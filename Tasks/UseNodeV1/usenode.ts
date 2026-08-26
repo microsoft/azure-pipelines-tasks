@@ -22,7 +22,11 @@ async function run() {
         // If not supplied then task is still used to setup proxy, auth, etc...
         //
         taskLib.setResourcePath(path.join(__dirname, 'task.json'));
-        const version = getNodeVersion(taskLib.getInput('version', false), taskLib.getInput('versionFilePath', false));
+        const versionSource = taskLib.getInput('versionSource', false) || 'spec';
+        const version = getNodeVersion(
+            versionSource,
+            taskLib.getInput('version', false),
+            taskLib.getInput('versionFilePath', versionSource === 'fromFile'));
         const nodejsMirror = taskLib.getInput('nodejsMirror', false) || 'https://nodejs.org/dist/';
         const retryCountOnDownloadFails = taskLib.getInput('retryCountOnDownloadFails', false) || "5";
         const delayBetweenRetries = taskLib.getInput('delayBetweenRetries', false) || "1000";
@@ -41,16 +45,16 @@ async function run() {
     }
 }
 
-function getNodeVersion(versionSpecInput: string, versionFilePathInput: string) {
-    if (versionSpecInput && versionFilePathInput) {
-        throw new Error(taskLib.loc('CannotSpecifyVersionAndVersionFilePath'));
+function getNodeVersion(versionSource: string, versionSpecInput: string, versionFilePathInput: string) {
+    const version = versionSource === 'fromFile'
+        ? fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' }).trim()
+        : versionSpecInput;
+
+    if (versionSource === 'fromFile' && !version) {
+        throw new Error(taskLib.loc('VersionFileIsEmpty', versionFilePathInput));
     }
 
-    const version =
-        versionFilePathInput
-            ? fs.readFileSync(versionFilePathInput, { 'encoding': 'utf8' })
-            : versionSpecInput;
-    if (semver.validRange(version) === null) {
+    if (version && semver.validRange(version) === null) {
         throw new Error(taskLib.loc('InvalidVersionSpecification', version));
     }
 

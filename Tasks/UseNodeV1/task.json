@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 280,
     "Patch": 0
   },
   "satisfies": [
@@ -28,19 +28,32 @@
   "instanceNameFormat": "Use Node $(versionSpec)",
   "inputs": [
     {
+      "name": "versionSource",
+      "type": "radio",
+      "label": "Source of version",
+      "required": true,
+      "defaultValue": "spec",
+      "options": {
+        "spec": "Specify Node version",
+        "fromFile": "Get version from file"
+      }
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "Version",
       "defaultValue": "10.x",
       "required": false,
-      "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0"
+      "helpMarkDown": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0",
+      "visibleRule": "versionSource = spec"
     },
     {
       "name": "versionFilePath",
       "type": "string",
       "label": "Version File Path",
       "required": false,
-      "helpMarkDown": "File path to get version.  Example: src/.nvmrc"
+      "helpMarkDown": "File path to get version.  Example: src/.nvmrc",
+      "visibleRule": "versionSource = fromFile"
     },
     {
       "name": "checkLatest",
@@ -111,7 +124,7 @@
     "UnexpectedOS": "Unexpected OS %s",
     "AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
     "InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
-    "CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified.",
+    "VersionFileIsEmpty": "Version file '%s' is empty.",
     "InvalidVersionSpecification": "Version specification '%s' is invalid."
   }
 }

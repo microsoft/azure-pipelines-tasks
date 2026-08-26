@@ -3,6 +3,7 @@
   "loc.helpMarkDown": "",
   "loc.description": "Set up a Node.js environment and add it to the PATH, additionally providing proxy support",
   "loc.instanceNameFormat": "Use Node $(versionSpec)",
+  "loc.input.label.versionSource": "Source of version",
   "loc.input.label.version": "Version",
   "loc.input.help.version": "Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0",
   "loc.input.label.versionFilePath": "Version File Path",
@@ -23,6 +24,6 @@
   "loc.messages.UnexpectedOS": "Unexpected OS %s",
   "loc.messages.AgentTempDirNotSet": "Expected Agent.TempDirectory to be set.",
   "loc.messages.InvalidNodejsMirror": "The provided Node.js mirror URL is invalid: '%s'",
-  "loc.messages.CannotSpecifyVersionAndVersionFilePath": "Specifing version is not supported when versionFilePath is also specified.",
+  "loc.messages.VersionFileIsEmpty": "Version file '%s' is empty.",
   "loc.messages.InvalidVersionSpecification": "Version specification '%s' is invalid."
 }
