@@ -58,6 +58,16 @@ try {
     Assert-AreEqual $true ($emptyOutput -match '##vso\[task\.setvariable') "Empty whitelist: task.setvariable must stay raw"
     Assert-AreEqual $true ($emptyOutput -match '##vso\[task\.complete') "Empty whitelist: task.complete must stay raw"
     Assert-AreEqual $true ($emptyOutput -notmatch '##_vso\[') "Empty whitelist: nothing must be escaped"
+
+    # --- Case 3: whitelist matching is case-insensitive (regression guard for the HashSet comparer) ---
+    # The whitelist is delivered upper-cased while the injected command is lower-case. Get-AllowedLoggingCommands
+    # builds an OrdinalIgnoreCase HashSet; if that comparer were dropped (e.g. by PowerShell unrolling the set on
+    # return), the match below would fail and the whitelisted command would be wrongly escaped.
+    $env:AGENT_ALLOWEDLOGGINGCOMMANDS = "TASK.SETVARIABLE"
+    $caseInsensitiveOutput = (& $remotePowershellRunnerPath -environmentName $environmentWithSkipCANotSet -machineNames $validMachineName1 -scriptPath $validScriptPath -runPowershellInParallel $false -protocol "HTTPS" -testCertificate "true") *>&1 | Out-String
+
+    Assert-AreEqual $true ($caseInsensitiveOutput -match '##vso\[task\.setvariable') "Case-insensitive whitelist: upper-cased TASK.SETVARIABLE must whitelist lower-case task.setvariable"
+    Assert-AreEqual $true ($caseInsensitiveOutput -match '##_vso\[task\.complete') "Case-insensitive whitelist: non-whitelisted task.complete must still be escaped"
 } finally {
     Remove-Item Env:\AGENT_ALLOWEDLOGGINGCOMMANDS -ErrorAction SilentlyContinue
 }

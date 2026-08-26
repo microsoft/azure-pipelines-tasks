@@ -81,12 +81,12 @@ function Publish-VsoCommandInjectionDryRunTelemetry {
 function Get-AllowedLoggingCommands {
     $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
     $raw = $env:AGENT_ALLOWEDLOGGINGCOMMANDS
-    if ([string]::IsNullOrWhiteSpace($raw)) { return $set }
+    if ([string]::IsNullOrWhiteSpace($raw)) { return ,$set }
     foreach ($command in $raw.Split(',')) {
         $trimmed = $command.Trim()
         if (-not [string]::IsNullOrEmpty($trimmed)) { [void]$set.Add($trimmed) }
     }
-    return $set
+    return ,$set
 }
 
 function ConvertTo-SanitizedRemoteOutput {
