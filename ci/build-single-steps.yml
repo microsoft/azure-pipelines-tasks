@@ -14,11 +14,11 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use .NET SDK 10
+# Use .NET SDK 8
 - task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 10.x'
+  displayName: 'Install .NET Core SDK 8.x'
   inputs:
-    version: 10.x
+    version: 8.x
 
 # Use node 20, npm 9
 - task: NodeTool@0
