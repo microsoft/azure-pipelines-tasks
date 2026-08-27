@@ -197,16 +197,51 @@ function Publish-VsoCommandInjectionDryRunTelemetry {
     }
 }
 
+# Whitelist-aware neutralization of ##vso[ logging commands from remote machine output
+# (ICM 31000000640794 / MSRC 122214). The allowed commands are delivered by the server as the
+# read-only pipeline variable 'agent.allowedLoggingCommands' (ConfigFramework), surfaced on the agent
+# as the environment variable AGENT_ALLOWEDLOGGINGCOMMANDS (comma-separated, case-insensitive).
+#   - whitelist empty/unset   -> nothing is changed (feature-off).
+#   - command NOT whitelisted -> its "##vso[" prefix is escaped to "##_vso[" so the agent does not
+#     execute it (the line is still printed as text).
+#   - command whitelisted     -> left unchanged so legitimate usage keeps working.
+function Get-AllowedLoggingCommands {
+    $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $raw = $env:AGENT_ALLOWEDLOGGINGCOMMANDS
+    if ([string]::IsNullOrWhiteSpace($raw)) { return ,$set }
+    foreach ($command in $raw.Split(',')) {
+        $trimmed = $command.Trim()
+        if (-not [string]::IsNullOrEmpty($trimmed)) { [void]$set.Add($trimmed) }
+    }
+    return ,$set
+}
+
+function ConvertTo-SanitizedRemoteOutput {
+    param(
+        [string] $text,
+        [System.Collections.Generic.HashSet[string]] $allowedCommands
+    )
+    if ([string]::IsNullOrEmpty($text)) { return $text }
+    # Feature-off when no whitelist is configured: never modify customer output.
+    if (($null -eq $allowedCommands) -or ($allowedCommands.Count -eq 0)) { return $text }
+    $evaluator = {
+        param($match)
+        $command = $match.Groups['cmd'].Value
+        if ($allowedCommands.Contains($command)) { return $match.Value }
+        return '##_vso[' + $command
+    }
+    return [regex]::Replace($text, '##vso\[(?<cmd>[\w.]+)', $evaluator, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+}
 $defaultErrorHandler = {
     Param($object, $computerName)
     $text = $object | Out-String
     Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:ErrorHandler" -text $text
-    Write-Host $text
+    Write-Host (ConvertTo-SanitizedRemoteOutput -text $text -allowedCommands (Get-AllowedLoggingCommands))
 }
 
 $defaultOutputHandler = {
     Param($object, $computerName)
     $text = $object | Out-String
     Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:OutputHandler" -text $text
-    Write-Host $text
+    Write-Host (ConvertTo-SanitizedRemoteOutput -text $text -allowedCommands (Get-AllowedLoggingCommands))
 }
