@@ -31,7 +31,7 @@ parameters:
 - name: signNodeModules
   displayName: Sign binaries inside node_modules
   type: boolean
-  default: false
+  default: true
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean

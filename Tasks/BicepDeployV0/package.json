@@ -21,14 +21,15 @@
     "@types/node": "^24.10.0",
     "@types/q": "^1.5.8",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^5.278.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.277.1",
-    "azure-pipelines-tool-lib": "^2.0.7"
+    "azure-pipelines-task-lib": "^5.279.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.279.0",
+    "azure-pipelines-tool-lib": "^2.279.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
   },
   "overrides": {
-    "agent-base": "^6.0.2"
+    "agent-base": "^6.0.2",
+    "brace-expansion": "^1.1.18"
   }
 }

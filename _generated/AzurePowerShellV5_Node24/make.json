@@ -5,7 +5,9 @@
                 "node_modules/https-proxy-agent/node_modules/agent-base",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-args-sanitizer/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-args-sanitizer/node_modules/azure-pipelines-tasks-utility-common"
             ],
             "options": "-Rf"
         }
@@ -22,6 +24,11 @@
         {
             "module": "../Common/Sanitizer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/ArgsSanitizer",
+            "type": "node",
+            "compile": true
         }
     ],
     "externals": {

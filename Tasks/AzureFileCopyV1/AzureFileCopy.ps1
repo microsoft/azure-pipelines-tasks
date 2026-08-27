@@ -101,6 +101,41 @@ function Publish-VsoCommandInjectionDryRunTelemetry {
     }
 }
 
+# Whitelist-aware neutralization of ##vso[ logging commands from remote machine output
+# (ICM 31000000640794 / MSRC 122214). The allowed commands are delivered by the server as the
+# read-only pipeline variable 'agent.allowedLoggingCommands' (ConfigFramework), surfaced on the agent
+# as the environment variable AGENT_ALLOWEDLOGGINGCOMMANDS (comma-separated, case-insensitive).
+#   - whitelist empty/unset   -> nothing is changed (feature-off).
+#   - command NOT whitelisted -> its "##vso[" prefix is escaped to "##_vso[" so the agent does not
+#     execute it (the line is still printed as text).
+#   - command whitelisted     -> left unchanged so legitimate usage keeps working.
+function Get-AllowedLoggingCommands {
+    $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $raw = $env:AGENT_ALLOWEDLOGGINGCOMMANDS
+    if ([string]::IsNullOrWhiteSpace($raw)) { return ,$set }
+    foreach ($command in $raw.Split(',')) {
+        $trimmed = $command.Trim()
+        if (-not [string]::IsNullOrEmpty($trimmed)) { [void]$set.Add($trimmed) }
+    }
+    return ,$set
+}
+
+function ConvertTo-SanitizedRemoteOutput {
+    param(
+        [string] $text,
+        [System.Collections.Generic.HashSet[string]] $allowedCommands
+    )
+    if ([string]::IsNullOrEmpty($text)) { return $text }
+    # Feature-off when no whitelist is configured: never modify customer output.
+    if (($null -eq $allowedCommands) -or ($allowedCommands.Count -eq 0)) { return $text }
+    $evaluator = {
+        param($match)
+        $command = $match.Groups['cmd'].Value
+        if ($allowedCommands.Contains($command)) { return $match.Value }
+        return '##_vso[' + $command
+    }
+    return [regex]::Replace($text, '##vso\[(?<cmd>[\w.]+)', $evaluator, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+}
 # Override Write-ResponseLogs exported by the DTT module (Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal).
 # Script-scope functions take precedence over module-exported functions in PowerShell command resolution,
 # so this definition shadows the module's version for all call sites in this script. It preserves the
@@ -116,12 +151,14 @@ function Write-ResponseLogs {
     if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
         $deploymentLogText = ($deploymentResponse.DeploymentLog | Format-List | Out-String)
         Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:DeploymentLog" -text $deploymentLogText
+        $deploymentLogText = ConvertTo-SanitizedRemoteOutput -text $deploymentLogText -allowedCommands (Get-AllowedLoggingCommands)
         Write-Output "Deployment logs for $operationName operation on $fqdn "
         Write-Output $deploymentLogText
     }
     if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
         $serviceLogText = ($deploymentResponse.ServiceLog | Format-List | Out-String)
         Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:ServiceLog" -text $serviceLogText
+        $serviceLogText = ConvertTo-SanitizedRemoteOutput -text $serviceLogText -allowedCommands (Get-AllowedLoggingCommands)
         Write-Verbose "Service logs for $operationName operation on $fqdn "
         Write-Verbose $serviceLogText
     }
