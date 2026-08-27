@@ -19,9 +19,14 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^10.17.0",
     "azure-pipelines-task-lib": "^4.16.0",
-    "azure-pipelines-tasks-msbuildhelpers": "3.272.0"
+    "azure-pipelines-tasks-msbuildhelpers": "3.279.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
+  },
+  "overrides": {
+    "minimatch": "3.1.4",
+    "adm-zip": "^0.6.0",
+    "brace-expansion": "^1.1.18"
   }
 }
