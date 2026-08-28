@@ -291,6 +291,10 @@ export class Utility {
                 `            }`,
                 `        }`,
                 `        $global:LASTEXITCODE = $azExitCode`,
+                `        if ($azExitCode -ne 0) {`,
+                `            $ErrorActionPreference = 'Continue'`,
+                `            Write-Error "az exited with code $azExitCode" 2>$null`,
+                `        }`,
                 `    }`,
                 `    Export-ModuleMember -Function az`,
                 `}`,
@@ -330,7 +334,7 @@ export class Utility {
                 reason,
                 error: error && error.message ? error.message : String(error)
             });
-            throw error;
+            tl.warning(`Failed to remove shim directory '${directoryPath}': ${error && error.message ? error.message : String(error)}`);
         }
     }
 }
