@@ -21,37 +21,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 function Get-RoboCopyArgumentsHardeningFeatureFlag
 {
-    $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
-
-    if (-not $featureFlagCmdlet)
-    {
-        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
-        try
-        {
-            Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -ErrorAction Stop
-            $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
-        }
-        catch
-        {
-            Write-Warning "Failed to import VstsTaskSdk module: $_"
-        }
-    }
-
-    if (-not $featureFlagCmdlet)
-    {
-        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable. Robocopy argument hardening will remain disabled."
-        return $false
-    }
-
-    try
-    {
-        return Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening' -ErrorAction Stop
-    }
-    catch
-    {
-        Write-Warning "Failed to check EnableWindowsMachineFileCopyArgumentsHardening feature flag: $_. Defaulting to disabled."
-        return $false
-    }
+    return Get-PipelineFeatureFlag -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening' -DisabledReason 'Robocopy argument hardening'
 }
 
 # Sanitizer

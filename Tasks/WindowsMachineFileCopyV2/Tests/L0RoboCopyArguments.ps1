@@ -6,7 +6,7 @@ param()
 $previousRetrySetting = [Environment]::GetEnvironmentVariable('MODIFY_NUMBER_OF_RETRIES_IN_ROBOCOPY', 'Process')
 $previousSanitizerSetting = [Environment]::GetEnvironmentVariable('AZP_75787_ENABLE_NEW_LOGIC', 'Process')
 $previousHardeningSetting = [Environment]::GetEnvironmentVariable('DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING', 'Process')
-$testFunctionNames = @('Get-VstsPipelineFeature', 'New-Item', 'Remove-Item', 'New-PSDrive', 'Remove-PSDrive', 'Test-Path', 'ConvertTo-SecureString', 'Invoke-Expression', 'robocopy')
+$testFunctionNames = @('Get-VstsPipelineFeature', 'Get-PipelineFeatureFlag', 'New-Item', 'Remove-Item', 'New-PSDrive', 'Remove-PSDrive', 'Test-Path', 'ConvertTo-SecureString', 'Invoke-Expression', 'robocopy')
 $previousTestFunctions = @{}
 foreach($testFunctionName in $testFunctionNames)
 {
@@ -34,6 +34,14 @@ $global:featureLookupMissing = $false
 $global:featureLookupCallCount = 0
 $global:useSanitizerCall = $true
 $global:useSanitizerActivate = $true
+
+function global:Get-PipelineFeatureFlag {
+    param([string]$FeatureName, [string]$DisabledReason)
+
+    if ($global:featureLookupMissing) { return $false }
+    try { return (Get-VstsPipelineFeature -FeatureName $FeatureName -ErrorAction Stop) }
+    catch { return $false }
+}
 
 try
 {
