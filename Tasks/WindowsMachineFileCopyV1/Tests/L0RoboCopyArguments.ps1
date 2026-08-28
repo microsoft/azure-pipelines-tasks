@@ -5,7 +5,7 @@ param()
 
 $previousSanitizerSetting = [Environment]::GetEnvironmentVariable('AZP_75787_ENABLE_NEW_LOGIC', 'Process')
 $previousHardeningSetting = [Environment]::GetEnvironmentVariable('DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING', 'Process')
-$testFunctionNames = @('Get-VstsPipelineFeature', 'Get-PipelineFeatureFlag', 'Test-Path', 'Invoke-Expression', 'robocopy', 'Get-LocalizedString')
+$testFunctionNames = @('Get-VstsPipelineFeature', 'Test-Path', 'Invoke-Expression', 'robocopy', 'Get-LocalizedString')
 $previousTestFunctions = @{}
 foreach($testFunctionName in $testFunctionNames)
 {
@@ -33,14 +33,6 @@ $global:featureLookupMissing = $false
 $global:featureLookupCallCount = 0
 $global:useSanitizerCall = $true
 $global:useSanitizerActivate = $true
-
-function global:Get-PipelineFeatureFlag {
-    param([string]$FeatureName, [string]$DisabledReason)
-
-    if ($global:featureLookupMissing) { return $false }
-    try { return (Get-VstsPipelineFeature -FeatureName $FeatureName -ErrorAction Stop) }
-    catch { return $false }
-}
 
 try
 {

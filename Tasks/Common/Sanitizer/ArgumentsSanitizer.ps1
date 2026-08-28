@@ -54,14 +54,7 @@ function Get-SanitizerActivateStatus {
 # checking cmdlet availability first, attempting to re-import the task's local
 # VstsTaskSdk copy if needed, and falling back to "disabled" if the cmdlet is
 # still unavailable or the flag check itself throws.
-function Get-PipelineFeatureFlag {
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$FeatureName,
-        [Parameter(Mandatory = $true)]
-        [string]$DisabledReason
-    )
-
+function Get-SourcePathHardeningFeatureFlag {
     $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
 
     if (-not $hasFeatureFlagCmdlet) {
@@ -76,21 +69,17 @@ function Get-PipelineFeatureFlag {
     }
 
     if (-not $hasFeatureFlagCmdlet) {
-        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). $DisabledReason will remain disabled."
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
         return $false
     }
 
     try {
-        return (Get-VstsPipelineFeature -FeatureName $FeatureName -ErrorAction Stop)
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
     }
     catch {
-        Write-Warning "Failed to check $FeatureName feature flag: $_. Defaulting to disabled."
+        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
         return $false
     }
-}
-
-function Get-SourcePathHardeningFeatureFlag {
-    return Get-PipelineFeatureFlag -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -DisabledReason 'SourcePath hardening'
 }
 
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
