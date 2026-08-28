@@ -378,6 +378,43 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection, {"status":"skipped","reason":"python.exe not found"}') >= 0, 'should emit skipped telemetry with reason');
     });
 
+    it('Az module fallback: falls back to -Command when file invocation setup fails', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0AzModuleFallbackToCommand.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task should have succeeded via -Command fallback');
+        assert(tr.stdout.indexOf('FALLBACK_TO_LEGACY_PATH') >= 0, 'should fall back to legacy getPowerShellScriptPath');
+        assert(tr.stdout.indexOf('TELEMETRY: AzureCLIV2/FileInvocationFallback') >= 0, 'should emit FileInvocationFallback telemetry');
+        assert(tr.stdout.indexOf('"scriptType":"pscore"') >= 0, 'telemetry should include scriptType');
+        assert(tr.stdout.indexOf('mkdtempSync failed') >= 0, 'telemetry should include error message');
+    });
+
+    it('Az module failure: shim write error propagates and getPowerShellScriptPathWithAzModule throws', async () => {
+        let tp = path.join(__dirname, 'L0AzModuleShimWriteFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'task helper should have succeeded');
+        assert(tr.stdout.indexOf('EXPECTED_ERROR:') >= 0, 'should throw an error');
+        assert(tr.stdout.indexOf('ENOSPC') >= 0, 'error should contain the original fs error');
+        assert(tr.stdout.indexOf('UNEXPECTED_SUCCESS') === -1, 'should NOT succeed');
+    });
+
     it('File invocation: Task succeeds with % and ^ in password (pscore, FF on)', async function() {
         if (process.platform !== 'win32') {
             this.skip();

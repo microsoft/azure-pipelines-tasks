@@ -3,50 +3,56 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
-let taskPath = path.join(__dirname, 'L0AzFunctionAliasInjection_task.js');
+let taskPath = path.join(__dirname, 'L0AzModuleShimWriteFailure_task.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-// Inputs that getPowerShellScriptPath reads
 tmr.setInput('powerShellErrorActionPreference', 'Stop');
 tmr.setInput('inlineScript', 'az account show');
 tmr.setInput('scriptPath', '');
 tmr.setInput('powerShellIgnoreLASTEXITCODE', 'false');
 
-// Environment — FF is OFF
 process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
-delete process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'];
 
-// Mock os to return win32
 tmr.registerMock('os', {
     platform: () => 'win32',
     tmpdir: () => os.tmpdir(),
     EOL: os.EOL
 });
 
-// Mock fs — pass through writes
 const realFs = require('fs');
+let rmRFCalled: string[] = [];
 tmr.registerMock('fs', {
-    writeFileSync: (filePath: string, data: string, options?: any) => {
-        realFs.writeFileSync(filePath, data, options);
-        if (filePath.includes('azureclitaskscript') && !filePath.includes('_inlinescript')) {
-            console.log('WRAPPER_SCRIPT_CONTENT_START');
-            console.log(data);
-            console.log('WRAPPER_SCRIPT_CONTENT_END');
-        }
-    },
+    writeFileSync: realFs.writeFileSync.bind(realFs),
     existsSync: (p: string) => {
         if (p.endsWith('python.exe')) return true;
         return realFs.existsSync(p);
     },
-    unlinkSync: realFs.unlinkSync.bind(realFs)
+    statSync: (p: string) => {
+        if (p.endsWith('python.exe')) return { isFile: () => true };
+        return realFs.statSync(p);
+    },
+    unlinkSync: realFs.unlinkSync.bind(realFs),
+    mkdtempSync: () => {
+        throw new Error('ENOSPC: no space left on device');
+    }
 });
 
-// Mock telemetry
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
-    emitTelemetry: () => {}
+    emitTelemetry: (area: string, feature: string, data: any) => {
+        console.log(`MOCK_TELEMETRY: ${area}, ${feature}, ${JSON.stringify(data)}`);
+    }
 });
 
-// Mock answers
+// Mock tl.rmRF used by Utility.deleteDirectory
+tmr.registerMock('azure-pipelines-task-lib/task', (() => {
+    const realTl = require('azure-pipelines-task-lib/mock-task');
+    const original = { ...realTl };
+    original.rmRF = (p: string) => {
+        console.log('RMRF_CALLED:' + p);
+    };
+    return original;
+})());
+
 let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
         'az': 'C:\\Program Files\\Microsoft SDKs\\Azure\\CLI2\\wbin\\az.cmd'
