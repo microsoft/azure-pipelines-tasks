@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 280,
     "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
@@ -92,8 +92,8 @@
     "Warn_IgnoringFeedUrl": "Ignoring feedUrl"
   },
   "_buildConfigMapping": {
-    "Default": "1.279.0",
+    "Default": "1.280.0",
     "LocalPackages": "1.249.4",
-    "wif_242": "1.279.1"
+    "wif_242": "1.280.1"
   }
 }
