@@ -22,7 +22,7 @@ export class MysqlTaskParameter {
 			this.sqlInline = tl.getInput('SqlInline', false);
 			this.serverName = tl.getInput('ServerName', true);
 			this.databaseName = tl.getInput('DatabaseName', false);
-			if (this.databaseName && !isValidDatabaseName(this.databaseName)) {
+			if (this.databaseName && tl.getPipelineFeature('EnableMysqlDeploymentDatabaseNameValidation') && !isValidDatabaseName(this.databaseName)) {
 				throw new Error(tl.loc("InvalidDatabaseName", this.databaseName));
 			}
 			this.sqlUserName = tl.getInput('SqlUsername', true);

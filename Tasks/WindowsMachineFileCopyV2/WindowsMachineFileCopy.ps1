@@ -19,17 +19,58 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
+function Get-RoboCopyArgumentsHardeningFeatureFlag
+{
+    $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $featureFlagCmdlet)
+    {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try
+        {
+            Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -ErrorAction Stop
+            $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $featureFlagCmdlet)
+    {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable. Robocopy argument hardening will remain disabled."
+        return $false
+    }
+
+    try
+    {
+        return Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening' -ErrorAction Stop
+    }
+    catch
+    {
+        Write-Warning "Failed to check EnableWindowsMachineFileCopyArgumentsHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
 # Sanitizer
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$enableWindowsMachineFileCopyArgumentsHardening = Get-RoboCopyArgumentsHardeningFeatureFlag
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = Join-SanitizedArguments -arguments $sanitizedArguments
+    if ($enableWindowsMachineFileCopyArgumentsHardening) {
+        $additionalArguments = Join-SanitizedArguments -arguments $sanitizedArguments
+    }
+    else {
+        $additionalArguments = $sanitizedArguments -join ' '
+    }
 }
 
 try 
@@ -65,7 +106,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
         } 
     }
     else
@@ -77,7 +118,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
 
             $Jobs.Add($job.Id, $machine)
         }        
