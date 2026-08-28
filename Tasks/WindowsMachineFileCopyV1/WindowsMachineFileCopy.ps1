@@ -27,6 +27,41 @@ Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
 
+function Get-RoboCopyArgumentsHardeningFeatureFlag
+{
+    $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $featureFlagCmdlet)
+    {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try
+        {
+            Import-Module $PSScriptRoot\ps_modules\VstsTaskSdk -ErrorAction Stop
+            $featureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch
+        {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $featureFlagCmdlet)
+    {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable. Robocopy argument hardening will remain disabled."
+        return $false
+    }
+
+    try
+    {
+        return Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening' -ErrorAction Stop
+    }
+    catch
+    {
+        Write-Warning "Failed to check EnableWindowsMachineFileCopyArgumentsHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.Internal"
 import-module "Microsoft.TeamFoundation.DistributedTask.Task.DevTestLabs"
@@ -36,13 +71,19 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$enableWindowsMachineFileCopyArgumentsHardening = Get-RoboCopyArgumentsHardeningFeatureFlag
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments -join " "
+    if ($enableWindowsMachineFileCopyArgumentsHardening) {
+        $additionalArguments = Join-SanitizedArguments -arguments $sanitizedArguments
+    }
+    else {
+        $additionalArguments = $sanitizedArguments -join " "
+    }
 }
 
 # keep machineNames parameter name unchanged due to back compatibility
@@ -64,7 +105,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
     Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate
+                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening
     Write-Verbose "Files copied to destination successfully."
 }
 else
@@ -98,7 +139,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
         } 
     }
     else
@@ -113,7 +154,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
 
             $Jobs.Add($job.Id, $resourceProperties)
         }        

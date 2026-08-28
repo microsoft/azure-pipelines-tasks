@@ -6,7 +6,8 @@ param (
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
     [string]$additionalArguments,
-    [string]$useSanitizerActivate
+    [string]$useSanitizerActivate,
+    [bool]$enableWindowsMachineFileCopyArgumentsHardening
     )
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
@@ -144,6 +145,17 @@ param (
 
         return $robocopyParameters.Trim()
     }
+    function Get-RoboCopyArgumentArray(
+        [string]$arguments
+        )
+    {
+        if([string]::IsNullOrWhiteSpace($arguments))
+        {
+            return @()
+        }
+
+        return [regex]::Split($arguments.Trim(), '\s+(?=(?:[^"]|"[^"]*")*$)')
+    }
 
     function Get-MachineShare(
         [string]$fqdn,
@@ -216,11 +228,19 @@ param (
 
         $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
         
-        if ($useSanitizerActivate -eq "true") {
+        if ($enableWindowsMachineFileCopyArgumentsHardening)
+        {
+            $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + (Get-RoboCopyArgumentArray -arguments $robocopyParameters)
+            & robocopy @robocopyArguments
+        }
+        elseif ($useSanitizerActivate -eq "true")
+        {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
             & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
-        } else {
+        }
+        else
+        {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
         }
