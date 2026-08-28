@@ -5,10 +5,18 @@ param (
     [string]$targetPath,
     [object]$credential,
     [string]$cleanTargetBeforeCopy,
-    [string]$additionalArguments,
+    $additionalArguments,
     [string]$useSanitizerActivate,
-    [bool]$enableWindowsMachineFileCopyArgumentsHardening
+    [bool]$enableWindowsMachineFileCopyArgumentsHardening,
+    [string]$scriptRoot
     )
+
+    # The parallel-copy path runs this scriptblock through Start-Job in a separate
+    # process, where the calling script's imports are not present.
+    if ($enableWindowsMachineFileCopyArgumentsHardening)
+    {
+        Import-Module "$scriptRoot\ps_modules\VstsTaskSdk"
+    }
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -120,10 +128,36 @@ param (
     }    
 
     function Get-RoboCopyParameters(
-        [string]$additionalArguments,
+        $additionalArguments,
         [switch]$fileCopy,
-        [switch]$clean)
+        [switch]$clean,
+        [switch]$AsArray)
     {
+        if ($AsArray.IsPresent)
+        {
+            $fixedFlags = @("/COPY:DAT")
+
+            if(-not $fileCopy.IsPresent)
+            {
+                if($clean.IsPresent)
+                {
+                    $fixedFlags += "/MIR"
+                }
+                else
+                {
+                    $fixedFlags += "/E"
+                }
+            }
+
+            $additionalArgumentArray = @($additionalArguments)
+            if ($additionalArgumentArray.Count -eq 1 -and [string]::IsNullOrWhiteSpace($additionalArgumentArray[0]))
+            {
+                $additionalArgumentArray = @()
+            }
+
+            return $fixedFlags + $additionalArgumentArray
+        }
+
         $robocopyParameters = "/COPY:DAT"
 
         if(-not $fileCopy.IsPresent)
@@ -144,17 +178,6 @@ param (
         }
 
         return $robocopyParameters.Trim()
-    }
-    function Get-RoboCopyArgumentArray(
-        [string]$arguments
-        )
-    {
-        if([string]::IsNullOrWhiteSpace($arguments))
-        {
-            return @()
-        }
-
-        return [regex]::Split($arguments.Trim(), '\s+(?=(?:[^"]|"[^"]*")*$)')
     }
 
     function Get-MachineShare(
@@ -226,11 +249,15 @@ param (
             }
         }
 
-        $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+        if (-not $enableWindowsMachineFileCopyArgumentsHardening)
+        {
+            $robocopyParameters = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp
+        }
         
         if ($enableWindowsMachineFileCopyArgumentsHardening)
         {
-            $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + (Get-RoboCopyArgumentArray -arguments $robocopyParameters)
+            $robocopyExtraArguments = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp -AsArray
+            $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + $robocopyExtraArguments
             & robocopy @robocopyArguments
         }
         elseif ($useSanitizerActivate -eq "true")

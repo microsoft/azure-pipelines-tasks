@@ -19,6 +19,7 @@ Export-ModuleMember -Function Protect-ScriptArguments
 Export-ModuleMember -Function Invoke-ScriptArgumentSanitization
 Export-ModuleMember -Function Split-AdditionalArguments
 Export-ModuleMember -Function Join-SanitizedArguments
+Export-ModuleMember -Function Get-PipelineFeatureFlag
 Export-ModuleMember -Function Get-SourcePathHardeningFeatureFlag
 Export-ModuleMember -Function Test-ShouldUseSanitizer
 Export-ModuleMember -Function Publish-SanitizerErrorTelemetry

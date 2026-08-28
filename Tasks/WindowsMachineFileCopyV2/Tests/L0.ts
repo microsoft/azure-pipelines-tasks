@@ -50,6 +50,9 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Uses legacy and structured Robocopy arguments based on pipeline feature state', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyArguments.ps1'), done);
         });
+        it('Round-trips sanitized Robocopy arguments without altering any token', (done) => {
+            psr.run(path.join(__dirname, 'L0RoboCopyArgumentsRoundTrip.ps1'), done);
+        });
     }
     else {
         console.warn('Cannot run tests for WindowsMachineFileCopy on Non-Windows Platform');

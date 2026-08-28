@@ -2,6 +2,7 @@
 param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 . $PSScriptRoot\MockVariable.ps1 -Force
 . $PSScriptRoot\MockHelper.ps1 -Force
 
