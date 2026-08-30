@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
 import * as httpc from 'typed-rest-client/HttpClient';
+import { GitHubReleaseProvider } from './githubReleaseProvider';
 
 import { sanitizeForLoggingCommand } from './sanitize';
 
@@ -198,7 +199,7 @@ async function main(): Promise<void> {
             }
         };
 
-        var webProvider = new providers.WebProvider(itemsUrl, templatePath, gitHubReleaseVariables, customCredentialHandler);
+        var webProvider = new GitHubReleaseProvider(itemsUrl, templatePath, gitHubReleaseVariables, customCredentialHandler);
         var fileSystemProvider = new providers.FilesystemProvider(downloadPath);
         var parallelLimit: number = +tl.getVariable("release.artifact.download.parallellimit");
 
