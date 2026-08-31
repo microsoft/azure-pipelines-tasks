@@ -44,7 +44,6 @@ try
     . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
     Register-Mock Import-Module { }
-    Register-Mock Get-Command { return $true }
     Register-Mock Get-SanitizerCallStatus { return $true }
     Register-Mock Get-SanitizerActivateStatus { return $true }
     Register-Mock Protect-ScriptArguments { return $global:sanitizedTokens }
@@ -146,7 +145,6 @@ try
 }
 finally
 {
-    Unregister-Mock Get-Command
     Unregister-Mock Get-VstsInput
     Unregister-Mock Import-Module
     Unregister-Mock Invoke-Command

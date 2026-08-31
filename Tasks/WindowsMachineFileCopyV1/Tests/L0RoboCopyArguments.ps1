@@ -15,7 +15,7 @@ foreach($testFunctionName in $testFunctionNames)
         $previousTestFunctions[$testFunctionName] = $previousTestFunction.ScriptBlock
     }
 }
-$testVariableNames = @('robocopyInvocations', 'copyJobInvocations', 'invokeExpressionCommands', 'featureLookupFails', 'featureLookupMissing', 'featureLookupCallCount', 'useSanitizerCall', 'useSanitizerActivate')
+$testVariableNames = @('robocopyInvocations', 'copyJobInvocations', 'invokeExpressionCommands', 'featureLookupCallCount', 'useSanitizerCall', 'useSanitizerActivate')
 $previousTestVariables = @{}
 foreach($testVariableName in $testVariableNames)
 {
@@ -28,8 +28,6 @@ foreach($testVariableName in $testVariableNames)
 $global:robocopyInvocations = New-Object System.Collections.Generic.List[object]
 $global:copyJobInvocations = New-Object System.Collections.Generic.List[object]
 $global:invokeExpressionCommands = New-Object System.Collections.Generic.List[string]
-$global:featureLookupFails = $false
-$global:featureLookupMissing = $false
 $global:featureLookupCallCount = 0
 $global:useSanitizerCall = $true
 $global:useSanitizerActivate = $true
@@ -43,14 +41,6 @@ try
         if ($Name -match 'Sanitizer') {
             Microsoft.PowerShell.Core\Import-Module -Name $Name -Global
         }
-    }
-    Register-Mock Get-Command {
-        if ($global:featureLookupMissing)
-        {
-            return $null
-        }
-
-        return $true
     }
     Register-Mock Get-ResourceFQDNTagKey { return 'FQDN' }
     Register-Mock Get-SanitizerCallStatus { return $global:useSanitizerCall }
@@ -92,11 +82,6 @@ try
         param([string]$FeatureName)
 
         $global:featureLookupCallCount++
-        if ($global:featureLookupFails)
-        {
-            throw "Unable to evaluate the task feature."
-        }
-
         return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
     }
     function global:robocopy {
@@ -113,17 +98,13 @@ try
     $filePath = 'C:\folder with spaces\file.txt'
     $legacyArguments = "/XF $filePath"
     $testCases = @(
-        [PSCustomObject]@{ FeatureEnabled = "false"; UseSanitizerCall = $true; UseSanitizerActivate = $true; FeatureLookupFails = $false; FeatureLookupMissing = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') },
-        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $true; UseSanitizerActivate = $true; FeatureLookupFails = $false; FeatureLookupMissing = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
-        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $false; UseSanitizerActivate = $false; FeatureLookupFails = $false; FeatureLookupMissing = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
-        [PSCustomObject]@{ FeatureEnabled = "false"; UseSanitizerCall = $true; UseSanitizerActivate = $true; FeatureLookupFails = $true; FeatureLookupMissing = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') },
-        [PSCustomObject]@{ FeatureEnabled = "false"; UseSanitizerCall = $true; UseSanitizerActivate = $true; FeatureLookupFails = $false; FeatureLookupMissing = $true; ExpectedFeatureLookupCalls = 0; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') }
+        [PSCustomObject]@{ FeatureEnabled = "false"; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') },
+        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $false; UseSanitizerActivate = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) }
     )
     foreach($testCase in $testCases)
     {
         $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = $testCase.FeatureEnabled
-        $global:featureLookupFails = $testCase.FeatureLookupFails
-        $global:featureLookupMissing = $testCase.FeatureLookupMissing
         $global:featureLookupCallCount = 0
         $global:useSanitizerCall = $testCase.UseSanitizerCall
         $global:useSanitizerActivate = $testCase.UseSanitizerActivate
@@ -149,7 +130,7 @@ try
             Assert-AreEqual $expectedAdditionalArguments[$i] $actualAdditionalArguments[$i]
         }
         Assert-AreEqual $testCase.UseSanitizerActivate $copyJobInvocation.Arguments[6]
-        Assert-AreEqual ([System.Convert]::ToBoolean($testCase.FeatureEnabled) -and -not $testCase.FeatureLookupFails -and -not $testCase.FeatureLookupMissing) $copyJobInvocation.Arguments[7]
+        Assert-AreEqual ([System.Convert]::ToBoolean($testCase.FeatureEnabled)) $copyJobInvocation.Arguments[7]
 
         $invokeExpressionCommandCount = $global:invokeExpressionCommands.Count
         $copyJobArguments = $copyJobInvocation.Arguments
@@ -195,7 +176,6 @@ try
 }
 finally
 {
-    Unregister-Mock Get-Command
     Unregister-Mock Import-Module
     Unregister-Mock Invoke-Command
     Unregister-Mock Get-ResourceFQDNTagKey

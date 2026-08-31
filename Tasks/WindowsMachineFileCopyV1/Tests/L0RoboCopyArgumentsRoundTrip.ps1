@@ -42,7 +42,6 @@ try
     . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
     Register-Mock Import-Module { }
-    Register-Mock Get-Command { return $true }
     Register-Mock Get-ResourceFQDNTagKey { return 'FQDN' }
     Register-Mock Get-SanitizerCallStatus { return $true }
     Register-Mock Get-SanitizerActivateStatus { return $true }
@@ -141,7 +140,6 @@ try
 }
 finally
 {
-    Unregister-Mock Get-Command
     Unregister-Mock Import-Module
     Unregister-Mock Invoke-Command
     Unregister-Mock Get-ResourceFQDNTagKey
