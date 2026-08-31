@@ -612,7 +612,7 @@ describe('AzureCLIV3 Suite', function () {
         assert(tr.stdout.indexOf('Import-Module -ModuleInfo') >= 0, 'wrapper should contain Import-Module -ModuleInfo');
         assert(tr.stdout.indexOf('-Global -Force') >= 0, 'wrapper should contain -Global -Force');
         assert(tr.stdout.indexOf('Add-Member -NotePropertyName Path') >= 0, 'wrapper should contain Add-Member -NotePropertyName Path');
-        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, AzModuleInjection, {"status":"injected"}') >= 0, 'should emit AzModuleInjection telemetry with status=injected');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, AzModuleInjection, {"status":"prepared"}') >= 0, 'should emit AzModuleInjection telemetry with status=prepared');
         assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, AzShimCreated, {"status":"created"}') >= 0, 'should emit AzShimCreated telemetry');
         assert(tr.stdout.indexOf('Az module preamble failed') >= 0 || tr.stdout.indexOf('Az CLI module injected successfully') >= 0, 'wrapper should contain preamble try/catch with success or failure marker');
         assert(tr.stdout.indexOf('} catch {') >= 0, 'wrapper should have catch block for preamble failure');

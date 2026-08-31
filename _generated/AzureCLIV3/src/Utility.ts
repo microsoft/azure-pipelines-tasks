@@ -302,11 +302,12 @@ export class Utility {
                 `    $azureCliTaskAzCommand | Add-Member -NotePropertyName Path -NotePropertyValue $azureCliTaskShimPath -Force`,
                 `    Write-Host '##vso[task.debug]Az CLI module injected successfully.'`,
                 `} catch {`,
+                `    if ($azureCliTaskModule) { Remove-Module -ModuleInfo $azureCliTaskModule -Force -ErrorAction SilentlyContinue }`,
                 `    Write-Host "##vso[task.logissue type=warning]Az module preamble failed: $_ - falling back to stock az.cmd"`,
                 `}`
             ];
 
-            Utility.emitAzTelemetry('AzModuleInjection', { status: 'injected' });
+            Utility.emitAzTelemetry('AzModuleInjection', { status: 'prepared' });
 
             tl.debug('Injected the Azure CLI PowerShell module and safe path fallback.');
 
