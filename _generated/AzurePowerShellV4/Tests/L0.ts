@@ -62,6 +62,38 @@ describe('AzurePowerShell Suite', function () {
         })
     }
 
+    it('deletes the generated temporary script after execution', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_DeletesTempScript.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert(tr.stdout.indexOf('TEMP_SCRIPT_REMOVED') >= 0,
+            'generated temporary script should be deleted');
+    });
+
+    it('preserves legacy temporary script behavior when the feature is disabled', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_FeatureDisabled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert(tr.stdout.indexOf('TEMP_SCRIPT_REMOVED') < 0,
+            'generated temporary script should not be deleted while the feature is disabled');
+    });
+
+    it('fails cleanly when writing the temporary script fails', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_WriteFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should fail when the temporary script cannot be written');
+        assert(tr.stdout.indexOf('simulated write failure') >= 0,
+            'the write failure should be reported');
+        assert(tr.stdout.indexOf('MAIN_SCRIPT_EXECUTED') < 0,
+            'PowerShell must not run when writing the temporary script fails');
+    });
+
     describe('MSRC 129198: Node handler rejects newline in ScriptArguments', function () {
         it('allows ignored multiline ScriptArguments for InlineScript', async () => {
             let tp = path.join(__dirname, 'L0NodeInlineIgnoresScriptArguments.js');

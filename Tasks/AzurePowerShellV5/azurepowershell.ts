@@ -15,6 +15,8 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 
 async function run() {
     let resolvedPwshPath: string = '';
+    let filePath: string;
+    let cleanupTempScriptEnabled = false;
     let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
     let tempDirectory = tl.getVariable('agent.tempDirectory');
     tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
@@ -27,6 +29,7 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        cleanupTempScriptEnabled = tl.getPipelineFeature('CleanupAzurePowerShellTempScript');
 
         // Get inputs.
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
@@ -136,17 +139,36 @@ async function run() {
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
-        await fs.writeFile(
-            filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                                          // encode the BOM into its UTF8 binary sequence.
-            function (err) {
-                if (err) throw err;
-                console.log('File saved!');
+        if (cleanupTempScriptEnabled) {
+            await new Promise<void>((resolve, reject) => {
+                fs.writeFile(
+                    filePath,
+                    '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
+                    { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                                                  // encode the BOM into its UTF8 binary sequence.
+                    function (err) {
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+
+                        console.log('File saved!');
+                        resolve();
+                    });
             });
+        } else {
+            await fs.writeFile(
+                filePath,
+                '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
+                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                                              // encode the BOM into its UTF8 binary sequence.
+                function (err) {
+                    if (err) throw err;
+                    console.log('File saved!');
+                });
+        }
 
         // Run the script.
         //
@@ -198,6 +220,10 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
+        if (cleanupTempScriptEnabled) {
+            deleteGeneratedScript(filePath);
+        }
+
         // Cleanup is best-effort and must NOT override the task's actual result.
         // This matches the Windows handler (azurepowershell.ps1), which has long used
         // `Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue`.
@@ -256,6 +282,24 @@ async function run() {
         // Emit CustomerIntelligence so the Kusto monitor can track cleanup outcomes
         // across the new code path. Best-effort — never throws.
         emitCleanupTelemetry(cleanupOutcome, cleanupExitCode, cleanupErrorMessage);
+    }
+}
+
+function deleteGeneratedScript(filePath: string): void {
+    if (!filePath) {
+        return;
+    }
+
+    try {
+        fs.unlinkSync(filePath);
+        tl.debug('Deleted the temporary Azure PowerShell script.');
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            return;
+        }
+
+        const message = err && err.message ? err.message : String(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script: ${message}`);
     }
 }
 

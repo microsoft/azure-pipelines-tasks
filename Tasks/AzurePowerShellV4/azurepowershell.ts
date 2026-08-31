@@ -14,8 +14,12 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 }
 
 async function run() {
+    let filePath: string;
+    let cleanupTempScriptEnabled = false;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        cleanupTempScriptEnabled = tl.getPipelineFeature('CleanupAzurePowerShellTempScript');
 
         // Get inputs.
         console.log("## Validating Inputs");
@@ -117,15 +121,33 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
-            filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-            function (err) { // encode the BOM into its UTF8 binary sequence.
-                if (err) throw err;
-                console.log('Saved!');
+        filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        if (cleanupTempScriptEnabled) {
+            await new Promise<void>((resolve, reject) => {
+                fs.writeFile(
+                    filePath,
+                    '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
+                    { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                    function (err) { // encode the BOM into its UTF8 binary sequence.
+                        if (err) {
+                            reject(err);
+                            return;
+                        }
+
+                        console.log('Saved!');
+                        resolve();
+                    });
             });
+        } else {
+            await fs.writeFile(
+                filePath,
+                '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
+                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
+                function (err) { // encode the BOM into its UTF8 binary sequence.
+                    if (err) throw err;
+                    console.log('Saved!');
+                });
+        }
         console.log("## Az module initialization Complete");
         console.log("## Beginning Script Execution");
         // Run the script.
@@ -179,7 +201,29 @@ async function run() {
         console.log(`##[error] run failed: For troubleshooting, refer: ${troubleshoot}`);
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
+    finally {
+        if (cleanupTempScriptEnabled) {
+            deleteGeneratedScript(filePath);
+        }
+    }
 }
 
+function deleteGeneratedScript(filePath: string): void {
+    if (!filePath) {
+        return;
+    }
+
+    try {
+        fs.unlinkSync(filePath);
+        tl.debug('Deleted the temporary Azure PowerShell script.');
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            return;
+        }
+
+        const message = err && err.message ? err.message : String(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script: ${message}`);
+    }
+}
 
 run();
