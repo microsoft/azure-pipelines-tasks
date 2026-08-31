@@ -23,10 +23,5 @@
   },
   "devDependencies": {
     "typescript": "4.0.2"
-  },
-  "overrides": {
-    "minimatch": "3.1.4",
-    "adm-zip": "^0.6.0",
-    "brace-expansion": "^1.1.18"
   }
 }
