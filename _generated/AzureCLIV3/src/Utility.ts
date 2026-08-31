@@ -302,7 +302,7 @@ export class Utility {
                 `    $azureCliTaskAzCommand | Add-Member -NotePropertyName Path -NotePropertyValue $azureCliTaskShimPath -Force`,
                 `    Write-Host '##vso[task.debug]Az CLI module injected successfully.'`,
                 `} catch {`,
-                `    Write-Host "##vso[task.debug]Az module preamble failed: $_ — falling back to stock az.cmd"`,
+                `    Write-Host "##vso[task.logissue type=warning]Az module preamble failed: $_ - falling back to stock az.cmd"`,
                 `}`
             ];
 

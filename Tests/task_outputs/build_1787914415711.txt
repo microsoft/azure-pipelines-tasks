@@ -1,1 +1,0 @@
-successfully built and tagged test/test:2, test:tag1, test:tag2 and test:tag3

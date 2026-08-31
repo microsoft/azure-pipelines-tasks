@@ -1,2 +1,0 @@
-Successfully built c834e0094587
- Successfully tagged testuser/testrepo:11.
