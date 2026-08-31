@@ -12,11 +12,9 @@ param (
     )
 
     # The parallel-copy path runs this scriptblock through Start-Job in a separate
-    # process, where the calling script's imports are not present.
-    if ($enableWindowsMachineFileCopyArgumentsHardening)
-    {
-        Import-Module "$scriptRoot\ps_modules\VstsTaskSdk"
-    }
+    # process, where the calling script's imports are not present. VstsTaskSdk is
+    # (re-)imported further below, after the legacy modules, to avoid a Get-TaskVariable
+    # name collision (see comment there).
 
     $sourcePath = $sourcePath.Trim().TrimEnd('\', '/')
     $targetPath = $targetPath.Trim().TrimEnd('\', '/')    
@@ -48,7 +46,16 @@ param (
     }
     
     import-module "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-    
+
+    # Microsoft.TeamFoundation.DistributedTask.Task.Common also exports a cmdlet named
+    # Get-TaskVariable, which shadows VstsTaskSdk's own Get-TaskVariable function of the same
+    # name (used internally by Write-VstsTaskError/Write-VstsSetResult below). Re-import
+    # VstsTaskSdk (-Force) after the legacy module so its functions win the name collision.
+    if ($enableWindowsMachineFileCopyArgumentsHardening)
+    {
+        Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -Force
+    }
+
     function ThrowError
     {
         param(

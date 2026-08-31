@@ -36,6 +36,12 @@ import-module "Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+
+# Re-import VstsTaskSdk (-Force) here: the legacy Microsoft.TeamFoundation.DistributedTask.Task.Common
+# module imported above also exports a cmdlet named Get-TaskVariable, which can shadow VstsTaskSdk's
+# own Get-TaskVariable function of the same name and break Get-VstsPipelineFeature (it calls
+# Get-TaskVariable internally). Forcing VstsTaskSdk back in ensures its function wins the name collision.
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force
 $enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
 
 if ($useSanitizerCall) {
