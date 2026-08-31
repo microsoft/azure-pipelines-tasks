@@ -332,6 +332,11 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.stdout.indexOf('Add-Member -NotePropertyName Path') >= 0, 'wrapper should contain Add-Member -NotePropertyName Path');
         assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzModuleInjection, {"status":"injected"}') >= 0, 'should emit AzModuleInjection telemetry with status=injected');
         assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV2, AzShimCreated, {"status":"created"}') >= 0, 'should emit AzShimCreated telemetry');
+        assert(tr.stdout.indexOf('try {') >= 0, 'wrapper should wrap preamble in try/catch');
+        assert(tr.stdout.indexOf('} catch {') >= 0, 'wrapper should have catch block for preamble failure');
+        assert(tr.stdout.indexOf("AZ_INSTALLER = 'MSI'") >= 0, 'shim should set AZ_INSTALLER');
+        assert(tr.stdout.indexOf('-IBm azure.cli') >= 0, 'shim should invoke azure.cli module');
+        assert(tr.stdout.indexOf('exit $azExitCode') >= 0, 'shim should propagate exit code');
     });
 
     it('Az module injection: FF off uses legacy getPowerShellScriptPath without module', async () => {
