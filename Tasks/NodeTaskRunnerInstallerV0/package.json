@@ -16,8 +16,5 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "picomatch": "^2.3.2"
   }
 }
