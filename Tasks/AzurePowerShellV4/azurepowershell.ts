@@ -14,8 +14,12 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 }
 
 async function run() {
+    let filePath: string;
+    let cleanupTempScriptEnabled = false;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        cleanupTempScriptEnabled = tl.getPipelineFeature('CleanupAzurePowerShellTempScript');
 
         // Get inputs.
         console.log("## Validating Inputs");
@@ -70,7 +74,7 @@ async function run() {
             targetAzurePs = ""
         }
 
-        var endpoint = JSON.stringify(endpointObject);
+        var endpoint = JSON.stringify(endpointObject).replace(/'/g, "''");
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
@@ -117,15 +121,10 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
-            filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-            function (err) { // encode the BOM into its UTF8 binary sequence.
-                if (err) throw err;
-                console.log('Saved!');
-            });
+        filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        const fileContent = '\ufeff' + contents.join(os.EOL);
+        await fs.promises.writeFile(filePath, fileContent, { encoding: 'utf8', mode: 0o600 });
+        console.log('Saved!');
         console.log("## Az module initialization Complete");
         console.log("## Beginning Script Execution");
         // Run the script.
@@ -179,7 +178,64 @@ async function run() {
         console.log(`##[error] run failed: For troubleshooting, refer: ${troubleshoot}`);
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
+    finally {
+        if (cleanupTempScriptEnabled) {
+            deleteGeneratedScript(filePath);
+        }
+    }
 }
 
+function deleteGeneratedScript(filePath: string): void {
+    if (!filePath) {
+        return;
+    }
+
+    try {
+        fs.truncateSync(filePath, 0);
+    } catch (err) {
+        tl.debug(`Unable to truncate the temporary Azure PowerShell script. Error code: ${getErrorCode(err)}.`);
+    }
+
+    try {
+        fs.unlinkSync(filePath);
+        tl.debug('Deleted the temporary Azure PowerShell script.');
+        emitTempScriptDeleteTelemetry('DeleteSucceeded');
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            emitTempScriptDeleteTelemetry('DeleteAlreadyAbsent');
+            return;
+        }
+
+        const errorCode = getErrorCode(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
+        emitTempScriptDeleteTelemetry('DeleteFailed', errorCode);
+    }
+}
+
+function getErrorCode(err: any): string {
+    return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
+}
+
+function emitTempScriptDeleteTelemetry(outcome: 'DeleteSucceeded' | 'DeleteAlreadyAbsent' | 'DeleteFailed', errorCode?: string): void {
+    try {
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
+            TaskVersion: getTaskVersion(),
+            Outcome: outcome,
+            ErrorCode: errorCode
+        });
+    } catch {
+        tl.debug('Unable to publish temporary script cleanup telemetry.');
+    }
+}
+
+function getTaskVersion(): string {
+    try {
+        const version = require('./task.json').version;
+        return `${version.Major}.${version.Minor}.${version.Patch}`;
+    } catch (err) {
+        tl.debug(`Unable to read task version: ${err && err.message ? err.message : err}`);
+        return '4';
+    }
+}
 
 run();

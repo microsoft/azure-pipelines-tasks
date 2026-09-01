@@ -925,6 +925,36 @@ var createResjson = function (task, taskPath) {
 };
 exports.createResjson = createResjson;
 
+// Loc source must cover every build config, so fold in the inputs that taskJsonOverride.json swaps in for WIF.
+var getLocSourceTaskDef = function (taskPath) {
+    var taskDef = fileToJson(path.join(taskPath, 'task.json'));
+    var overridePath = path.join(taskPath, 'taskJsonOverride.json');
+    if (!fs.existsSync(overridePath)) {
+        return taskDef;
+    }
+
+    var overrideInputs = fileToJson(overridePath).inputs;
+    if (!Array.isArray(overrideInputs)) {
+        return taskDef;
+    }
+
+    var baseInputs = taskDef.inputs || [];
+    var mergedInputs = baseInputs.map(function (input) {
+        var override = overrideInputs.find(function (o) { return o.name === input.name; });
+        return override || input;
+    });
+    var baseInputNames = baseInputs.map(function (input) { return input.name; });
+    overrideInputs.forEach(function (override) {
+        if (baseInputNames.indexOf(override.name) === -1) {
+            mergedInputs.push(override);
+        }
+    });
+
+    taskDef.inputs = mergedInputs;
+    return taskDef;
+};
+exports.getLocSourceTaskDef = getLocSourceTaskDef;
+
 var createTaskLocJson = function (taskPath) {
     var taskJsonPath = path.join(taskPath, 'task.json');
     var taskLoc = JSON.parse(fs.readFileSync(taskJsonPath));
