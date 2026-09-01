@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 280,
     "Patch": 0
   },
   "demands": [],
@@ -204,6 +204,7 @@
   },
   "messages": {
     "ARGD_ConstructorFailed": "The task failed while initializing. Error: %s .",
+    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed.",
     "FirewallRuleNameCannotBeEmpty": "The firewall rule name cannot be null.",
     "FirewallAddressRangeCannotBeEmpty": "The firewall address cannot be null.",
     "StartIpAddressCannotBeEmpty": "The start IP address of the firewall rule cannot be null.",
