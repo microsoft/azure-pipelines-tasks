@@ -12,7 +12,7 @@
     "@types/node": "^24.10.0",
     "@types/mocha": "^10.0.10",
     "azure-pipelines-task-lib": "^5.279.0",
-    "azure-pipelines-tool-lib": "^2.279.1"
+    "azure-pipelines-tool-lib": "^2.279.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
