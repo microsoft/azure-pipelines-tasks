@@ -38,6 +38,12 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint', {
     }
 });
 
+tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
+    emitTelemetry: (area, feature, data) => {
+        console.log(`DELETE_TELEMETRY:${data.Outcome}:${data.TaskVersion}:${data.ErrorCode || ''}`);
+    }
+});
+
 tmr.registerMock('uuid/v4', () => 'test-uuid');
 
 const fs = require('fs');

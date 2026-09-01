@@ -21,7 +21,6 @@ tmr.setInput('workingDirectory', tempDir);
 
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
 process.env['AGENT_VERSION'] = '2.999.0';
-process.env['DISTRIBUTEDTASK_TASKS_CLEANUPAZUREPOWERSHELLTEMPSCRIPT'] = 'true';
 process.env['ENDPOINT_URL_AzureRM'] = 'https://management.azure.com/';
 process.env['ENDPOINT_AUTH_AzureRM'] = '{"parameters":{"serviceprincipalid":"spId","serviceprincipalkey":"spKey","tenantid":"tenantId"},"scheme":"ServicePrincipal"}';
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'ServicePrincipal';
@@ -33,14 +32,12 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint', {
     AzureRMEndpoint: class {
         constructor(connectedServiceName: string) { }
         async getEndpoint() {
-            return { scheme: 'ServicePrincipal', auth: { scheme: 'ServicePrincipal' } };
+            return {
+                scheme: 'ServicePrincipal',
+                displayName: "Contoso's connection",
+                auth: { scheme: 'ServicePrincipal' }
+            };
         }
-    }
-});
-
-tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
-    emitTelemetry: (area, feature, data) => {
-        console.log(`DELETE_TELEMETRY:${data.Outcome}:${data.TaskVersion}:${data.ErrorCode || ''}`);
     }
 });
 
@@ -48,38 +45,17 @@ tmr.registerMock('uuid/v4', () => 'test-uuid');
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-let writeCompleted = false;
-let truncateCompleted = false;
-fsClone.promises = Object.assign({}, fs.promises);
-fsClone.promises.writeFile = function (file, data, options) {
-    if (options.mode !== 0o600) {
-        throw new Error('Temporary script permissions were not restricted to the current user');
-    }
+fsClone.promises = Object.assign({}, fs.promises, {
+    writeFile: (file, data) => {
+        const fileContent = String(data);
+        if (fileContent.indexOf(`"displayName":"Contoso''s connection"`) < 0) {
+            throw new Error('Endpoint single quote was not escaped for a PowerShell single-quoted string');
+        }
 
-    return new Promise<void>((resolve) => {
-        setTimeout(() => {
-            writeCompleted = true;
-            resolve();
-        }, 25);
-    });
-};
-fsClone.truncateSync = function (file, length) {
-    if (!writeCompleted) {
-        throw new Error('Temporary script was truncated before its write completed');
+        console.log('ENDPOINT_SINGLE_QUOTE_ESCAPED');
+        return Promise.resolve();
     }
-
-    truncateCompleted = true;
-};
-fsClone.unlinkSync = function (file) {
-    if (!writeCompleted) {
-        throw new Error('Temporary script was deleted before its write completed');
-    }
-    if (!truncateCompleted) {
-        throw new Error('Temporary script was deleted before it was truncated');
-    }
-
-    console.log(`TEMP_SCRIPT_REMOVED:${file}`);
-};
+});
 tmr.registerMock('fs', fsClone);
 
 const scriptPath = path.join(tempDir, 'test-uuid.ps1');

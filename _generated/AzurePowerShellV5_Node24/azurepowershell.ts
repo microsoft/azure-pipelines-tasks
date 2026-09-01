@@ -275,14 +275,16 @@ function deleteGeneratedScript(filePath: string): void {
     try {
         fs.unlinkSync(filePath);
         tl.debug('Deleted the temporary Azure PowerShell script.');
+        emitTempScriptDeleteTelemetry('DeleteSucceeded');
     } catch (err) {
         if (err && err.code === 'ENOENT') {
+            emitTempScriptDeleteTelemetry('DeleteAlreadyAbsent');
             return;
         }
 
         const errorCode = getErrorCode(err);
         tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
-        emitTempScriptDeleteFailureTelemetry('5', errorCode);
+        emitTempScriptDeleteTelemetry('DeleteFailed', errorCode);
     }
 }
 
@@ -290,11 +292,11 @@ function getErrorCode(err: any): string {
     return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
 }
 
-function emitTempScriptDeleteFailureTelemetry(taskVersion: string, errorCode: string): void {
+function emitTempScriptDeleteTelemetry(outcome: 'DeleteSucceeded' | 'DeleteAlreadyAbsent' | 'DeleteFailed', errorCode?: string): void {
     try {
         telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
-            TaskVersion: taskVersion,
-            Outcome: 'DeleteFailed',
+            TaskVersion: getTaskVersion(),
+            Outcome: outcome,
             ErrorCode: errorCode
         });
     } catch {

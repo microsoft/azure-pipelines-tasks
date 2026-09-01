@@ -44,7 +44,7 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
 
 tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     emitTelemetry: (area, feature, data) => {
-        console.log(`DELETE_FAILURE_TELEMETRY:${data.TaskVersion}:${data.ErrorCode}`);
+        console.log(`DELETE_TELEMETRY:${data.Outcome}:${data.TaskVersion}:${data.ErrorCode || ''}`);
     }
 });
 

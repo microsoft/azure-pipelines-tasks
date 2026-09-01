@@ -7,6 +7,8 @@ import assert = require('assert');
 import path = require('path');
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
+const taskVersion = require('../task.json').version;
+const expectedTaskVersion = `${taskVersion.Major}.${taskVersion.Minor}.${taskVersion.Patch}`;
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { isPowerShellArgumentAstSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
@@ -79,6 +81,8 @@ describe('AzurePowerShell Suite', function () {
             assert(tr.succeeded, 'task should succeed');
             assert(tr.stdout.indexOf('TEMP_SCRIPT_REMOVED') >= 0,
                 'generated temporary script should be deleted');
+            assert(tr.stdout.indexOf(`DELETE_TELEMETRY:DeleteSucceeded:${expectedTaskVersion}:`) >= 0,
+                'delete-success telemetry should include the generated task version');
         });
 
         it('does not delete the temporary script when the feature is disabled', async () => {
@@ -113,7 +117,7 @@ describe('AzurePowerShell Suite', function () {
                 'the deletion warning should include only the error code');
             assert(tr.stdout.indexOf('/sensitive/delete/path.ps1') < 0,
                 'the deletion warning should not include the error message or path');
-            assert(tr.stdout.indexOf('DELETE_FAILURE_TELEMETRY:5:EACCES') >= 0,
+            assert(tr.stdout.indexOf(`DELETE_TELEMETRY:DeleteFailed:${expectedTaskVersion}:EACCES`) >= 0,
                 'delete-failure telemetry should include the task version and error code');
         });
 
