@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 276,
+    "Minor": 280,
     "Patch": 0
   },
   "demands": [],
@@ -204,6 +204,7 @@
   },
   "messages": {
     "ARGD_ConstructorFailed": "ms-resource:loc.messages.ARGD_ConstructorFailed",
+    "InvalidDatabaseName": "ms-resource:loc.messages.InvalidDatabaseName",
     "FirewallRuleNameCannotBeEmpty": "ms-resource:loc.messages.FirewallRuleNameCannotBeEmpty",
     "FirewallAddressRangeCannotBeEmpty": "ms-resource:loc.messages.FirewallAddressRangeCannotBeEmpty",
     "StartIpAddressCannotBeEmpty": "ms-resource:loc.messages.StartIpAddressCannotBeEmpty",
