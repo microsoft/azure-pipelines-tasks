@@ -128,6 +128,7 @@
     "UnableToCreateDatabaseException": "Unable to create database.",
     "WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",
     "LinuxMysqlClientMissingError": "MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.",
-    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern"
+    "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
+    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
   }
 }
