@@ -20,9 +20,14 @@ tmr.registerMock('os', {
 });
 
 const realFs = require('fs');
-let rmRFCalled: string[] = [];
+let createdTempDir: string = null;
 tmr.registerMock('fs', {
-    writeFileSync: realFs.writeFileSync.bind(realFs),
+    writeFileSync: (filePath: string, data: string, options?: any) => {
+        if (filePath.endsWith('az.ps1')) {
+            throw new Error('EACCES: permission denied, open az.ps1');
+        }
+        realFs.writeFileSync(filePath, data, options);
+    },
     existsSync: (p: string) => {
         if (p.endsWith('python.exe')) return true;
         return realFs.existsSync(p);
@@ -32,8 +37,11 @@ tmr.registerMock('fs', {
         return realFs.statSync(p);
     },
     unlinkSync: realFs.unlinkSync.bind(realFs),
-    mkdtempSync: () => {
-        throw new Error('ENOSPC: no space left on device');
+    mkdtempSync: (prefix: string) => {
+        createdTempDir = realFs.mkdtempSync(prefix);
+        console.log('MKDTEMP_CREATED:' + createdTempDir);
+        process.env['TEST_SHIM_DIR'] = createdTempDir;
+        return createdTempDir;
     }
 });
 
@@ -42,16 +50,6 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
         console.log(`MOCK_TELEMETRY: ${area}, ${feature}, ${JSON.stringify(data)}`);
     }
 });
-
-// Mock tl.rmRF used by Utility.deleteDirectory
-tmr.registerMock('azure-pipelines-task-lib/task', (() => {
-    const realTl = require('azure-pipelines-task-lib/mock-task');
-    const original = { ...realTl };
-    original.rmRF = (p: string) => {
-        console.log('RMRF_CALLED:' + p);
-    };
-    return original;
-})());
 
 let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {

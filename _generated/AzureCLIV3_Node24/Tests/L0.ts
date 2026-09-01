@@ -686,7 +686,7 @@ describe('AzureCLIV3 Suite', function () {
         assert(tr.stdout.indexOf('mkdtempSync failed') >= 0, 'telemetry should include error message');
     });
 
-    it('Az module failure: shim write error propagates and getPowerShellScriptPathWithAzModule throws', async () => {
+    it('Az module failure: shim write error propagates and triggers cleanup', async () => {
         let tp = path.join(__dirname, 'L0AzModuleShimWriteFailure.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -697,9 +697,30 @@ describe('AzureCLIV3 Suite', function () {
         }
 
         assert(tr.succeeded, 'task helper should have succeeded');
+        assert(tr.stdout.indexOf('MKDTEMP_CREATED:') >= 0, 'shim directory should have been created before write failure');
         assert(tr.stdout.indexOf('EXPECTED_ERROR:') >= 0, 'should throw an error');
-        assert(tr.stdout.indexOf('ENOSPC') >= 0, 'error should contain the original fs error');
-        assert(tr.stdout.indexOf('UNEXPECTED_SUCCESS') === -1, 'should NOT succeed');
+        assert(tr.stdout.indexOf('EACCES') >= 0, 'error should contain the permission error from az.ps1 write');
+        assert(tr.stdout.indexOf('MOCK_TELEMETRY: AzureCLIV3, AzShimCleanup') >= 0, 'should attempt shim directory cleanup');
+    });
+
+    it('Az module: caller preferences forwarded to module function (pwsh process test)', async function() {
+        if (process.platform !== 'win32') {
+            this.skip();
+            return;
+        }
+        let tp = path.join(__dirname, 'L0AzModuleCallerPrefs.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        if (!tr.succeeded) {
+            console.log('STDOUT:', tr.stdout);
+            console.log('STDERR:', tr.stderr);
+        }
+
+        assert(tr.succeeded, 'pwsh process test should have succeeded');
+        assert(tr.stdout.indexOf('AZ_COMMAND_TYPE:Function') >= 0, 'az should resolve as Function');
+        assert(tr.stdout.indexOf('NATIVE_EXCEPTION_CAUGHT:true') >= 0, 'NativeCommandExitException should fire when caller sets $PSNativeCommandUseErrorActionPreference');
+        assert(tr.stdout.indexOf('SECOND_COMMAND_RAN:false') >= 0, 'second command should NOT run after failed az');
     });
 
     it('Direct python login fallback: falls back to az.cmd when python.exe not found', async function() {
