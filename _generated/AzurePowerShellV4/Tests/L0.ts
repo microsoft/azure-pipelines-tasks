@@ -72,7 +72,7 @@ describe('AzurePowerShell Suite', function () {
             'generated temporary script should be deleted');
     });
 
-    it('preserves legacy temporary script behavior when the feature is disabled', async () => {
+    it('does not delete the temporary script when the feature is disabled', async () => {
         let tp = path.join(__dirname, 'L0Cleanup_FeatureDisabled.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -90,8 +90,22 @@ describe('AzurePowerShell Suite', function () {
         assert(!tr.succeeded, 'task should fail when the temporary script cannot be written');
         assert(tr.stdout.indexOf('simulated write failure') >= 0,
             'the write failure should be reported');
-        assert(tr.stdout.indexOf('MAIN_SCRIPT_EXECUTED') < 0,
+        assert(tr.invokedToolCount === 0,
             'PowerShell must not run when writing the temporary script fails');
+    });
+
+    it('continues safely and emits path-safe telemetry when deletion fails', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_DeleteFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when temporary script deletion fails');
+        assert(tr.stdout.indexOf('Failed to delete the temporary Azure PowerShell script. Error code: EACCES.') >= 0,
+            'the deletion warning should include only the error code');
+        assert(tr.stdout.indexOf('/sensitive/delete/path.ps1') < 0,
+            'the deletion warning should not include the error message or path');
+        assert(tr.stdout.indexOf('DELETE_FAILURE_TELEMETRY:4:EACCES') >= 0,
+            'delete-failure telemetry should include the task version and error code');
     });
 
     describe('MSRC 129198: Node handler rejects newline in ScriptArguments', function () {

@@ -21,7 +21,7 @@ tmr.setInput('workingDirectory', tempDir);
 
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
 process.env['AGENT_VERSION'] = '2.999.0';
-delete process.env['DISTRIBUTEDTASK_TASKS_CLEANUPAZUREPOWERSHELLTEMPSCRIPT'];
+process.env['DISTRIBUTEDTASK_TASKS_CLEANUPAZUREPOWERSHELLTEMPSCRIPT'] = 'true';
 process.env['ENDPOINT_URL_AzureRM'] = 'https://management.azure.com/';
 process.env['ENDPOINT_AUTH_AzureRM'] = '{"parameters":{"serviceprincipalid":"spId","serviceprincipalkey":"spKey","tenantid":"tenantId"},"scheme":"ServicePrincipal"}';
 process.env['ENDPOINT_AUTH_SCHEME_AzureRM'] = 'ServicePrincipal';
@@ -42,21 +42,26 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
     validateAzModuleVersion: () => Promise.resolve()
 });
 
+tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
+    emitTelemetry: (area, feature, data) => {
+        console.log(`DELETE_FAILURE_TELEMETRY:${data.TaskVersion}:${data.ErrorCode}`);
+    }
+});
+
 tmr.registerMock('uuid/v4', () => 'test-uuid');
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
 fsClone.promises = Object.assign({}, fs.promises, {
-    writeFile: (file, data, options) => {
-        if (options.mode !== 0o600) {
-            throw new Error('Temporary script permissions were not restricted to the current user');
-        }
-
-        return Promise.resolve();
-    }
+    writeFile: () => Promise.resolve()
 });
+fsClone.truncateSync = function (file, length) {
+    console.log('TEMP_SCRIPT_TRUNCATED');
+};
 fsClone.unlinkSync = function (file) {
-    console.log(`TEMP_SCRIPT_REMOVED:${file}`);
+    const error: any = new Error("EACCES: permission denied, unlink '/sensitive/delete/path.ps1'");
+    error.code = 'EACCES';
+    throw error;
 };
 tmr.registerMock('fs', fsClone);
 

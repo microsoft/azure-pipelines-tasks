@@ -122,32 +122,9 @@ async function run() {
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
         filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        if (cleanupTempScriptEnabled) {
-            await new Promise<void>((resolve, reject) => {
-                fs.writeFile(
-                    filePath,
-                    '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-                    { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                    function (err) { // encode the BOM into its UTF8 binary sequence.
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-
-                        console.log('Saved!');
-                        resolve();
-                    });
-            });
-        } else {
-            await fs.writeFile(
-                filePath,
-                '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                function (err) { // encode the BOM into its UTF8 binary sequence.
-                    if (err) throw err;
-                    console.log('Saved!');
-                });
-        }
+        const fileContent = '\ufeff' + contents.join(os.EOL);
+        await fs.promises.writeFile(filePath, fileContent, { encoding: 'utf8', mode: 0o600 });
+        console.log('Saved!');
         console.log("## Az module initialization Complete");
         console.log("## Beginning Script Execution");
         // Run the script.
@@ -214,6 +191,12 @@ function deleteGeneratedScript(filePath: string): void {
     }
 
     try {
+        fs.truncateSync(filePath, 0);
+    } catch (err) {
+        tl.debug(`Unable to truncate the temporary Azure PowerShell script. Error code: ${getErrorCode(err)}.`);
+    }
+
+    try {
         fs.unlinkSync(filePath);
         tl.debug('Deleted the temporary Azure PowerShell script.');
     } catch (err) {
@@ -221,8 +204,25 @@ function deleteGeneratedScript(filePath: string): void {
             return;
         }
 
-        const message = err && err.message ? err.message : String(err);
-        tl.warning(`Failed to delete the temporary Azure PowerShell script: ${message}`);
+        const errorCode = getErrorCode(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
+        emitTempScriptDeleteFailureTelemetry('4', errorCode);
+    }
+}
+
+function getErrorCode(err: any): string {
+    return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
+}
+
+function emitTempScriptDeleteFailureTelemetry(taskVersion: string, errorCode: string): void {
+    try {
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
+            TaskVersion: taskVersion,
+            Outcome: 'DeleteFailed',
+            ErrorCode: errorCode
+        });
+    } catch {
+        tl.debug('Unable to publish temporary script cleanup telemetry.');
     }
 }
 

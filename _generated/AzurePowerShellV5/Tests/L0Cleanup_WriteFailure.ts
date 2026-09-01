@@ -45,9 +45,12 @@ tmr.registerMock('uuid/v4', () => 'test-uuid');
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFile = function (file, data, options, callback) {
-    setTimeout(() => callback(new Error('simulated write failure')), 25);
-};
+fsClone.promises = Object.assign({}, fs.promises, {
+    writeFile: () => new Promise<void>((resolve, reject) => {
+        setTimeout(() => reject(new Error('simulated write failure')), 25);
+    })
+});
+fsClone.truncateSync = function (file, length) { };
 fsClone.unlinkSync = function (file) {
     const error: any = new Error('file not found');
     error.code = 'ENOENT';

@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
@@ -141,34 +142,9 @@ async function run() {
         tl.assertAgent('2.115.0');
         filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
-        if (cleanupTempScriptEnabled) {
-            await new Promise<void>((resolve, reject) => {
-                fs.writeFile(
-                    filePath,
-                    '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-                    { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                                                  // encode the BOM into its UTF8 binary sequence.
-                    function (err) {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-
-                        console.log('File saved!');
-                        resolve();
-                    });
-            });
-        } else {
-            await fs.writeFile(
-                filePath,
-                '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-                { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                                              // encode the BOM into its UTF8 binary sequence.
-                function (err) {
-                    if (err) throw err;
-                    console.log('File saved!');
-                });
-        }
+        const fileContent = '\ufeff' + contents.join(os.EOL);
+        await fs.promises.writeFile(filePath, fileContent, { encoding: 'utf8', mode: 0o600 });
+        console.log('File saved!');
 
         // Run the script.
         //
@@ -291,6 +267,12 @@ function deleteGeneratedScript(filePath: string): void {
     }
 
     try {
+        fs.truncateSync(filePath, 0);
+    } catch (err) {
+        tl.debug(`Unable to truncate the temporary Azure PowerShell script. Error code: ${getErrorCode(err)}.`);
+    }
+
+    try {
         fs.unlinkSync(filePath);
         tl.debug('Deleted the temporary Azure PowerShell script.');
     } catch (err) {
@@ -298,8 +280,25 @@ function deleteGeneratedScript(filePath: string): void {
             return;
         }
 
-        const message = err && err.message ? err.message : String(err);
-        tl.warning(`Failed to delete the temporary Azure PowerShell script: ${message}`);
+        const errorCode = getErrorCode(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
+        emitTempScriptDeleteFailureTelemetry('5', errorCode);
+    }
+}
+
+function getErrorCode(err: any): string {
+    return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
+}
+
+function emitTempScriptDeleteFailureTelemetry(taskVersion: string, errorCode: string): void {
+    try {
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
+            TaskVersion: taskVersion,
+            Outcome: 'DeleteFailed',
+            ErrorCode: errorCode
+        });
+    } catch {
+        tl.debug('Unable to publish temporary script cleanup telemetry.');
     }
 }
 

@@ -47,15 +47,33 @@ tmr.registerMock('uuid/v4', () => 'test-uuid');
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
 let writeCompleted = false;
-fsClone.writeFile = function (file, data, options, callback) {
-    setTimeout(() => {
-        writeCompleted = true;
-        callback(null);
-    }, 25);
+let truncateCompleted = false;
+fsClone.promises = Object.assign({}, fs.promises);
+fsClone.promises.writeFile = function (file, data, options) {
+    if (options.mode !== 0o600) {
+        throw new Error('Temporary script permissions were not restricted to the current user');
+    }
+
+    return new Promise<void>((resolve) => {
+        setTimeout(() => {
+            writeCompleted = true;
+            resolve();
+        }, 25);
+    });
+};
+fsClone.truncateSync = function (file, length) {
+    if (!writeCompleted) {
+        throw new Error('Temporary script was truncated before its write completed');
+    }
+
+    truncateCompleted = true;
 };
 fsClone.unlinkSync = function (file) {
     if (!writeCompleted) {
         throw new Error('Temporary script was deleted before its write completed');
+    }
+    if (!truncateCompleted) {
+        throw new Error('Temporary script was deleted before it was truncated');
     }
 
     console.log(`TEMP_SCRIPT_REMOVED:${file}`);

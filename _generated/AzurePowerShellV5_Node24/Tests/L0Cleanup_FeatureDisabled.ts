@@ -46,9 +46,15 @@ tmr.registerMock('uuid/v4', () => 'test-uuid');
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
-fsClone.writeFile = function (file, data, options, callback) {
-    callback(null);
-};
+fsClone.promises = Object.assign({}, fs.promises, {
+    writeFile: (file, data, options) => {
+        if (options.mode !== 0o600) {
+            throw new Error('Temporary script permissions were not restricted to the current user');
+        }
+
+        return Promise.resolve();
+    }
+});
 fsClone.unlinkSync = function (file) {
     console.log(`TEMP_SCRIPT_REMOVED:${file}`);
 };
