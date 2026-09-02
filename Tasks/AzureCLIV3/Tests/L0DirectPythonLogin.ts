@@ -103,7 +103,12 @@ tmr.registerMock('fs', {
     },
     writeFileSync: realFs.writeFileSync.bind(realFs),
     unlinkSync: realFs.unlinkSync.bind(realFs),
-    readFileSync: realFs.readFileSync.bind(realFs)
+    readFileSync: realFs.readFileSync.bind(realFs),
+    mkdtempSync: realFs.mkdtempSync.bind(realFs),
+    statSync: (p: string) => {
+        if (p.endsWith('python.exe')) return { isFile: () => true };
+        return realFs.statSync(p);
+    }
 });
 
 // Mock Utility
@@ -118,7 +123,11 @@ tmr.registerMock('./src/Utility', {
         getPowerShellScriptPath: async (location: string, extensions: string[], scriptArguments: string) => {
             return path.join(os.tmpdir(), 'testscript.ps1');
         },
-        deleteFile: async (filePath: string) => {}
+        getPowerShellScriptPathWithAzModule: async (location: string, extensions: string[], scriptArguments: string) => {
+            return { scriptPath: path.join(os.tmpdir(), 'testscript.ps1') };
+        },
+        deleteFile: async (filePath: string) => {},
+        deleteDirectory: (directoryPath: string, reason: string) => {}
     }
 });
 

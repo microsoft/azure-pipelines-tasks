@@ -3,7 +3,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
 
-let taskPath = path.join(__dirname, 'L0AzFunctionAliasInjection_task.js');
+let taskPath = path.join(__dirname, 'L0AzModuleFlagOff_task.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Inputs that getPowerShellScriptPath reads
@@ -16,14 +16,7 @@ tmr.setInput('powerShellIgnoreLASTEXITCODE', 'false');
 process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
 delete process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'];
 
-// Mock os to return win32
-tmr.registerMock('os', {
-    platform: () => 'win32',
-    tmpdir: () => os.tmpdir(),
-    EOL: os.EOL
-});
-
-// Mock fs — pass through writes
+// Mock fs — pass through writes, capture wrapper script content
 const realFs = require('fs');
 tmr.registerMock('fs', {
     writeFileSync: (filePath: string, data: string, options?: any) => {
@@ -34,11 +27,15 @@ tmr.registerMock('fs', {
             console.log('WRAPPER_SCRIPT_CONTENT_END');
         }
     },
-    existsSync: (p: string) => {
-        if (p.endsWith('python.exe')) return true;
-        return realFs.existsSync(p);
-    },
+    existsSync: realFs.existsSync.bind(realFs),
     unlinkSync: realFs.unlinkSync.bind(realFs)
+});
+
+// Mock telemetry — capture calls
+tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
+    emitTelemetry: (area: string, feature: string, data: any) => {
+        console.log(`MOCK_TELEMETRY: ${area}, ${feature}, ${JSON.stringify(data)}`);
+    }
 });
 
 // Mock answers

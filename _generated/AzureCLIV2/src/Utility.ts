@@ -5,6 +5,16 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import fs = require("fs");
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
+export interface PowerShellScriptResult {
+    scriptPath: string;
+    azShimDirectory?: string;
+}
+
+interface AzModulePreamble {
+    azShimDirectory: string;
+    lines: string[];
+}
+
 export class Utility {
 
     public static async getScriptPath(scriptLocation: string, fileExtensions: string[]): Promise<string> {
@@ -40,38 +50,6 @@ export class Utility {
         let contents: string[] = [];
         contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
         contents.push(`$ErrorView = 'NormalView'`);
-
-        // Bypass az.cmd to preserve special characters (e.g. ^ in passwords)
-        // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
-        if (os.platform() === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
-            const azPath = tl.which('az', false);
-            if (azPath) {
-                const pythonPath = path.join(path.dirname(path.dirname(azPath)), 'python.exe');
-                if (fs.existsSync(pythonPath)) {
-                    contents.push(`function az { $env:AZ_INSTALLER = 'MSI'; & '${pythonPath.replace(/'/g, "''")}' -IBm azure.cli @args }`);
-                    tl.debug('Injected PowerShell az function alias to bypass az.cmd.');
-                    try {
-                        emitTelemetry('AzureCLIV2', 'AzFunctionAlias', { status: 'injected' });
-                    } catch (telErr) {
-                        tl.debug(`Unable to emit telemetry: ${telErr}`);
-                    }
-                } else {
-                    tl.debug(`python.exe not found at '${pythonPath}'; skipping az function alias injection.`);
-                    try {
-                        emitTelemetry('AzureCLIV2', 'AzFunctionAlias', { status: 'skipped', reason: 'python.exe not found' });
-                    } catch (telErr) {
-                        tl.debug(`Unable to emit telemetry: ${telErr}`);
-                    }
-                }
-            } else {
-                tl.debug('az not found on PATH; skipping az function alias injection.');
-                try {
-                    emitTelemetry('AzureCLIV2', 'AzFunctionAlias', { status: 'skipped', reason: 'az not found on PATH' });
-                } catch (telErr) {
-                    tl.debug(`Unable to emit telemetry: ${telErr}`);
-                }
-            }
-        }
 
         let filePath: string = tl.getPathInput("scriptPath", false, false);
         if (scriptLocation.toLowerCase() === 'inlinescript') {
@@ -152,6 +130,222 @@ export class Utility {
                 //error while deleting should not result in task failure
                 console.error(err.toString());
             }
+        }
+    }
+
+    public static async getPowerShellScriptPathWithAzModule(
+        scriptLocation: string,
+        fileExtensions: string[],
+        scriptArguments: string
+    ): Promise<PowerShellScriptResult> {
+        let powerShellErrorActionPreference: string = tl.getInput('powerShellErrorActionPreference', false) || 'Stop';
+        switch (powerShellErrorActionPreference.toUpperCase()) {
+            case 'STOP':
+            case 'CONTINUE':
+            case 'SILENTLYCONTINUE':
+                break;
+            default:
+                throw new Error(tl.loc('JS_InvalidErrorActionPreference', powerShellErrorActionPreference));
+        }
+
+        tl.assertAgent('2.115.0');
+
+        const tempDirectory = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
+
+        let azShimDirectory: string | undefined;
+        let wrapperScriptPath: string | undefined;
+
+        try {
+            const contents: string[] = [];
+            contents.push(`$ErrorActionPreference = '${powerShellErrorActionPreference}'`);
+            contents.push(`$ErrorView = 'NormalView'`);
+
+            const modulePreamble = await Utility.createAzModulePreamble(tempDirectory);
+
+            if (modulePreamble) {
+                azShimDirectory = modulePreamble.azShimDirectory;
+                contents.push(...modulePreamble.lines);
+            }
+
+            let customerScriptPath: string = tl.getPathInput("scriptPath", false, false);
+
+            if (scriptLocation.toLowerCase() === 'inlinescript') {
+                const inlineScript: string = tl.getInput("inlineScript", true);
+
+                customerScriptPath = path.join(
+                    tempDirectory,
+                    `azureclitaskscript${new Date().getTime()}_inlinescript.${fileExtensions[0]}`
+                );
+
+                await Utility.createFile(customerScriptPath, inlineScript);
+            } else if (!Utility.checkIfFileExists(customerScriptPath, fileExtensions)) {
+                throw new Error(tl.loc('JS_InvalidFilePath', customerScriptPath));
+            }
+
+            let invocation = `. '${customerScriptPath.replace(/'/g, "''")}' `;
+            if (scriptArguments) {
+                invocation += scriptArguments;
+            }
+            contents.push(invocation.trim());
+
+            const powerShellIgnoreLASTEXITCODE = tl.getBoolInput('powerShellIgnoreLASTEXITCODE', false);
+            if (!powerShellIgnoreLASTEXITCODE) {
+                contents.push(`if (!(Test-Path -LiteralPath variable:\\LASTEXITCODE)) {`);
+                contents.push(`    Write-Host '##vso[task.debug]$LASTEXITCODE is not set.'`);
+                contents.push(`} else {`);
+                contents.push(`    Write-Host ('##vso[task.debug]$LASTEXITCODE: {0}' -f $LASTEXITCODE)`);
+                contents.push(`    exit $LASTEXITCODE`);
+                contents.push(`}`);
+            }
+
+            wrapperScriptPath = path.join(
+                tempDirectory,
+                `azureclitaskscript${new Date().getTime()}.${fileExtensions[0]}`
+            );
+
+            await Utility.createFile(wrapperScriptPath, '\ufeff' + contents.join(os.EOL), { encoding: 'utf8' });
+
+            return { scriptPath: wrapperScriptPath, azShimDirectory };
+        } catch (error) {
+            if (wrapperScriptPath) {
+                await Utility.deleteFile(wrapperScriptPath);
+            }
+            if (azShimDirectory) {
+                Utility.deleteDirectory(azShimDirectory, 'partialSetup');
+            }
+            throw error;
+        }
+    }
+
+    private static async createAzModulePreamble(
+        tempDirectory: string
+    ): Promise<AzModulePreamble | undefined> {
+        const azPath = tl.which('az', false);
+
+        if (!azPath) {
+            tl.debug('az not found on PATH; skipping Azure CLI module injection.');
+            Utility.emitAzTelemetry('AzModuleInjection', { status: 'skipped', reason: 'az not found on PATH' });
+            return undefined;
+        }
+
+        const pythonPath = path.join(path.dirname(path.dirname(azPath)), 'python.exe');
+
+        if (!fs.existsSync(pythonPath) || !fs.statSync(pythonPath).isFile()) {
+            tl.debug(`python.exe not found at '${pythonPath}'; skipping Azure CLI module injection.`);
+            Utility.emitAzTelemetry('AzModuleInjection', { status: 'skipped', reason: 'python.exe not found' });
+            return undefined;
+        }
+
+        let azShimDirectory: string | undefined;
+
+        try {
+            azShimDirectory = fs.mkdtempSync(path.join(tempDirectory, 'azureclitask-az-'));
+
+            const azShimPath = path.join(azShimDirectory, 'az.ps1');
+            const escapedPythonPath = pythonPath.replace(/'/g, "''");
+            const escapedShimPath = azShimPath.replace(/'/g, "''");
+
+            const shimContents = [
+                `$previousInstaller = $env:AZ_INSTALLER`,
+                `$azExitCode = 1`,
+                `try {`,
+                `    $env:AZ_INSTALLER = 'MSI'`,
+                `    & '${escapedPythonPath}' -IBm azure.cli @args`,
+                `    $azExitCode = $LASTEXITCODE`,
+                `}`,
+                `finally {`,
+                `    if ($null -eq $previousInstaller) {`,
+                `        Remove-Item Env:\\AZ_INSTALLER -ErrorAction SilentlyContinue`,
+                `    }`,
+                `    else {`,
+                `        $env:AZ_INSTALLER = $previousInstaller`,
+                `    }`,
+                `}`,
+                `exit $azExitCode`
+            ].join(os.EOL);
+
+            await Utility.createFile(azShimPath, '\ufeff' + shimContents, { encoding: 'utf8' });
+
+            Utility.emitAzTelemetry('AzShimCreated', { status: 'created' });
+
+            // Module is named after the shim path so (Get-Command az).Source returns it.
+            // Do NOT rename to a human-friendly name — it breaks .Source resolution.
+            const lines = [
+                `$azureCliTaskShimPath = '${escapedShimPath}'`,
+                `$azureCliTaskPythonPath = '${escapedPythonPath}'`,
+                `try {`,
+                `    $azureCliTaskModule = New-Module -Name $azureCliTaskShimPath -ArgumentList $azureCliTaskPythonPath -ScriptBlock {`,
+                `        param([string] $pythonPath)`,
+                `        $script:pythonPath = $pythonPath`,
+                `        function az {`,
+                `            $callerFrame = (Get-PSCallStack)[1].GetFrameVariables()`,
+                `            $eapFrame = $callerFrame['ErrorActionPreference']`,
+                `            if ($eapFrame) { $ErrorActionPreference = $eapFrame.Value }`,
+                `            $nativeFrame = $callerFrame['PSNativeCommandUseErrorActionPreference']`,
+                `            if ($nativeFrame) { $PSNativeCommandUseErrorActionPreference = $nativeFrame.Value }`,
+                `            $argFrame = $callerFrame['PSNativeCommandArgumentPassing']`,
+                `            if ($argFrame) { $PSNativeCommandArgumentPassing = $argFrame.Value }`,
+                `            $previousInstaller = $env:AZ_INSTALLER`,
+                `            $azExitCode = 1`,
+                `            try {`,
+                `                $env:AZ_INSTALLER = 'MSI'`,
+                `                & $script:pythonPath -IBm azure.cli @args`,
+                `                $azExitCode = $LASTEXITCODE`,
+                `            }`,
+                `            finally {`,
+                `                if ($null -eq $previousInstaller) {`,
+                `                    Remove-Item Env:\\AZ_INSTALLER -ErrorAction SilentlyContinue`,
+                `                }`,
+                `                else {`,
+                `                    $env:AZ_INSTALLER = $previousInstaller`,
+                `                }`,
+                `            }`,
+                `            $global:LASTEXITCODE = $azExitCode`,
+                `        }`,
+                `        Export-ModuleMember -Function az`,
+                `    }`,
+                `    Import-Module -ModuleInfo $azureCliTaskModule -Global -Force`,
+                `    $azureCliTaskAzCommand = Get-Command az -CommandType Function -ErrorAction Stop`,
+                `    $azureCliTaskAzCommand | Add-Member -NotePropertyName Path -NotePropertyValue $azureCliTaskShimPath -Force`,
+                `    Write-Host '##vso[task.debug]Az CLI module injected successfully.'`,
+                `} catch {`,
+                `    if ($azureCliTaskModule) { Remove-Module -ModuleInfo $azureCliTaskModule -Force -ErrorAction SilentlyContinue }`,
+                `    Write-Host "##vso[task.logissue type=warning]Az module preamble failed: $_ - falling back to stock az.cmd"`,
+                `}`
+            ];
+
+            Utility.emitAzTelemetry('AzModuleInjection', { status: 'prepared' });
+
+            tl.debug('Injected the Azure CLI PowerShell module and safe path fallback.');
+
+            return { azShimDirectory, lines };
+        } catch (error) {
+            if (azShimDirectory) {
+                Utility.deleteDirectory(azShimDirectory, 'setupFailure');
+            }
+            throw error;
+        }
+    }
+
+    private static emitAzTelemetry(feature: string, properties: Record<string, string>): void {
+        try {
+            emitTelemetry('AzureCLIV2', feature, properties);
+        } catch (telemetryError) {
+            tl.debug(`Unable to emit telemetry: ${telemetryError}`);
+        }
+    }
+
+    public static deleteDirectory(directoryPath: string, reason: string): void {
+        try {
+            tl.rmRF(directoryPath);
+            Utility.emitAzTelemetry('AzShimCleanup', { status: 'removed', reason });
+        } catch (error) {
+            Utility.emitAzTelemetry('AzShimCleanup', {
+                status: 'failed',
+                reason,
+                error: error && error.message ? error.message : String(error)
+            });
+            tl.warning(`Failed to remove shim directory '${directoryPath}': ${error && error.message ? error.message : String(error)}`);
         }
     }
 }
