@@ -45,6 +45,12 @@ tmr.registerMock('fs', {
     }
 });
 
+const mockTask = require('azure-pipelines-task-lib/mock-task');
+mockTask.rmRF = (directoryPath: string) => {
+    console.log('RMRF_MATCHES_CREATED_DIR:' + (directoryPath === createdTempDir));
+    realFs.rmSync(directoryPath, { recursive: true, force: true });
+};
+
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
     emitTelemetry: (area: string, feature: string, data: any) => {
         console.log(`MOCK_TELEMETRY: ${area}, ${feature}, ${JSON.stringify(data)}`);
