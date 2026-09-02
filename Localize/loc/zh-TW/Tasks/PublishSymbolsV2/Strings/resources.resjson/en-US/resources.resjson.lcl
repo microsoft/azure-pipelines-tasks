@@ -689,10 +689,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnexpectedDbghelpdllExpected0Actual1" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.]]></Val>
+          <Val><![CDATA[Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{1}'.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已從未預期的路徑載入程式庫 dbghelp.dll。預期為 '{0}'。實際為 '{0}'。]]></Val>
+            <Val><![CDATA[程式庫 dbghelp.dll 已從未預期的路徑載入。預期 '{0}'。實際 '{1}'。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Library dbghelp.dll is already loaded from an unexpected path. Expected '{0}'. Actual '{0}'.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

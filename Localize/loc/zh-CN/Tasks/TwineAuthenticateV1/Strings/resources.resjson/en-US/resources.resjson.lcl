@@ -254,10 +254,13 @@
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          <Val><![CDATA[Successfully added auth for %s internal feeds, %s external endpoints, and %s federated feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已成功添加对 %s 内部源和 %s 外部终结点的身份验证。]]></Val>
+            <Val><![CDATA[已成功为 %s 个内部源、%s 个外部终结点和 %s 个联合源添加身份验证]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

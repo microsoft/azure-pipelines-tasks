@@ -174,28 +174,37 @@
       </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Authentification ajoutée pour le flux %s.]]></Val>
+            <Val><![CDATA[Impossible d’obtenir les informations d’identification fédérées à partir de la connexion de service]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_AddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Impossible d’obtenir les informations d’identification fédérées à partir de la connexion de service]]></Val>
+            <Val><![CDATA[Ajout d’informations d’authentification à partir des %s de connexion de service pour les %s de flux]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ajout d’informations d’authentification à partir des %s de connexion de service pour les %s de flux]]></Val>
+            <Val><![CDATA[Authentification ajoutée pour le flux %s.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
