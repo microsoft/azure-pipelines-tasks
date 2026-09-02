@@ -340,6 +340,8 @@ Tasks/MavenV3/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/MavenV4/     @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
+Tasks/MicrosoftSqlDeploymentV1/    @microsoft/dacfx @ssreerama @llali @allancascante @dzsquared
+
 Tasks/MSBuildV1/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/MysqlDeploymentOnMachineGroupV1/    @microsoft/release-management-task-team @manolerazvan 
