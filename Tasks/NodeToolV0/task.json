@@ -14,10 +14,10 @@
   "version": {
     "Major": 0,
     "Minor": 279,
-    "Patch": 0
+    "Patch": 1
   },
   "deprecated": true,
-  "deprecationMessage": "This task is deprecated and will no longer receive updates. Please use UseNodeV1 as a replacement.",
+  "deprecationMessage": "This task is deprecated and will no longer receive updates. Please use UseNode@1 as a replacement.",
   "satisfies": [
     "Node",
     "npm",
