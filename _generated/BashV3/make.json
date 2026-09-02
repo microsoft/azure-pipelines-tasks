@@ -1,14 +1,4 @@
 {
-    "minify": {
-        "enabled": true,
-        "allowBundledAndRetained": [
-            "semver",
-            "uuid"
-        ],
-        "external": [
-            "azure-pipelines-task-lib"
-        ]
-    },
     "rm": [
         {
             "items": [
