@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -28,7 +28,7 @@
       "type": "string",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.dockerVersion",
-      "defaultValue": "17.09.0-ce"
+      "defaultValue": "28.5.2"
     },
     {
       "name": "releaseType",
