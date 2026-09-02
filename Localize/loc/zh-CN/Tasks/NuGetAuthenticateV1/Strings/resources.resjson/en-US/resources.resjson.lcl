@@ -174,28 +174,37 @@
       </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已成功为源 %s 添加身份验证。]]></Val>
+            <Val><![CDATA[无法从服务连接获取联合凭据。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_AddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[无法从服务连接获取联合凭据。]]></Val>
+            <Val><![CDATA[正在为源 %s 添加服务连接 %s 中的身份验证信息]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[正在为源 %s 添加服务连接 %s 中的身份验证信息]]></Val>
+            <Val><![CDATA[已成功为源 %s 添加身份验证。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ]]></Val>
+          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Если этот параметр задано, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с pythonDownloadServiceConnections. ]]></Val>
+            <Val><![CDATA[Если этот параметр задан, требуется workloadIdentityServiceConnection. Все остальные входные данные игнорируются. Несовместимо с pythonDownloadServiceConnections.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

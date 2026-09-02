@@ -63,10 +63,13 @@
       </Item>
       <Item ItemId=";loc.input.help.workloadIdentityServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, registryNames is required. All other inputs are ignored.]]></Val>
+          <Val><![CDATA[If this is set, feedUrl is required. All other inputs are ignored.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Если этот параметр задан, требуется registryNames. Все остальные входные данные игнорируются.]]></Val>
+            <Val><![CDATA[Если этот параметр задано, требуется feedUrl. Все остальные входные данные игнорируются.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, registryNames is required. All other inputs are ignored.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

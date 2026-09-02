@@ -254,10 +254,13 @@
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          <Val><![CDATA[Successfully added auth for %s internal feeds, %s external endpoints, and %s federated feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[%s 내부 피드 및 %s 외부 엔드포인트의 인증을 추가했습니다.]]></Val>
+            <Val><![CDATA[내부 피드 %s개, 외부 엔드포인트 %s개 및 페더레이션된 피드 %s개에 대한 인증을 추가했습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

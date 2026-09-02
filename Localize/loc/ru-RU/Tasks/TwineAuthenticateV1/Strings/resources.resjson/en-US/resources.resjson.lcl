@@ -254,10 +254,13 @@
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          <Val><![CDATA[Successfully added auth for %s internal feeds, %s external endpoints, and %s federated feeds]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Проверка подлинности успешно добавлена для внутреннего веб-канала (%s) и внешней конечной точки (%s).]]></Val>
+            <Val><![CDATA[Проверка подлинности успешно добавлена для %sвнутренних каналов, %s внешних конечных точек и %s федеративных каналов.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for %s internal feed and %s external endpoint.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

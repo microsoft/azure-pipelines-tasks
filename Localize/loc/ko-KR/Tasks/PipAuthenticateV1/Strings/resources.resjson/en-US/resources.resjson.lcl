@@ -56,10 +56,13 @@
       </Item>
       <Item ItemId=";loc.input.help.feedUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ]]></Val>
+          <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[이 설정을 지정하면 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. pythonDownloadServiceConnections와 호환되지 않습니다. ]]></Val>
+            <Val><![CDATA[이 설정을 지정하는 경우 workloadIdentityServiceConnection이 필요합니다. 다른 모든 입력은 무시됩니다. pythonDownloadServiceConnections와 호환되지 않습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[If this is set, workloadIdentityServiceConnection is required. All other inputs are ignored. Not compatible with pythonDownloadServiceConnections. ]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

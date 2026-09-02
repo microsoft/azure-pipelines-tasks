@@ -174,28 +174,37 @@
       </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Проверка подлинности для веб-канала %s добавлена.]]></Val>
+            <Val><![CDATA[Не удалось получить федеративные учетные данные из подключения к службе]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_AddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Не удалось получить федеративные учетные данные из подключения к службе]]></Val>
+            <Val><![CDATA[Добавление сведений о проверке подлинности из подключения службы %s для веб-канала %s]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Unable to get federated credentials from service connection]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.Info_SuccessAddingFederatedFeedAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          <Val><![CDATA[Successfully added auth for feed %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Добавление сведений о проверке подлинности из подключения службы %s для веб-канала %s]]></Val>
+            <Val><![CDATA[Проверка подлинности для веб-канала %s добавлена.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Adding auth information from service connection %s for feed %s]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
