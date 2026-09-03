@@ -7,6 +7,7 @@ import * as fileUtils from "azure-pipelines-tasks-docker-common/fileutils";
 import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
+import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
 
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
@@ -82,7 +83,7 @@ export function run(connection: ContainerConnection): any {
         err += data;
     });
 
-    return connection.execCommand(command).then(() => {
+    return connection.execCommand(command, createSanitizedExecOptions()).then(() => {
         if (isBuildKitEnabled())
         {
             // Build kit output the build results to stderr instead of stdout
