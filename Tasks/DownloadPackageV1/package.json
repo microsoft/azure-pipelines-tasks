@@ -27,7 +27,8 @@
     "azure-pipelines-tasks-utility-common": "^3.272.0",
     "decompress-zip": "0.3.3",
     "tar-fs": "3.1.1",
-    "extract-zip": "2.0.1"
+    "extract-zip": "2.0.1",
+    "adm-zip": "0.6.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
