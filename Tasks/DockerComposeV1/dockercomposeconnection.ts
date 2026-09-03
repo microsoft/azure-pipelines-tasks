@@ -89,12 +89,19 @@ export default class DockerComposeConnection extends ContainerConnection {
         return output || '\n';
     }
 
-    public createComposeCommand(): tr.ToolRunner {
+    public createComposeCommand(globalArgs?: string[]): tr.ToolRunner {
         var command = tl.tool(this.dockerComposePath);
 
         if (!tl.getInput('dockerComposePath')) {
             command.arg("compose");
             process.env["COMPOSE_COMPATIBILITY"] = "true";
+        }
+
+        // Add global arguments before -f flags and project name
+        if (globalArgs && globalArgs.length > 0) {
+            globalArgs.forEach(arg => {
+                command.arg(arg);
+            });
         }
 
         command.arg(["-f", this.dockerComposeFile]);
@@ -115,8 +122,8 @@ export default class DockerComposeConnection extends ContainerConnection {
         return command;
     }
 
-    public getCombinedConfig(imageDigestComposeFile?: string): any {
-        var command = this.createComposeCommand();
+    public getCombinedConfig(imageDigestComposeFile?: string, globalArgs?: string[]): any {
+        var command = this.createComposeCommand(globalArgs);
         if (imageDigestComposeFile) {
             command.arg(["-f", imageDigestComposeFile]);
         }
