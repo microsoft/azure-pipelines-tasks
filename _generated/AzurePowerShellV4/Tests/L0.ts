@@ -10,6 +10,8 @@ import { isPowerShellArgumentAstSafe } from 'azure-pipelines-tasks-args-sanitize
 import tl = require('azure-pipelines-task-lib/task');
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
+const taskVersion = require('../task.json').version;
+const expectedTaskVersion = `${taskVersion.Major}.${taskVersion.Minor}.${taskVersion.Patch}`;
 
 describe('AzurePowerShell Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -61,6 +63,64 @@ describe('AzurePowerShell Suite', function () {
             psr.run(path.join(__dirname, 'CleansUpTempScriptPwsh.ps1'), done);
         })
     }
+
+    it('deletes the generated temporary script after execution', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_DeletesTempScript.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert(tr.stdout.indexOf('TEMP_SCRIPT_REMOVED') >= 0,
+            'generated temporary script should be deleted');
+        assert(tr.stdout.indexOf(`DELETE_TELEMETRY:DeleteSucceeded:${expectedTaskVersion}:`) >= 0,
+            'delete-success telemetry should include the generated task version');
+    });
+
+    it('does not delete the temporary script when the feature is disabled', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_FeatureDisabled.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed');
+        assert(tr.stdout.indexOf('TEMP_SCRIPT_REMOVED') < 0,
+            'generated temporary script should not be deleted while the feature is disabled');
+    });
+
+    it('fails cleanly when writing the temporary script fails', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_WriteFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(!tr.succeeded, 'task should fail when the temporary script cannot be written');
+        assert(tr.stdout.indexOf('simulated write failure') >= 0,
+            'the write failure should be reported');
+        assert(tr.invokedToolCount === 0,
+            'PowerShell must not run when writing the temporary script fails');
+    });
+
+    it('continues safely and emits path-safe telemetry when deletion fails', async () => {
+        let tp = path.join(__dirname, 'L0Cleanup_DeleteFailure.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed when temporary script deletion fails');
+        assert(tr.stdout.indexOf('Failed to delete the temporary Azure PowerShell script. Error code: EACCES.') >= 0,
+            'the deletion warning should include only the error code');
+        assert(tr.stdout.indexOf('/sensitive/delete/path.ps1') < 0,
+            'the deletion warning should not include the error message or path');
+        assert(tr.stdout.indexOf(`DELETE_TELEMETRY:DeleteFailed:${expectedTaskVersion}:EACCES`) >= 0,
+            'delete-failure telemetry should include the task version and error code');
+    });
+
+    it('escapes single quotes in endpoint data before generating the PowerShell script', async () => {
+        let tp = path.join(__dirname, 'L0EndpointSingleQuoteEscaping.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should succeed with a single quote in endpoint data');
+        assert(tr.stdout.indexOf('ENDPOINT_SINGLE_QUOTE_ESCAPED') >= 0,
+            'the generated script should escape endpoint single quotes for PowerShell');
+    });
 
     describe('MSRC 129198: Node handler rejects newline in ScriptArguments', function () {
         it('allows ignored multiline ScriptArguments for InlineScript', async () => {
