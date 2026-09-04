@@ -22,7 +22,7 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.279.0",
-    "azure-pipelines-tasks-utility-common": "3.279.1",
+    "azure-pipelines-tasks-utility-common": "3.280.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
