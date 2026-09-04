@@ -52,6 +52,13 @@ let a: any = <any>{
             "code": 0,
             "stdout": "sucessfully built the service images"
         },
+        // Simulates an attacker-controlled docker-compose.yml/Dockerfile emitting a
+        // ##vso[] logging command in its build output, to verify createSanitizedExecOptions()
+        // is actually wired into execCommandWithLogging (not just present in docker-common).
+        "docker-compose -f F:\\dir2\\vsoinjection-compose.yml build": {
+            "code": 0,
+            "stdout": "Step 1/2 : FROM node:18\n##vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images"
+        },
         "docker compose -f F:\\dir2\\docker-compose.yml build": {
             "code": 0,
             "stdout": "sucessfully built the service images"
@@ -61,6 +68,10 @@ let a: any = <any>{
             "stdout": "sucessfully built the service images"
         },
         "docker-compose -f F:\\dir2\\docker-compose.yml config": {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
+        },
+        "docker-compose -f F:\\dir2\\vsoinjection-compose.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: C:\\docketest\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - C:\\docketest:/code:rw\nversion: '2.0'"
         },

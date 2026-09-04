@@ -50,6 +50,21 @@ describe('Docker Compose Suite', function() {
             assert(tr.stdout.indexOf("[command]docker-compose-userdefined -f F:\\dir2\\docker-compose.yml build") != -1, "docker compose build should run");
         });
 
+        it('Runs successfully for windows docker compose service build and neutralizes ##vso[ commands in output', async () => {
+            let tp = path.join(__dirname, 'L0Windows.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__composeFilePath__"] = "F:\\dir2\\vsoinjection-compose.yml";
+
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
+                "##vso[ markers from attacker-controlled compose build output must be neutralized before reaching the log");
+            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
+                "sanitized marker (single #) should still be present so the output stays readable");
+        });
+
         it('Runs successfully for windows docker compose push service', async () => {
             let tp = path.join(__dirname, 'L0Windows.js');
             let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -198,6 +213,21 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]docker-compose-userdefined -f /tmp/tempdir/100/docker-compose.yml build") != -1, "docker compose build should run");
+        });
+
+        it('Runs successfully for linux docker compose service build and neutralizes ##vso[ commands in output', async () => {
+            let tp = path.join(__dirname, 'L0Linux.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__composeFilePath__"] = "/tmp/tempdir/100/vsoinjection-compose.yml";
+
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
+                "##vso[ markers from attacker-controlled compose build output must be neutralized before reaching the log");
+            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
+                "sanitized marker (single #) should still be present so the output stays readable");
         });
 
         it('Runs successfully for linux docker compose push service', async () => {
