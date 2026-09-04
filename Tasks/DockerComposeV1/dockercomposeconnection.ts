@@ -10,7 +10,7 @@ import * as DockerComposeUtils from "./dockercomposeutils";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection"
 import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
-import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 export default class DockerComposeConnection extends ContainerConnection {
     private dockerComposePath: string;

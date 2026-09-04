@@ -4,7 +4,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as utils from "./utils";
 import * as Q from 'q';
-import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string): Q.Promise<void> {
     let command = connection.createCommand();
