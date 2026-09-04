@@ -31,8 +31,5 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "adm-zip": "0.6.0"
   }
 }
