@@ -2,7 +2,7 @@
 
 import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
-import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 export function run(connection: ContainerConnection, outputUpdate: (data: string) => any): any {
     var command = connection.createCommand();

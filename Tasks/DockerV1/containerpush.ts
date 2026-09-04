@@ -6,7 +6,7 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common/containerco
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
-import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 function dockerPush(connection: ContainerConnection, image: string, imageDigestFile?: string, useMultiImageMode?: boolean, commandArguments?: string): any {
     var command = connection.createCommand();
