@@ -21,13 +21,10 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.2.10",
-    "azure-pipelines-tasks-securefiles-common": "^2.272.0"
+    "azure-pipelines-task-lib": "^5.279.0",
+    "azure-pipelines-tasks-securefiles-common": "^2.279.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "form-data": "^4.0.4"
   }
 }

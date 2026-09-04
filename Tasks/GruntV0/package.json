@@ -21,8 +21,8 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.2.10",
-    "minimatch": "^3.0.4"
+    "azure-pipelines-task-lib": "^5.279.0",
+    "minimatch": "^3.0.5"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
