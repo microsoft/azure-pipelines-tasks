@@ -10,7 +10,7 @@ import ContainerConnection from "azure-pipelines-tasks-docker-common/containerco
 import * as sourceUtils from "azure-pipelines-tasks-docker-common/sourceutils";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
-import { createSanitizedExecOptions } from "./dockeroutputsanitizer";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 export function run(connection: ContainerConnection): any {
     var command = connection.createCommand();
