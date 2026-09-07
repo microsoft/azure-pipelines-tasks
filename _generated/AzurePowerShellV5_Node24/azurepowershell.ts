@@ -3,6 +3,7 @@ import path = require('path');
 import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
+import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
@@ -15,6 +16,8 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 
 async function run() {
     let resolvedPwshPath: string = '';
+    let filePath: string;
+    let cleanupTempScriptEnabled = false;
     let input_workingDirectory = tl.getPathInput('workingDirectory', /*required*/ true, /*check*/ true);
     let tempDirectory = tl.getVariable('agent.tempDirectory');
     tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
@@ -27,6 +30,7 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        cleanupTempScriptEnabled = tl.getPipelineFeature('CleanupAzurePowerShellTempScript');
 
         // Get inputs.
         let _vsts_input_errorActionPreference: string = tl.getInput('errorActionPreference', false) || 'Stop';
@@ -136,17 +140,11 @@ async function run() {
 
         // Write the script to disk.
         tl.assertAgent('2.115.0');
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        filePath = path.join(tempDirectory, uuidV4() + '.ps1');
 
-        await fs.writeFile(
-            filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-                                          // encode the BOM into its UTF8 binary sequence.
-            function (err) {
-                if (err) throw err;
-                console.log('File saved!');
-            });
+        const fileContent = '\ufeff' + contents.join(os.EOL);
+        await fs.promises.writeFile(filePath, fileContent, { encoding: 'utf8', mode: 0o600 });
+        console.log('File saved!');
 
         // Run the script.
         //
@@ -198,6 +196,10 @@ async function run() {
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
     finally {
+        if (cleanupTempScriptEnabled) {
+            deleteGeneratedScript(filePath);
+        }
+
         // Cleanup is best-effort and must NOT override the task's actual result.
         // This matches the Windows handler (azurepowershell.ps1), which has long used
         // `Disconnect-AzureAndClearContext -ErrorAction SilentlyContinue`.
@@ -256,6 +258,49 @@ async function run() {
         // Emit CustomerIntelligence so the Kusto monitor can track cleanup outcomes
         // across the new code path. Best-effort — never throws.
         emitCleanupTelemetry(cleanupOutcome, cleanupExitCode, cleanupErrorMessage);
+    }
+}
+
+function deleteGeneratedScript(filePath: string): void {
+    if (!filePath) {
+        return;
+    }
+
+    try {
+        fs.truncateSync(filePath, 0);
+    } catch (err) {
+        tl.debug(`Unable to truncate the temporary Azure PowerShell script. Error code: ${getErrorCode(err)}.`);
+    }
+
+    try {
+        fs.unlinkSync(filePath);
+        tl.debug('Deleted the temporary Azure PowerShell script.');
+        emitTempScriptDeleteTelemetry('DeleteSucceeded');
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            emitTempScriptDeleteTelemetry('DeleteAlreadyAbsent');
+            return;
+        }
+
+        const errorCode = getErrorCode(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
+        emitTempScriptDeleteTelemetry('DeleteFailed', errorCode);
+    }
+}
+
+function getErrorCode(err: any): string {
+    return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
+}
+
+function emitTempScriptDeleteTelemetry(outcome: 'DeleteSucceeded' | 'DeleteAlreadyAbsent' | 'DeleteFailed', errorCode?: string): void {
+    try {
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
+            TaskVersion: getTaskVersion(),
+            Outcome: outcome,
+            ErrorCode: errorCode
+        });
+    } catch {
+        tl.debug('Unable to publish temporary script cleanup telemetry.');
     }
 }
 
