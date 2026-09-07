@@ -1,5 +1,16 @@
 import tl = require("azure-pipelines-task-lib/task");
 
+// Allow-list of characters permitted in a MySQL database identifier.
+// Mirrors MySQL's own identifier rules (see dev.mysql.com/doc/refman/8.0/en/identifiers.html):
+// ASCII alnum/_/-/$ plus the full Basic Multilingual Plane (U+0080-U+FFFF), EXCLUDING the
+// UTF-16 surrogate range (U+D800-U+DFFF) so that supplementary-plane characters (U+10000+,
+// e.g. emoji) are rejected -- MySQL never permits those in identifiers, quoted or not.
+const DATABASE_NAME_REGEX = /^[a-zA-Z0-9_\-$\u0080-\uD7FF\uE000-\uFFFF]+$/;
+
+export function isValidDatabaseName(databaseName: string): boolean {
+	return DATABASE_NAME_REGEX.test(databaseName);
+}
+
 export class AzureMysqlTaskParameter {
 	
 	private connectedServiceName: string; 
@@ -21,6 +32,9 @@ export class AzureMysqlTaskParameter {
             this.connectedServiceName = tl.getInput('ConnectedServiceName', true);
             this.serverName = tl.getInput('ServerName', true);
             this.databaseName = tl.getInput('DatabaseName', false);
+            if (this.databaseName && tl.getPipelineFeature('EnableAzureMysqlDeploymentDatabaseNameValidation') && !isValidDatabaseName(this.databaseName)) {
+                throw new Error(tl.loc("InvalidDatabaseName", this.databaseName));
+            }
             this.sqlUserName = tl.getInput('SqlUsername', true);
             this.sqlPassword = tl.getInput('SqlPassword', true);
             this.taskNameSelector = tl.getInput('TaskNameSelector', true);
