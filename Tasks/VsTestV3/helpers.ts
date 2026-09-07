@@ -20,6 +20,27 @@ export class Constants {
 }
 
 export class Helper {
+    private static arm64VsTestConsoleEnabled = false;
+
+    public static setArm64VsTestConsoleEnabled(enabled: boolean) {
+        Helper.arm64VsTestConsoleEnabled = enabled;
+        tl.debug('Arm64 vstest console feature flag is set to: ' + enabled);
+    }
+
+    // Name used only for logging; the executable actually launched is resolved separately.
+    public static getVsTestConsoleExeName(): string {
+        return Helper.arm64VsTestConsoleEnabled ? constants.VsTestConsole.ARM64_EXE_NAME : constants.VsTestConsole.EXE_NAME;
+    }
+
+    // Localized strings embed the exe name verbatim in every locale, so swap it after resolving the string.
+    public static locVsTestConsole(key: string, ...args: any[]): string {
+        const message = tl.loc(key, ...args);
+        if (!Helper.arm64VsTestConsoleEnabled) {
+            return message;
+        }
+        return message.replace(/vstest\.console\.exe/gi, constants.VsTestConsole.ARM64_EXE_NAME);
+    }
+
     public static addToProcessEnvVars(envVars: { [key: string]: string; }, name: string, value: string) {
         if (!this.isNullEmptyOrUndefined(value)) {
             if (!name.includes('AccessToken')) {

@@ -9,7 +9,7 @@ import * as os from 'os';
 import * as localtest from './vstest';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
-import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables } from './constants';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, FeatureFlags } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -36,6 +36,10 @@ async function execute() {
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
+        const enableArm64VsTestConsole = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
+            FeatureFlags.ENABLE_ARM64_VSTEST_CONSOLE, tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        utils.Helper.setArm64VsTestConsoleEnabled(enableArm64VsTestConsole);
+
         setUpConnectedServiceEnvironmentVariables();
 
         if (serverBasedRun) {
@@ -54,7 +58,7 @@ async function execute() {
 
         } else {
             ci.publishEvent({ runmode: 'nondistributed' });
-            console.log(tl.loc('nonDistributedTestWorkflow'));
+            console.log(utils.Helper.locVsTestConsole('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
             const enableHydra = isHydraFlowToBeEnabled(inputDataContract);

@@ -27,6 +27,15 @@ export module VsTestToolsInstaller {
     export const PathToVsTestToolVariable = 'VsTestToolsInstallerInstalledToolLocation';
 }
 
+export module VsTestConsole {
+    export const EXE_NAME = 'vstest.console.exe';
+    export const ARM64_EXE_NAME = 'vstest.console.arm64.exe';
+}
+
+export module FeatureFlags {
+    export const ENABLE_ARM64_VSTEST_CONSOLE = 'TestExecution.EnableArm64VstestConsole';
+}
+
 export module DistributionTypes {
     export const EXECUTIONTIMEBASED = 'TestExecutionTimes';
     export const ASSEMBLYBASED = 'TestAssemblies';
