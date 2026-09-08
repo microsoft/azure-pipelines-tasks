@@ -77,48 +77,13 @@ export class PackageFile {
         await fs.promises.mkdir(unzipLocation, { recursive: true });
         const dir: string = await fs.promises.realpath(unzipLocation);
 
-        await new Promise<void>((resolve, reject) => {
-            yauzl.open(zipLocation, { lazyEntries: true }, (err: Error, zipfile: any) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                let canceled: boolean = false;
-                const fail = (error: Error) => {
-                    if (canceled) {
-                        return;
-                    }
-                    canceled = true;
-                    zipfile.close();
-                    reject(error);
-                };
-
-                zipfile.on("error", fail);
-                zipfile.on("close", () => {
-                    if (!canceled) {
-                        resolve();
-                    }
-                });
-                zipfile.on("entry", (entry: any) => {
-                    if (canceled) {
-                        return;
-                    }
-                    if (entry.fileName.startsWith("__MACOSX/")) {
-                        zipfile.readEntry();
-                        return;
-                    }
-                    this.extractYauzlEntry(zipfile, entry, dir)
-                        .then(() => {
-                            if (!canceled) {
-                                zipfile.readEntry();
-                            }
-                        })
-                        .catch(fail);
-                });
-
-                zipfile.readEntry();
-            });
-        });
+        const zipfile: any = await yauzl.openPromise(zipLocation);
+        for await (const entry of zipfile.eachEntry()) {
+            if (entry.fileName.startsWith("__MACOSX/")) {
+                continue;
+            }
+            await this.extractYauzlEntry(zipfile, entry, dir);
+        }
     }
 
     private async extractYauzlEntry(zipfile: any, entry: any, dir: string): Promise<void> {
