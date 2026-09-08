@@ -23,16 +23,13 @@ export class Helper {
     private static arm64VsTestConsoleEnabled = false;
 
     public static setArm64VsTestConsoleEnabled(featureFlagEnabled: boolean) {
-        const arm64Agent = Helper.isWindowsArm64Agent();
+        const arm64Agent = Helper.isArm64Agent();
         Helper.arm64VsTestConsoleEnabled = featureFlagEnabled && arm64Agent;
-        tl.debug(`Arm64 vstest console feature flag: ${featureFlagEnabled}, windows arm64 agent: ${arm64Agent}`);
+        tl.debug(`Arm64 vstest console feature flag: ${featureFlagEnabled}, arm64 agent: ${arm64Agent}`);
     }
 
-    // vstest.console.arm64.exe only ships for windows arm64, so the agent has to match before we name it.
-    private static isWindowsArm64Agent(): boolean {
-        if (os.platform() !== 'win32') {
-            return false;
-        }
+    // Agent.OSArchitecture reflects the OS, unlike os.arch() which reports x64 for an emulated agent on arm64 hardware.
+    private static isArm64Agent(): boolean {
         const agentArchitecture = tl.getVariable(constants.AgentVariables.AGENT_OSARCHITECTURE);
         if (!Helper.isNullEmptyOrUndefined(agentArchitecture)) {
             return agentArchitecture.toLowerCase() === 'arm64';
