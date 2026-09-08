@@ -22,9 +22,22 @@ export class Constants {
 export class Helper {
     private static arm64VsTestConsoleEnabled = false;
 
-    public static setArm64VsTestConsoleEnabled(enabled: boolean) {
-        Helper.arm64VsTestConsoleEnabled = enabled;
-        tl.debug('Arm64 vstest console feature flag is set to: ' + enabled);
+    public static setArm64VsTestConsoleEnabled(featureFlagEnabled: boolean) {
+        const arm64Agent = Helper.isWindowsArm64Agent();
+        Helper.arm64VsTestConsoleEnabled = featureFlagEnabled && arm64Agent;
+        tl.debug(`Arm64 vstest console feature flag: ${featureFlagEnabled}, windows arm64 agent: ${arm64Agent}`);
+    }
+
+    // vstest.console.arm64.exe only ships for windows arm64, so the agent has to match before we name it.
+    private static isWindowsArm64Agent(): boolean {
+        if (os.platform() !== 'win32') {
+            return false;
+        }
+        const agentArchitecture = tl.getVariable(constants.AgentVariables.AGENT_OSARCHITECTURE);
+        if (!Helper.isNullEmptyOrUndefined(agentArchitecture)) {
+            return agentArchitecture.toLowerCase() === 'arm64';
+        }
+        return os.arch() === 'arm64';
     }
 
     // Name used only for logging; the executable actually launched is resolved separately.

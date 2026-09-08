@@ -56,4 +56,5 @@ export module BackDoorVariables {
 
 export module AgentVariables {
     export const AGENT_TEMPDIRECTORY = 'Agent.TempDirectory';
+    export const AGENT_OSARCHITECTURE = 'Agent.OSArchitecture';
 }
