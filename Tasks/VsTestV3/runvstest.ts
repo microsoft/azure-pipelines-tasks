@@ -9,7 +9,7 @@ import * as os from 'os';
 import * as localtest from './vstest';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
-import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, FeatureFlags } from './constants';
+import { ServerTypes, ActionOnThresholdNotMet, BackDoorVariables, AgentVariables, FeatureFlags, ResourceAreas } from './constants';
 
 const request = require('request');
 const osPlat: string = os.platform();
@@ -36,8 +36,9 @@ async function execute() {
             'TestExecution.EnableDiagnostics', tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
         inputParser.setEnableDiagnosticsSettings(enableDiagnostics);
 
-        const enableArm64VsTestConsole = await isFeatureFlagEnabled(tl.getVariable('System.TeamFoundationCollectionUri'),
-            FeatureFlags.ENABLE_ARM64_VSTEST_CONSOLE, tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken);
+        const accessToken = tl.getEndpointAuthorization('SystemVssConnection', true).parameters.AccessToken;
+        const tcmServiceUrl = await getServiceUrlFromResourceArea(tl.getVariable('System.TeamFoundationCollectionUri'), ResourceAreas.TCM, accessToken);
+        const enableArm64VsTestConsole = await isFeatureFlagEnabled(tcmServiceUrl, FeatureFlags.ENABLE_ARM64_VSTEST_CONSOLE, accessToken);
         utils.Helper.setArm64VsTestConsoleEnabled(enableArm64VsTestConsole);
 
         setUpConnectedServiceEnvironmentVariables();
@@ -126,10 +127,38 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
     return false;
 }
 
-export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
+// Feature flag registries are per service, so a TCM owned flag has to be queried against the TCM url and not the collection url.
+export function getServiceUrlFromResourceArea(collectionUri: string, resourceAreaId: string, token: string): Promise<string> {
+    const options = {
+        url: `${trimTrailingSlash(collectionUri)}/_apis/resourceAreas/${resourceAreaId}?api-version=5.0-preview.1`,
+        json: true,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
+    };
+
+    return new Promise((resolve) => {
+        request(options, (err, res, resourceArea) => {
+            if (err) {
+                tl.debug(`Unable to resolve resource area ${resourceAreaId}. Error: ${err.message}`);
+                return resolve(collectionUri);
+            }
+            const statusCode = res && res.statusCode;
+            if (resourceArea && resourceArea.locationUrl) {
+                tl.debug(`Resolved resource area ${resourceAreaId} to ${resourceArea.locationUrl}`);
+                return resolve(resourceArea.locationUrl);
+            }
+            tl.debug(`Resource area ${resourceAreaId} did not return a locationUrl. Status: ${statusCode}. Falling back to ${collectionUri}`);
+            resolve(collectionUri);
+        });
+    });
+}
+
+export function isFeatureFlagEnabled(serviceUrl: string, featureFlag: string, token: string): Promise<boolean> {
     let state = false;
     const options = {
-        url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
+        url: `${trimTrailingSlash(serviceUrl)}/_apis/FeatureFlags/${featureFlag}`,
         json: true,
         headers: {
             'Content-Type': 'application/json',
@@ -142,15 +171,22 @@ export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string,
             if (err) {
                 tl.warning(tl.loc('UnableToGetFeatureFlag', featureFlag));
                 tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
-                resolve(state);
+                return resolve(state);
             }
+            const statusCode = res && res.statusCode;
             if (faModel && faModel.effectiveState) {
                 state = ('on' === faModel.effectiveState.toLowerCase());
-                tl.debug(' Final feature flag state: ' + state);
+                tl.debug(`Feature flag ${featureFlag} effectiveState: ${faModel.effectiveState}, status: ${statusCode}, final state: ${state}`);
+            } else {
+                tl.debug(`Feature flag ${featureFlag} returned no effectiveState from ${options.url}. Status: ${statusCode}`);
             }
             resolve(state);
         });
     });
+}
+
+function trimTrailingSlash(url: string): string {
+    return url ? url.replace(/\/+$/, '') : url;
 }
 
 function isMultiConfigOnDemandRun(): boolean {

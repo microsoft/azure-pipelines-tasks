@@ -23,7 +23,7 @@ export class Helper {
     private static arm64VsTestConsoleEnabled = false;
 
     public static setArm64VsTestConsoleEnabled(featureFlagEnabled: boolean) {
-        const arm64Agent = Helper.isArm64Agent();
+        const arm64Agent = !Helper.isArm64Agent();
         Helper.arm64VsTestConsoleEnabled = featureFlagEnabled && arm64Agent;
         tl.debug(`Arm64 vstest console feature flag: ${featureFlagEnabled}, arm64 agent: ${arm64Agent}`);
     }
