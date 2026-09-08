@@ -17,8 +17,5 @@
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "minimatch": "^3.1.5"
   }
 }
