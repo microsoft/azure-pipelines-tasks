@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 280,
     "Patch": 0
   },
   "satisfies": [
@@ -28,12 +28,32 @@
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
+      "name": "versionSource",
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.versionSource",
+      "required": true,
+      "defaultValue": "spec",
+      "options": {
+        "spec": "Specify Node version",
+        "fromFile": "Get version from file"
+      }
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "10.x",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "versionSource = spec"
+    },
+    {
+      "name": "versionFilePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionFilePath",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionFilePath",
+      "visibleRule": "versionSource = fromFile"
     },
     {
       "name": "checkLatest",
@@ -103,6 +123,8 @@
     "NodeVersionNotFound": "ms-resource:loc.messages.NodeVersionNotFound",
     "UnexpectedOS": "ms-resource:loc.messages.UnexpectedOS",
     "AgentTempDirNotSet": "ms-resource:loc.messages.AgentTempDirNotSet",
-    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror"
+    "InvalidNodejsMirror": "ms-resource:loc.messages.InvalidNodejsMirror",
+    "VersionFileIsEmpty": "ms-resource:loc.messages.VersionFileIsEmpty",
+    "InvalidVersionSpecification": "ms-resource:loc.messages.InvalidVersionSpecification"
   }
 }
