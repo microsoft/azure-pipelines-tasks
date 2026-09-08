@@ -151,7 +151,11 @@ function makeHelpersMock(fileExists: boolean = true) {
             },
             trimString: function(s: string) { return s ? s.trim() : s; },
             getVSVersion: function(v: number) { return v.toString(); },
-            isToolsInstallerFlow: function(_config: any) { return false; }
+            isToolsInstallerFlow: function(_config: any) { return false; },
+            getVsTestConsoleExeName: function() { return 'vstest.console.exe'; },
+            locVsTestConsole: function(key: string, ...args: any[]) {
+                return args.length ? `${key}:${args.join(',')}` : key;
+            }
         },
         Constants: {
             vsTestLocationString: 'location',
@@ -377,5 +381,316 @@ describe('VsTestV3 – versionfinder.ts (PowerShell Get-ItemProperty change)', f
             (err: Error) => err.message === 'ErrorReadingVstestVersion',
             'should throw ErrorReadingVstestVersion when both methods fail'
         );
+    });
+});
+
+// ---------------------------------------------------------------------------
+// helpers.ts unit tests (arm64 vstest.console name resolution)
+// ---------------------------------------------------------------------------
+
+const localizedStrings: { [key: string]: string } = {
+    // Mirrors the shipped strings, which embed the exe name rather than taking it as a parameter.
+    nonDistributedTestWorkflow: 'Running tests using vstest.console.exe runner.',
+    VstestDiagNotSupported: 'vstest.console.exe version does not support the /diag flag.',
+    VstestLocationDoesNotExist: "The location of 'vstest.console.exe' specified '%s' does not exist.",
+    NoExeNameInHere: 'Nothing to substitute here.'
+};
+
+function makeTlMockForHelpers(variables: { [key: string]: string }) {
+    return {
+        getVariable: function(name: string) { return variables[name]; },
+        debug: function(_msg: string) {},
+        warning: function(_msg: string) {},
+        error: function(_msg: string) {},
+        loc: function(key: string, ...args: any[]) {
+            const template = localizedStrings[key] || key;
+            return args.length ? template.replace('%s', args[0]) : template;
+        },
+        tool: function() { return createMockToolRunner(''); }
+    };
+}
+
+function loadHelpers(variables: { [key: string]: string }, arch: string) {
+    libMocker.registerMock('azure-pipelines-task-lib/task', makeTlMockForHelpers(variables));
+    libMocker.registerMock('azure-pipelines-task-lib/toolrunner', {});
+    libMocker.registerMock('./cieventlogger', mockCi);
+    libMocker.registerMock('os', { arch: function() { return arch; }, tmpdir: function() { return 'C:\\temp'; } });
+    return require('../helpers') as typeof import('../helpers');
+}
+
+describe('VsTestV3 – helpers.ts (arm64 vstest.console name)', function() {
+    this.timeout(10000);
+
+    const ARM64_EXE = 'vstest.console.arm64.exe';
+    const DEFAULT_EXE = 'vstest.console.exe';
+
+    before(function() {
+        libMocker.enable({ useCleanCache: true, warnOnUnregistered: false });
+    });
+
+    after(function() {
+        libMocker.disable();
+    });
+
+    afterEach(function() {
+        libMocker.deregisterAll();
+        libMocker.resetCache();
+    });
+
+    it('defaults to vstest.console.exe before the feature flag is resolved', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), DEFAULT_EXE);
+    });
+
+    it('uses the arm64 name when the flag is on and the agent is arm64', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), ARM64_EXE);
+    });
+
+    it('keeps the default name when the flag is on but the agent is x64', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'X64' }, 'x64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), DEFAULT_EXE);
+    });
+
+    it('keeps the default name when the agent is arm64 but the flag is off', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(false);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), DEFAULT_EXE);
+    });
+
+    it('matches Agent.OSArchitecture case-insensitively', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'arm64' }, 'x64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), ARM64_EXE);
+    });
+
+    it('prefers Agent.OSArchitecture over os.arch() for an emulated x64 agent on arm64 hardware', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'x64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), ARM64_EXE);
+    });
+
+    it('falls back to os.arch() when Agent.OSArchitecture is not set', function() {
+        const helpers = loadHelpers({}, 'arm64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), ARM64_EXE);
+    });
+
+    it('falls back to os.arch() and stays default when the agent is not arm64', function() {
+        const helpers = loadHelpers({}, 'x64');
+
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.getVsTestConsoleExeName(), DEFAULT_EXE);
+    });
+
+    it('substitutes the exe name inside a localized string when enabled', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(
+            helpers.Helper.locVsTestConsole('nonDistributedTestWorkflow'),
+            'Running tests using vstest.console.arm64.exe runner.');
+    });
+
+    it('leaves the localized string untouched when disabled', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+        helpers.Helper.setArm64VsTestConsoleEnabled(false);
+
+        assert.strictEqual(
+            helpers.Helper.locVsTestConsole('nonDistributedTestWorkflow'),
+            'Running tests using vstest.console.exe runner.');
+    });
+
+    it('substitutes the exe name while preserving loc format arguments', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(
+            helpers.Helper.locVsTestConsole('VstestLocationDoesNotExist', 'C:\\some\\path'),
+            "The location of 'vstest.console.arm64.exe' specified 'C:\\some\\path' does not exist.");
+    });
+
+    it('leaves a localized string with no exe name unchanged', function() {
+        const helpers = loadHelpers({ 'Agent.OSArchitecture': 'ARM64' }, 'arm64');
+        helpers.Helper.setArm64VsTestConsoleEnabled(true);
+
+        assert.strictEqual(helpers.Helper.locVsTestConsole('NoExeNameInHere'), 'Nothing to substitute here.');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// runvstest.ts unit tests (TCM resource area + feature flag lookup)
+// ---------------------------------------------------------------------------
+
+interface FakeResponse {
+    err?: Error;
+    statusCode?: number;
+    body?: any;
+}
+
+function makeRequestMock(responses: { [urlFragment: string]: FakeResponse }, capturedUrls: string[]) {
+    return function(options: any, callback: (err: any, res: any, body: any) => void) {
+        capturedUrls.push(options.url);
+        const match = Object.keys(responses).find(fragment => options.url.indexOf(fragment) !== -1);
+        const response = match ? responses[match] : { statusCode: 404, body: undefined };
+        callback(response.err, { statusCode: response.statusCode }, response.body);
+    };
+}
+
+function loadRunVsTest(responses: { [urlFragment: string]: FakeResponse }, capturedUrls: string[]) {
+    // os.platform() is forced off win32 so importing the module takes the "unsupported OS" branch
+    // and reports a failure instead of running the whole task.
+    libMocker.registerMock('os', { platform: function() { return 'linux'; }, arch: function() { return 'x64'; } });
+    libMocker.registerMock('request', makeRequestMock(responses, capturedUrls));
+    libMocker.registerMock('azure-pipelines-task-lib/task', {
+        setResourcePath: function() {},
+        setResult: function() {},
+        getVariable: function() { return ''; },
+        getInput: function() { return ''; },
+        debug: function() {},
+        warning: function() {},
+        error: function() {},
+        loc: function(key: string) { return key; },
+        TaskResult: { Failed: 1 }
+    });
+    libMocker.registerMock('./nondistributedtest', {});
+    libMocker.registerMock('./distributedtest', {});
+    libMocker.registerMock('./cieventlogger', mockCi);
+    libMocker.registerMock('./helpers', makeHelpersMock());
+    libMocker.registerMock('./inputparser', {});
+    libMocker.registerMock('./vstest', {});
+    return require('../runvstest') as typeof import('../runvstest');
+}
+
+describe('VsTestV3 – runvstest.ts (TCM resource area and feature flags)', function() {
+    this.timeout(10000);
+
+    const collectionUri = 'https://dev.azure.com/fakeorg/';
+    const tcmUrl = 'https://fakeorg.vstmr.visualstudio.com/';
+    const tcmAreaId = '00000054-0000-8888-8000-000000000000';
+    const flagName = 'TestExecution.EnableArm64VstestConsole';
+
+    before(function() {
+        libMocker.enable({ useCleanCache: true, warnOnUnregistered: false });
+    });
+
+    after(function() {
+        libMocker.disable();
+    });
+
+    afterEach(function() {
+        libMocker.deregisterAll();
+        libMocker.resetCache();
+    });
+
+    it('resolves the TCM service url from the resource area response', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/resourceAreas': { statusCode: 200, body: { locationUrl: tcmUrl } } }, urls);
+
+        const resolved = await rv.getServiceUrlFromResourceArea(collectionUri, tcmAreaId, 'token');
+
+        assert.strictEqual(resolved, tcmUrl);
+        assert.strictEqual(urls[0], `https://dev.azure.com/fakeorg/_apis/resourceAreas/${tcmAreaId}?api-version=5.0-preview.1`);
+    });
+
+    it('falls back to the collection uri when the resource area returns no locationUrl', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/resourceAreas': { statusCode: 404, body: undefined } }, urls);
+
+        const resolved = await rv.getServiceUrlFromResourceArea(collectionUri, tcmAreaId, 'token');
+
+        assert.strictEqual(resolved, collectionUri);
+    });
+
+    it('falls back to the collection uri when the resource area request errors', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/resourceAreas': { err: new Error('socket hang up') } }, urls);
+
+        const resolved = await rv.getServiceUrlFromResourceArea(collectionUri, tcmAreaId, 'token');
+
+        assert.strictEqual(resolved, collectionUri);
+    });
+
+    it('returns true when the feature flag effectiveState is On', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'On' } } }, urls);
+
+        assert.strictEqual(await rv.isFeatureFlagEnabled(tcmUrl, flagName, 'token'), true);
+    });
+
+    it('is case-insensitive about the effectiveState value', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'ON' } } }, urls);
+
+        assert.strictEqual(await rv.isFeatureFlagEnabled(tcmUrl, flagName, 'token'), true);
+    });
+
+    it('returns false when the feature flag effectiveState is Off', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'Off' } } }, urls);
+
+        assert.strictEqual(await rv.isFeatureFlagEnabled(tcmUrl, flagName, 'token'), false);
+    });
+
+    it('returns false without throwing when the flag is unknown to the service', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 404, body: { message: 'not found' } } }, urls);
+
+        assert.strictEqual(await rv.isFeatureFlagEnabled(tcmUrl, flagName, 'token'), false);
+    });
+
+    it('returns false when the feature flag request errors', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { err: new Error('ETIMEDOUT') } }, urls);
+
+        assert.strictEqual(await rv.isFeatureFlagEnabled(tcmUrl, flagName, 'token'), false);
+    });
+
+    it('does not produce a double slash when the service url has a trailing slash', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'On' } } }, urls);
+
+        await rv.isFeatureFlagEnabled(collectionUri, flagName, 'token');
+
+        assert.strictEqual(urls[0], `https://dev.azure.com/fakeorg/_apis/FeatureFlags/${flagName}`);
+        assert.strictEqual(urls[0].indexOf('//_apis'), -1, 'url should not contain a double slash');
+    });
+
+    it('builds the same url when the service url has no trailing slash', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({ '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'On' } } }, urls);
+
+        await rv.isFeatureFlagEnabled('https://dev.azure.com/fakeorg', flagName, 'token');
+
+        assert.strictEqual(urls[0], `https://dev.azure.com/fakeorg/_apis/FeatureFlags/${flagName}`);
+    });
+
+    it('queries the feature flag against the resolved TCM url, not the collection uri', async function() {
+        const urls: string[] = [];
+        const rv = loadRunVsTest({
+            '_apis/resourceAreas': { statusCode: 200, body: { locationUrl: tcmUrl } },
+            '_apis/FeatureFlags': { statusCode: 200, body: { effectiveState: 'On' } }
+        }, urls);
+
+        const resolved = await rv.getServiceUrlFromResourceArea(collectionUri, tcmAreaId, 'token');
+        await rv.isFeatureFlagEnabled(resolved, flagName, 'token');
+
+        assert.strictEqual(urls[1], `https://fakeorg.vstmr.visualstudio.com/_apis/FeatureFlags/${flagName}`);
     });
 });
