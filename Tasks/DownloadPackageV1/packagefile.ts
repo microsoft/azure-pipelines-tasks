@@ -1,11 +1,14 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
-import * as extract from 'extract-zip'
-import AdmZip = require("adm-zip");
+import * as stream from "stream";
+import { promisify } from "util";
 
 var tar = require("tar-fs");
 var zlib = require("zlib");
+var yauzl = require("yauzl");
+
+const pipeline = promisify(stream.pipeline);
 
 
 export class PackageFile {
@@ -47,8 +50,7 @@ export class PackageFile {
             case ".zip":
             case ".crate":
             case ".nupkg":
-                // return this.unzip(this.initialLocation, this.finalLocation);
-                return this.unzipUsingAdmZip(this.initialLocation, this.finalLocation);
+                return this.unzipUsingYauzl(this.initialLocation, this.finalLocation);
             case ".tgz":
                 return this.unTarGz(this.initialLocation, this.finalLocation);
             default:
@@ -65,22 +67,127 @@ export class PackageFile {
         );
     }
 
-    private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-        return new Promise<void>(function(resolve, reject) {
-            tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-            tl.debug(`Using extract-zip package for extracting archive`);
-            extract(zipLocation, { dir: unzipLocation }).then(() => {
-                resolve();
-            }).catch((error) => {
-                reject(error);
+    private async unzipUsingYauzl(zipLocation: string, unzipLocation: string): Promise<void> {
+        tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
+        tl.debug("Using yauzl package for extracting archive");
+
+        if (!path.isAbsolute(unzipLocation)) {
+            throw new Error("Target directory is expected to be absolute");
+        }
+        await fs.promises.mkdir(unzipLocation, { recursive: true });
+        const dir: string = await fs.promises.realpath(unzipLocation);
+
+        await new Promise<void>((resolve, reject) => {
+            yauzl.open(zipLocation, { lazyEntries: true }, (err: Error, zipfile: any) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                let canceled: boolean = false;
+                const fail = (error: Error) => {
+                    if (canceled) {
+                        return;
+                    }
+                    canceled = true;
+                    zipfile.close();
+                    reject(error);
+                };
+
+                zipfile.on("error", fail);
+                zipfile.on("close", () => {
+                    if (!canceled) {
+                        resolve();
+                    }
+                });
+                zipfile.on("entry", (entry: any) => {
+                    if (canceled) {
+                        return;
+                    }
+                    if (entry.fileName.startsWith("__MACOSX/")) {
+                        zipfile.readEntry();
+                        return;
+                    }
+                    this.extractYauzlEntry(zipfile, entry, dir)
+                        .then(() => {
+                            if (!canceled) {
+                                zipfile.readEntry();
+                            }
+                        })
+                        .catch(fail);
+                });
+
+                zipfile.readEntry();
             });
         });
     }
 
-    private async unzipUsingAdmZip(zipLocation: string, unzipLocation: string): Promise<void> {
-        tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-        tl.debug("Using adm-zip package for extracting archive");
-        const zip: AdmZip = new AdmZip(zipLocation);
-        await zip.extractAllToAsync(unzipLocation, /* overwrite */ true);
+    private async extractYauzlEntry(zipfile: any, entry: any, dir: string): Promise<void> {
+        const dest: string = path.resolve(dir, entry.fileName);
+        const relativeDest: string = path.relative(dir, dest);
+        if (relativeDest.split(path.sep).includes("..") || path.isAbsolute(relativeDest)) {
+            throw new Error(`Out of bound path "${dest}" found while processing file ${entry.fileName}`);
+        }
+
+        // Reject paths that escape the target directory (zip slip), resolving path symlinks.
+        const parentDir: string = path.dirname(dest);
+        await fs.promises.mkdir(parentDir, { recursive: true });
+        const canonicalParentDir: string = await fs.promises.realpath(parentDir);
+        if (path.relative(dir, canonicalParentDir).split(path.sep).includes("..")) {
+            throw new Error(`Out of bound path "${canonicalParentDir}" found while processing file ${entry.fileName}`);
+        }
+
+        const mode: number = (entry.externalFileAttributes >> 16) & 0xFFFF;
+        const IFMT: number = 61440;
+        const IFDIR: number = 16384;
+        const IFLNK: number = 40960;
+        const symlink: boolean = (mode & IFMT) === IFLNK;
+        let isDir: boolean = (mode & IFMT) === IFDIR;
+
+        if (!isDir && entry.fileName.endsWith("/")) {
+            isDir = true;
+        }
+        const madeBy: number = entry.versionMadeBy >> 8;
+        if (!isDir) {
+            isDir = madeBy === 0 && entry.externalFileAttributes === 16;
+        }
+
+        const procMode: number = this.getExtractedMode(mode, isDir) & 0o777;
+        tl.debug(`extracting entry ${entry.fileName} isDir=${isDir} isSymlink=${symlink}`);
+
+        const targetDir: string = isDir ? dest : path.dirname(dest);
+        await fs.promises.mkdir(targetDir, isDir ? { recursive: true, mode: procMode } : { recursive: true });
+        if (isDir) {
+            return;
+        }
+
+        const readStream: stream.Readable = await promisify(zipfile.openReadStream.bind(zipfile))(entry);
+
+        if (symlink) {
+            const link: string = await this.readStreamToString(readStream);
+            const relativeTarget: string = path.relative(dir, path.resolve(path.dirname(dest), link));
+            if (relativeTarget.split(path.sep).includes("..") || path.isAbsolute(relativeTarget)) {
+                throw new Error(`Blocked symlink "${entry.fileName}" -> "${link}" that escapes the extraction directory`);
+            }
+            await fs.promises.symlink(link, dest);
+        } else {
+            await pipeline(readStream, fs.createWriteStream(dest, { mode: procMode }));
+        }
+    }
+
+    private readStreamToString(readStream: stream.Readable): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            const chunks: Buffer[] = [];
+            readStream.on("data", (chunk: Buffer) => chunks.push(chunk));
+            readStream.on("end", () => resolve(Buffer.concat(chunks).toString()));
+            readStream.on("error", reject);
+        });
+    }
+
+    private getExtractedMode(entryMode: number, isDir: boolean): number {
+        let mode: number = entryMode;
+        if (mode === 0) {
+            mode = isDir ? 0o755 : 0o644;
+        }
+        return mode;
     }
 }
