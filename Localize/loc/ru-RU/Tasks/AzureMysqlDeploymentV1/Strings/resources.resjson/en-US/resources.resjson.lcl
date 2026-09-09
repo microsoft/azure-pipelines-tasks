@@ -432,6 +432,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidDatabaseName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Недопустимое имя базы данных "%s". Допускаются только буквенно-цифровые символы, знаки подчеркивания и дефисы.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LinuxMysqlClientMissingError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.]]></Val>
