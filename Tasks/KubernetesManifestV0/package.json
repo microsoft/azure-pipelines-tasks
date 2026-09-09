@@ -12,19 +12,21 @@
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.4.0",
     "azure-pipelines-tasks-docker-common": "2.0.6",
-    "azure-pipelines-tasks-kubernetes-common": "^2.212.0",
-    "azure-pipelines-tasks-utility-common": "^3.210.0",
-    "azure-pipelines-tool-lib": "^2.0.10",
+    "azure-pipelines-tasks-kubernetes-common": "^2.280.0",
+    "azure-pipelines-tasks-utility-common": "^3.280.0",
+    "azure-pipelines-tool-lib": "^2.279.2",
     "del": "2.2.0",
-    "js-yaml": "3.13.1",
+    "js-yaml": "3.15.2",
     "moment": "^2.29.4",
     "agent-base": "^6.0.2",
-    "typed-rest-client": "^1.8.9"
+    "typed-rest-client": "^1.8.11"
   },
   "devDependencies": {
     "typescript": "5.1.6"
   },
   "overrides": {
-    "form-data": "^4.0.4"
+    "form-data": "^4.0.6",
+    "brace-expansion": "^1.1.18",
+    "minimatch": "^3.1.5"
   }
 }
