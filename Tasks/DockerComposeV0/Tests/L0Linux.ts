@@ -75,6 +75,19 @@ let a: any = <any>{
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
         },
+        // Simulates the compose config resolution writing a ##vso[] logging command to
+        // stderr. getCombinedConfig() runs with silent:true, so the sanitized outStream is
+        // never consulted - the line reaches the log through the errline handler and
+        // tl.error(), which has to sanitize it explicitly.
+        "docker-compose -f /tmp/tempdir/100/vsoinjection-config-compose.yml build": {
+            "code": 0,
+            "stdout": "sucessfully built the service images"
+        },
+        "docker-compose -f /tmp/tempdir/100/vsoinjection-config-compose.yml config": {
+            "code": 0,
+            "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'",
+            "stderr": "##vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js"
+        },
         "docker compose -f /tmp/tempdir/100/docker-compose.yml config": {
             "code": 0,
             "stdout": "services:\n  redis:\n    image: redis:alpine\n  web:\n    build:\n      context: /tmp/tempdir/100\n    ports:\n    - 5000:5000/tcp\n    volumes:\n    - /tmp/tempdir/100:/code:rw\nversion: '2.0'"
