@@ -10,7 +10,7 @@ import * as DockerComposeUtils from "./dockercomposeutils";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection"
 import AuthenticationToken from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken"
 import * as Utils from "./utils";
-import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
+import { createSanitizedExecOptions, sanitizeDockerOutput } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 export default class DockerComposeConnection extends ContainerConnection {
     private dockerComposePath: string;
@@ -89,9 +89,10 @@ export default class DockerComposeConnection extends ContainerConnection {
         });
         // Compose command output can contain attacker-controlled content (e.g. from a
         // Dockerfile or docker-compose.yml in a pull request), so route it through the
-        // sanitizer by default to prevent ##vso[] logging-command injection. Callers may
-        // still override outStream/errStream via options if needed.
-        await this.execCommand(command, { ...createSanitizedExecOptions(), ...options });
+        // sanitizer by default to prevent ##vso[] logging-command injection. Options
+        // passed by the caller take precedence only for fields other than the sanitizer
+        // streams, so callers cannot accidentally disable sanitization.
+        await this.execCommand(command, { ...options, ...createSanitizedExecOptions() });
         return output || '\n';
     }
 
@@ -132,11 +133,15 @@ export default class DockerComposeConnection extends ContainerConnection {
             result += data;
         });
         command.on("errline", line => {
-            tl.error(line);
+            // errline is emitted from the raw child-process stderr regardless of the
+            // "silent" exec option, so it must be sanitized explicitly here - the
+            // sanitized outStream/errStream below are not consulted for this event.
+            tl.error(sanitizeDockerOutput(line));
         });
         // The resolved compose config can echo attacker-controlled content from the
-        // compose file, so sanitize it before it reaches the live console/log.
-        return command.exec({ silent: true, ...createSanitizedExecOptions() } as any).then(() => result);
+        // compose file. stdout/stderr echoing to the console is suppressed (silent),
+        // and the errline handler above sanitizes what's forwarded to tl.error().
+        return command.exec({ silent: true } as any).then(() => result);
     }
 
     public getImages(builtOnly?: boolean): any {
