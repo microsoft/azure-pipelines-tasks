@@ -10,7 +10,7 @@ import { BuildStatus, BuildResult, BuildQueryOrder, Build, BuildDefinitionRefere
 
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
-import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
+import * as webHandlers from 'typed-rest-client/Handlers';
 import { IBaseHandlerConfig, IContainerHandlerConfig, IContainerHandlerZipConfig } from './DownloadHandlers/HandlerConfigs';
 
 import { DownloadHandlerContainer } from './DownloadHandlers/DownloadHandlerContainer';
