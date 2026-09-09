@@ -736,6 +736,7 @@ namespace BuildConfigGen
                 {
                     throw new Exception($"expected {taskTargetPath} to exist!");
                 }
+                bool shouldPreserveTypescriptVersion = ShouldPreserveTypescriptVersion(taskTargetPath);
 
                 string taskHandler = Path.Combine(taskTargetPath, "task.json");
                 JsonNode taskHandlerContents = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(taskHandler))!;
@@ -900,7 +901,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides);
+                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides, shouldPreserveTypescriptVersion);
                             }
 
                         }
@@ -997,6 +998,20 @@ namespace BuildConfigGen
             }
 
             return false;
+        }
+
+        private static bool ShouldPreserveTypescriptVersion(string taskTargetPath)
+        {
+            string makeJsonPath = Path.Combine(taskTargetPath, "make.json");
+            if (!File.Exists(makeJsonPath))
+            {
+                return false;
+            }
+
+            JsonNode makeJson = JsonNode.Parse(File.ReadAllText(makeJsonPath))
+                ?? throw new InvalidOperationException($"Unable to parse {makeJsonPath}");
+
+            return makeJson["buildConfigGen"]?["preserveTypescriptVersion"]?.GetValue<bool>() ?? false;
         }
 
         private static void EnsureDependencyVersionsAreSyncronized(
@@ -1282,14 +1297,15 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides, bool shouldPreserveTypescriptVersion)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
 
-            // Upgrade typescript version if specified from packageVersionOverrides
-            if (shouldUpdateTypescript && packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
+            if (shouldUpdateTypescript
+                && !shouldPreserveTypescriptVersion
+                && packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
             {
                 outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = typescriptVersion;
             }
