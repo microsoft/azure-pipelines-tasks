@@ -72,22 +72,32 @@ export class DeploymentScopeBase {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables");
+                        const setOutputVariable = (variableName: string, variableValue: string) => {
+                            if (useSafeDeploymentOutputVariables) {
+                                tl.setVariable(variableName, variableValue);
+                                console.log(tl.loc("AddedOutputVariable", JSON.stringify(variableName)));
+                            } else {
+                                console.log(`##vso[task.setvariable variable=${variableName};]${variableValue}`);
+                                console.log(tl.loc("AddedOutputVariable", variableName));
+                            }
+                        };
                         const setVariablesInObject = (path: string, obj: any) => {
                             for (var key of Object.keys(obj)) {
                                 if (obj[key] && typeof(obj[key]) === "object") {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
                                 }
                                 else {
-                                    console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
-                                    console.log(tl.loc("AddedOutputVariable", `${path}.${key}`));
+                                    const variableName = `${path}.${key}`;
+                                    const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
+                                    setOutputVariable(variableName, variableValue);
                                 }
                             }
                         }
                         if (typeof(result["properties"]["outputs"]) === "object") {
                             setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
                         }
-                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
-                        console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        setOutputVariable(this.taskParameters.deploymentOutputs, JSON.stringify(result["properties"]["outputs"]));
                     }
 
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));

@@ -75,6 +75,35 @@ describe('Azure Resource Manager Template Deployment', function () {
             throw error;
         }
     });
+    it('Escapes ARM output names before creating deployment output variables', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["maliciousDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        delete process.env["maliciousDeploymentOutputs"];
+        delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+            assert(
+                tr.stdout.indexOf("variable=someVar.safe%3B%5D%0A##vso[task.setvariable variable=MSRC_REPRO_MARKER%3B%5Dconfirmed%0A##vso[task.setvariable variable=padding.type;") >= 0,
+                "ARM output name should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("\n##vso[task.setvariable variable=MSRC_REPRO_MARKER;]confirmed") < 0,
+                "ARM output name should not inject a logging command");
+            assert(
+                tr.stdout.indexOf("\\n##vso[task.setvariable variable=MSRC_REPRO_MARKER;]confirmed\\n") >= 0,
+                "ARM output name should be encoded when included in informational logs");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+    });
     it('Create or Update RG, failed on faulty CSM template file', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "faultyCSM.json";
