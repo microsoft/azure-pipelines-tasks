@@ -27,6 +27,19 @@ export module VsTestToolsInstaller {
     export const PathToVsTestToolVariable = 'VsTestToolsInstallerInstalledToolLocation';
 }
 
+export module VsTestConsole {
+    export const EXE_NAME = 'vstest.console.exe';
+    export const ARM64_EXE_NAME = 'vstest.console.arm64.exe';
+}
+
+export module FeatureFlags {
+    export const ENABLE_ARM64_VSTEST_CONSOLE = 'TestExecution.EnableArm64VstestConsole';
+}
+
+export module ResourceAreas {
+    export const TCM = '00000054-0000-8888-8000-000000000000';
+}
+
 export module DistributionTypes {
     export const EXECUTIONTIMEBASED = 'TestExecutionTimes';
     export const ASSEMBLYBASED = 'TestAssemblies';
@@ -47,4 +60,5 @@ export module BackDoorVariables {
 
 export module AgentVariables {
     export const AGENT_TEMPDIRECTORY = 'Agent.TempDirectory';
+    export const AGENT_OSARCHITECTURE = 'Agent.OSArchitecture';
 }
