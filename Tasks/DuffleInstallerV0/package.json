@@ -9,13 +9,16 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.4.0",
-    "azure-pipelines-tasks-utility-common": "3.280.0",
-    "azure-pipelines-tool-lib": "^2.279.2"
+    "azure-pipelines-tasks-utility-common": "3.267.0",
+    "azure-pipelines-tool-lib": "^2.0.10"
   },
   "devDependencies": {
     "typescript": "5.1.6"
   },
   "overrides": {
-    "minimatch": "^3.1.5"
+    "brace-expansion": "^1.1.18",
+    "js-yaml": "3.15.2",
+    "minimatch": "^3.1.5",
+    "underscore": "^1.13.8"
   }
 }

@@ -9,8 +9,8 @@
     "@types/q": "^1.5.0",
     "@types/uuid": "^8.3.0",
     "azure-pipelines-task-lib": "^4.0.2",
-    "azure-pipelines-tasks-kubernetes-common": "2.280.0",
-    "azure-pipelines-tool-lib": "^2.279.2",
+    "azure-pipelines-tasks-kubernetes-common": "2.209.1",
+    "azure-pipelines-tool-lib": "^2.0.10",
     "del": "2.2.0",
     "js-yaml": "4.3.2",
     "typed-rest-client": "1.8.11"
@@ -19,6 +19,9 @@
     "typescript": "5.1.6"
   },
   "overrides": {
-    "minimatch": "^3.1.5"
+    "form-data": "^4.0.6",
+    "brace-expansion": "^1.1.18",
+    "minimatch": "^3.1.5",
+    "underscore": "^1.13.8"
   }
 }
