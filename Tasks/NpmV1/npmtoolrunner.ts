@@ -207,7 +207,7 @@ export class NpmToolRunner extends tr.ToolRunner {
 
     private _getDebugLogPath(options?: tr.IExecSyncOptions): string {
         // check cache
-        const logs = tl.findMatch(path.join(this.cacheLocation, '_logs'), '*-debug.log');
+        const logs = tl.findMatch(path.join(this.cacheLocation, '_logs'), '*-debug*.log');
         if (logs && logs.length > 0) {
             const debugLog = logs[logs.length - 1];
             console.log(tl.loc('FoundNpmDebugLog', debugLog));
