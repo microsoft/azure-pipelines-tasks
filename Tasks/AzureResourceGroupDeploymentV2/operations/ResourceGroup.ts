@@ -557,10 +557,17 @@ export class ResourceGroup {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables");
                         const setVariablesInObject = (path: string, obj: any) => {
                             for (var key of Object.keys(obj)) {
                                 if (obj[key] && typeof(obj[key]) === "object") {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else if (useSafeDeploymentOutputVariables) {
+                                    const variableName = `${path}.${key}`;
+                                    const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
+                                    tl.command("task.setvariable", { variable: variableName }, variableValue);
+                                    console.log(tl.loc("AddedOutputVariable", JSON.stringify(variableName).slice(1, -1)));
                                 }
                                 else {
                                     console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
@@ -571,8 +578,13 @@ export class ResourceGroup {
                         if (typeof(result["properties"]["outputs"]) === "object") {
                             setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
                         }
-                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
-                        console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        if (useSafeDeploymentOutputVariables) {
+                            tl.command("task.setvariable", { variable: this.taskParameters.deploymentOutputs }, JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", JSON.stringify(this.taskParameters.deploymentOutputs).slice(1, -1)));
+                        } else {
+                            console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        }
                     }
 
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
