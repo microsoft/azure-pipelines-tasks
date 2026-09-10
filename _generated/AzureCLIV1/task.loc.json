@@ -20,7 +20,7 @@
   "version": {
     "Major": 1,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -167,7 +167,7 @@
     "ExpiredServicePrincipalMessageWithLink": "ms-resource:loc.messages.ExpiredServicePrincipalMessageWithLink"
   },
   "_buildConfigMapping": {
-    "Default": "1.280.0",
-    "Node24_1": "1.280.1"
+    "Default": "1.280.2",
+    "Node24_1": "1.280.3"
   }
 }
