@@ -16,18 +16,15 @@
     "azure-pipelines-tasks-utility-common": "^3.210.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "del": "2.2.0",
-    "js-yaml": "3.15.2",
+    "js-yaml": "3.13.1",
     "moment": "^2.29.4",
     "agent-base": "^6.0.2",
-    "typed-rest-client": "^1.8.11"
+    "typed-rest-client": "^1.8.9"
   },
   "devDependencies": {
     "typescript": "5.1.6"
   },
   "overrides": {
-    "form-data": "^4.0.6",
-    "brace-expansion": "^1.1.18",
-    "minimatch": "^3.1.5",
-    "underscore": "^1.13.8"
+    "form-data": "^4.0.4"
   }
 }
