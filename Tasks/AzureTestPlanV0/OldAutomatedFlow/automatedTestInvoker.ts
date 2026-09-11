@@ -39,12 +39,6 @@ export async function testInvoker(testsToBeExecuted: string[], ciData: ciDiction
                 ciData["isPythonExecution"] = true;
                 break;
 
-            case 'Go':
-                exitCode = await executeGoTests(testsToBeExecuted);
-                tl.debug(`Execution Status Code for Go: ${exitCode}`);
-                ciData["isGoExecution"] = true;
-                break;
-
             case 'Jest':
                 exitCode = await executeJestTests(testsToBeExecuted);
                 tl.debug(`Execution Status Code for Jest: ${exitCode}`);
