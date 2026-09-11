@@ -1,6 +1,6 @@
 import { ArtifactEngineOptions } from 'artifact-engine/Engine';
 import { BuildArtifact } from 'azure-devops-node-api/interfaces/BuildInterfaces';
-import { PersonalAccessTokenCredentialHandler } from 'artifact-engine/Providers/typed-rest-client/Handlers';
+import { PersonalAccessTokenCredentialHandler } from 'typed-rest-client/Handlers';
 
 export interface IBaseHandlerConfig {
     artifactInfo: BuildArtifact;
