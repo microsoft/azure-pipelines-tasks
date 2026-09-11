@@ -25,7 +25,7 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
 
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertNpmrcContains(npmrcPath, `_authToken=${TestData.externalRegistryToken}`);
-            TestHelpers.assertNpmrcContains(npmrcPath, 'always-auth=true');
+            TestHelpers.assertNpmrcNotContains(npmrcPath, 'always-auth');
         });
     });
 
@@ -46,6 +46,7 @@ describe('NpmAuthenticate L0 - Endpoint Credential Resolution', function () {
             TestHelpers.assertNpmrcContains(npmrcPath, 'username=VssToken');
             TestHelpers.assertNpmrcContains(npmrcPath, '_password=');
             TestHelpers.assertNpmrcNotContains(npmrcPath, '_authToken=');
+            TestHelpers.assertNpmrcNotContains(npmrcPath, 'always-auth');
         });
     });
 
