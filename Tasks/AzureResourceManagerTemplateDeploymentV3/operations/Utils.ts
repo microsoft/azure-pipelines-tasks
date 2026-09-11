@@ -445,8 +445,8 @@ class Utils {
             let azcliversion = await this.getAzureCliVersion(useResolvedAzureCliPath ? azureCliPath : undefined)
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion, filePathExtension)){
-                    setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService);
-                    await loginAzureRM(taskParameters.connectedService);
+                    setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService, azureCliPath);
+                    await loginAzureRM(taskParameters.connectedService, azureCliPath);
                     await this.execBicepBuild(filePath, azureCliPath)
                     if(filePathExtension === 'bicep'){
                         filePath = filePath.replace('.bicep', '.json')      
