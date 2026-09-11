@@ -56,23 +56,72 @@ describe('Azure Resource Manager Template Deployment', function () {
             throw error;
         }
     });*/
-    it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', async () => {
+    it('Preserves legacy deployment output commands when the feature flag is disabled', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
         process.env["deploymentOutputs"] = "someVar";
+        process.env["regularDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "false";
         let tr = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
         try {
+            await tr.runAsync();
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("properly sanitized") > 0, "Parameters should have been sanitized");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf('##vso[task.setvariable variable=someVar.safeOutput.type;]"string"') >= 0, "individual deploymentOutput should use the legacy command format");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
             throw error;
+        }
+        finally {
+            delete process.env["regularDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Escapes ARM output names before creating deployment output variables', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["specialCharacterDeploymentOutputs"] = "true";
+        process.env["useWithoutJSON"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            assert(
+                tr.stdout.indexOf("variable=someVar.safe%3B%5D%0A##vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER%3B%5Dconfirmed%0A##vso[task.setvariable variable=padding.type;") >= 0,
+                "ARM output name should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("\n##vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER;]confirmed") < 0,
+                "ARM output name should not inject a logging command");
+            assert(
+                tr.stdout.indexOf("\\n##vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER;]confirmed\\n") >= 0,
+                "ARM output name should be encoded when included in informational logs");
+            assert(
+                tr.stdout.indexOf("harmless-marker%0A##vso[task.setvariable variable=OUTPUT_VALUE_TEST_MARKER;]confirmed") >= 0,
+                "ARM output value should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("\n##vso[task.setvariable variable=OUTPUT_VALUE_TEST_MARKER;]confirmed") < 0,
+                "ARM output value should not inject a logging command");
+            assert(
+                tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0,
+                "aggregate deploymentOutput should be updated");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["specialCharacterDeploymentOutputs"];
+            delete process.env["useWithoutJSON"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
         }
     });
     it('Create or Update RG, failed on faulty CSM template file', async () => {
