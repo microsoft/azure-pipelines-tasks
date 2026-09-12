@@ -17,10 +17,10 @@ tmr.mockNpmCommand('custom', {
 } as TaskLibAnswerExecResult);
 tmr.answers.exist['C:\\mock\\cache\\npm-debug.log'] = false;
 tmr.answers["stats"] = {"C:\\mock\\cache": {"isDirectory":true}};
-tmr.answers.findMatch['*-debug.log'] = [
-    'someRandomNpm-debug.log'
+tmr.answers.findMatch['*-debug*.log'] = [
+    '2026-09-04T12_39_31_440Z-debug-0.log'
 ];
 let fs = require('fs');
-fs.writeFileSync('someRandomNpm-debug.log', 'NPM_DEBUG_LOG', 'utf-8');
+fs.writeFileSync('2026-09-04T12_39_31_440Z-debug-0.log', 'NPM_DEBUG_LOG', 'utf-8');
 tmr.run();
 
