@@ -30,12 +30,30 @@
   ],
   "inputs": [
     {
+      "name": "useGoMod",
+      "type": "boolean",
+      "label": "Use go.mod",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Select this option to install the Go version matching the specified go.mod file. These files are searched from system.DefaultWorkingDirectory. You can change the search root path by setting working directory input."
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "Working Directory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify path from where go.mod files should be searched when using `Use go.mod`. If empty, `system.DefaultWorkingDirectory` will be considered as the root path.",
+      "visibleRule": "useGoMod = true"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "Version",
       "defaultValue": "1.10",
       "required": true,
-      "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3"
+      "helpMarkDown": "The Go version to download (if necessary) and use. Example: 1.9.3",
+      "visibleRule": "useGoMod = false"
     },
     {
       "name": "goPath",
@@ -81,6 +99,10 @@
   },
   "messages": {
     "FailedToDownload": "Failed to download Go version %s. Verify that the version is valid and resolve any other issues. Error: %s",
-    "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set."
+    "TempDirNotSet": "The 'Agent.TempDirectory' environment variable was expected to be set.",
+    "FailedToFindGoMod": "No go.mod file found in directory '%s'. Make sure go.mod file exists in the specified directory or its subdirectories.",
+    "GoModVersionDetected": "Detected Go version '%s' from go.mod file: %s",
+    "GoModVersionNotFound": "Could not find Go version directive in go.mod file: %s",
+    "FailedToReadGoMod": "Failed to read go.mod file '%s': %s"
   }
 }
