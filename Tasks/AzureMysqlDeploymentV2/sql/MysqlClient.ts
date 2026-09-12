@@ -106,6 +106,9 @@ export class MysqlClient implements ISqlClient {
      * Run the user-provided SQL script (inline or file-based)
      */
     private async _runUserScript(argument: string): Promise<number> {
+        // Binary mode disables mysql client commands such as \! in non-interactive input.
+        // Append it after user-provided arguments so it cannot be disabled by an override.
+        argument += " --binary-mode";
         if (this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
             return this._executeSqlScript(argument + this._getFileSourceArgument());
         }
