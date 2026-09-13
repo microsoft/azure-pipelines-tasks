@@ -1,7 +1,6 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as path from "path";
 import * as fs from "fs";
-import * as toolLib from "azure-pipelines-tool-lib/tool";
 
 var tar = require("tar-fs");
 var zlib = require("zlib");
@@ -65,7 +64,7 @@ export class PackageFile {
 
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
         tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-        tl.debug("Using azure-pipelines-tool-lib extractZip for extracting archive");
-        await toolLib.extractZip(zipLocation, unzipLocation);
+        tl.debug("Using azure-pipelines-task-lib extractZipSecure for extracting archive");
+        await tl.extractZipSecure(zipLocation, unzipLocation);
     }
 }
