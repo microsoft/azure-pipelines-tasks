@@ -23,9 +23,18 @@ $capturedAzSource = $azCommand.Source
 & $capturedAzSource source-execution
 Write-Host "CAPTURED_SOURCE_EXECUTED:$($LASTEXITCODE -eq 0)"
 
+@('captured first line', 'captured second line') | & $capturedAzSource read-stdin captured-source
+Write-Host "CAPTURED_SOURCE_STDIN_SUCCESS:$($? -and $LASTEXITCODE -eq 0)"
+
 $env:AZ_INSTALLER = 'OriginalInstaller'
 az 'space value' 'special%^&'
 Write-Host "ENV_RESTORED_AFTER_SUCCESS:$($env:AZ_INSTALLER -eq 'OriginalInstaller')"
+
+@('alias first line', 'alias second %^& line') | az read-stdin alias-pipe
+Write-Host "ALIAS_STDIN_SUCCESS:$($? -and $LASTEXITCODE -eq 0)"
+
+az no-input
+Write-Host "NO_INPUT_SUCCESS:$($? -and $LASTEXITCODE -eq 0)"
 
 if ($PSVersionTable.PSVersion.Major -ge 7) {
 	function Invoke-AzFromInnerCaller {
@@ -66,6 +75,12 @@ $nonzeroExitCode = $LASTEXITCODE
 Write-Host "NONZERO_SUCCESS:$nonzeroSuccess"
 Write-Host "NONZERO_EXIT_CODE:$nonzeroExitCode"
 Write-Host "ENV_RESTORED_AFTER_NONZERO:$($env:AZ_INSTALLER -eq 'BeforeNonzero')"
+
+@('piped failure line') | az read-stdin fail
+$pipedNonzeroSuccess = $?
+$pipedNonzeroExitCode = $LASTEXITCODE
+Write-Host "PIPED_NONZERO_SUCCESS:$pipedNonzeroSuccess"
+Write-Host "PIPED_NONZERO_EXIT_CODE:$pipedNonzeroExitCode"
 
 $env:AZ_INSTALLER = ''
 $emptyInstallerExistedBefore = Test-Path Env:\AZ_INSTALLER

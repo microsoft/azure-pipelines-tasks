@@ -27,6 +27,20 @@ public class Program
         {
             Console.WriteLine("FAKE_ARG_" + index + ":" + Convert.ToBase64String(Encoding.UTF8.GetBytes(args[index])));
         }
+        if (Array.IndexOf(args, "read-stdin") >= 0)
+        {
+            string line;
+            int index = 0;
+            while ((line = Console.ReadLine()) != null)
+            {
+                Console.WriteLine("FAKE_STDIN_" + index++ + ":" + Convert.ToBase64String(Encoding.UTF8.GetBytes(line)));
+            }
+            Console.WriteLine("FAKE_STDIN_COUNT:" + index);
+        }
+        else
+        {
+            Console.WriteLine("FAKE_STDIN_MODE:NONE");
+        }
         return Array.IndexOf(args, "fail") >= 0 ? 7 : 0;
     }
 }
