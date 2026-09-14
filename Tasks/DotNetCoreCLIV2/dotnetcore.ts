@@ -232,13 +232,12 @@ export class dotNetExe {
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
+        // When the test run title is suffixed per project, every project needs its own results
+        // directory so that its trx files can be published under its own test run title.
+        const publishPerProject: boolean = enablePublishTestResults && !!this.getAppendToTestRunTitle();
 
-        if (enablePublishTestResults && enablePublishTestResults === true) {
-            if (isMTP) {
-                this.arguments = ` --report-trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
-            } else {
-                this.arguments = ` --logger trx --results-directory "${resultsDirectory}" `.concat(this.arguments);
-            }
+        if (enablePublishTestResults && !publishPerProject) {
+            this.arguments = dotNetExe.getResultsDirectoryArguments(isMTP, resultsDirectory).concat(this.arguments);
         }
 
         // Remove old trx files
@@ -275,7 +274,14 @@ export class dotNetExe {
             }
 
             dotnet.arg(projectFile);
-            dotnet.line(this.arguments);
+
+            const projectResultsDirectory = publishPerProject
+                ? path.join(resultsDirectory, `TestResults_${fileIndex}`)
+                : resultsDirectory;
+            dotnet.line(publishPerProject
+                ? dotNetExe.getResultsDirectoryArguments(isMTP, projectResultsDirectory).concat(this.arguments)
+                : this.arguments);
+
             try {
                 const result = await dotnet.exec(<tr.IExecOptions>{
                     cwd: this.workingDirectory
@@ -284,9 +290,13 @@ export class dotNetExe {
                 tl.error(err);
                 failedProjects.push(projectFile);
             }
+
+            if (publishPerProject) {
+                this.publishTestResults(projectResultsDirectory, this.getTestRunTitle(projectFile));
+            }
         }
-        if (enablePublishTestResults && enablePublishTestResults === true) {
-            this.publishTestResults(resultsDirectory);
+        if (enablePublishTestResults && !publishPerProject) {
+            this.publishTestResults(resultsDirectory, this.getTestRunTitle(""));
         }
         if (failedProjects.length > 0) {
             tl.warning(tl.loc('Net5NugetVersionCompat'));
@@ -294,10 +304,56 @@ export class dotNetExe {
         }
     }
 
-    private publishTestResults(resultsDir: string): void {
+    private getAppendToTestRunTitle(): string {
+        return (tl.getInput("appendToTestRunTitle", false) || "").trim();
+    }
+
+    // Builds the test run title for a project: the 'testRunTitle' input, optionally
+    // suffixed with the project name or its path relative to the repository root.
+    private getTestRunTitle(projectFile: string): string {
+        const testRunTitle = tl.getInput("testRunTitle", false) || "";
+        const suffix = this.getTestRunTitleSuffix(projectFile);
+        if (!suffix) {
+            return testRunTitle;
+        }
+        return testRunTitle ? `${testRunTitle} ${suffix}` : suffix;
+    }
+
+    private getTestRunTitleSuffix(projectFile: string): string {
+        const appendToTestRunTitle = this.getAppendToTestRunTitle();
+        if (!appendToTestRunTitle || !projectFile) {
+            return "";
+        }
+        switch (appendToTestRunTitle.toLowerCase()) {
+            case "projectname":
+                return path.basename(projectFile, path.extname(projectFile));
+            case "projectpath":
+                return dotNetExe.getProjectPathFromRepositoryRoot(projectFile);
+            default:
+                tl.warning(tl.loc("UnknownAppendToTestRunTitle", appendToTestRunTitle));
+                return "";
+        }
+    }
+
+    private static getProjectPathFromRepositoryRoot(projectFile: string): string {
+        const repositoryRoot = tl.getVariable("Build.SourcesDirectory")
+            || tl.getVariable("System.DefaultWorkingDirectory")
+            || process.cwd();
+        const relativePath = path.relative(repositoryRoot, projectFile);
+        // Fall back to the path as given when the project sits outside the repository root.
+        const projectPath = (!relativePath || relativePath.startsWith("..")) ? projectFile : relativePath;
+        return projectPath.split(path.sep).join("/");
+    }
+
+    private static getResultsDirectoryArguments(isMTP: boolean, resultsDir: string): string {
+        return isMTP
+            ? ` --report-trx --results-directory "${resultsDir}" `
+            : ` --logger trx --results-directory "${resultsDir}" `;
+    }
+
+    private publishTestResults(resultsDir: string, testRunTitle: string): void {
         const buildConfig = tl.getVariable('BuildConfiguration');
         const buildPlaform = tl.getVariable('BuildPlatform');
-        const testRunTitle = tl.getInput("testRunTitle", false) || "";
         const matchingTestResultsFiles: string[] = tl.findMatch(resultsDir, '**/*.trx');
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.warning('No test result files were found.');
