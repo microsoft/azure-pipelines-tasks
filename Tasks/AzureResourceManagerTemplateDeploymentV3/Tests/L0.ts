@@ -295,6 +295,14 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(parsed, "the emitted line should parse as a command");
             assert.strictEqual(parsed.properties.variable, "someVar.a]b.value", "the bracketed name round-trips intact");
             assert.strictEqual(parsed.data, '"bracket-value"', "the value is no longer polluted by the name");
+            // A name the legacy format would have truncated has to raise a migration warning,
+            // so the rename is visible in the log during the staged rollout instead of
+            // silently changing which variable downstream steps resolve.
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(
+                warned.some(cmd => cmd.data.indexOf("someVar.a]b.value") >= 0),
+                "expected a warning naming the changed output variable");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);

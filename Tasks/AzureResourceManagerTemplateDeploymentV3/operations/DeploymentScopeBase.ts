@@ -3,7 +3,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sanitizeForLoggingCommand } from "./sanitize";
+import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
 import azureGraph = require("azure-pipelines-tasks-azure-arm-rest/azure-graph");
@@ -84,6 +84,9 @@ export class DeploymentScopeBase {
                                     const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
                                     tl.command("task.setvariable", { variable: variableName }, variableValue);
                                     console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(variableName)));
+                                    if (wasTruncatedByLegacyCommandFormat(variableName)) {
+                                        tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(variableName)));
+                                    }
                                 }
                                 else {
                                     console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));

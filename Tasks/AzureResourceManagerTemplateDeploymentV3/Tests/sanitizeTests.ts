@@ -1,6 +1,6 @@
 import assert = require("assert");
 
-import { sanitizeForLoggingCommand } from "../operations/sanitize";
+import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "../operations/sanitize";
 
 // Unit tests for sanitizeForLoggingCommand - prevents ##vso[ logging-command injection
 // through ARM deployment output names and values that reach the build log.
@@ -81,5 +81,25 @@ export function runSanitizeTests() {
         assert.strictEqual(sanitizeForLoggingCommand(null), null);
         assert.strictEqual(sanitizeForLoggingCommand(undefined), undefined);
         assert.strictEqual(sanitizeForLoggingCommand(''), '');
+    });
+
+    it('Should flag names that the legacy command format truncated', () => {
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a]b'), true, 'a closing bracket ended the legacy command');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a;b'), true, 'a semicolon split the legacy property list');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a\nb'), true, 'a line feed ended the legacy command');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a\rb'), true, 'a carriage return ended the legacy command');
+    });
+
+    it('Should not flag names the legacy command format handled correctly', () => {
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.storageName'), false);
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.storage_Account-1.value'), false);
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a=b'), false, 'an equals sign round-tripped on both paths');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a b'), false, 'a space round-tripped on both paths');
+    });
+
+    it('Should treat empty and nullish names as unaffected', () => {
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat(null), false);
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat(undefined), false);
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat(''), false);
     });
 }

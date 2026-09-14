@@ -10,7 +10,7 @@ import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
-import { sanitizeForLoggingCommand } from "./sanitize";
+import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
@@ -569,6 +569,9 @@ export class ResourceGroup {
                                     const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
                                     tl.command("task.setvariable", { variable: variableName }, variableValue);
                                     console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(variableName)));
+                                    if (wasTruncatedByLegacyCommandFormat(variableName)) {
+                                        tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(variableName)));
+                                    }
                                 }
                                 else {
                                     console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));

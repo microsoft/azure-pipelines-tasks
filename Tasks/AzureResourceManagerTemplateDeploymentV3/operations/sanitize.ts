@@ -1,4 +1,18 @@
-// Matches one or more # followed by vso[ - the prefix the Azure Pipelines agent uses to
+// Characters that corrupted the legacy hand-built logging command. The agent scans for the
+// first ']' after the marker and splits properties on ';', and a line break ended the
+// command outright. A name containing any of these therefore resolved to a different -
+// usually truncated - variable before the escaped path was introduced.
+const legacyTruncatingPattern = /[;\]\r\n]/;
+
+/**
+ * Reports whether a variable name would have been truncated or corrupted by the legacy
+ * hand-built logging command, and so resolves to a different variable now that the name is
+ * escaped. Used to warn the user that a name they may have referenced has changed.
+ */
+export function wasTruncatedByLegacyCommandFormat(variableName: string | null | undefined): boolean {
+    return !!variableName && legacyTruncatingPattern.test(variableName);
+}
+
 // detect logging commands. We match #+ (not just ##) so that inputs like "####vso[" are
 // fully neutralised in a single pass rather than leaving a residual "##vso[" after
 // replacing the inner match. Case-insensitive because the agent accepts any casing.
