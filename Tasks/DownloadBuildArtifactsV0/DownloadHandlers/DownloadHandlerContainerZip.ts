@@ -4,7 +4,6 @@ import { FilesystemProvider, ZipProvider } from 'artifact-engine/Providers';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as DecompressZip from 'decompress-zip';
-import * as extract from 'extract-zip'
 
 /**
  * Handler for download artifact via build API
@@ -40,8 +39,8 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
             }
 
             tl.debug(`Extracting ${this.zipLocation} to ${unzipLocation}`);
-            tl.debug(`Using extract-zip package for extracting archive`);
-            extract(this.zipLocation, { dir: unzipLocation }).then(() => {
+            tl.debug(`Using azure-pipelines-task-lib extractZipSecure for extracting archive`);
+            tl.extractZipSecure(this.zipLocation, unzipLocation).then(() => {
                 resolve();
             }).catch((error) => {
                 reject(error);
