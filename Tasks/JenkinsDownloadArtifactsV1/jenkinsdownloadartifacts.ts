@@ -14,7 +14,6 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-import * as extract from 'extract-zip'
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
 var uuidv4 = require('uuid/v4');
@@ -93,15 +92,9 @@ function publishEvent(feature, properties: any): void {
 }
 
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-    await new Promise<void>(function (resolve, reject) {
-        tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-        tl.debug(`Using extract-zip package for extracting archive`);
-        extract(zipLocation, { dir: unzipLocation }).then(() => {
-            resolve();
-        }).catch((error) => {
-            reject(error);
-        });
-    });
+    tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
+    tl.debug('Using azure-pipelines-task-lib extractZipSecure for extracting archive');
+    await tl.extractZipSecure(zipLocation, unzipLocation);
 }
 
 async function doWork() {
