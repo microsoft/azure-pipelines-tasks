@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {
-	validateRegistrySchemes,
+	validateAndFilterRegistryUrls,
 	normalizeRegistry,
 	toNerfDart,
 	tryResolveFromEndpoints,
@@ -9,7 +9,7 @@ import {
 import { NpmrcCredential } from '../../npmrcCredential';
 
 describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
-	describe('validateRegistrySchemes', function () {
+	describe('validateAndFilterRegistryUrls', function () {
 		for (const urls of [
 			['https://registry.example/feed/', 'http://registry.example/feed/'],
 			['http://registry.example/feed/', 'HTTPS://REGISTRY.EXAMPLE:443/feed/'],
@@ -17,15 +17,21 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			['https://registry.example:8443/feed/', 'http://registry.example:8443/feed/']
 		]) {
 			it(`rejects mixed schemes: ${urls.join(', ')}`, function () {
-				assert.throws(() => validateRegistrySchemes(urls), /mix HTTPS and non-HTTPS|Error_MixedRegistrySchemes/);
+				assert.throws(() => validateAndFilterRegistryUrls(urls), /mix HTTPS and non-HTTPS|Error_MixedRegistrySchemes/);
 			});
 		}
 
 		it('allows different hosts, ports, and HTTPS-only aliases', function () {
-			assert.doesNotThrow(() => validateRegistrySchemes([
+			assert.doesNotThrow(() => validateAndFilterRegistryUrls([
 				'https://registry.example/feed/', 'https://registry.example/other/',
 				'http://other.example/feed/', 'http://registry.example:8080/feed/'
 			]));
+		});
+
+		it('filters malformed registry URLs', function () {
+			assert.deepStrictEqual(validateAndFilterRegistryUrls([
+				'not-a-url', 'https://registry.example/feed/'
+			]), ['https://registry.example/feed/']);
 		});
 	});
 

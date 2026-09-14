@@ -22,7 +22,6 @@ async function main(): Promise<void> {
     const backupManager = new NpmrcBackupManager(backupDirectory);
     backupManager.ensureBackedUp(npmrc);
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
-    npmauthutils.validateRegistrySchemes(npmrcRegistries);
     
     let packagingLocation;
     try {
@@ -46,6 +45,7 @@ async function main(): Promise<void> {
     let federatedAuthToken: string | undefined;
 
     if (entraWifServiceConnectionName) {
+        npmrcRegistries = npmauthutils.validateAndFilterRegistryUrls(npmrcRegistries);
         federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName);
 
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.

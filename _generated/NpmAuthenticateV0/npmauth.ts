@@ -22,7 +22,6 @@ async function main(): Promise<void> {
     const backupManager = new NpmrcBackupManager(backupDirectory);
     backupManager.ensureBackedUp(npmrc);
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
-    npmauthutils.validateRegistrySchemes(npmrcRegistries);
     
     let packagingLocation;
     try {

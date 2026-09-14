@@ -134,6 +134,23 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         TestHelpers.assertOutputNotContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
 
+    it('warns and skips malformed registries before feedUrl matching', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc(
+            `@invalid:registry=not-a-url\n@valid:registry=${TestData.wifRegistryUrl}`
+        );
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+            [TestEnvVars.wifRegistryUrl]: TestData.wifRegistryUrl,
+            [TestEnvVars.wifToken]: TestData.wifToken
+        });
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'InvalidRegistryUrl');
+        TestHelpers.assertNpmrcContains(npmrcPath, TestData.wifToken);
+    });
+
     it('fails when feedUrl is provided without a service connection', async () => {
         // Arrange: feedUrl is set but workloadIdentityServiceConnection is not
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);

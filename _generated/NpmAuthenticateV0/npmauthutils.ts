@@ -7,16 +7,19 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 
-export function validateRegistrySchemes(registryUrls: string[]): void {
+export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] {
     const secureHosts = new Set<string>();
     const insecureHosts = new Set<string>();
+    const validRegistryUrls: string[] = [];
     for (const registryUrl of registryUrls) {
         let parsed: URL;
         try {
             parsed = new URL(registryUrl);
         } catch {
+            tl.warning(tl.loc('InvalidRegistryUrl', registryUrl));
             continue;
         }
+        validRegistryUrls.push(registryUrl);
         if (parsed.protocol === 'https:') {
             secureHosts.add(parsed.host);
         } else {
@@ -28,6 +31,7 @@ export function validateRegistrySchemes(registryUrls: string[]): void {
             throw new Error(tl.loc('Error_MixedRegistrySchemes', host));
         }
     }
+    return validRegistryUrls;
 }
 
 export function normalizeRegistry(registryUrl: string): string {
