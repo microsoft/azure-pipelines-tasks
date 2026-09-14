@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -160,6 +160,20 @@
       "visibleRule": "command = test",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.testRunTitle"
+    },
+    {
+      "name": "appendToTestRunTitle",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.appendToTestRunTitle",
+      "defaultValue": "",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.appendToTestRunTitle",
+      "options": {
+        "": "None",
+        "projectName": "Project name",
+        "projectPath": "Project path"
+      }
     },
     {
       "name": "zipAfterPublish",
@@ -567,6 +581,7 @@
     "PackagesFailedToPublish": "ms-resource:loc.messages.PackagesFailedToPublish",
     "PackagesInstalledSuccessfully": "ms-resource:loc.messages.PackagesInstalledSuccessfully",
     "PackagesPublishedSuccessfully": "ms-resource:loc.messages.PackagesPublishedSuccessfully",
+    "UnknownAppendToTestRunTitle": "ms-resource:loc.messages.UnknownAppendToTestRunTitle",
     "UnknownFeedType": "ms-resource:loc.messages.UnknownFeedType",
     "Warning_AutomaticallyVersionReferencedProjects": "ms-resource:loc.messages.Warning_AutomaticallyVersionReferencedProjects",
     "Warning_MoreThanOneVersionInBuildNumber": "ms-resource:loc.messages.Warning_MoreThanOneVersionInBuildNumber",
