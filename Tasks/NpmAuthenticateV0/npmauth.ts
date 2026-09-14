@@ -21,6 +21,8 @@ async function main(): Promise<void> {
     const backupDirectory = npmauthutils.initializeBackupDirectory();
     const backupManager = new NpmrcBackupManager(backupDirectory);
     backupManager.ensureBackedUp(npmrc);
+    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
+    npmauthutils.validateRegistrySchemes(npmrcRegistries);
     
     let packagingLocation;
     try {
@@ -38,7 +40,6 @@ async function main(): Promise<void> {
     const npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
     const addedRegistries: URL[] = [];
-    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
 #if WIF
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
@@ -76,6 +77,11 @@ async function main(): Promise<void> {
         // First match wins; subsequent sources are skipped for this registry.
 #if WIF
         if (entraWifServiceConnectionName) {
+            if (registryURL.protocol !== 'https:') {
+                console.log(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
+                continue;
+            }
+
             console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };

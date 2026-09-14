@@ -7,6 +7,29 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 
+export function validateRegistrySchemes(registryUrls: string[]): void {
+    const secureHosts = new Set<string>();
+    const insecureHosts = new Set<string>();
+    for (const registryUrl of registryUrls) {
+        let parsed: URL;
+        try {
+            parsed = new URL(registryUrl);
+        } catch {
+            continue;
+        }
+        if (parsed.protocol === 'https:') {
+            secureHosts.add(parsed.host);
+        } else {
+            insecureHosts.add(parsed.host);
+        }
+    }
+    for (const host of secureHosts) {
+        if (insecureHosts.has(host)) {
+            throw new Error(tl.loc('Error_MixedRegistrySchemes', host));
+        }
+    }
+}
+
 export function normalizeRegistry(registryUrl: string): string {
     if (registryUrl && !registryUrl.endsWith('/')) {
         registryUrl += '/';
@@ -71,15 +94,15 @@ export function resolveInternalFeedCredentials(
         return [];
     }
 
-    const packagingHosts = packagingUris
-        .map(uri => { try { return new URL(uri).host.toLowerCase(); } catch { return undefined; } })
-        .filter((host): host is string => host !== undefined);
+    const packagingOrigins = packagingUris
+        .map(uri => { try { return new URL(uri).origin; } catch { return undefined; } })
+        .filter((origin): origin is string => origin !== undefined && origin !== 'null');
 
     const allRegistries = getRegistriesFromNpmrc(npmrc);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
-            const host = new URL(registryUrl).host.toLowerCase();
-            return packagingHosts.includes(host);
+            const origin = new URL(registryUrl).origin;
+            return packagingOrigins.includes(origin);
         } catch {
             return false;
         }
@@ -125,7 +148,8 @@ export function tryResolveFromEndpoints(
     endpointRegistries: NpmrcCredential[]
 ): NpmrcCredential | null {
     for (const endpoint of endpointRegistries) {
-        if (toNerfDart(endpoint.url) === toNerfDart(registryUrlString)) {
+        if (new URL(endpoint.url).origin === new URL(registryUrlString).origin
+            && toNerfDart(endpoint.url) === toNerfDart(registryUrlString)) {
             return endpoint;
         }
     }
@@ -139,7 +163,8 @@ export function tryResolveFromLocalRegistries(
     registryHost: string
 ): NpmrcCredential | null {
     for (const localRegistry of localRegistries) {
-        if (toNerfDart(localRegistry.url) === toNerfDart(registryUrlString)) {
+        if (new URL(localRegistry.url).origin === new URL(registryUrlString).origin
+            && toNerfDart(localRegistry.url) === toNerfDart(registryUrlString)) {
             if (previouslyAuthenticatedUrls.indexOf(localRegistry.url) !== -1) {
                 tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                 tl.warning(tl.loc('FoundEndpointCredentials', registryHost));

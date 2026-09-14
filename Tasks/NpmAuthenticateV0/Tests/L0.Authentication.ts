@@ -21,6 +21,20 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     });
 
     describe('Internal feed authentication', function () {
+        it('does not append System.AccessToken for an HTTP registry at an HTTPS packaging host', async () => {
+            const internalUrl = new URL(`${TestData.collectionUri}_packaging/TestFeed/npm/registry/`);
+            internalUrl.protocol = 'http:';
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${internalUrl.href}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath
+            });
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertNpmrcNotContains(npmrcPath, TestData.systemAccessToken);
+            TestHelpers.assertOutputNotContains(tr, 'AddingLocalCredentials');
+        });
+
         it('appends auth token for a matching internal registry', async () => {
             // The project .npmrc and the target .npmrc are the same file here.
             // The registry host (dev.azure.com) matches the collectionUri host.
@@ -49,6 +63,22 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
     });
 
     describe('External service connection authentication', function () {
+        it('does not append HTTPS endpoint credentials for an HTTP registry', async () => {
+            const registryUrl = new URL(TestData.externalRegistryUrl);
+            registryUrl.protocol = 'http:';
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${registryUrl.href}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.customEndpoint]: TestData.externalEndpointId,
+                [TestEnvVars.externalRegistryUrl]: TestData.externalRegistryUrl,
+                [TestEnvVars.externalRegistryToken]: TestData.externalRegistryToken
+            });
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertNpmrcNotContains(npmrcPath, TestData.externalRegistryToken);
+        });
+
         it('appends auth token for a matching external registry', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.externalRegistryUrl}`);
 
