@@ -484,6 +484,30 @@ describe('DotNetCoreExe Suite', function () {
         assert(tr.failed, 'should have failed');
     });
 
+    it('test command with appendToTestRunTitle projectName publishes a test run per project', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/publishtestsAppendProjectName.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+        assert(tr.invokedToolCount === 2, 'should have run dotnet once per project');
+        assert(tr.stdOutContained('runTitle=My Tests Alpha.Tests;'), 'should publish the first project under its own title');
+        assert(tr.stdOutContained('runTitle=My Tests Beta.Tests;'), 'should publish the second project under its own title');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('test command with appendToTestRunTitle projectPath publishes a test run per project', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/publishtestsAppendProjectPath.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+        assert(tr.invokedToolCount === 2, 'should have run dotnet once per project');
+        assert(tr.stdOutContained('runTitle=My Tests Alpha.Tests/Alpha.Tests.csproj;'), 'should publish the first project under its repository relative path');
+        assert(tr.stdOutContained('runTitle=My Tests Beta.Tests/Beta.Tests.csproj;'), 'should publish the second project under its repository relative path');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
     it('test command without publish test results', async () => {
         const tp = path.join(__dirname, './TestCommandTests/runTestsWithoutPublish.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
