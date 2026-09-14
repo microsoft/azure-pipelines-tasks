@@ -11,10 +11,10 @@ import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { v4 as uuidv4 } from "uuid";
 
 var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
-var uuid = require("uuid");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl");
 var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
@@ -212,7 +212,7 @@ class Utils {
         name = path.basename(name).split(".")[0].replace(/\s/g, "");
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
-        var uniqueId = uuid().substr(0, 4);
+        var uniqueId = uuidv4().substr(0, 4);
         var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
             formatNumber(timestamp.getMonth() + 1),
             formatNumber(timestamp.getDate()),
