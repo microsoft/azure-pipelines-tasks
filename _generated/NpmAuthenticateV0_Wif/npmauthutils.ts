@@ -17,7 +17,7 @@ export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] 
         try {
             parsed = new URL(registryUrl);
         } catch {
-            tl.warning(tl.loc('InvalidRegistryUrl', registryUrl));
+            console.log(tl.loc('InvalidRegistryUrl', registryUrl));
             continue;
         }
         validRegistryUrls.push(registryUrl);

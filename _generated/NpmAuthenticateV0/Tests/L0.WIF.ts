@@ -134,7 +134,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         TestHelpers.assertOutputNotContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
 
-    it('warns and skips malformed registries before feedUrl matching', async () => {
+    it('logs and skips malformed registries before feedUrl matching', async () => {
         const npmrcPath = TestHelpers.createTempNpmrc(
             `@invalid:registry=not-a-url\n@valid:registry=${TestData.wifRegistryUrl}`
         );
@@ -148,6 +148,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
         TestHelpers.assertSuccess(tr);
         TestHelpers.assertOutputContains(tr, 'InvalidRegistryUrl');
+        assert.strictEqual(tr.warningIssues.length, 0);
         TestHelpers.assertNpmrcContains(npmrcPath, TestData.wifToken);
     });
 
