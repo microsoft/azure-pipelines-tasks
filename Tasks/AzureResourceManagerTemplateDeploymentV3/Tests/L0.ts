@@ -170,6 +170,22 @@ describe('Azure Resource Manager Template Deployment', function () {
                 parsed.properties.variable,
                 'someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.type',
                 "output name should survive escaping unchanged");
+            // The value travels as the command's data. useWithoutJSON is deliberately left
+            // unset here, so this also pins the default JSON.stringify formatting: a change
+            // in quoting would otherwise slip through the checks above unnoticed.
+            const emittedValue = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safe") >= 0 && line.indexOf(".value;]") > 0)[0];
+            assert(emittedValue, "expected a setvariable command for the payload output value");
+            const parsedValue = tryParseAgentCommand(emittedValue);
+            assert(parsedValue, "the emitted value line should parse as a command");
+            assert.strictEqual(
+                parsedValue.properties.variable,
+                'someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.value',
+                "output name should survive escaping unchanged on the value command");
+            assert.strictEqual(
+                parsedValue.data,
+                '"harmless##vso[task.setvariable variable=INLINE_VALUE_MARKER;]confirmed"',
+                "output value should round-trip as inert JSON data");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
