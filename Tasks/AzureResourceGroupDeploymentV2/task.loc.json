@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -486,6 +486,7 @@
     "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
     "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
     "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "OutputVariableNameChanged": "ms-resource:loc.messages.OutputVariableNameChanged",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",

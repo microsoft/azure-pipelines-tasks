@@ -5,12 +5,18 @@ const ttm = require('azure-pipelines-task-lib/mock-test');
 const path = require('path');
 import fs = require("fs");
 
+import { runSanitizeTests } from './sanitizeTests';
+import { parseAgentCommands, tryParseAgentCommand } from './agentCommandParser';
+
 function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
 }
 
 describe('Azure Resource Manager Template Deployment', function () {
     this.timeout(120000);
+
+    describe('Logging command sanitization', runSanitizeTests);
+
     before((done) => {
         done();
     });
@@ -56,23 +62,256 @@ describe('Azure Resource Manager Template Deployment', function () {
             throw error;
         }
     });*/
-    it('Successfully triggered createOrUpdate deployment and updated deploymentOutputs', async () => {
+    it('Preserves legacy deployment output commands when the feature flag is disabled', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "CSM.json";
         process.env["csmParametersFile"] = "CSM.json";
         process.env["deploymentOutputs"] = "someVar";
+        process.env["regularDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "false";
         let tr = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
         try {
+            await tr.runAsync();
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("properly sanitized") > 0, "Parameters should have been sanitized");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
+            assert(tr.stdout.indexOf('##vso[task.setvariable variable=someVar.safeOutput.type;]"string"') >= 0, "individual deploymentOutput should use the legacy command format");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
             throw error;
+        }
+        finally {
+            delete process.env["regularDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Escapes ARM output names before creating deployment output variables', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["specialCharacterDeploymentOutputs"] = "true";
+        process.env["useWithoutJSON"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            assert(
+                tr.stdout.indexOf("variable=someVar.safe%3B%5D%0A##vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER%3B%5Dconfirmed%0A##vso[task.setvariable variable=padding.type;") >= 0,
+                "ARM output name should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("\n##vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER;]confirmed") < 0,
+                "ARM output name should not inject a logging command");
+            assert(
+                tr.stdout.indexOf("loc_mock_AddedOutputVariable someVar.safe;] #vso[task.setvariable variable=OUTPUT_VARIABLE_TEST_MARKER;]confirmed #vso[task.setvariable variable=padding.type") >= 0,
+                "ARM output name should be neutralized when included in informational logs");
+            assert(
+                tr.stdout.indexOf("harmless-marker%0A##vso[task.setvariable variable=OUTPUT_VALUE_TEST_MARKER;]confirmed") >= 0,
+                "ARM output value should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("\n##vso[task.setvariable variable=OUTPUT_VALUE_TEST_MARKER;]confirmed") < 0,
+                "ARM output value should not inject a logging command");
+            assert(
+                tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0,
+                "aggregate deploymentOutput should be updated");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["specialCharacterDeploymentOutputs"];
+            delete process.env["useWithoutJSON"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Neutralizes an inline payload that contains no line break', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["inlinePayloadDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // The name keeps its ##vso[ text but loses the ; and ] that a command needs in
+            // order to terminate, so the payload cannot close the surrounding command.
+            assert(
+                tr.stdout.indexOf("variable=someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER%3B%5Dconfirmed.type;]") >= 0,
+                "inline payload in the output name should be escaped in the logging command");
+            // The agent honours the first marker on a line and treats the remainder as data,
+            // so the property that matters is that no line parses into a command that sets
+            // the payload's variables - not that the text never appears at all.
+            const executed = parseAgentCommands(tr.stdout);
+            const injected = executed.filter(cmd =>
+                cmd.properties.variable === "INLINE_NAME_MARKER" || cmd.properties.variable === "INLINE_VALUE_MARKER");
+            assert.strictEqual(injected.length, 0, "inline payload must not produce an executable logging command");
+            // The informational log line is sanitized instead, which reduces the marker to a
+            // single # so the agent's parser cannot see it.
+            assert(
+                tr.stdout.indexOf("loc_mock_AddedOutputVariable someVar.safe#vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.type") >= 0,
+                "inline payload should be neutralized in the informational log line");
+            // Round-trip the emitted command through the agent's parser: the escaping has to
+            // be lossless, and the payload has to come back as an inert variable name.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safe") >= 0 && line.indexOf(".type;]") > 0)[0];
+            assert(emitted, "expected a setvariable command for the payload output");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.area + '.' + parsed.event, "task.setvariable", "only one command should be parsed from the line");
+            assert.strictEqual(
+                parsed.properties.variable,
+                'someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.type',
+                "output name should survive escaping unchanged");
+            // The value travels as the command's data. useWithoutJSON is deliberately left
+            // unset here, so this also pins the default JSON.stringify formatting: a change
+            // in quoting would otherwise slip through the checks above unnoticed.
+            const emittedValue = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safe") >= 0 && line.indexOf(".value;]") > 0)[0];
+            assert(emittedValue, "expected a setvariable command for the payload output value");
+            const parsedValue = tryParseAgentCommand(emittedValue);
+            assert(parsedValue, "the emitted value line should parse as a command");
+            assert.strictEqual(
+                parsedValue.properties.variable,
+                'someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.value',
+                "output name should survive escaping unchanged on the value command");
+            assert.strictEqual(
+                parsedValue.data,
+                '"harmless##vso[task.setvariable variable=INLINE_VALUE_MARKER;]confirmed"',
+                "output value should round-trip as inert JSON data");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["inlinePayloadDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Neutralizes a payload carried by a nested output key', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["nestedPayloadDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // The recursive walk reaches keys below the output root, so a payload nested two
+            // levels down has to be escaped on exactly the same terms as a top-level one.
+            const executed = parseAgentCommands(tr.stdout);
+            const injected = executed.filter(cmd => cmd.properties.variable === "NESTED_NAME_MARKER");
+            assert.strictEqual(injected.length, 0, "nested payload must not produce an executable logging command");
+            assert(
+                tr.stdout.indexOf("variable=NESTED_NAME_MARKER%3B%5Dconfirmed;]") >= 0,
+                "nested payload should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("loc_mock_AddedOutputVariable someVar.safeParent.value.evil;] #vso[task.setvariable variable=NESTED_NAME_MARKER;]confirmed") >= 0,
+                "nested payload should be neutralized in the informational log line");
+            // The nested key must still round-trip to the exact name the template declared,
+            // including the line break it contains.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safeParent.value.evil") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the nested output");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(
+                parsed.properties.variable,
+                'someVar.safeParent.value.evil;]\n##vso[task.setvariable variable=NESTED_NAME_MARKER;]confirmed',
+                "nested output name should survive escaping unchanged");
+            assert.strictEqual(parsed.data, '"nested-payload-value"', "nested output value should be preserved");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["nestedPayloadDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Pins the legacy truncation of an output name that contains a closing bracket', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // With the feature disabled the command is hand-built, so a bracket inside the
+            // name terminates it early: the agent sets a truncated variable and treats the
+            // rest of the name as data. That is pre-existing behaviour, pinned here so the
+            // difference the escaped path introduces stays visible during the rollout.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a") >= 0 && line.indexOf("b.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a", "legacy name is truncated at the bracket");
+            assert.strictEqual(parsed.data, 'b.value;]"bracket-value"', "the remainder of the name leaks into the data");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+        }
+    });
+    it('Preserves an output name that contains a closing bracket', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // Escaping the bracket repairs the truncation above: the variable now carries the
+            // name the template declared, and the value is no longer polluted by it. Callers
+            // that referenced the truncated name will see it change once the flag is enabled.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a%5Db.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a]b.value", "the bracketed name round-trips intact");
+            assert.strictEqual(parsed.data, '"bracket-value"', "the value is no longer polluted by the name");
+            // A name the legacy format would have truncated has to raise a migration warning,
+            // so the rename is visible in the log during the staged rollout instead of
+            // silently changing which variable downstream steps resolve.
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(
+                warned.some(cmd => cmd.data.indexOf("someVar.a]b.value") >= 0),
+                "expected a warning naming the changed output variable");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
         }
     });
     it('Create or Update RG, failed on faulty CSM template file', async () => {

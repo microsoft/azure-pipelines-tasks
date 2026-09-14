@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -322,6 +322,7 @@
     "ParametersPatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile",
     "CsmFilePatternMatchesADirectoryInsteadOfAFile": "ms-resource:loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile",
     "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "OutputVariableNameChanged": "ms-resource:loc.messages.OutputVariableNameChanged",
     "UnableToReadResponseBody": "ms-resource:loc.messages.UnableToReadResponseBody",
     "MoreInformationOnAzurePortal": "ms-resource:loc.messages.MoreInformationOnAzurePortal",
     "LogDeploymentName": "ms-resource:loc.messages.LogDeploymentName",

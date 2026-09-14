@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
   "loc.messages.AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
+  "loc.messages.OutputVariableNameChanged": "The output variable name '%s' contains characters that were previously truncated when the variable was published. The full name is now used. If your pipeline referenced the shortened name, update it to the full name.",
   "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
   "loc.messages.LogDeploymentName": "Deployment name is %s",
