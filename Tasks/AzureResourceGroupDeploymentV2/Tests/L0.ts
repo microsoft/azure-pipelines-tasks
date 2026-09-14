@@ -619,6 +619,68 @@ describe('Azure Resource Group Deployment', function () {
             delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
         }
     });
+    it('Pins the legacy truncation of an output name that contains a closing bracket', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // With the feature disabled the command is hand-built, so a bracket inside the
+            // name terminates it early: the agent sets a truncated variable and treats the
+            // rest of the name as data. That is pre-existing behaviour, pinned here so the
+            // difference the escaped path introduces stays visible during the rollout.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a") >= 0 && line.indexOf("b.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a", "legacy name is truncated at the bracket");
+            assert.strictEqual(parsed.data, 'b.value;]"bracket-value"', "the remainder of the name leaks into the data");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout); throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+        }
+    });
+    it('Preserves an output name that contains a closing bracket', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // Escaping the bracket repairs the truncation above: the variable now carries the
+            // name the template declared, and the value is no longer polluted by it. Callers
+            // that referenced the truncated name will see it change once the flag is enabled.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a%5Db.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a]b.value", "the bracketed name round-trips intact");
+            assert.strictEqual(parsed.data, '"bracket-value"', "the value is no longer polluted by the name");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout); throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
     it('Create or Update RG, failed on faulty CSM template file', async () => {
         let tp = path.join(__dirname, 'createOrUpdate.js');
         process.env["csmFile"] = "faultyCSM.json";
