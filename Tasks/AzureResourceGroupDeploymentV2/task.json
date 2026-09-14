@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -486,6 +486,7 @@
     "ListingOfExtensionsFailed": "Failed to list the extensions for the vm: '%s'. Error '%s'",
     "ExtensionNotFound": "Extension not found on the vm: %s",
     "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
+    "OutputVariableNameChanged": "The output variable name '%s' contains characters that were previously truncated when the variable was published. The full name is now used. If your pipeline referenced the shortened name, update it to the full name.",
     "UnableToFetchAuthorityURL": "Unable to fetch authority URL.",
     "UnableToFetchActiveDirectory": "Unable to fetch Active Directory resource ID.",
     "SpecifiedAzureRmEndpointIsInvalid": "Specified AzureRm service connection URL: '{0}' is invalid.",
