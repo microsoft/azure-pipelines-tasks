@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 const ttm = require('azure-pipelines-task-lib/mock-test');
-const taskCommand = require('azure-pipelines-task-lib/taskcommand');
 const path = require('path');
 import fs = require("fs");
 
 import { runSanitizeTests } from './sanitizeTests';
+import { parseAgentCommands, tryParseAgentCommand } from './agentCommandParser';
 
 function setResponseFile(name) {
     process.env['MOCK_RESPONSES'] = path.join(__dirname, name);
@@ -149,30 +149,23 @@ describe('Azure Resource Manager Template Deployment', function () {
             // The agent honours the first marker on a line and treats the remainder as data,
             // so the property that matters is that no line parses into a command that sets
             // the payload's variables - not that the text never appears at all.
-            const injected = tr.stdout.split('\n')
-                .filter(line => line.indexOf("##vso[") >= 0)
-                .map(line => {
-                    try {
-                        return taskCommand.commandFromString(line.substring(line.indexOf("##vso[")));
-                    } catch (error) {
-                        return null;
-                    }
-                })
-                .filter(cmd => !!cmd && (cmd.properties.variable === "INLINE_NAME_MARKER" || cmd.properties.variable === "INLINE_VALUE_MARKER"));
+            const executed = parseAgentCommands(tr.stdout);
+            const injected = executed.filter(cmd =>
+                cmd.properties.variable === "INLINE_NAME_MARKER" || cmd.properties.variable === "INLINE_VALUE_MARKER");
             assert.strictEqual(injected.length, 0, "inline payload must not produce an executable logging command");
             // The informational log line is sanitized instead, which reduces the marker to a
             // single # so the agent's parser cannot see it.
             assert(
                 tr.stdout.indexOf("loc_mock_AddedOutputVariable someVar.safe#vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.type") >= 0,
                 "inline payload should be neutralized in the informational log line");
-            // Round-trip the emitted command through the agent's own parser: the escaping has
-            // to be lossless, and the payload has to come back as an inert variable name.
-            const emitted = tr.stdout.split('\n')
-                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safe") >= 0 && line.indexOf(".type;]") > 0)
-                .map(line => line.substring(line.indexOf("##vso[")))[0];
+            // Round-trip the emitted command through the agent's parser: the escaping has to
+            // be lossless, and the payload has to come back as an inert variable name.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safe") >= 0 && line.indexOf(".type;]") > 0)[0];
             assert(emitted, "expected a setvariable command for the payload output");
-            const parsed = taskCommand.commandFromString(emitted);
-            assert.strictEqual(parsed.command, "task.setvariable", "only one command should be parsed from the line");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.area + '.' + parsed.event, "task.setvariable", "only one command should be parsed from the line");
             assert.strictEqual(
                 parsed.properties.variable,
                 'someVar.safe##vso[task.setvariable variable=INLINE_NAME_MARKER;]confirmed.type',
@@ -185,6 +178,51 @@ describe('Azure Resource Manager Template Deployment', function () {
         }
         finally {
             delete process.env["inlinePayloadDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Neutralizes a payload carried by a nested output key', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["nestedPayloadDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // The recursive walk reaches keys below the output root, so a payload nested two
+            // levels down has to be escaped on exactly the same terms as a top-level one.
+            const executed = parseAgentCommands(tr.stdout);
+            const injected = executed.filter(cmd => cmd.properties.variable === "NESTED_NAME_MARKER");
+            assert.strictEqual(injected.length, 0, "nested payload must not produce an executable logging command");
+            assert(
+                tr.stdout.indexOf("variable=NESTED_NAME_MARKER%3B%5Dconfirmed;]") >= 0,
+                "nested payload should be escaped in the logging command");
+            assert(
+                tr.stdout.indexOf("loc_mock_AddedOutputVariable someVar.safeParent.value.evil;] #vso[task.setvariable variable=NESTED_NAME_MARKER;]confirmed") >= 0,
+                "nested payload should be neutralized in the informational log line");
+            // The nested key must still round-trip to the exact name the template declared,
+            // including the line break it contains.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.safeParent.value.evil") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the nested output");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(
+                parsed.properties.variable,
+                'someVar.safeParent.value.evil;]\n##vso[task.setvariable variable=NESTED_NAME_MARKER;]confirmed',
+                "nested output name should survive escaping unchanged");
+            assert.strictEqual(parsed.data, '"nested-payload-value"', "nested output value should be preserved");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["nestedPayloadDeploymentOutputs"];
             delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
         }
     });
