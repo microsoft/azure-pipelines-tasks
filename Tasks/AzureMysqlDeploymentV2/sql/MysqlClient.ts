@@ -106,8 +106,9 @@ export class MysqlClient implements ISqlClient {
      * Run the user-provided SQL script (inline or file-based)
      */
     private async _runUserScript(argument: string): Promise<number> {
-        // Binary mode disables mysql client commands such as \! in non-interactive input.
-        // Append it after user-provided arguments so it cannot be disabled by an override.
+        // Enforce --binary-mode for security hardening. Appended after
+        // user-provided arguments so it takes precedence over any conflicting
+        // user-supplied value for this option.
         argument += " --binary-mode";
         if (this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
             return this._executeSqlScript(argument + this._getFileSourceArgument());
@@ -176,7 +177,24 @@ export class MysqlClient implements ISqlClient {
      * Additional connection argument passed by user
      */
     private _getAdditionalArgument() : string{
-        return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
+        const additionalArguments = this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
+        this._rejectOptionTerminator(additionalArguments);
+        return additionalArguments;
+    }
+
+    /**
+     * Reject a bare "--" token in user-supplied additional arguments, which
+     * is not a supported value for this input and could interfere with
+     * enforced security options. See internal security tracking for details.
+     */
+    private _rejectOptionTerminator(additionalArguments: string): void {
+        if (!additionalArguments) {
+            return;
+        }
+        const tokens = Utility.argStringToArray(additionalArguments);
+        if (tokens.some(token => token === '--')) {
+            throw new Error(task.loc("AdditionalArgumentsContainOptionTerminator"));
+        }
     }
 
     /**

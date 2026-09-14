@@ -43,6 +43,13 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should have passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should have passed.');
     });
 
+    it('AzureMySqlDeployment MysqlClientOptionTerminator', async () => {
+        let tp = path.join(__dirname, 'MysqlClientOptionTerminatorTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminator should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminator should have passed.');
+    });
+
     it('AzureMySqlDeployment MysqlClientFileExec', async () => {
         let tp = path.join(__dirname, 'MysqlClientFileExecTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
