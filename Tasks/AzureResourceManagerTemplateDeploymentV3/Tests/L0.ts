@@ -190,11 +190,41 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(tr.succeeded, "Should have succeeded");
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+            const normalizedOutput = tr.stdout.replace(/\\/g, '/');
+            const expectedAzureCliPath = path.join(__dirname, "mock_node_modules", "azure-cli", "az").replace(/\\/g, '/');
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} bicep build`) > 0, "Should have used the resolved Azure CLI path");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} login --service-principal`) > 0, "Should have used the resolved Azure CLI path for login");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} account set`) > 0, "Should have used the resolved Azure CLI path for account setup");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
             console.log("STDOUT", tr.stdout);
             throw error;
+        }
+    });
+
+    it('uses legacy Azure CLI invocation when resolved path feature is disabled', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSMwithBicep.bicep";
+        process.env["csmParametersFile"] = "";
+        process.env["TEST_USE_RESOLVED_AZURE_CLI_PATH_FEATURE_DISABLED"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            const normalizedOutput = tr.stdout.replace(/\\/g, '/');
+            const expectedAzureCliPath = path.join(__dirname, "mock_node_modules", "azure-cli", "az").replace(/\\/g, '/');
+            assert(normalizedOutput.indexOf("az bicep build") > 0, "Should have used the legacy Azure CLI invocation");
+            assert(normalizedOutput.indexOf("az login --service-principal") > 0, "Should have used the legacy Azure CLI invocation for login");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} bicep build`) < 0, "Should not have used the resolved Azure CLI path");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["TEST_USE_RESOLVED_AZURE_CLI_PATH_FEATURE_DISABLED"];
         }
     });
 
