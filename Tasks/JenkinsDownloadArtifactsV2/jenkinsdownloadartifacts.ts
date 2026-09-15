@@ -14,20 +14,13 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-// #if NODE20
-// import * as extract from 'extract-zip'
-// #else
-// var DecompressZip = require('decompress-zip');
-// #endif
 let extractZip: any;
 
 const isCurrentNodeVersionAtLeast20 = parseInt(process.versions.node.split('.')[0], 10) >= 20;
 
 if (isCurrentNodeVersionAtLeast20) {
     // Node.js 20 or later
-    import('extract-zip').then((module) => {
-        extractZip = module;
-    });
+    extractZip = (zipLocation: string, options: { dir: string }) => tl.extractZipSecure(zipLocation, options.dir);
 } else {
     // Older Node.js versions
     const DecompressZip = require('decompress-zip');
@@ -115,9 +108,9 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
     await new Promise<void>(function (resolve, reject) {
         tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
         if (isCurrentNodeVersionAtLeast20) {
-            tl.debug(`Using extract-zip package for extracting archive`);
+            tl.debug('Using azure-pipelines-task-lib extractZipSecure for extracting archive');
             extractZip(zipLocation, { dir: unzipLocation }).then(() => {
-               resolve();
+                resolve();
             }).catch((error) => {
                 reject(error);
             });
