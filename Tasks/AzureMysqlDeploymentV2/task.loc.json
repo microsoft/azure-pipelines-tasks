@@ -234,6 +234,7 @@
     "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
     "FirewallRuleNameCannotBeNull": "ms-resource:loc.messages.FirewallRuleNameCannotBeNull",
     "SqlFileNotFound": "ms-resource:loc.messages.SqlFileNotFound",
-    "InvalidDatabaseName": "ms-resource:loc.messages.InvalidDatabaseName"
+    "InvalidDatabaseName": "ms-resource:loc.messages.InvalidDatabaseName",
+    "AdditionalArgumentsContainOptionTerminator": "ms-resource:loc.messages.AdditionalArgumentsContainOptionTerminator"
   }
 }
