@@ -7,6 +7,7 @@ class API {
     private readonly projectName: string;
     private readonly webApi: WebApi;
     private buildApi: IBuildApi | null = null;
+    //public readonly isNodeCompatible: boolean;
 
     constructor(argv: string[]) {
         const authToken = argv[2];
@@ -29,6 +30,8 @@ class API {
         this.tasks = TaskArg.split(',');
         const authHandler = getPersonalAccessTokenHandler(authToken);
         this.webApi = new WebApi(adoUrl, authHandler);
+
+        //this.isNodeCompatible = argv[6] === 'true';
     }
 
     public async getDefinitions() {
