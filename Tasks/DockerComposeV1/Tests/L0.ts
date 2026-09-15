@@ -172,6 +172,20 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f F:\\dir2\\docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
         });
+
+        it('Runs successfully for windows docker compose service build with --profile global flag', async () => {
+            let tp = path.join(__dirname, 'L0Windows.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__arguments__"] = "--profile build --no-cache";
+
+            await tr.runAsync();
+
+            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("[command]" + composeCommand + " --profile build -f F:\\dir2\\docker-compose.yml build --no-cache") != -1, "docker compose build should run with --profile as global flag");
+        });
     } else {
         it('Runs successfully for linux docker compose service build', async () => {
             let tp = path.join(__dirname, 'L0Linux.js');
@@ -302,6 +316,20 @@ describe('Docker Compose Suite', function() {
             assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("[command]" + composeCommand + " -f /tmp/tempdir/100/docker-compose.yml build --pull --parallel") != -1, "docker compose build should run with argumentss");
+        });
+
+        it('Runs successfully for linux docker compose service build with --profile global flag', async () => {
+            let tp = path.join(__dirname, 'L0Linux.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env["__command__"] = "Build services";
+            process.env["__arguments__"] = "--profile build --no-cache";
+
+            await tr.runAsync();
+
+            assert(tr.invokedToolCount == 1, 'should have invoked tool one times. actual: ' + tr.invokedToolCount);
+            assert(tr.stderr.length == 0 || tr.errorIssues.length, 'should not have written to stderr');
+            assert(tr.succeeded, 'task should have succeeded');
+            assert(tr.stdout.indexOf("[command]" + composeCommand + " --profile build -f /tmp/tempdir/100/docker-compose.yml build --no-cache") != -1, "docker compose build should run with --profile as global flag");
         });
 
         it('Runs successfully for linux docker compose command with arguments', async () => {

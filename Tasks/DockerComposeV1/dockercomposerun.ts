@@ -4,9 +4,13 @@ import * as tl from "azure-pipelines-task-lib/task";
 import DockerComposeConnection from "./dockercomposeconnection";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as utils from "./utils";
+import * as DockerComposeUtils from "./dockercomposeutils";
 
 export async function run(connection: DockerComposeConnection, outputUpdate: (data: string) => any): Promise<any> {
-    var command = connection.createComposeCommand();
+    var arg = tl.getInput("arguments", false);
+    var parsedArgs = DockerComposeUtils.parseComposeArguments(arg || "");
+    
+    var command = connection.createComposeCommand(parsedArgs.globalArgs);
     command.arg("run");
 
     var detached = tl.getBoolInput("detached");
@@ -42,9 +46,12 @@ export async function run(connection: DockerComposeConnection, outputUpdate: (da
     var serviceName = tl.getInput("serviceName", true);
     command.arg(serviceName);
 
-    var arg = tl.getInput("arguments", false);
-    var commandArgs = dockerCommandUtils.getCommandArguments(arg || "");
-    command.line(commandArgs || "");
+    // Add command-specific arguments
+    if (parsedArgs.commandArgs.length > 0) {
+        parsedArgs.commandArgs.forEach(cmdArg => {
+            command.arg(cmdArg);
+        });
+    }
 
     var containerCommand = tl.getInput("containerCommand");
     if (containerCommand) {
@@ -57,7 +64,7 @@ export async function run(connection: DockerComposeConnection, outputUpdate: (da
     } finally {
         if (!detached) {
             
-            var downCommand = connection.createComposeCommand();
+            var downCommand = connection.createComposeCommand(parsedArgs.globalArgs);
             downCommand.arg("down");
 
             await connection.execCommandWithLogging(downCommand)
