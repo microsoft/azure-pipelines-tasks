@@ -193,6 +193,8 @@ describe('Azure Resource Manager Template Deployment', function () {
             const normalizedOutput = tr.stdout.replace(/\\/g, '/');
             const expectedAzureCliPath = path.join(__dirname, "mock_node_modules", "azure-cli", "az").replace(/\\/g, '/');
             assert(normalizedOutput.indexOf(`${expectedAzureCliPath} bicep build`) > 0, "Should have used the resolved Azure CLI path");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} login --service-principal`) > 0, "Should have used the resolved Azure CLI path for login");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} account set`) > 0, "Should have used the resolved Azure CLI path for account setup");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
@@ -210,7 +212,11 @@ describe('Azure Resource Manager Template Deployment', function () {
         try {
             await tr.runAsync();
             assert(tr.succeeded, "Should have succeeded");
-            assert(tr.stdout.indexOf("az bicep build") > 0, "Should have used the legacy Azure CLI invocation");
+            const normalizedOutput = tr.stdout.replace(/\\/g, '/');
+            const expectedAzureCliPath = path.join(__dirname, "mock_node_modules", "azure-cli", "az").replace(/\\/g, '/');
+            assert(normalizedOutput.indexOf("az bicep build") > 0, "Should have used the legacy Azure CLI invocation");
+            assert(normalizedOutput.indexOf("az login --service-principal") > 0, "Should have used the legacy Azure CLI invocation for login");
+            assert(normalizedOutput.indexOf(`${expectedAzureCliPath} bicep build`) < 0, "Should not have used the resolved Azure CLI path");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
