@@ -20,7 +20,7 @@
     "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
     "azure-pipelines-tasks-java-common": "2.264.0",
     "azure-pipelines-tasks-packaging-common": "^3.230.0",
-    "azure-pipelines-tool-lib": "^2.0.10",
+    "azure-pipelines-tool-lib": "^2.279.2",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
     "jsdom": "^16.7.0",
@@ -36,6 +36,11 @@
   "overrides": {
     "serialize-javascript": "7.0.5",
     "form-data": "^3.0.5",
-    "minimatch": "^5.1.7"
+    "minimatch": "^5.1.7",
+    "brace-expansion": "^2.1.4",
+    "fast-uri": "^3.1.6",
+    "ip-address": "^10.3.1",
+    "js-yaml@3.x": { ".": "3.15.1" },
+    "js-yaml@4.x": { ".": "4.3.1" }
   }
 }
