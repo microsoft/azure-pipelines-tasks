@@ -5,6 +5,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
+import stream = require('stream');
 import url = require('url');
 import request = require('request');
 
@@ -14,6 +15,13 @@ import { unzip } from './unzip';
 import {JobState, checkStateTransitions} from './states';
 
 import * as Util from './util';
+
+export function createJenkinsConsoleOutputStream(destination: NodeJS.WritableStream): NodeJS.WritableStream {
+    return tl.createExternalOutputStream({
+        source: 'remote',
+        destination
+    });
+}
 
 export class Job {
     public Parent: Job; // if this job is a pipelined job, its parent that started it.
@@ -32,6 +40,7 @@ export class Job {
     private jobConsole: string = '';
     private jobConsoleOffset: number = 0;
     private jobConsoleEnabled: boolean = false;
+    private externalConsoleOutput: NodeJS.WritableStream;
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
@@ -50,6 +59,12 @@ export class Job {
         }
         this.queue = jobQueue;
         this.retryNumber = 0;
+        this.externalConsoleOutput = createJenkinsConsoleOutputStream(new stream.Writable({
+            write: (chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
+                this.consoleLog(chunk.toString('utf8'));
+                callback();
+            }
+        }));
         if (this.TaskUrl.startsWith(this.queue.TaskOptions.serverEndpointUrl)) {
             // simplest case (jobs run on the same server name as the endpoint)
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
@@ -165,10 +180,10 @@ export class Job {
             this.ExecutableUrl = Util.addUrlSegment(this.TaskUrl, this.ExecutableNumber.toString());
             this.changeState(JobState.Streaming);
             // log the jobs starting block
-            this.consoleLog(this.getBlockMessage('Jenkins job started: ' + this.Name + '\n' + this.ExecutableUrl));
+            this.consoleLog(Util.filterRemoteOutput(this.getBlockMessage('Jenkins job started: ' + this.Name + '\n' + this.ExecutableUrl)));
             // log any pending jobs
             if (this.queue.FindActiveConsoleJob() == null) {
-                console.log('Jenkins job pending: ' + this.ExecutableUrl);
+                console.log(Util.filterRemoteOutput('Jenkins job pending: ' + this.ExecutableUrl));
             }
         } else if (this.State === JobState.Joined || this.State === JobState.Cut) {
             Util.fail('Can not be set to streaming: ' + this);
@@ -218,7 +233,7 @@ export class Job {
     private setParsedExecutionResult(parsedExecutionResult: {result: string, timestamp: number}) {
         this.ParsedExecutionResult = parsedExecutionResult;
         //log the job's closing block
-        this.consoleLog(this.getBlockMessage('Jenkins job finished: ' + this.Name + '\n' + this.ExecutableUrl));
+        this.consoleLog(Util.filterRemoteOutput(this.getBlockMessage('Jenkins job finished: ' + this.Name + '\n' + this.ExecutableUrl)));
     }
 
     public GetTaskResult(): number {
@@ -439,13 +454,14 @@ export class Job {
                     thisJob.RetryConnection();
                 }
             } else {
-                thisJob.consoleLog(thisJob.stripAnsiCodes(body)); // redirect Jenkins console to task console, strip ANSI codes
+                thisJob.externalConsoleOutput.write(thisJob.stripAnsiCodes(body));
                 const xMoreData: string = httpResponse.headers['x-more-data'];
                 if (xMoreData && xMoreData == 'true') {
                     const offset: string = httpResponse.headers['x-text-size'];
                     thisJob.jobConsoleOffset = Number.parseInt(offset);
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 } else { // no more console, move to Finishing
+                    thisJob.externalConsoleOutput.end();
                     thisJob.stopWork(0, JobState.Finishing);
                 }
             }

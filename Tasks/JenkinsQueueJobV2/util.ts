@@ -12,6 +12,10 @@ import { Job } from './job';
 import { JobQueue } from './jobqueue';
 import { TaskOptions } from './jenkinsqueuejobtask';
 
+export function filterRemoteOutput(message: string): string {
+    return tl.filterExternalOutput(message, { source: 'remote' }).toString('utf8');
+}
+
 export function getFullErrorMessage(httpResponse, message: string): string {
     const fullMessage: string = `${message}\nHttpResponse.statusCode=${httpResponse.statusCode}\nHttpResponse.statusMessage=${httpResponse.statusMessage}`;
     return fullMessage;
@@ -19,7 +23,7 @@ export function getFullErrorMessage(httpResponse, message: string): string {
 
 export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
-    console.error(fullMessage);
+    console.error(filterRemoteOutput(fullMessage));
     tl.setResult(tl.TaskResult.Failed, message);
 }
 

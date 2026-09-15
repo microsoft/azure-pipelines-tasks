@@ -129,8 +129,8 @@ async function doWork() {
         let message: string;
         if (e instanceof util.HttpError) {
             message = e.message;
-            console.error(e.fullMessage);
-            console.error(e.body);
+            console.error(util.filterRemoteOutput(e.fullMessage));
+            console.error(util.filterRemoteOutput(String(e.body)));
         } else if (e instanceof Error) {
             message = e.message;
             console.error(e);

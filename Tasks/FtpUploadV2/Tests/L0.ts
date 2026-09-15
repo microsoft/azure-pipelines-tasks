@@ -113,6 +113,10 @@ describe('FtpUploadV2 Suite', function () {
 
         await tr.runAsync();
         console.info(tr.stdout);
+        assert(tr.stdOutContained('ftp greeting ##_vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response output should be filtered');
+        assert(tr.stdOutContained('ftp logger ##_vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug output should be filtered');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug command should be neutralized');
         assert(tr.succeeded, 'task should succeed');
     });
 });

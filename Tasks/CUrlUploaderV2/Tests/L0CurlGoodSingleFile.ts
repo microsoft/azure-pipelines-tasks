@@ -10,6 +10,7 @@ tr.setInput('username', 'user');
 tr.setInput('password', 'pass');
 tr.setInput('url', 'ftp://some.ftp.com/');
 tr.setInput('redirectStderr', 'true');
+process.env['SYSTEM_DEBUG'] = 'true';
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -20,7 +21,7 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "exec": {
         "curl -T /some/path/one ftp://some.ftp.com/ --stderr - -u user:pass": {
             "code": 0,
-            "stdout": "curl output here"
+            "stdout": "curl output ##vso[task.setvariable variable=unsafe]value"
         }
     },
     "checkPath": {
