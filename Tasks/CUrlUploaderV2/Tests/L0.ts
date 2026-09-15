@@ -13,6 +13,8 @@ describe('CUrlUploaderV2 Suite', function () {
 
         assert(tr.invokedToolCount == 1, 'should have only run curl');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stdOutContained('curl output ##_vso[task.setvariable variable=unsafe]value'), 'curl output command should be neutralized');
+        assert(!tr.stdOutContained('curl output ##vso[task.setvariable variable=unsafe]value'), 'curl output command should not be executable');
         assert(tr.succeeded, 'task should have succeeded');
     });
 

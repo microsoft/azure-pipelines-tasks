@@ -143,18 +143,22 @@ async function run() {
 
         let output:string = '';
         curlRunner.on('stdout', (buffer: Buffer) => {
-            process.stdout.write(buffer);
             output = output.concat(buffer ? buffer.toString() : '');
         });
 
-        var code: number = await curlRunner.exec();
+        const code = await curlRunner.execAsync({
+            externalOutput: {
+                source: 'childProcess'
+            }
+        });
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('CurlReturnCode', code));
 
         let outputMatch:RegExpMatchArray = output.match(/[\n\r]100\s/g);
         let completed: number = outputMatch ? outputMatch.length : 0;
         tl.debug('Successfully uploaded: ' + completed);
         if (completed < uploadCount) {
-            tl.debug('Tested output [' + output + ']');
+            const filteredOutput = tl.filterExternalOutput(output, { source: 'childProcess' }).toString('utf8');
+            tl.debug('Tested output [' + filteredOutput + ']');
             tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
         }
     }

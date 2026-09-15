@@ -146,7 +146,7 @@ export class JobQueue {
             } else if (addedToConsole) {
                 for (const i in streamingJobs) {
                     const job: Job = streamingJobs[i];
-                    console.log('Jenkins job pending: ' + job.ExecutableUrl);
+                    console.log(util.filterRemoteOutput('Jenkins job pending: ' + job.ExecutableUrl));
                 }
             }
         }

@@ -4,7 +4,10 @@
 import assert = require('assert');
 import path = require('path');
 import process = require('process');
+import stream = require('stream');
+import { createJenkinsConsoleOutputStream } from '../job';
 import { JobState, checkStateTransitions } from '../states';
+import * as util from '../util';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -143,6 +146,38 @@ describe('JenkinsQueueJob L0 Suite', function () {
                 checkStateTransitions(JobState[testedState], JobState[state]);
             }
         }
+    });
+
+    it('filters VSO commands from chunked Jenkins console output', async () => {
+        const chunks: Buffer[] = [];
+        const destination = new stream.Writable({
+            write: (chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
+                chunks.push(Buffer.from(chunk));
+                callback();
+            }
+        });
+        const output = createJenkinsConsoleOutputStream(destination);
+        const ended = new Promise<void>((resolve, reject) => {
+            output.on('end', resolve);
+            output.on('error', reject);
+            destination.on('error', reject);
+        });
+
+        output.write('ordinary Jenkins output\n##vs');
+        output.end('o[task.setvariable variable=unsafe]value\n');
+        await ended;
+
+        assert.strictEqual(
+            Buffer.concat(chunks).toString('utf8'),
+            'ordinary Jenkins output\n##_vso[task.setvariable variable=unsafe]value\n'
+        );
+    });
+
+    it('filters VSO commands from Jenkins metadata and error responses', () => {
+        assert.strictEqual(
+            util.filterRemoteOutput('job name\n##vso[task.setvariable variable=unsafe]value'),
+            'job name\n##_vso[task.setvariable variable=unsafe]value'
+        );
     });
 
     function runValidations(validator: () => void, tr) {

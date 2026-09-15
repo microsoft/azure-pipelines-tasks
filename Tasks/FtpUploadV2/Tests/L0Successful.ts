@@ -5,14 +5,15 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'ftpuploadtask.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-const ftp = {
+const ftp: any = {
     Client: function () {
         this.ftp = {
             log: () => { }
         };
         this.access = (options: any) => {
+            this.ftp.log("ftp logger ##vso[task.setvariable variable=fromLogger]unsafe");
             return {
-                message: "ftp mock response",
+                message: "ftp greeting ##vso[task.setvariable variable=fromGreeting]unsafe",
             };
         };
         this.trackProgress = (callback: (info: any) => void) => {
