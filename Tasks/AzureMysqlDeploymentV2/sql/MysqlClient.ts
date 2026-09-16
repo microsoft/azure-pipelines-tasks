@@ -47,7 +47,7 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()));
+        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getConnectionArgument()));
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -82,10 +82,21 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
+     * Shared argument builder used by every mysql invocation this client
+     * makes. Enforces --binary-mode last, after any
+     * user-supplied additional arguments, so it takes precedence over a
+     * conflicting user-supplied value for this option and cannot be
+     * disabled by an override.
+     */
+    private _getConnectionArgument(): string {
+        return this._getArgumentString() + " " + this._getAdditionalArgument() + " --binary-mode";
+    }
+
+    /**
      * Execute Mysql script
      */
     public async executeSqlCommand() : Promise<number> {
-        let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
+        let argument: string = this._getConnectionArgument();
         let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
         telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry); 
         if(this._azureMysqlTaskParameter.getDatabaseName()){
@@ -106,10 +117,6 @@ export class MysqlClient implements ISqlClient {
      * Run the user-provided SQL script (inline or file-based)
      */
     private async _runUserScript(argument: string): Promise<number> {
-        // Enforce --binary-mode for security hardening. Appended after
-        // user-provided arguments so it takes precedence over any conflicting
-        // user-supplied value for this option.
-        argument += " --binary-mode";
         if (this._azureMysqlTaskParameter.getTaskNameSelector() === 'InlineSqlTask') {
             return this._executeSqlScript(argument + this._getFileSourceArgument());
         }
@@ -183,9 +190,9 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Reject a bare "--" token in user-supplied additional arguments, which
-     * is not a supported value for this input and could interfere with
-     * enforced security options. See internal security tracking for details.
+     * Reject a bare "--" token in user-supplied additional arguments. This
+     * value is not supported for this input, as it would prevent
+     * task-managed client options from being applied as intended.
      */
     private _rejectOptionTerminator(additionalArguments: string): void {
         if (!additionalArguments) {
