@@ -30,6 +30,13 @@ process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.wi
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
 process.env["ENDPOINT_AUTH_SCHEME_AzureRM"] = "serviceprincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE"] = "key";
+const useResolvedAzureCliPath = process.env["TEST_USE_RESOLVED_AZURE_CLI_PATH_FEATURE_DISABLED"] !== "true";
+if (!useResolvedAzureCliPath) {
+    delete process.env["DISTRIBUTEDTASK_TASKS_USERESOLVEDAZURECLIPATHFORARMTEMPLATEDEPLOYMENT"];
+}
+else {
+    process.env["DISTRIBUTEDTASK_TASKS_USERESOLVEDAZURECLIPATHFORARMTEMPLATEDEPLOYMENT"] = "true";
+}
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMBicep = path.join(__dirname, "CSMwithBicep.bicep");
@@ -41,15 +48,19 @@ var CSMBicepWithError = path.join(__dirname, "CSMwithBicepWithError.bicep");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");
 var defaults = path.join(__dirname, "defaults.json");
 var faultyCSM = path.join(__dirname, "faultyCSM.json");
-var bicepbuildCmd = `az bicep build --file "${path.join(__dirname, "CSMwithBicep.bicep")}"`;
-var bicepbuildwithspaceinpathCmd = `az bicep build --file "${path.join(__dirname, "CSMwithBicep WithSpaceInPath.bicep")}"`;
-var bicepparambuildCmd = `az bicep build-params --file "${path.join(__dirname, "CSMwithBicep.bicepparam")}" --outfile "${path.join(__dirname, "CSMwithBicep.parameters.json")}"`;
-var bicepparambuildwithenvironmentCmd = `az bicep build-params --file "${path.join(__dirname, "CSMwithBicep.prod.bicepparam")}" --outfile "${path.join(__dirname, "CSMwithBicep.parameters.json")}"`;
-var bicepbuildwithWarning = `az bicep build --file "${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}"`;
+var azureCliPath = path.join(__dirname, "mock_node_modules", "azure-cli", "az");
+var azureCliExecutable = useResolvedAzureCliPath ? azureCliPath : "az";
+var bicepbuildCmd = `${azureCliExecutable} bicep build --file "${path.join(__dirname, "CSMwithBicep.bicep")}"`;
+var bicepbuildwithspaceinpathCmd = `${azureCliExecutable} bicep build --file "${path.join(__dirname, "CSMwithBicep WithSpaceInPath.bicep")}"`;
+var bicepparambuildCmd = `${azureCliExecutable} bicep build-params --file "${path.join(__dirname, "CSMwithBicep.bicepparam")}" --outfile "${path.join(__dirname, "CSMwithBicep.parameters.json")}"`;
+var bicepparambuildwithenvironmentCmd = `${azureCliExecutable} bicep build-params --file "${path.join(__dirname, "CSMwithBicep.prod.bicepparam")}" --outfile "${path.join(__dirname, "CSMwithBicep.parameters.json")}"`;
+var bicepbuildwithWarning = `${azureCliExecutable} bicep build --file "${path.join(__dirname, "CSMwithBicepWithWarning.bicep")}"`;
 var azloginCommand = `az login --service-principal -u "id" --password="key" --tenant "tenant" --allow-no-subscriptions`;
-var azaccountSet = `az account set --subscription "sId"`;
-var azlogoutCommand = `az account clear`
-var azVersion = `az --version`
+azloginCommand = azloginCommand.replace(/^az/, azureCliExecutable);
+var azaccountSet = `${azureCliExecutable} account set --subscription "sId"`;
+var azlogoutCommand = `${azureCliExecutable} account clear`
+var azVersion = `${azureCliExecutable} --version`
+var azVersionJson = `${azureCliExecutable} version`
 
 var exec = {}
 const successExec = {
@@ -60,6 +71,10 @@ const successAzExec = {
     "code": 0,
     "stdout": "azure-cli 2.66.0"
 }
+const successAzVersionJsonExec = {
+    "code": 0,
+    "stdout": JSON.stringify({"azure-cli": "2.66.0"})
+}
 exec[bicepbuildCmd] = successExec;
 exec[bicepbuildwithspaceinpathCmd] = successExec;
 exec[bicepparambuildCmd] = successExec;
@@ -69,13 +84,15 @@ exec[azloginCommand] = successExec;
 exec[azaccountSet] = successExec;
 exec[azlogoutCommand] = successExec;
 exec[azVersion] = successAzExec;
+exec[azVersionJson] = successAzVersionJsonExec;
 
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     "which": {
-        "az": "az"
+        "az": azureCliExecutable,
+        [azureCliExecutable]: azureCliExecutable
     },
     "checkPath": {
-        "az": true
+        [azureCliExecutable]: true
     },
     exec,
     "findMatch": {
