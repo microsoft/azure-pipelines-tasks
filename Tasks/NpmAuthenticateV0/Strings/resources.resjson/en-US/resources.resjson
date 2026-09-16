@@ -39,6 +39,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
   "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
   "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
 }
