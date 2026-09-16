@@ -48,6 +48,11 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
         assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminator should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminator should have passed.');
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsBareTerminatorAlone should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsBareTerminatorAlone should have passed.');
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsTerminatorWithTrailingTokens should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsTerminatorWithTrailingTokens should have passed.');
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.allowsQuotedDoubleDashValue should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.allowsQuotedDoubleDashValue should have passed.');
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.');
+        assert(tr.stdOutContained('MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminatorForFileTask should have passed.'), 'Should have printed: MysqlClientOptionTerminatorL0Tests.rejectsOptionTerminatorForFileTask should have passed.');
     });
 
     it('AzureMySqlDeployment MysqlClientFileExec', async () => {

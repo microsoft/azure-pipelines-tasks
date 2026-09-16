@@ -17,8 +17,10 @@ export class MysqlClientOptionTerminatorTests {
         // arguments and must be rejected before reaching the mysql client.
         tr.setInput('SqlAdditionalArguments', '--skip-binary-mode --');
 
-        // No "exec" answer is registered: the task must fail validation
-        // before ever attempting to invoke the mysql client.
+        // No "exec" answer is registered for the rejection scenarios: the
+        // task must fail validation before ever attempting to invoke the
+        // mysql client. One "exec" answer is registered for the negative
+        // control (a quoted "--" value that must be allowed through).
         let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "which": {
                 "/usr/local/bin/mysql": "/usr/local/bin/mysql"
@@ -26,7 +28,12 @@ export class MysqlClientOptionTerminatorTests {
             "checkPath": {
                 "/usr/local/bin/mysql": true
             },
-            "exec": {}
+            "exec": {
+                "/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD --ssl-mode=REQUIRED --default-character-set=-- --binary-mode -eSELECT 1;": {
+                    "code": 0,
+                    "stdout": ""
+                }
+            }
         };
         tr.setAnswers(a);
         tr.run();
