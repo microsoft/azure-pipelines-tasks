@@ -19,10 +19,7 @@ export class MysqlClientOptionTerminatorL0Tests {
     );
 
     // Builds a lightweight stand-in for AzureMysqlTaskParameter, overriding
-    // only the fields a scenario needs. AzureMysqlTaskParameter reads all
-    // task inputs once in its constructor, so re-running it in-process
-    // wouldn't pick up different values; a stub avoids that and lets each
-    // scenario vary inputs independently within a single mock-run process.
+    // only the fields a scenario needs.
     private static makeClient(overrides: { [key: string]: () => any }): ISqlClient {
         const param = {
             getSqlUserName: () => 'DEMO_SQL_USERNAME',
@@ -84,10 +81,7 @@ export class MysqlClientOptionTerminatorL0Tests {
         );
 
         // Negative control: "--" that only appears as part of a quoted
-        // option value (not as its own token) must NOT be rejected. A
-        // mocked "exec" answer is registered for this exact command line,
-        // so the task only succeeds if the client is actually invoked
-        // (proving no over-rejection).
+        // option value (not as its own token) must NOT be rejected.
         await MysqlClientOptionTerminatorL0Tests.expectAllowed(
             'allowsQuotedDoubleDashValue',
             () => MysqlClientOptionTerminatorL0Tests.makeClient({
