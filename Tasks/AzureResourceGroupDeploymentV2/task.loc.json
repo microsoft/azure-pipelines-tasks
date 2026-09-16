@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -508,6 +508,8 @@
     "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
-    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide",
+    "SafeOutputVariablesAgentTooOld": "ms-resource:loc.messages.SafeOutputVariablesAgentTooOld",
+    "SafeOutputVariablesPercentDecodingDisabled": "ms-resource:loc.messages.SafeOutputVariablesPercentDecodingDisabled"
   }
 }

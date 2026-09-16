@@ -11,6 +11,7 @@ import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
 import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
+import { canEmitSafeOutputVariables } from "./agentCompatibility";
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
@@ -558,7 +559,8 @@ export class ResourceGroup {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
-                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables");
+                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables")
+                            && canEmitSafeOutputVariables();
                         const setVariablesInObject = (path: string, obj: any) => {
                             for (var key of Object.keys(obj)) {
                                 if (obj[key] && typeof(obj[key]) === "object") {
@@ -585,6 +587,9 @@ export class ResourceGroup {
                         if (useSafeDeploymentOutputVariables) {
                             tl.command("task.setvariable", { variable: this.taskParameters.deploymentOutputs }, JSON.stringify(result["properties"]["outputs"]));
                             console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            if (wasTruncatedByLegacyCommandFormat(this.taskParameters.deploymentOutputs)) {
+                                tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            }
                         } else {
                             console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
                             console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));

@@ -90,11 +90,23 @@ export function runSanitizeTests() {
         assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a\rb'), true, 'a carriage return ended the legacy command');
     });
 
+    it('Should flag names containing spellings the legacy agent unescaped', () => {
+        for (const token of ['%3B', '%5D', '%0D', '%0A', '%AZP25']) {
+            assert.strictEqual(
+                wasTruncatedByLegacyCommandFormat(`armOut.a${token}b`),
+                true,
+                `${token} resolved differently in the legacy command format`);
+        }
+    });
+
     it('Should not flag names the legacy command format handled correctly', () => {
         assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.storageName'), false);
         assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.storage_Account-1.value'), false);
         assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a=b'), false, 'an equals sign round-tripped on both paths');
         assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a b'), false, 'a space round-tripped on both paths');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a%5db'), false, 'legacy unescape tokens are case-sensitive');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a%20b'), false, '%20 is not a legacy logging-command escape');
+        assert.strictEqual(wasTruncatedByLegacyCommandFormat('armOut.a%25b'), false, '%25 is not decoded by compatible agents');
     });
 
     it('Should treat empty and nullish names as unaffected', () => {

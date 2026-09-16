@@ -6,6 +6,7 @@ const path = require('path');
 import fs = require("fs");
 
 import { runSanitizeTests } from './sanitizeTests';
+import { runAgentCompatibilityTests } from './agentCompatibilityTests';
 import { parseAgentCommands, tryParseAgentCommand } from './agentCommandParser';
 
 function setResponseFile(name) {
@@ -16,6 +17,7 @@ describe('Azure Resource Manager Template Deployment', function () {
     this.timeout(120000);
 
     describe('Logging command sanitization', runSanitizeTests);
+    describe('Agent compatibility', runAgentCompatibilityTests);
 
     before((done) => {
         done();
@@ -69,6 +71,8 @@ describe('Azure Resource Manager Template Deployment', function () {
         process.env["deploymentOutputs"] = "someVar";
         process.env["regularDeploymentOutputs"] = "true";
         process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "false";
+        process.env["agentVersion"] = "2.181.2";
+        process.env["DECODE_PERCENTS"] = "false";
         let tr = new ttm.MockTestRunner(tp);
         try {
             await tr.runAsync();
@@ -77,6 +81,8 @@ describe('Azure Resource Manager Template Deployment', function () {
             assert(tr.stdout.indexOf("deployments.createOrUpdate is called") > 0, "deployments.createOrUpdate function should have been called from azure-sdk");
             assert(tr.stdout.indexOf('##vso[task.setvariable variable=someVar.safeOutput.type;]"string"') >= 0, "individual deploymentOutput should use the legacy command format");
             assert(tr.stdout.indexOf("##vso[task.setvariable variable=someVar;]") >= 0, "deploymentsOutput should have been updated");
+            assert(tr.stdout.indexOf("loc_mock_SafeOutputVariablesAgentTooOld") < 0, "the disabled feature should not check the agent version");
+            assert(tr.stdout.indexOf("loc_mock_SafeOutputVariablesPercentDecodingDisabled") < 0, "the disabled feature should not check percent decoding");
         }
         catch (error) {
             console.log("STDERR", tr.stderr);
@@ -85,6 +91,92 @@ describe('Azure Resource Manager Template Deployment', function () {
         }
         finally {
             delete process.env["regularDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+            delete process.env["agentVersion"];
+            delete process.env["DECODE_PERCENTS"];
+        }
+    });
+    it('Warns when the aggregate deployment output name changes under the safe format', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "a]b";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=a%5Db;]{}") >= 0)[0];
+            assert(emitted, "expected the aggregate output variable to use the safe format");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the aggregate output command should parse");
+            assert.strictEqual(parsed.properties.variable, "a]b", "the aggregate name should round-trip intact");
+            assert.strictEqual(parsed.data, "{}", "the empty outputs object should be preserved");
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(
+                warned.some(cmd => cmd.data.indexOf("loc_mock_OutputVariableNameChanged a]b") >= 0),
+                "expected a warning naming the changed aggregate output variable");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Round-trips literal percent characters in output names and values', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["percentDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("variable=someVar.percent%AZP25name.value;]") >= 0)[0];
+            assert(emitted, "expected literal percent characters to be escaped during transport");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the percent output command should parse");
+            assert.strictEqual(parsed.properties.variable, "someVar.percent%name.value", "the percent in the name should round-trip");
+            assert.strictEqual(parsed.data, '"https://host/a%20b"', "the percent in the value should round-trip");
+            assert(tr.stdout.indexOf("loc_mock_OutputVariableNameChanged") < 0, "an ordinary percent should not trigger a compatibility warning");
+        }
+        finally {
+            delete process.env["percentDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Preserves legacy unescape tokens literally and warns about the changed name', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["legacyTokenDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("variable=someVar.a%AZP255Db.value;]") >= 0)[0];
+            assert(emitted, "expected the leading percent in the legacy token to be escaped");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the legacy-token output command should parse");
+            assert.strictEqual(parsed.properties.variable, "someVar.a%5Db.value", "the token spelling in the name should remain literal");
+            assert.strictEqual(parsed.data, '"value%3B%0D%0A%AZP25"', "token spellings in the value should remain literal");
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(warned.some(cmd => cmd.data.indexOf("someVar.a%5Db.value") >= 0), "expected a compatibility warning for the changed name");
+        }
+        finally {
+            delete process.env["legacyTokenDeploymentOutputs"];
             delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
         }
     });
@@ -312,6 +404,108 @@ describe('Azure Resource Manager Template Deployment', function () {
         finally {
             delete process.env["bracketNameDeploymentOutputs"];
             delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+        }
+    });
+    it('Keeps the previous format when the agent cannot decode percent escaping', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        process.env["agentVersion"] = "2.183.0";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // An agent below 2.184.0 hands the caller the raw %AZP25 sequence instead of a '%',
+            // so the task keeps the previous format rather than publishing a corrupted name.
+            // The pipeline keeps working and the log explains why the safe format was skipped.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a") >= 0 && line.indexOf("b.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a", "the previous format is still in use");
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(
+                warned.some(cmd => cmd.data.indexOf("loc_mock_SafeOutputVariablesAgentTooOld") >= 0),
+                "expected a warning naming the unsupported agent version");
+            assert(
+                !warned.some(cmd => cmd.data.indexOf("loc_mock_OutputVariableNameChanged") >= 0),
+                "no rename warning applies while the previous format is in use");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+            delete process.env["agentVersion"];
+        }
+    });
+    it('Keeps the previous format when percent decoding is turned off', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["bracketNameDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        process.env["DECODE_PERCENTS"] = "false";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            // A current agent still leaves %AZP25 alone when this variable turns decoding off,
+            // so the same fallback applies.
+            const emitted = tr.stdout.split(/\r?\n/)
+                .filter(line => line.indexOf("##vso[task.setvariable variable=someVar.a") >= 0 && line.indexOf("b.value") >= 0)[0];
+            assert(emitted, "expected a setvariable command for the bracketed output value");
+            const parsed = tryParseAgentCommand(emitted);
+            assert(parsed, "the emitted line should parse as a command");
+            assert.strictEqual(parsed.properties.variable, "someVar.a", "the previous format is still in use");
+            const warned = parseAgentCommands(tr.stdout)
+                .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+            assert(
+                warned.some(cmd => cmd.data.indexOf("loc_mock_SafeOutputVariablesPercentDecodingDisabled") >= 0),
+                "expected a warning naming the variable that disabled decoding");
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            throw error;
+        }
+        finally {
+            delete process.env["bracketNameDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+            delete process.env["DECODE_PERCENTS"];
+        }
+    });
+    it('Prioritizes the old-agent warning when both compatibility checks fail', async () => {
+        let tp = path.join(__dirname, 'createOrUpdate.js');
+        process.env["csmFile"] = "CSM.json";
+        process.env["csmParametersFile"] = "CSM.json";
+        process.env["deploymentOutputs"] = "someVar";
+        process.env["regularDeploymentOutputs"] = "true";
+        process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"] = "true";
+        process.env["agentVersion"] = "2.183.0";
+        process.env["DECODE_PERCENTS"] = "false";
+        let tr = new ttm.MockTestRunner(tp);
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, "Should have succeeded");
+            assert(tr.stdout.indexOf('##vso[task.setvariable variable=someVar.safeOutput.type;]"string"') >= 0, "the legacy format should be used");
+            assert(tr.stdout.indexOf("loc_mock_SafeOutputVariablesAgentTooOld") >= 0, "the old-agent warning should be emitted");
+            assert(tr.stdout.indexOf("loc_mock_SafeOutputVariablesPercentDecodingDisabled") < 0, "only the primary incompatibility warning should be emitted");
+        }
+        finally {
+            delete process.env["regularDeploymentOutputs"];
+            delete process.env["DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES"];
+            delete process.env["agentVersion"];
+            delete process.env["DECODE_PERCENTS"];
         }
     });
     it('Create or Update RG, failed on faulty CSM template file', async () => {
