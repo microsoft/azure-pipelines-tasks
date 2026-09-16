@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 277,
-    "Patch": 0
+    "Minor": 280,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -99,6 +99,8 @@
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
     "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
     "Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+    "Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
+    "Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
     "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   }
