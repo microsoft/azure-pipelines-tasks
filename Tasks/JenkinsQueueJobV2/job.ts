@@ -210,7 +210,7 @@ export class Job {
     }
 
     public SetJoined(joinedJob: Job): void {
-        tl.debugExternalOutput(this + '.setJoined(' + joinedJob + ')', { source: 'remote' });
+        tl.debug(this + '.setJoined(' + joinedJob + ')');
         this.Joined = joinedJob;
         this.changeState(JobState.Joined);
         if (joinedJob.State === JobState.Joined || joinedJob.State === JobState.Cut) {
@@ -344,7 +344,7 @@ export class Job {
     private downloadResults(): void {
         const thisJob: Job = this;
         const downloadUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'team-results/zip');
-        tl.debugExternalOutput('downloadResults(), url:' + downloadUrl, { source: 'remote' });
+        tl.debug('downloadResults(), url:' + downloadUrl);
 
         const downloadRequest = request.get({ url: downloadUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL })
             .auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
@@ -353,10 +353,7 @@ export class Job {
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             })
             .on('response', (response) => {
-                tl.debugExternalOutput(
-                    'downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage,
-                    { source: 'remote' }
-                );
+                tl.debug('downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage);
                 if (response.statusCode == 404) { // expected if there are no results
                     tl.debug('no results to download');
                     thisJob.stopWork(0, JobState.Done);
@@ -367,35 +364,32 @@ export class Job {
                     try {
                         // Create the destination folder if it doesn't exist
                         if (!tl.exist(destinationFolder)) {
-                            tl.debugExternalOutput('creating results destination folder: ' + destinationFolder, { source: 'remote' });
+                            tl.debug('creating results destination folder: ' + destinationFolder);
                             tl.mkdirP(destinationFolder);
                         }
 
-                        tl.debugExternalOutput('downloading results file: ' + fileName, { source: 'remote' });
+                        tl.debug('downloading results file: ' + fileName);
 
                         const file: fs.WriteStream = fs.createWriteStream(fileName);
                         downloadRequest.pipe(file)
                             .on('error', (err) => { throw err; })
                             .on('finish', function fileFinished() {
-                                tl.debugExternalOutput('successfully downloaded results to: ' + fileName, { source: 'remote' });
+                                tl.debug('successfully downloaded results to: ' + fileName);
                                 try {
                                     unzip(fileName, destinationFolder);
                                     thisJob.stopWork(0, JobState.Done);
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
-                                    tl.debugExternalOutput(String(e.message), { source: 'remote' });
-                                    tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
+                                    tl.debug(e.message);
+                                    process.stderr.write(e + os.EOL);
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warningExternalOutput(
-                            'unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl,
-                            { source: 'remote' }
-                        );
-                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
-                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
+                        tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
+                        tl.warning(err.message);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 } else { // an unexepected error with results
@@ -408,13 +402,13 @@ export class Job {
                         downloadRequest.pipe(warningStream)
                             .on('error', (err) => { throw err; })
                             .on('finish', function finished() {
-                                tl.warningExternalOutput(warningStream.toString(), { source: 'remote' });
+                                tl.warning(warningStream);
                                 thisJob.stopWork(0, JobState.Done);
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
-                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
+                        tl.warning(err.message);
+                        process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
                 }
@@ -539,7 +533,7 @@ export class Job {
 
     private debug(message: string) {
         const fullMessage: string = this.toString() + ' debug: ' + message;
-        tl.debugExternalOutput(fullMessage, { source: 'remote' });
+        tl.debug(fullMessage);
     }
 
     private toString() {

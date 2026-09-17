@@ -49,7 +49,7 @@ export class JobQueue {
                     this.FlushJobConsolesSafely();
                 }
             } catch (err) {
-                tl.debugExternalOutput(String(err.message), { source: 'remote' });
+                tl.debug(err.message);
                 tl.setResult(tl.TaskResult.Failed, err.message);
                 this.stop(false);
             }
@@ -296,7 +296,7 @@ export class JobQueue {
         const thisQueue: JobQueue = this;
         const tempDir: string = shell.tempdir();
         const linkMarkdownFile: string = path.join(tempDir, 'JenkinsJob_' + this.RootJob.Name + '_' + this.RootJob.ExecutableNumber + '.md');
-        tl.debugExternalOutput('markdown location: ' + linkMarkdownFile, { source: 'remote' });
+        tl.debug('markdown location: ' + linkMarkdownFile);
         const tab: string = '  ';
         const paddingTab: number = 4;
         generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, (markdownContents) => {
@@ -305,12 +305,9 @@ export class JobQueue {
 
                 if (err) {
                     //don't fail the build -- there just won't be a link
-                    tl.writeExternalOutput('Error creating link to Jenkins job: ' + String(err) + os.EOL, { source: 'remote' });
+                    console.log('Error creating link to Jenkins job: ' + err);
                 } else {
-                    tl.command('task.addattachment', {
-                        type: 'Distributedtask.Core.Summary',
-                        name: 'Jenkins Results'
-                    }, linkMarkdownFile);
+                    console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
                 }
 
                 let message: string = null;

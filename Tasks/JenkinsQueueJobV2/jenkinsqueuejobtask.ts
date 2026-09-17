@@ -58,7 +58,7 @@ export class TaskOptions {
     constructor() {
         this.serverEndpoint = tl.getInput('serverEndpoint', true);
         this.serverEndpointUrl = tl.getEndpointUrl(this.serverEndpoint, false);
-        tl.debugExternalOutput('serverEndpointUrl=' + this.serverEndpointUrl, { source: 'remote' });
+        tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
         this.serverEndpointAuth = tl.getEndpointAuthorization(this.serverEndpoint, false);
         this.username = this.serverEndpointAuth['parameters']['username'];
         this.password = this.serverEndpointAuth['parameters']['password'];
@@ -84,11 +84,11 @@ export class TaskOptions {
         this.failOnUnstableResult = tl.getBoolInput('failOnUnstableResult', false);
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
-        tl.debugExternalOutput('jobQueueUrl=' + this.jobQueueUrl, { source: 'remote' });
+        tl.debug('jobQueueUrl=' + this.jobQueueUrl);
         this.teamJobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, '/team-build/' + ((this.parameterizedJob) ? 'buildWithParameters/' : 'build/') + this.jobName + '?delay=0sec');
-        tl.debugExternalOutput('teamJobQueueUrl=' + this.teamJobQueueUrl, { source: 'remote' });
+        tl.debug('teamJobQueueUrl=' + this.teamJobQueueUrl);
         this.teamPluginUrl = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
-        tl.debugExternalOutput('teamPluginUrl=' + this.teamPluginUrl, { source: 'remote' });
+        tl.debug('teamPluginUrl=' + this.teamPluginUrl);
 
         this.teamBuildPluginAvailable = false;
         // 'Build.StagingDirectory' is available during build.
@@ -133,10 +133,10 @@ async function doWork() {
             tl.writeExternalOutput(String(e.body) + os.EOL, { source: 'remote', destination: process.stderr });
         } else if (e instanceof Error) {
             message = e.message;
-            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
+            console.error(e);
         } else {
             message = e;
-            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
+            console.error(e);
         }
         tl.setResult(tl.TaskResult.Failed, message);
     }
