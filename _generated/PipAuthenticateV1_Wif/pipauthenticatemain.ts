@@ -23,12 +23,21 @@ async function main(): Promise<void> {
         // If using feed Url and wif service connection, set the pip index url
         if (feedUrl && entraWifServiceConnectionName)
         {
+            let parsedFeedUrl: URL;
+            try {
+                parsedFeedUrl = new URL(feedUrl);
+            } catch {
+                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
+            }
+            if (parsedFeedUrl.protocol !== 'https:') {
+                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
+            }
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(feedUrl);
+            const feedTenant = await getFeedTenantId(parsedFeedUrl.href);
             let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
             if(token)
             {
-                var indexUrl = utils.addCredentialsToUri(entraWifServiceConnectionName, token, feedUrl) ;
+                var indexUrl = utils.addCredentialsToUri(entraWifServiceConnectionName, token, parsedFeedUrl.href) ;
                 tl.setVariable("PIP_INDEX_URL", indexUrl, false);
                 federatedFeedAuthSuccessCount++;
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));

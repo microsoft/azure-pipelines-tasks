@@ -7,7 +7,7 @@ const taskPath = path.join(__dirname, '..', 'src', 'dockertoolinstaller.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 // Set inputs
-tr.setInput('dockerVersion', '17.09.0-ce');
+tr.setInput('dockerVersion', '28.5.2');
 tr.setInput('releaseType', 'stable');
 
 // Determine platform-specific values
@@ -18,7 +18,7 @@ process.env['AGENT_TEMPDIRECTORY'] = isWindows ? 'C:\\temp' : '/tmp';
 process.env['AGENT_TOOLSDIRECTORY'] = isWindows ? 'C:\\temp\\tools' : '/tmp/tools';
 
 const dockerExecutable = isWindows ? 'docker.exe' : 'docker';
-const cachedToolPath = isWindows ? 'C:\\temp\\tools\\docker-stable\\17.9.0-ce\\x64' : '/tmp/tools/docker-stable/17.9.0-ce/x64';
+const cachedToolPath = isWindows ? 'C:\\temp\\tools\\docker-stable\\28.5.2\\x64' : '/tmp/tools/docker-stable/28.5.2/x64';
 const dockerPath = isWindows ? `${cachedToolPath}\\${dockerExecutable}` : `${cachedToolPath}/${dockerExecutable}`;
 const dockerWhichPath = isWindows ? 'C:\\Program Files\\Docker\\docker.exe' : '/usr/bin/docker';
 
@@ -33,7 +33,7 @@ const answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'exec': {
         [`${dockerWhichPath} --version`]: {
             'code': 0,
-            'stdout': 'Docker version 17.09.0-ce, build afdb6d4'
+            'stdout': 'Docker version 28.5.2, build mock'
         }
     },
     'exist': {
