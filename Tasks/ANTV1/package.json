@@ -13,9 +13,9 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.279.0",
-    "azure-pipelines-tasks-codecoverage-tools": "3.279.0",
-    "azure-pipelines-tasks-java-common": "2.279.0",
+    "azure-pipelines-task-lib": "^5.280.1",
+    "azure-pipelines-tasks-codecoverage-tools": "3.280.0",
+    "azure-pipelines-tasks-java-common": "2.280.0",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
