@@ -79,14 +79,14 @@ async function run() {
         } 
         else {
             // Find app files matching the specified pattern
-            tl.debugExternalOutput('Matching glob pattern: ' + filesPattern, { source: 'repository' });
+            tl.debug('Matching glob pattern: ' + filesPattern);
 
             // First find the most complete path without any matching patterns
             var idx = firstWildcardIndex(filesPattern);
             tl.debug('Index of first wildcard: ' + idx);
 
             var findPathRoot = path.dirname(filesPattern.slice(0, idx));
-            tl.debugExternalOutput('find root dir: ' + findPathRoot, { source: 'repository' });
+            tl.debug('find root dir: ' + findPathRoot);
 
             // Now we get a list of all files under this root
             var allFiles = tl.find(findPathRoot);
@@ -107,7 +107,7 @@ async function run() {
             uploadCount = uploadFilesList.length;
             var uploadFiles = '{' + uploadFilesList.join(',') + '}'
         }
-        tl.debugExternalOutput(tl.loc('UploadingFiles', uploadFiles), { source: 'repository' });
+        tl.debug(tl.loc('UploadingFiles', uploadFiles));
 
         curlRunner.arg('-T')
         // arrayify the arg so vsts-task-lib does not try to break args at space
@@ -157,14 +157,13 @@ async function run() {
         let completed: number = outputMatch ? outputMatch.length : 0;
         tl.debug('Successfully uploaded: ' + completed);
         if (completed < uploadCount) {
-            tl.debugExternalOutput('Tested output [' + output + ']', { source: 'childProcess' });
+            tl.debugExternalOutput('Tested output [' + output + ']',  {source: 'childProcess'});
             tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
         }
     }
     catch(err) {
-        const errorMessage = err instanceof Error ? err.message : String(err);
-        tl.errorExternalOutput(errorMessage, { source: 'repository' });
-        tl.setResult(tl.TaskResult.Failed, tl.loc('CurlFailed', errorMessage));
+        tl.error(err.message);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('CurlFailed', err.message));
     }    
 }
 
