@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 1
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "dotnet $(command)",
@@ -160,6 +160,20 @@
       "visibleRule": "command = test",
       "required": false,
       "helpMarkDown": "Provide a name for the test run."
+    },
+    {
+      "name": "appendToTestRunTitle",
+      "type": "pickList",
+      "label": "Append to test run title",
+      "defaultValue": "",
+      "visibleRule": "command = test",
+      "required": false,
+      "helpMarkDown": "Appends the selected value to the test run title, so that each project gets its own test run. Test results are published per project when this is set.",
+      "options": {
+        "": "None",
+        "projectName": "Project name",
+        "projectPath": "Project path"
+      }
     },
     {
       "name": "zipAfterPublish",
@@ -567,6 +581,7 @@
     "PackagesFailedToPublish": "Packages failed to publish",
     "PackagesInstalledSuccessfully": "Packages were restored successfully",
     "PackagesPublishedSuccessfully": "Packages were published successfully",
+    "UnknownAppendToTestRunTitle": "The value '%s' for the 'appendToTestRunTitle' input was not recognized. Supported values are 'projectName' and 'projectPath'. Nothing will be appended to the test run title.",
     "UnknownFeedType": "Unknown feed type '%s'",
     "Warning_AutomaticallyVersionReferencedProjects": "The automatic package versioning and include referenced projects options do not work together. Referenced projects will not inherit the custom version provided by the automatic versioning settings.",
     "Warning_MoreThanOneVersionInBuildNumber": "Found more than one instance of version data in BUILD_BUILDNUMBER.Assuming first instance is version.",
