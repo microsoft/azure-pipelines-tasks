@@ -10,6 +10,11 @@ import * as child_process from 'child_process';
 
 export type SpawnFn = typeof child_process.spawn;
 
+const unsupportedAdditionalOptions = new Set<string>([
+    '--',
+    '--commands'
+]);
+
 export class MysqlClient implements ISqlClient {
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
     private _hostName: string;
@@ -185,22 +190,20 @@ export class MysqlClient implements ISqlClient {
      */
     private _getAdditionalArgument() : string{
         const additionalArguments = this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
-        this._rejectOptionTerminator(additionalArguments);
+        this._validateAdditionalArguments(additionalArguments);
         return additionalArguments;
     }
 
     /**
-     * Reject a bare "--" token in user-supplied additional arguments. This
-     * value is not supported for this input, as it would prevent
+     * Reject unsupported user-supplied arguments that can prevent
      * task-managed client options from being applied as intended.
      */
-    private _rejectOptionTerminator(additionalArguments: string): void {
-        if (!additionalArguments) {
-            return;
-        }
-        const tokens = Utility.argStringToArray(additionalArguments);
-        if (tokens.some(token => token === '--')) {
-            throw new Error(task.loc("AdditionalArgumentsContainOptionTerminator"));
+    private _validateAdditionalArguments(additionalArguments: string): void {
+        for (const token of Utility.argStringToArray(additionalArguments)) {
+            const optionName = token.split('=', 1)[0].toLowerCase();
+            if (unsupportedAdditionalOptions.has(optionName)) {
+                throw new Error(task.loc("AdditionalArgumentsContainUnsupportedOption", optionName));
+            }
         }
     }
 

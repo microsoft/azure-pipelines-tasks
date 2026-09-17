@@ -2,10 +2,10 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import * as path from 'path';
 
-export class MysqlClientOptionTerminatorTests {
+export class MysqlClientUnsupportedOptionsTests {
 
-    public static startMysqlClientOptionTerminatorL0Tests() {
-        let tp = path.join(__dirname, 'MysqlClientOptionTerminatorL0Tests.js');
+    public static startMysqlClientUnsupportedOptionsL0Tests() {
+        let tp = path.join(__dirname, 'MysqlClientUnsupportedOptionsL0Tests.js');
         let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
         tr.setInput('ConnectedServiceName', 'DEMO_CONNECTED_SERVICE_NAME');
         tr.setInput('ServerName', 'MOCK_SERVER_NAME');
@@ -40,4 +40,4 @@ export class MysqlClientOptionTerminatorTests {
     }
 }
 
-MysqlClientOptionTerminatorTests.startMysqlClientOptionTerminatorL0Tests();
+MysqlClientUnsupportedOptionsTests.startMysqlClientUnsupportedOptionsL0Tests();

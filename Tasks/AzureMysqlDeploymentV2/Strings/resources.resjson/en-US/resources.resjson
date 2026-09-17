@@ -69,5 +69,5 @@
   "loc.messages.FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null.",
   "loc.messages.SqlFileNotFound": "SQL file not found at path: %s",
   "loc.messages.InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed.",
-  "loc.messages.AdditionalArgumentsContainOptionTerminator": "The value of 'Additional MySQL Arguments' cannot contain a bare '--' argument. Remove '--' from the additional arguments."
+  "loc.messages.AdditionalArgumentsContainUnsupportedOption": "The value of 'Additional MySQL Arguments' cannot contain the unsupported option '%s'. Remove this option from the additional arguments."
 }

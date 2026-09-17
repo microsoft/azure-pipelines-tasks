@@ -4,16 +4,16 @@ import { MysqlClient } from '../sql/MysqlClient';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 
 /**
- * Verifies a bare "--" in SqlAdditionalArguments is rejected before the
- * mysql client runs. No mocked exec/spawn answer is registered for the
+ * Verifies unsupported SqlAdditionalArguments are rejected before the mysql
+ * client runs. No mocked exec/spawn answer is registered for the
  * rejection scenarios, so a regression that still invokes the client fails
  * for a different reason (unmatched exec answer) instead of passing silently.
  */
-export class MysqlClientOptionTerminatorL0Tests {
+export class MysqlClientUnsupportedOptionsL0Tests {
 
     public static azureMysqlTaskParameter: AzureMysqlTaskParameter = new AzureMysqlTaskParameter();
     public static sqlClient: ISqlClient = new MysqlClient(
-        MysqlClientOptionTerminatorL0Tests.azureMysqlTaskParameter,
+        MysqlClientUnsupportedOptionsL0Tests.azureMysqlTaskParameter,
         'DEMO_MYSQL_SERVER',
         '/usr/local/bin/mysql'
     );
@@ -34,16 +34,16 @@ export class MysqlClientOptionTerminatorL0Tests {
         return new MysqlClient(param, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql');
     }
 
-    // Runs an action expected to throw the option-terminator rejection error.
+    // Runs an action expected to throw the unsupported-argument rejection error.
     private static async expectRejected(testName: string, action: () => any) {
         try {
             await action();
-            tl.setResult(tl.TaskResult.Failed, `MysqlClientOptionTerminatorL0Tests.${testName}: should have thrown but succeeded.`);
+            tl.setResult(tl.TaskResult.Failed, `MysqlClientUnsupportedOptionsL0Tests.${testName}: should have thrown but succeeded.`);
         } catch (error) {
-            if (error.message.indexOf('AdditionalArgumentsContainOptionTerminator') !== -1) {
-                tl.setResult(tl.TaskResult.Succeeded, `MysqlClientOptionTerminatorL0Tests.${testName} should have passed.`);
+            if (error.message.indexOf('AdditionalArgumentsContainUnsupportedOption') !== -1) {
+                tl.setResult(tl.TaskResult.Succeeded, `MysqlClientUnsupportedOptionsL0Tests.${testName} should have passed.`);
             } else {
-                tl.setResult(tl.TaskResult.Failed, `MysqlClientOptionTerminatorL0Tests.${testName}: threw unexpected error: ${error.message}`);
+                tl.setResult(tl.TaskResult.Failed, `MysqlClientUnsupportedOptionsL0Tests.${testName}: threw unexpected error: ${error.message}`);
             }
         }
     }
@@ -52,39 +52,39 @@ export class MysqlClientOptionTerminatorL0Tests {
     private static async expectAllowed(testName: string, action: () => any) {
         try {
             await action();
-            tl.setResult(tl.TaskResult.Succeeded, `MysqlClientOptionTerminatorL0Tests.${testName} should have passed.`);
+            tl.setResult(tl.TaskResult.Succeeded, `MysqlClientUnsupportedOptionsL0Tests.${testName} should have passed.`);
         } catch (error) {
-            tl.setResult(tl.TaskResult.Failed, `MysqlClientOptionTerminatorL0Tests.${testName}: threw unexpected error: ${error.message}`);
+            tl.setResult(tl.TaskResult.Failed, `MysqlClientUnsupportedOptionsL0Tests.${testName}: threw unexpected error: ${error.message}`);
         }
     }
 
     public static async startL0Tests() {
-        await MysqlClientOptionTerminatorL0Tests.expectRejected(
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
             'rejectsOptionTerminator',
-            () => MysqlClientOptionTerminatorL0Tests.sqlClient.executeSqlCommand()
+            () => MysqlClientUnsupportedOptionsL0Tests.sqlClient.executeSqlCommand()
         );
 
         // A bare "--" with no other arguments must also be rejected (not
         // just "--" following another flag).
-        await MysqlClientOptionTerminatorL0Tests.expectRejected(
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
             'rejectsBareTerminatorAlone',
-            () => MysqlClientOptionTerminatorL0Tests.makeClient({ getSqlAdditionalArguments: () => '--' }).executeSqlCommand()
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({ getSqlAdditionalArguments: () => '--' }).executeSqlCommand()
         );
 
         // "--" followed by more tokens must still be rejected (not just a
         // trailing "--" at the end of the argument string).
-        await MysqlClientOptionTerminatorL0Tests.expectRejected(
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
             'rejectsTerminatorWithTrailingTokens',
-            () => MysqlClientOptionTerminatorL0Tests.makeClient({
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
                 getSqlAdditionalArguments: () => '--skip-binary-mode -- --some-other-flag'
             }).executeSqlCommand()
         );
 
         // Negative control: "--" that only appears as part of a quoted
         // option value (not as its own token) must NOT be rejected.
-        await MysqlClientOptionTerminatorL0Tests.expectAllowed(
+        await MysqlClientUnsupportedOptionsL0Tests.expectAllowed(
             'allowsQuotedDoubleDashValue',
-            () => MysqlClientOptionTerminatorL0Tests.makeClient({
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
                 getSqlAdditionalArguments: () => '--default-character-set="--"'
             }).executeSqlCommand()
         );
@@ -92,22 +92,45 @@ export class MysqlClientOptionTerminatorL0Tests {
         // The firewall-check path (getFirewallConfiguration) shares the
         // same additional-argument validation and must reject before ever
         // invoking task.execSync.
-        await MysqlClientOptionTerminatorL0Tests.expectRejected(
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
             'rejectsOptionTerminatorInFirewallCheck',
-            () => MysqlClientOptionTerminatorL0Tests.makeClient({}).getFirewallConfiguration()
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({}).getFirewallConfiguration()
         );
 
         // The file-based task path (SqlFile) shares the same
         // additional-argument validation and must reject before ever
         // attempting to spawn the client.
-        await MysqlClientOptionTerminatorL0Tests.expectRejected(
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
             'rejectsOptionTerminatorForFileTask',
-            () => MysqlClientOptionTerminatorL0Tests.makeClient({
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
                 getTaskNameSelector: () => 'SqlFile',
                 getSqlFile: () => '/tmp/does-not-matter.sql'
+            }).executeSqlCommand()
+        );
+
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
+            'rejectsCommandsOption',
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
+                getSqlAdditionalArguments: () => '--commands'
+            }).executeSqlCommand()
+        );
+
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
+            'rejectsEnabledCommandsOptionForFileTask',
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
+                getTaskNameSelector: () => 'SqlFile',
+                getSqlFile: () => '/tmp/does-not-matter.sql',
+                getSqlAdditionalArguments: () => '--commands=ON'
+            }).executeSqlCommand()
+        );
+
+        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
+            'rejectsDisabledCommandsOption',
+            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
+                getSqlAdditionalArguments: () => '--commands=OFF'
             }).executeSqlCommand()
         );
     }
 }
 
-MysqlClientOptionTerminatorL0Tests.startL0Tests();
+MysqlClientUnsupportedOptionsL0Tests.startL0Tests();
