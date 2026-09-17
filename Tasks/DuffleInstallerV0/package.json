@@ -16,6 +16,9 @@
     "typescript": "5.1.6"
   },
   "overrides": {
-    "form-data": "^4.0.4"
+    "brace-expansion": "^1.1.18",
+    "js-yaml": "3.15.2",
+    "minimatch": "^3.1.5",
+    "underscore": "^1.13.8"
   }
 }

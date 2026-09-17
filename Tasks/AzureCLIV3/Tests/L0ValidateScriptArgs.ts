@@ -31,16 +31,24 @@ export const runValidateScriptArgsTests = () => {
         assert.strictEqual(isAstProbeResultSafe({ status: 0 }), true);
     });
 
+    const originalEnvValues = new Map<string, string | undefined>();
     const setEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName, envValue] = envVariable.split('=');
+            originalEnvValues.set(envName, process.env[envName]);
             process.env[envName] = envValue;
         });
     };
     const clearEnv = (envVariables: string[]) => {
         envVariables.forEach(envVariable => {
             const [envName] = envVariable.split('=');
-            delete process.env[envName];
+            const originalValue = originalEnvValues.get(envName);
+            if (originalValue === undefined) {
+                delete process.env[envName];
+            } else {
+                process.env[envName] = originalValue;
+            }
+            originalEnvValues.delete(envName);
         });
     };
 
@@ -111,28 +119,31 @@ export const runValidateScriptArgsTests = () => {
         // Mode matrix: audit (LOG) and collect only warn / emit telemetry — they must NOT throw,
         // even for the newline, character and AST-constructor injection vectors that enforce blocks.
         ['pscore: audit mode warns but does not throw on ; separator',
-            'test; whoami', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+            'test; whoami', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'AZP_75787_ENABLE_NEW_LOGIC=false']],
         ['pscore: collect mode does not throw on ; separator',
-            'test; whoami', 'pscore', ['AZP_75787_ENABLE_COLLECT=true']],
+            'test; whoami', 'pscore', ['AZP_75787_ENABLE_COLLECT=true', 'AZP_75787_ENABLE_NEW_LOGIC=false']],
         ['pscore: audit mode does not throw on newline',
-            '-Foo bar\nWrite-Host x', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+            '-Foo bar\nWrite-Host x', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'AZP_75787_ENABLE_NEW_LOGIC=false']],
         ['pscore: audit mode does not throw on command-valued hashtable (AST)',
             '-Tag @{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true']],
+            ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'AZP_75787_ENABLE_NEW_LOGIC=false']],
         ['pscore: collect mode does not throw on command-valued hashtable (AST)',
             '-Tag @{ k = [System.Net.Dns]::MachineName }', 'pscore',
-            ['AZP_75787_ENABLE_COLLECT=true']],
+            ['AZP_75787_ENABLE_COLLECT=true', 'AZP_75787_ENABLE_NEW_LOGIC=false']],
         // MSRC 129198 ring-by-ring gates: a new check is inert unless BOTH its own FF and the enforce
         // toggle (AZP_75787_ENABLE_NEW_LOGIC) are on. None of these may throw.
         ['pscore: AST injection inert when expression FF off (enforce on)',
-            '@{ k = New-Item C:\\x }', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+            '@{ k = New-Item C:\\x }', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=false']],
         ['pscore: AST injection inert when enforce off (expression FF on, collect on)',
             '@{ k = New-Item C:\\x }', 'pscore',
-            ['AZP_75787_ENABLE_COLLECT=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true']],
+            ['AZP_75787_ENABLE_COLLECT=true', 'AZP_75787_ENABLE_NEW_LOGIC=false', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true']],
         ['pscore: backtick-escaped newline inert when newline FF off (enforce on)',
-            '-Name `\nvalue', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+            '-Name `\nvalue', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
         ['pscore: lone LF inert when newline FF off (enforce on) - deployed parity',
-            '-Foo bar\nWrite-Host x', 'pscore', ['AZP_75787_ENABLE_NEW_LOGIC=true']]
+            '-Foo bar\nWrite-Host x', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {

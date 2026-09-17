@@ -1,6 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as path from "path";
+import * as os from "os";
 import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
 import * as packUtils from "azure-pipelines-tasks-packaging-common/PackUtilities";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
@@ -159,7 +160,7 @@ export async function run(nuGetPath: string): Promise<void> {
 }
 
 async function pack(file: string, options: PackOptions): Promise<number> {
-    console.log(tl.loc("Info_AttemptingToPackFile") + file);
+    tl.writeExternalOutput(tl.loc("Info_AttemptingToPackFile") + file + os.EOL, { source: "repository" });
 
     let nugetTool = ngToolRunner.createNuGetToolRunner(options.nuGetPath, options.environment, undefined);
     nugetTool.arg("pack");
@@ -205,7 +206,10 @@ async function pack(file: string, options: PackOptions): Promise<number> {
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult = await nugetTool.exec({ ignoreReturnCode: true } as IExecOptions);
+    const execResult = await nugetTool.exec({
+        ignoreReturnCode: true,
+        externalOutput: { source: "childProcess" }
+    } as IExecOptions);
 
     if (execResult !== 0) {
         telemetry.logResult('Packaging', 'NuGetCommand', execResult);

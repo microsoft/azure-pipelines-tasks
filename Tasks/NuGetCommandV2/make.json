@@ -59,6 +59,12 @@
                 "url": "https://vstsagenttools.blob.core.windows.net/tools/NuGetCredProvider/1.1.0/c.zip",
                 "dest": "./CredentialProviderV2/"
             }
+        ],
+        "files": [
+            {
+                "url": "https://dist.nuget.org/win-x86-commandline/v7.6.0/nuget.exe",
+                "dest": "./NuGet/7.6.0/nuget.exe"
+            }
         ]
     }
 }
