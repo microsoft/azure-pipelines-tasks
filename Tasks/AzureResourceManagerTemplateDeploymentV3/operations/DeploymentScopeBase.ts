@@ -3,6 +3,8 @@ import tl = require("azure-pipelines-task-lib/task");
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase");
 import utils = require("./Utils");
+import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
+import { canEmitSafeOutputVariables } from "./agentCompatibility";
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
 import azureGraph = require("azure-pipelines-tasks-azure-arm-rest/azure-graph");
@@ -72,10 +74,21 @@ export class DeploymentScopeBase {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables")
+                            && canEmitSafeOutputVariables();
                         const setVariablesInObject = (path: string, obj: any) => {
                             for (var key of Object.keys(obj)) {
                                 if (obj[key] && typeof(obj[key]) === "object") {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else if (useSafeDeploymentOutputVariables) {
+                                    const variableName = `${path}.${key}`;
+                                    const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
+                                    tl.command("task.setvariable", { variable: variableName }, variableValue);
+                                    console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(variableName)));
+                                    if (wasTruncatedByLegacyCommandFormat(variableName)) {
+                                        tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(variableName)));
+                                    }
                                 }
                                 else {
                                     console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
@@ -86,8 +99,16 @@ export class DeploymentScopeBase {
                         if (typeof(result["properties"]["outputs"]) === "object") {
                             setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
                         }
-                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
-                        console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        if (useSafeDeploymentOutputVariables) {
+                            tl.command("task.setvariable", { variable: this.taskParameters.deploymentOutputs }, JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            if (wasTruncatedByLegacyCommandFormat(this.taskParameters.deploymentOutputs)) {
+                                tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            }
+                        } else {
+                            console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        }
                     }
 
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
