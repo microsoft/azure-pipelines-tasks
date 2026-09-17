@@ -15,7 +15,7 @@
   "version": {
     "Major": 2,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -486,6 +486,7 @@
     "ListingOfExtensionsFailed": "ms-resource:loc.messages.ListingOfExtensionsFailed",
     "ExtensionNotFound": "ms-resource:loc.messages.ExtensionNotFound",
     "AddedOutputVariable": "ms-resource:loc.messages.AddedOutputVariable",
+    "OutputVariableNameChanged": "ms-resource:loc.messages.OutputVariableNameChanged",
     "UnableToFetchAuthorityURL": "ms-resource:loc.messages.UnableToFetchAuthorityURL",
     "UnableToFetchActiveDirectory": "ms-resource:loc.messages.UnableToFetchActiveDirectory",
     "SpecifiedAzureRmEndpointIsInvalid": "ms-resource:loc.messages.SpecifiedAzureRmEndpointIsInvalid",
@@ -507,6 +508,8 @@
     "TemplateValidationFailure": "ms-resource:loc.messages.TemplateValidationFailure",
     "ManagedServiceIdentityDetails": "ms-resource:loc.messages.ManagedServiceIdentityDetails",
     "DeploymentGroupConfigurationFailedOnVM": "ms-resource:loc.messages.DeploymentGroupConfigurationFailedOnVM",
-    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide"
+    "TroubleshootingGuide": "ms-resource:loc.messages.TroubleshootingGuide",
+    "SafeOutputVariablesAgentTooOld": "ms-resource:loc.messages.SafeOutputVariablesAgentTooOld",
+    "SafeOutputVariablesPercentDecodingDisabled": "ms-resource:loc.messages.SafeOutputVariablesPercentDecodingDisabled"
   }
 }
