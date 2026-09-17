@@ -96,12 +96,11 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         const allFiles = tl.find(ftpOptions.rootFolder);
 
         // filePatterns is a multiline input containing glob patterns
-        tl.debugExternalOutput(
+        tl.debug(
             "searching for files using: " +
             ftpOptions.filePatterns.length +
             " filePatterns: " +
-            ftpOptions.filePatterns,
-            { source: "repository" }
+            ftpOptions.filePatterns
         );
 
         // minimatch options
@@ -126,10 +125,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
                 path.normalize(ftpOptions.filePatterns[i])
             );
 
-            tl.debugExternalOutput(
-                "searching for files, pattern: " + normalizedPattern,
-                { source: "repository" }
-            );
+            tl.debug("searching for files, pattern: " + normalizedPattern);
 
             const matched = tl.match(allFiles, normalizedPattern, undefined, matchOptions);
             tl.debug("Found total matches: " + matched.length);
@@ -240,7 +236,7 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
         port = 21;
     }
 
-    tl.writeExternalOutput(tl.loc("ConnectPort", hostName, port) + os.EOL, { source: "repository" });
+    console.log(tl.loc("ConnectPort", hostName, port));
 
     return {
         host: hostName,
@@ -353,18 +349,12 @@ async function run() {
             await ftpClient.ensureDir(ftpOptions.remotePath);
         }, tries);
         if (ftpOptions.clean) {
-            tl.writeExternalOutput(
-                tl.loc("CleanRemoteDir", ftpOptions.remotePath) + os.EOL,
-                { source: "repository" }
-            );
+            console.log(tl.loc("CleanRemoteDir", ftpOptions.remotePath));
             await retryWithNewClient(async () => {
                 await ftpClient.removeDir(ftpOptions.remotePath);
             }, tries);
         } else if (ftpOptions.cleanContents) {
-            tl.writeExternalOutput(
-                tl.loc("CleanRemoteDirContents", ftpOptions.remotePath) + os.EOL,
-                { source: "repository" }
-            );
+            console.log(tl.loc("CleanRemoteDirContents", ftpOptions.remotePath));
             await retryWithNewClient(async () => {
                 await ftpClient.cd(ftpOptions.remotePath);
                 await ftpClient.clearWorkingDir();
@@ -403,20 +393,14 @@ async function run() {
             }
         }
 
-        tl.writeExternalOutput(
-            tl.loc("UploadSucceedMsg", tracker.getSuccessStatusMessage()) + os.EOL,
-            { source: "repository" }
-        );
+        console.log(tl.loc("UploadSucceedMsg", tracker.getSuccessStatusMessage()));
     } catch (err) {
         error = err;
         tl.errorExternalOutput(String(error), { source: "remote" });
-        tl.writeExternalOutput(tracker.getFailureStatusMessage() + os.EOL, { source: "repository" });
+        console.log(tracker.getFailureStatusMessage());
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     } finally {
-        tl.writeExternalOutput(
-            tl.loc("DisconnectHost", ftpOptions.serverEndpointUrl.host) + os.EOL,
-            { source: "repository" }
-        );
+        console.log(tl.loc("DisconnectHost", ftpOptions.serverEndpointUrl.host));
         ftpClient.trackProgress(() => { });
         ftpClient.close();
     }
