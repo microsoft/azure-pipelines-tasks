@@ -9,8 +9,8 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 4
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
