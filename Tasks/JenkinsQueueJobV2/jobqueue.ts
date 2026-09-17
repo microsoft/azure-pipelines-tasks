@@ -3,6 +3,7 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import shell = require('shelljs');
 
@@ -146,7 +147,7 @@ export class JobQueue {
             } else if (addedToConsole) {
                 for (const i in streamingJobs) {
                     const job: Job = streamingJobs[i];
-                    console.log(util.filterRemoteOutput('Jenkins job pending: ' + job.ExecutableUrl));
+                    tl.writeExternalOutput('Jenkins job pending: ' + job.ExecutableUrl + os.EOL, { source: 'remote' });
                 }
             }
         }

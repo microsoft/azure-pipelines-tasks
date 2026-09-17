@@ -180,10 +180,10 @@ export class Job {
             this.ExecutableUrl = Util.addUrlSegment(this.TaskUrl, this.ExecutableNumber.toString());
             this.changeState(JobState.Streaming);
             // log the jobs starting block
-            this.consoleLog(Util.filterRemoteOutput(this.getBlockMessage('Jenkins job started: ' + this.Name + '\n' + this.ExecutableUrl)));
+            this.consoleLog(this.getBlockMessage('Jenkins job started: ' + this.Name + '\n' + this.ExecutableUrl));
             // log any pending jobs
             if (this.queue.FindActiveConsoleJob() == null) {
-                console.log(Util.filterRemoteOutput('Jenkins job pending: ' + this.ExecutableUrl));
+                tl.writeExternalOutput('Jenkins job pending: ' + this.ExecutableUrl + os.EOL, { source: 'remote' });
             }
         } else if (this.State === JobState.Joined || this.State === JobState.Cut) {
             Util.fail('Can not be set to streaming: ' + this);
@@ -233,7 +233,7 @@ export class Job {
     private setParsedExecutionResult(parsedExecutionResult: {result: string, timestamp: number}) {
         this.ParsedExecutionResult = parsedExecutionResult;
         //log the job's closing block
-        this.consoleLog(Util.filterRemoteOutput(this.getBlockMessage('Jenkins job finished: ' + this.Name + '\n' + this.ExecutableUrl)));
+        this.consoleLog(this.getBlockMessage('Jenkins job finished: ' + this.Name + '\n' + this.ExecutableUrl));
     }
 
     public GetTaskResult(): number {
@@ -481,7 +481,7 @@ export class Job {
         if (thisJob.queue.TaskOptions.captureConsole) {
             if (!this.jobConsoleEnabled) {
                 if (this.jobConsole != '') { // flush any queued output
-                    console.log(this.jobConsole);
+                    tl.writeExternalOutput(this.jobConsole + os.EOL, { source: 'remote' });
                 }
                 this.jobConsoleEnabled = true;
             }
@@ -495,7 +495,7 @@ export class Job {
     private consoleLog(message: string) {
         if (this.jobConsoleEnabled) {
             //only log it if the console is enabled.
-            console.log(message);
+            tl.writeExternalOutput(message + os.EOL, { source: 'remote' });
         }
         this.jobConsole += message;
     }

@@ -157,8 +157,7 @@ async function run() {
         let completed: number = outputMatch ? outputMatch.length : 0;
         tl.debug('Successfully uploaded: ' + completed);
         if (completed < uploadCount) {
-            const filteredOutput = tl.filterExternalOutput(output, { source: 'childProcess' }).toString('utf8');
-            tl.debug('Tested output [' + filteredOutput + ']');
+            tl.debugExternalOutput('Tested output [' + output + ']',  {source: 'childProcess'});
             tl.warning(tl.loc('NotAllFilesUploaded', completed, uploadCount));
         }
     }

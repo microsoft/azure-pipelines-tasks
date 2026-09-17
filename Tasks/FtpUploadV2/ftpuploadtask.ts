@@ -29,10 +29,6 @@ interface FtpOptions {
     customCmds: string[];
 }
 
-function filterRepositoryOutput(message: string): string {
-    return tl.filterExternalOutput(message, { source: "repository" }).toString("utf8");
-}
-
 class ProgressTracker {
     progressFilesUploaded: number = 0;
     progressDirectoriesProcessed: number = 0;
@@ -93,7 +89,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         const rootFolderStats = tl.stats(ftpOptions.rootFolder);
         if (rootFolderStats.isFile()) {
             const file = ftpOptions.rootFolder;
-            tl.debug(filterRepositoryOutput(file + " is a file. Ignoring all file patterns"));
+            tl.debugExternalOutput(file + " is a file. Ignoring all file patterns", { source: "repository" });
             return [file];
         }
 
@@ -117,7 +113,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
 
         tl.debug("Candidates found for match: " + allFiles.length);
         for (let i = 0; i < allFiles.length; i++) {
-            tl.debug(filterRepositoryOutput("file: " + allFiles[i]));
+            tl.debugExternalOutput("file: " + allFiles[i], { source: "repository" });
         }
 
         // use a set to avoid duplicates
@@ -140,14 +136,15 @@ function findFiles(ftpOptions: FtpOptions): string[] {
                 if (!ftpOptions.preservePaths && stats.isDirectory()) {
                     // if not preserving paths, skip all directories
                 } else if (matchingFilesSet.add(match)) {
-                    tl.debug(filterRepositoryOutput(
-                        "adding " + (stats.isFile() ? "file:   " : "folder: ") + match
-                    ));
+                    tl.debugExternalOutput(
+                        "adding " + (stats.isFile() ? "file:   " : "folder: ") + match,
+                        { source: "repository" }
+                    );
                     if (stats.isFile() && ftpOptions.preservePaths) {
                         // if preservePaths, make sure the parent directory is also included
                         let parent = path.normalize(path.dirname(match));
                         if (matchingFilesSet.add(parent)) {
-                            tl.debug(filterRepositoryOutput("adding folder: " + parent));
+                            tl.debugExternalOutput("adding folder: " + parent, { source: "repository" });
                         }
                     }
                 }
@@ -157,7 +154,7 @@ function findFiles(ftpOptions: FtpOptions): string[] {
         return Array.from(matchingFilesSet).sort();
     }
     catch (err) {
-        tl.error(filterRepositoryOutput(String(err)));
+        tl.errorExternalOutput(String(err), { source: "repository" });
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     }
 
@@ -254,7 +251,7 @@ function getAccessOption(options: FtpOptions): ftp.AccessOptions {
 async function getFtpClient(options: FtpOptions): Promise<ftp.Client> {
     const ftpClient = new ftp.Client();
     ftpClient.ftp.log = message => {
-        tl.debug(tl.filterExternalOutput(message, { source: "remote" }).toString("utf8"));
+        tl.debugExternalOutput(message, { source: "remote" });
     };
     const accessOptions = getAccessOption(options);
     const response = await ftpClient.access(accessOptions);
@@ -313,7 +310,7 @@ async function run() {
         ftpClient = await getFtpClient(ftpOptions);
     } catch (err) {
         error = err;
-        tl.error(tl.filterExternalOutput(String(error), { source: "remote" }).toString("utf8"));
+        tl.errorExternalOutput(String(error), { source: "remote" });
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
         return;
     }
@@ -331,7 +328,7 @@ async function run() {
             } catch (err) {
                 e = err;
                 error = err;
-                tl.warning(tl.filterExternalOutput(String(error), { source: "remote" }).toString("utf8"));
+                tl.warningExternalOutput(String(error), { source: "remote" });
                 ftpClient.close();
 
                 await sleep(1000);
@@ -370,7 +367,7 @@ async function run() {
         }, tries);
 
         for (const file of files) {
-            tl.debug(filterRepositoryOutput("file: " + file));
+            tl.debugExternalOutput("file: " + file, { source: "repository" });
             let remoteFile: string = ftpOptions.preservePaths
                 ? path.join(
                     ftpOptions.remotePath,
@@ -379,7 +376,7 @@ async function run() {
                 : path.join(ftpOptions.remotePath, path.basename(file));
 
             remoteFile = remoteFile.replace(/\\/gi, "/"); // always use forward slashes
-            tl.debug(filterRepositoryOutput("remoteFile: " + remoteFile));
+            tl.debugExternalOutput("remoteFile: " + remoteFile, { source: "repository" });
 
             let stats = tl.stats(file);
             if (stats.isDirectory()) {
@@ -399,7 +396,7 @@ async function run() {
         console.log(tl.loc("UploadSucceedMsg", tracker.getSuccessStatusMessage()));
     } catch (err) {
         error = err;
-        tl.error(tl.filterExternalOutput(String(error), { source: "remote" }).toString("utf8"));
+        tl.errorExternalOutput(String(error), { source: "remote" });
         console.log(tracker.getFailureStatusMessage());
         tl.setResult(tl.TaskResult.Failed, tl.loc("UploadFailed"));
     } finally {

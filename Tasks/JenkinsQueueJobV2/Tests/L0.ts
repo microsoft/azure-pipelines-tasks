@@ -7,7 +7,6 @@ import process = require('process');
 import stream = require('stream');
 import { createJenkinsConsoleOutputStream } from '../job';
 import { JobState, checkStateTransitions } from '../states';
-import * as util from '../util';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -170,13 +169,6 @@ describe('JenkinsQueueJob L0 Suite', function () {
         assert.strictEqual(
             Buffer.concat(chunks).toString('utf8'),
             'ordinary Jenkins output\n##_vso[task.setvariable variable=unsafe]value\n'
-        );
-    });
-
-    it('filters VSO commands from Jenkins metadata and error responses', () => {
-        assert.strictEqual(
-            util.filterRemoteOutput('job name\n##vso[task.setvariable variable=unsafe]value'),
-            'job name\n##_vso[task.setvariable variable=unsafe]value'
         );
     });
 
