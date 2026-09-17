@@ -22,7 +22,6 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
-    "Agent.Tasks": "file:../..",
     "azure-pipelines-task-lib": "^5.280.2"
   },
   "devDependencies": {
