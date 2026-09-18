@@ -92,3 +92,21 @@ Syntax to access environment variables based on script type.\
 *Powershell script:* `$env:servicePrincipalId`\
 *Batch script:* `%servicePrincipalId%` \
 *Shell script:* `$servicePrincipalId`
+
+## Troubleshooting
+
+In some environments, the Azure CLI task might remain blocked during Azure CLI initialization and not reach the configured script. Configure non-interactive Azure CLI behavior and set finite timeout and retry limits:
+
+```yaml
+- task: AzureCLI@2
+	timeoutInMinutes: 15
+	retryCountOnTaskFailure: 2
+	env:
+		AZURE_EXTENSION_USE_DYNAMIC_INSTALL: 'yes_without_prompt'
+		AZURE_CORE_DISABLE_CONFIRM_PROMPT: 'true'
+		AZURE_CORE_COLLECT_TELEMETRY: '0'
+	inputs:
+		# Keep your existing inputs unchanged.
+```
+
+These settings prevent extension-installation and confirmation prompts, disable telemetry, and limit how long a blocked task can affect the job. They are preventive mitigations and might not address every cause of an unresponsive Azure CLI task.
