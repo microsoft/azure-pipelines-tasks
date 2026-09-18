@@ -210,7 +210,7 @@ export class Job {
     }
 
     public SetJoined(joinedJob: Job): void {
-        tl.debug(this + '.setJoined(' + joinedJob + ')');
+        tl.debugExternalOutput(this + '.setJoined(' + joinedJob + ')', { source: 'remote' });
         this.Joined = joinedJob;
         this.changeState(JobState.Joined);
         if (joinedJob.State === JobState.Joined || joinedJob.State === JobState.Cut) {
@@ -344,7 +344,7 @@ export class Job {
     private downloadResults(): void {
         const thisJob: Job = this;
         const downloadUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'team-results/zip');
-        tl.debug('downloadResults(), url:' + downloadUrl);
+        tl.debugExternalOutput('downloadResults(), url:' + downloadUrl, { source: 'remote' });
 
         const downloadRequest = request.get({ url: downloadUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL })
             .auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
@@ -353,7 +353,10 @@ export class Job {
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             })
             .on('response', (response) => {
-                tl.debug('downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage);
+                tl.debugExternalOutput(
+                    'downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage,
+                    { source: 'remote' }
+                );
                 if (response.statusCode == 404) { // expected if there are no results
                     tl.debug('no results to download');
                     thisJob.stopWork(0, JobState.Done);
@@ -364,31 +367,34 @@ export class Job {
                     try {
                         // Create the destination folder if it doesn't exist
                         if (!tl.exist(destinationFolder)) {
-                            tl.debug('creating results destination folder: ' + destinationFolder);
+                            tl.debugExternalOutput('creating results destination folder: ' + destinationFolder, { source: 'remote' });
                             tl.mkdirP(destinationFolder);
                         }
 
-                        tl.debug('downloading results file: ' + fileName);
+                        tl.debugExternalOutput('downloading results file: ' + fileName, { source: 'remote' });
 
                         const file: fs.WriteStream = fs.createWriteStream(fileName);
                         downloadRequest.pipe(file)
                             .on('error', (err) => { throw err; })
                             .on('finish', function fileFinished() {
-                                tl.debug('successfully downloaded results to: ' + fileName);
+                                tl.debugExternalOutput('successfully downloaded results to: ' + fileName, { source: 'remote' });
                                 try {
                                     unzip(fileName, destinationFolder);
                                     thisJob.stopWork(0, JobState.Done);
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
-                                    tl.debug(e.message);
+                                    tl.debugExternalOutput(String(e.message), { source: 'remote' });
                                     process.stderr.write(e + os.EOL);
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
-                        tl.warning(err.message);
+                        tl.warningExternalOutput(
+                            'unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl,
+                            { source: 'remote' }
+                        );
+                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
                         process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
@@ -402,12 +408,12 @@ export class Job {
                         downloadRequest.pipe(warningStream)
                             .on('error', (err) => { throw err; })
                             .on('finish', function finished() {
-                                tl.warning(warningStream);
+                                tl.warningExternalOutput(warningStream.toString(), { source: 'remote' });
                                 thisJob.stopWork(0, JobState.Done);
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warning(err.message);
+                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
                         process.stderr.write(err + os.EOL);
                         thisJob.stopWork(0, JobState.Done);
                     }
@@ -533,7 +539,7 @@ export class Job {
 
     private debug(message: string) {
         const fullMessage: string = this.toString() + ' debug: ' + message;
-        tl.debug(fullMessage);
+        tl.debugExternalOutput(fullMessage, { source: 'remote' });
     }
 
     private toString() {

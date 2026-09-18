@@ -79,14 +79,14 @@ async function run() {
         } 
         else {
             // Find app files matching the specified pattern
-            tl.debug('Matching glob pattern: ' + filesPattern);
+            tl.debugExternalOutput('Matching glob pattern: ' + filesPattern, { source: 'repository' });
 
             // First find the most complete path without any matching patterns
             var idx = firstWildcardIndex(filesPattern);
             tl.debug('Index of first wildcard: ' + idx);
 
             var findPathRoot = path.dirname(filesPattern.slice(0, idx));
-            tl.debug('find root dir: ' + findPathRoot);
+            tl.debugExternalOutput('find root dir: ' + findPathRoot, { source: 'repository' });
 
             // Now we get a list of all files under this root
             var allFiles = tl.find(findPathRoot);
@@ -107,7 +107,7 @@ async function run() {
             uploadCount = uploadFilesList.length;
             var uploadFiles = '{' + uploadFilesList.join(',') + '}'
         }
-        tl.debug(tl.loc('UploadingFiles', uploadFiles));
+        tl.debugExternalOutput(tl.loc('UploadingFiles', uploadFiles), { source: 'repository' });
 
         curlRunner.arg('-T')
         // arrayify the arg so vsts-task-lib does not try to break args at space
@@ -162,7 +162,7 @@ async function run() {
         }
     }
     catch(err) {
-        tl.error(err.message);
+        tl.errorExternalOutput(String(err.message), { source: 'repository' });
         tl.setResult(tl.TaskResult.Failed, tl.loc('CurlFailed', err.message));
     }    
 }
