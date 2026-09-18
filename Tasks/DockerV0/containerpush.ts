@@ -5,6 +5,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as imageUtils from "azure-pipelines-tasks-docker-common/containerimageutils";
 import * as utils from "./utils";
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 function dockerPush(connection: ContainerConnection, image: string, imageDigestFile?: string, useMultiImageMode?: boolean): any {
     var command = connection.createCommand();
@@ -12,7 +13,7 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
     command.arg(image);
 
     if (!imageDigestFile) {
-        return connection.execCommand(command);
+        return connection.execCommand(command, createSanitizedExecOptions());
     }
 
     var output = "";
@@ -20,7 +21,7 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
         output += data;
     });
 
-    return connection.execCommand(command).then(() => {
+    return connection.execCommand(command, createSanitizedExecOptions()).then(() => {
         // Parse the output to find the repository digest
         var imageDigest = output.match(/^[^:]*: digest: ([^ ]*) size: \d*$/m)[1];
         if (imageDigest) {
