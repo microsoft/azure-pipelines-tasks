@@ -48,6 +48,10 @@ describe('CUrlUploaderV2 Suite', function () {
 
         assert(tr.invokedToolCount == 1, 'should have only run curl');
         assert(tr.stderr.length == 0, 'should not have written to stderr');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern command should be neutralized');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromFile]unsafe'), 'repository filename command should be neutralized');
+        assert(!tr.stdOutContained('Matching glob pattern: /some/path/file*##vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern log should not contain an executable command');
+        assert(!tr.stdOutContained('loc_mock_UploadingFiles {/some/path/file1##vsotunsafe,/some/path/file2##vso[task.setvariable variable=fromFile]unsafe##vsotunsafe}'), 'repository filename log should not contain an executable command');
         assert(tr.succeeded, 'task should have succeeded');
     });
 });

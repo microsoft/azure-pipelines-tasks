@@ -115,8 +115,15 @@ describe('FtpUploadV2 Suite', function () {
         console.info(tr.stdout);
         assert(tr.stdOutContained('ftp greeting ##_vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response output should be filtered');
         assert(tr.stdOutContained('ftp logger ##_vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromFile]unsafe'), 'repository filename output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromRemotePath]unsafe'), 'remote path output should be filtered');
         assert(!tr.stdOutContained('##vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response command should be neutralized');
         assert(!tr.stdOutContained('##vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug command should be neutralized');
+        assert(!tr.stdOutContained('searching for files using: 2 filePatterns: **,##vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern log should not contain an executable command');
+        assert(!tr.stdOutContained('file: rootFolder/##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe'), 'repository filename candidate log should not contain an executable command');
+        assert(!tr.stdOutContained('file: rootFolder\\##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe'), 'repository filename upload log should not contain an executable command');
+        assert(!tr.stdOutContained('loc_mock_CleanRemoteDir /upload/##vso[task.setvariable variable=fromRemotePath]unsafe'), 'remote path log should not contain an executable command');
         assert(tr.succeeded, 'task should succeed');
     });
 });

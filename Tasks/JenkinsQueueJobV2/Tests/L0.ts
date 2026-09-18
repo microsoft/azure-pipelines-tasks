@@ -5,8 +5,10 @@ import assert = require('assert');
 import path = require('path');
 import process = require('process');
 import stream = require('stream');
+import tl = require('azure-pipelines-task-lib/task');
 import { createJenkinsConsoleOutputStream } from '../job';
 import { JobState, checkStateTransitions } from '../states';
+import { StringWritable } from '../util';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -170,6 +172,28 @@ describe('JenkinsQueueJob L0 Suite', function () {
             Buffer.concat(chunks).toString('utf8'),
             'ordinary Jenkins output\n##_vso[task.setvariable variable=unsafe]value\n'
         );
+    });
+
+    it('marks Jenkins error response chunks as remote output', () => {
+        const data = 'Jenkins response ##vso[task.setvariable variable=unsafe]value';
+        let debugMessage: string;
+        let debugSource: string;
+        const originalDebugExternalOutput = tl.debugExternalOutput;
+        tl.debugExternalOutput = (message: string, options): void => {
+            debugMessage = message;
+            debugSource = options.source;
+        };
+
+        try {
+            const output = new StringWritable({ decodeStrings: false });
+            output._write(data, 'utf8', () => undefined);
+
+            assert.strictEqual(debugMessage, data);
+            assert.strictEqual(debugSource, 'remote');
+            assert.strictEqual(output.toString(), data);
+        } finally {
+            tl.debugExternalOutput = originalDebugExternalOutput;
+        }
     });
 
     function runValidations(validator: () => void, tr) {

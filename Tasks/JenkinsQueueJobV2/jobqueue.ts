@@ -307,10 +307,7 @@ export class JobQueue {
                     //don't fail the build -- there just won't be a link
                     tl.writeExternalOutput('Error creating link to Jenkins job: ' + String(err) + os.EOL, { source: 'remote' });
                 } else {
-                    tl.command('task.addattachment', {
-                        type: 'Distributedtask.Core.Summary',
-                        name: 'Jenkins Results'
-                    }, linkMarkdownFile);
+                    console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
                 }
 
                 let message: string = null;

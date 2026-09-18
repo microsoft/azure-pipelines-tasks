@@ -40,9 +40,10 @@ tr.setInput('credsType', 'serviceEndpoint');
 process.env["ENDPOINT_URL_ID1"] = "ftp://valid.microsoft.com";
 process.env["ENDPOINT_AUTH_ID1"] = "{\"scheme\":\"UsernamePassword\", \"parameters\": {\"username\": \"uname\", \"password\": \"pword\"}}";
 process.env["build.sourcesDirectory"] = "/";
+process.env["SYSTEM_DEBUG"] = "true";
 tr.setInput('rootFolder', 'rootFolder');
-tr.setInput('filePatterns', '**');
-tr.setInput('remotePath', '/upload/');
+tr.setInput('filePatterns', '**\n##vso[task.setvariable variable=fromPattern]unsafe');
+tr.setInput('remotePath', '/upload/##vso[task.setvariable variable=fromRemotePath]unsafe');
 tr.setInput('clean', 'true');
 tr.setInput('overwrite', 'true');
 tr.setInput('preservePaths', 'true');
@@ -55,16 +56,14 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "find": {
         "rootFolder": [
-            "rootFolder/a",
+            "rootFolder/##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe",
             "rootFolder/b",
             "rootFolder/c"
         ]
     },
     "match": {
         "*": [
-            "rootFolder/a",
-            "rootFolder/b",
-            "rootFolder/c"
+            "rootFolder/##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe"
         ]
     }
 };
