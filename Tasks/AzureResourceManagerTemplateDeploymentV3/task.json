@@ -15,7 +15,7 @@
   "version": {
     "Major": 3,
     "Minor": 280,
-    "Patch": 2
+    "Patch": 3
   },
   "demands": [],
   "minimumAgentVersion": "2.119.1",
@@ -322,6 +322,7 @@
     "ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
     "CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
     "AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
+    "OutputVariableNameChanged": "The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.",
     "UnableToReadResponseBody": "Unable to read response body. Error: %s",
     "MoreInformationOnAzurePortal": "More information on Azure Portal",
     "LogDeploymentName": "Deployment name is %s",
@@ -346,6 +347,8 @@
     "ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
     "BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
     "IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file",
-    "ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
+    "ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'",
+    "SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.",
+    "SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands."
   }
 }
