@@ -10,6 +10,11 @@ import * as child_process from 'child_process';
 
 export type SpawnFn = typeof child_process.spawn;
 
+const unsupportedAdditionalOptions = new Set<string>([
+    '--',
+    '--commands'
+]);
+
 export class MysqlClient implements ISqlClient {
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
     private _hostName: string;
@@ -47,7 +52,7 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
-        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()));
+        const result = task.execSync(this._toolPath, Utility.argStringToArray(this._getConnectionArgument()));
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -82,10 +87,21 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
+     * Shared argument builder used by every mysql invocation this client
+     * makes. Enforces --binary-mode last, after any
+     * user-supplied additional arguments, so it takes precedence over a
+     * conflicting user-supplied value for this option and cannot be
+     * disabled by an override.
+     */
+    private _getConnectionArgument(): string {
+        return this._getArgumentString() + " " + this._getAdditionalArgument() + " --binary-mode";
+    }
+
+    /**
      * Execute Mysql script
      */
     public async executeSqlCommand() : Promise<number> {
-        let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
+        let argument: string = this._getConnectionArgument();
         let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
         telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry); 
         if(this._azureMysqlTaskParameter.getDatabaseName()){
@@ -173,7 +189,22 @@ export class MysqlClient implements ISqlClient {
      * Additional connection argument passed by user
      */
     private _getAdditionalArgument() : string{
-        return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
+        const additionalArguments = this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
+        this._validateAdditionalArguments(additionalArguments);
+        return additionalArguments;
+    }
+
+    /**
+     * Reject unsupported user-supplied arguments that can prevent
+     * task-managed client options from being applied as intended.
+     */
+    private _validateAdditionalArguments(additionalArguments: string): void {
+        for (const token of Utility.argStringToArray(additionalArguments)) {
+            const optionName = token.split('=', 1)[0].toLowerCase();
+            if (unsupportedAdditionalOptions.has(optionName)) {
+                throw new Error(task.loc("AdditionalArgumentsContainUnsupportedOption", optionName));
+            }
+        }
     }
 
     /**

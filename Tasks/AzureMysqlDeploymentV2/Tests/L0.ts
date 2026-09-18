@@ -39,8 +39,29 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         let tp = path.join(__dirname, 'MysqlClientTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
+        assert.strictEqual(tr.errorIssues.length, 0, tr.stdout);
+        assert(tr.succeeded, tr.stdout);
         assert(tr.stdOutContained('MysqlClientL0Tests.getFirewallConfiguration should have passed.'), 'Should have printed: MysqlClientL0Tests.getFirewallConfiguration should have passed.');
-        assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should have passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should have passed.');
+        assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should have passed.'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should have passed.');
+        const command = '/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD --ssl-mode=REQUIRED --skip-binary-mode --binary-mode';
+        assert(tr.ran(command + ' -eCREATE DATABASE IF NOT EXISTS `DEMO_DB` ;'), 'Expected database creation with enforced binary mode.');
+        assert(tr.ran(command + ' -DDEMO_DB -eSELECT 1;'), 'Expected successful script execution after database creation.');
+        assert.strictEqual(tr.invokedToolCount, 3, 'Expected one firewall probe, one database creation, and one script execution.');
+    });
+
+    it('AzureMySqlDeployment MysqlClientUnsupportedOptions', async () => {
+        let tp = path.join(__dirname, 'MysqlClientUnsupportedOptionsTests.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminator should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminator should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsBareTerminatorAlone should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsBareTerminatorAlone should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsTerminatorWithTrailingTokens should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsTerminatorWithTrailingTokens should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.allowsQuotedDoubleDashValue should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.allowsQuotedDoubleDashValue should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorForFileTask should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorForFileTask should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsCommandsOption should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsCommandsOption should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsEnabledCommandsOptionForFileTask should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsEnabledCommandsOptionForFileTask should have passed.');
+        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsDisabledCommandsOption should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsDisabledCommandsOption should have passed.');
     });
 
     it('AzureMySqlDeployment MysqlClientFileExec', async () => {
