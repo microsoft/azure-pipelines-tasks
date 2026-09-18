@@ -16,7 +16,7 @@
     "@types/node": "^20.11.0",
     "@types/q": "^1.5.4",
     "azure-pipelines-task-lib": "^5.280.3",
-    "azure-pipelines-tasks-codeanalysis-common": "^2.226.0",
+    "azure-pipelines-tasks-codeanalysis-common": "^2.280.0",
     "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
     "azure-pipelines-tasks-java-common": "^2.280.0",
     "azure-pipelines-tasks-packaging-common": "^3.280.0",
