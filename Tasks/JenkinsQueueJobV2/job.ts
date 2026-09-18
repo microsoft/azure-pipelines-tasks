@@ -384,7 +384,7 @@ export class Job {
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
                                     tl.debugExternalOutput(String(e.message), { source: 'remote' });
-                                    process.stderr.write(e + os.EOL);
+                                    tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
@@ -395,7 +395,7 @@ export class Job {
                             { source: 'remote' }
                         );
                         tl.warningExternalOutput(String(err.message), { source: 'remote' });
-                        process.stderr.write(err + os.EOL);
+                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
                         thisJob.stopWork(0, JobState.Done);
                     }
                 } else { // an unexepected error with results
@@ -414,7 +414,7 @@ export class Job {
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
                         tl.warningExternalOutput(String(err.message), { source: 'remote' });
-                        process.stderr.write(err + os.EOL);
+                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
                         thisJob.stopWork(0, JobState.Done);
                     }
                 }

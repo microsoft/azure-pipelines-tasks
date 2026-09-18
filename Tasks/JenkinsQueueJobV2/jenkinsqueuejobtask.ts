@@ -3,6 +3,7 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
@@ -128,14 +129,12 @@ async function doWork() {
         let message: string;
         if (e instanceof util.HttpError) {
             message = e.message;
-            console.error(e.fullMessage);
-            console.error(e.body);
-        } else if (e instanceof Error) {
-            message = e.message;
-            console.error(e);
+            tl.writeExternalOutput(e.fullMessage + os.EOL, { source: 'remote', destination: process.stderr });
+            tl.writeExternalOutput(String(e.body) + os.EOL, { source: 'remote', destination: process.stderr });
         } else {
-            message = e;
-            console.error(e);
+            message = e instanceof Error ? e.message : String(e);
+            const details = e instanceof Error ? e.stack || e.toString() : message;
+            tl.writeExternalOutput(details + os.EOL, { source: 'remote', destination: process.stderr });
         }
         tl.setResult(tl.TaskResult.Failed, message);
     }
