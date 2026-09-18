@@ -111,3 +111,21 @@ Syntax to access environment variables based on script type.\
 * **az login output visibility**: If this is set to true, az login command will output to the task. Setting it to false will suppress the az login output.
 
 * **Keep Azure CLI session active**: When enabled, this task will continuously sign into Azure to avoid AADSTS700024 errors when requesting access tokens beyond the IdToken expiry date. Note that this feature is EXPERIMENTAL, may not work in all scenarios and you are using it without any guarantees. Valid only for service connections using the Workload Identity Federation authentication scheme.
+
+## Troubleshooting
+
+In some environments, the Azure CLI task might remain blocked during Azure CLI initialization and not reach the configured script. Configure non-interactive Azure CLI behavior and set finite timeout and retry limits:
+
+```yaml
+- task: AzureCLI@3
+	timeoutInMinutes: 15
+	retryCountOnTaskFailure: 2
+	env:
+		AZURE_EXTENSION_USE_DYNAMIC_INSTALL: 'yes_without_prompt'
+		AZURE_CORE_DISABLE_CONFIRM_PROMPT: 'true'
+		AZURE_CORE_COLLECT_TELEMETRY: '0'
+	inputs:
+		# Keep your existing inputs unchanged.
+```
+
+These settings prevent extension-installation and confirmation prompts, disable telemetry, and limit how long a blocked task can affect the job. They are preventive mitigations and might not address every cause of an unresponsive Azure CLI task.
