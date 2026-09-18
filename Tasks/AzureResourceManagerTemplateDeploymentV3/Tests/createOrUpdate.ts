@@ -18,6 +18,11 @@ tr.setInput("deploymentMode", "Complete");
 tr.setInput("enableDeploymentPrerequisites", "None");
 tr.setInput("csmParametersFile", process.env["csmParametersFile"]);
 tr.setInput("deploymentOutputs", !!process.env["deploymentOutputs"] ? process.env["deploymentOutputs"] : "");
+tr.setInput("useWithoutJSON", process.env["useWithoutJSON"] || "false");
+
+// The safe output variable format requires an agent that decodes percent escaping. Tests default
+// to a current agent and override this when they exercise the compatibility fallback.
+process.env["AGENT_VERSION"] = process.env["agentVersion"] || "3.245.0";
 
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
