@@ -236,7 +236,7 @@
         "chartVersion"
       ],
       "type": "string",
-      "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version?",
+      "helpMarkDown": "Specify the exact chart version to install. If this is not specified, the latest version is installed. Set the version on the chart to this semver version​",
       "defaultValue": "",
       "visibleRule": "command == package || command == install || command == upgrade",
       "groupName": "commands"
@@ -318,7 +318,7 @@
       "type": "boolean",
       "label": "Save",
       "defaultValue": "true",
-      "helpMarkDown": "Save packaged chart to local chart repository (default true)?",
+      "helpMarkDown": "Save packaged chart to local chart repository (default true)​",
       "visibleRule": "command == package",
       "groupName": "commands"
     },
@@ -327,7 +327,7 @@
       "type": "boolean",
       "label": "Install if release not present.",
       "defaultValue": "true",
-      "helpMarkDown": "If a release by this name doesn't already exist, run an install?.",
+      "helpMarkDown": "If a release by this name doesn't already exist, run an install​.",
       "visibleRule": "command == upgrade",
       "groupName": "commands"
     },
@@ -354,7 +354,7 @@
       "type": "boolean",
       "label": "Force",
       "defaultValue": "false",
-      "helpMarkDown": "Force resource update through delete/recreate if needed?",
+      "helpMarkDown": "Force resource update through delete/recreate if needed​",
       "visibleRule": "command == upgrade",
       "groupName": "commands"
     },

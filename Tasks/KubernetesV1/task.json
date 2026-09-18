@@ -130,7 +130,7 @@
       "required": false,
       "defaultValue": "",
       "groupName": "kubernetesCluster",
-      "helpMarkDown": "Set the namespace for the kubectl command by using the ?namespace flag. If the namespace is not provided, the commands will run in the default namespace."
+      "helpMarkDown": "Set the namespace for the kubectl command by using the –namespace flag. If the namespace is not provided, the commands will run in the default namespace."
     },
     {
       "name": "command",
