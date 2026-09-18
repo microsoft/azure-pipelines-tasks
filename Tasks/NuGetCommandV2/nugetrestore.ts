@@ -290,7 +290,11 @@ async function restorePackages(solutionFile: string, options: RestoreOptions): P
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult = await nugetTool.exec({ cwd: path.dirname(solutionFile), ignoreReturnCode: true } as IExecOptions);
+    const execResult = await nugetTool.exec({
+        cwd: path.dirname(solutionFile),
+        ignoreReturnCode: true,
+        externalOutput: { source: "childProcess" }
+    } as IExecOptions);
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);
