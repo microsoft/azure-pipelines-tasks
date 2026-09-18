@@ -131,10 +131,12 @@ async function doWork() {
             message = e.message;
             tl.writeExternalOutput(e.fullMessage + os.EOL, { source: 'remote', destination: process.stderr });
             tl.writeExternalOutput(String(e.body) + os.EOL, { source: 'remote', destination: process.stderr });
+        } else if (e instanceof Error) {
+            message = e.message;
+            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
         } else {
-            message = e instanceof Error ? e.message : String(e);
-            const details = e instanceof Error ? e.stack || e.toString() : message;
-            tl.writeExternalOutput(details + os.EOL, { source: 'remote', destination: process.stderr });
+            message = e;
+            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
         }
         tl.setResult(tl.TaskResult.Failed, message);
     }
