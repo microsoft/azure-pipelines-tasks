@@ -7,13 +7,13 @@ import * as path from 'path';
 import * as UUID from 'uuid/v4';
 import {execSync} from 'child_process';
 
-export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string) {
+export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string, publishHtmlReport: boolean = true) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
-    publishCoverage(inputFiles, reportDirectory, sourceDirectory)
+    publishCoverage(inputFiles, reportDirectory, sourceDirectory, publishHtmlReport)
 }
 
-async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string) {
+async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string, publishHtmlReport: boolean = true) {
 
     if(!inputFiles || inputFiles.length == 0) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
@@ -61,6 +61,11 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
     if(!isNullOrWhitespace(pathToSources)) {
         dotnet.arg('--sourceDirectory');
         dotnet.arg(pathToSources);
+    }
+
+    if(!publishHtmlReport) {
+        dotnet.arg('--publishHtmlReport');
+        dotnet.arg('false');
     }
 
     try {
