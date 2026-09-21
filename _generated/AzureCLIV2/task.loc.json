@@ -229,5 +229,9 @@
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+  },
+  "_buildConfigMapping": {
+    "Default": "2.281.0",
+    "Node24_1": "2.281.1"
   }
 }
