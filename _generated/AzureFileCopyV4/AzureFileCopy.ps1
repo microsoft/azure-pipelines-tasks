@@ -78,7 +78,13 @@ $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 if ($featureFlags.retireAzureRM) {
     Write-Debug "Initializing Az Module"
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    try {
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    }
+    catch {
+        Remove-EndpointSecrets
+        throw
+    }
 } else {
     if (Get-Module Az.Accounts -ListAvailable) {
         $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
