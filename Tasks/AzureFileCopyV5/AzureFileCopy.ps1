@@ -73,7 +73,13 @@ $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    try {
+        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
+    }
+    catch {
+        Remove-EndpointSecrets
+        throw
+    }
 }
 else {
     Write-Verbose "No module found with name: Az.Accounts"

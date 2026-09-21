@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 6,
-    "Minor": 280,
+    "Minor": 281,
     "Patch": 1
   },
   "demands": [
@@ -296,7 +296,7 @@
     "AzModuleNotFound": "ms-resource:loc.messages.AzModuleNotFound"
   },
   "_buildConfigMapping": {
-    "Default": "6.280.0",
-    "Node24_1": "6.280.1"
+    "Default": "6.281.0",
+    "Node24_1": "6.281.1"
   }
 }
