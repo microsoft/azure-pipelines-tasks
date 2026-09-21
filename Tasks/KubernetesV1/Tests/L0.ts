@@ -684,4 +684,132 @@ describe('sanitizeForLoggingCommand', function() {
         const sanitized = sanitizeForLoggingCommand(malicious);
         assert(sanitized.indexOf('##vso[') === -1, 'should not contain any ##vso[');
     });
+
+    it('should neutralize a task.setvariable command targeting NODE_OPTIONS', () => {
+        const malicious = '##vso[task.setvariable variable=NODE_OPTIONS]--require=/tmp/pwn.js';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+        assert(sanitized.indexOf('__vso[task.setvariable variable=NODE_OPTIONS]') !== -1, 'should be neutralized to __vso[');
+    });
+
+    it('should neutralize a task.setvariable command targeting BASH_ENV', () => {
+        const malicious = '##vso[task.setvariable variable=BASH_ENV]/tmp/pwn.sh';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+        assert(sanitized.indexOf('__vso[task.setvariable variable=BASH_ENV]') !== -1, 'should be neutralized to __vso[');
+    });
+});
+
+// Tests that ClusterConnection.execCommand neutralizes Azure Pipelines logging-command markers
+// (##vso[ / ##[) in streamed command output before it is written to the task's output stream,
+// while preserving benign output and leaving silent callers unaffected.
+import ClusterConnection from '../src/clusterconnection';
+import Q = require('q');
+import { EventEmitter } from 'events';
+
+describe('execCommand streamed-output sanitization', function () {
+    this.timeout(10000);
+
+    // Minimal stand-in for task-lib's ToolRunner reproducing the parts execCommand relies on:
+    // when not silent it writes raw child output to options.outStream (stdout, and stderr unless
+    // failOnStdErr), and it emits 'errline' events per stderr line.
+    class FakeToolRunner extends EventEmitter {
+        public execOptions: any;
+        constructor(private readonly emissions: Array<{ stream: 'stdout' | 'stderr', data: string | Buffer }>) { super(); }
+        public exec(options: any): any {
+            this.execOptions = options || {};
+            for (const emission of this.emissions) {
+                if (emission.stream === 'stderr') {
+                    String(emission.data).replace(/\r?\n$/, '').split('\n').forEach(line => this.emit('errline', line));
+                    const errDestination = this.execOptions.failOnStdErr ? this.execOptions.errStream : this.execOptions.outStream;
+                    if (!this.execOptions.silent && errDestination) {
+                        errDestination.write(emission.data);
+                    }
+                } else if (!this.execOptions.silent && this.execOptions.outStream) {
+                    this.execOptions.outStream.write(emission.data);
+                }
+            }
+            return Q.resolve(0);
+        }
+    }
+
+    function captureStdout(action: () => any): Promise<string> {
+        const originalOut = process.stdout.write;
+        const originalErr = process.stderr.write;
+        let captured = '';
+        (process.stdout as any).write = (chunk: any) => { captured += chunk.toString(); return true; };
+        (process.stderr as any).write = (chunk: any) => { captured += chunk.toString(); return true; };
+        const restore = () => { (process.stdout as any).write = originalOut; (process.stderr as any).write = originalErr; };
+        return Promise.resolve(action()).then(
+            () => { restore(); return captured; },
+            () => { restore(); return captured; }
+        );
+    }
+
+    it('neutralizes ##vso[ markers in streamed stdout', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner([
+            { stream: 'stdout', data: 'app log line 1\n##vso[task.setvariable variable=NODE_OPTIONS]--require=/tmp/pwn.js\napp log line 2\n' }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any));
+        assert(out.indexOf('__vso[task.setvariable variable=NODE_OPTIONS]') !== -1, 'marker must be neutralized to __vso[');
+        assert(out.indexOf('##vso[task.setvariable variable=NODE_OPTIONS]') === -1, 'raw ##vso[ must not reach stdout');
+        assert(out.indexOf('app log line 1') !== -1 && out.indexOf('app log line 2') !== -1, 'benign log lines must be preserved');
+        assert(runner.execOptions.outStream, 'a sanitizing outStream must be injected for non-silent callers');
+    });
+
+    it('neutralizes ##vso[ and ##[ markers in streamed stderr', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner([
+            { stream: 'stderr', data: '##vso[task.setvariable variable=BASH_ENV]/tmp/pwn.sh\n##[warning]spoofed\n' }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any));
+        assert(out.indexOf('##vso[task.setvariable variable=BASH_ENV]') === -1, 'raw ##vso[ from stderr must not reach stdout');
+        assert(out.indexOf('##[warning]') === -1, 'raw ##[ from stderr must not reach stdout');
+    });
+
+    it('neutralizes a marker split across two write chunks', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner([
+            { stream: 'stdout', data: 'partial ##vso' },
+            { stream: 'stdout', data: '[task.setvariable variable=NODE_OPTIONS]--require=/tmp/pwn.js\n' }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any));
+        assert(out.indexOf('##vso[task.setvariable variable=NODE_OPTIONS]') === -1, 'marker split across writes must still be neutralized');
+        assert(out.indexOf('__vso[task.setvariable variable=NODE_OPTIONS]') !== -1, 'reassembled marker must be neutralized');
+    });
+
+    it('leaves silent callers unchanged', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner([
+            { stream: 'stdout', data: '##vso[task.setvariable variable=X]y\n' }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any, { silent: true } as any));
+        assert(runner.execOptions.silent === true, 'silent option must be preserved');
+        assert(!runner.execOptions.outStream, 'no sanitizing outStream should be injected for silent callers');
+        assert(out.indexOf('__vso[') === -1, 'silent callers must not have output re-echoed');
+    });
+
+    it('neutralizes markers on the failOnStdErr stderr path', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner([
+            { stream: 'stderr', data: '##vso[task.setvariable variable=NODE_OPTIONS]--require=/tmp/pwn.js\n' }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any, { failOnStdErr: true } as any));
+        assert(runner.execOptions.errStream, 'a sanitizing errStream must be injected for non-silent callers');
+        assert(out.indexOf('##vso[task.setvariable variable=NODE_OPTIONS]') === -1, 'raw ##vso[ from the failOnStdErr stderr path must not reach the output stream');
+        assert(out.indexOf('__vso[task.setvariable variable=NODE_OPTIONS]') !== -1, 'marker must be neutralized to __vso[');
+    });
+
+    it('preserves a multi-byte character split across two writes', async () => {
+        const connection = new ClusterConnection();
+        const kanji = Buffer.from('中', 'utf8'); // 3 bytes: E4 B8 AD
+        const runner = new FakeToolRunner([
+            { stream: 'stdout', data: kanji.slice(0, 1) },
+            { stream: 'stdout', data: Buffer.concat([kanji.slice(1), Buffer.from('\n', 'utf8')]) }
+        ]);
+        const out = await captureStdout(() => connection.execCommand(runner as any));
+        assert(out.indexOf('中') !== -1, 'multi-byte character split across writes must be preserved');
+        assert(out.indexOf('\uFFFD') === -1, 'must not contain the Unicode replacement character');
+    });
 });

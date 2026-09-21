@@ -7,9 +7,45 @@ import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utilities";
 import * as os from "os";
+import { StringDecoder } from "string_decoder";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
+import { sanitizeForLoggingCommand } from "./sanitize";
+
+// A line-buffered pass-through writer that neutralizes Azure Pipelines
+// logging-command markers (##vso[ and ##[) in streamed command output before it
+// reaches the task's real output stream, which the agent parses for logging commands.
+class LoggingCommandSanitizingWriter {
+    private buffer: string = "";
+    private readonly decoder = new StringDecoder("utf8");
+
+    constructor(private readonly destination: NodeJS.WritableStream) { }
+
+    public write(data: string | Buffer): boolean {
+        this.buffer += this.decoder.write(Buffer.isBuffer(data) ? data : Buffer.from(data));
+        let newlineIndex: number;
+        while ((newlineIndex = this.buffer.indexOf("\n")) !== -1) {
+            let line = this.buffer.substring(0, newlineIndex);
+            let terminator = "\n";
+            if (line.endsWith("\r")) {
+                line = line.substring(0, line.length - 1);
+                terminator = "\r\n";
+            }
+            this.destination.write(sanitizeForLoggingCommand(line) + terminator);
+            this.buffer = this.buffer.substring(newlineIndex + 1);
+        }
+        return true;
+    }
+
+    public flush(): void {
+        this.buffer += this.decoder.end();
+        if (this.buffer.length > 0) {
+            this.destination.write(sanitizeForLoggingCommand(this.buffer));
+            this.buffer = "";
+        }
+    }
+}
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -131,15 +167,27 @@ export default class ClusterConnection {
             errlines.push(line);
         });
 
+        let stdoutSanitizer: LoggingCommandSanitizingWriter | undefined;
+        let stderrSanitizer: LoggingCommandSanitizingWriter | undefined;
+        if (!options || options.silent !== true) {
+            stdoutSanitizer = new LoggingCommandSanitizingWriter(process.stdout);
+            stderrSanitizer = new LoggingCommandSanitizingWriter(process.stderr);
+            options = { ...(options || {}), outStream: stdoutSanitizer as any, errStream: stderrSanitizer as any };
+        }
+
         tl.debug(tl.loc('CallToolRunnerExec'));
         
         let promise = command.exec(options)
         .fail(error => {
+            if (stdoutSanitizer) { stdoutSanitizer.flush(); }
+            if (stderrSanitizer) { stderrSanitizer.flush(); }
             tl.debug(tl.loc('ToolRunnerExecCallFailed', error));
-            errlines.forEach(line => tl.error(line));
+            errlines.forEach(line => tl.error(sanitizeForLoggingCommand(line)));
             throw error;
         })
         .then(() => {
+            if (stdoutSanitizer) { stdoutSanitizer.flush(); }
+            if (stderrSanitizer) { stderrSanitizer.flush(); }
             tl.debug(tl.loc('ToolRunnerExecCallSucceeded'));
         });
 
