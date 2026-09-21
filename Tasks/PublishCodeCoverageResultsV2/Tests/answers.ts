@@ -52,6 +52,9 @@ export const noncoreAnswers: TaskLibAnswers = <TaskLibAnswers>{
         ]
     },
     "stats": {
+        "/user/admin/summary.xml": {
+            "isFile": true
+        },
         "some/path": {
             "isFile": false
         },
@@ -71,7 +74,10 @@ export const defaultAnswers: TaskLibAnswers = <TaskLibAnswers> {
     "getVariable": {
         "System.DefaultWorkingDirectory": "/someDir",
         "ignore.coverage.autogenerate": true,
-        "Agent.TempDirectory": '/someDir'
+        "Agent.TempDirectory": '/someDir',
+        "System.TeamFoundationCollectionUri": "https://dev.azure.com/example/",
+        "System.TeamProjectId": "00000000-0000-0000-0000-000000000001",
+        "Build.BuildId": "42"
     },
     "find": {
         "/someDir": [
@@ -117,6 +123,9 @@ export const defaultAnswers: TaskLibAnswers = <TaskLibAnswers> {
         ]
     },
     "stats": {
+        "/user/admin/summary.xml": {
+            "isFile": true
+        },
         "some/path": {
             "isFile": false
         },

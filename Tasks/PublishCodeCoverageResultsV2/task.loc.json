@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 8
   },
   "demands": [],
   "minimumAgentVersion": "2.144.0",
@@ -68,6 +68,21 @@
   },
   "messages": {
     "FoundNMatchesForPattern": "ms-resource:loc.messages.FoundNMatchesForPattern",
-    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage"
+    "NoCodeCoverage": "ms-resource:loc.messages.NoCodeCoverage",
+    "InstallDotNetCoreForPublishing": "ms-resource:loc.messages.InstallDotNetCoreForPublishing",
+    "ErrorWhilePublishing": "ms-resource:loc.messages.ErrorWhilePublishing",
+    "UpgradeAgentMessage": "ms-resource:loc.messages.UpgradeAgentMessage",
+    "NoInputFiles": "ms-resource:loc.messages.NoInputFiles",
+    "UnableToGetRawCoverageCapability": "ms-resource:loc.messages.UnableToGetRawCoverageCapability",
+    "MissingPipelineContext": "ms-resource:loc.messages.MissingPipelineContext",
+    "MissingRawCoverageContext": "ms-resource:loc.messages.MissingRawCoverageContext",
+    "UnableToGetCoverageContainer": "ms-resource:loc.messages.UnableToGetCoverageContainer",
+    "InvalidCoverageContainerUrl": "ms-resource:loc.messages.InvalidCoverageContainerUrl",
+    "UploadingCoverageFile": "ms-resource:loc.messages.UploadingCoverageFile",
+    "PublishedCoverageFile": "ms-resource:loc.messages.PublishedCoverageFile",
+    "CoverageFileUploadFailed": "ms-resource:loc.messages.CoverageFileUploadFailed",
+    "RawCoverageUploadFailedAdditive": "ms-resource:loc.messages.RawCoverageUploadFailedAdditive",
+    "PublishedRawCoverageManifest": "ms-resource:loc.messages.PublishedRawCoverageManifest",
+    "UnableToQueueRawCoverageProcessing": "ms-resource:loc.messages.UnableToQueueRawCoverageProcessing"
   }
 }

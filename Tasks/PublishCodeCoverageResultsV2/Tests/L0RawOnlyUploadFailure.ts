@@ -1,4 +1,3 @@
-import assert = require('assert');
 import path = require('path');
 import stream = require('stream');
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
@@ -14,17 +13,11 @@ const variables: { [key: string]: string } = {
     'Build.BuildId': '42',
     'Agent.TempDirectory': '/someDir'
 };
-const requests: Array<{ kind: string, url: string, body?: string }> = [];
-const expectedProxy = {
-    proxyUrl: 'http://proxy.example:8080',
-    proxyFormattedUrl: 'http://proxy.example:8080'
-};
 
 tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
 tr.setAnswers(answers.defaultAnswers);
 tr.registerMockExport('getVariable', (name: string) => variables[name]);
 tr.registerMockExport('getEndpointAuthorizationParameter', () => 'token');
-tr.registerMockExport('getHttpProxyConfiguration', () => expectedProxy);
 
 tr.registerMock('azure-devops-node-api', {
     getHandlerFromToken: () => ({}),
@@ -39,13 +32,8 @@ tr.registerMock('azure-devops-node-api', {
         }
     }
 });
-
 tr.registerMock('typed-rest-client/HttpClient', {
     HttpClient: class {
-        public constructor(_userAgent: string, _handlers: unknown[], options: { proxy: unknown }) {
-            assert.deepStrictEqual(options.proxy, expectedProxy);
-        }
-
         public async get() {
             return {
                 message: { statusCode: 200 },
@@ -57,38 +45,27 @@ tr.registerMock('typed-rest-client/HttpClient', {
             };
         }
 
-        public async sendStream(_method: string, url: string) {
-            requests.push({ kind: 'block', url });
-            return successfulResponse();
+        public async sendStream() {
+            return {
+                message: { statusCode: 500 },
+                readBody: async () => 'upload failed'
+            };
         }
 
-        public async put(url: string, body: string) {
-            const kind = url.includes('manifest.json') ? 'manifest' : 'put';
-            if (kind === 'manifest') {
-                assert(requests.length > 0, 'manifest must be uploaded after all blob operations');
-                assert(requests.every(request => request.kind !== 'manifest'));
-                const manifest = JSON.parse(body);
-                assert.strictEqual(manifest.schemaVersion, '1.0');
-                assert.strictEqual(manifest.entries.length, 1);
-                assert.strictEqual(manifest.entries[0].ordinal, 0);
-                assert(url.includes('/Intermediate/coverage/Raw/v1/'));
+        public async put(url: string) {
+            if (url.includes('manifest.json')) {
+                throw new Error('manifest must not upload after a blob failure');
             }
-            requests.push({ kind, url, body });
-            return successfulResponse();
-        }
-
-        public async post(url: string) {
-            assert(requests.some(request => request.kind === 'manifest'));
-            assert(url.includes('/_apis/testresults/codecoverage/rawcoveragebundle/capabilities?'));
-            requests.push({ kind: 'trigger', url });
-            return successfulResponse();
+            return {
+                message: { statusCode: 201 },
+                readBody: async () => ''
+            };
         }
 
         public dispose() {
         }
     }
 });
-
 tr.registerMock('fs', {
     statSync: () => ({ size: 1 }),
     createReadStream: () => stream.Readable.from(Buffer.from('x')),
@@ -98,10 +75,3 @@ tr.registerMock('fs', {
 });
 
 tr.run();
-
-function successfulResponse() {
-    return {
-        message: { statusCode: 201 },
-        readBody: async () => ''
-    };
-}

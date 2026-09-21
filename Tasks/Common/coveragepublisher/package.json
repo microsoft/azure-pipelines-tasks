@@ -1,19 +1,22 @@
 {
-  "name": "coveragepublisher",
-  "version": "1.1.2",
+  "name": "azure-pipelines-tasks-coveragepublisher",
+  "version": "2.0.0",
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Microsoft/vso-agent-tasks/issues"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^5.2.11",
+    "azure-devops-node-api": "12.5.0",
+    "azure-pipelines-task-lib": "^5.280.3",
     "@types/node": "^24.10.0",
-    "os": "^0.1.1",
-    "uuid": "^3.3.2"
+    "typed-rest-client": "1.8.9"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "brace-expansion": "1.1.18"
   },
   "main": "VSTS Tasks Code Coverage Tools",
   "scripts": {

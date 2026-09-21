@@ -2,5 +2,16 @@
   "loc.messages.InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",
   "loc.messages.ErrorWhilePublishing": "Error occured while publishing coverage: ",
   "loc.messages.UpgradeAgentMessage": "Please upgrade your agent version. Required v2.115.0 or greater. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "No input files were provided."
+  "loc.messages.NoInputFiles": "No input files were provided.",
+  "loc.messages.UnableToGetRawCoverageCapability": "Unable to get the raw coverage capability. The ReportGenerator publishing path will be used. Details: %s",
+  "loc.messages.MissingPipelineContext": "The pipeline context required to upload code coverage files is incomplete.",
+  "loc.messages.MissingRawCoverageContext": "The task instance ID and task version required to upload a deterministic raw coverage bundle are incomplete.",
+  "loc.messages.UnableToGetCoverageContainer": "Unable to get the code coverage upload container. Test log store status: %s.",
+  "loc.messages.InvalidCoverageContainerUrl": "The code coverage upload container URL is invalid.",
+  "loc.messages.UploadingCoverageFile": "Uploading code coverage file '%s' to '%s'.",
+  "loc.messages.PublishedCoverageFile": "Uploaded code coverage file '%s' to '%s'.",
+  "loc.messages.CoverageFileUploadFailed": "Failed to upload code coverage file '%s': %s",
+  "loc.messages.RawCoverageUploadFailedAdditive": "Raw coverage bundle upload failed. Existing ReportGenerator publishing will continue. Details: %s",
+  "loc.messages.PublishedRawCoverageManifest": "Uploaded raw coverage manifest to '%s'.",
+  "loc.messages.UnableToQueueRawCoverageProcessing": "Unable to queue raw coverage processing. HTTP status: %s."
 }

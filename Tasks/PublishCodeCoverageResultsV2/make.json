@@ -9,7 +9,7 @@
     "rm": [
         {
             "items": [
-                "node_modules/coveragepublisher/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-coveragepublisher/node_modules/azure-pipelines-task-lib"
             ],
             "options": "-Rf"
         }

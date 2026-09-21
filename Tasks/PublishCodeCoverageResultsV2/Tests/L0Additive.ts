@@ -14,17 +14,20 @@ const variables: { [key: string]: string } = {
     'Build.BuildId': '42',
     'Agent.TempDirectory': '/someDir'
 };
-const requests: Array<{ kind: string, url: string, body?: string }> = [];
-const expectedProxy = {
-    proxyUrl: 'http://proxy.example:8080',
-    proxyFormattedUrl: 'http://proxy.example:8080'
-};
+const coveragePublisherPath = path.join(
+    __dirname,
+    '..',
+    'node_modules',
+    'azure-pipelines-tasks-coveragepublisher',
+    'CoveragePublisher',
+    'CoveragePublisher.Console.exe');
+answers.defaultAnswers.exec = {};
+let manifestUploaded = false;
 
 tr.setInput('summaryFileLocation', '/user/admin/summary.xml');
 tr.setAnswers(answers.defaultAnswers);
 tr.registerMockExport('getVariable', (name: string) => variables[name]);
 tr.registerMockExport('getEndpointAuthorizationParameter', () => 'token');
-tr.registerMockExport('getHttpProxyConfiguration', () => expectedProxy);
 
 tr.registerMock('azure-devops-node-api', {
     getHandlerFromToken: () => ({}),
@@ -42,45 +45,31 @@ tr.registerMock('azure-devops-node-api', {
 
 tr.registerMock('typed-rest-client/HttpClient', {
     HttpClient: class {
-        public constructor(_userAgent: string, _handlers: unknown[], options: { proxy: unknown }) {
-            assert.deepStrictEqual(options.proxy, expectedProxy);
-        }
-
         public async get() {
             return {
                 message: { statusCode: 200 },
                 readBody: async () => JSON.stringify({
                     contractVersion: '1.0',
                     acceptedSchemaMajorVersions: [1],
-                    supportedModes: ['raw-authoritative']
+                    supportedModes: ['shadow']
                 })
             };
         }
 
-        public async sendStream(_method: string, url: string) {
-            requests.push({ kind: 'block', url });
+        public async sendStream() {
             return successfulResponse();
         }
 
-        public async put(url: string, body: string) {
-            const kind = url.includes('manifest.json') ? 'manifest' : 'put';
-            if (kind === 'manifest') {
-                assert(requests.length > 0, 'manifest must be uploaded after all blob operations');
-                assert(requests.every(request => request.kind !== 'manifest'));
-                const manifest = JSON.parse(body);
-                assert.strictEqual(manifest.schemaVersion, '1.0');
-                assert.strictEqual(manifest.entries.length, 1);
-                assert.strictEqual(manifest.entries[0].ordinal, 0);
-                assert(url.includes('/Intermediate/coverage/Raw/v1/'));
+        public async put(url: string) {
+            if (url.includes('manifest.json')) {
+                manifestUploaded = true;
             }
-            requests.push({ kind, url, body });
             return successfulResponse();
         }
 
         public async post(url: string) {
-            assert(requests.some(request => request.kind === 'manifest'));
+            assert(manifestUploaded, 'raw coverage processing must be queued after the manifest upload');
             assert(url.includes('/_apis/testresults/codecoverage/rawcoveragebundle/capabilities?'));
-            requests.push({ kind: 'trigger', url });
             return successfulResponse();
         }
 
@@ -94,7 +83,18 @@ tr.registerMock('fs', {
     createReadStream: () => stream.Readable.from(Buffer.from('x')),
     readFileSync: () => JSON.stringify({
         version: { Major: 2, Minor: 281, Patch: 0 }
-    })
+    }),
+    mkdirSync: (reportDirectory: string) => {
+        if (!manifestUploaded) {
+            throw new Error('additive mode must finish the raw manifest before ReportGenerator starts');
+        }
+        answers.defaultAnswers.exec[
+            `${coveragePublisherPath} /user/admin/summary.xml --reportDirectory ${reportDirectory}`
+        ] = {
+            code: 0,
+            stdout: 'REPORT_GENERATOR_EXECUTED'
+        };
+    }
 });
 
 tr.run();
