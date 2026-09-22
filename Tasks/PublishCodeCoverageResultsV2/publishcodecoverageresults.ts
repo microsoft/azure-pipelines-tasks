@@ -13,6 +13,7 @@ async function run() {
         const failIfCoverageIsEmpty: boolean = taskLib.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = taskLib.getVariable('System.DefaultWorkingDirectory');
         const pathToSources: string = taskLib.getInput('pathToSources');
+        const publishHtmlReport: boolean = taskLib.getBoolInput('publishHtmlReport');
 
         var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
 
@@ -24,7 +25,7 @@ async function run() {
             }
         }
         else{
-            await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources);
+            await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources, publishHtmlReport);
         }       
 
     } catch (err) {
