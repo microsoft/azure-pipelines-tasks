@@ -48,6 +48,18 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Deploy with diff pkg', done => {
         psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
     });
+    it('Diff pkg rejects path traversal in package name', done => {
+        psr.run(path.join(__dirname, 'CreateDiffPkgRejectsTraversalInPackageName.ps1'), done);
+    });
+    it('Diff pkg rejects path traversal in service manifest name', done => {
+        psr.run(path.join(__dirname, 'CreateDiffPkgRejectsTraversalInServiceManifestName.ps1'), done);
+    });
+    it('Publish new rejects path traversal in application type name', done => {
+        psr.run(path.join(__dirname, 'PublishNewRejectsTraversalInApplicationTypeName.ps1'), done);
+    });
+    it('Publish new allows valid application type name', done => {
+        psr.run(path.join(__dirname, 'PublishNewAllowsValidApplicationTypeName.ps1'), done);
+    });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
     });

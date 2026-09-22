@@ -243,6 +243,10 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
+    # Validated here rather than where the image store path is built, so that a crafted manifest is
+    # rejected before the upgrade touches the cluster.
+    Assert-ValidImageStorePathSegment -Name $names.ApplicationTypeName
+
     # If ApplicationName is not specified on command line get application name from Application parameter file.
     if (!$ApplicationName)
     {

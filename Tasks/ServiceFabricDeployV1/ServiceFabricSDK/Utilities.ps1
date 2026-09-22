@@ -88,6 +88,31 @@ function Get-NamesFromApplicationManifest
     Write-Output (New-Object psobject -Property $h)
 }
 
+# ApplicationTypeName is read straight out of the local ApplicationManifest.xml and is then used as
+# the package's path inside the cluster image store. Service Fabric only ever emits a simple name
+# here, but the value comes from XML inside the application package, which is only as trustworthy as
+# whatever produced that package. A name such as '..\..\x', 'C:\x' or '\\server\share\x' would
+# otherwise point the copy, register and remove operations at a location outside the folder the
+# package belongs to. That matters most when the image store is backed by a file share
+# (ImageStoreConnectionString of the form 'file:...'), because the image store path then resolves to
+# a real filesystem path and the remove operation becomes an arbitrary delete.
+function Assert-ValidImageStorePathSegment
+{
+    param(
+        [string] $Name
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Name) -or
+        $Name -eq '.' -or
+        $Name -eq '..' -or
+        $Name.IndexOfAny([char[]]@('\', '/')) -ne -1 -or
+        $Name.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1 -or
+        [System.IO.Path]::IsPathRooted($Name))
+    {
+        throw (Get-VstsLocString -Key SFSDK_InvalidApplicationTypeName -ArgumentList @($Name))
+    }
+}
+
 function Get-ImageStoreConnectionStringFromClusterManifest
 {
     <#

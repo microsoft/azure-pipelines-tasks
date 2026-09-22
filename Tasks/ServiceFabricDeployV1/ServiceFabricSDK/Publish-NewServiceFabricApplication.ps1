@@ -164,6 +164,10 @@
         return
     }
 
+    # Validated here rather than where the image store path is built, so that a crafted manifest is
+    # rejected before any application is removed from the cluster under OverwriteBehavior 'Always'.
+    Assert-ValidImageStorePathSegment -Name $names.ApplicationTypeName
+
     if ($Action.Equals("Register") -or $Action.Equals("RegisterAndCreate"))
     {
         # Apply OverwriteBehavior if an applciation with same name already exists.
