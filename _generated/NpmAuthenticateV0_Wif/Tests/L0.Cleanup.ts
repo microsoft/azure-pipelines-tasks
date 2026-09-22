@@ -12,7 +12,17 @@ import { TestHelpers } from './TestHelpers';
  */
 function createSaveDir(npmrcPath: string, originalContent: string = 'original=https://registry.npmjs.org/\n'): string {
     const saveDir = TestHelpers.createTempDir('npm-auth-save-');
-    const index = { nextId: 1, entries: { [npmrcPath]: 0 } };
+    const npmrcStats = fs.statSync(npmrcPath, { bigint: true });
+    const index = {
+        nextId: 1,
+        entries: { [npmrcPath]: 0 },
+        identities: {
+            [npmrcPath]: {
+                device: npmrcStats.dev.toString(),
+                inode: npmrcStats.ino.toString()
+            }
+        }
+    };
     fs.writeFileSync(path.join(saveDir, 'index.json'), JSON.stringify(index), 'utf8');
     // Create the backup file that restoreBackedUpFile() will copy back
     fs.writeFileSync(path.join(saveDir, '0'), originalContent, 'utf8');

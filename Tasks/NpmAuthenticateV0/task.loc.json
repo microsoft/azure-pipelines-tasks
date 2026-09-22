@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
-    "Patch": 2
+    "Minor": 281,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -74,6 +74,9 @@
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
+    "NpmrcMustBeRegularFile": "ms-resource:loc.messages.NpmrcMustBeRegularFile",
+    "NpmrcChangedSinceBackup": "ms-resource:loc.messages.NpmrcChangedSinceBackup",
+    "InvalidNpmrcBackup": "ms-resource:loc.messages.InvalidNpmrcBackup",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
     "RestoringFile": "ms-resource:loc.messages.RestoringFile",
