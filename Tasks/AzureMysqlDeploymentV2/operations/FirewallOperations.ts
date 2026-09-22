@@ -68,14 +68,24 @@ export class FirewallOperations {
     public async invokeFirewallOperations(azureMysqlTaskParameter: AzureMysqlTaskParameter, sqlClient: ISqlClient, mysqlServer: MysqlServer) : Promise<boolean> {
         if(azureMysqlTaskParameter.getIpDetectionMethod() ==='IPAddressRange'){
             await this._preparefirewallRule(mysqlServer.getName(), azureMysqlTaskParameter.getStartIpAddress(), azureMysqlTaskParameter.getEndIpAddress(), mysqlServer.getResourceGroupName(), "IPAddressRange_" + this._getFirewallRuleName());
-            const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
-            task.debug(" firewall conf " +JSON.stringify(firewallConfiguration));
+            try {
+                const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
+                task.debug(" firewall conf " +JSON.stringify(firewallConfiguration));
 
-            if(!firewallConfiguration.isIpAdressAlreadyAdded()){
-                task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
-                throw new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule"));
+                if(!firewallConfiguration.isIpAdressAlreadyAdded()){
+                    task.debug("Agent Ip address not in added firewall rule: "+ firewallConfiguration.getIpAddress());
+                    throw new Error(task.loc("AgentIpAddressIsMissingInAddedFirewallRule"));
+                }
+                return true;
+            } catch (error) {
+                task.debug("Deleting firewall rule after validation failure: " + error);
+                try {
+                    await this.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
+                } catch (cleanupError) {
+                    task.warning(cleanupError.message);
+                }
+                throw error;
             }
-            return true;
         }else {
             const firewallConfiguration: FirewallConfiguration = sqlClient.getFirewallConfiguration();
             if(!firewallConfiguration.isIpAdressAlreadyAdded()){
