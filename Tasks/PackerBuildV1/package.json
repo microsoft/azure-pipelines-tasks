@@ -10,8 +10,8 @@
     "@types/node": "^24.10.0",
     "@types/q": "^1.0.7",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^5.280.1",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.280.3",
+    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.281.0",
     "decompress-zip": "^0.3.3",
     "extract-zip": "2.0.1"
   },

@@ -15,12 +15,12 @@
     "@types/mocha": "^9.1.1",
     "@types/node": "^20.11.0",
     "@types/q": "^1.5.4",
-    "azure-pipelines-task-lib": "^4.13.0",
-    "azure-pipelines-tasks-codeanalysis-common": "^2.226.0",
+    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-tasks-codeanalysis-common": "^2.281.0",
     "azure-pipelines-tasks-codecoverage-tools": "2.201.0",
-    "azure-pipelines-tasks-java-common": "^2.264.0",
-    "azure-pipelines-tasks-packaging-common": "^3.230.0",
-    "azure-pipelines-tool-lib": "^2.280.1",
+    "azure-pipelines-tasks-java-common": "^2.281.0",
+    "azure-pipelines-tasks-packaging-common": "^3.281.0",
+    "azure-pipelines-tool-lib": "^2.281.0",
     "base-64": "^0.1.0",
     "fs-extra": "^0.30.0",
     "strip-bom": "^3.0.0",
@@ -34,11 +34,6 @@
   "overrides": {
     "serialize-javascript": "7.0.5",
     "form-data": "^4.0.6",
-    "minimatch": "^3.1.5",
-    "brace-expansion": "^1.1.18",
-    "fast-uri": "^3.1.6",
-    "ip-address": "^10.3.1",
-    "js-yaml@3.x": { ".": "3.15.2" },
-    "js-yaml@4.x": { ".": "4.3.2" }
+    "minimatch": "^3.1.5"
   }
 }
