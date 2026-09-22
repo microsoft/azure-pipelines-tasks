@@ -60,6 +60,9 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Publish new allows valid application type name', done => {
         psr.run(path.join(__dirname, 'PublishNewAllowsValidApplicationTypeName.ps1'), done);
     });
+    it('Publish upgrade rejects path traversal in application type name', done => {
+        psr.run(path.join(__dirname, 'PublishUpgradeRejectsTraversalInApplicationTypeName.ps1'), done);
+    });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
     });
