@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 279,
+    "Minor": 281,
     "Patch": 0
   },
   "demands": [],
@@ -46,6 +46,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failIfCoverageEmpty"
+    },
+    {
+      "name": "publishHtmlReport",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.publishHtmlReport",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.publishHtmlReport"
     }
   ],
   "execution": {
