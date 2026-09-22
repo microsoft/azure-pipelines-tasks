@@ -740,7 +740,7 @@ describe('execCommand streamed-output sanitization', function () {
         (process.stdout as any).write = (chunk: any) => { captured += chunk.toString(); return true; };
         (process.stderr as any).write = (chunk: any) => { captured += chunk.toString(); return true; };
         const restore = () => { (process.stdout as any).write = originalOut; (process.stderr as any).write = originalErr; };
-        return Promise.resolve(action()).then(
+        return Promise.resolve().then(() => action()).then(
             () => { restore(); return captured; },
             () => { restore(); return captured; }
         );
