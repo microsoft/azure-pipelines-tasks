@@ -7,13 +7,30 @@ import * as path from 'path';
 import * as UUID from 'uuid/v4';
 import {execSync} from 'child_process';
 
-export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string, publishHtmlReport: boolean = true) {
+export async function PublishCodeCoverage(
+    inputFiles: string[],
+    sourceDirectory?: string,
+    publishHtmlReport: boolean = true,
+    trustedSourceDirectories?: string[],
+    enableTrustedSourcePathFiltering: boolean = false) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
-    publishCoverage(inputFiles, reportDirectory, sourceDirectory, publishHtmlReport)
+    await publishCoverage(
+        inputFiles,
+        reportDirectory,
+        sourceDirectory,
+        publishHtmlReport,
+        trustedSourceDirectories,
+        enableTrustedSourcePathFiltering);
 }
 
-async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string, publishHtmlReport: boolean = true) {
+async function publishCoverage(
+    inputFiles: string[],
+    reportDirectory: string,
+    pathToSources?: string,
+    publishHtmlReport: boolean = true,
+    trustedSourceDirectories?: string[],
+    enableTrustedSourcePathFiltering: boolean = false) {
 
     if(!inputFiles || inputFiles.length == 0) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
@@ -58,9 +75,24 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
     dotnet.arg('--reportDirectory');
     dotnet.arg(reportDirectory);
 
+    const trustedRoots = enableTrustedSourcePathFiltering
+        ? [...(trustedSourceDirectories || []), pathToSources]
+            .filter(root => !isNullOrWhitespace(root))
+            .join(';')
+        : '';
+
     if(!isNullOrWhitespace(pathToSources)) {
         dotnet.arg('--sourceDirectory');
         dotnet.arg(pathToSources);
+    }
+
+    if(enableTrustedSourcePathFiltering && !isNullOrWhitespace(trustedRoots)) {
+        dotnet.arg('--trustedSourceDirectory');
+        dotnet.arg(trustedRoots);
+    }
+
+    if(enableTrustedSourcePathFiltering) {
+        dotnet.arg('--enableTrustedSourcePathFiltering');
     }
 
     if(!publishHtmlReport) {
@@ -81,12 +113,18 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId'),
             "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG'),
             "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT'),
+            ...(enableTrustedSourcePathFiltering
+                ? { "AZP_COVERAGE_TRUSTED_SOURCE_DIRECTORIES": trustedRoots }
+                : {}),
             // Comprehensive proxy configuration for .NET HttpClient
             ...proxyConfig
         };
 
         await dotnet.exec({
             env,
+            cwd: enableTrustedSourcePathFiltering && trustedSourceDirectories && trustedSourceDirectories.length > 0
+                ? trustedSourceDirectories[0]
+                : process.cwd(),
             ignoreReturnCode: false,
             failOnStdErr: true,
             windowsVerbatimArguments: true,
