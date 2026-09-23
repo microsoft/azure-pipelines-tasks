@@ -198,6 +198,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_MixedRegistrySchemes" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法驗證在「%s」上混用 HTTPS 和非 HTTPS URL 的登錄。npm 認證資訊不會依通訊協定配置範圍。請在此主機和連接埠上的所有登錄都使用 HTTPS。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_UnableToGetPackagingUris" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve packaging service URLs.]]></Val>
@@ -278,6 +287,15 @@
           <Val><![CDATA[No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未指定 feedUrl。正在將 WIF 認證套用至 .npmrc 中的所有 %d 登錄。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Info_SkippingNonHttpsWifRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping WIF authentication for non-HTTPS registry: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[略過非 HTTPS 登錄的 WIF 驗證: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -756,6 +756,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.OutputVariableNameChanged" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[输出变量名称 '%s' 之前在发布变量时已解码或截断为其他名称。现在按字面使用声明的名称。如果管道引用了以前的名称，请将其更新为声明的名称。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.ParametersFileParsingFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Ensure the Parameters file ( '%s' ) is valid. Task failed while parsing with following error: %s]]></Val>
@@ -825,6 +834,21 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未能检查资源组状态。错误: %s。]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已使用以前的格式发布部署输出变量，因为此作业正在运行代理版本 '%s'。需要代理版本 %s 或更高版本才能使用安全格式发布它们，这可防止输出名称和值被解释为代理命令。升级代理以采用安全格式。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>

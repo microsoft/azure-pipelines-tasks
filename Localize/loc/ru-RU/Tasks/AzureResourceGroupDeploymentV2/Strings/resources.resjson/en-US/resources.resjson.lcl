@@ -1272,6 +1272,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.OutputVariableNameChanged" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Имя переменной выходных данных "%s" ранее декодировано или усечено до другого имени при публикации переменной. Указанное имя теперь используется буквально. Если конвейер ссылался на предыдущее имя, обновите его до указанного имени.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.OutputVariableShouldNotBeEmpty" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Output variable should not be empty.]]></Val>
@@ -1439,6 +1448,24 @@
           <Val><![CDATA[Rule %s already exists on the security group '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Правило %s уже существует в группе безопасности "%s"]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Переменные выходных данных развертывания опубликованы в предыдущем формате, так как это задание выполняется на агенте версии "%s". Для публикации в безопасном формате, который не позволяет интерпретировать имена и значения выходных данных как команды агента, требуется агент версии %s или более поздней. Обновите агент, чтобы перейти на безопасный формат.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Переменные выходных данных развертывания опубликованы в предыдущем формате, так как для переменной %s установлено значение, которое не позволяет агенту декодировать экранирование процентов. Удалите эту переменную или установите для нее значение ИСТИНА, чтобы использовать безопасный формат, который не позволяет интерпретировать имена и значения выходных данных как команды агента.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
