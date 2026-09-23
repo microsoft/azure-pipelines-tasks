@@ -162,6 +162,55 @@ export function resolvePlaywrightTestLocations(listReport: any, automatedTestNam
     return { locations: Array.from(locations), unmatched: unmatched };
 }
 
+/*
+    Packs resolved Playwright test locations ("file:line") into command line
+    sized invocations. A large test plan can resolve to more locations than a
+    single command line accepts, so locations are grouped by spec file (in
+    first-seen order, preserving the resolution order) and files are packed in
+    order until the next file would exceed maxCommandLength. A spec file is
+    never split across batches.
+
+    maxCommandLength budgets the location arguments only; it deliberately
+    stays clear of the 8191 character Windows command line limit to leave room
+    for the npx/cross-env/playwright prefix and quoting.
+*/
+export function batchPlaywrightTestLocations(locations: string[], maxCommandLength: number = 7000): string[][] {
+    if (!locations || locations.length === 0) {
+        return [];
+    }
+
+    const locationsByFile = new Map<string, string[]>();
+    for (const location of locations) {
+        const separatorIndex = location.lastIndexOf(':');
+        const file = separatorIndex === -1 ? location : location.slice(0, separatorIndex);
+        if (!locationsByFile.has(file)) {
+            locationsByFile.set(file, []);
+        }
+        locationsByFile.get(file).push(location);
+    }
+
+    const batches: string[][] = [];
+    let currentBatch: string[] = [];
+    let currentBatchLength = 0;
+
+    for (const fileLocations of locationsByFile.values()) {
+        const fileLength = fileLocations.reduce((total, location) => total + location.length + 1, 0);
+        if (currentBatch.length > 0 && currentBatchLength + fileLength > maxCommandLength) {
+            batches.push(currentBatch);
+            currentBatch = [];
+            currentBatchLength = 0;
+        }
+        currentBatch.push(...fileLocations);
+        currentBatchLength += fileLength;
+    }
+
+    if (currentBatch.length > 0) {
+        batches.push(currentBatch);
+    }
+
+    return batches;
+}
+
 export function getExecOptions(output?: { stdout: string }): tr.IExecOptions {
     const env = process.env;
 
