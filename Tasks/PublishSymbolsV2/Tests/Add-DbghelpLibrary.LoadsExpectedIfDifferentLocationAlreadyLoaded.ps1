@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\IndexHelpers\DbghelpFunctions.ps1
 Register-Mock Get-DbghelpPath { "SomeDrive:\AgentHome\...\dbghelp.dll" }
+Register-Mock Initialize-DbghelpNativeMethods
 Register-Mock Get-CurrentProcess {
     New-Object psobject -Property @{
             Id = $PID
@@ -27,7 +28,6 @@ Register-Mock Write-Warning
 Add-DbghelpLibrary 
 
 # Assert.
-Assert-WasCalled Invoke-LoadLibrary -Times 0
-Assert-WasCalled Write-Warning -Times 2
-Assert-WasCalled Write-Warning -- "UnexpectedDbghelpdllExpected0Actual1 $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\AgentHome\...\dbghelp.dll")) $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\SomeDir2\dbghelp.dll"))"
-Assert-WasCalled Write-Warning -- "UnexpectedDbghelpdllExpected0Actual1 $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\AgentHome\...\dbghelp.dll")) $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\SomeDir3\dbghelp.dll"))"
+Assert-WasCalled Initialize-DbghelpNativeMethods -- -DbghelpPath "SomeDrive:\AgentHome\...\dbghelp.dll"
+Assert-WasCalled Invoke-LoadLibrary -Times 1 -- -LiteralPath "SomeDrive:\AgentHome\...\dbghelp.dll"
+Assert-WasCalled Write-Warning -Times 0
