@@ -102,6 +102,38 @@ describe("HelmDeployV1 Suite", function () {
         assert.strictEqual(syncResult.stdout, externalOutput, "sync result should preserve raw Helm output for helmOutput");
     });
 
+    it("neutralizes indented artifact upload and pipeline control commands from Helm NOTES", function () {
+        const externalCommands = [
+            "  ##vso[task.setvariable variable=MARKER]PWNED_BY_CHART_NOTES",
+            "  ##vso[artifact.upload containerfolder=proof;artifactname=helmproof]/agent/.credentials",
+            "  ##vso[task.logissue type=error]INJECTED_ISSUE_FROM_CHART_NOTES"
+        ];
+        const externalOutput = [
+            "NOTES:",
+            "1. Get the application URL by running these commands:",
+            ...externalCommands,
+            "2. Verify that the application is running."
+        ].join("\n");
+        const displayedOutput: string[] = [];
+        const command = new TestCommand(true);
+        const tool = command.createCommand();
+        tool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+
+        const result = command.execCommandSync(tool, {
+            env: Object.assign({}, process.env, { HELM_TEST_EXTERNAL_OUTPUT: externalOutput }),
+            outStream: createOutputStream(displayedOutput)
+        });
+
+        const display = displayedOutput.join("");
+        assert(display.includes("NOTES:"), "Helm NOTES heading should remain");
+        assert(display.includes("1. Get the application URL by running these commands:"), "benign Helm instructions should remain");
+        externalCommands.forEach(externalCommand => {
+            assert(!display.includes(externalCommand), `displayed output should not contain executable command: ${externalCommand}`);
+            assert(display.includes(externalCommand.replace("##vso[", "##_vso[")), `command should be neutralized: ${externalCommand}`);
+        });
+        assert.strictEqual(result.stdout, externalOutput, "raw Helm output should remain available for helmOutput");
+    });
+
     it("Run successfully with Helm install (version 3) with chart name", async function () {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
