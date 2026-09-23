@@ -1,28 +1,27 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('azure-pipelines-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
-import Q = require('q');
+import path = require("path");
+
+import tl = require("azure-pipelines-task-lib/task");
 
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
+var fsExtra = require("fs-extra");
+import * as extract from "extract-zip";
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
-import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-import * as extract from 'extract-zip'
-var fsExtra = require('fs-extra');
-var taskJson = require('./task.json');
-var uuidv4 = require('uuid/v4');
+import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient";
 
-const area: string = 'JenkinsDownloadArtifacts';
+var taskJson = require("./task.json");
+var uuidv4 = require("uuid/v4");
+
+const area = "JenkinsDownloadArtifacts";
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
-    console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
+    console.log(tl.loc("ArtifactDownloadUrl", artifactQueryUrl));
 
     var templatePath = path.join(__dirname, 'jenkins.handlebars.txt');
     var webProvider = new providers.WebProvider(artifactQueryUrl, templatePath, variables, handler, { ignoreSslError: !strictSSL });
