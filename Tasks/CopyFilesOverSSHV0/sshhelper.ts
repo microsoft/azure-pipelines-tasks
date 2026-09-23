@@ -3,6 +3,13 @@ var Ssh2Client = require('ssh2').Client;
 var SftpClient = require('ssh2-sftp-client');
 var path = require('path');
 
+export function createRemoteOutputStream(destination: NodeJS.WritableStream): NodeJS.WritableStream {
+    return tl.createExternalOutputStream({
+        source: 'remote',
+        destination
+    });
+}
+
 export class RemoteCommandOptions {
     public failOnStdErr : boolean;
 }
@@ -212,7 +219,12 @@ export class SshHelper {
                     return;
                 }
 
+                const stdout = createRemoteOutputStream(process.stdout);
+                const stderr = createRemoteOutputStream(process.stderr);
+
                 stream.on('close', (code, signal) => {
+                    stdout.end();
+                    stderr.end();
                     tl.debug('code = ' + code + ', signal = ' + signal);
 
                     if (code && code != 0) {
@@ -231,12 +243,12 @@ export class SshHelper {
                         }
                     }
                 }).on('data', (data) => {
-                    console.log(data.toString());
+                    stdout.write(data);
                 }).stderr.on('data', (data) => {
                     stdErrWritten = true;
-                    tl.debug('stderr = ' + data);
+                    tl.debugExternalOutput('stderr = ' + data, { source: 'remote' });
                     if (data && data.toString().trim() !== '') {
-                        tl.error(data);
+                        stderr.write(data);
                     }
                 });
             });
