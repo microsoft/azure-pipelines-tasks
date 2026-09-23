@@ -101,6 +101,7 @@ export class PlaywrightTestExecutor implements ITestExecutor {
         }
 
         let resolvedLocations: string[] = [];
+        let batchCount = 1;
         executionTimer.start();
         try {
             const junitOutput = 'test-results/test-results.xml';
@@ -143,21 +144,45 @@ export class PlaywrightTestExecutor implements ITestExecutor {
                 throw new Error(`${resolved.unmatched.length} selected test point(s) did not match any Playwright test`);
             }
 
-            // 2. Run the resolved tests by location.
-            tl.debug(`Executing Playwright test command: npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput} playwright test --reporter=junit ${resolvedLocations.join(' ')}`);
-            this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
-            this.toolRunner = tl.tool(this.toolRunnerPath);
+            // 2. Run the resolved tests by location. A large plan can resolve
+            // to more locations than one command line accepts, so the
+            // locations are packed into batches that never split a spec file.
+            const locationBatches = utils.batchPlaywrightTestLocations(resolvedLocations);
+            batchCount = locationBatches.length;
+            tl.debug(`Executing ${batchCount} Playwright invocation(s) for ${resolvedLocations.length} resolved location(s)`);
 
-            this.toolRunner.arg('cross-env');
-            this.toolRunner.arg(`PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput}`);
-            this.toolRunner.arg('playwright');
-            this.toolRunner.arg('test');
-            this.toolRunner.arg('--reporter=junit');
-            for (const location of resolvedLocations) {
-                this.toolRunner.arg(location);
+            let firstFailureCode = 0;
+            for (let batchIndex = 0; batchIndex < locationBatches.length; batchIndex++) {
+                // Batching must not depend on the single-invocation report
+                // name (a separate change renames it), so every batch writes
+                // its own report for the publisher's glob to collect.
+                const batchJunitOutput = batchCount === 1
+                    ? junitOutput
+                    : `test-results/TEST-playwright-${batchIndex + 1}.xml`;
+                const batchLocations = locationBatches[batchIndex];
+
+                tl.debug(`Executing Playwright test command: npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${batchJunitOutput} playwright test --reporter=junit ${batchLocations.join(' ')}`);
+                this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
+                this.toolRunner = tl.tool(this.toolRunnerPath);
+
+                this.toolRunner.arg('cross-env');
+                this.toolRunner.arg(`PLAYWRIGHT_JUNIT_OUTPUT_NAME=${batchJunitOutput}`);
+                this.toolRunner.arg('playwright');
+                this.toolRunner.arg('test');
+                this.toolRunner.arg('--reporter=junit');
+                for (const location of batchLocations) {
+                    this.toolRunner.arg(location);
+                }
+
+                const batchReturnCode = await this.toolRunner.execAsync();
+                // Run every batch so the published results stay complete, and
+                // report the first non-zero exit code.
+                if (batchReturnCode !== 0 && firstFailureCode === 0) {
+                    firstFailureCode = batchReturnCode;
+                }
             }
 
-            operationResult.returnCode = await this.toolRunner.execAsync();
+            operationResult.returnCode = firstFailureCode;
 
         } catch (error) {
             tl.debug(`Error during test execution: ${error.message}`);
@@ -172,6 +197,7 @@ export class PlaywrightTestExecutor implements ITestExecutor {
 
         executionTimer.stop(ciData);
         ciData['resolvedTestLocations'] = resolvedLocations.join('|');
+        ciData['playwrightInvocationCount'] = batchCount;
         ciData['executionStatus'] = operationResult.returnCode === 0 ? 'Success' : 'Failure';
 
         return operationResult;

@@ -5,6 +5,7 @@ import ttm = require('azure-pipelines-task-lib/mock-test');
 const tl = require('azure-pipelines-task-lib/task');
 import { TestPlanData } from '../testPlanData';
 import { newAutomatedTestsFlow } from '../Automated Flow/automatedFlow';
+import { batchPlaywrightTestLocations } from '../Common/utils';
 
 describe('AzureTestPlan Suite', function () {
     this.timeout(30000);
@@ -20,6 +21,44 @@ describe('AzureTestPlan Suite', function () {
     afterEach(() => {
         tl.getInput = originalGetInput;
         tl.getBoolInput = originalGetBoolInput;
+    });
+
+    it('Batches resolved Playwright test locations without splitting a spec file', () => {
+        const locations: string[] = [];
+        for (let file = 0; file < 40; file++) {
+            for (const line of [10, 40, 75, 120, 160, 200, 240]) {
+                locations.push(`tests/playwright/src/specs/generated-scenario-${file}.spec.ts:${line}`);
+            }
+        }
+
+        const batches = batchPlaywrightTestLocations(locations);
+
+        assert(batches.length > 1,
+            `A plan larger than one command line should be split, got ${batches.length} invocation(s)`);
+        assert.deepStrictEqual(batches.reduce((all, batch) => all.concat(batch), []), locations,
+            'Every location should run exactly once, in resolution order');
+
+        for (const batch of batches) {
+            const commandLength = batch.reduce((total, location) => total + location.length + 1, 0);
+            assert(commandLength <= 7000,
+                `A batch should stay within the command line budget, got ${commandLength} characters`);
+        }
+
+        const batchIndexByFile = new Map<string, number>();
+        batches.forEach((batch, index) => {
+            for (const location of batch) {
+                const file = location.substring(0, location.lastIndexOf(':'));
+                const seenAt = batchIndexByFile.get(file);
+                assert(seenAt === undefined || seenAt === index,
+                    `Spec file ${file} was split across invocations`);
+                batchIndexByFile.set(file, index);
+            }
+        });
+
+        assert.strictEqual(batchPlaywrightTestLocations(locations.slice(0, 7)).length, 1,
+            'A plan that fits on one command line should stay a single invocation');
+        assert.deepStrictEqual(batchPlaywrightTestLocations([]), [],
+            'No locations should produce no invocations');
     });
 
     it('Check if runs fine', (done: Mocha.Done) => {
