@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 279,
+    "Minor": 281,
     "Patch": 0
   },
   "demands": [],
@@ -46,6 +46,14 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "Fail the task if code coverage did not produce any results to publish."
+    },
+    {
+      "name": "publishHtmlReport",
+      "type": "boolean",
+      "label": "Publish HTML report",
+      "defaultValue": "true",
+      "required": false,
+      "helpMarkDown": "Publish an HTML code coverage report. Disable this option to skip generating and publishing the HTML report."
     }
   ],
   "execution": {
