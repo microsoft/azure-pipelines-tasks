@@ -23,7 +23,7 @@ process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
 helper.RegisterArtifactEngineMock(tr);
 helper.RegisterHttpClientMock(tr, (url: string) => {
     if (url === "http://url/job/myfreestyleproject//api/json") {
-        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleProject\\n##vso[task.setvariable variable=jenkinsInjected]unsafe" }');
+        return helper.GetSuccessExpectedResult('{ "_class": "hudson.model.FreeStyleProject\\r\\n##vso[task.uploadfile]/tmp/jda_exfil_target.txt\\r\\n##vso[task.uploadsummary]/tmp/jda_exfil_target.txt" }');
     }
     if (url === "http://url//job/myfreestyleproject//10/api/json?tree=artifacts[*]") {
         return helper.GetSuccessExpectedResult('{ "artifacts": [] }');
