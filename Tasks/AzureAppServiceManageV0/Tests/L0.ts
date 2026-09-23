@@ -32,12 +32,7 @@ describe('Azure App Service Manage Suite', function () {
     AppInsightsWebTests.ApplicationInsightsTests(30000);
     ResourcesTests.ResourcesTests(30000);
 
-    it('filters Kudu WebJob names before writing them', async () => {
-        const kuduServiceMock = {
-            getContinuousJobs: async () => [
-                { name: 'job\n##vso[task.setvariable variable=kuduInjected]unsafe', status: 'Running' }
-            ]
-        };
+    async function captureOutput(action: () => Promise<void>): Promise<string> {
         const chunks: string[] = [];
         const originalWrite = process.stdout.write;
         process.stdout.write = ((chunk: any) => {
@@ -46,13 +41,41 @@ describe('Azure App Service Manage Suite', function () {
         }) as any;
 
         try {
-            await new KuduServiceUtils(kuduServiceMock as any).startContinuousWebJobs();
+            await action();
         } finally {
             process.stdout.write = originalWrite;
         }
 
-        const output = chunks.join('');
-        assert(output.includes('##_vso[task.setvariable variable=kuduInjected]unsafe'), output);
-        assert(!output.includes('##vso[task.setvariable variable=kuduInjected]unsafe'), output);
+        return chunks.join('');
+    }
+
+    it('filters Kudu WebJob names in start and stop paths', async () => {
+        const startCommand = '##vso[task.setvariable variable=BASH_ENV]attacker-startup-command';
+        const stopCommand = '##vso[task.setvariable variable=protectedConnectionInjected]unsafe';
+        const startOutput = await captureOutput(async () => {
+            const kuduServiceMock = {
+                getContinuousJobs: async () => [
+                    { name: `ordinary-start-job\n${startCommand}`, status: 'Running' }
+                ]
+            };
+
+            await new KuduServiceUtils(kuduServiceMock as any).startContinuousWebJobs();
+        });
+        const stopOutput = await captureOutput(async () => {
+            const kuduServiceMock = {
+                getContinuousJobs: async () => [
+                    { name: `ordinary-stop-job\r\n${stopCommand}`, status: 'Stopped' }
+                ]
+            };
+
+            await new KuduServiceUtils(kuduServiceMock as any).stopContinuousWebJobs();
+        });
+
+        assert(startOutput.includes('ordinary-start-job'), startOutput);
+        assert(startOutput.includes(startCommand.replace('##vso[', '##_vso[')), startOutput);
+        assert(!startOutput.includes(startCommand), startOutput);
+        assert(stopOutput.includes('ordinary-stop-job'), stopOutput);
+        assert(stopOutput.includes(stopCommand.replace('##vso[', '##_vso[')), stopOutput);
+        assert(!stopOutput.includes(stopCommand), stopOutput);
     });
 });
