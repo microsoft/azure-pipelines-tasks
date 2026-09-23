@@ -15,13 +15,16 @@ export async function PublishCodeCoverage(
     enableTrustedSourcePathFiltering: boolean = false) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
-    await publishCoverage(
+    const publishing = publishCoverage(
         inputFiles,
         reportDirectory,
         sourceDirectory,
         publishHtmlReport,
         trustedSourceDirectories,
         enableTrustedSourcePathFiltering);
+    if (enableTrustedSourcePathFiltering) {
+        await publishing;
+    }
 }
 
 async function publishCoverage(
@@ -35,6 +38,30 @@ async function publishCoverage(
     if(!inputFiles || inputFiles.length == 0) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
         return;
+    }
+
+    let publisherWorkingDirectory = process.cwd();
+    let trustedRoots = '';
+    if (enableTrustedSourcePathFiltering) {
+        taskLib.setResourcePath(path.join(__dirname, 'module.json'), true);
+        const workspaceRoots = (trustedSourceDirectories || [])
+            .filter(directory => !isNullOrWhitespace(directory));
+        trustedRoots = [...workspaceRoots, pathToSources]
+            .filter(directory => !isNullOrWhitespace(directory))
+            .join(';');
+
+        if (isNullOrWhitespace(trustedRoots)) {
+            throw new Error(taskLib.loc('NoTrustedCoverageSourceDirectories'));
+        }
+
+        if (workspaceRoots.length > 0) {
+            publisherWorkingDirectory = workspaceRoots[0];
+        }
+
+        if (!fs.existsSync(publisherWorkingDirectory) ||
+            !fs.statSync(publisherWorkingDirectory).isDirectory()) {
+            throw new Error(taskLib.loc('InvalidCoverageWorkingDirectory', publisherWorkingDirectory));
+        }
     }
 
     const osvar = process.platform;
@@ -74,12 +101,6 @@ async function publishCoverage(
     }
     dotnet.arg('--reportDirectory');
     dotnet.arg(reportDirectory);
-
-    const trustedRoots = enableTrustedSourcePathFiltering
-        ? [...(trustedSourceDirectories || []), pathToSources]
-            .filter(root => !isNullOrWhitespace(root))
-            .join(';')
-        : '';
 
     if(!isNullOrWhitespace(pathToSources)) {
         dotnet.arg('--sourceDirectory');
@@ -122,12 +143,10 @@ async function publishCoverage(
 
         await dotnet.exec({
             env,
-            cwd: enableTrustedSourcePathFiltering && trustedSourceDirectories && trustedSourceDirectories.length > 0
-                ? trustedSourceDirectories[0]
-                : process.cwd(),
+            cwd: publisherWorkingDirectory,
             ignoreReturnCode: false,
             failOnStdErr: true,
-            windowsVerbatimArguments: true,
+            windowsVerbatimArguments: !enableTrustedSourcePathFiltering,
             errStream: {
                 write: (data: Buffer) => {
                     console.error(data.toString());
@@ -137,7 +156,10 @@ async function publishCoverage(
         } as any);
 
     } catch (err) {
-        // Logging should be handled thorugh error stream
+        if (enableTrustedSourcePathFiltering) {
+            const message = err instanceof Error ? err.message : String(err);
+            taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('CoveragePublisherExecutionFailed', message));
+        }
     }
 }
 
