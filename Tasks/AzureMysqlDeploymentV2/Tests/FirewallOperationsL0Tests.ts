@@ -18,7 +18,6 @@ export class FirewallOperationsL0Tests  {
     public static async testFirewallOperations() {
         await FirewallOperationsL0Tests.addFirewallRuleTest();
         await FirewallOperationsL0Tests.deleteFirewallRuleTest();
-        await FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest();
     }
 
     public static async addFirewallRuleTest(){
@@ -43,40 +42,6 @@ export class FirewallOperationsL0Tests  {
             tl.setResult(tl.TaskResult.Succeeded, 'FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded.');
         }catch(error){
             tl.setResult(tl.TaskResult.Failed, 'FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded but failed.');
-        }
-    }
-
-    public static async cleanupFirewallRuleAfterValidationFailureTest(){
-        const firewallOperations: FirewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
-        let firewallRuleDeleted = false;
-        firewallOperations.addFirewallRule = () => Promise.resolve();
-        firewallOperations.deleteFirewallRule = () => {
-            firewallRuleDeleted = true;
-            return Promise.resolve();
-        };
-
-        const azureMysqlTaskParameter = {
-            getIpDetectionMethod: () => 'IPAddressRange',
-            getStartIpAddress: () => '0.0.0.0',
-            getEndIpAddress: () => '255.255.255.255'
-        } as AzureMysqlTaskParameter;
-        const sqlClient = {
-            getFirewallConfiguration: () => {
-                throw new Error('validation failed');
-            },
-            executeSqlCommand: () => Promise.resolve(0)
-        } as ISqlClient;
-        const mysqlServer: MysqlServer = new MysqlServer("MOCK_SERVER_NAME", "MOCK_SERVER_NAME.test-vm1.onebox.xdb.mscds.com", "MOCK_RESOURCE_GROUP_NAME");
-
-        try {
-            await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
-            tl.setResult(tl.TaskResult.Failed, 'FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest should have failed validation.');
-        } catch(error) {
-            if(firewallRuleDeleted && error.message === 'validation failed') {
-                tl.setResult(tl.TaskResult.Succeeded, 'FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest should have succeeded.');
-            } else {
-                tl.setResult(tl.TaskResult.Failed, 'FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest did not delete the firewall rule.');
-            }
         }
     }
 

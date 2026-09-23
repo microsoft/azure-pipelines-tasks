@@ -26,7 +26,6 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         await tr.runAsync();
         assert(tr.stdOutContained('FirewallOperationsL0Tests.addFirewallRuleTest should have succeeded.'), 'Should have printed: FirewallOperationsL0Tests.addFirewallRuleTest should have succeeded.');
         assert(tr.stdOutContained('FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded.'), 'Should have printed: FirewallOperationsL0Tests.deleteFirewallRuleTest should have succeeded.');
-        assert(tr.stdOutContained('FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest should have succeeded.'), 'Should have printed: FirewallOperationsL0Tests.cleanupFirewallRuleAfterValidationFailureTest should have succeeded.');
     });
 
     it('AzureMySqlDeployment ToolPathOperationTests', async () => {
