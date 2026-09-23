@@ -76,7 +76,6 @@
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
     "NpmrcMustBeRegularFile": "ms-resource:loc.messages.NpmrcMustBeRegularFile",
     "NpmrcChangedSinceBackup": "ms-resource:loc.messages.NpmrcChangedSinceBackup",
-    "InvalidNpmrcBackup": "ms-resource:loc.messages.InvalidNpmrcBackup",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
     "RestoringFile": "ms-resource:loc.messages.RestoringFile",

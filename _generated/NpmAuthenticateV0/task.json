@@ -76,7 +76,6 @@
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
     "NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
     "NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
-    "InvalidNpmrcBackup": "The saved .npmrc backup for %s is invalid or is not a regular file.",
     "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
     "SavingFile": "Saving file %s",
     "RestoringFile": "Restoring file %s",

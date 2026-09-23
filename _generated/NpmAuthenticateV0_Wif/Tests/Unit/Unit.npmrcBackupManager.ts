@@ -169,42 +169,6 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
-    it('rejects a symbolic link used as the saved backup', function () {
-        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
-        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
-        try {
-            const npmrcPath = path.join(sourceDir, '.npmrc');
-            const targetPath = path.join(sourceDir, 'target');
-            const backupPath = path.join(root, '0');
-            fs.writeFileSync(npmrcPath, 'original\n', 'utf8');
-            fs.writeFileSync(targetPath, 'host-only\n', 'utf8');
-
-            const manager = new NpmrcBackupManager(root);
-            manager.ensureBackedUp(npmrcPath);
-            fs.unlinkSync(backupPath);
-            try {
-                fs.symlinkSync(targetPath, backupPath, 'file');
-            } catch (error) {
-                if ((error as NodeJS.ErrnoException).code === 'EPERM') {
-                    this.skip();
-                    return;
-                }
-                throw error;
-            }
-            fs.writeFileSync(npmrcPath, 'modified\n', 'utf8');
-
-            assert.throws(
-                () => manager.restoreBackedUpFile(npmrcPath),
-                /saved .npmrc backup/
-            );
-            assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'modified\n');
-            assert.strictEqual(fs.readFileSync(targetPath, 'utf8'), 'host-only\n');
-        } finally {
-            fs.rmSync(root, { recursive: true, force: true });
-            fs.rmSync(sourceDir, { recursive: true, force: true });
-        }
-    });
-
     it('returns false when restore is requested for an untracked file', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         try {
@@ -231,28 +195,6 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
             const restored = manager.restoreBackedUpFile(npmrcPath);
 
             assert.strictEqual(restored, false);
-        } finally {
-            fs.rmSync(root, { recursive: true, force: true });
-            fs.rmSync(sourceDir, { recursive: true, force: true });
-        }
-    });
-
-    it('rejects a malformed backup entry', function () {
-        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
-        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
-        try {
-            const npmrcPath = path.join(sourceDir, '.npmrc');
-            fs.writeFileSync(npmrcPath, 'value\n', 'utf8');
-            fs.writeFileSync(path.join(root, 'index.json'), JSON.stringify({
-                nextId: 1,
-                entries: { [npmrcPath]: '../target' }
-            }));
-
-            const manager = NpmrcBackupManager.fromBackupDirectory(root);
-            assert.throws(
-                () => manager.restoreBackedUpFile(npmrcPath),
-                /saved .npmrc backup/
-            );
         } finally {
             fs.rmSync(root, { recursive: true, force: true });
             fs.rmSync(sourceDir, { recursive: true, force: true });

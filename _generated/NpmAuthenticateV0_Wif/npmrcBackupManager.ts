@@ -46,16 +46,13 @@ export class NpmrcBackupManager {
         if (entryId === undefined) {
             return false;
         }
-        if (!this.isValidEntryId(entryId)) {
-            throw new Error(tl.loc('InvalidNpmrcBackup', npmrcPath));
-        }
 
         const backupPath = this.getBackupFilePath(entryId);
         if (!fs.existsSync(backupPath)) {
             return false;
         }
 
-        const backup = this.readRegularFile(backupPath, 'InvalidNpmrcBackup');
+        const backupContents = fs.readFileSync(backupPath);
         const destinationStats = fs.lstatSync(npmrcPath, { bigint: true });
         const expectedIdentity = this.identities[npmrcPath];
         if (!destinationStats.isFile()
@@ -73,7 +70,7 @@ export class NpmrcBackupManager {
             }
 
             fs.ftruncateSync(destinationHandle, 0);
-            fs.writeFileSync(destinationHandle, backup.contents);
+            fs.writeFileSync(destinationHandle, backupContents);
         } finally {
             fs.closeSync(destinationHandle);
         }
@@ -104,7 +101,7 @@ export class NpmrcBackupManager {
         }));
     }
 
-    private getBackupFilePath(entryId: number): string {
+    private getBackupFilePath(entryId: number | string): string {
         return path.join(this.backupDirectory, String(entryId));
     }
 
@@ -113,7 +110,7 @@ export class NpmrcBackupManager {
         tl.debug(tl.loc('SavingFile', sourcePath));
         const source = this.readRegularFile(sourcePath, 'NpmrcMustBeRegularFile');
 
-        const backupHandle = fs.openSync(backupPath, 'wx', source.mode);
+        const backupHandle = fs.openSync(backupPath, 'w', source.mode);
         try {
             fs.writeFileSync(backupHandle, source.contents);
             fs.fchmodSync(backupHandle, source.mode);
@@ -159,10 +156,6 @@ export class NpmrcBackupManager {
 
     private hasIdentity(stats: fs.BigIntStats, identity: FileIdentity): boolean {
         return stats.dev.toString() === identity.device && stats.ino.toString() === identity.inode;
-    }
-
-    private isValidEntryId(entryId: number): boolean {
-        return Number.isSafeInteger(entryId) && entryId >= 0;
     }
 
     static fromBackupDirectory(backupDirectory: string): NpmrcBackupManager {
