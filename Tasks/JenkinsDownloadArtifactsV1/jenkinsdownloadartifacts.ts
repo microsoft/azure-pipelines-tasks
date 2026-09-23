@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import os = require("os");
 import path = require("path");
 
 import tl = require("azure-pipelines-task-lib/task");
@@ -136,7 +137,7 @@ async function doWork() {
         }
         else {
             jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+            tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
 
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
@@ -202,21 +203,21 @@ async function doWork() {
             if (tl.getBoolInput('propagatedArtifacts') == true) {
                 try {
                     jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                    tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
                 }
                 catch (error) {
-                    tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
+                    tl.warningExternalOutput(tl.loc("CommitsAndWorkItemsDownloadFailed", error), { source: "remote" });
                 }
             }
 
             new ArtifactDetailsDownloader()
                 .DownloadCommitsAndWorkItems(jenkinsJobDetails)
                 .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
-                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+                    (error) => tl.warningExternalOutput(tl.loc("CommitsAndWorkItemsDownloadFailed", error), { source: "remote" }));
         }
 
     } catch (err) {
-        tl.error(err);
+        tl.errorExternalOutput(String(err), { source: "remote" });
         publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }

@@ -1,3 +1,4 @@
+import * as os from 'os';
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
@@ -234,7 +235,7 @@ export class JenkinsRestClient {
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
             response.readBody().then((body: string) => {
                 if (!!body && response.message.statusCode === 200)  {
-                    tl.debug(`Content received from server ${body}`);
+                    tl.debugExternalOutput(`Content received from server ${body}`, { source: "remote" });
                     let jsonResult;
 
                     try {
@@ -278,7 +279,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        tl.debugExternalOutput(body, { source: "remote" });
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));
@@ -300,7 +301,7 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            console.log(tl.loc("FoundJobType", result));
+            tl.writeExternalOutput(tl.loc("FoundJobType", result) + os.EOL, { source: "remote" });
             defer.resolve(result.trim());
         }, (error) => {
             console.log(tl.loc("CannotFindJobType"));

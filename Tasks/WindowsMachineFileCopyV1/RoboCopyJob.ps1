@@ -120,6 +120,20 @@ param (
         return $text.Substring(0, $pos) + $replace + $text.Substring($pos + $search.Length);
     }
 
+    function Write-RobocopyOutput
+    {
+        process
+        {
+            $line = if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                $_.Exception.Message
+            } else {
+                $_.ToString()
+            }
+
+            Write-Output ($line.Replace("##vso[", "##_vso["))
+        }
+    }
+
     function Get-DestinationNetworkPath(
         [string]$targetPath,
         [string]$machineShare
@@ -265,18 +279,18 @@ param (
         {
             $robocopyExtraArguments = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -clean:$doCleanUp -AsArray
             $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + $robocopyExtraArguments
-            & robocopy @robocopyArguments
+            & robocopy @robocopyArguments 2>&1 | Write-RobocopyOutput
         }
         elseif ($useSanitizerActivate -eq "true")
         {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments 2>&1 | Write-RobocopyOutput
         }
         else
         {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-            Invoke-Expression $command
+            Invoke-Expression $command 2>&1 | Write-RobocopyOutput
         }
 
         if ($LASTEXITCODE -ge 8)

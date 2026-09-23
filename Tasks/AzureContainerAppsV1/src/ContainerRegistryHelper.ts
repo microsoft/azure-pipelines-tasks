@@ -23,11 +23,11 @@ export class ContainerRegistryHelper {
                 'login', '--password-stdin',
                 '--username', acrUsername,
                 registry
-            ], { input: acrPassword });
+            ], { input: acrPassword, stdio: 'pipe' });
             this.authenticatedRegistries.add(registry);
         } catch (err) {
             tl.error(tl.loc('AcrUsernamePasswordAuthFailed', acrName));
-            throw err;
+            throw new Error(tl.loc('AcrUsernamePasswordAuthFailed', acrName));
         }
     }
 
@@ -46,7 +46,7 @@ export class ContainerRegistryHelper {
                 '--output', 'json',
                 '--expose-token',
                 '--only-show-errors'
-            ], { encoding: 'utf8' });
+            ], { encoding: 'utf8', stdio: 'pipe' });
 
             const accessToken = JSON.parse(tokenJson).accessToken;
 
@@ -58,7 +58,7 @@ export class ContainerRegistryHelper {
             this.authenticatedRegistries.add(registry);
         } catch (err) {
             tl.error(tl.loc('AcrAccessTokenAuthFailed', acrName));
-            throw err;
+            throw new Error(tl.loc('AcrAccessTokenAuthFailed', acrName));
         }
     }
 
