@@ -1,7 +1,8 @@
-import * as Q from 'q';
 import * as os from 'os';
 import * as path from 'path';
-import * as  tl from 'azure-pipelines-task-lib/task';
+import * as Q from 'q';
+
+import * as tl from 'azure-pipelines-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
@@ -61,7 +62,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
             }, (error) => {
                 defer.reject(error);
             });
-        })        
+        })
 
         return defer.promise;
     }
@@ -87,7 +88,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         const workItemsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=actions[issues[*],serverURL]`;
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Downloaded workItems: ${workItemsResult}`);
+            tl.debugExternalOutput(`Downloaded workItems: ${workItemsResult}`, { source: "remote" });
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);
@@ -95,7 +96,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         return defer.promise;
     }
- 
+
     private GetWorkItems(jenkinsJobDetails: JenkinsJobDetails, startIndex: number, endIndex: number, commitMessages: string[]): Q.Promise<string> {
         let defer = Q.defer<string>();
 
@@ -104,7 +105,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Downloaded workItems: ${workItemsResult}`);
+            tl.debugExternalOutput(`Downloaded workItems: ${workItemsResult}`, { source: "remote" });
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);

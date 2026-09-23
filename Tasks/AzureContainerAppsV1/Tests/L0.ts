@@ -1,7 +1,7 @@
-import * as assert from'assert';
-import * as path from'path';
+import * as assert from 'assert';
+import * as path from 'path';
+
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { Done } from 'mocha';
 
 describe('AzureContainerAppsV1 Suite', function () {
     this.timeout(60000);
@@ -558,8 +558,10 @@ describe('AzureContainerAppsV1 Suite', function () {
         const originalExecSync = tl.execSync;
         const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
         let capturedArgs: any;
-        tl.execSync = (tool: string, args: any) => {
+        let capturedOptions: any;
+        tl.execSync = (tool: string, args: any, options: any) => {
             capturedArgs = args;
+            capturedOptions = options;
             return { code: 0, stdout: '', stderr: '', error: null };
         };
         process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'true';
@@ -573,6 +575,7 @@ describe('AzureContainerAppsV1 Suite', function () {
 
         assert(Array.isArray(capturedArgs), 'createRunnableAppImage should invoke execSync with an array of arguments, not a single command string.');
         assert(capturedArgs.indexOf(injectionAppSourcePath) !== -1, 'appSourcePath must be passed as a single execSync argument so its contents cannot be interpreted as additional arguments.');
+        assert.deepStrictEqual(capturedOptions.externalOutput, { source: 'childProcess' }, 'createRunnableAppImage should filter displayed pack output as child-process output.');
     });
 
     it('Passes appSourcePath in the legacy command string when UseArgArrayForFilePath is disabled', () => {
@@ -585,8 +588,10 @@ describe('AzureContainerAppsV1 Suite', function () {
         const originalExecSync = tl.execSync;
         const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
         let capturedArgs: any;
-        tl.execSync = (tool: string, args: any) => {
+        let capturedOptions: any;
+        tl.execSync = (tool: string, args: any, options: any) => {
             capturedArgs = args;
+            capturedOptions = options;
             return { code: 0, stdout: '', stderr: '', error: null };
         };
         process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'false';
@@ -600,5 +605,100 @@ describe('AzureContainerAppsV1 Suite', function () {
 
         assert(typeof capturedArgs === 'string', 'createRunnableAppImage should invoke execSync with a single command string when the feature flag is disabled.');
         assert(capturedArgs.indexOf(`--path ${appSourcePath}`) !== -1, 'appSourcePath should be interpolated into the legacy command string when the feature flag is disabled.');
+        assert.deepStrictEqual(capturedOptions.externalOutput, { source: 'childProcess' }, 'createRunnableAppImage should filter displayed pack output as child-process output.');
+    });
+
+    it('Filters displayed az, pack, and Docker output while preserving raw execSync results', () => {
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+        const { ContainerRegistryHelper } = require('../src/ContainerRegistryHelper');
+
+        const originalExecSync = tl.execSync;
+        const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
+        const rawOutput = '##vso[task.complete result=Failed;]untrusted';
+        const calls: any[] = [];
+        tl.execSync = (tool: string, args: any, options: any) => {
+            calls.push({ tool, args, options });
+            return { code: 0, stdout: rawOutput, stderr: '', error: null };
+        };
+        process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'true';
+
+        try {
+            const containerAppHelper = new ContainerAppHelper(true);
+            assert.strictEqual(containerAppHelper.getExistingContainerAppEnvironment('sample-group'), rawOutput, 'Raw captured az output should remain available to task logic.');
+            containerAppHelper.createRunnableAppImage('sample-image:tag', '/samplepath', 'dotnetcore:7.0');
+            containerAppHelper.createRunnableAppImageFromDockerfile('sample-image:tag', '/samplepath', '/samplepath/Dockerfile');
+            new ContainerRegistryHelper().pushImageToAcr('sample-image:tag');
+        } finally {
+            tl.execSync = originalExecSync;
+            process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = originalFeatureEnv;
+        }
+
+        assert.strictEqual(calls.length, 4, 'The test should exercise az, pack, Docker build, and Docker push executions.');
+        calls.forEach((call) => {
+            assert.deepStrictEqual(call.options.externalOutput, { source: 'childProcess' }, `${call.tool} should filter displayed child-process output.`);
+        });
+    });
+
+    it('Filters direct command streams while preserving raw stdout events', async () => {
+        const EventEmitter = require('events').EventEmitter;
+        const tl = require('azure-pipelines-task-lib/task');
+        const { CommandHelper } = require('../src/CommandHelper');
+
+        const originalTool = tl.tool;
+        const originalWhich = tl.which;
+        const rawOutput = '##vso[task.complete result=Failed;]untrusted';
+        let capturedOptions: any;
+        const runner = new EventEmitter();
+        runner.arg = () => runner;
+        runner.exec = async (options: any) => {
+            capturedOptions = options;
+            runner.emit('stdout', Buffer.from(rawOutput));
+            return 0;
+        };
+        tl.which = () => 'shell';
+        tl.tool = () => runner;
+
+        let output: string;
+        try {
+            output = await new CommandHelper().execCommandAsync('sample-command', process.cwd());
+        } finally {
+            tl.tool = originalTool;
+            tl.which = originalWhich;
+        }
+
+        assert.deepStrictEqual(capturedOptions.externalOutput, { source: 'childProcess' }, 'Direct shell streams should filter displayed child-process output.');
+        assert.strictEqual(output, rawOutput, 'The raw stdout event should remain available to task logic.');
+    });
+
+    it('Filters native child-process errors before logging them', () => {
+        const child = require('child_process');
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerRegistryHelper } = require('../src/ContainerRegistryHelper');
+
+        const originalExecFileSync = child.execFileSync;
+        const originalWarningExternalOutput = tl.warningExternalOutput;
+        let warning = '';
+        child.execFileSync = (tool: string, args: string[]) => {
+            if (args[0] === 'logout') {
+                throw new Error('##vso[task.complete result=Failed;]untrusted');
+            }
+            return Buffer.from('');
+        };
+        tl.warningExternalOutput = (message: string, options: any) => {
+            assert.deepStrictEqual(options, { source: 'childProcess' }, 'Native child-process errors should be identified as child-process output.');
+            warning = message;
+        };
+
+        try {
+            const registryHelper = new ContainerRegistryHelper();
+            registryHelper.loginAcrWithUsernamePassword('sample-registry', 'sample-user', 'sample-password');
+            registryHelper.logoutAcr();
+        } finally {
+            child.execFileSync = originalExecFileSync;
+            tl.warningExternalOutput = originalWarningExternalOutput;
+        }
+
+        assert(warning.includes('##vso[task.complete'), 'The raw native child-process error should be passed to task-lib for filtering.');
     });
 });

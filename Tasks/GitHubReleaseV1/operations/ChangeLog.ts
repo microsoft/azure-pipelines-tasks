@@ -1,17 +1,19 @@
-import tl = require("azure-pipelines-task-lib/task");
 import util = require("util");
+import os = require("os");
+
+import tl = require("azure-pipelines-task-lib/task");
+
 import { Utility, GitHubAttributes, IRepositoryIssueId, Delimiters, AzureDevOpsVariables, ChangeLogStartCommit, GitHubIssueState, ChangeLogType } from "./Utility";
 import { Release } from "./Release";
 import { Helper } from "./Helper";
 
 export class ChangeLog {
-
     /**
      * Returns the change log.
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param target 
-     * @param top 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param target
+     * @param top
      * @param compareWithRelease
      * @param changeLogType
      * @param changeLogCompareToReleaseTag
@@ -29,12 +31,12 @@ export class ChangeLog {
         // Get the curent commit.
         let endCommitSha: string = await new Helper().getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
         //Get the start commit.
-        let startCommitSha: string = await this.getStartCommitSha(githubEndpointToken, repositoryName, endCommitSha, top,compareWithRelease, changeLogCompareToReleaseTag);
+        let startCommitSha: string = await this.getStartCommitSha(githubEndpointToken, repositoryName, endCommitSha, top, compareWithRelease, changeLogCompareToReleaseTag);
         // Compare the diff between 2 commits.
-        tl.debug("start commit: "+ startCommitSha + "; end commit: "+ endCommitSha);
+        tl.debug("start commit: " + startCommitSha + "; end commit: " + endCommitSha);
         console.log(tl.loc("FetchCommitDiff"));
         let commitsListResponse = await release.getCommitsList(githubEndpointToken, repositoryName, startCommitSha, endCommitSha);
-        tl.debug("Get commits list response: " + JSON.stringify(commitsListResponse));
+        tl.debugExternalOutput("Get commits list response: " + JSON.stringify(commitsListResponse), { source: "remote" });
 
         if (commitsListResponse.statusCode === 200) {
             // If end commit is older than start commit i.e. Rollback scenario, we will not show any change log.
@@ -53,12 +55,12 @@ export class ChangeLog {
 
                 console.log(tl.loc("FetchCommitDiffSuccess"));
                 // Reversing commits as commits retrieved are in oldest first order
-                commits = commits.reverse(); 
+                commits = commits.reverse();
 
                 // Only show changeLog for top X commits, where X = top
                 // Form the commitId to issues dictionary
                 let commitIdToMessageDictionary: { [key: string]: string } = this._getCommitIdToMessageDictionary(commits.length > top ? commits.slice(0, top) : commits);
-                tl.debug("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary));
+                tl.debugExternalOutput("commitIdToMessageDictionary: " + JSON.stringify(commitIdToMessageDictionary), { source: "repository" });
 
                 let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = this._getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary, repositoryName);
                 tl.debug("commitIdToRepoIssueIdsDictionary: " + JSON.stringify(commitIdToRepoIssueIdsDictionary));
@@ -66,7 +68,7 @@ export class ChangeLog {
                     return this._getCommitBasedChangeLog(commitIdToRepoIssueIdsDictionary, commitIdToMessageDictionary, repositoryName);
                 }
                 else {
-                    let issues = new Set([]);
+                    let issues = new Set<number>([]);
                     Object.keys(commitIdToRepoIssueIdsDictionary).forEach((commitId: string) => {
                         if (issues.size >= top) {
                             return;
@@ -92,19 +94,19 @@ export class ChangeLog {
                 }
             }
         }
-        else{
+        else {
             tl.error(tl.loc("FetchCommitDiffError"));
             throw new Error(commitsListResponse.body[GitHubAttributes.message]);
         }
     }
-     /**
-     * Generate issue based ChangeLog
-     * @param issues
-     * @param repositoryName 
-     * @param release 
-     * @param githubEndpointToken
-     * @param labels
-     */
+    /**
+    * Generate issue based ChangeLog
+    * @param issues
+    * @param repositoryName
+    * @param release
+    * @param githubEndpointToken
+    * @param labels
+    */
     private async _getIssueBasedChangeLog(issues: number[], repositoryName: string, release: Release, githubEndpointToken: string, labels: any[]) {
 
         if (issues.length === 0) {
@@ -117,7 +119,7 @@ export class ChangeLog {
             let graphQLErrors = issuesListResponse.body?.errors;
             if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(graphQLErrors));
+                tl.warningExternalOutput(JSON.stringify(graphQLErrors), { source: "remote" });
                 return "";
             }
             else {
@@ -127,15 +129,15 @@ export class ChangeLog {
                 let index = 0;
                 this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
-                tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
+                tl.debugExternalOutput("issuesListResponse: " + JSON.stringify(issuesList), { source: "remote" });
                 let labelsRankDictionary = this._getLabelsRankDictionary(labels);
                 tl.debug("labelsRankDictionary: " + JSON.stringify(labelsRankDictionary));
                 let groupedIssuesDictionary = this._getGroupedIssuesDictionary(labelsRankDictionary, issuesList, labels);
-                tl.debug("Group wise issues : " + JSON.stringify(groupedIssuesDictionary));
+                tl.debugExternalOutput("Group wise issues : " + JSON.stringify(groupedIssuesDictionary), { source: "remote" });
                 Object.keys(groupedIssuesDictionary).forEach((group: string) => {
                     if (groupedIssuesDictionary[group].length === 0) return;
                     //If the only category is the default cateogry, don't add the category title.
-                    if (index > 0 || group!= this._defaultGroup){
+                    if (index > 0 || group != this._defaultGroup) {
                         let changeLogGroupTitle = util.format(this._groupTitleFormat, group);
                         if (index >= this._changeLogVisibleLimit) {
                             seeMoreChangeLog = seeMoreChangeLog + changeLogGroupTitle + Delimiters.newLine;
@@ -163,15 +165,15 @@ export class ChangeLog {
         }
         else {
             console.log(tl.loc("IssuesFetchError"));
-            tl.warning(issuesListResponse.body[GitHubAttributes.message]);
+            tl.warningExternalOutput(issuesListResponse.body[GitHubAttributes.message], { source: "remote" });
             return "";
         }
     }
     /**
      * Generate all issue based ChangeLog without labels
      * @param issues
-     * @param repositoryName 
-     * @param release 
+     * @param repositoryName
+     * @param release
      * @param githubEndpointToken
      */
     private async _getAllIssuesChangeLog(issues: number[], repositoryName: string, release: Release, githubEndpointToken: string) {
@@ -186,7 +188,7 @@ export class ChangeLog {
             let graphQLErrors = issuesListResponse.body?.errors;
             if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(graphQLErrors));
+                tl.warningExternalOutput(JSON.stringify(graphQLErrors), { source: "remote" });
                 return "";
             }
             else {
@@ -195,7 +197,7 @@ export class ChangeLog {
                 let seeMoreChangeLog: string = "";
                 this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
                 let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
-                tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
+                tl.debugExternalOutput("issuesListResponse: " + JSON.stringify(issuesList), { source: "remote" });
                 Object.keys(issuesList).forEach((key: string, index: number) => {
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
                     // See more functionality
@@ -213,17 +215,17 @@ export class ChangeLog {
         }
         else {
             console.log(tl.loc("IssuesFetchError"));
-            tl.warning(issuesListResponse.body[GitHubAttributes.message]);
+            tl.warningExternalOutput(issuesListResponse.body[GitHubAttributes.message], { source: "remote" });
             return "";
         }
     }
     /**
      * Generate commit based ChangeLog
-     * @param commitIdToRepoIssueIdsDictionary 
-     * @param commitIdToMessageDictionary 
-     * @param repositoryName 
+     * @param commitIdToRepoIssueIdsDictionary
+     * @param commitIdToMessageDictionary
+     * @param repositoryName
      */
-    private async _getCommitBasedChangeLog(commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> }, commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string){
+    private async _getCommitBasedChangeLog(commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> }, commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string) {
         let changeLog: string = "";
         let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
         let seeMoreChangeLog: string = "";
@@ -247,10 +249,10 @@ export class ChangeLog {
     }
     /**
      * Returns the start commit needed to compute ChangeLog.
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param endCommitSha 
-     * @param top 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param endCommitSha
+     * @param top
      * @param compareWithRelease
      * @param changeLogCompareToReleaseTag
      */
@@ -262,7 +264,7 @@ export class ChangeLog {
             // Get the latest published release to compare the changes with.
             console.log(tl.loc("FetchLatestPublishRelease"));
             let latestReleaseResponse = await release.getLatestRelease(githubEndpointToken, repositoryName);
-            tl.debug("Get latest release response: " + JSON.stringify(latestReleaseResponse));
+            tl.debugExternalOutput("Get latest release response: " + JSON.stringify(latestReleaseResponse), { source: "remote" });
             // Get the start commit.
             // Release has target_commitsh property but it can be branch name also.
             // Hence if a release is present, then get the tag and find its corresponding commit.
@@ -273,10 +275,10 @@ export class ChangeLog {
             }
             else if (latestReleaseResponse.statusCode !== 404 && latestReleaseResponse.body && !!latestReleaseResponse.body[GitHubAttributes.tagName]) {
                 let latestReleaseTag: string = latestReleaseResponse.body[GitHubAttributes.tagName];
-                tl.debug("latest release tag: " + latestReleaseTag);
+                tl.debugExternalOutput("latest release tag: " + latestReleaseTag, { source: "remote" });
 
                 let latestReleaseUrl: string = latestReleaseResponse.body[GitHubAttributes.htmlUrl];
-                console.log(tl.loc("FetchLatestPublishReleaseSuccess", latestReleaseUrl));
+                tl.writeExternalOutput(tl.loc("FetchLatestPublishReleaseSuccess", latestReleaseUrl) + os.EOL, { source: "remote" });
                 startCommitSha = await this._getCommitForTag(githubEndpointToken, repositoryName, latestReleaseTag);
             }
             else {
@@ -324,13 +326,13 @@ export class ChangeLog {
 
     /**
      * Returns latest release satisfying the given comparer.
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param comparer 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param comparer
      */
-    public async getLastReleaseTag(githubEndpointToken: string, repositoryName: string, comparer:(release: any)=> boolean): Promise<string> {
+    public async getLastReleaseTag(githubEndpointToken: string, repositoryName: string, comparer: (release: any) => boolean): Promise<string> {
         let release = new Release();
-        
+
         // Fetching all releases in the repository. Sorted in descending order according to 'created_at' attribute.
         let releasesResponse = await release.getReleases(githubEndpointToken, repositoryName);
         let links: { [key: string]: string } = {};
@@ -338,11 +340,11 @@ export class ChangeLog {
         // Fetching releases api call may end up in paginated results.
         // Traversing all the pages and filtering all the releases with given tag.
         while (true) {
-            tl.debug("Get releases response: " + JSON.stringify(releasesResponse));
+            tl.debugExternalOutput("Get releases response: " + JSON.stringify(releasesResponse), { source: "remote" });
 
             let startRelease: any;
             //404 is returned when there are no releases.
-            if (releasesResponse.statusCode !== 200 && releasesResponse.statusCode !== 404){
+            if (releasesResponse.statusCode !== 200 && releasesResponse.statusCode !== 404) {
                 tl.error(tl.loc("GetLatestReleaseError"));
                 throw new Error(releasesResponse.body[GitHubAttributes.message]);
             }
@@ -365,13 +367,13 @@ export class ChangeLog {
             //If status code is 404 or there are no releases satisfying the constraints return null.
             return null;
         }
-    } 
+    }
 
     /**
      * Returns the commit for provided tag
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param tag 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param tag
      */
     private async _getCommitForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<string> {
         let filteredTag: any = await new Helper().filterTag(githubEndpointToken, repositoryName, tag, this._filterTagsByTagName);
@@ -381,9 +383,9 @@ export class ChangeLog {
 
     /**
      * Returns a commit which is 'X' (top) commits older than the provided commit sha.
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param sha 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param sha
      */
     private async _getInitialCommit(githubEndpointToken: string, repositoryName: string, sha: string, top: number): Promise<string> {
         let release = new Release();
@@ -395,15 +397,15 @@ export class ChangeLog {
         let links: { [key: string]: string } = {};
         let commits: any[] = [];
 
-        while(true) {
-            tl.debug("Get initial commit response: " + JSON.stringify(commitsForGivenShaResponse));
+        while (true) {
+            tl.debugExternalOutput("Get initial commit response: " + JSON.stringify(commitsForGivenShaResponse), { source: "remote" });
 
             if (commitsForGivenShaResponse.statusCode === 200) {
                 // Returned commits are in latest first order and first commit is the commit queried itself.
                 (commitsForGivenShaResponse.body || []).forEach(commit => {
                     commits.push(commit);
                 });
-    
+
                 if (commits.length >= top) {
                     // Return 250th commit
                     return commits[top - 1][GitHubAttributes.sha];
@@ -431,7 +433,7 @@ export class ChangeLog {
 
     /**
      * Returns a dictionary of { commitId to commit message }.
-     * @param commits 
+     * @param commits
      */
     private _getCommitIdToMessageDictionary(commits: any[]): { [key: string]: string } {
         let commitIdToMessageDictionary: { [key: string]: string } = {};
@@ -445,8 +447,8 @@ export class ChangeLog {
 
     /**
      * Returns a dictionary of { commitId to repoIssueIds }.
-     * @param commitIdToMessageDictionary 
-     * @param repositoryName 
+     * @param commitIdToMessageDictionary
+     * @param repositoryName
      */
     private _getCommitIdToRepoIssueIdsDictionary(commitIdToMessageDictionary: { [key: string]: string }, repositoryName: string): { [key: string]: Set<string> } {
         let commitIdToRepoIssueIdsDictionary: { [key: string]: Set<string> } = {};
@@ -463,17 +465,17 @@ export class ChangeLog {
      * Returns a dictionary of { key to displayname, rank }.
      * Key is labelname#issuestate
      * This dictionary is used to find the label with highest priority.
-     * @param labels 
+     * @param labels
      */
-    private _getLabelsRankDictionary(labels: any[]){
+    private _getLabelsRankDictionary(labels: any[]) {
         let labelsRankDictionary = {};
-        for (let index = 0; index < labels.length; index++){
+        for (let index = 0; index < labels.length; index++) {
             if (!labels[index].label || !labels[index].displayName) continue;
             let label = labels[index].label;
             let issueState = labels[index].state || this._noStateSpecified;
-            let key = (label+ Delimiters.hash +issueState).toLowerCase();
-            if (!labelsRankDictionary[key]){
-                labelsRankDictionary[key] = {displayName: labels[index].displayName, rank: index};
+            let key = (label + Delimiters.hash + issueState).toLowerCase();
+            if (!labelsRankDictionary[key]) {
+                labelsRankDictionary[key] = { displayName: labels[index].displayName, rank: index };
             }
         }
         return labelsRankDictionary;
@@ -482,10 +484,10 @@ export class ChangeLog {
     /**
      * Returns a dictionary of { groupname to issues }.
      * This dictionary is used to find all the issues under a display name.
-     * @param labelsRankDictionary 
-     * @param issuesList 
+     * @param labelsRankDictionary
+     * @param issuesList
      */
-    private _getGroupedIssuesDictionary(labelsRankDictionary, issuesList, labels){
+    private _getGroupedIssuesDictionary(labelsRankDictionary, issuesList, labels) {
         let labelsIssuesDictionary = {};
         labels.forEach(label => {
             if (!label.displayName) return;
@@ -497,29 +499,29 @@ export class ChangeLog {
             let currentLabelRank: number = Number.MAX_SAFE_INTEGER;
             let issueState = issuesList[issue].state;
             //For Pull Requests, show only Merged PRs, Ignore Closed PRs
-            if (!!issuesList[issue].changedFiles){
-                if(issueState.toLowerCase() === GitHubIssueState.merged.toLowerCase()){
+            if (!!issuesList[issue].changedFiles) {
+                if (issueState.toLowerCase() === GitHubIssueState.merged.toLowerCase()) {
                     issueState = GitHubIssueState.closed;
                 }
-                else if (issueState.toLowerCase() === GitHubIssueState.closed.toLowerCase()){
+                else if (issueState.toLowerCase() === GitHubIssueState.closed.toLowerCase()) {
                     return;
                 }
             }
             issuesList[issue].labels.edges && issuesList[issue].labels.edges.forEach(labelDetails => {
                 let key = (labelDetails.node.name + Delimiters.hash + issueState).toLowerCase();
-                if(!labelsRankDictionary[key]) {
+                if (!labelsRankDictionary[key]) {
                     key = (labelDetails.node.name + Delimiters.hash + this._noStateSpecified).toLowerCase();
                 }
 
-                if (labelsRankDictionary[key] && labelsRankDictionary[key].rank < currentLabelRank){
+                if (labelsRankDictionary[key] && labelsRankDictionary[key].rank < currentLabelRank) {
                     group = labelsRankDictionary[key].displayName;
                     currentLabelRank = labelsRankDictionary[key].rank;
                 }
             });
-            if (currentLabelRank === Number.MAX_SAFE_INTEGER){
+            if (currentLabelRank === Number.MAX_SAFE_INTEGER) {
                 group = this._defaultGroup; //Default category
             }
-            labelsIssuesDictionary[group].push({"issue": issuesList[issue].title, "id": issue.substr(1)});
+            labelsIssuesDictionary[group].push({ "issue": issuesList[issue].title, "id": issue.substr(1) });
         });
         return labelsIssuesDictionary;
     }
@@ -528,9 +530,9 @@ export class ChangeLog {
      * Returns the log for a single issue.
      * Log format: * #issueId: issueTitle
      * @param issueId
-     * @param issueTitle 
+     * @param issueTitle
      */
-    private _getChangeLogPerIssue(issueId: number | string, issueTitle: string){
+    private _getChangeLogPerIssue(issueId: number | string, issueTitle: string) {
         return Delimiters.star + Delimiters.space + Delimiters.hash + issueId + Delimiters.colon + Delimiters.space + issueTitle;
     }
 
@@ -559,7 +561,7 @@ export class ChangeLog {
         }
         return definedErrors.every(error => {
             let errorType = error.type || error.extensions?.type || error.extensions?.code;
-            tl.debug("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"));
+            tl.debugExternalOutput("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"), { source: "remote" });
             return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
         });
     }
@@ -613,8 +615,8 @@ export class ChangeLog {
     /**
      * Returns a unique set of repository#issueId string for each issue mentioned in the commit.
      * repository#issueId string is needed as issues can be of cross repository.
-     * @param message 
-     * @param repositoryName 
+     * @param message
+     * @param repositoryName
      */
     private _getRepoIssueIdFromCommitMessage(message: string, repositoryName: string): Set<string> {
         let match = undefined;
@@ -653,10 +655,10 @@ export class ChangeLog {
     /**
      * Returns the log for a single commit.
      * Log format: * commitId commitMessageTitle, [ #issueId1, #issueId2 ]
-     * @param commitId 
-     * @param commitMessage 
-     * @param repoIssueIdSet 
-     * @param repositoryName 
+     * @param commitId
+     * @param commitMessage
+     * @param repoIssueIdSet
+     * @param repositoryName
      */
     private _getChangeLogPerCommit(commitId: string, commitMessage: string, repoIssueIdSet: Set<string>, repositoryName: string): string {
         // GitHub commit messages have description as well alongwith title.
@@ -716,7 +718,7 @@ export class ChangeLog {
         if (topXChangeLog) {
             changeLog = util.format(this._changeLogTitleFormat, this._changeLogTitle) + topXChangeLog;
 
-            if(!seeMoreChangeLog) {
+            if (!seeMoreChangeLog) {
                 changeLog = changeLog + Delimiters.newLine + this._getAutoGeneratedText();
             }
             else {
@@ -740,7 +742,7 @@ export class ChangeLog {
             if (collectionUri.endsWith(Delimiters.slash)) {
                 collectionUri = collectionUri.slice(0, collectionUri.length - 1);
             }
-            
+
             let teamProject: string = tl.getVariable(AzureDevOpsVariables.teamProject);
             let buildId: string = tl.getVariable(AzureDevOpsVariables.buildId);
 

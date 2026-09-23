@@ -554,4 +554,14 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             
         }
     });
+
+    it('filters Jenkins API-controlled output', async () => {
+        const tp: string = path.join(__dirname, 'L0FiltersJenkinsApiOutput.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.stdout.includes('##_vso[task.setvariable variable=jenkinsInjected]unsafe'), tr.stdout);
+        assert(!tr.stdout.includes('##vso[task.setvariable variable=jenkinsInjected]unsafe'), tr.stdout);
+    });
 });

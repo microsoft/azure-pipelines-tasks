@@ -1,6 +1,8 @@
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as child from 'child_process';
-import { Utility } from './Utility';
+import * as child from "child_process";
+
+import * as tl from "azure-pipelines-task-lib/task";
+
+import { childProcessOutputOptions, Utility } from "./Utility";
 
 export class ContainerRegistryHelper {
     // Tracks the ACR login servers (e.g. "myregistry.azurecr.io") that this task has authenticated
@@ -13,7 +15,7 @@ export class ContainerRegistryHelper {
      * @param acrUsername - the username for authentication
      * @param acrPassword - the password for authentication
      */
-     public loginAcrWithUsernamePassword(acrName: string, acrUsername: string, acrPassword: string) {
+    public loginAcrWithUsernamePassword(acrName: string, acrUsername: string, acrPassword: string) {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with username and password credentials`);
         const registry = `${acrName}.azurecr.io`;
         try {
@@ -34,7 +36,7 @@ export class ContainerRegistryHelper {
      * the 'az acr login --expose-token' command.
      * @param acrName - the name of the ACR instance to authenticate calls to.
      */
-     public async loginAcrWithAccessTokenAsync(acrName: string) {
+    public async loginAcrWithAccessTokenAsync(acrName: string) {
         tl.debug(`Attempting to log in to ACR instance "${acrName}" with access token`);
         const registry = `${acrName}.azurecr.io`;
         try {
@@ -72,7 +74,10 @@ export class ContainerRegistryHelper {
             try {
                 child.execFileSync('docker', ['logout', registry], { stdio: 'pipe' });
             } catch (err) {
-                tl.warning(tl.loc('AcrLogoutFailed', registry, err.message));
+                tl.warningExternalOutput(
+                    tl.loc('AcrLogoutFailed', registry, err.message),
+                    childProcessOutputOptions.externalOutput
+                );
             }
         }
 
@@ -83,11 +88,11 @@ export class ContainerRegistryHelper {
      * Pushes an image to the ACR instance that was previously authenticated against.
      * @param imageToPush - the name of the image to push to ACR
      */
-     public pushImageToAcr(imageToPush: string) {
+    public pushImageToAcr(imageToPush: string) {
         tl.debug(`Attempting to push image "${imageToPush}" to ACR`);
         try {
             new Utility().throwIfError(
-                tl.execSync('docker', `push ${imageToPush}`),
+                tl.execSync('docker', `push ${imageToPush}`, childProcessOutputOptions),
                 tl.loc('PushImageToAcrFailed', imageToPush)
             );
         } catch (err) {

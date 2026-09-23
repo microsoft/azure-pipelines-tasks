@@ -1,5 +1,11 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import { IExecSyncOptions, IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+
+export const childProcessOutputOptions: IExecSyncOptions = {
+    externalOutput: {
+        source: 'childProcess'
+    }
+};
 
 export class Utility {
     /**
@@ -8,7 +14,7 @@ export class Utility {
      * @param resultOfToolExecution - the result of the command that was previously executed
      * @param errormsg - the error message to display if the command failed
      */
-     public throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
+    public throwIfError(resultOfToolExecution: IExecSyncResult, errormsg?: string): void {
         if (resultOfToolExecution.code !== 0) {
             tl.error(tl.loc('ErrorCodeFormat', resultOfToolExecution.code));
             if (errormsg) {
@@ -24,9 +30,9 @@ export class Utility {
      */
     public setAzureCliDynamicInstall() {
         this.throwIfError(
-            tl.execSync('az', 'config set extension.use_dynamic_install=yes_without_prompt'),
+            tl.execSync('az', 'config set extension.use_dynamic_install=yes_without_prompt', childProcessOutputOptions),
             tl.loc('AzureCliDynamicInstallFailed')
-            );
+        );
     }
 
     /**
