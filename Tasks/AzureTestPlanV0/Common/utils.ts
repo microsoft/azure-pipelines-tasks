@@ -88,6 +88,80 @@ export function separatePlaywrightTestName(inputString) {
     }
 }
 
+export interface PlaywrightResolvedTests {
+    locations: string[];
+    unmatched: string[];
+}
+
+/*
+    Resolves automated test names to Playwright test locations ("file:line")
+    using the `playwright test --list --reporter=json` report.
+    Supported name formats:
+    - '›'-joined title paths ("sample.spec.ts › Suite › test title"),
+      matched exactly against the tail of the spec's title path
+    - "<path>.<test title>", matched exactly by leaf title
+    - fallback: last-dot-truncated substring match
+*/
+export function resolvePlaywrightTestLocations(listReport: any, automatedTestNames: string[]): PlaywrightResolvedTests {
+    interface FlatSpec { titlePath: string[]; file: string; line: number; }
+    const flatSpecs: FlatSpec[] = [];
+
+    const walk = (suite: any, ancestors: string[]) => {
+        const titlePath = suite && suite.title ? ancestors.concat([suite.title]) : ancestors;
+        for (const spec of (suite && suite.specs) || []) {
+            flatSpecs.push({ titlePath: titlePath.concat([spec.title]), file: spec.file, line: spec.line });
+        }
+        for (const child of (suite && suite.suites) || []) {
+            walk(child, titlePath);
+        }
+    };
+    for (const suite of (listReport && listReport.suites) || []) {
+        walk(suite, []);
+    }
+
+    const locations = new Set<string>();
+    const unmatched: string[] = [];
+
+    for (const storedName of automatedTestNames) {
+        let matches: FlatSpec[] = [];
+
+        const parts = storedName.split('›').map((p: string) => p.trim()).filter((p: string) => p.length > 0);
+        if (parts.length > 1) {
+            // '›'-joined title path: exact tail match.
+            matches = flatSpecs.filter(s => {
+                if (parts.length > s.titlePath.length) {
+                    return false;
+                }
+                const tail = s.titlePath.slice(s.titlePath.length - parts.length);
+                return tail.every((t, i) => t === parts[i]);
+            });
+        } else {
+            // "<path>.<test title>" or bare title: exact leaf-title match.
+            const leafTitle = separatePlaywrightTestName(storedName);
+            matches = flatSpecs.filter(s => {
+                const specTitle = s.titlePath[s.titlePath.length - 1];
+                return specTitle === storedName || specTitle === leafTitle;
+            });
+        }
+
+        if (matches.length === 0) {
+            // Fallback: truncated substring match.
+            const legacyName = separatePlaywrightTestName(storedName);
+            matches = flatSpecs.filter(s => s.titlePath.join(' ').includes(legacyName));
+        }
+
+        if (matches.length === 0) {
+            unmatched.push(storedName);
+            continue;
+        }
+        for (const m of matches) {
+            locations.add(`${m.file}:${m.line}`);
+        }
+    }
+
+    return { locations: Array.from(locations), unmatched: unmatched };
+}
+
 export function getExecOptions(output?: { stdout: string }): tr.IExecOptions {
     const env = process.env;
 
