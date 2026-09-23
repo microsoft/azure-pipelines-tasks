@@ -60,9 +60,6 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.allowsQuotedDoubleDashValue should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.allowsQuotedDoubleDashValue should have passed.');
         assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorInFirewallCheck should have passed.');
         assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorForFileTask should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsOptionTerminatorForFileTask should have passed.');
-        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsCommandsOption should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsCommandsOption should have passed.');
-        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsEnabledCommandsOptionForFileTask should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsEnabledCommandsOptionForFileTask should have passed.');
-        assert(tr.stdOutContained('MysqlClientUnsupportedOptionsL0Tests.rejectsDisabledCommandsOption should have passed.'), 'Should have printed: MysqlClientUnsupportedOptionsL0Tests.rejectsDisabledCommandsOption should have passed.');
     });
 
     it('AzureMySqlDeployment MysqlClientFileExec', async () => {

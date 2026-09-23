@@ -11,8 +11,7 @@ import * as child_process from 'child_process';
 export type SpawnFn = typeof child_process.spawn;
 
 const unsupportedAdditionalOptions = new Set<string>([
-    '--',
-    '--commands'
+    '--'
 ]);
 
 export class MysqlClient implements ISqlClient {

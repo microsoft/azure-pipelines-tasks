@@ -108,28 +108,6 @@ export class MysqlClientUnsupportedOptionsL0Tests {
             }).executeSqlCommand()
         );
 
-        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
-            'rejectsCommandsOption',
-            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
-                getSqlAdditionalArguments: () => '--commands'
-            }).executeSqlCommand()
-        );
-
-        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
-            'rejectsEnabledCommandsOptionForFileTask',
-            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
-                getTaskNameSelector: () => 'SqlFile',
-                getSqlFile: () => '/tmp/does-not-matter.sql',
-                getSqlAdditionalArguments: () => '--commands=ON'
-            }).executeSqlCommand()
-        );
-
-        await MysqlClientUnsupportedOptionsL0Tests.expectRejected(
-            'rejectsDisabledCommandsOption',
-            () => MysqlClientUnsupportedOptionsL0Tests.makeClient({
-                getSqlAdditionalArguments: () => '--commands=OFF'
-            }).executeSqlCommand()
-        );
     }
 }
 
