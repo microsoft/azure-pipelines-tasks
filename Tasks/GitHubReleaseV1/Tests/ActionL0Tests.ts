@@ -1,4 +1,5 @@
 import { Action } from "../operations/Action";
+import { Utility } from "../operations/Utility";
 
 export class ActionL0Tests {
 
@@ -10,6 +11,7 @@ export class ActionL0Tests {
         await this.validateEditReleaseActionWithMakeLatestTrue();
         await this.validateEditReleaseActionWithMakeLatestLegacy();
         await this.validateDeleteReleaseAction();
+        await this.validateAssetPathLogging();
     }
 
     public static async validateCreateReleaseAction() {
@@ -38,6 +40,39 @@ export class ActionL0Tests {
 
     public static async validateDeleteReleaseAction() {
         await new Action().deleteReleaseAction("endpoint", "repo", "tag");
+    }
+
+    public static async validateAssetPathLogging() {
+        const injectedAssetPath = [
+            "release-assets/ordinary-prefix",
+            "##vso[task.setvariable variable=PATH]attacker-bin",
+            "##vso[task.complete result=Succeeded;done=true;]/asset.bin"
+        ].join("\n");
+        const originalGetUploadAssets = Utility.getUploadAssets;
+        const originalIsPatternADirectory = Utility.isPatternADirectory;
+        const originalIsFile = Utility.isFile;
+        const originalValidateUploadAssets = Utility.validateUploadAssets;
+
+        Utility.getUploadAssets = () => [injectedAssetPath];
+        Utility.isPatternADirectory = () => false;
+        Utility.isFile = () => true;
+        Utility.validateUploadAssets = () => { };
+
+        try {
+            await (new Action() as any)._uploadAssetsForGivenPattern(
+                "endpoint",
+                "repo",
+                "upload-url",
+                [],
+                "release-assets/**",
+                "replace"
+            );
+        } finally {
+            Utility.getUploadAssets = originalGetUploadAssets;
+            Utility.isPatternADirectory = originalIsPatternADirectory;
+            Utility.isFile = originalIsFile;
+            Utility.validateUploadAssets = originalValidateUploadAssets;
+        }
     }
 }
 

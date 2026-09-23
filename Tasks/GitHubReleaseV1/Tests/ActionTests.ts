@@ -42,7 +42,8 @@ export class ActionTests {
                             statusCode: 204
                         }
                     },
-                    uploadReleaseAsset: function () {
+                    uploadReleaseAsset: function (githubEndpointToken: string, filePath: string) {
+                        console.log("[MOCK] remote asset name: " + path.basename(filePath));
                         return {
                             statusCode: 201
                         }

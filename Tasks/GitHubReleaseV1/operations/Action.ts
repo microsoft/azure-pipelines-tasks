@@ -191,19 +191,19 @@ export class Action {
 
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
-            console.log(tl.loc("UploadingAsset", asset));
+            tl.writeExternalOutput(tl.loc("UploadingAsset", asset) + os.EOL, { source: "repository" });
 
             let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
             tl.debugExternalOutput("Upload asset response: " + JSON.stringify(uploadResponse), { source: "remote" });
 
             if (uploadResponse.statusCode === 201) {
-                console.log(tl.loc("UploadAssetSuccess", asset));
+                tl.writeExternalOutput(tl.loc("UploadAssetSuccess", asset) + os.EOL, { source: "repository" });
             }
             else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === this._alreadyExistErrorCode) {
 
                 if (assetUploadMode === AssetUploadMode.replace) {
-                    console.log(tl.loc("DuplicateAssetFound", asset));
-                    console.log(tl.loc("DeletingDuplicateAsset", asset));
+                    tl.writeExternalOutput(tl.loc("DuplicateAssetFound", asset) + os.EOL, { source: "repository" });
+                    tl.writeExternalOutput(tl.loc("DeletingDuplicateAsset", asset) + os.EOL, { source: "repository" });
 
                     const fileName = path.basename(asset);
 
@@ -216,7 +216,7 @@ export class Action {
                     }
                 }
                 else {
-                    console.log(tl.loc("SkipDuplicateAssetFound", asset));
+                    tl.writeExternalOutput(tl.loc("SkipDuplicateAssetFound", asset) + os.EOL, { source: "repository" });
                 }
             }
             else {

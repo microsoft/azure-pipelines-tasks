@@ -143,6 +143,11 @@ describe('GitHubReleaseTaskTests Suite', function () {
                 assert(tr.stdout.search(TestString.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.deleteReleaseSuccessKeyword);
                 assert(tr.stdout.includes("##_vso[task.setvariable variable=githubReleaseInjected]unsafe"), "GitHub release output should be filtered");
                 assert(!tr.stdout.includes("##vso[task.setvariable variable=githubReleaseInjected]unsafe"), "GitHub release output should not contain executable commands");
+                assert(tr.stdout.includes("##_vso[task.setvariable variable=PATH]attacker-bin"), "asset paths should neutralize injected PATH commands");
+                assert(tr.stdout.includes("##_vso[task.complete result=Succeeded;done=true;]/asset.bin"), "asset paths should neutralize injected task completion commands");
+                assert(!tr.stdout.includes("##vso[task.setvariable variable=PATH]attacker-bin"), "asset paths should not expose executable PATH commands");
+                assert(!tr.stdout.includes("##vso[task.complete result=Succeeded;done=true;]/asset.bin"), "asset paths should not expose executable task completion commands");
+                assert(tr.stdout.includes("[MOCK] remote asset name: asset.bin"), "the uploaded GitHub asset basename should remain asset.bin");
                 done();
             });
     });
