@@ -198,6 +198,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_MixedRegistrySchemes" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[HTTPS URL과 HTTPS가 아닌 URL을 혼합한 '%s'의 레지스트리는 인증할 수 없습니다. npm 자격 증명은 구성표별로 범위가 지정되지 않습니다. 이 호스트와 포트의 모든 레지스트리에 HTTPS를 사용하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_UnableToGetPackagingUris" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to retrieve packaging service URLs.]]></Val>
@@ -278,6 +287,15 @@
           <Val><![CDATA[No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[feedUrl이 지정되지 않았습니다. .npmrc의 모든 %d 레지스트리에 WIF 자격 증명을 적용하고 있습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Info_SkippingNonHttpsWifRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping WIF authentication for non-HTTPS registry: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[HTTPS가 아닌 레지스트리에 대해 WIF 인증을 건너뛰는 중: %s]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

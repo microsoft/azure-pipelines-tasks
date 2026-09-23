@@ -1272,6 +1272,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.OutputVariableNameChanged" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[출력 변수 이름 '%s'이(가) 변수를 게시할 때 이전에 다른 이름으로 디코딩되거나 잘렸습니다. 이제 선언된 이름이 그대로 사용됩니다. 파이프라인에서 이전 이름을 참조한 경우 선언된 이름으로 업데이트하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.OutputVariableShouldNotBeEmpty" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Output variable should not be empty.]]></Val>
@@ -1439,6 +1448,24 @@
           <Val><![CDATA[Rule %s already exists on the security group '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[규칙 %s이(가) 이미 보안 그룹 '%s'에 있습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[이 작업은 에이전트 버전 '%s'를 실행하고 있으므로 이전 형식을 사용하여 배포 출력 변수가 게시되었습니다. 출력 이름과 값이 에이전트 명령으로 해석되지 않도록 안전한 형식을 사용하여 게시하려면 에이전트 버전 %s 이상이 필요합니다. 안전한 형식을 채택하도록 에이전트를 업그레이드합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 변수가 에이전트에서 백분율 이스케이프를 디코딩하지 못하도록 하는 값으로 설정되어 있기 때문에 배포 출력 변수가 이전 형식으로 게시되었습니다. 해당 변수를 삭제하거나 true로 설정하세요. 그러면 출력 이름과 값이 에이전트 명령으로 해석되지 않는 안전한 형식을 사용할 수 있습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

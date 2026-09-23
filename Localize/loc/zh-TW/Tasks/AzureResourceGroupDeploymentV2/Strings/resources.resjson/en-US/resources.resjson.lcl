@@ -1272,6 +1272,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.OutputVariableNameChanged" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[輸出變數名稱 '%s' 在變數發佈時先前曾被解碼或截斷成不同的名稱。現在會原樣使用宣告的名稱。如果您的管線參考了先前的名稱，請將其更新為宣告的名稱。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.OutputVariableShouldNotBeEmpty" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Output variable should not be empty.]]></Val>
@@ -1439,6 +1448,24 @@
           <Val><![CDATA[Rule %s already exists on the security group '%s']]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[下列安全性群組已有規則 %s: '%s']]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部署輸出變數使用先前的格式發佈，因為此作業執行於代理程式版本 '%s'。若要使用安全格式發佈，必須使用代理程式版本 %s 或更新版本；安全格式可避免輸出名稱和值遭解讀為代理程式命令。請升級代理程式，以採用安全格式。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部署輸出變數使用先前的格式發佈，因為 %s 變數的值會阻止代理程式解碼百分比逸出。移除該變數，或將其設定為 true，以採用安全格式，避免輸出名稱和值遭解讀為代理程式命令。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

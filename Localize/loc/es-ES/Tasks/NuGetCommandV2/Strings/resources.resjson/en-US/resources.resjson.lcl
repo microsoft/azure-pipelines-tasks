@@ -756,6 +756,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_ApiKeyRequiresNuGet76" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[External service connections that use API key authentication require NuGet 7.6 or later. The selected NuGet version is %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Las conexiones de servicios externos que usan la autenticación de clave de API requieren NuGet 7.6 o posterior. La versión de NuGet seleccionada es %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_AutomaticallyVersionReleases" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Autoversion: Getting version number from build option is not supported in releases]]></Val>
