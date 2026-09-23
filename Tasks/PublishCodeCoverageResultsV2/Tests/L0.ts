@@ -2,6 +2,7 @@ import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
+import './CoveragePublisherTests';
 
 describe('PublishCodeCoverageResultsV2 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 15000);
