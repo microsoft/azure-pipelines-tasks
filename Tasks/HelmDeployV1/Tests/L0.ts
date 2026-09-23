@@ -59,8 +59,15 @@ describe("HelmDeployV1 Suite", function () {
 
     after(async () => { });
 
-    it("filters external output for async and sync Helm execution", async function () {
-        const externalOutput = "normal Helm output\n##vso[task.setvariable variable=unsafe]value";
+    it("neutralizes a NODE_OPTIONS logging command rendered from Helm NOTES", async function () {
+        const injectedNodeOptions = "--import=data:text/javascript;base64,Y29uc29sZS5sb2coJ2F0dGFjaycp";
+        const externalOutput = [
+            "Thank you for installing the chart.",
+            `##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`,
+            "Run kubectl get pods to verify the installation."
+        ].join("\n");
+        const neutralizedCommand = `##_vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
+        const executableCommand = `##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
         const execOptions = {
             env: Object.assign({}, process.env, { HELM_TEST_EXTERNAL_OUTPUT: externalOutput })
         };
@@ -74,10 +81,12 @@ describe("HelmDeployV1 Suite", function () {
 
         await command.execCommand(asyncTool, Object.assign({}, execOptions, { outStream: createOutputStream(asyncDisplayedOutput) }));
 
-        assert(asyncDisplayedOutput.join("").includes("normal Helm output"), "normal async output should remain");
-        assert(asyncDisplayedOutput.join("").includes("##_vso[task.setvariable variable=unsafe]value"), "async logging command should be neutralized");
-        assert(!asyncDisplayedOutput.join("").includes("##vso["), "async output should not contain an executable logging command");
-        assert(asyncRawOutput.includes("##vso[task.setvariable variable=unsafe]value"), "async stdout event should remain raw");
+        const asyncDisplay = asyncDisplayedOutput.join("");
+        assert(asyncDisplay.includes("Thank you for installing the chart."), "benign async NOTES output should remain");
+        assert(asyncDisplay.includes("Run kubectl get pods to verify the installation."), "benign async instructions should remain");
+        assert(asyncDisplay.includes(neutralizedCommand), "async NODE_OPTIONS logging command should be neutralized");
+        assert(!asyncDisplay.includes(executableCommand), "async output should not expose the NODE_OPTIONS command to the agent");
+        assert.strictEqual(asyncRawOutput, externalOutput, "async stdout events should preserve raw Helm output");
 
         const syncDisplayedOutput: string[] = [];
         const syncTool = command.createCommand();
@@ -85,10 +94,12 @@ describe("HelmDeployV1 Suite", function () {
 
         const syncResult = command.execCommandSync(syncTool, Object.assign({}, execOptions, { outStream: createOutputStream(syncDisplayedOutput) }));
 
-        assert(syncDisplayedOutput.join("").includes("normal Helm output"), "normal sync output should remain");
-        assert(syncDisplayedOutput.join("").includes("##_vso[task.setvariable variable=unsafe]value"), "sync logging command should be neutralized");
-        assert(!syncDisplayedOutput.join("").includes("##vso["), "sync output should not contain an executable logging command");
-        assert(syncResult.stdout.includes("##vso[task.setvariable variable=unsafe]value"), "sync result should remain raw");
+        const syncDisplay = syncDisplayedOutput.join("");
+        assert(syncDisplay.includes("Thank you for installing the chart."), "benign sync NOTES output should remain");
+        assert(syncDisplay.includes("Run kubectl get pods to verify the installation."), "benign sync instructions should remain");
+        assert(syncDisplay.includes(neutralizedCommand), "sync NODE_OPTIONS logging command should be neutralized");
+        assert(!syncDisplay.includes(executableCommand), "sync output should not expose the NODE_OPTIONS command to the agent");
+        assert.strictEqual(syncResult.stdout, externalOutput, "sync result should preserve raw Helm output for helmOutput");
     });
 
     it("Run successfully with Helm install (version 3) with chart name", async function () {
