@@ -1,10 +1,20 @@
 import * as assert from 'assert';
 import * as path from 'path';
+import * as stream from 'stream';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('AzureContainerAppsV1 Suite', function () {
     this.timeout(60000);
+
+    function createOutputStream(output: string[]): stream.Writable {
+        return new stream.Writable({
+            write(chunk, encoding, callback) {
+                output.push(chunk.toString());
+                callback();
+            }
+        });
+    }
 
     function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
@@ -638,6 +648,51 @@ describe('AzureContainerAppsV1 Suite', function () {
         calls.forEach((call) => {
             assert.deepStrictEqual(call.options.externalOutput, { source: 'childProcess' }, `${call.tool} should filter displayed child-process output.`);
         });
+    });
+
+    it('Neutralizes a BuildKit-prefixed NODE_OPTIONS command from Docker build stderr', () => {
+        const tl = require('azure-pipelines-task-lib/task');
+        const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+
+        const injectedNodeOptions = '--import=data:text/javascript;base64,Y29uc29sZS5sb2coJ2F0dGFjaycp';
+        const dockerStdout = '#9 [2/2] RUN --network=none build-app\n#9 DONE 0.1s\n';
+        const dockerStderr = `#9 0.055 ##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}\n`;
+        const executableCommand = `##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
+        const neutralizedCommand = `##_vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
+        const displayedStdout: string[] = [];
+        const displayedStderr: string[] = [];
+        const originalExecSync = tl.execSync;
+        const originalFeatureEnv = process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'];
+        let rawResult: any;
+
+        tl.execSync = (tool: string, args: any, options: any) => {
+            assert.strictEqual(tool, 'docker', 'Dockerfile builds should invoke Docker.');
+            const script = `process.stdout.write(${JSON.stringify(dockerStdout)});process.stderr.write(${JSON.stringify(dockerStderr)});`;
+            rawResult = originalExecSync.call(tl, process.execPath, ['-e', script], Object.assign({}, options, {
+                outStream: createOutputStream(displayedStdout),
+                errStream: createOutputStream(displayedStderr)
+            }));
+            return rawResult;
+        };
+        process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = 'true';
+
+        try {
+            new ContainerAppHelper(true).createRunnableAppImageFromDockerfile(
+                'sample-image:tag',
+                '/samplepath',
+                '/samplepath/Dockerfile'
+            );
+        } finally {
+            tl.execSync = originalExecSync;
+            process.env['DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH'] = originalFeatureEnv;
+        }
+
+        const displayedError = displayedStderr.join('');
+        assert(displayedStdout.join('').includes('#9 DONE 0.1s'), 'ordinary Docker build output should remain visible.');
+        assert(displayedError.includes('#9 0.055'), 'BuildKit output prefixes should remain visible.');
+        assert(displayedError.includes(neutralizedCommand), 'the NODE_OPTIONS logging command should be neutralized.');
+        assert(!displayedError.includes(executableCommand), 'Docker stderr should not expose the NODE_OPTIONS command to the agent.');
+        assert.strictEqual(rawResult.stderr, dockerStderr, 'raw Docker stderr should remain available to task logic.');
     });
 
     it('Filters direct command streams while preserving raw stdout events', async () => {
