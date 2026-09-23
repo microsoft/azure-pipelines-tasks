@@ -1,11 +1,14 @@
 # Signs the built task files before they are zipped, so signatures ride into every task package.
-# Windows-only (Get-AuthenticodeSignature is Windows-only). node_modules is signed only when signNodeModules is set.
+# Windows-only. node_modules catalogs are generated and signed only when signNodeModules is set.
 parameters:
 - name: tasksRoot
   type: string
 - name: signNodeModules
   type: boolean
   default: false
+- name: catalogGenerationThrottle
+  type: number
+  default: 4
 - name: microsoftSignedListFile
   type: string
   default: '$(Agent.TempDirectory)/microsoft-signed-files.txt'
@@ -24,10 +27,7 @@ steps:
   inputs:
     targetType: 'filePath'
     filePath: ./ci/GetMicrosoftSignedFilesScript.ps1
-    ${{ if parameters.signNodeModules }}:
-      arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }} -IncludeNodeModules'
-    ${{ else }}:
-      arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }}'
+    arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }}'
 
 # Authenticode sign our authored task scripts with the Microsoft certificate.
 - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
@@ -152,124 +152,6 @@ steps:
       }
       ]
 
-- ${{ if parameters.signNodeModules }}:
-  # Sign node_modules binaries.
-  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-    displayName: Sign node_modules Binaries (3rd Party Assemblies Signing)
-    inputs:
-      ConnectedServiceName: $(ConnectedServiceName)
-      UseMSIAuthentication: true
-      AppRegistrationClientId: $(AppRegistrationClientId)
-      AppRegistrationTenantId: $(AppRegistrationTenantId)
-      EsrpClientId: $(EsrpClientId)
-      AuthAKVName: $(AuthAKVName)
-      AuthSignCertName: $(AuthSignCertName)
-      FolderPath: '${{ parameters.tasksRoot }}'
-      Pattern: |
-        **/node_modules/**/*.exe
-        **/node_modules/**/*.dll
-        **/node_modules/**/*.node
-        !**/node_modules/deasync/bin/linux-*/**
-        !**/node_modules/deasync/bin/darwin-*/**
-      UseMinimatch: true
-      signConfigType: inlineSignParams
-      inlineOperation: |
-        [{
-        "keyCode": "CP-231522",
-        "operationSetCode": "SigntoolSign",
-        "parameters": [{
-        "parameterName": "OpusName",
-        "parameterValue": "Microsoft"
-        },
-        {
-        "parameterName": "OpusInfo",
-        "parameterValue": "http://www.microsoft.com"
-        },
-        {
-        "parameterName": "Append",
-        "parameterValue": "/as"
-        },
-        {
-        "parameterName": "FileDigest",
-        "parameterValue": "/fd \"SHA256\""
-        },
-        {
-        "parameterName": "PageHash",
-        "parameterValue": "/NPH"
-        },
-        {
-        "parameterName": "TimeStamp",
-        "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
-        }
-        ],
-        "toolName": "sign",
-        "toolVersion": "1.0"
-        },
-        {
-        "keyCode": "CP-231522",
-        "operationSetCode": "SigntoolVerify",
-        "parameters": [],
-        "toolName": "sign",
-        "toolVersion": "1.0"
-        }
-        ]
-
-  # Sign node_modules scripts.
-  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-    displayName: Sign node_modules Scripts (3rd Party Assemblies Signing)
-    inputs:
-      ConnectedServiceName: $(ConnectedServiceName)
-      UseMSIAuthentication: true
-      AppRegistrationClientId: $(AppRegistrationClientId)
-      AppRegistrationTenantId: $(AppRegistrationTenantId)
-      EsrpClientId: $(EsrpClientId)
-      AuthAKVName: $(AuthAKVName)
-      AuthSignCertName: $(AuthSignCertName)
-      FolderPath: '${{ parameters.tasksRoot }}'
-      Pattern: |
-        **/node_modules/**/*.js
-        **/node_modules/**/*.ps1
-        **/node_modules/**/*.psm1
-        **/node_modules/**/*.psd1
-      UseMinimatch: true
-      signConfigType: inlineSignParams
-      inlineOperation: |
-        [{
-        "keyCode": "CP-231522",
-        "operationSetCode": "SigntoolSign",
-        "parameters": [{
-        "parameterName": "OpusName",
-        "parameterValue": "Microsoft"
-        },
-        {
-        "parameterName": "OpusInfo",
-        "parameterValue": "http://www.microsoft.com"
-        },
-        {
-        "parameterName": "FileDigest",
-        "parameterValue": "/fd \"SHA256\""
-        },
-        {
-        "parameterName": "PageHash",
-        "parameterValue": "/NPH"
-        },
-        {
-        "parameterName": "TimeStamp",
-        "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
-        }
-        ],
-        "toolName": "sign",
-        "toolVersion": "1.0"
-        },
-        {
-        "keyCode": "CP-231522",
-        "operationSetCode": "SigntoolVerify",
-        "parameters": [],
-        "toolName": "sign",
-        "toolVersion": "1.0"
-        }
-        ]
-
 - task: PowerShell@2
   displayName: Move Microsoft-signed files back after 3rd party signing
   condition: always()
@@ -277,6 +159,72 @@ steps:
     targetType: 'filePath'
     filePath: ./ci/MoveMicrosoftSignedFilesScript.ps1
     arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ListFilePath ${{ parameters.microsoftSignedListFile }} -HoldingRoot ${{ parameters.microsoftSignedHoldingRoot }} -Mode Restore'
+
+- ${{ if parameters.signNodeModules }}:
+  - task: PowerShell@2
+    displayName: Generate node_modules catalogs
+    inputs:
+      targetType: 'filePath'
+      filePath: ./ci/NewTaskCatalogs.ps1
+      arguments: '-TasksRoot ${{ parameters.tasksRoot }} -ThrottleLimit ${{ parameters.catalogGenerationThrottle }}'
+
+  - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+    displayName: Sign node_modules Catalogs (3rd Party Assemblies Signing)
+    inputs:
+      ConnectedServiceName: $(ConnectedServiceName)
+      UseMSIAuthentication: true
+      AppRegistrationClientId: $(AppRegistrationClientId)
+      AppRegistrationTenantId: $(AppRegistrationTenantId)
+      EsrpClientId: $(EsrpClientId)
+      AuthAKVName: $(AuthAKVName)
+      AuthSignCertName: $(AuthSignCertName)
+      FolderPath: '${{ parameters.tasksRoot }}'
+      Pattern: '**/node_modules.cat'
+      UseMinimatch: true
+      signConfigType: inlineSignParams
+      inlineOperation: |
+        [{
+        "keyCode": "CP-231522",
+        "operationSetCode": "SigntoolSign",
+        "parameters": [{
+        "parameterName": "OpusName",
+        "parameterValue": "Microsoft"
+        },
+        {
+        "parameterName": "OpusInfo",
+        "parameterValue": "http://www.microsoft.com"
+        },
+        {
+        "parameterName": "FileDigest",
+        "parameterValue": "/fd \"SHA256\""
+        },
+        {
+        "parameterName": "PageHash",
+        "parameterValue": "/NPH"
+        },
+        {
+        "parameterName": "TimeStamp",
+        "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+        }
+        ],
+        "toolName": "sign",
+        "toolVersion": "1.0"
+        },
+        {
+        "keyCode": "CP-231522",
+        "operationSetCode": "SigntoolVerify",
+        "parameters": [],
+        "toolName": "sign",
+        "toolVersion": "1.0"
+        }
+        ]
+
+  - task: PowerShell@2
+    displayName: Verify node_modules catalogs
+    inputs:
+      targetType: 'filePath'
+      filePath: ./ci/TestTaskCatalogs.ps1
+      arguments: '-TasksRoot ${{ parameters.tasksRoot }}'
 
 - task: DeleteFiles@1
   displayName: Delete CodeSignSummary.md
