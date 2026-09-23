@@ -139,6 +139,9 @@ export class PlaywrightTestExecutor implements ITestExecutor {
             if (resolvedLocations.length === 0) {
                 throw new Error('None of the selected test points matched a Playwright test');
             }
+            if (resolved.unmatched.length > 0 && tl.getBoolInput('failOnUnmatchedTests', false)) {
+                throw new Error(`${resolved.unmatched.length} selected test point(s) did not match any Playwright test`);
+            }
 
             // 2. Run the resolved tests by location.
             tl.debug(`Executing Playwright test command: npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput} playwright test --reporter=junit ${resolvedLocations.join(' ')}`);
