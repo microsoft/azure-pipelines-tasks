@@ -290,10 +290,16 @@ function Upload-FilesToAzureContainer
     }
     finally
     {
-        #azcopy logout to remove all credentials
-        Write-Output "##[command] & `"$azCopyExeLocation`" logout"
-        $command = "& `"$azCopyExeLocation`" logout"
-        Invoke-Expression $command
+        try {
+            #azcopy logout to remove all credentials
+            Write-Output "##[command] & `"$azCopyExeLocation`" logout"
+            $command = "& `"$azCopyExeLocation`" logout"
+            Invoke-Expression $command
+        }
+        finally {
+            Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
+            Remove-EndpointSecrets
+        }
     }
 }
 

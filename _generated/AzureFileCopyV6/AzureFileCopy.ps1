@@ -107,6 +107,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
@@ -120,13 +121,7 @@ $vstsAccessToken = $vstsEndpoint.auth.parameters.AccessToken
 
 if (Get-Module Az.Accounts -ListAvailable) {
     $encryptedToken = ConvertTo-SecureString $vstsAccessToken -AsPlainText -Force
-    try {
-        Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
-    }
-    catch {
-        Remove-EndpointSecrets
-        throw
-    }
+    Initialize-AzModule -Endpoint $endpoint -connectedServiceNameARM $connectedServiceName -encryptedToken $encryptedToken
 }
 else {
     Write-Verbose "No module found with name: Az.Accounts"
@@ -168,7 +163,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try {
         # Importing required version of azure cmdlets according to azureps installed on machine
         $azureUtility = Get-AzureUtility
@@ -325,5 +319,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $endpoint.Auth.Scheme -ErrorAction SilentlyContinue
 }
