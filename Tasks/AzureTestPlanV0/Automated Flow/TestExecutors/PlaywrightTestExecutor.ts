@@ -101,7 +101,10 @@ export class PlaywrightTestExecutor implements ITestExecutor {
 
         let grepArg = '';
         try {
-            const junitOutput = 'test-results/test-results.xml';
+            // The publisher searches for '**/TEST-*.xml' (Common/publishAutomatedTests.ts),
+            // so the report name must follow the same convention as the Python and Jest
+            // executors (TEST-python-junit.xml, TEST-Jest{i}-junit.xml).
+            const junitOutput = 'test-results/TEST-playwright-junit.xml';
             tl.setVariable('PLAYWRIGHT_JUNIT_OUTPUT_NAME', junitOutput);
             const resultsDir = path.join(process.cwd(), 'test-results');
             if (!fs.existsSync(resultsDir)) {
