@@ -3,8 +3,8 @@ import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 
-import { 
-    HttpClient, 
+import {
+    HttpClient,
     HttpClientResponse,
 } from "artifact-engine/Providers/typed-rest-client/HttpClient";
 
@@ -32,7 +32,7 @@ export class JenkinsJobDetails {
 
         this.jobName = jobName;
         this.jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(this.jobName)
-        
+
         this.buildId = buildId;
         this.jobType = jenkinsJobType;
         this.multiBranchPipelineName = multibranchPipelineName;
@@ -74,9 +74,9 @@ export class JenkinsRestClient {
             if ((lhs && !rhs) || (!lhs && rhs)) {
                 return options.inverse(this);
             }
-            
+
             if (lhs.toUpperCase() != rhs.toUpperCase()) {
-                return options.inverse(this);                    
+                return options.inverse(this);
             }
             else {
                 return options.fn(this);
@@ -142,7 +142,7 @@ export class JenkinsRestClient {
         });
 
         handlebars.registerHelper('selectMaxOf', function(array, property) {
-            
+
             function GetJsonProperty(jsonObject: any, property: string): any {
                 let properties = property.split('.'); // if property has dot in it, we want to access the nested property of the objects.
                 let element = jsonObject;
@@ -171,7 +171,7 @@ export class JenkinsRestClient {
                     if (!isNaN(value) && value > maxValue) {
                         result = array[i];
                         maxValue = value;
-                    }                        
+                    }
                 }
 
                 tl.debug(`Found maxvalue ${maxValue}`);
@@ -211,7 +211,7 @@ export class JenkinsRestClient {
         const jobName = tl.getInput("jobName", true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
         const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
-        
+
         const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
         const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
         tl.debug(`RetryLimit set to ${retryLimit}`);
@@ -229,7 +229,7 @@ export class JenkinsRestClient {
         return defer.promise;
     }
 
-    public DownloadJsonContentWithRetries(httpClient: HttpClient, requestUrl: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }, ): Q.Promise<any> {    
+    public DownloadJsonContentWithRetries(httpClient: HttpClient, requestUrl: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }, ): Q.Promise<any> {
         let defer = Q.defer<any>();
 
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
@@ -471,10 +471,10 @@ export class JenkinsRestClient {
     private ExecuteWithRetries(operationName: string, operation: () => Q.Promise<any>, retryCount): Q.Promise<any> {
         let defer = Q.defer<any>();
         this.ExecuteWithRetriesImplementation(operationName, operation, retryCount, defer);
-            
+
         return defer.promise;
     }
-    
+
     private ExecuteWithRetriesImplementation(operationName: string, operation: () => Q.Promise<any>, currentRetryCount, defer: Q.Deferred<any>) {
         operation().then((result) => {
             defer.resolve(result);
