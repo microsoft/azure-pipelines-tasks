@@ -27,6 +27,9 @@ describe('PublishSymbols Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('(Initialize-DbghelpNativeMethods) binds to specified library', (done) => {
+            psr.run(path.join(__dirname, 'Initialize-DbghelpNativeMethods.BindsToSpecifiedLibrary.ps1'), done);
+        })
         it('(Add-DbghelpLibrary) loads if not loaded', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.LoadsIfNotLoaded.ps1'), done);
         })
@@ -36,8 +39,8 @@ describe('PublishSymbols Suite', function () {
         it('(Add-DbghelpLibrary) throws if dll not found', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.ThrowsIfDllNotFound.ps1'), done);
         })
-        it('(Add-DbghelpLibrary) warns if different location already loaded', (done) => {
-            psr.run(path.join(__dirname, 'Add-DbghelpLibrary.WarnsIfDifferentLocationAlreadyLoaded.ps1'), done);
+        it('(Add-DbghelpLibrary) loads expected library if different location already loaded', (done) => {
+            psr.run(path.join(__dirname, 'Add-DbghelpLibrary.LoadsExpectedIfDifferentLocationAlreadyLoaded.ps1'), done);
         })
         it('(Add-DbghelpLibrary) warns if load fails', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.WarnsIfLoadFails.ps1'), done);
