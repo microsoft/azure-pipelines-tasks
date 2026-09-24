@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -169,6 +169,14 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "Fail the task if no result files are found."
+    },
+    {
+      "name": "failOnUnmatchedTests",
+      "type": "boolean",
+      "label": "Fail if selected test points do not match any test",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "Fail the task if one or more selected test points do not match any test in the test suite. When unchecked, unmatched test points are reported as warnings and the matched tests are run."
     }
   ],
   "dataSourceBindings": [
