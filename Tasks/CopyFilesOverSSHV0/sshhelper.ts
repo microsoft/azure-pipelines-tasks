@@ -212,12 +212,10 @@ export class SshHelper {
                     return;
                 }
 
-                const stdout = tl.createExternalOutputStream({source: 'remote', destination: process.stdout});
-                const stderr = tl.createExternalOutputStream({source: 'remote', destination: process.stderr});
+                const filteredStdout = tl.createExternalOutputStream({source: 'remote', destination: process.stdout});
 
                 stream.on('close', (code, signal) => {
-                    stdout.end();
-                    stderr.end();
+                    filteredStdout.end();
                     tl.debug('code = ' + code + ', signal = ' + signal);
 
                     if (code && code != 0) {
@@ -236,12 +234,12 @@ export class SshHelper {
                         }
                     }
                 }).on('data', (data) => {
-                    stdout.write(data);
+                    filteredStdout.write(data);
                 }).stderr.on('data', (data) => {
                     stdErrWritten = true;
                     tl.debugExternalOutput('stderr = ' + data, { source: 'remote' });
                     if (data && data.toString().trim() !== '') {
-                        stderr.write(data);
+                        tl.errorExternalOutput(data, { source: 'remote' });
                     }
                 });
             });
