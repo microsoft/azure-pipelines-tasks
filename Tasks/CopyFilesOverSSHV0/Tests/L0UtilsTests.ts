@@ -1,6 +1,6 @@
 import assert = require('assert');
 import stream = require('stream');
-import { createRemoteOutputStream } from '../sshhelper';
+import tl = require('azure-pipelines-task-lib/task');
 import * as utils from '../utils';
 
 export function run() {
@@ -40,7 +40,7 @@ export function run() {
                     callback();
                 }
             });
-            const output = createRemoteOutputStream(destination);
+            const output = tl.createExternalOutputStream({source: 'remote', destination});
             const ended = new Promise<void>((resolve, reject) => {
                 output.on('end', resolve);
                 output.on('error', reject);

@@ -3,13 +3,6 @@ var Ssh2Client = require('ssh2').Client;
 var SftpClient = require('ssh2-sftp-client');
 var path = require('path');
 
-export function createRemoteOutputStream(destination: NodeJS.WritableStream): NodeJS.WritableStream {
-    return tl.createExternalOutputStream({
-        source: 'remote',
-        destination
-    });
-}
-
 export class RemoteCommandOptions {
     public failOnStdErr : boolean;
 }
@@ -219,8 +212,8 @@ export class SshHelper {
                     return;
                 }
 
-                const stdout = createRemoteOutputStream(process.stdout);
-                const stderr = createRemoteOutputStream(process.stderr);
+                const stdout = tl.createExternalOutputStream({source: 'remote', destination: process.stdout});
+                const stderr = tl.createExternalOutputStream({source: 'remote', destination: process.stderr});
 
                 stream.on('close', (code, signal) => {
                     stdout.end();
