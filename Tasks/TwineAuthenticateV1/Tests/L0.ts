@@ -7,4 +7,5 @@ import './L0.ErrorHandling';
 import './L0.Telemetry';
 #if WIF
 import './L0.WIF';
+import './L0.URLValidation';
 #endif

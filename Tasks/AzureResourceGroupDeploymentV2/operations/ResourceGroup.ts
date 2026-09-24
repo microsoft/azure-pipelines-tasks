@@ -10,14 +10,16 @@ import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
+import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
+import { canEmitSafeOutputVariables } from "./agentCompatibility";
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import azureGraph = require("azure-pipelines-tasks-azure-arm-rest/azure-graph");
+import { v4 as uuidv4 } from "uuid";
 
 var hm = require("typed-rest-client/HttpClient");
-var uuid = require("uuid");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl");
 var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
@@ -287,7 +289,7 @@ export class ResourceGroup {
         name = path.basename(name).split(".")[0].replace(/\s/g, "");
         name = name.substr(0, 40);
         var timestamp = new Date(Date.now());
-        var uniqueId = uuid().substr(0, 4);
+        var uniqueId = uuidv4().substr(0, 4);
         var suffix = util.format("%s%s%s-%s%s%s-%s", timestamp.getFullYear(),
             formatNumber(timestamp.getMonth() + 1),
             formatNumber(timestamp.getDate()),
@@ -557,10 +559,21 @@ export class ResourceGroup {
                         return reject(tl.loc("CreateTemplateDeploymentFailed"));
                     }
                     if (result && result["properties"] && result["properties"]["outputs"] && utils.isNonEmpty(this.taskParameters.deploymentOutputs)) {
+                        const useSafeDeploymentOutputVariables = tl.getPipelineFeature("EnableSafeArmDeploymentOutputVariables")
+                            && canEmitSafeOutputVariables();
                         const setVariablesInObject = (path: string, obj: any) => {
                             for (var key of Object.keys(obj)) {
                                 if (obj[key] && typeof(obj[key]) === "object") {
                                     setVariablesInObject(`${path}.${key}`, obj[key]);
+                                }
+                                else if (useSafeDeploymentOutputVariables) {
+                                    const variableName = `${path}.${key}`;
+                                    const variableValue = String(this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key]));
+                                    tl.command("task.setvariable", { variable: variableName }, variableValue);
+                                    console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(variableName)));
+                                    if (wasTruncatedByLegacyCommandFormat(variableName)) {
+                                        tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(variableName)));
+                                    }
                                 }
                                 else {
                                     console.log(`##vso[task.setvariable variable=${path}.${key};]` + (this.taskParameters.useWithoutJSON ? obj[key] : JSON.stringify(obj[key])));
@@ -571,8 +584,16 @@ export class ResourceGroup {
                         if (typeof(result["properties"]["outputs"]) === "object") {
                             setVariablesInObject(this.taskParameters.deploymentOutputs, result["properties"]["outputs"]);
                         }
-                        console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
-                        console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        if (useSafeDeploymentOutputVariables) {
+                            tl.command("task.setvariable", { variable: this.taskParameters.deploymentOutputs }, JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            if (wasTruncatedByLegacyCommandFormat(this.taskParameters.deploymentOutputs)) {
+                                tl.warning(tl.loc("OutputVariableNameChanged", sanitizeForLoggingCommand(this.taskParameters.deploymentOutputs)));
+                            }
+                        } else {
+                            console.log(`##vso[task.setvariable variable=${this.taskParameters.deploymentOutputs};]` + JSON.stringify(result["properties"]["outputs"]));
+                            console.log(tl.loc("AddedOutputVariable", this.taskParameters.deploymentOutputs));
+                        }
                     }
 
                     console.log(tl.loc("CreateTemplateDeploymentSucceeded"));
