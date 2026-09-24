@@ -2,7 +2,7 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$TasksRoot,
-    [ValidateRange(1, 32)]
+    [ValidateRange(1, 8)]
     [int]$ThrottleLimit = 4
 )
 
@@ -30,9 +30,17 @@ try {
             $taskDirectory = $pending.Dequeue()
             $nodeModulesPath = Join-Path $taskDirectory.FullName 'node_modules'
             $catalogPath = Join-Path $taskDirectory.FullName 'node_modules.cat'
+            $mockeryPath = Join-Path $nodeModulesPath 'mockery'
 
             if (Test-Path -LiteralPath $catalogPath) {
                 Remove-Item -LiteralPath $catalogPath -Force
+            }
+
+            # Packaging already omits this test-only module. Remove it before hashing so the
+            # catalog describes the exact node_modules content that is shipped.
+            if (Test-Path -LiteralPath $mockeryPath) {
+                Remove-Item -LiteralPath $mockeryPath -Recurse -Force
+                Write-Host "Removed packaging-excluded module: $mockeryPath"
             }
 
             $job = Start-Job -Name $taskDirectory.Name -ArgumentList $nodeModulesPath, $catalogPath -ScriptBlock {

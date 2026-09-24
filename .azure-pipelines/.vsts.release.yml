@@ -32,6 +32,19 @@ parameters:
   displayName: Catalog sign files inside node_modules
   type: boolean
   default: true
+- name: catalogGenerationThrottle
+  displayName: Maximum parallel catalog generation workers
+  type: number
+  default: 4
+  values:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
@@ -146,6 +159,7 @@ extends:
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
             signTasks: true
             signNodeModules: ${{ parameters.signNodeModules }}
+            catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
       # Courtesy Push
       - job: courtesy_push
