@@ -1,8 +1,4 @@
-import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import fs = require("fs");
-import util = require("util");
-import os = require("os");
 import tr = require('azure-pipelines-task-lib/toolrunner');
 
 abstract class basecommand {
@@ -20,12 +16,13 @@ abstract class basecommand {
     }
 
     public createCommand(): tr.ToolRunner {
-        var command = tl.tool(this.toolPath);
+        const command = tl.tool(this.toolPath);
         return command;
     }
 
     public execCommand(command: tr.ToolRunner, options?: tr.IExecOptions) {
-        var errlines = [];
+        const errlines: string[] = [];
+
         command.on("stderr", line => {
             errlines.push(line);
         });
@@ -34,14 +31,22 @@ abstract class basecommand {
             errlines.push(line);
         });
 
-        return command.exec(options).fail(error => {
+        const execOptions = Object.assign({}, options, {
+            externalOutput: { source: 'childProcess' }
+        });
+
+        return command.exec(execOptions).fail(error => {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
     }
 
     public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
-        return command.execSync(options);
+        const execOptions = Object.assign({}, options, {
+            externalOutput: { source: 'childProcess' }
+        });
+
+        return command.execSync(execOptions);
     }
 
     public IsInstalled(): boolean {
@@ -52,11 +57,10 @@ abstract class basecommand {
         if (execResult.code != tl.TaskResult.Succeeded) {
 
             tl.debug('execResult: ' + JSON.stringify(execResult));
-            if(!!execResult.error || !!execResult.stderr) {
+            if (!!execResult.error || !!execResult.stderr) {
                 tl.setResult(tl.TaskResult.Failed, execResult.stderr);
             }
-            else
-            {
+            else {
                 tl.setResult(tl.TaskResult.Failed, "");
             }
         }

@@ -34,14 +34,22 @@ abstract class basecommand {
             errlines.push(line);
         });
 
-        return command.exec(options).fail(error => {
+        const execOptions = Object.assign({}, options, {
+            externalOutput: { source: 'childProcess' }
+        });
+
+        return command.exec(execOptions).fail(error => {
             errlines.forEach(line => tl.error(line));
             throw error;
         });
     }
 
     public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
-        return command.execSync(options);
+        const execOptions = Object.assign({}, options, {
+            externalOutput: { source: 'childProcess' }
+        });
+
+        return command.execSync(execOptions);
     }
 
     public IsInstalled(): boolean {

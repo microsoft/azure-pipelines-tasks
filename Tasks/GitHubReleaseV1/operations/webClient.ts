@@ -1,7 +1,8 @@
+import util = require("util");
+
 import tl = require('azure-pipelines-task-lib/task');
 import httpClient = require("typed-rest-client/HttpClient");
 import httpInterfaces = require("typed-rest-client/Interfaces");
-import util = require("util");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl");
 var requestOptions: httpInterfaces.IRequestOptions = proxyUrl ? {
@@ -52,7 +53,7 @@ export async function sendRequest(request: WebRequest, options?: WebRequestOptio
         try {
             let response: WebResponse = await sendRequestInternal(request);
             if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
-                tl.debug(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage));
+                tl.debugExternalOutput(util.format("Encountered a retriable status code: %s. Message: '%s'.", response.statusCode, response.statusMessage), { source: "remote" });
                 await sleepFor(timeToWait);
                 timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
                 continue;
@@ -102,7 +103,7 @@ async function toWebResponse(response: httpClient.HttpClientResponse): Promise<W
             }
             catch (error) {
                 tl.debug("Could not parse response: " + JSON.stringify(error, null, 2));
-                tl.debug("Response: " + JSON.stringify(res.body));
+                tl.debugExternalOutput("Response: " + body, { source: "remote" });
                 res.body = body;
             }
         }

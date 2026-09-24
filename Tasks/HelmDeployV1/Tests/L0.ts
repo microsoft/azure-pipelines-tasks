@@ -1,9 +1,30 @@
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
+import stream = require('stream');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as shared from './TestShared';
 import * as tl from 'azure-pipelines-task-lib';
+import basecommand from '../src/basecommand';
+
+class TestCommand extends basecommand {
+    public getTool(): string {
+        return process.execPath;
+    }
+
+    public login(): void { }
+
+    public logout(): void { }
+}
+
+function createOutputStream(output: string[]): stream.Writable {
+    return new stream.Writable({
+        write(chunk, encoding, callback) {
+            output.push(chunk.toString());
+            callback();
+        }
+    });
+}
 
 describe("HelmDeployV1 Suite", function () {
     this.timeout(30000);
@@ -37,6 +58,81 @@ describe("HelmDeployV1 Suite", function () {
     });
 
     after(async () => { });
+
+    it("neutralizes a NODE_OPTIONS logging command rendered from Helm NOTES", async function () {
+        const injectedNodeOptions = "--import=data:text/javascript;base64,Y29uc29sZS5sb2coJ2F0dGFjaycp";
+        const externalOutput = [
+            "Thank you for installing the chart.",
+            `##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`,
+            "Run kubectl get pods to verify the installation."
+        ].join("\n");
+        const neutralizedCommand = `##_vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
+        const executableCommand = `##vso[task.setvariable variable=NODE_OPTIONS]${injectedNodeOptions}`;
+        const execOptions = {
+            env: Object.assign({}, process.env, { HELM_TEST_EXTERNAL_OUTPUT: externalOutput })
+        };
+        const command = new TestCommand(true);
+
+        const asyncDisplayedOutput: string[] = [];
+        let asyncRawOutput = "";
+        const asyncTool = command.createCommand();
+        asyncTool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+        asyncTool.on("stdout", data => asyncRawOutput += data.toString());
+
+        await command.execCommand(asyncTool, Object.assign({}, execOptions, { outStream: createOutputStream(asyncDisplayedOutput) }));
+
+        const asyncDisplay = asyncDisplayedOutput.join("");
+        assert(asyncDisplay.includes("Thank you for installing the chart."), "benign async NOTES output should remain");
+        assert(asyncDisplay.includes("Run kubectl get pods to verify the installation."), "benign async instructions should remain");
+        assert(asyncDisplay.includes(neutralizedCommand), "async NODE_OPTIONS logging command should be neutralized");
+        assert(!asyncDisplay.includes(executableCommand), "async output should not expose the NODE_OPTIONS command to the agent");
+        assert.strictEqual(asyncRawOutput, externalOutput, "async stdout events should preserve raw Helm output");
+
+        const syncDisplayedOutput: string[] = [];
+        const syncTool = command.createCommand();
+        syncTool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+
+        const syncResult = command.execCommandSync(syncTool, Object.assign({}, execOptions, { outStream: createOutputStream(syncDisplayedOutput) }));
+
+        const syncDisplay = syncDisplayedOutput.join("");
+        assert(syncDisplay.includes("Thank you for installing the chart."), "benign sync NOTES output should remain");
+        assert(syncDisplay.includes("Run kubectl get pods to verify the installation."), "benign sync instructions should remain");
+        assert(syncDisplay.includes(neutralizedCommand), "sync NODE_OPTIONS logging command should be neutralized");
+        assert(!syncDisplay.includes(executableCommand), "sync output should not expose the NODE_OPTIONS command to the agent");
+        assert.strictEqual(syncResult.stdout, externalOutput, "sync result should preserve raw Helm output for helmOutput");
+    });
+
+    it("neutralizes indented artifact upload and pipeline control commands from Helm NOTES", function () {
+        const externalCommands = [
+            "  ##vso[task.setvariable variable=MARKER]PWNED_BY_CHART_NOTES",
+            "  ##vso[artifact.upload containerfolder=proof;artifactname=helmproof]/agent/.credentials",
+            "  ##vso[task.logissue type=error]INJECTED_ISSUE_FROM_CHART_NOTES"
+        ];
+        const externalOutput = [
+            "NOTES:",
+            "1. Get the application URL by running these commands:",
+            ...externalCommands,
+            "2. Verify that the application is running."
+        ].join("\n");
+        const displayedOutput: string[] = [];
+        const command = new TestCommand(true);
+        const tool = command.createCommand();
+        tool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+
+        const result = command.execCommandSync(tool, {
+            env: Object.assign({}, process.env, { HELM_TEST_EXTERNAL_OUTPUT: externalOutput }),
+            outStream: createOutputStream(displayedOutput)
+        });
+
+        const display = displayedOutput.join("");
+        assert(display.includes("NOTES:"), "Helm NOTES heading should remain");
+        assert(display.includes("1. Get the application URL by running these commands:"), "benign Helm instructions should remain");
+        externalCommands.forEach(externalCommand => {
+            assert(!display.includes(externalCommand), `displayed output should not contain executable command: ${externalCommand}`);
+            assert(display.includes(externalCommand.replace("##vso[", "##_vso[")), `command should be neutralized: ${externalCommand}`);
+        });
+        assert.strictEqual(result.stdout, externalOutput, "raw Helm output should remain available for helmOutput");
+    });
 
     it("Run successfully with Helm install (version 3) with chart name", async function () {
         const tp = path.join(__dirname, "TestSetup.js");
