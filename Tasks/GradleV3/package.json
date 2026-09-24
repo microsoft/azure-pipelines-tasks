@@ -14,11 +14,11 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.280.1",
-    "azure-pipelines-tasks-codeanalysis-common": "^2.280.0",
-    "azure-pipelines-tasks-codecoverage-tools": "^3.280.0",
-    "azure-pipelines-tasks-java-common": "^2.280.0",
-    "azure-pipelines-tasks-utility-common": "^3.280.3"
+    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-tasks-codeanalysis-common": "^2.281.0",
+    "azure-pipelines-tasks-codecoverage-tools": "^3.281.0",
+    "azure-pipelines-tasks-java-common": "^2.281.0",
+    "azure-pipelines-tasks-utility-common": "^3.281.0"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
