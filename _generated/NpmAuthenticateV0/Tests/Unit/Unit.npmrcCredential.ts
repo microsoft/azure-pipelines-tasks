@@ -82,6 +82,24 @@ describe('NpmAuthenticateV0 Unit - npmrcCredential', function () {
         assert(credential.auth.includes('username=myuser'));
         assert(credential.auth.includes(':_password='));
         assert(credential.auth.includes('email=myuser'));
-        assert(credential.auth.includes('always-auth=true'));
+        assert(!credential.auth.includes('always-auth'),
+            'always-auth must not be written (deprecated, npm 11 warns about it)');
+    });
+
+    it('formats external Token credentials as bearer _authToken without always-auth', async () => {
+        (tl as any).getEndpointAuthorization = () => ({
+            scheme: 'Token',
+            parameters: {
+                apitoken: 'my-external-token'
+            }
+        });
+        (tl as any).getEndpointUrl = () => 'https://registry.example.invalid/npm';
+
+        const credential = await resolveServiceEndpointCredential(endpointId, normalizeRegistry, toNerfDart);
+
+        assert.strictEqual(credential.url, 'https://registry.example.invalid/npm/');
+        assert.strictEqual(credential.auth, '//registry.example.invalid/npm/:_authToken=my-external-token');
+        assert(!credential.auth.includes('always-auth'),
+            'always-auth must not be written (deprecated, npm 11 warns about it)');
     });
 });
