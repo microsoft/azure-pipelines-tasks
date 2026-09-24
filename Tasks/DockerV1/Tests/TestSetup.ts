@@ -175,6 +175,13 @@ a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels
     "code": 0,
     "stdout": " => => writing image sha256:6c3ada3eb42094510e0083bba6ae805540e36c96871d7be0c926b2f8cbeea68c\n => => naming to docker.io/library/testuser/buildkit:11"
 };
+// Simulates an attacker-controlled Dockerfile/build step emitting a ##vso[] logging
+// command in its output, to verify createSanitizedExecOptions() is actually wired
+// into the real docker build exec call (not just present in docker-common).
+a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} -t testuser/vsoinjection:1`] = {
+    "code": 0,
+    "stdout": "Step 1/2 : FROM node:18\n##vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nSuccessfully built abc123"
+};
 a.exec[`docker build -f ${DockerFilePath} ${shared.DockerCommandArgs.BuildLabels} --label ${shared.BaseImageLabels.name} --label ${shared.BaseImageLabels.digest} -t testuser/imagewithannotations:11`] = {
     "code": 0,
     "stdout": "successfully built image and tagged testuser/imagewithannotations:11."
