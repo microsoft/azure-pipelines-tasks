@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import { NpmrcBackupManager } from './npmrcBackupManager';
+import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -10,7 +10,19 @@ async function run() {
     const indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
     if (indexFile && tl.exist(indexFile) && tl.exist(workingFilePath)) {
         const backupManager = NpmrcBackupManager.fromBackupDirectory(npmrcPath);
-        const restored = backupManager.restoreBackedUpFile(workingFilePath);
+        const serializedIdentity = tl.getTaskVariable(NpmrcFileIdentityTaskVariable);
+        let trustedIdentity: FileIdentity;
+        try {
+            trustedIdentity = serializedIdentity && JSON.parse(serializedIdentity);
+        } catch {
+            throw new Error(tl.loc('NpmrcChangedSinceBackup', workingFilePath));
+        }
+        if (!trustedIdentity
+            || typeof trustedIdentity.device !== 'string'
+            || typeof trustedIdentity.inode !== 'string') {
+            throw new Error(tl.loc('NpmrcChangedSinceBackup', workingFilePath));
+        }
+        const restored = backupManager.restoreBackedUpFile(workingFilePath, trustedIdentity);
         if (restored) {
             console.log(tl.loc("RevertedChangesToNpmrc", workingFilePath));
         }
