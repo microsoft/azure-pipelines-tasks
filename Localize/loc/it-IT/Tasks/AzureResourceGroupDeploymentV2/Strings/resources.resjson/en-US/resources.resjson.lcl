@@ -1455,12 +1455,18 @@
       <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché questo processo viene eseguito con la versione dell'agente '%s'. Per pubblicarle usando il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente, è necessaria la versione dell'agente %s o successiva. Aggiornare l'agente per adottare il formato sicuro.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché la variabile %s è impostata su un valore che impedisce all'agente di decodificare la codifica con percentuale. Rimuovere la variabile oppure impostala su true per adottare il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
