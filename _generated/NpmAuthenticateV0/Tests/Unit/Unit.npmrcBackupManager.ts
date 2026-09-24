@@ -30,6 +30,28 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
+    it('backs up and restores content larger than the copy buffer', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            const originalContent = Buffer.alloc((64 * 1024 * 2) + 17, 0x61);
+            fs.writeFileSync(npmrcPath, originalContent);
+
+            const manager = new NpmrcBackupManager(root);
+            const trustedIdentity = manager.ensureBackedUp(npmrcPath);
+            fs.writeFileSync(npmrcPath, 'modified\n', 'utf8');
+
+            const restored = manager.restoreBackedUpFile(npmrcPath, trustedIdentity);
+
+            assert.strictEqual(restored, true);
+            assert.deepStrictEqual(fs.readFileSync(npmrcPath), originalContent);
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
     it('does not overwrite first snapshot when ensureBackedUp is called twice', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
@@ -48,6 +70,40 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
 
             assert.strictEqual(restored, true);
             assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'first\n');
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
+    it('revalidates the working file when ensureBackedUp is called again', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            const targetPath = path.join(sourceDir, 'target');
+            fs.writeFileSync(npmrcPath, 'original\n', 'utf8');
+            fs.writeFileSync(targetPath, 'host-only\n', 'utf8');
+
+            const manager = new NpmrcBackupManager(root);
+            manager.ensureBackedUp(npmrcPath);
+            fs.unlinkSync(npmrcPath);
+            try {
+                fs.symlinkSync(targetPath, npmrcPath, 'file');
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code === 'EPERM') {
+                    this.skip();
+                    return;
+                }
+                throw error;
+            }
+
+            const laterManager = NpmrcBackupManager.fromBackupDirectory(root);
+            assert.throws(
+                () => laterManager.ensureBackedUp(npmrcPath),
+                /must be a regular file/
+            );
+            assert.strictEqual(fs.readFileSync(targetPath, 'utf8'), 'host-only\n');
         } finally {
             fs.rmSync(root, { recursive: true, force: true });
             fs.rmSync(sourceDir, { recursive: true, force: true });
@@ -133,6 +189,40 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
 
             assert.throws(
                 () => manager.restoreBackedUpFile(npmrcPath),
+                /no longer the same regular file/
+            );
+            assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');
+            assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
+    it('uses the trusted task identity when restoring a file', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'original\n', 'utf8');
+
+            const manager = new NpmrcBackupManager(root);
+            const trustedIdentity = manager.ensureBackedUp(npmrcPath);
+            fs.unlinkSync(npmrcPath);
+            fs.writeFileSync(npmrcPath, 'replacement\n', 'utf8');
+
+            const replacementStats = fs.statSync(npmrcPath, { bigint: true });
+            const indexPath = path.join(root, 'index.json');
+            const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+            index.identities[npmrcPath] = {
+                device: replacementStats.dev.toString(),
+                inode: replacementStats.ino.toString()
+            };
+            fs.writeFileSync(indexPath, JSON.stringify(index), 'utf8');
+
+            const cleanupManager = NpmrcBackupManager.fromBackupDirectory(root);
+            assert.throws(
+                () => cleanupManager.restoreBackedUpFile(npmrcPath, trustedIdentity),
                 /no longer the same regular file/
             );
             assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');

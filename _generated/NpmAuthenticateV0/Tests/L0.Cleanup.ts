@@ -1,3 +1,4 @@
+import assert from 'assert';
 import * as path from 'path';
 import * as fs from 'fs';
 import { TestEnvVars } from './TestConstants';
@@ -24,6 +25,8 @@ function createSaveDir(npmrcPath: string, originalContent: string = 'original=ht
         }
     };
     fs.writeFileSync(path.join(saveDir, 'index.json'), JSON.stringify(index), 'utf8');
+    process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'] =
+        JSON.stringify(index.identities[npmrcPath]);
     // Create the backup file that restoreBackedUpFile() will copy back
     fs.writeFileSync(path.join(saveDir, '0'), originalContent, 'utf8');
     return saveDir;
@@ -60,6 +63,21 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         // Verify the file was physically restored
         const restoredContent = fs.readFileSync(npmrcPath, 'utf8');
         TestHelpers.assertNpmrcContains(npmrcPath, 'registry=https://registry.npmjs.org/');
+    });
+
+    it('fails closed when the trusted file identity is unavailable', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir = createSaveDir(npmrcPath);
+        delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'];
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertFailure(tr);
+        assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'modified-by-task');
+        assert.strictEqual(fs.existsSync(path.join(saveDir, '0')), true);
     });
 
     it('logs NoIndexJsonFile when index.json is missing from SAVE_NPMRC_PATH', async () => {

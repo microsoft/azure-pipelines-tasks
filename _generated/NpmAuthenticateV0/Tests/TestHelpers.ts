@@ -29,6 +29,7 @@ export class TestHelpers {
         delete process.env['SYSTEM_DEBUG'];
         delete process.env['SAVE_NPMRC_PATH'];
         delete process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'];
+        delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'];
         delete process.env['EXISTING_ENDPOINTS'];
     }
 
@@ -39,6 +40,7 @@ export class TestHelpers {
         delete process.env['SYSTEM_DEBUG'];
         delete process.env['SAVE_NPMRC_PATH'];
         delete process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'];
+        delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'];
         delete process.env['EXISTING_ENDPOINTS'];
         for (const dir of this._tempDirs) {
             try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
