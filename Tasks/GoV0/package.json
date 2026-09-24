@@ -21,12 +21,9 @@
   "dependencies": {
     "@types/node": "^24.10.0",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^5.2.10"
+    "azure-pipelines-task-lib": "^5.280.3"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "form-data": "^4.0.4"
   }
 }
