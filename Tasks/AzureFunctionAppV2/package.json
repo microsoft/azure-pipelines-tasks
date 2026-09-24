@@ -23,10 +23,17 @@
     "@types/node": "^24.10.0",
     "@types/q": "1.0.7",
     "agent-base": "6.0.2",
+<<<<<<< HEAD
     "azure-devops-node-api": "^17.0.1",
     "azure-pipelines-task-lib": "^5.280.3",
     "azure-pipelines-tasks-azure-arm-rest": "^3.281.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.281.0",
+=======
+    "azure-devops-node-api": "^15.1.3",
+    "azure-pipelines-task-lib": "^5.2.10",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.280.4",
+    "azure-pipelines-tasks-webdeployment-common": "^4.279.0",
+>>>>>>> origin/master
     "azure-storage": "2.10.7",
     "moment": "^2.29.4",
     "q": "1.4.1",
