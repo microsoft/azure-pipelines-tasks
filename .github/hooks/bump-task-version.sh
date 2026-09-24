@@ -22,8 +22,9 @@ if [[ -z "$TASK_NAME" ]]; then
   exit 0
 fi
 
-# Fetch current sprint info
-SPRINT_JSON=$(curl -sf --max-time 5 "https://whatsprintis.it/?json") || exit 0
+# Calculate current sprint info
+REPO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+SPRINT_JSON=$(node "$REPO_ROOT/ci/sprint.js") || exit 0
 SPRINT=$(echo "$SPRINT_JSON" | jq -r '.sprint')
 WEEK=$(echo "$SPRINT_JSON" | jq -r '.week')
 

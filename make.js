@@ -38,6 +38,7 @@ var assert = util.assert;
 var getExternalsAsync = util.getExternalsAsync;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
+var getLocSourceTaskDef = util.getLocSourceTaskDef;
 var validateTask = util.validateTask;
 var fileToJson = util.fileToJson;
 var createYamlSnippetFile = util.createYamlSnippetFile;
@@ -487,7 +488,7 @@ async function buildTaskAsync(taskName, nodeVersion, isServerBuild = false) {
             if (sourceTaskPath !== taskPath && test('-f', sourceTaskJsonPath)) {
                 console.log('Refreshing source loc files: ' + sourceTaskPath);
                 createTaskLocJson(sourceTaskPath);
-                createResjson(fileToJson(sourceTaskJsonPath), sourceTaskPath);
+                createResjson(getLocSourceTaskDef(sourceTaskPath), sourceTaskPath);
             }
         }
     } else {

@@ -164,6 +164,7 @@ function zipArchive(archive: string, files: string[]) {
         zip.arg('-q');
     }
     zip.arg(archive);
+    zip.arg('--');
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
         console.log(tl.loc('Filename', files[i]));
@@ -191,6 +192,7 @@ function tarArchive(archive: string, compression: string, files: string[]) {
     }
     tar.arg('-f');
     tar.arg(archive);
+    tar.arg('--');
     for (var i = 0; i < files.length; i++) {
         tar.arg(files[i]);
     }

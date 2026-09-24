@@ -9,6 +9,7 @@ import azureModel = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
+import { tryValidateScriptArgs } from './argsSanitizer';
 import utils = require("./Utils")
 
 
@@ -136,6 +137,14 @@ export default class VirtualMachineScaleSet {
 
         let blobsPefixPath = this._getBlobsPrefixPath();
 
+        // Validate user-provided arguments with the shared WI-75787 sanitizer for the
+        // target shell (ps for Windows, bash for Linux). Fails closed on injection when
+        // AZP_75787_ENABLE_NEW_LOGIC is set and the EnableVmssCustomScriptArgsValidation gate is on.
+        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+
+        // WI-75787: our own backtick escaping doubles/backslashes the sanitizer-trusted escape and revives it at the Invoke-Expression/eval sink, so pass args verbatim when the gate is on.
+        const sanitizerEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
+
         if (osType === "Windows") {
             // escape powershell special characters. This is needed as this script will be executed in a powershell session
             let script = this.taskParameters.customScript.replace(/`/g, '``').replace(/\$/g, '`$');
@@ -149,7 +158,11 @@ export default class VirtualMachineScaleSet {
             // escape powershell special characters
             let escapedArgs = "";
             if (this.taskParameters.customScriptArguments) {
-                escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '``').replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
+                let args = this.taskParameters.customScriptArguments;
+                if (!sanitizerEnabled) {
+                    args = args.replace(/`/g, '``');
+                }
+                escapedArgs = args.replace(/\$/g, '`$').replace(/'/g, "''").replace(/"/g, '"""');
             }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
@@ -167,7 +180,11 @@ export default class VirtualMachineScaleSet {
             // escape shell special characters
             let escapedArgs = "";
             if (this.taskParameters.customScriptArguments) {
-                escapedArgs = this.taskParameters.customScriptArguments.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
+                let args = this.taskParameters.customScriptArguments;
+                if (!sanitizerEnabled) {
+                    args = args.replace(/`/g, '\\`');
+                }
+                escapedArgs = args.replace(/\$/g, '\\$').replace(/'/g, "'\"'\"'");
             }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.sh");

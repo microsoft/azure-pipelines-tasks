@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "artifact-engine": "^1.5.5",
+    "artifact-engine": "^1.280.0",
     "azure-pipelines-task-lib": "^5.2.4",
     "nock": "^9.6.1",
     "typed-rest-client": "^2.2.0"

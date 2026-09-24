@@ -1,5 +1,9 @@
 # Determine current sprint.
-$currentSprint = (Invoke-WebRequest https://whatsprintis.it -UseBasicParsing -Headers @{"Accept" = "application/json" } | ConvertFrom-Json)
+$sprintOutput = & node (Join-Path $PSScriptRoot "sprint.js")
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to calculate the current sprint"
+}
+$currentSprint = $sprintOutput | ConvertFrom-Json
 
 $sprint = $currentSprint.sprint
 $week = $currentSprint.week

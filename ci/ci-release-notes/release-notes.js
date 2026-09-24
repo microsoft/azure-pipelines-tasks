@@ -1,7 +1,7 @@
 const argv = require('minimist')(process.argv.slice(2));
-const axios = require("axios");
 
 const util = require('../ci-util');
+const { getSprintDates } = require('../sprint');
 const tempGen = require('./template-generator');
 
 const { Octokit } = require('@octokit/rest');
@@ -11,7 +11,6 @@ const REPO = 'azure-pipelines-tasks';
 const GIT = 'git';
 const VALID_RELEASE_RE = /^[0-9]{1,3}$/;
 
-const getWhatSprintUrl = sprintVersion => `https://whatsprintis.it/sprint/${sprintVersion}`;
 if (!argv.token) throw Error('token is required');
 
 const octokit = new Octokit({ auth: argv.token });
@@ -103,8 +102,7 @@ async function getPRsFromDate(branch, dateFrom, dateTo) {
 */
 async function fetchPRsForRelease(baseBranch, version) {
     try {
-        const sprintResponse = await axios.get(getWhatSprintUrl(version));
-        const sprintData = sprintResponse.data;
+        const sprintData = getSprintDates(Number(version));
         console.log('Getting latest release');
 
         releaseInfo = await octokit.repos.getLatestRelease({
@@ -126,7 +124,7 @@ async function fetchPRsForRelease(baseBranch, version) {
             process.exit(-1);
         }
     } catch (e) {
-        console.log("Failed to fetch sprint dates for version " + version);
+        console.log("Failed to calculate sprint dates for version " + version);
         console.log(e);
         process.exit(-1);
     }

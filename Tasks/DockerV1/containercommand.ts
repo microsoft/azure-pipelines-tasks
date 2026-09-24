@@ -16,5 +16,5 @@ export function run(connection: ContainerConnection,  outputUpdate: (data: strin
     var commandArguments = dockerCommandUtils.getCommandArguments(tl.getInput("arguments", false));
 
     command.line(commandArguments);
-    return connection.execCommand(command);
+    return connection.execCommand(command, dockerCommandUtils.createSanitizedExecOptions());
 }

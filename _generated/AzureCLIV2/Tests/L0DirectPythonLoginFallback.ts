@@ -43,7 +43,7 @@ process.env['AGENT_OS'] = 'Windows_NT';
 process.env['AGENT_TEMPDIRECTORY'] = os.tmpdir();
 
 // Feature flag for -File invocation — ON
-process.env['AZP_AZURECLI_USE_FILE_INVOCATION'] = 'true';
+process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'] = 'true';
 
 // Mock Endpoint
 process.env['ENDPOINT_URL_AzureRM'] = 'https://management.azure.com/';

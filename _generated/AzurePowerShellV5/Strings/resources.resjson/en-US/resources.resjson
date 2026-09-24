@@ -33,6 +33,7 @@
   "loc.messages.GeneratingScript": "Generating script.",
   "loc.messages.JS_FormattedCommand": "Formatted command: %s",
   "loc.messages.InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
   "loc.messages.InvalidAzurePsVersion": "The Azure PowerShell version '{0}' specified is not in the correct format. Please check the format. An example of correct format is 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell exited with code '%s'.",

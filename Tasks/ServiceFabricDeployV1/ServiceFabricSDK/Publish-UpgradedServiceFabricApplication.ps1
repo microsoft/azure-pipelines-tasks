@@ -399,22 +399,14 @@ function Publish-UpgradedServiceFabricApplication
             $serviceTypeHealthPolicyMap = $UpgradeParameters["ServiceTypeHealthPolicyMap"]
             if ($serviceTypeHealthPolicyMap -and $serviceTypeHealthPolicyMap -is [string])
             {
-                $useSafeParser = Get-VstsPipelineFeature -FeatureName 'SfSafeParser'
-                if (-not $useSafeParser)
+                try
                 {
-                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
                 }
-                else
+                catch
                 {
-                    try
-                    {
-                        $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
-                    }
-                    catch
-                    {
-                        Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorData $_
-                        throw
-                    }
+                    Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorData $_
+                    throw
                 }
             }
 

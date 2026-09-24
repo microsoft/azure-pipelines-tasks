@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 275,
-    "Patch": 0
+    "Minor": 280,
+    "Patch": 1
   },
   "demands": [],
   "satisfies": [
@@ -28,7 +28,7 @@
       "type": "string",
       "required": true,
       "helpMarkDown": "Specify the version of Docker CLI to install",
-      "defaultValue": "17.09.0-ce"
+      "defaultValue": "28.5.2"
     },
     {
       "name": "releaseType",

@@ -21,6 +21,7 @@ async function main(): Promise<void> {
     const backupDirectory = npmauthutils.initializeBackupDirectory();
     const backupManager = new NpmrcBackupManager(backupDirectory);
     backupManager.ensureBackedUp(npmrc);
+    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
     
     let packagingLocation;
     try {
@@ -38,7 +39,6 @@ async function main(): Promise<void> {
     const npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
     const addedRegistries: URL[] = [];
-    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
 
     for (const registryUrlString of npmrcRegistries) {
