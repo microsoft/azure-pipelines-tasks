@@ -57,6 +57,9 @@ describe('AzurePowerShell Suite', function () {
         it('Get-LatestModule returns the latest available module', (done) => {
             psr.run(path.join(__dirname, 'Utility.Get-LatestModule.ps1'), done);
         })
+        it('bounds module version validation and uses local-only discovery', (done) => {
+            psr.run(path.join(__dirname, 'Utility.ModuleVersionValidation.ps1'), done);
+        });
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
             psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
         })
