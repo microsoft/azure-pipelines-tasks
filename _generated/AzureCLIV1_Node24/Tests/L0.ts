@@ -4,6 +4,7 @@ import os = require('os');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
+import { runCredentialFileIsolationTests } from './L0CredentialFileIsolation';
 
 describe('AzureCLIV1 Suite', function () {
     this.timeout(20000);
@@ -11,6 +12,8 @@ describe('AzureCLIV1 Suite', function () {
     describe('AZURE_CONFIG_DIR isolation', () => {
         runConfigDirIsolationTests();
     });
+
+    runCredentialFileIsolationTests();
 
     // Use cross-platform temp directory for assertions
     const tempDir = require('os').tmpdir();

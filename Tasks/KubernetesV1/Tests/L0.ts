@@ -594,6 +594,20 @@ describe('Kubernetes Suite', function() {
         console.log(tr.stderr);
     });
 
+    it('neutralizes ##vso[ markers in kubectl logs output (external-output filtering)', async () => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.command] = shared.Commands.logs;
+        process.env[shared.TestEnvVars.arguments] = "injected-pod";
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdout.indexOf('##_vso[task.setvariable variable=NODE_OPTIONS]') != -1, 'kubectl output marker must be neutralized to ##_vso[');
+        const leaked = tr.stdout.split('\n').some(line => line.trim().indexOf('##vso[task.setvariable variable=NODE_OPTIONS]') === 0);
+        assert(!leaked, 'no raw ##vso[ command line from kubectl output may reach the agent');
+        assert(tr.stdout.indexOf('ordinary pod log line') != -1, 'benign log content must be preserved');
+    });
+
     it('Runs successfully when a configuration is provided inline', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -683,5 +697,54 @@ describe('sanitizeForLoggingCommand', function() {
         const malicious = '##vso[task.setvariable variable=A;]x ##vso[task.setvariable variable=B;]y';
         const sanitized = sanitizeForLoggingCommand(malicious);
         assert(sanitized.indexOf('##vso[') === -1, 'should not contain any ##vso[');
+    });
+
+    it('should neutralize a task.setvariable command targeting NODE_OPTIONS', () => {
+        const malicious = '##vso[task.setvariable variable=NODE_OPTIONS]--require=/tmp/pwn.js';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+        assert(sanitized.indexOf('__vso[task.setvariable variable=NODE_OPTIONS]') !== -1, 'should be neutralized to __vso[');
+    });
+
+    it('should neutralize a task.setvariable command targeting BASH_ENV', () => {
+        const malicious = '##vso[task.setvariable variable=BASH_ENV]/tmp/pwn.sh';
+        const sanitized = sanitizeForLoggingCommand(malicious);
+        assert(sanitized.indexOf('##vso[') === -1, 'should not contain ##vso[');
+        assert(sanitized.indexOf('__vso[task.setvariable variable=BASH_ENV]') !== -1, 'should be neutralized to __vso[');
+    });
+});
+
+// Verifies that ClusterConnection.execCommand enables task-lib's shared external-output filtering
+// on the (non-silent) display path, and leaves silent callers unchanged.
+import ClusterConnection from '../src/clusterconnection';
+import Q = require('q');
+import { EventEmitter } from 'events';
+
+describe('execCommand external-output filtering', function () {
+    this.timeout(10000);
+
+    // Minimal stand-in for task-lib's ToolRunner that records the options passed to exec().
+    class FakeToolRunner extends EventEmitter {
+        public execOptions: any;
+        public exec(options: any): any {
+            this.execOptions = options || {};
+            return Q.resolve(0);
+        }
+    }
+
+    it('enables child-process external-output filtering for non-silent callers', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner();
+        await connection.execCommand(runner as any);
+        assert(runner.execOptions.externalOutput, 'externalOutput must be set for non-silent callers');
+        assert.strictEqual(runner.execOptions.externalOutput.source, 'childProcess', 'external-output source must be childProcess');
+    });
+
+    it('does not enable external-output filtering for silent callers', async () => {
+        const connection = new ClusterConnection();
+        const runner = new FakeToolRunner();
+        await connection.execCommand(runner as any, { silent: true } as any);
+        assert.strictEqual(runner.execOptions.silent, true, 'silent option must be preserved');
+        assert(!runner.execOptions.externalOutput, 'externalOutput must not be set for silent callers');
     });
 });
