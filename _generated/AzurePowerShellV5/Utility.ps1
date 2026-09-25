@@ -1,3 +1,6 @@
+# Bounded deadline for the non-critical GitHub module-version advisory request.
+$script:AzureModuleVersionRequestTimeoutSeconds = 3
+
 function Get-SavedModuleContainerPath {
     [CmdletBinding()]
     param (
@@ -217,6 +220,7 @@ function Invoke-AzureModuleVersionRequest {
     $handler = New-Object System.Net.Http.HttpClientHandler
     $handler.DefaultProxyCredentials = [System.Net.CredentialCache]::DefaultCredentials
 
+    # HttpClient owns the handler by default, so disposing the client also disposes the handler.
     $client = New-Object System.Net.Http.HttpClient($handler)
 
     try {
@@ -234,42 +238,26 @@ function Invoke-AzureModuleVersionRequest {
 function Get-MajorVersionOnAzurePackage {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [string]$moduleName,
-
         [int]$requestTimeoutSeconds = 0
     )
-
+    # GitHub API URL for Azure releases
     $url = "https://api.github.com/repos/Azure/${moduleName}/releases"
-
     try {
         if ($requestTimeoutSeconds -gt 0) {
-            $response = Invoke-AzureModuleVersionRequest `
-                -url $url `
-                -requestTimeoutSeconds $requestTimeoutSeconds
-        }
-        else {
-            # Preserve the exact legacy path while rollout is disabled.
+            $response = Invoke-AzureModuleVersionRequest -url $url -requestTimeoutSeconds $requestTimeoutSeconds
+        } else {
             $response = Invoke-RestMethod -Uri $url -Method Get
         }
-
         $majorReleases = $response
-
-        if ($moduleName -eq "azure-powershell") {
-            $majorReleases = $response |
-                Where-Object { $_.tag_name -match "^v\d+\.\d+\.0" } |
-                Sort-Object { $_.id } -Descending
-        }
-
+        If ($moduleName -eq 'azure-powershell') {
+            $majorReleases = $response  | Where-Object { $_.tag_name -match '^v\d+\.\d+\.0' } | Sort-Object { $_.id } -Descending
+        } 
         $lastOneRelease = $majorReleases | Select-Object -First 1
+    } catch {
+        Write-Verbose "Attempting to find the latest major release failed with the error: $($_.Exception.Message)"
     }
-    catch {
-        Write-Verbose (
-            "Attempting to find the latest major release failed with the error: " +
-            $_.Exception.Message
-        )
-    }
-
     return $lastOneRelease
 }
 
@@ -305,12 +293,10 @@ function Get-LatestModuleFromCommonPath {
 function Get-InstalledMajorRelease {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [string]$moduleName,
-
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [bool]$isWin,
-
         [switch]$localOnly
     )
     $version = ''
@@ -331,24 +317,14 @@ function Get-InstalledMajorRelease {
     }
     if (!$localOnly) {
         try {
-            $installedModule = Get-InstalledModule `
-                -Name $moduleName `
-                -ErrorAction SilentlyContinue |
-                Sort-Object Version -Descending |
-                Select-Object -First 1
-
+            $installedModule = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue | Sort-Object Version -Descending | Select-Object -First 1
             if ($installedModule) {
                 $version = $installedModule.Version.ToString()
-                Write-Debug (
-                    "Found Az module version from Get-InstalledModule: $version"
-                )
+                Write-Debug "Found Az module version from Get-InstalledModule: $version"
                 return $version
             }
-        }
-        catch {
-            Write-Verbose (
-                "Get-InstalledModule failed: " + $_.Exception.Message
-            )
+        } catch {
+            Write-Verbose "Get-InstalledModule failed: $($_.Exception.Message)"
         }
     }
     try {
@@ -395,17 +371,14 @@ function Get-IsSpecifiedPwshAzVersionOlder{
 function Initialize-ModuleVersionValidation {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [string]$moduleName,
-
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [AllowEmptyString()]
         [string]$targetAzurePs,
-
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [string]$displayModuleName,
-
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory=$true)]
         [int]$versionsToReduce
     )
 
@@ -437,7 +410,7 @@ function Initialize-ModuleVersionValidation {
         if ($enableRequestTimeout) {
             $latestRelease = Get-MajorVersionOnAzurePackage `
                 -moduleName $moduleName `
-                -requestTimeoutSeconds 3
+                -requestTimeoutSeconds $script:AzureModuleVersionRequestTimeoutSeconds
         }
         else {
             $latestRelease = Get-MajorVersionOnAzurePackage `
@@ -452,8 +425,6 @@ function Initialize-ModuleVersionValidation {
         }
     }
     catch {
-        Write-Verbose (
-            "Error while validating Az version: " + $_.Exception.Message
-        )
+        Write-Verbose "Error while validating Az version: $($_.Exception.Message)"
     }
 }
