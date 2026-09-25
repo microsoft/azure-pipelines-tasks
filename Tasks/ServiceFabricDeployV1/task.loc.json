@@ -17,7 +17,7 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 281,
     "Patch": 0
   },
   "demands": [
@@ -421,6 +421,7 @@
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
     "UnsupportedARMAuthScheme": "ms-resource:loc.messages.UnsupportedARMAuthScheme",
     "UnsupportedContainerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedContainerRegistryAuthScheme",
+    "SFSDK_InvalidManifestPathSegment": "ms-resource:loc.messages.SFSDK_InvalidManifestPathSegment",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",
     "SFSDK_UnableToVerifyClusterConnection": "ms-resource:loc.messages.SFSDK_UnableToVerifyClusterConnection",
