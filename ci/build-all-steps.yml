@@ -14,6 +14,9 @@ parameters:
 - name: signNodeModules
   type: boolean
   default: false
+- name: catalogGenerationThrottle
+  type: number
+  default: 4
 
 steps:
 
@@ -176,6 +179,7 @@ steps:
       parameters:
         tasksRoot: $(Build.SourcesDirectory)\_build\Tasks
         signNodeModules: ${{ parameters.signNodeModules }}
+        catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js true individually
