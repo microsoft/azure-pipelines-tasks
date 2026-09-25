@@ -107,6 +107,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
@@ -162,7 +163,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try {
         # Importing required version of azure cmdlets according to azureps installed on machine
         $azureUtility = Get-AzureUtility
@@ -319,5 +319,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $endpoint.Auth.Scheme -ErrorAction SilentlyContinue
 }
