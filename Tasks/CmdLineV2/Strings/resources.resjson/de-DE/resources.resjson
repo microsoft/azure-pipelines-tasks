@@ -14,5 +14,7 @@
   "loc.messages.JS_Stderr": "Bash hat mindestens eine Zeile in den Standardfehlerstream geschrieben.",
   "loc.messages.PS_ExitCode": "\"Cmd.exe\" wurde mit dem Code \"{0}\" beendet.",
   "loc.messages.PS_UnableToDetermineExitCode": "Unerwartete Ausnahme. Der Exitcode konnte aus \"cmd.exe\" nicht bestimmt werden.",
+  "loc.messages.ComSpecNotSet": "Die Umgebungsvariable „ComSpec“ ist nicht gesetzt oder leer. Diese Variable wird benötigt, um cmd.exe zu finden. Stellen Sie sicher, dass sie nicht versehentlich gelöscht wurde und dass der Agent-Dienst nach jeder Änderung der Umgebungsvariablen neu gestartet wurde.",
+  "loc.messages.ComSpecInvalidPath": "Die Umgebungsvariable „ComSpec“ ist auf „{0}“ gesetzt, doch dieser Pfad existiert nicht oder es handelt sich nicht um eine Datei. Überprüfen Sie, ob sich „cmd.exe“ an diesem Speicherort befindet.",
   "loc.messages.ScriptContents": "Skriptinhalte:"
 }
