@@ -1,3 +1,6 @@
+# Bounded deadline for the non-critical GitHub module-version advisory request.
+$script:AzureModuleVersionRequestTimeoutSeconds = 3
+
 function Get-SavedModuleContainerPath {
     [CmdletBinding()]
     param (
@@ -202,16 +205,51 @@ function CleanUp-PSModulePathForHostedAgent {
 }
 
 
+function Invoke-AzureModuleVersionRequest {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$url,
+
+        [Parameter(Mandatory = $true)]
+        [int]$requestTimeoutSeconds
+    )
+
+    Add-Type -AssemblyName System.Net.Http
+
+    $handler = New-Object System.Net.Http.HttpClientHandler
+    $handler.DefaultProxyCredentials = [System.Net.CredentialCache]::DefaultCredentials
+
+    # HttpClient owns the handler by default, so disposing the client also disposes the handler.
+    $client = New-Object System.Net.Http.HttpClient($handler)
+
+    try {
+        $client.Timeout = [TimeSpan]::FromSeconds($requestTimeoutSeconds)
+        $client.DefaultRequestHeaders.UserAgent.ParseAdd("AzurePipelines-AzurePowerShell")
+
+        $content = $client.GetStringAsync($url).GetAwaiter().GetResult()
+        return $content | ConvertFrom-Json
+    }
+    finally {
+        $client.Dispose()
+    }
+}
+
 function Get-MajorVersionOnAzurePackage {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true)]
-        [string]$moduleName
+        [string]$moduleName,
+        [int]$requestTimeoutSeconds = 0
     )
     # GitHub API URL for Azure releases
     $url = "https://api.github.com/repos/Azure/${moduleName}/releases"
     try {
-        $response = Invoke-RestMethod -Uri $url -Method Get
+        if ($requestTimeoutSeconds -gt 0) {
+            $response = Invoke-AzureModuleVersionRequest -url $url -requestTimeoutSeconds $requestTimeoutSeconds
+        } else {
+            $response = Invoke-RestMethod -Uri $url -Method Get
+        }
         $majorReleases = $response
         If ($moduleName -eq 'azure-powershell') {
             $majorReleases = $response  | Where-Object { $_.tag_name -match '^v\d+\.\d+\.0' } | Sort-Object { $_.id } -Descending
@@ -258,7 +296,8 @@ function Get-InstalledMajorRelease {
         [Parameter(Mandatory=$true)]
         [string]$moduleName,
         [Parameter(Mandatory=$true)]
-        [bool]$isWin
+        [bool]$isWin,
+        [switch]$localOnly
     )
     $version = ''
     $versionPattern = "[0-9]+\.[0-9]+\.[0-9]+"
@@ -276,15 +315,17 @@ function Get-InstalledMajorRelease {
             return $version
         }
     }
-    try {
-        $installedModule = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue | Sort-Object Version -Descending | Select-Object -First 1
-        if ($installedModule) {
-            $version = $installedModule.Version.ToString()
-            Write-Debug "Found Az module version from Get-InstalledModule: $version"
-            return $version
+    if (!$localOnly) {
+        try {
+            $installedModule = Get-InstalledModule -Name $moduleName -ErrorAction SilentlyContinue | Sort-Object Version -Descending | Select-Object -First 1
+            if ($installedModule) {
+                $version = $installedModule.Version.ToString()
+                Write-Debug "Found Az module version from Get-InstalledModule: $version"
+                return $version
+            }
+        } catch {
+            Write-Verbose "Get-InstalledModule failed: $($_.Exception.Message)"
         }
-    } catch {
-        Write-Verbose "Get-InstalledModule failed: $($_.Exception.Message)"
     }
     try {
         # First try to get the Az module directly
@@ -340,18 +381,50 @@ function Initialize-ModuleVersionValidation {
         [Parameter(Mandatory=$true)]
         [int]$versionsToReduce
     )
+
     try {
-        $DisplayWarningForOlderAzVersion = Get-VstsPipelineFeature -FeatureName "ShowWarningOnOlderAzureModules"
-        if ($DisplayWarningForOlderAzVersion -eq $true) {
-            if ($targetAzurePs -eq "") {
-                $targetAzurePs = Get-InstalledMajorRelease -moduleName $displayModuleName -isWin $true
-            }
-            $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName
-            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease.tag_name) -versionsToReduce $versionsToReduce) {
-                Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease.tag_name))
-            }       
+        $displayWarning = Get-VstsPipelineFeature `
+            -FeatureName "ShowWarningOnOlderAzureModules"
+
+        if ($displayWarning -ne $true) {
+            return
         }
-    } catch {
+
+        $enableRequestTimeout = Get-VstsPipelineFeature `
+            -FeatureName "EnableAzureModuleVersionCheckRequestTimeout"
+
+        if ($targetAzurePs -eq "") {
+            if ($enableRequestTimeout) {
+                $targetAzurePs = Get-InstalledMajorRelease `
+                    -moduleName $displayModuleName `
+                    -isWin $true `
+                    -localOnly
+            }
+            else {
+                $targetAzurePs = Get-InstalledMajorRelease `
+                    -moduleName $displayModuleName `
+                    -isWin $true
+            }
+        }
+
+        if ($enableRequestTimeout) {
+            $latestRelease = Get-MajorVersionOnAzurePackage `
+                -moduleName $moduleName `
+                -requestTimeoutSeconds $script:AzureModuleVersionRequestTimeoutSeconds
+        }
+        else {
+            $latestRelease = Get-MajorVersionOnAzurePackage `
+                -moduleName $moduleName
+        }
+
+        if (Get-IsSpecifiedPwshAzVersionOlder `
+                -specifiedVersion $targetAzurePs `
+                -latestRelease $latestRelease.tag_name `
+                -versionsToReduce $versionsToReduce) {
+            Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $latestRelease.tag_name)
+        }
+    }
+    catch {
         Write-Verbose "Error while validating Az version: $($_.Exception.Message)"
     }
 }
