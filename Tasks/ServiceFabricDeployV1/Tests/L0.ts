@@ -63,6 +63,12 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Publish upgrade rejects path traversal in application type name', done => {
         psr.run(path.join(__dirname, 'PublishUpgradeRejectsTraversalInApplicationTypeName.ps1'), done);
     });
+    it('Assert-ValidManifestPathSegment rejects Windows-normalized trailing dot/space names', done => {
+        psr.run(path.join(__dirname, 'AssertValidManifestPathSegmentRejectsWindowsNormalizedNames.ps1'), done);
+    });
+    it('Docker settings rejects path traversal in service manifest name', done => {
+        psr.run(path.join(__dirname, 'DockerSettingsRejectsTraversalInServiceManifestName.ps1'), done);
+    });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
     });

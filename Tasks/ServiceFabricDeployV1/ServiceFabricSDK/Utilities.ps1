@@ -88,18 +88,21 @@ function Get-NamesFromApplicationManifest
     Write-Output (New-Object psobject -Property $h)
 }
 
-# ApplicationTypeName is read straight out of the local ApplicationManifest.xml and is then used as
-# the package's path inside the cluster image store. Service Fabric only ever emits a simple name
-# here, but the value comes from XML inside the application package, which is only as trustworthy as
-# whatever produced that package. A name such as '..\..\x', 'C:\x' or '\\server\share\x' would
-# otherwise point the copy, register and remove operations at a location outside the folder the
-# package belongs to. That matters most when the image store is backed by a file share
-# (ImageStoreConnectionString of the form 'file:...'), because the image store path then resolves to
-# a real filesystem path and the remove operation becomes an arbitrary delete.
-function Assert-ValidImageStorePathSegment
+# Shared by every caller that builds a file path from a name taken out of an untrusted application/service
+# manifest: ApplicationTypeName (used as the package's path inside the cluster image store),
+# ServiceManifestRef/@ServiceManifestName and CodePackage/ConfigPackage/DataPackage @Name (used as folder
+# names while building the diff package and while reading the docker/container settings from the service
+# manifest). Service Fabric only ever emits a simple name in these positions, but the manifest is only as
+# trustworthy as whatever produced the application package, so a name such as '..\..\x', 'C:\x' or
+# '\\server\share\x' would escape the folder the value is supposed to stay inside of. Windows also silently
+# strips a trailing '.' or ' ' off a path segment outside of the '\\?\' long-path form - eg 'MyApp. ' resolves
+# to 'MyApp', '...' to the parent directory, and '.. ' to '..' - so those must be rejected too, even though
+# none of them fail the checks above on their own.
+function Assert-ValidManifestPathSegment
 {
     param(
-        [string] $Name
+        [string] $Name,
+        [string] $ElementDescription
     )
 
     if ([string]::IsNullOrWhiteSpace($Name) -or
@@ -107,10 +110,20 @@ function Assert-ValidImageStorePathSegment
         $Name -eq '..' -or
         $Name.IndexOfAny([char[]]@('\', '/')) -ne -1 -or
         $Name.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1 -or
-        [System.IO.Path]::IsPathRooted($Name))
+        [System.IO.Path]::IsPathRooted($Name) -or
+        $Name.TrimEnd('.', ' ') -ne $Name)
     {
-        throw (Get-VstsLocString -Key SFSDK_InvalidApplicationTypeName -ArgumentList @($Name))
+        throw (Get-VstsLocString -Key SFSDK_InvalidManifestPathSegment -ArgumentList @($ElementDescription, $Name))
     }
+}
+
+function Assert-ValidImageStorePathSegment
+{
+    param(
+        [string] $Name
+    )
+
+    Assert-ValidManifestPathSegment -Name $Name -ElementDescription 'ApplicationTypeName'
 }
 
 function Get-ImageStoreConnectionStringFromClusterManifest

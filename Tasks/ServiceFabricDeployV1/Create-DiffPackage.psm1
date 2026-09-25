@@ -1,3 +1,7 @@
+# Load the shared manifest-path-segment validator (Assert-ValidManifestPathSegment) at module scope, so it
+# is available both here and in Copy-DiffPackage below regardless of which function is invoked first.
+. "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
+
 # Names that come out of the local ApplicationManifest.xml / ServiceManifest.xml
 # (ServiceManifestRef/@ServiceManifestName and the Name attribute of CodePackage, ConfigPackage and
 # DataPackage) are used as folder names when building the temporary diff package, and the resulting
@@ -16,15 +20,7 @@ function Assert-ValidDiffPackageName
         [string] $ElementDescription
     )
 
-    if ([string]::IsNullOrWhiteSpace($Name) -or
-        $Name -eq '.' -or
-        $Name -eq '..' -or
-        $Name.IndexOfAny([char[]]@('\', '/')) -ne -1 -or
-        $Name.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1 -or
-        [System.IO.Path]::IsPathRooted($Name))
-    {
-        throw (Get-VstsLocString -Key DIFFPKG_InvalidPackageName -ArgumentList @($ElementDescription, $Name))
-    }
+    Assert-ValidManifestPathSegment -Name $Name -ElementDescription $ElementDescription
 }
 
 # Defense in depth for the paths derived from the names validated above: even if a future change
@@ -45,7 +41,7 @@ function Assert-PathContainedIn
 
     if (!$childFullPath.StartsWith($parentPrefix, [System.StringComparison]::OrdinalIgnoreCase))
     {
-        throw (Get-VstsLocString -Key DIFFPKG_InvalidPackageName -ArgumentList @($ElementDescription, $Name))
+        throw (Get-VstsLocString -Key SFSDK_InvalidManifestPathSegment -ArgumentList @($ElementDescription, $Name))
     }
 }
 
