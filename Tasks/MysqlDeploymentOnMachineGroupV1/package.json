@@ -34,9 +34,5 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
-  },
-  "overrides": {
-    "form-data": "^4.0.6",
-    "minimatch": "^3.1.4"
   }
 }
