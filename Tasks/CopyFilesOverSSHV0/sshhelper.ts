@@ -237,9 +237,9 @@ export class SshHelper {
                     filteredStdout.write(data);
                 }).stderr.on('data', (data) => {
                     stdErrWritten = true;
-                    tl.debugExternalOutput('stderr = ' + data, { source: 'remote' });
+                    tl.debug('stderr = ' + data);
                     if (data && data.toString().trim() !== '') {
-                        tl.errorExternalOutput(data, { source: 'remote' });
+                        tl.error(data);
                     }
                 });
             });
