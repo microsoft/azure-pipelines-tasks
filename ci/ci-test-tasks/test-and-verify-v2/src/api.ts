@@ -26,7 +26,14 @@ class API {
             throw new Error('Task list is not provided');
         }
 
-        this.tasks = TaskArg.split(',');
+        // Blank entries must never reach the pipeline matcher: it selects by name
+        // prefix, and every name starts with the empty string, so a single blank
+        // entry fans the run out to every pipeline in the project.
+        this.tasks = TaskArg.split(',').map(task => task.trim()).filter(task => task.length > 0);
+        if (this.tasks.length === 0) {
+            throw new Error(`Task list "${TaskArg}" contains no task names`);
+        }
+
         const authHandler = getPersonalAccessTokenHandler(authToken);
         this.webApi = new WebApi(adoUrl, authHandler);
     }
