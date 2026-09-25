@@ -212,7 +212,10 @@ export class SshHelper {
                     return;
                 }
 
+                const filteredStdout = tl.createExternalOutputStream({source: 'remote', destination: process.stdout});
+
                 stream.on('close', (code, signal) => {
+                    filteredStdout.end();
                     tl.debug('code = ' + code + ', signal = ' + signal);
 
                     if (code && code != 0) {
@@ -231,7 +234,7 @@ export class SshHelper {
                         }
                     }
                 }).on('data', (data) => {
-                    console.log(data.toString());
+                    filteredStdout.write(data);
                 }).stderr.on('data', (data) => {
                     stdErrWritten = true;
                     tl.debug('stderr = ' + data);
