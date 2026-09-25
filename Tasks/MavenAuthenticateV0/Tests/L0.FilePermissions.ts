@@ -125,7 +125,7 @@ describe('MavenAuthenticate L0 - File Permissions', function () {
         try {
             await tr.runAsync();
             TestHelpers.assertSuccess(tr);
-            TestHelpers.assertOutputContains(tr, 'Unable to set restrictive permissions');
+            TestHelpers.assertOutputContains(tr, 'Warning_ChmodFailed');
         } finally {
             delete process.env[TestEnvVars.chmodShouldFail];
         }
