@@ -9,6 +9,7 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // Use os.tmpdir() to get the system's actual temp directory (cross-platform)
 const tempDir = os.tmpdir();
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
+process.env['DISTRIBUTEDTASK_TASKS_AZURECLICREDENTIALFILEISOLATIONENABLED'] = 'false';
 
 // Inputs
 tmr.setInput('connectedServiceNameARM', 'AzureRM');
