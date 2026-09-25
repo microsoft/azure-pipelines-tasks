@@ -18,7 +18,7 @@
   "preview": false,
   "version": {
     "Major": 0,
-    "Minor": 279,
+    "Minor": 280,
     "Patch": 0
   },
   "minimumAgentVersion": "2.104.1",
@@ -318,6 +318,16 @@
     "Node24": {
       "target": "azurespringappsdeployment.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "testEndpoint"
+      ]
     }
   },
   "messages": {
