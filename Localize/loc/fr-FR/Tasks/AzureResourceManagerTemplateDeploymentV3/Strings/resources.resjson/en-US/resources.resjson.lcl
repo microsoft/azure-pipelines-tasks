@@ -850,7 +850,7 @@
         <Str Cat="Text">
           <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nous avons publié les variables de résultat du déploiement ont dans l’ancien format, car la variable %s est définie sur une valeur qui empêche l’agent de décoder l’échappement de pourcentage. Supprimez cette variable ou définissez-la sur la valeur true pour adopter le format sécurisé, qui empêche les noms et les valeurs de la sortie d’être interprétés en tant que commandes de l’agent.]]></Val>
+            <Val><![CDATA[Nous avons publié les variables de résultat du déploiement dans l’ancien format, car la variable %s est définie sur une valeur qui empêche l’agent de décoder l’échappement de pourcentage. Supprimez cette variable ou définissez-la sur la valeur true pour adopter le format sécurisé, qui empêche les noms et les valeurs de la sortie d’être interprétés en tant que commandes de l’agent.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
