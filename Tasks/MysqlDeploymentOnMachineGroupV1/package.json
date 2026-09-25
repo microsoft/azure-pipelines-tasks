@@ -22,8 +22,8 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
-    "azure-pipelines-task-lib": "^4.17.2",
-    "azure-pipelines-tasks-webdeployment-common": "^4.274.2",
+    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-tasks-webdeployment-common": "^4.281.0",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
     "normalize-path": "2.0.1",
@@ -34,9 +34,5 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
-  },
-  "overrides": {
-    "form-data": "^4.0.6",
-    "minimatch": "^3.1.4"
   }
 }
