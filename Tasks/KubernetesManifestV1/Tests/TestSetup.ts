@@ -394,8 +394,10 @@ tr.registerMock('../utils/FileHelper', {
     writeManifestToFile: fh.writeManifestToFile
 });
 
-tr.registerMock('uuid/v4', function () {
-    return 'random';
+tr.registerMock('uuid', {
+    v4: function () {
+        return 'random';
+    }
 });
 
 tr.run();
