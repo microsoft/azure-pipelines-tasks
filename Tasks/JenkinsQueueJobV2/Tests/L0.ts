@@ -4,7 +4,11 @@
 import assert = require('assert');
 import path = require('path');
 import process = require('process');
+import stream = require('stream');
+import tl = require('azure-pipelines-task-lib/task');
+import { createJenkinsConsoleOutputStream } from '../job';
 import { JobState, checkStateTransitions } from '../states';
+import { StringWritable } from '../util';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
@@ -142,6 +146,53 @@ describe('JenkinsQueueJob L0 Suite', function () {
             for (const state of stateList) {
                 checkStateTransitions(JobState[testedState], JobState[state]);
             }
+        }
+    });
+
+    it('filters VSO commands from chunked Jenkins console output', async () => {
+        const chunks: Buffer[] = [];
+        const destination = new stream.Writable({
+            write: (chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
+                chunks.push(Buffer.from(chunk));
+                callback();
+            }
+        });
+        const output = createJenkinsConsoleOutputStream(destination);
+        const ended = new Promise<void>((resolve, reject) => {
+            output.on('end', resolve);
+            output.on('error', reject);
+            destination.on('error', reject);
+        });
+
+        output.write('ordinary Jenkins output\n##vs');
+        output.end('o[task.setvariable variable=unsafe]value\n');
+        await ended;
+
+        assert.strictEqual(
+            Buffer.concat(chunks).toString('utf8'),
+            'ordinary Jenkins output\n##_vso[task.setvariable variable=unsafe]value\n'
+        );
+    });
+
+    it('marks Jenkins error response chunks as remote output', () => {
+        const data = 'Jenkins response ##vso[task.setvariable variable=unsafe]value';
+        let debugMessage: string;
+        let debugSource: string;
+        const originalDebugExternalOutput = tl.debugExternalOutput;
+        tl.debugExternalOutput = (message: string, options): void => {
+            debugMessage = message;
+            debugSource = options.source;
+        };
+
+        try {
+            const output = new StringWritable({ decodeStrings: false });
+            output._write(data, 'utf8', () => undefined);
+
+            assert.strictEqual(debugMessage, data);
+            assert.strictEqual(debugSource, 'remote');
+            assert.strictEqual(output.toString(), data);
+        } finally {
+            tl.debugExternalOutput = originalDebugExternalOutput;
         }
     });
 

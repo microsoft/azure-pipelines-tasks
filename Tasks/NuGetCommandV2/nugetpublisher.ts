@@ -324,7 +324,10 @@ async function publishPackageNuGet(
         stdErrText += data.toString('utf-8');
     });
 
-    const execOptions = { ignoreReturnCode: true } as IExecOptions;
+    const execOptions = {
+        ignoreReturnCode: true,
+        externalOutput: { source: "childProcess" }
+    } as IExecOptions;
     if (options.useApiKeyEnvironment) {
         execOptions.env = { ...process.env, NUGET_API_KEY: options.apiKey };
     }
@@ -366,7 +369,9 @@ async function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNu
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult: number = await vstsNuGetPushTool.exec();
+    const execResult: number = await vstsNuGetPushTool.exec({
+        externalOutput: { source: "childProcess" }
+    });
     if (execResult === 0) {
         return;
     }

@@ -21,6 +21,7 @@
   },
   "overrides": {
     "adm-zip": "^0.6.0",
+    "@azure/msal-browser": "^5.6.3",
     "brace-expansion": "^1.1.18",
     "jws": "^4.0.0",
     "minimatch": "3.1.5",

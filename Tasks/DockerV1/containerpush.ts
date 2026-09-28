@@ -14,7 +14,7 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
     command.line(commandArguments);
 
     if (!imageDigestFile) {
-        return connection.execCommand(command);
+        return connection.execCommand(command, dockerCommandUtils.createSanitizedExecOptions());
     }
 
     var output = "";
@@ -22,7 +22,7 @@ function dockerPush(connection: ContainerConnection, image: string, imageDigestF
         output += data;
     });
 
-    return connection.execCommand(command).then(() => {
+    return connection.execCommand(command, dockerCommandUtils.createSanitizedExecOptions()).then(() => {
         // Parse the output to find the repository digest
         var imageDigest = output.match(/^[^:]*: digest: ([^ ]*) size: \d*$/m)[1];
         if (imageDigest) {
@@ -42,7 +42,7 @@ export function run(connection: ContainerConnection): any {
     try {
         var imageLsCommand = connection.createCommand();
         imageLsCommand.arg("images");
-        connection.execCommand(imageLsCommand);
+        connection.execCommand(imageLsCommand, dockerCommandUtils.createSanitizedExecOptions());
     } catch (ex) {
         
     }

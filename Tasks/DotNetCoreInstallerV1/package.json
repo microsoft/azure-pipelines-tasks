@@ -29,10 +29,10 @@
     "@types/node": "^20.3.1",
     "@types/q": "^1.0.7",
     "@types/semver": "6.0.1",
-    "azure-pipelines-task-lib": "^5.279.0",
-    "azure-pipelines-tool-lib": "^2.279.2",
+    "azure-pipelines-task-lib": "^5.280.1",
+    "azure-pipelines-tool-lib": "^2.280.1",
     "semver": "^7.6.3",
-    "typed-rest-client": "1.8.9"
+    "typed-rest-client": "1.8.11"
   },
   "devDependencies": {
     "typescript": "5.1.6"
