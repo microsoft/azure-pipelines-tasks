@@ -2,6 +2,8 @@ import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as coveragePublisher from 'coveragepublisher/coveragepublisher';
 
+const sourcePathContainmentFeature = 'EnablePublishCodeCoverageResultsV2SourcePathContainment';
+
 // Main entry point of this task.
 async function run() {
     try {
@@ -12,7 +14,9 @@ async function run() {
         const summaryFileLocations = taskLib.getInput('summaryFileLocation', true);
         const failIfCoverageIsEmpty: boolean = taskLib.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = taskLib.getVariable('System.DefaultWorkingDirectory');
+        const buildSourcesDirectory: string = taskLib.getVariable('Build.SourcesDirectory');
         const pathToSources: string = taskLib.getInput('pathToSources');
+        const enableTrustedSourcePathFiltering = taskLib.getPipelineFeature(sourcePathContainmentFeature);
         const publishHtmlReport: boolean = taskLib.getBoolInput('publishHtmlReport');
 
         var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
@@ -25,7 +29,13 @@ async function run() {
             }
         }
         else{
-            await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources, publishHtmlReport);
+            await coveragePublisher.PublishCodeCoverage(
+                resolvedSummaryFiles,
+                pathToSources, publishHtmlReport,
+                enableTrustedSourcePathFiltering
+                    ? [workingDirectory, buildSourcesDirectory].filter(directory => !!directory)
+                    : undefined,
+                enableTrustedSourcePathFiltering);
         }       
 
     } catch (err) {
