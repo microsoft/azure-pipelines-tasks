@@ -78,3 +78,27 @@ Assert-WasCalled Get-MajorVersionOnAzurePackage -ParametersEvaluator {
     $moduleName -eq "azure-powershell" -and
     $null -eq $requestTimeoutSeconds
 }
+
+# Timeout enforcement: a stalled endpoint must make the bounded request give up quickly.
+$listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+$listener.Start()
+try {
+    $port = ([System.Net.IPEndPoint]$listener.LocalEndpoint).Port
+    $null = $listener.AcceptTcpClientAsync()
+
+    $threw = $false
+    $watch = [System.Diagnostics.Stopwatch]::StartNew()
+    try {
+        Invoke-AzureModuleVersionRequest -url "http://127.0.0.1:$port/" -requestTimeoutSeconds 1
+    }
+    catch {
+        $threw = $true
+    }
+    $watch.Stop()
+
+    Assert-AreEqual $true $threw
+    Assert-AreEqual $true ($watch.Elapsed.TotalSeconds -lt 15)
+}
+finally {
+    $listener.Stop()
+}

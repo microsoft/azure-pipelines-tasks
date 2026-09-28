@@ -218,6 +218,8 @@ function Invoke-AzureModuleVersionRequest {
     Add-Type -AssemblyName System.Net.Http
 
     $handler = New-Object System.Net.Http.HttpClientHandler
+    # Route through the system/corporate proxy (default) and supply the agent's default proxy credentials, matching Invoke-RestMethod.
+    $handler.UseProxy = $true
     $handler.DefaultProxyCredentials = [System.Net.CredentialCache]::DefaultCredentials
 
     # HttpClient owns the handler by default, so disposing the client also disposes the handler.
@@ -383,48 +385,26 @@ function Initialize-ModuleVersionValidation {
     )
 
     try {
-        $displayWarning = Get-VstsPipelineFeature `
-            -FeatureName "ShowWarningOnOlderAzureModules"
-
-        if ($displayWarning -ne $true) {
-            return
-        }
-
-        $enableRequestTimeout = Get-VstsPipelineFeature `
-            -FeatureName "EnableAzureModuleVersionCheckRequestTimeout"
-
-        if ($targetAzurePs -eq "") {
+        $DisplayWarningForOlderAzVersion = Get-VstsPipelineFeature -FeatureName "ShowWarningOnOlderAzureModules"
+        if ($DisplayWarningForOlderAzVersion -eq $true) {
+            $enableRequestTimeout = Get-VstsPipelineFeature -FeatureName "EnableAzureModuleVersionCheckRequestTimeout"
+            if ($targetAzurePs -eq "") {
+                if ($enableRequestTimeout) {
+                    $targetAzurePs = Get-InstalledMajorRelease -moduleName $displayModuleName -isWin $true -localOnly
+                } else {
+                    $targetAzurePs = Get-InstalledMajorRelease -moduleName $displayModuleName -isWin $true
+                }
+            }
             if ($enableRequestTimeout) {
-                $targetAzurePs = Get-InstalledMajorRelease `
-                    -moduleName $displayModuleName `
-                    -isWin $true `
-                    -localOnly
+                $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName -requestTimeoutSeconds $script:AzureModuleVersionRequestTimeoutSeconds
+            } else {
+                $latestRelease = Get-MajorVersionOnAzurePackage -moduleName $moduleName
             }
-            else {
-                $targetAzurePs = Get-InstalledMajorRelease `
-                    -moduleName $displayModuleName `
-                    -isWin $true
-            }
+            if (Get-IsSpecifiedPwshAzVersionOlder -specifiedVersion $targetAzurePs -latestRelease $($latestRelease.tag_name) -versionsToReduce $versionsToReduce) {
+                Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $($latestRelease.tag_name))
+            }       
         }
-
-        if ($enableRequestTimeout) {
-            $latestRelease = Get-MajorVersionOnAzurePackage `
-                -moduleName $moduleName `
-                -requestTimeoutSeconds $script:AzureModuleVersionRequestTimeoutSeconds
-        }
-        else {
-            $latestRelease = Get-MajorVersionOnAzurePackage `
-                -moduleName $moduleName
-        }
-
-        if (Get-IsSpecifiedPwshAzVersionOlder `
-                -specifiedVersion $targetAzurePs `
-                -latestRelease $latestRelease.tag_name `
-                -versionsToReduce $versionsToReduce) {
-            Write-Warning (Get-VstsLocString -Key Az_LowerVersionWarning -ArgumentList $displayModuleName, $targetAzurePs, $latestRelease.tag_name)
-        }
-    }
-    catch {
+    } catch {
         Write-Verbose "Error while validating Az version: $($_.Exception.Message)"
     }
 }
