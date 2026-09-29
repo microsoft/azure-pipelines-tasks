@@ -7,17 +7,61 @@ import * as path from 'path';
 import * as UUID from 'uuid/v4';
 import {execSync} from 'child_process';
 
-export async function PublishCodeCoverage(inputFiles: string[], sourceDirectory?: string, publishHtmlReport: boolean = true) {
+export async function PublishCodeCoverage(
+    inputFiles: string[],
+    sourceDirectory?: string,
+    publishHtmlReport: boolean = true,
+    trustedSourceDirectories?: string[],
+    enableTrustedSourcePathFiltering: boolean = false) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
-    publishCoverage(inputFiles, reportDirectory, sourceDirectory, publishHtmlReport)
+    const publishing = publishCoverage(
+        inputFiles,
+        reportDirectory,
+        sourceDirectory,
+        publishHtmlReport,
+        trustedSourceDirectories,
+        enableTrustedSourcePathFiltering);
+    if (enableTrustedSourcePathFiltering) {
+        await publishing;
+    }
 }
 
-async function publishCoverage(inputFiles: string[], reportDirectory: string, pathToSources?: string, publishHtmlReport: boolean = true) {
+async function publishCoverage(
+    inputFiles: string[],
+    reportDirectory: string,
+    pathToSources?: string,
+    publishHtmlReport: boolean = true,
+    trustedSourceDirectories?: string[],
+    enableTrustedSourcePathFiltering: boolean = false) {
 
     if(!inputFiles || inputFiles.length == 0) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
         return;
+    }
+
+    let publisherWorkingDirectory = process.cwd();
+    let trustedRoots = '';
+    if (enableTrustedSourcePathFiltering) {
+        taskLib.setResourcePath(path.join(__dirname, 'module.json'), true);
+        const workspaceRoots = (trustedSourceDirectories || [])
+            .filter(directory => !isNullOrWhitespace(directory));
+        trustedRoots = [...workspaceRoots, pathToSources]
+            .filter(directory => !isNullOrWhitespace(directory))
+            .join(';');
+
+        if (isNullOrWhitespace(trustedRoots)) {
+            throw new Error(taskLib.loc('NoTrustedCoverageSourceDirectories'));
+        }
+
+        if (workspaceRoots.length > 0) {
+            publisherWorkingDirectory = workspaceRoots[0];
+        }
+
+        if (!fs.existsSync(publisherWorkingDirectory) ||
+            !fs.statSync(publisherWorkingDirectory).isDirectory()) {
+            throw new Error(taskLib.loc('InvalidCoverageWorkingDirectory', publisherWorkingDirectory));
+        }
     }
 
     const osvar = process.platform;
@@ -63,6 +107,15 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         dotnet.arg(pathToSources);
     }
 
+    if(enableTrustedSourcePathFiltering && !isNullOrWhitespace(trustedRoots)) {
+        dotnet.arg('--trustedSourceDirectory');
+        dotnet.arg(trustedRoots);
+    }
+
+    if(enableTrustedSourcePathFiltering) {
+        dotnet.arg('--enableTrustedSourcePathFiltering');
+    }
+
     if(!publishHtmlReport) {
         dotnet.arg('--publishHtmlReport');
         dotnet.arg('false');
@@ -81,15 +134,19 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
             "SYSTEM_TEAMPROJECTID": taskLib.getVariable('System.TeamProjectId'),
             "PIPELINES_COVERAGEPUBLISHER_DEBUG": taskLib.getVariable('PIPELINES_COVERAGEPUBLISHER_DEBUG'),
             "DOTNET_SYSTEM_GLOBALIZATION_INVARIANT": taskLib.getVariable('DOTNET_SYSTEM_GLOBALIZATION_INVARIANT'),
+            ...(enableTrustedSourcePathFiltering
+                ? { "AZP_COVERAGE_TRUSTED_SOURCE_DIRECTORIES": trustedRoots }
+                : {}),
             // Comprehensive proxy configuration for .NET HttpClient
             ...proxyConfig
         };
 
         await dotnet.exec({
             env,
+            cwd: publisherWorkingDirectory,
             ignoreReturnCode: false,
             failOnStdErr: true,
-            windowsVerbatimArguments: true,
+            windowsVerbatimArguments: !enableTrustedSourcePathFiltering,
             errStream: {
                 write: (data: Buffer) => {
                     console.error(data.toString());
@@ -99,7 +156,10 @@ async function publishCoverage(inputFiles: string[], reportDirectory: string, pa
         } as any);
 
     } catch (err) {
-        // Logging should be handled thorugh error stream
+        if (enableTrustedSourcePathFiltering) {
+            const message = err instanceof Error ? err.message : String(err);
+            taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc('CoveragePublisherExecutionFailed', message));
+        }
     }
 }
 
