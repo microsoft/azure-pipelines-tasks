@@ -28,23 +28,13 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
-- name: signNodeModules
-  displayName: Catalog sign files inside node_modules
-  type: boolean
-  default: true
-- name: catalogGenerationThrottle
-  displayName: Maximum parallel catalog generation workers
-  type: number
-  default: 4
+- name: nodeModulesSigningMode
+  displayName: Choose node_modules signing option
+  type: string
+  default: 'Catalog signing'
   values:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
+  - 'Catalog signing'
+  - 'Individual file signing'
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
@@ -61,6 +51,19 @@ parameters:
   displayName: Use Semver Build Config to support canary rollout
   type: boolean
   default: false
+- name: catalogGenerationThrottle
+  displayName: Maximum parallel catalog generation workers (Catalog signing only)
+  type: number
+  default: 4
+  values:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
 
 variables:
 - name: currentDate
@@ -158,7 +161,7 @@ extends:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
             signTasks: true
-            signNodeModules: ${{ parameters.signNodeModules }}
+            nodeModulesSigningMode: ${{ parameters.nodeModulesSigningMode }}
             catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
       # Courtesy Push
