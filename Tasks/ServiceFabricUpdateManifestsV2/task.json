@@ -19,7 +19,7 @@
   ],
   "version": {
     "Major": 2,
-    "Minor": 280,
+    "Minor": 281,
     "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
@@ -190,6 +190,7 @@
     "ImageDigestListMismatch": "The list of image names and the list of digests must be the same length. Number of image names: '{0}', number of image digests: '{1}'.",
     "AmbiguousImages": "The repository '{0}' has more than one digest. You must provide a path to the list of the original images names in the input \"Image Names Path\" to disambiguate.",
     "ImageDigestNameMismatch": "The digest '{0}' does not match the image '{1}'.",
-    "NoDigestForImage": "No digest found for image '{0}'."
+    "NoDigestForImage": "No digest found for image '{0}'.",
+    "InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
   }
 }
