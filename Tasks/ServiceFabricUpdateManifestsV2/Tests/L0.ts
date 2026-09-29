@@ -66,6 +66,9 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Update-ServiceVersions) service version prefix changed', (done) => {
             psr.run(path.join(__dirname, 'Update-ServiceVersions.VersionPrefixChanged.ps1'), done);
         })
+        it('(Update-ServiceVersions) rejects path traversal in service manifest name', (done) => {
+            psr.run(path.join(__dirname, 'Update-ServiceVersions.InvalidServiceName.ps1'), done);
+        })
         it('(Update-PackageVersion) no changes', (done) => {
             psr.run(path.join(__dirname, 'Update-PackageVersion.NoChanges.ps1'), done);
         })
@@ -105,6 +108,9 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Find-FileChanges) only the first change is logged', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.LogOnlyFirst.ps1'), done);
         })
+        it('(Update-PackageVersion) rejects path traversal in package name', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.InvalidPackageName.ps1'), done);
+        })
         it('(Update-DockerImageSettings.psm1) test untagged Docker image settings with names file', done => {
             psr.run(path.join(__dirname, 'Test-UntaggedDockerImageSettingsWithNames.ps1'), done);
         })
@@ -122,6 +128,9 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         })
         it('(Update-DockerImageSettings.psm1) test ambiguous tagged Docker image settings without names file', done => {
             psr.run(path.join(__dirname, 'Test-AmbiguousTaggedDockerImageSettingsWithoutNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) rejects path traversal in service manifest name', done => {
+            psr.run(path.join(__dirname, 'Test-DockerImageSettings.InvalidServiceName.ps1'), done);
         })
     }
 });
