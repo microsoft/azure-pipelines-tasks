@@ -3,5 +3,7 @@
  * preserving the original diagnostic text and line structure.
  */
 export function sanitizeForLoggingCommand(value: string): string {
-    return value.replace(/##vso\[/gi, '##_vso[');
+    return value
+        .replace(/##vso\[/gi, '##_vso[')
+        .replace(/##\[/g, '##_[');
 }
