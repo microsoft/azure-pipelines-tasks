@@ -1,3 +1,9 @@
+# Load the shared manifest-path-segment validator (Assert-ValidManifestPathSegment). This runs before
+# Create-DiffPackage.psm1's own validation - configureDockerSettings is applied unconditionally, even when
+# useDiffPackage is disabled - so ServiceManifestRef/@ServiceManifestName must be checked here too, not just
+# in the diff-package path.
+. "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
+
 function Update-DockerSettings
 {
     [CmdletBinding()]
@@ -74,6 +80,14 @@ function Update-DockerSettings
         foreach ($serviceManifestImport in $serviceManifestImports)
         {
             # Open the service manifest associated with the current ServiceManifestImport element
+            #
+            # ServiceManifestName is read straight out of the local ApplicationManifest.xml, and the
+            # manifest is only as trustworthy as whatever produced the application package. A relative
+            # name (eg '..\..\x') would read a file outside the application package, and a UNC name (eg
+            # '\\server\share\x') would cause an outbound SMB request - so it must be validated before
+            # it is joined into a path, exactly like the equivalent name is validated in
+            # Create-DiffPackage.psm1.
+            Assert-ValidManifestPathSegment -Name $serviceManifestImport.ServiceManifestRef.ServiceManifestName -ElementDescription 'ServiceManifestRef/@ServiceManifestName'
             $serviceManifestPath = [System.IO.Path]::Combine($ApplicationPackagePath, $serviceManifestImport.ServiceManifestRef.ServiceManifestName, "ServiceManifest.xml")
             $serviceManifestXml = [xml](Get-Content -LiteralPath $serviceManifestPath)
 

@@ -4,6 +4,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
 import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
+import { runCredentialFileIsolationTests } from './L0CredentialFileIsolation';
 
 describe('AzureCLIV3 Suite', function () {
     const timeout = 30000;
@@ -26,6 +27,8 @@ describe('AzureCLIV3 Suite', function () {
     describe('AZURE_CONFIG_DIR isolation', () => {
         runConfigDirIsolationTests();
     });
+
+    runCredentialFileIsolationTests();
 
     it('Should handle Azure DevOps connection with Workload Identity Federation', function (done) {
         this.timeout(timeout);
