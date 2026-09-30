@@ -261,7 +261,7 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
     } else {
         // hydra: should it be full path or directory above?
         inputDataContract.VsTestConsolePath = tl.getInput('vsTestLocation');
-        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
+        console.log(tl.loc('vstestLocationSpecified', utils.Helper.getVsTestConsoleExeName(), inputDataContract.VsTestConsolePath));
         if (inputDataContract.VsTestConsolePath.endsWith('vstest.console.exe')) {
             inputDataContract.VsTestConsolePath = path.dirname(inputDataContract.VsTestConsolePath);
         }

@@ -27,7 +27,7 @@ let resultsDirectory = null;
 
 export function startTest() {
     try {
-        console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
+        //console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
         console.log('========================================================');
         try {
             vstestConfig = taskInputParser.getvsTestConfigurations();
@@ -167,7 +167,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
             || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
-            tl.warning(tl.loc('VstestDiagNotSupported'));
+            tl.warning(utils.Helper.locVsTestConsole('VstestDiagNotSupported'));
         }
     }
 
