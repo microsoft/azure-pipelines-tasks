@@ -113,6 +113,7 @@ try
 }
 finally {
     if (!$success) {
+        Remove-EndpointSecrets
         Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
     }
 }
