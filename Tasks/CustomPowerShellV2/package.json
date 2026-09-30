@@ -1,0 +1,27 @@
+{
+  "name": "vsts-powershell-task",
+  "version": "1.0.0",
+  "description": "Azure Pipelines PowerShell Task",
+  "main": "powershell.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "scripts": {
+    "build": "node ../../make.js build --task PowerShellV2",
+    "serverBuild": "node ../../make.js serverBuild --task PowerShellV2",
+    "test": "node ../../make.js test --task PowerShellV2"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-tasks-utility-common": "^3.281.0",
+    "uuid": "^3.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
