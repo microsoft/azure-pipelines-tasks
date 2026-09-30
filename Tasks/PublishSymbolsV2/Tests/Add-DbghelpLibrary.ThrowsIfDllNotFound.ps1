@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\IndexHelpers\DbghelpFunctions.ps1
 Register-Mock Get-DbghelpPath { throw "This error should be thrown." }
+Register-Mock Initialize-DbghelpNativeMethods
 Register-Mock Get-CurrentProcess
 Register-Mock Invoke-LoadLibrary
 
