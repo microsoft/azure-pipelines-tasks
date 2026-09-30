@@ -59,11 +59,11 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
+            tl.writeExternalOutput(tl.loc("GetCommitMessagesFailed", error, commits) + os.EOL, { source: "remote" });
             throw error;
         }
 
-        tl.debug(`Commit messages: ${result}`);
+        tl.debugExternalOutput(`Commit messages: ${result}`, { source: "remote" });
         return result.split(',');
     }
 
@@ -106,7 +106,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
+            tl.debugExternalOutput(`Downloaded commits: ${commitsResult}`, { source: "remote" });
 
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
@@ -125,7 +125,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
+            tl.debugExternalOutput(`Downloaded commits: ${commitsResult}`, { source: "remote" });
             
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
@@ -175,14 +175,14 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 var commitMessages = JSON.parse(commits);
 
                 commitMessages.forEach((commit) => {
-                    tl.debug('Normalizing url' + commit.DisplayUri);
+                    tl.debugExternalOutput('Normalizing url' + commit.DisplayUri, { source: "remote" });
                     commit.DisplayUri = this.TransformCommitUrl(commit.DisplayUri);
                 });
 
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                console.log(tl.loc("CannotParseCommits", commits, error));
+                tl.writeExternalOutput(tl.loc("CannotParseCommits", commits, error) + os.EOL, { source: "remote" });
                 throw error;
             }
         }
@@ -198,10 +198,10 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 commitUrl = commitUrl.replace('/commit/', '/commits/')
             }
         } catch (error) {
-            tl.debug(`Error while parsing the commit url ${commitUrl}`);
+            tl.debugExternalOutput(`Error while parsing the commit url ${commitUrl}`, { source: "remote" });
         }
 
-        tl.debug(`Translated url ${commitUrl} after fixing the query path based on the provider`);
+        tl.debugExternalOutput(`Translated url ${commitUrl} after fixing the query path based on the provider`, { source: "remote" });
         return commitUrl;
     }
 

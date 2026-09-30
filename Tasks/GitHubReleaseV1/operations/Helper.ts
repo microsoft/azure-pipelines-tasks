@@ -1,9 +1,11 @@
+import * as crypto from "crypto";
+
 import tl = require("azure-pipelines-task-lib/task");
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-import { Utility, GitHubAttributes, AzureDevOpsVariables, ActionType} from "./Utility";
+
+import { Utility, GitHubAttributes, AzureDevOpsVariables, ActionType } from "./Utility";
 import { Inputs } from "./Constants";
 import { Release } from "./Release";
-import * as crypto from "crypto";
 
 interface IRelease {
     tagName: string;
@@ -21,26 +23,26 @@ interface ITelemetryData {
 }
 
 export class Helper {
-    
+
     /**
      * Returns tag name to be used for creating a release.
      * If tagPattern is specified, returns tag matching the given pattern
-     * If user has specified tag, then use it 
+     * If user has specified tag, then use it
      * else if $(Build.SourceBranch) is referencing to a tag, then parse tag name and use it
      * else fetch tag from the target specified by user
      * if no tag found for that target commit, then return undefined
      * else if more than 1 tag found, then throw error
      * else return the found tag name
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param target 
-     * @param tag 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param target
+     * @param tag
      * @param tagPattern
      */
     public async getTagForCommitTarget(githubEndpointToken: string, repositoryName: string, target: string, tagPattern: string = null): Promise<string> {
         console.log(tl.loc("FetchTagForTarget", target));
-        let tag = undefined; 
-        
+        let tag = undefined;
+
         let commit_sha: string = await this.getCommitShaFromTarget(githubEndpointToken, repositoryName, target);
         tl.debug("commit sha for target: " + commit_sha);
         let buildSourceVersion = tl.getVariable(AzureDevOpsVariables.buildSourceVersion);
@@ -69,21 +71,21 @@ export class Helper {
         if (!!tag) {
             console.log(tl.loc("FetchTagForTargetSuccess", target));
         }
-        
+
         return tag;
     }
 
     /**
      * Returns latest commit on the target if target is branch else returns target.
      * Target can be branch as well e.g. 'master' and in this scenario we need to fetch commit associated to that branch
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param target 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param target
      */
     public async getCommitShaFromTarget(githubEndpointToken: string, repositoryName: string, target: string): Promise<string> {
         let commit_sha: string = undefined;
         let response = await new Release().getBranch(githubEndpointToken, repositoryName, target);
-        tl.debug("Get branch response: " + JSON.stringify(response));
+        tl.debugExternalOutput("Get branch response: " + JSON.stringify(response), { source: "remote" });
 
         if (response.statusCode === 200) {
             commit_sha = response.body[GitHubAttributes.commit][GitHubAttributes.sha];
@@ -104,13 +106,13 @@ export class Helper {
      * If 0 release found return undefined
      * else if 1 release found return releaseId
      * else throw error
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param tag 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param tag
      */
     public async getReleaseIdForTag(githubEndpointToken: string, repositoryName: string, tag: string): Promise<any> {
         let release = new Release();
-        
+
         // Fetching all releases in the repository.
         let releasesResponse = await release.getReleases(githubEndpointToken, repositoryName);
         let releasesWithGivenTag: IRelease[] = [];
@@ -119,12 +121,12 @@ export class Helper {
         // Fetching releases api call may end up in paginated results.
         // Traversing all the pages and filtering all the releases with given tag.
         while (true) {
-            tl.debug("Get releases response: " + JSON.stringify(releasesResponse));
+            tl.debugExternalOutput("Get releases response: " + JSON.stringify(releasesResponse), { source: "remote" });
 
             if (releasesResponse.statusCode === 200) {
                 // Filter the releases fetched
                 (releasesResponse.body || []).forEach(release => {
-                    tl.debug("release[GitHubAttributes.tagName]: " + release[GitHubAttributes.tagName] + " " + "tag: " + tag);
+                    tl.debugExternalOutput("release[GitHubAttributes.tagName]: " + release[GitHubAttributes.tagName] + " " + "tag: " + tag, { source: "remote" });
                     // Push release if tag matches
                     if (release[GitHubAttributes.tagName] === tag) {
                         releasesWithGivenTag.push({
@@ -156,16 +158,16 @@ export class Helper {
                 throw new Error(releasesResponse.body[GitHubAttributes.message]);
             }
         }
-    }   
+    }
 
     /**
      * Returns tag object associated with the commit.
      * If 0 tag found return undefined
      * else if 1 tag found return tag object
      * else throw error
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param filterValue 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param filterValue
      * @param filterTagsCallback Callback to filter the tags
      */
     public async filterTag(githubEndpointToken: string, repositoryName: string, filterValue: string, filterTagsCallback: (tagsList: any[], filterValue: string) => any[]): Promise<any> {
@@ -179,12 +181,12 @@ export class Helper {
         // Fetching tags api call may end up in paginated results.
         // So, traversing pages one by one and throwing error if more than 1 tag found.
         while (true) {
-            tl.debug("Get tags response: " + JSON.stringify(tagsResponse));
+            tl.debugExternalOutput("Get tags response: " + JSON.stringify(tagsResponse), { source: "remote" });
 
             if (tagsResponse.statusCode === 200) {
                 // Parse header link and get links to different pages
                 links = Utility.parseHTTPHeaderLink(tagsResponse.headers[GitHubAttributes.link]);
-                
+
                 // Filter the tags returned in current page
                 let tags: any[] = filterTagsCallback(tagsResponse.body, filterValue);
 
@@ -195,7 +197,7 @@ export class Helper {
                     })
 
                     // Throw error in case of ambiguity as we do not know which tag to pick for creating release.
-                    if (filteredTags.length >= 2 ) {
+                    if (filteredTags.length >= 2) {
                         throw new Error(tl.loc("MultipleTagFound", filterValue));
                     }
                 }
@@ -210,7 +212,7 @@ export class Helper {
                     return filteredTags.length === 0 ? undefined : filteredTags[0];
                 }
             }
-            else{
+            else {
                 tl.error(tl.loc("GetTagsError"));
                 throw new Error(tagsResponse.body[GitHubAttributes.message]);
             }
@@ -240,16 +242,16 @@ export class Helper {
 
         telemetry.emitTelemetry("TaskHub", "GitHubRelease", telemetryData);
     }
-    
+
     /**
      * Returns tag name associated with the commit.
      * If tagPattern is specified returns tag name
      * If 0 tag found return undefined
      * else if 1 tag found return tag name
      * else throw error
-     * @param githubEndpointToken 
-     * @param repositoryName 
-     * @param commit_sha 
+     * @param githubEndpointToken
+     * @param repositoryName
+     * @param commit_sha
      */
     private async _getTagForCommit(githubEndpointToken: string, repositoryName: string, commit_sha: string, tagPattern: string = null): Promise<string> {
         let filteredTag: any;

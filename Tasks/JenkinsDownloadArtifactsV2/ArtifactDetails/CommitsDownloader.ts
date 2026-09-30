@@ -1,12 +1,13 @@
-import * as Q from 'q';
 import * as os from 'os';
 import * as path from 'path';
-import * as  tl from 'azure-pipelines-task-lib/task';
-
+import * as Q from 'q';
 import url = require('url');
 
-import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
+import * as  tl from 'azure-pipelines-task-lib/task';
+
+
+import { ArtifactDetailsDownloaderBase } from "./ArtifactDetailsDownloaderBase"
+import { JenkinsRestClient, JenkinsJobDetails } from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -58,18 +59,18 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         let template = handlebars.compile(GetCommitMessagesTemplate);
         try {
             var result = template(JSON.parse(commits));
-        } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
+        } catch (error) {
+            tl.writeExternalOutput(tl.loc("GetCommitMessagesFailed", error, commits) + os.EOL, { source: "remote" });
             throw error;
         }
 
-        tl.debug(`Commit messages: ${result}`);
+        tl.debugExternalOutput(`Commit messages: ${result}`, { source: "remote" });
         return result.split(',');
     }
 
     public DownloadFromSingleBuildAndSave(jenkinsJobDetails: JenkinsJobDetails): Q.Promise<string> {
         let defer: Q.Deferred<string> = Q.defer<string>();
-        
+
         console.log(tl.loc("GettingCommitsFromSingleBuild", jenkinsJobDetails.buildId));
         this.GetCommitsFromSingleBuild(jenkinsJobDetails).then((commits: string) => {
             this.UploadCommits(commits).then(() => {
@@ -106,7 +107,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
+            tl.debugExternalOutput(`Downloaded commits: ${commitsResult}`, { source: "remote" });
 
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
@@ -124,9 +125,9 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/api/json?tree=${buildParameter}[number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]]{${endIndex},${startIndex}}`;
 
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
-        this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
-            
+        this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, { 'buildParameter': buildParameter }).then((commitsResult) => {
+            tl.debugExternalOutput(`Downloaded commits: ${commitsResult}`, { source: "remote" });
+
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
         }, (error) => {
@@ -175,18 +176,18 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 var commitMessages = JSON.parse(commits);
 
                 commitMessages.forEach((commit) => {
-                    tl.debug('Normalizing url' + commit.DisplayUri);
+                    tl.debugExternalOutput('Normalizing url' + commit.DisplayUri, { source: "remote" });
                     commit.DisplayUri = this.TransformCommitUrl(commit.DisplayUri);
                 });
 
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                console.log(tl.loc("CannotParseCommits", commits, error));
+                tl.writeExternalOutput(tl.loc("CannotParseCommits", commits, error) + os.EOL, { source: "remote" });
                 throw error;
             }
         }
-                
+
         return '';
     };
 
@@ -198,10 +199,10 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 commitUrl = commitUrl.replace('/commit/', '/commits/')
             }
         } catch (error) {
-            tl.debug(`Error while parsing the commit url ${commitUrl}`);
+            tl.debugExternalOutput(`Error while parsing the commit url ${commitUrl}`, { source: "remote" });
         }
 
-        tl.debug(`Translated url ${commitUrl} after fixing the query path based on the provider`);
+        tl.debugExternalOutput(`Translated url ${commitUrl} after fixing the query path based on the provider`, { source: "remote" });
         return commitUrl;
     }
 
@@ -210,13 +211,13 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         if (!!commitUrl) {
             if (commitUrl.startsWith('git@')) {
                 tl.debug('repo url is a git protocol url');
-                
+
                 if (commitUrl.startsWith('git@gitlab.com')) {
-                    result= commitUrl.replace('git@gitlab.com:', 'https://gitlab.com/').replace('.git/', '/');
+                    result = commitUrl.replace('git@gitlab.com:', 'https://gitlab.com/').replace('.git/', '/');
                 }
                 else if (commitUrl.startsWith('git@github.com')) {
                     result = commitUrl.replace('git@github.com:', 'https://github.com/').replace('.git/', '/');
-                }                
+                }
             }
             else if (commitUrl.startsWith('http')) {
                 // if its http return the url as is.
@@ -224,7 +225,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
             }
         }
 
-        tl.debug(`Translated url ${commitUrl} to ${result}`);
+        tl.debugExternalOutput(`Translated url ${commitUrl} to ${result}`, { source: "remote" });
         return result;
     }
 

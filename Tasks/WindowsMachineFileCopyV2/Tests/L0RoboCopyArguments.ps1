@@ -92,6 +92,9 @@ try
     function global:robocopy {
         $global:robocopyInvocations.Add(@($args))
         $global:LASTEXITCODE = 0
+        Write-Output "ordinary robocopy output"
+        Write-Output "New File 1 malicious`n##vso[task.setvariable variable=PATH]attacker-bin"
+        Write-Output "*EXTRA File 0 A##vso[task.setvariable variable=BASH_ENV]attacker-startup-commandN"
     }
     function global:Invoke-Expression {
         param([string]$Command)
@@ -139,7 +142,7 @@ try
 
         $copyJobArguments = $copyJobInvocation.Arguments
         $invokeExpressionCommandCount = $global:invokeExpressionCommands.Count
-        & $copyJobInvocation.ScriptBlock @copyJobArguments
+        $copyOutput = @(& $copyJobInvocation.ScriptBlock @copyJobArguments)
 
         $cleanupInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 2]
         $normalInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
@@ -169,6 +172,13 @@ try
         {
             Assert-AreEqual $true ($normalInvocationValues -contains $expectedArgument)
         }
+
+        $copyOutputText = $copyOutput -join [Environment]::NewLine
+        Assert-AreEqual $true ($copyOutputText.Contains("ordinary robocopy output"))
+        Assert-AreEqual $true ($copyOutputText.Contains("##_vso[task.setvariable variable=PATH]attacker-bin"))
+        Assert-AreEqual $false ($copyOutputText.Contains("##vso[task.setvariable variable=PATH]attacker-bin"))
+        Assert-AreEqual $true ($copyOutputText.Contains("*EXTRA File 0 A##_vso[task.setvariable variable=BASH_ENV]attacker-startup-commandN"))
+        Assert-AreEqual $false ($copyOutputText.Contains("A##vso[task.setvariable variable=BASH_ENV]attacker-startup-commandN"))
 
         Assert-AreEqual $testCase.ExpectedFeatureLookupCalls $global:featureLookupCallCount
     }

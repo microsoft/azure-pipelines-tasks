@@ -5,10 +5,9 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import { Inputs } from '../operations/Constants';
 
 export class ActionTests {
-
     public static startTest() {
         let tp = path.join(__dirname, 'ActionL0Tests.js');
-        let tr : tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
+        let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(tp);
 
         tr.setInput(Inputs.assetUploadMode, "replace");
 
@@ -18,28 +17,33 @@ export class ActionTests {
     }
 
     public static stub(tr) {
-
         tr.registerMock("./Release", {
             Release: function () {
                 return {
-                    createRelease: async function() {
+                    createRelease: async function () {
                         return {
                             statusCode: 201,
-                            body: { "upload_url": "url" }
+                            body: {
+                                "upload_url": "url",
+                                "html_url": "https://github.example/release\n##vso[task.setvariable variable=githubReleaseInjected]unsafe"
+                            }
                         }
                     },
-                    editRelease: function() {
+                    editRelease: function () {
                         return {
                             statusCode: 200,
-                            body: { "html_url": "url" }
+                            body: {
+                                "html_url": "https://github.example/release\n##vso[task.setvariable variable=githubReleaseInjected]unsafe"
+                            }
                         }
                     },
-                    deleteRelease: function() {
+                    deleteRelease: function () {
                         return {
                             statusCode: 204
                         }
                     },
-                    uploadReleaseAsset: function() {
+                    uploadReleaseAsset: function (githubEndpointToken: string, filePath: string) {
+                        console.log("[MOCK] remote asset name: " + path.basename(filePath));
                         return {
                             statusCode: 201
                         }
@@ -51,7 +55,7 @@ export class ActionTests {
         tr.registerMock("./Helper", {
             Helper: function () {
                 return {
-                    getReleaseIdForTag: function() {
+                    getReleaseIdForTag: function () {
                         return "id";
                     }
                 }

@@ -1,9 +1,11 @@
+import * as os from 'os';
 import * as Q from 'q';
+
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 
-import { 
-    HttpClient, 
+import {
+    HttpClient,
     HttpClientResponse,
 } from "artifact-engine/Providers/typed-rest-client/HttpClient";
 
@@ -14,9 +16,9 @@ var handlebars = require('handlebars');
 export class JenkinsJobDetails {
     jobName: string;
     buildId: number;
-    jobType: string;
+    jobType: string | undefined;
     isMultiBranchPipeline: boolean;
-    multiBranchPipelineName: string;
+    multiBranchPipelineName: string | undefined;
     jobUrlInfix: string;
     multiBranchPipelineUrlInfix: string;
 
@@ -31,12 +33,12 @@ export class JenkinsJobDetails {
 
         this.jobName = jobName;
         this.jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(this.jobName)
-        
+
         this.buildId = buildId;
         this.jobType = jenkinsJobType;
         this.multiBranchPipelineName = multibranchPipelineName;
 
-        this.isMultiBranchPipeline = this.jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
+        this.isMultiBranchPipeline = this.jobType?.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
         this.multiBranchPipelineUrlInfix = this.isMultiBranchPipeline ? `/job/${this.multiBranchPipelineName}` : "";
     }
 
@@ -65,7 +67,7 @@ export class JenkinsRestClient {
     }
 
     public RegisterCustomerHandleBars(): void {
-        handlebars.registerHelper('caseIgnoreEqual', function(lhs, rhs, options) {
+        handlebars.registerHelper('caseIgnoreEqual', function (lhs, rhs, options) {
             if (!lhs && !rhs) {
                 return options.fn(this);
             }
@@ -73,16 +75,16 @@ export class JenkinsRestClient {
             if ((lhs && !rhs) || (!lhs && rhs)) {
                 return options.inverse(this);
             }
-            
+
             if (lhs.toUpperCase() != rhs.toUpperCase()) {
-                return options.inverse(this);                    
+                return options.inverse(this);
             }
             else {
                 return options.fn(this);
             }
         });
 
-        handlebars.registerHelper('lookupAction', function(list, key, options) {
+        handlebars.registerHelper('lookupAction', function (list, key, options) {
             if (!!list) {
                 for (let i = 0, len = list.length; i < len; i++) {
                     if (list[i][key]) {
@@ -94,7 +96,7 @@ export class JenkinsRestClient {
             return null;
         });
 
-        handlebars.registerHelper('first', function(array) {
+        handlebars.registerHelper('first', function (array) {
             if (!!array) {
                 return array[0];
             }
@@ -102,7 +104,7 @@ export class JenkinsRestClient {
             return '';
         });
 
-        handlebars.registerHelper('pluck', function(array, key) {
+        handlebars.registerHelper('pluck', function (array, key) {
             if (!!array) {
                 var result = [];
                 for (var i = 0; i < array.length; i++) {
@@ -118,9 +120,9 @@ export class JenkinsRestClient {
             return [];
         });
 
-        handlebars.registerHelper('containsInArray', function(array, value, options) {
+        handlebars.registerHelper('containsInArray', function (array, value, options) {
             if (!!array) {
-                for(let i = 0, len = array.length; i < len; i++) {
+                for (let i = 0, len = array.length; i < len; i++) {
                     tl.debug(`checking ${array[i]} ${value}`);
                     if (!!array[i] && array[i].indexOf(value) > -1) {
                         return options.fn(this);
@@ -131,7 +133,7 @@ export class JenkinsRestClient {
             return options.inverse(this);
         });
 
-        handlebars.registerHelper('chopTrailingSlash', function(value, options) {
+        handlebars.registerHelper('chopTrailingSlash', function (value, options) {
             var result: any = value;
             if (!!value && value.substr(-1) === '/') {
                 result = value.substr(0, value.length - 1)
@@ -140,13 +142,13 @@ export class JenkinsRestClient {
             return result;
         });
 
-        handlebars.registerHelper('selectMaxOf', function(array, property) {
-            
+        handlebars.registerHelper('selectMaxOf', function (array, property) {
+
             function GetJsonProperty(jsonObject: any, property: string): any {
                 let properties = property.split('.'); // if property has dot in it, we want to access the nested property of the objects.
                 let element = jsonObject;
                 let found: boolean = false;
-                for(let propertyIndex = 0; propertyIndex < properties.length; propertyIndex++) {
+                for (let propertyIndex = 0; propertyIndex < properties.length; propertyIndex++) {
                     if (!!element) {
                         element = element[properties[propertyIndex]];
 
@@ -156,7 +158,7 @@ export class JenkinsRestClient {
                     }
                 }
 
-                return found == true ? element: null;
+                return found == true ? element : null;
             }
 
             let result = null;
@@ -164,13 +166,13 @@ export class JenkinsRestClient {
                 let maxValue: number = 0;
                 result = array[0]; //consider first as result until we figure out if there are any other max available
 
-                for(let i = 0; i < array.length; i++) {
+                for (let i = 0; i < array.length; i++) {
                     let value: number = parseInt(GetJsonProperty(array[i], property));
                     tl.debug(`#selectMaxOf comparing values ${maxValue} and ${value}`);
                     if (!isNaN(value) && value > maxValue) {
                         result = array[i];
                         maxValue = value;
-                    }                        
+                    }
                 }
 
                 tl.debug(`Found maxvalue ${maxValue}`);
@@ -210,7 +212,7 @@ export class JenkinsRestClient {
         const jobName = tl.getInput("jobName", true);
         const strictSSL: boolean = ('true' !== tl.getEndpointDataParameter(endpoint, 'acceptUntrustedCerts', true));
         const jobUrlInfix = JenkinsJobDetails.GetJobUrlInfix(jobName);
-        
+
         const retryLimitValue: string = tl.getVariable("VSTS_HTTP_RETRY");
         const retryLimit: number = (!!retryLimitValue && !isNaN(parseInt(retryLimitValue))) ? parseInt(retryLimitValue) : 4;
         tl.debug(`RetryLimit set to ${retryLimit}`);
@@ -221,25 +223,25 @@ export class JenkinsRestClient {
         let httpClient: HttpClient = this.GetClient();
         this.ExecuteWithRetries("DownloadJsonContent", () => this.DownloadJsonContentWithRetries(httpClient, requestUrl, handlebarSource, additionalHandlebarContext), retryLimit).then((result) => {
             defer.resolve(result);
-        },(err) => {
+        }, (err) => {
             defer.reject(err);
         });
 
         return defer.promise;
     }
 
-    public DownloadJsonContentWithRetries(httpClient: HttpClient, requestUrl: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any }, ): Q.Promise<any> {    
+    public DownloadJsonContentWithRetries(httpClient: HttpClient, requestUrl: string, handlebarSource: string, additionalHandlebarContext: { [key: string]: any },): Q.Promise<any> {
         let defer = Q.defer<any>();
 
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
             response.readBody().then((body: string) => {
-                if (!!body && response.message.statusCode === 200)  {
-                    tl.debug(`Content received from server ${body}`);
+                if (!!body && response.message.statusCode === 200) {
+                    tl.debugExternalOutput(`Content received from server ${body}`, { source: "remote" });
                     let jsonResult;
 
                     try {
                         jsonResult = JSON.parse(body);
-                    } catch(error) {
+                    } catch (error) {
                         jsonResult = "";
                         defer.reject(error);
                     }
@@ -255,18 +257,18 @@ export class JenkinsRestClient {
                                 if (additionalHandlebarContext) {
                                     for (let key in additionalHandlebarContext) {
                                         tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
-                                            jsonResult[key] = additionalHandlebarContext[key];
-                                        };
+                                        jsonResult[key] = additionalHandlebarContext[key];
+                                    };
                                 }
 
                                 var result = template(jsonResult);
 
                                 // back slash is an illegal character in json.
                                 // when we downloaded the api output has \\, but the previous parse method will strip of a single \. Adding it back.
-                                result = result.replace(/\\/g,"\\\\");
+                                result = result.replace(/\\/g, "\\\\");
                                 defer.resolve(result);
                             }
-                            catch(err) {
+                            catch (err) {
                                 defer.reject(new Error(tl.loc("JenkinsArtifactDetailsParsingError", err)))
                             }
                         }
@@ -278,7 +280,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        tl.debugExternalOutput(body, { source: "remote" });
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));
@@ -300,7 +302,7 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            console.log(tl.loc("FoundJobType", result));
+            tl.writeExternalOutput(tl.loc("FoundJobType", result) + os.EOL, { source: "remote" });
             defer.resolve(result.trim());
         }, (error) => {
             console.log(tl.loc("CannotFindJobType"));
@@ -382,7 +384,7 @@ export class JenkinsRestClient {
                         branchName = jsonResult["branchName"];
                         buildId = parseInt(jsonResult["buildId"]);
                         tl.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
-                    } catch(error) {
+                    } catch (error) {
                         defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
                     }
                 }
@@ -470,10 +472,10 @@ export class JenkinsRestClient {
     private ExecuteWithRetries(operationName: string, operation: () => Q.Promise<any>, retryCount): Q.Promise<any> {
         let defer = Q.defer<any>();
         this.ExecuteWithRetriesImplementation(operationName, operation, retryCount, defer);
-            
+
         return defer.promise;
     }
-    
+
     private ExecuteWithRetriesImplementation(operationName: string, operation: () => Q.Promise<any>, currentRetryCount, defer: Q.Deferred<any>) {
         operation().then((result) => {
             defer.resolve(result);

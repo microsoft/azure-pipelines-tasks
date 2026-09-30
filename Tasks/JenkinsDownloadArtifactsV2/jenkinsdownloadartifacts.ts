@@ -1,11 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import tl = require('azure-pipelines-task-lib/task');
-import fs = require('fs');
-import path = require('path');
-import shell = require('shelljs');
-import Q = require('q');
+import os = require("os");
+import path = require("path");
+
+import tl = require("azure-pipelines-task-lib/task");
 
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
@@ -25,20 +24,20 @@ const isCurrentNodeVersionAtLeast20 = parseInt(process.versions.node.split('.')[
 
 if (isCurrentNodeVersionAtLeast20) {
     // Node.js 20 or later
-    import('extract-zip').then((module) => {
+    import("extract-zip").then((module) => {
         extractZip = module;
     });
 } else {
     // Older Node.js versions
-    const DecompressZip = require('decompress-zip');
+    const DecompressZip = require("decompress-zip");
     extractZip = DecompressZip;
 }
 
-var fsExtra = require('fs-extra');
-var taskJson = require('./task.json');
-var {v4: uuidv4} = require('uuid');
+const fsExtra = require("fs-extra");
+const taskJson = require("./task.json");
+const { v4: uuidv4 } = require("uuid");
 
-const area: string = 'JenkinsDownloadArtifacts';
+const area: string = "JenkinsDownloadArtifacts";
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
@@ -117,7 +116,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
         if (isCurrentNodeVersionAtLeast20) {
             tl.debug(`Using extract-zip package for extracting archive`);
             extractZip(zipLocation, { dir: unzipLocation }).then(() => {
-               resolve();
+                resolve();
             }).catch((error) => {
                 reject(error);
             });
@@ -170,7 +169,7 @@ async function doWork() {
         }
         else {
             jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+            tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
 
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
@@ -225,7 +224,7 @@ async function doWork() {
                 }
             }
             else {
-               console.log(tl.loc('NoAssociatedArtifacts'));
+                console.log(tl.loc('NoAssociatedArtifacts'));
             }
         }
 
@@ -236,21 +235,21 @@ async function doWork() {
             if (tl.getBoolInput('propagatedArtifacts') == true) {
                 try {
                     jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                    tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
                 }
                 catch (error) {
-                    tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
+                    tl.warningExternalOutput(tl.loc("CommitsAndWorkItemsDownloadFailed", error), { source: "remote" });
                 }
             }
 
             new ArtifactDetailsDownloader()
                 .DownloadCommitsAndWorkItems(jenkinsJobDetails)
                 .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
-                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+                    (error) => tl.warningExternalOutput(tl.loc("CommitsAndWorkItemsDownloadFailed", error), { source: "remote" }));
         }
 
     } catch (err) {
-        tl.error(err);
+        tl.errorExternalOutput(String(err), { source: "remote" });
         publishEvent('reliability', { issueType: 'error', errorMessage: JSON.stringify(err, Object.getOwnPropertyNames(err)) });
         tl.setResult(tl.TaskResult.Failed, err.message);
     }

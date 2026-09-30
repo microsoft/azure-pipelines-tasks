@@ -1,16 +1,18 @@
 import * as os from 'os';
+
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 
-export class CommandHelper {
+import { childProcessOutputOptions } from './Utility';
 
+export class CommandHelper {
     /**
      * Runs a command based on the OS of the agent running this task.
      * @param command - the command to execute
      * @param cwd - the current working directory; if not provided, the 'cwd' input will be used
      * @returns the string output from the command
      */
-    public async execCommandAsync(command: string, cwd?: string) : Promise<string> {
+    public async execCommandAsync(command: string, cwd?: string): Promise<string> {
         return os.platform() == 'win32' ?
             this.execPwshCommandAsync(command, cwd) :
             this.execBashCommandAsync(command, cwd);
@@ -23,7 +25,7 @@ export class CommandHelper {
      * @param cwd - the current working directory; if not provided, the 'cwd' input will be used
      * @returns the string output from the command
      */
-     private async execBashCommandAsync(command: string, cwd?: string): Promise<string> {
+    private async execBashCommandAsync(command: string, cwd?: string): Promise<string> {
         try {
             if (!cwd) {
                 cwd = tl.getPathInput('cwd', true, false);
@@ -31,14 +33,15 @@ export class CommandHelper {
 
             const bashPath: string = tl.which('bash', true);
             const bashCmd = tl.tool(bashPath)
-                            .arg('-c')
-                            .arg(command);
-            const bashOptions = <tr.IExecOptions> {
+                .arg('-c')
+                .arg(command);
+            const bashOptions = <tr.IExecOptions>{
                 cwd: cwd,
                 failOnStdErr: true,
                 errStream: process.stderr,
                 outStream: process.stdout,
-                ignoreReturnCode: false
+                ignoreReturnCode: false,
+                externalOutput: childProcessOutputOptions.externalOutput
             };
             let bashOutput = '';
             bashCmd.on('stdout', (data) => {
@@ -66,14 +69,15 @@ export class CommandHelper {
 
             const pwshPath: string = tl.which('pwsh.exe', true);
             const pwshCmd = tl.tool(pwshPath)
-                            .arg('-command')
-                            .arg(command);
-            const pwshOptions = <tr.IExecOptions> {
+                .arg('-command')
+                .arg(command);
+            const pwshOptions = <tr.IExecOptions>{
                 cwd: cwd,
                 failOnStdErr: true,
                 errStream: process.stderr,
                 outStream: process.stdout,
-                ignoreReturnCode: false
+                ignoreReturnCode: false,
+                externalOutput: childProcessOutputOptions.externalOutput
             };
             let pwshOutput = '';
             pwshCmd.on('stdout', (data) => {

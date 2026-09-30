@@ -1,6 +1,8 @@
-import tl = require("azure-pipelines-task-lib/task");
+import os = require("os");
 import path = require("path");
-import fs = require('fs');
+
+import tl = require("azure-pipelines-task-lib/task");
+
 import { WebResponse } from "./webClient";
 import { Release } from "./Release";
 import { Utility, AssetUploadMode, GitHubAttributes } from "./Utility";
@@ -8,7 +10,6 @@ import { Inputs } from "./Constants";
 import { Helper } from "./Helper";
 
 export class Action {
-
     /**
      * Creating a release and uploading assets are 2 different process. First we create a release and when it is successful, we upload assets to it.
      * But in our scenario, we assume it to be a single process, means if upload assets step fail then we say release is in dirty state and we would want it to be deleted as it is without assets yet.
@@ -30,17 +31,17 @@ export class Action {
 
         // Create release
         let response: WebResponse = await new Release().createRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, makeLatest);
-        tl.debug("Create release response: " + JSON.stringify(response));
+        tl.debugExternalOutput("Create release response: " + JSON.stringify(response), { source: "remote" });
 
         if (response.statusCode === 201) {
             try {
                 // Upload the assets
                 const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
                 await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, [], false);
-                console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
+                tl.writeExternalOutput(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]) + os.EOL, { source: "remote" });
             }
             catch (error) {
-                console.log(tl.loc("CreateReleaseFailed", error.message));
+                tl.writeExternalOutput(tl.loc("CreateReleaseFailed", (error instanceof Error ? error.message : error)) + os.EOL, { source: "remote" });
 
                 try {
                     // If upload asets fail, then delete the release
@@ -82,12 +83,12 @@ export class Action {
         console.log(tl.loc("EditingRelease", tag));
 
         let response: WebResponse = await new Release().editRelease(githubEndpointToken, repositoryName, target, tag, releaseTitle, releaseNote, isDraft, isPrerelease, releaseId, makeLatest);
-        tl.debug("Edit release response: " + JSON.stringify(response));
+        tl.debugExternalOutput("Edit release response: " + JSON.stringify(response), { source: "remote" });
 
         if (response.statusCode === 200) {
             const uploadUrl: string = response.body[GitHubAttributes.uploadUrl];
             await this._uploadAssets(githubEndpointToken, repositoryName, githubReleaseAssetInputPatterns, uploadUrl, response.body[GitHubAttributes.assets], true);
-            console.log(tl.loc("EditReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
+            tl.writeExternalOutput(tl.loc("EditReleaseSuccess", response.body[GitHubAttributes.htmlUrl]) + os.EOL, { source: "remote" });
         }
         else {
             tl.error(tl.loc("EditReleaseError"));
@@ -125,7 +126,7 @@ export class Action {
     private async _deleteRelease(githubEndpointToken: string, repositoryName: string, releaseId: string, tag: string): Promise<void> {
         console.log(tl.loc("DeletingRelease", tag));
         let response: WebResponse = await new Release().deleteRelease(githubEndpointToken, repositoryName, releaseId);
-        tl.debug("Delete release response: " + JSON.stringify(response));
+        tl.debugExternalOutput("Delete release response: " + JSON.stringify(response), { source: "remote" });
 
         if (response.statusCode === 204) {
             console.log(tl.loc("DeleteReleaseSuccess"));
@@ -190,19 +191,19 @@ export class Action {
 
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
-            console.log(tl.loc("UploadingAsset", asset));
+            tl.writeExternalOutput(tl.loc("UploadingAsset", asset) + os.EOL, { source: "repository" });
 
             let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
-            tl.debug("Upload asset response: " + JSON.stringify(uploadResponse));
+            tl.debugExternalOutput("Upload asset response: " + JSON.stringify(uploadResponse), { source: "remote" });
 
             if (uploadResponse.statusCode === 201) {
-                console.log(tl.loc("UploadAssetSuccess", asset));
+                tl.writeExternalOutput(tl.loc("UploadAssetSuccess", asset) + os.EOL, { source: "repository" });
             }
             else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === this._alreadyExistErrorCode) {
 
                 if (assetUploadMode === AssetUploadMode.replace) {
-                    console.log(tl.loc("DuplicateAssetFound", asset));
-                    console.log(tl.loc("DeletingDuplicateAsset", asset));
+                    tl.writeExternalOutput(tl.loc("DuplicateAssetFound", asset) + os.EOL, { source: "repository" });
+                    tl.writeExternalOutput(tl.loc("DeletingDuplicateAsset", asset) + os.EOL, { source: "repository" });
 
                     const fileName = path.basename(asset);
 
@@ -215,7 +216,7 @@ export class Action {
                     }
                 }
                 else {
-                    console.log(tl.loc("SkipDuplicateAssetFound", asset));
+                    tl.writeExternalOutput(tl.loc("SkipDuplicateAssetFound", asset) + os.EOL, { source: "repository" });
                 }
             }
             else {
@@ -232,21 +233,21 @@ export class Action {
      * @param assets
      */
     private async _deleteAssets(githubEndpointToken: string, repositoryName: string, assets: any[]): Promise<void> {
-        if (assets && assets.length ===  0) {
+        if (assets && assets.length === 0) {
             console.log(tl.loc("NoAssetFoundToDelete"));
             return;
         }
 
         for (let asset of assets) {
-            console.log(tl.loc("DeletingAsset", asset[GitHubAttributes.nameAttribute]));
+            tl.writeExternalOutput(tl.loc("DeletingAsset", asset[GitHubAttributes.nameAttribute]) + os.EOL, { source: "remote" });
             let deleteAssetResponse = await new Release().deleteReleaseAsset(githubEndpointToken, repositoryName, asset.id);
-            tl.debug("Delete asset response: " + JSON.stringify(deleteAssetResponse));
+            tl.debugExternalOutput("Delete asset response: " + JSON.stringify(deleteAssetResponse), { source: "remote" });
 
             if (deleteAssetResponse.statusCode === 204) {
-                console.log(tl.loc("AssetDeletedSuccessfully", asset[GitHubAttributes.nameAttribute]));
+                tl.writeExternalOutput(tl.loc("AssetDeletedSuccessfully", asset[GitHubAttributes.nameAttribute]) + os.EOL, { source: "remote" });
             }
             else {
-                tl.error(tl.loc("ErrorDeletingAsset", asset[GitHubAttributes.nameAttribute]));
+                tl.errorExternalOutput(tl.loc("ErrorDeletingAsset", asset[GitHubAttributes.nameAttribute]), { source: "remote" });
                 throw new Error(deleteAssetResponse.body[GitHubAttributes.message]);
             }
         }

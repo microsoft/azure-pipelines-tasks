@@ -1,16 +1,19 @@
 import * as path from 'path';
+
 import * as tl from 'azure-pipelines-task-lib/task';
 import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 
-export class AzureAuthenticationHelper {
+import { childProcessOutputOptions } from './Utility';
 
-    private sessionLoggedIn: boolean = false;
-    private cliPasswordPath: string = null;
+export class AzureAuthenticationHelper {
+    private sessionLoggedIn = false;
+    private cliPasswordPath = null;
 
     public async loginAzure(connectedService: string): Promise<void> {
         await loginAzureRM(connectedService);
 
         const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
+
         if (authScheme.toLowerCase() === 'serviceprincipal') {
             const authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             if (authType === 'spnCertificate') {
@@ -30,7 +33,7 @@ export class AzureAuthenticationHelper {
         if (this.sessionLoggedIn) {
             tl.debug('Attempting to log out from Azure');
             try {
-                tl.execSync('az', ' account clear');
+                tl.execSync('az', ' account clear', childProcessOutputOptions);
             } catch (err) {
                 // task should not fail if logout doesn`t occur
                 tl.warning(`The following error occurred while logging out: ${err.message}`);

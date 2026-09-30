@@ -1,14 +1,16 @@
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as path from 'path';
-import * as os from 'os';
 import * as fs from 'fs';
-import { CommandHelper } from './CommandHelper';
-import { Utility } from './Utility';
+import * as os from 'os';
+import * as path from 'path';
 
-const ORYX_CLI_IMAGE: string = 'mcr.microsoft.com/oryx/cli:builder-debian-buster-20230208.1';
-const ORYX_BUILDER_IMAGE: string = 'mcr.microsoft.com/oryx/builder:20230208.1';
-const IS_WINDOWS_AGENT: boolean = os.platform() == 'win32';
-const PACK_CMD: string = IS_WINDOWS_AGENT ? path.join(os.tmpdir(), 'pack') : 'pack';
+import * as tl from 'azure-pipelines-task-lib/task';
+
+import { CommandHelper } from './CommandHelper';
+import { childProcessOutputOptions, Utility } from './Utility';
+
+const ORYX_CLI_IMAGE = 'mcr.microsoft.com/oryx/cli:builder-debian-buster-20230208.1';
+const ORYX_BUILDER_IMAGE = 'mcr.microsoft.com/oryx/builder:20230208.1';
+const IS_WINDOWS_AGENT = os.platform() == 'win32';
+const PACK_CMD = IS_WINDOWS_AGENT ? path.join(os.tmpdir(), 'pack') : 'pack';
 
 export class ContainerAppHelper {
     readonly disableTelemetry: boolean = false;
@@ -25,27 +27,27 @@ export class ContainerAppHelper {
      * @param imageToDeploy - the name of the runnable application image that the Container App will be based from
      * @param optionalCmdArgs - a set of optional command line arguments
      */
-     public createContainerApp(
+    public createContainerApp(
         containerAppName: string,
         resourceGroup: string,
         environment: string,
         imageToDeploy: string,
         optionalCmdArgs: string[]) {
-            tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
-            try {
-                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --environment ${environment}`;
-                optionalCmdArgs.forEach(function (val: string) {
-                    command += ` ${val}`;
-                });
+        tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
+        try {
+            let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy} --environment ${environment}`;
+            optionalCmdArgs.forEach(function (val: string) {
+                command += ` ${val}`;
+            });
 
-                new Utility().throwIfError(
-                    tl.execSync('az', command),
-                    tl.loc('CreateContainerAppFailed')
-                );
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
-            }
+            new Utility().throwIfError(
+                tl.execSync('az', command, childProcessOutputOptions),
+                tl.loc('CreateContainerAppFailed')
+            );
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -58,18 +60,18 @@ export class ContainerAppHelper {
         containerAppName: string,
         resourceGroup: string,
         yamlConfigPath: string) {
-            tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
-            try {
-                let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
+        tl.debug(`Attempting to create Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
+        try {
+            let command = `containerapp create -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
 
-                new Utility().throwIfError(
-                    tl.execSync('az', command),
-                    tl.loc('CreateContainerAppFromYamlFailed')
-                );
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
-            }
+            new Utility().throwIfError(
+                tl.execSync('az', command, childProcessOutputOptions),
+                tl.loc('CreateContainerAppFromYamlFailed')
+            );
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -84,21 +86,21 @@ export class ContainerAppHelper {
         resourceGroup: string,
         imageToDeploy: string,
         optionalCmdArgs: string[]) {
-            tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
-            try {
-                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
-                optionalCmdArgs.forEach(function (val: string) {
-                    command += ` ${val}`;
-                });
+        tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
+        try {
+            let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
+            optionalCmdArgs.forEach(function (val: string) {
+                command += ` ${val}`;
+            });
 
-                new Utility().throwIfError(
-                    tl.execSync('az', command),
-                    tl.loc('UpdateContainerAppFailed')
-                );
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
-            }
+            new Utility().throwIfError(
+                tl.execSync('az', command, childProcessOutputOptions),
+                tl.loc('UpdateContainerAppFailed')
+            );
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -117,31 +119,31 @@ export class ContainerAppHelper {
         optionalCmdArgs: string[],
         ingress?: string,
         targetPort?: string) {
-            tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
-            const util = new Utility();
-            try {
-                let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
-                optionalCmdArgs.forEach(function (val: string) {
-                    command += ` ${val}`;
-                });
+        tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" based from image "${imageToDeploy}"`);
+        const util = new Utility();
+        try {
+            let command = `containerapp up -n ${containerAppName} -g ${resourceGroup} -i ${imageToDeploy}`;
+            optionalCmdArgs.forEach(function (val: string) {
+                command += ` ${val}`;
+            });
 
-                if (!util.isNullOrEmpty(ingress)) {
-                    command += ` --ingress ${ingress}`;
-                }
-
-                if (!util.isNullOrEmpty(targetPort)) {
-                    command += ` --target-port ${targetPort}`;
-                }
-
-                util.throwIfError(
-                    tl.execSync('az', command),
-                    tl.loc('UpdateContainerAppFailed')
-                );
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
+            if (!util.isNullOrEmpty(ingress)) {
+                command += ` --ingress ${ingress}`;
             }
+
+            if (!util.isNullOrEmpty(targetPort)) {
+                command += ` --target-port ${targetPort}`;
+            }
+
+            util.throwIfError(
+                tl.execSync('az', command, childProcessOutputOptions),
+                tl.loc('UpdateContainerAppFailed')
+            );
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
         }
+    }
 
     /**
      * Updates an existing Azure Container App based from a YAML configuration file.
@@ -153,18 +155,18 @@ export class ContainerAppHelper {
         containerAppName: string,
         resourceGroup: string,
         yamlConfigPath: string) {
-            tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
-            try {
-                let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
+        tl.debug(`Attempting to update Container App with name "${containerAppName}" in resource group "${resourceGroup}" from provided YAML "${yamlConfigPath}"`);
+        try {
+            let command = `containerapp update -n ${containerAppName} -g ${resourceGroup} --yaml ${yamlConfigPath}`;
 
-                new Utility().throwIfError(
-                    tl.execSync('az', command),
-                    tl.loc('UpdateContainerAppFromYamlFailed')
-                );
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
-            }
+            new Utility().throwIfError(
+                tl.execSync('az', command, childProcessOutputOptions),
+                tl.loc('UpdateContainerAppFromYamlFailed')
+            );
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -177,7 +179,7 @@ export class ContainerAppHelper {
         tl.debug(`Attempting to determine if Container App with name "${containerAppName}" exists in resource group "${resourceGroup}"`);
         try {
             const command = `containerapp show -n ${containerAppName} -g ${resourceGroup} -o none`;
-            const result = tl.execSync('az', command);
+            const result = tl.execSync('az', command, childProcessOutputOptions);
             return result.code == 0;
         } catch (err) {
             tl.warning(err.message);
@@ -195,7 +197,7 @@ export class ContainerAppHelper {
         tl.debug(`Attempting to determine if Container App Environment with name "${containerAppEnvironment}" exists in resource group "${resourceGroup}"`);
         try {
             const command = `containerapp env show -n ${containerAppEnvironment} -g ${resourceGroup} -o none`;
-            const result = tl.execSync('az', command);
+            const result = tl.execSync('az', command, childProcessOutputOptions);
             return result.code == 0;
         } catch (err) {
             tl.warning(err.message);
@@ -212,7 +214,7 @@ export class ContainerAppHelper {
         tl.debug(`Attempting to determine if resource group "${resourceGroup}" exists`);
         try {
             const command = `group show -n ${resourceGroup} -o none`;
-            const result = tl.execSync('az', command);
+            const result = tl.execSync('az', command, childProcessOutputOptions);
             return result.code == 0;
         } catch (err) {
             tl.warning(err.message);
@@ -228,7 +230,7 @@ export class ContainerAppHelper {
         tl.debug(`Attempting to get the default location for the Container App service for the subscription.`);
         try {
             const command = `provider show -n Microsoft.App --query "resourceTypes[?resourceType=='containerApps'].locations[] | [0]"`
-            const result = tl.execSync('az', command);
+            const result = tl.execSync('az', command, childProcessOutputOptions);
 
             // If successful, strip out double quotes, spaces and parentheses from the first location returned
             return result.code == 0 ? result.stdout.toLowerCase().replace(/["() ]/g, "") : `eastus2`;
@@ -248,7 +250,7 @@ export class ContainerAppHelper {
         try {
             const command = `group create -n ${name} -l ${location}`;
             new Utility().throwIfError(
-                tl.execSync('az', command),
+                tl.execSync('az', command, childProcessOutputOptions),
                 tl.loc('CreateResourceGroupFailed', name)
             );
         } catch (err) {
@@ -266,7 +268,7 @@ export class ContainerAppHelper {
         tl.debug(`Attempting to get the existing Container App Environment in resource group "${resourceGroup}"`);
         try {
             const command = `containerapp env list -g ${resourceGroup} --query [0].name"`;
-            const result = tl.execSync('az', command);
+            const result = tl.execSync('az', command, childProcessOutputOptions);
             return result.code == 0 ? result.stdout : null;
         } catch (err) {
             tl.warning(err.message);
@@ -290,7 +292,7 @@ export class ContainerAppHelper {
             }
 
             util.throwIfError(
-                tl.execSync('az', command),
+                tl.execSync('az', command, childProcessOutputOptions),
                 tl.loc('CreateContainerAppEnvironmentFailed')
             );
         } catch (err) {
@@ -309,7 +311,7 @@ export class ContainerAppHelper {
         try {
             const command = `containerapp ingress disable -n ${name} -g ${resourceGroup}`;
             new Utility().throwIfError(
-                tl.execSync('az', command),
+                tl.execSync('az', command, childProcessOutputOptions),
                 tl.loc('DisableContainerAppIngressFailed')
             );
         } catch (err) {
@@ -331,7 +333,7 @@ export class ContainerAppHelper {
         try {
             const command = `containerapp registry set -n ${name} -g ${resourceGroup} --server ${acrName}.azurecr.io --username ${acrUsername} --password ${acrPassword}`;
             new Utility().throwIfError(
-                tl.execSync('az', command),
+                tl.execSync('az', command, childProcessOutputOptions),
                 tl.loc('UpdateContainerAppRegistryDetailsFailed')
             );
         } catch (err) {
@@ -350,34 +352,34 @@ export class ContainerAppHelper {
         imageToDeploy: string,
         appSourcePath: string,
         runtimeStack: string) {
-            tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
-            try {
-                const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
-                if (useArgArray) {
-                    let telemetryArg = 'CALLER_ID=azure-pipelines-v1';
-                    if (this.disableTelemetry) {
-                        telemetryArg = 'ORYX_DISABLE_TELEMETRY=true';
-                    }
-
-                    new Utility().throwIfError(
-                        tl.execSync(PACK_CMD, ['build', `${imageToDeploy}`, '--path', `${appSourcePath}`, '--builder', `${ORYX_BUILDER_IMAGE}`, '--run-image', `mcr.microsoft.com/oryx/${runtimeStack}`, '--env', telemetryArg]),
-                        tl.loc('CreateImageWithBuilderFailed')
-                    );
-                } else {
-                    let telemetryArg = `--env "CALLER_ID=azure-pipelines-v1"`;
-                    if (this.disableTelemetry) {
-                        telemetryArg = `--env "ORYX_DISABLE_TELEMETRY=true"`;
-                    }
-
-                    new Utility().throwIfError(
-                        tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`),
-                        tl.loc('CreateImageWithBuilderFailed')
-                    );
+        tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
+        try {
+            const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+            if (useArgArray) {
+                let telemetryArg = 'CALLER_ID=azure-pipelines-v1';
+                if (this.disableTelemetry) {
+                    telemetryArg = 'ORYX_DISABLE_TELEMETRY=true';
                 }
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
+
+                new Utility().throwIfError(
+                    tl.execSync(PACK_CMD, ['build', `${imageToDeploy}`, '--path', `${appSourcePath}`, '--builder', `${ORYX_BUILDER_IMAGE}`, '--run-image', `mcr.microsoft.com/oryx/${runtimeStack}`, '--env', telemetryArg], childProcessOutputOptions),
+                    tl.loc('CreateImageWithBuilderFailed')
+                );
+            } else {
+                let telemetryArg = `--env "CALLER_ID=azure-pipelines-v1"`;
+                if (this.disableTelemetry) {
+                    telemetryArg = `--env "ORYX_DISABLE_TELEMETRY=true"`;
+                }
+
+                new Utility().throwIfError(
+                    tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`, childProcessOutputOptions),
+                    tl.loc('CreateImageWithBuilderFailed')
+                );
             }
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -391,24 +393,24 @@ export class ContainerAppHelper {
         imageToDeploy: string,
         appSourcePath: string,
         dockerfilePath: string) {
-            tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
-            try {
-                const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
-                if (useArgArray) {
-                    new Utility().throwIfError(
-                        tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`]),
-                        tl.loc('CreateImageWithDockerfileFailed')
-                    );
-                } else {
-                    new Utility().throwIfError(
-                        tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`),
-                        tl.loc('CreateImageWithDockerfileFailed')
-                    );
-                }
-            } catch (err) {
-                tl.error(err.message);
-                throw err;
+        tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
+        try {
+            const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+            if (useArgArray) {
+                new Utility().throwIfError(
+                    tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`], childProcessOutputOptions),
+                    tl.loc('CreateImageWithDockerfileFailed')
+                );
+            } else {
+                new Utility().throwIfError(
+                    tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`, childProcessOutputOptions),
+                    tl.loc('CreateImageWithDockerfileFailed')
+                );
             }
+        } catch (err) {
+            tl.error(err.message);
+            throw err;
+        }
     }
 
     /**
@@ -416,7 +418,7 @@ export class ContainerAppHelper {
      * @param appSourcePath - the path to the application source on the machine
      * @returns a string representing the runtime stack that can be used for the Oryx MCR runtime images
      */
-     public async determineRuntimeStackAsync(appSourcePath: string): Promise<string> {
+    public async determineRuntimeStackAsync(appSourcePath: string): Promise<string> {
         tl.debug('Attempting to determine the runtime stack needed for the provided application source');
         try {
             // Use 'oryx dockerfile' command to determine the runtime stack to use and write it to a temp file
@@ -424,13 +426,13 @@ export class ContainerAppHelper {
             if (useArgArray) {
                 const dockerCommand: string[] = ['run', '--rm', '-v', `${appSourcePath}:/app`, `${ORYX_CLI_IMAGE}`, '/bin/bash', '-c', "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"];
                 new Utility().throwIfError(
-                    tl.execSync('docker', dockerCommand),
+                    tl.execSync('docker', dockerCommand, childProcessOutputOptions),
                     tl.loc('DetermineRuntimeStackFailed', appSourcePath)
                 );
             } else {
                 const dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
                 new Utility().throwIfError(
-                    tl.execSync('docker', dockerCommand),
+                    tl.execSync('docker', dockerCommand, childProcessOutputOptions),
                     tl.loc('DetermineRuntimeStackFailed', appSourcePath)
                 );
             }
@@ -458,11 +460,11 @@ export class ContainerAppHelper {
      * Sets the default builder on the machine to the Oryx++ Builder to prevent an exception from being thrown due
      * to no default builder set.
      */
-     public setDefaultBuilder() {
+    public setDefaultBuilder() {
         tl.debug('Setting the Oryx++ Builder as the default builder via the pack CLI');
         try {
             new Utility().throwIfError(
-                tl.execSync(PACK_CMD, `config default-builder ${ORYX_BUILDER_IMAGE}`),
+                tl.execSync(PACK_CMD, `config default-builder ${ORYX_BUILDER_IMAGE}`, childProcessOutputOptions),
                 tl.loc('SetDefaultBuilderFailed')
             );
         } catch (err) {
@@ -475,7 +477,7 @@ export class ContainerAppHelper {
      * Installs the pack CLI that will be used to build a runnable application image.
      * For more information about the pack CLI can be found here: https://buildpacks.io/docs/tools/pack/
      */
-     public async installPackCliAsync() {
+    public async installPackCliAsync() {
         tl.debug('Attempting to install the pack CLI');
         try {
             let command: string = '';
@@ -484,13 +486,13 @@ export class ContainerAppHelper {
                 const packZipDownloadFilePath: string = path.join(PACK_CMD, 'pack-windows.zip');
 
                 command = `New-Item -ItemType Directory -Path ${PACK_CMD} -Force | Out-Null;` +
-                          `Invoke-WebRequest -Uri ${packZipDownloadUri} -OutFile ${packZipDownloadFilePath}; ` +
-                          `Expand-Archive -LiteralPath ${packZipDownloadFilePath} -DestinationPath ${PACK_CMD}; ` +
-                          `Remove-Item -Path ${packZipDownloadFilePath}`;
+                    `Invoke-WebRequest -Uri ${packZipDownloadUri} -OutFile ${packZipDownloadFilePath}; ` +
+                    `Expand-Archive -LiteralPath ${packZipDownloadFilePath} -DestinationPath ${PACK_CMD}; ` +
+                    `Remove-Item -Path ${packZipDownloadFilePath}`;
             } else {
                 const tgzSuffix = os.platform() == 'darwin' ? 'macos' : 'linux';
                 command = `(curl -sSL \"https://github.com/buildpacks/pack/releases/download/v0.27.0/pack-v0.27.0-${tgzSuffix}.tgz\" | ` +
-                                  'tar -C /usr/local/bin/ --no-same-owner -xzv pack)';
+                    'tar -C /usr/local/bin/ --no-same-owner -xzv pack)';
             }
 
             await new CommandHelper().execCommandAsync(command);

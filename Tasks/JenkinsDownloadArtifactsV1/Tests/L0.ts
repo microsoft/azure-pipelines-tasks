@@ -504,5 +504,22 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             throw err;
         }
     });
-});
 
+    it('filters Jenkins commit message and author metadata from parse-error output', async () => {
+        const tp: string = path.join(__dirname, 'L0FiltersJenkinsCommitOutput.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.stdout.includes('##_vso[task.setvariable variable=jda_commit_pwned;issecret=false]INJECTED_BY_COMMIT_MSG'), tr.stdout);
+        assert(tr.stdout.includes('##_vso[artifact.upload containerfolder=leak;artifactname=leaked]/tmp/jda_exfil_target.txt'), tr.stdout);
+        assert(tr.stdout.includes('##_vso[task.uploadfile]/tmp/agent-identity-marker'), tr.stdout);
+        assert(tr.stdout.includes('##_vso[task.uploadsummary]/tmp/agent-identity-marker'), tr.stdout);
+        assert(!tr.stdout.includes('##vso[task.setvariable variable=jda_commit_pwned;issecret=false]INJECTED_BY_COMMIT_MSG'), tr.stdout);
+        assert(!tr.stdout.includes('##vso[artifact.upload containerfolder=leak;artifactname=leaked]/tmp/jda_exfil_target.txt'), tr.stdout);
+        assert(!tr.stdout.includes('##vso[task.uploadfile]/tmp/agent-identity-marker'), tr.stdout);
+        assert(!tr.stdout.includes('##vso[task.uploadsummary]/tmp/agent-identity-marker'), tr.stdout);
+        assert(tr.stdout.includes('[EXPECTED] malformed Jenkins commit response was rejected'), tr.stdout);
+        assert(tr.stdout.includes('[EXPECTED] Jenkins author metadata with raw line breaks was rejected'), tr.stdout);
+    });
+});

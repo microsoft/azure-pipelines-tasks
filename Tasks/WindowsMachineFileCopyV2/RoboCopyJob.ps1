@@ -113,6 +113,20 @@ param (
         return $text.Substring(0, $pos) + $replace + $text.Substring($pos + $search.Length);
     }
 
+    function Write-RobocopyOutput
+    {
+        process
+        {
+            $line = if ($_ -is [System.Management.Automation.ErrorRecord]) {
+                $_.Exception.Message
+            } else {
+                $_.ToString()
+            }
+
+            Write-Output ($line.Replace("##vso[", "##_vso["))
+        }
+    }
+
     function Clean-Target
     {
         if(-not $ModifyRoboCopyRetries){
@@ -127,11 +141,11 @@ param (
         if ($enableWindowsMachineFileCopyArgumentsHardening)
         {
             $cleanupArguments = @($tempDirectory, $destinationNetworkPath, "*.*") + (Split-AdditionalArguments -additionalArguments $cleanupArgument.Trim())
-            & robocopy @cleanupArguments
+            & robocopy @cleanupArguments 2>&1 | Write-RobocopyOutput
         }
         else
         {
-            Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+            Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument" 2>&1 | Write-RobocopyOutput
         }
         Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
     }
@@ -300,17 +314,17 @@ param (
         {
             $robocopyExtraArguments = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -AsArray
             $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + $robocopyExtraArguments
-            & robocopy @robocopyArguments
+            & robocopy @robocopyArguments 2>&1 | Write-RobocopyOutput
         }
         elseif ($useSanitizerActivate -eq "true")
         {
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments 2>&1 | Write-RobocopyOutput
         }
         else
         {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-            Invoke-Expression $command
+            Invoke-Expression $command 2>&1 | Write-RobocopyOutput
         }
 
         if ($LASTEXITCODE -ge 8)

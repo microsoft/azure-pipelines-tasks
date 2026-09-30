@@ -1,5 +1,6 @@
-import * as tl from 'azure-pipelines-task-lib/task';
-import { Utility } from './Utility';
+import * as tl from "azure-pipelines-task-lib/task";
+
+import { childProcessOutputOptions, Utility } from "./Utility";
 
 const ORYX_CLI_IMAGE: string = "mcr.microsoft.com/oryx/cli:debian-buster-20230207.2";
 
@@ -15,9 +16,9 @@ const util = new Utility();
 export class TelemetryHelper {
     readonly disableTelemetry: boolean;
 
-    private scenario: string;
-    private result: string;
-    private errorMessage: string;
+    private scenario: string = "";
+    private result: string = "";
+    private errorMessage: string = "";
     private taskStartMilliseconds: number;
 
     constructor(disableTelemetry: boolean) {
@@ -85,12 +86,12 @@ export class TelemetryHelper {
                 }
 
                 const dockerCommand = `run --rm ${ORYX_CLI_IMAGE} /bin/bash -c "oryx telemetry --event-name 'ContainerAppsPipelinesTaskV1' ` +
-                `--processing-time '${taskLengthMilliseconds}' ${resultArg} ${scenarioArg} ${errorMessageArg}"`
+                    `--processing-time '${taskLengthMilliseconds}' ${resultArg} ${scenarioArg} ${errorMessageArg}"`
 
                 // Don't use Utility's throwIfError() since it will still record an error in the pipeline logs, but won't fail the task
-                tl.execSync('docker', dockerCommand)
+                tl.execSync('docker', dockerCommand, childProcessOutputOptions)
             } catch (err) {
-                tl.warning(`Skipping telemetry logging due to the following exception: ${err.message}`);
+                tl.warning(`Skipping telemetry logging due to the following exception: ${(err instanceof Error ? err.message : err)}`);
             }
         }
     }

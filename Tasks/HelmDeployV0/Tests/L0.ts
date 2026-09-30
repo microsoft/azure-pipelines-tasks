@@ -1,9 +1,32 @@
-import fs = require('fs');
 import assert = require('assert');
+import fs = require('fs');
 import path = require('path');
+import stream = require('stream');
+
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+
 import * as shared from './TestShared';
 import * as tl from 'azure-pipelines-task-lib';
+import basecommand from '../src/basecommand';
+
+class TestCommand extends basecommand {
+    public getTool(): string {
+        return process.execPath;
+    }
+
+    public login(): void { }
+
+    public logout(): void { }
+}
+
+function createOutputStream(output: string[]): stream.Writable {
+    return new stream.Writable({
+        write(chunk, encoding, callback) {
+            output.push(chunk.toString());
+            callback();
+        }
+    });
+}
 
 describe("HelmDeployV0 Suite", function () {
     this.timeout(30000);
@@ -30,6 +53,38 @@ describe("HelmDeployV0 Suite", function () {
     });
 
     after(async () => { });
+
+    it("filters external output for async and sync Helm execution", async function () {
+        const externalOutput = "normal Helm output\n##vso[task.setvariable variable=unsafe]value";
+        const execOptions = {
+            env: Object.assign({}, process.env, { HELM_TEST_EXTERNAL_OUTPUT: externalOutput })
+        };
+        const command = new TestCommand(true);
+
+        const asyncDisplayedOutput: string[] = [];
+        let asyncRawOutput = "";
+        const asyncTool = command.createCommand();
+        asyncTool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+        asyncTool.on("stdout", data => asyncRawOutput += data.toString());
+
+        await command.execCommand(asyncTool, Object.assign({}, execOptions, { outStream: createOutputStream(asyncDisplayedOutput) }));
+
+        assert(asyncDisplayedOutput.join("").includes("normal Helm output"), "normal async output should remain");
+        assert(asyncDisplayedOutput.join("").includes("##_vso[task.setvariable variable=unsafe]value"), "async logging command should be neutralized");
+        assert(!asyncDisplayedOutput.join("").includes("##vso["), "async output should not contain an executable logging command");
+        assert(asyncRawOutput.includes("##vso[task.setvariable variable=unsafe]value"), "async stdout event should remain raw");
+
+        const syncDisplayedOutput: string[] = [];
+        const syncTool = command.createCommand();
+        syncTool.arg(["-e", "process.stdout.write(process.env.HELM_TEST_EXTERNAL_OUTPUT)"]);
+
+        const syncResult = command.execCommandSync(syncTool, Object.assign({}, execOptions, { outStream: createOutputStream(syncDisplayedOutput) }));
+
+        assert(syncDisplayedOutput.join("").includes("normal Helm output"), "normal sync output should remain");
+        assert(syncDisplayedOutput.join("").includes("##_vso[task.setvariable variable=unsafe]value"), "sync logging command should be neutralized");
+        assert(!syncDisplayedOutput.join("").includes("##vso["), "sync output should not contain an executable logging command");
+        assert(syncResult.stdout.includes("##vso[task.setvariable variable=unsafe]value"), "sync result should remain raw");
+    });
 
     it("Run successfully with Helm install (version 3) with chart name", async function () {
         const tp = path.join(__dirname, "TestSetup.js");
@@ -228,10 +283,10 @@ describe("HelmDeployV0 Suite", function () {
     it("Run with feature flag OFF - uses legacy helm version command (--client --short)", async function () {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         // Set feature flag to FALSE before running the test
         process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'false';
-        
+
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
@@ -250,10 +305,10 @@ describe("HelmDeployV0 Suite", function () {
     it("Run with feature flag ON - uses new helm version command (--short only)", async function () {
         const tp = path.join(__dirname, "TestSetup.js");  // SAME setup file!
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         // Set feature flag to TRUE before running the test
         process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'true';
-        
+
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
