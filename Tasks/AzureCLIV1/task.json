@@ -20,7 +20,7 @@
   "version": {
     "Major": 1,
     "Minor": 281,
-    "Patch": 2
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "[Deprecated] Azure CLI $(scriptPath)",
