@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 280,
-    "Patch": 1
+    "Minor": 281,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -234,6 +234,7 @@
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
     "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null.",
     "SqlFileNotFound": "SQL file not found at path: %s",
-    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed.",
+    "AdditionalArgumentsContainUnsupportedOption": "The value of 'Additional MySQL Arguments' cannot contain the unsupported option '%s'. Remove this option from the additional arguments."
   }
 }
