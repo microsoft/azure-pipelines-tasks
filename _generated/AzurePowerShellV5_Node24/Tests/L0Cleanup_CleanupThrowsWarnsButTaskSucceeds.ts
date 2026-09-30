@@ -66,7 +66,7 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
     validateAzModuleVersion: () => Promise.resolve()
 });
 
-tmr.registerMock('uuid/v4', () => 'test-uuid');
+tmr.registerMock('uuid', { v4: () => 'test-uuid' });
 
 // Mock fs.writeFile so the task does not actually write to disk
 const fs = require('fs');
