@@ -195,6 +195,7 @@
     "RetryingOperation": "Operation failed, waiting %sms before retrying, retries remaining: %s",
     "RedirectUrlError": "Unable to get redirect URL with error %.",
     "UnsupportedArchiveType": "Unsupported archive type: %s",
+    "InvalidPackageFilePath": "Package file path '%s' must be relative to and remain within the destination directory.",
     "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",

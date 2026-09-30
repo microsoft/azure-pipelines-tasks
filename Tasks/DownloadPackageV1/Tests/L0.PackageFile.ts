@@ -34,6 +34,12 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             assert.strictEqual(pf.downloadPath, path.resolve('/dest/output', 'mypackage.nupkg'));
         });
 
+        it('allows nested relative package file paths', () => {
+            const pf = new PackageFile(false, '/dest/output', 'lib/mypackage.jar');
+
+            assert.strictEqual(pf.downloadPath, path.resolve('/dest/output', 'lib/mypackage.jar'));
+        });
+
         it('handles .tgz extension the same way', () => {
             const pf = new PackageFile(true, '/dest', 'pkg.tgz');
 
@@ -45,6 +51,18 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
 
             assert.strictEqual(pf.downloadPath, path.resolve('/mock/agent/temp', 'pkg.crate'));
         });
+
+        for (const filename of [
+            '../outside.txt',
+            'nested/../../outside.txt',
+            '/etc/cron.d/package-task',
+            'C:\\Windows\\Temp\\package-task',
+            '\\\\server\\share\\package-task'
+        ]) {
+            it(`rejects unsafe package file path ${filename}`, () => {
+                assert.throws(() => new PackageFile(false, '/dest/output', filename));
+            });
+        }
     });
 
     describe('process() behavior', function () {

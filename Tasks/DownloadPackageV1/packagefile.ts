@@ -22,9 +22,9 @@ export class PackageFile {
         this.extractFile = extract;
 
         if (extract) {
-            this.initialLocation = path.resolve(tl.getVariable('Agent.TempDirectory'), filename);
+            this.initialLocation = this.resolveContainedPath(tl.getVariable('Agent.TempDirectory'), filename);
         } else {
-            this.initialLocation = path.resolve(destination, filename);
+            this.initialLocation = this.resolveContainedPath(destination, filename);
         }
     }
 
@@ -36,6 +36,30 @@ export class PackageFile {
 
     get downloadPath() {
         return this.initialLocation;
+    }
+
+    private resolveContainedPath(destination: string, filename: string): string {
+        const root = path.resolve(destination);
+        const hasParentSegment = filename.split(/[\\/]+/).includes("..");
+        const hasWindowsRoot = path.win32.parse(filename).root !== "";
+
+        if (!filename || path.posix.isAbsolute(filename) || hasWindowsRoot || hasParentSegment) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        const resolvedPath = path.resolve(root, filename);
+        const relativePath = path.relative(root, resolvedPath);
+        const escapesRoot =
+            !relativePath ||
+            relativePath === ".." ||
+            relativePath.startsWith(`..${path.sep}`) ||
+            path.isAbsolute(relativePath);
+
+        if (escapesRoot) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        return resolvedPath;
     }
 
     private async extract(): Promise<void> {
