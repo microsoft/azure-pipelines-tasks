@@ -60,6 +60,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.publishHtmlReport" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Publish an HTML code coverage report. Disable this option to skip generating and publishing the HTML report.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Veröffentlichen Sie einen HTML Code Coverage-Bericht Deaktivieren Sie diese Option, wenn kein HTML-Bericht generiert und veröffentlicht werden soll.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.summaryFileLocation" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Paths to summary files containing code coverage statistics, such as line, method, and class coverage. Multiple summary files will be merged into a single report. Supports multiple lines of minimatch patterns. [More information]5D;(https://aka.ms/minimatchexamples)]]></Val>
@@ -83,6 +92,15 @@
           <Val><![CDATA[Path to Source files]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Pfad zu Quelldateien]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.publishHtmlReport" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Publish HTML report]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[HTML-Bericht veröffentlichen]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
