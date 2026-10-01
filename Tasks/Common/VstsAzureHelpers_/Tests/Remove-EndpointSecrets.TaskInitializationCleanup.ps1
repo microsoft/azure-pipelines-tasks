@@ -3,7 +3,20 @@ param()
 
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 
-$repositoryRoot = Resolve-Path "$PSScriptRoot\..\..\..\.."
+# Tests run from the build output (_build), which only contains the task(s) under test in a filtered
+# PR build. Walk up to the real source root so these cross-task scripts are always found and validated.
+$repositoryRoot = $null
+$searchDir = $PSScriptRoot
+while ($searchDir) {
+    if (Test-Path (Join-Path $searchDir "Tasks\AzureFileCopyV1\AzureFileCopy.ps1")) {
+        $repositoryRoot = $searchDir
+        break
+    }
+    $searchDir = Split-Path $searchDir -Parent
+}
+if (-not $repositoryRoot) {
+    $repositoryRoot = Resolve-Path "$PSScriptRoot\..\..\..\.."
+}
 $taskScripts = @(
     "Tasks\AzureFileCopyV1\AzureFileCopy.ps1",
     "Tasks\AzureFileCopyV2\AzureFileCopy.ps1",
