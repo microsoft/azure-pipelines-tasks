@@ -79,7 +79,7 @@ export class NpmrcBackupManager {
                 }
 
                 fs.ftruncateSync(destinationHandle, 0);
-                this.copyFileContents(backupHandle, destinationHandle);
+                this.copyFileContents(backupHandle, destinationHandle, npmrcPath);
             } finally {
                 fs.closeSync(destinationHandle);
             }
@@ -125,7 +125,7 @@ export class NpmrcBackupManager {
         try {
             const backupHandle = fs.openSync(backupPath, 'w', source.mode);
             try {
-                this.copyFileContents(source.handle, backupHandle);
+                this.copyFileContents(source.handle, backupHandle, backupPath);
                 fs.fchmodSync(backupHandle, source.mode);
             } finally {
                 fs.closeSync(backupHandle);
@@ -173,7 +173,7 @@ export class NpmrcBackupManager {
         }
     }
 
-    private copyFileContents(sourceHandle: number, destinationHandle: number): void {
+    private copyFileContents(sourceHandle: number, destinationHandle: number, destinationPath: string): void {
         const buffer = Buffer.allocUnsafe(64 * 1024);
         let bytesRead: number;
         while ((bytesRead = fs.readSync(sourceHandle, buffer, 0, buffer.length, null)) > 0) {
@@ -187,7 +187,7 @@ export class NpmrcBackupManager {
                     null
                 );
                 if (bytesWritten === 0) {
-                    throw new Error('Unable to write file contents.');
+                    throw new Error(tl.loc('UnableToWriteFileContents', destinationPath));
                 }
                 offset += bytesWritten;
             }

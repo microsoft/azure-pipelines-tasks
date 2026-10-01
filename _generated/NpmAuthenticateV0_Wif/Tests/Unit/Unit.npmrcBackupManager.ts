@@ -199,6 +199,33 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
+    it('reports a localized error and keeps the backup when restore cannot write', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        const nodeFs = require('fs');
+        const originalWriteSync = nodeFs.writeSync;
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'original\n', 'utf8');
+
+            const manager = new NpmrcBackupManager(root);
+            manager.ensureBackedUp(npmrcPath);
+            fs.writeFileSync(npmrcPath, 'modified\n', 'utf8');
+
+            nodeFs.writeSync = () => 0;
+            assert.throws(
+                () => manager.restoreBackedUpFile(npmrcPath),
+                (error: Error) => error.message === tl.loc('UnableToWriteFileContents', npmrcPath)
+            );
+            nodeFs.writeSync = originalWriteSync;
+            assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
+        } finally {
+            nodeFs.writeSync = originalWriteSync;
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
     it('uses the trusted task identity when restoring a file', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));

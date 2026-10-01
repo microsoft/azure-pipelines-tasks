@@ -76,6 +76,7 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         }, 'TestSetupCleanup.js');
 
         TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'loc_mock_NpmrcChangedSinceBackup');
         assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'modified-by-task');
         assert.strictEqual(fs.existsSync(path.join(saveDir, '0')), true);
     });

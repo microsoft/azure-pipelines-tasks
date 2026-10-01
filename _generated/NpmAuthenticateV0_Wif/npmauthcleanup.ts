@@ -35,4 +35,6 @@ async function run() {
         console.log(tl.loc("NoIndexJsonFile"));
     }
 }
-run();
+run().catch(error => {
+    tl.setResult(tl.TaskResult.Failed, error.message);
+});
