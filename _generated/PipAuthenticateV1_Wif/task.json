@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 281,
-    "Patch": 1
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -135,7 +135,7 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.281.0",
-    "wif_242": "1.281.1"
+    "Default": "1.281.2",
+    "wif_242": "1.281.3"
   }
 }
