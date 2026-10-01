@@ -233,7 +233,10 @@ try{
     {
         Validate-AzureCloudServiceStatus -CloudServiceName $ServiceName -Slot $Slot
     }
+
 } finally {
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Remove-EndpointSecrets
 	Trace-VstsLeavingInvocation $MyInvocation
 }
 
