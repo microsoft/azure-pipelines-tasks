@@ -21,7 +21,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "artifact-engine": "^2.280.0",
+    "artifact-engine": "^2.281.0",
     "azure-devops-node-api": "^17.0.1",
     "azure-pipelines-task-lib": "^5.280.3",
     "decompress-zip": "0.3.3",
