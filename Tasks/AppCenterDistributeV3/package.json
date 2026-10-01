@@ -23,15 +23,15 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "appcenter-file-upload-client-node": "^1.2.11",
-    "azure-pipelines-task-lib": "^5.2.6",
+    "azure-pipelines-task-lib": "^5.281.0",
     "jszip": "^3.10.0",
-    "typed-rest-client": "^1.8.9"
+    "typed-rest-client": "^3.1.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
   },
   "overrides": {
-    "form-data": "^4.0.4",
+    "form-data": "^4.0.6",
     "basic-ftp": "5.3.0"
   }
 }
