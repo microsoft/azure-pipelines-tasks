@@ -12,6 +12,9 @@
       <Item ItemId=";loc.messages.CoveragePublisherExecutionFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Coverage publisher execution failed: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Esecuzione dell'entità di pubblicazione di copertura non riuscita: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -36,6 +39,9 @@
       <Item ItemId=";loc.messages.InvalidCoverageWorkingDirectory" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Coverage publisher working directory does not exist or is not a directory: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La directory di lavoro dell'entità di pubblicazione della copertura non esiste o non è una directory: %s]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
