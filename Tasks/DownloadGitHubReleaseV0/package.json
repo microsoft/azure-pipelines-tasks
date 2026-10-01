@@ -21,14 +21,11 @@
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "artifact-engine": "^1.280.0",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.280.3",
     "nock": "^9.6.1",
-    "typed-rest-client": "^2.2.0"
+    "typed-rest-client": "^3.1.2"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "form-data": "^4.0.4"
   }
 }
