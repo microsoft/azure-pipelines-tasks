@@ -50,17 +50,18 @@ namespace BuildConfigGen
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
                 ["typescript"] = "^5.7.2",
-                ["azure-pipelines-task-lib"] = "^5.2.6",
-                ["azure-devops-node-api"] = "^15.1.3",
-                ["azure-pipelines-tasks-artifacts-common"] = "^2.273.0",
-                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.279.5",
-                ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
-                ["azure-pipelines-tasks-kubernetes-common"] = "^2.270.1",
-                ["azure-pipelines-tasks-packaging-common"] = "^3.273.1",
-                ["azure-pipelines-tasks-securefiles-common"] = "^2.270.0",
-                ["azure-pipelines-tasks-utility-common"] = "^3.270.0",
-                ["azure-pipelines-tasks-webdeployment-common"] = "^4.268.0"
+                ["azure-pipelines-task-lib"] = "^5.281.0",
+                ["azure-devops-node-api"] = "^17.0.1",
+                ["azure-pipelines-tasks-artifacts-common"] = "^2.281.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.281.0",
+                ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.281.0",
+                ["azure-pipelines-tasks-kubernetes-common"] = "^2.281.0",
+                ["azure-pipelines-tasks-packaging-common"] = "^3.281.0",
+                ["azure-pipelines-tasks-securefiles-common"] = "^2.281.0",
+                ["azure-pipelines-tasks-utility-common"] = "^3.281.0",
+                ["azure-pipelines-tasks-webdeployment-common"] = "^4.281.0"
             };
+
 
             public record ConfigRecord(string name, string constMappingKey, bool isDefault, bool isNode, string nodePackageVersion, bool isWif, string nodeHandler, string preprocessorVariableName, bool enableBuildConfigOverrides, bool deprecated, bool shouldUpdateTypescript, bool writeNpmrc, string? overriddenDirectoryName = null, bool shouldUpdateLocalPkgs = false, bool useGlobalVersion = false, bool useAltGeneratedPath = false, bool mergeToBase = false, bool abTaskReleases = true, string? typescriptVersion = "5.1.6", string? taskLibVersion = null, Dictionary<string, string>? packageVersionOverrides = null)
             {
