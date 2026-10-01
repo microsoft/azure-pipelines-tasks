@@ -4,6 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import { normalizeUrl, AZURE_ARTIFACTS_URL_PATTERN } from './urlUtils';
 
 /**
@@ -34,7 +35,7 @@ export function discoverFeedUrls(buildFiles: string[], repositoryUrls: string[])
     for (const filePath of buildFiles) {
         const resolved = path.resolve(filePath);
         if (!fs.existsSync(resolved)) {
-            tl.warning(tl.loc('Warning_BuildFileNotFound', resolved));
+            tl.warning(tl.loc('Warning_BuildFileNotFound'), IssueSource.TaskInternal);
             continue;
         }
 
@@ -114,10 +115,10 @@ export function discoverPluginVersions(buildFiles: string[]): string[] {
     for (const gf of gradleFiles) {
         const ver = extractPluginVersion(path.resolve(gf));
         if (ver) {
-            console.log(tl.loc('Info_PluginVersionFromFile', gf, ver));
+            tl.debugExternalOutput(tl.loc('Info_PluginVersionFromFile', gf, ver), { source: 'repository' });
             if (ver.includes('+')) {
                 dynamicPatterns.push(ver);
-                console.log(tl.loc('Info_DynamicVersionDetected', ver));
+                tl.debugExternalOutput(tl.loc('Info_DynamicVersionDetected', ver), { source: 'repository' });
             } else if (!versions.includes(ver)) {
                 versions.push(ver);
             }
@@ -132,7 +133,9 @@ export function discoverPluginVersions(buildFiles: string[]): string[] {
         const synthesized = pattern.replace('+', '0');
         if (!versions.includes(synthesized)) {
             versions.push(synthesized);
-            console.log(tl.loc('Info_SynthesizedVersion', synthesized, pattern));
+            tl.debugExternalOutput(
+                tl.loc('Info_SynthesizedVersion', synthesized, pattern),
+                { source: 'repository' });
         }
     }
 

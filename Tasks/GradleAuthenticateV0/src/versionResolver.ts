@@ -6,6 +6,7 @@ import { discoverPluginVersions } from './buildFileScanner';
 import { getJarVersion } from './ciJarResolver';
 
 const DEFAULT_VERSION = '1.0.0';
+const SAFE_PLUGIN_VERSION_PATTERN = /^[0-9A-Za-z.+_-]{1,64}$/;
 
 interface VersionInputs {
     buildFiles: string[];
@@ -32,19 +33,24 @@ export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
     const versions = discoverPluginVersions(inputs.buildFiles);
 
     if (versions.length > 0) {
+        assertSafePluginVersions(versions);
         return { versions, source: 'buildfiles' };
     }
 
     // Fallback chain when no versions found in build files
     if (inputs.pluginToolVersion) {
-        console.log(tl.loc('Info_PluginVersionFromInput', inputs.pluginToolVersion));
+        assertSafePluginVersions([inputs.pluginToolVersion]);
+        tl.debugExternalOutput(
+            tl.loc('Info_PluginVersionFromInput', inputs.pluginToolVersion),
+            { source: 'repository' });
         return { versions: [inputs.pluginToolVersion], source: 'input' };
     }
 
     if (inputs.ciJarPath) {
         const jarVer = getJarVersion(inputs.ciJarPath);
         if (jarVer) {
-            console.log(tl.loc('Info_PluginVersionBundled', jarVer));
+            assertSafePluginVersions([jarVer]);
+            tl.debug(tl.loc('Info_PluginVersionBundled'));
             return { versions: [jarVer], source: 'jar' };
         }
     }
@@ -52,6 +58,12 @@ export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
     // Last resort: use a dummy version for the local Maven layout.
     // The version is cosmetic — the init script resolves the JAR from
     // the local file:// repo regardless of the version string.
-    console.log(tl.loc('Info_PluginVersionBundled', DEFAULT_VERSION));
+    console.log(tl.loc('Info_PluginVersionBundled'));
     return { versions: [DEFAULT_VERSION], source: 'fallback' };
+}
+
+function assertSafePluginVersions(versions: string[]): void {
+    if (versions.some(version => !SAFE_PLUGIN_VERSION_PATTERN.test(version))) {
+        throw new Error(tl.loc('Error_InvalidPluginVersion'));
+    }
 }
