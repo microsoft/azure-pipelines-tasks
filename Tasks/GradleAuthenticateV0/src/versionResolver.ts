@@ -17,6 +17,7 @@ interface VersionInputs {
 export interface VersionResult {
     versions: string[];
     source: 'buildfiles' | 'input' | 'jar' | 'fallback';
+    classpathVersion: string;
 }
 
 /**
@@ -30,20 +31,28 @@ export interface VersionResult {
  *    Maven repo layout — any value works)
  */
 export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
+    const classpathVersion = inputs.pluginToolVersion || '+';
+    if (inputs.pluginToolVersion) {
+        assertSafePluginVersions([inputs.pluginToolVersion]);
+    }
+
     const versions = discoverPluginVersions(inputs.buildFiles);
 
     if (versions.length > 0) {
         assertSafePluginVersions(versions);
-        return { versions, source: 'buildfiles' };
+        return { versions, source: 'buildfiles', classpathVersion };
     }
 
     // Fallback chain when no versions found in build files
     if (inputs.pluginToolVersion) {
-        assertSafePluginVersions([inputs.pluginToolVersion]);
         tl.debugExternalOutput(
             tl.loc('Info_PluginVersionFromInput', inputs.pluginToolVersion),
             { source: 'repository' });
-        return { versions: [inputs.pluginToolVersion], source: 'input' };
+        return {
+            versions: [inputs.pluginToolVersion],
+            source: 'input',
+            classpathVersion,
+        };
     }
 
     if (inputs.ciJarPath) {
@@ -51,7 +60,7 @@ export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
         if (jarVer) {
             assertSafePluginVersions([jarVer]);
             tl.debug(tl.loc('Info_PluginVersionBundled'));
-            return { versions: [jarVer], source: 'jar' };
+            return { versions: [jarVer], source: 'jar', classpathVersion };
         }
     }
 
@@ -59,7 +68,7 @@ export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
     // The version is cosmetic — the init script resolves the JAR from
     // the local file:// repo regardless of the version string.
     console.log(tl.loc('Info_PluginVersionBundled'));
-    return { versions: [DEFAULT_VERSION], source: 'fallback' };
+    return { versions: [DEFAULT_VERSION], source: 'fallback', classpathVersion };
 }
 
 function assertSafePluginVersions(versions: string[]): void {

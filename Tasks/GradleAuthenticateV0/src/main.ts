@@ -75,8 +75,9 @@ async function run(): Promise<void> {
 
         exportEnvironmentVariables(tempDir, authConfigPath);
 
-        const classpathVersion = inputs.pluginToolVersion || '+';
-        const initScriptPath = writeInitScript(inputs.gradleUserHome, classpathVersion);
+        const initScriptPath = writeInitScript(
+            inputs.gradleUserHome,
+            versionResult.classpathVersion);
         tl.debug(tl.loc('Info_InitScriptWritten'));
 
         tl.setTaskVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH', initScriptPath, false);
