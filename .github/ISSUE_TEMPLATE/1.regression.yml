@@ -80,6 +80,12 @@ body:
       placeholder: Azure DevOps Server 2019.1
 
   - type: input
+    id: agent-version
+    attributes:
+      label: Agent version
+      placeholder: x.x.x
+
+  - type: input
     id: operation-system
     attributes:
       label: Operation system

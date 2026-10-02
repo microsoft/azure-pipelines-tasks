@@ -3,7 +3,7 @@ import fs = require('fs');
 import path = require('path');
 var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility');
 var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility');
-import { Kudu } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
+import { Kudu, sanitizeKuduLogForConsole } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias, KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 
@@ -203,7 +203,7 @@ export class KuduServiceUtility {
 
         var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
         for(var deploymentLog of deploymentLogs) {
-            console.log(`${deploymentLog.message}`);
+            console.log(sanitizeKuduLogForConsole(`${deploymentLog.message}`, 'AzureFunctionApp'));
             if(deploymentLog.details_url) {
                 await this._printZipDeployLogs(deploymentLog.details_url);
             }

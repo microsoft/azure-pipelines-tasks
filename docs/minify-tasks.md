@@ -16,6 +16,7 @@ to try minification on a task and inspect the result before you commit to opting
 
 - [Try it first (command line, experimentation only)](#try-it-first-command-line-experimentation-only)
 - [Opt in (make.json - the real switch)](#opt-in-makejson---the-real-switch)
+- [Generate a minified canary variant](#generate-a-minified-canary-variant)
 - [make.json "minify" options](#makejson-minify-options)
 - [Source maps and debugging](#source-maps-and-debugging)
 - [Duplicate packages (split module state)](#duplicate-packages-split-module-state)
@@ -98,6 +99,27 @@ build (including generated tasks) - no flag required:
 **Precedence:** a command-line flag always wins (that's what makes experimentation safe -
 you can force minification on or off regardless of `make.json`). When no flag is given, the
 per-task `make.json` setting decides.
+
+## Generate a minified canary variant
+
+To keep the base task unminified while producing a generated minified artifact, add the task to
+the `minified_278` cohort in `make-options.json` and place its minification configuration at
+`Tasks/<Task>/_buildConfigs/Minified/make.json`. The override must include any existing
+task-specific `make.json` settings that the generated task still needs because it replaces that
+file in the generated output.
+
+The build-config generator creates `_generated/<Task>_Minified` with its own version while the base
+task keeps its unminified build behavior. Build and test the base task normally; build-config
+generation and task-list expansion automatically include the generated variant:
+
+```bash
+node make.js build --task <Task>
+node make.js test --task <Task> --suite L0
+```
+
+The generated artifact retains the base task ID and major version. Publishing it therefore acts as
+a version-based canary or replacement; it does not allow pipelines to select normal and minified
+artifacts independently. Side-by-side selection requires a distinct task ID and name.
 
 ## `make.json` "minify" options
 

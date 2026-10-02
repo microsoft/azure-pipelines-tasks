@@ -133,8 +133,11 @@ Unregister-Mock Get-Command
 Unregister-Mock Get-VstsPipelineFeature
 
 # Mock the shared module functions that Invoke-DacpacDeploymentV2 calls
-Register-Mock Get-SqlPackageOnTargetMachine { return "cmd.exe" }
-Register-Mock Get-SqlPackageCmdArgs { return '/c echo /Action:Publish /p:BlockOnPossibleDataLoss=False' }
+$isWindowsPlatform = [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([System.Runtime.InteropServices.OSPlatform]::Windows)
+$sqlPackageEchoCommand = if ($isWindowsPlatform) { "cmd.exe" } else { "/bin/echo" }
+$sqlPackageEchoPrefix = if ($isWindowsPlatform) { "/c echo " } else { "" }
+Register-Mock Get-SqlPackageOnTargetMachine { return $sqlPackageEchoCommand }
+Register-Mock Get-SqlPackageCmdArgs { return "$sqlPackageEchoPrefix/Action:Publish /p:BlockOnPossibleDataLoss=False" }
 
 Invoke-DacpacDeploymentV2 -dacpacFile "test.dacpac" -targetMethod "server" `
     -serverName "localhost" -databaseName "testdb" -authscheme "windowsAuthentication" `
@@ -146,13 +149,48 @@ Assert-WasCalled Get-SqlPackageCmdArgs -Times 1
 # Semicolons survive through to CLI
 Unregister-Mock Get-SqlPackageCmdArgs
 Unregister-Mock Get-SqlPackageOnTargetMachine
-Register-Mock Get-SqlPackageOnTargetMachine { return "cmd.exe" }
-Register-Mock Get-SqlPackageCmdArgs { return '/c echo /p:DoNotDropObjectTypes=Users;Permissions' }
+Register-Mock Get-SqlPackageOnTargetMachine { return $sqlPackageEchoCommand }
+Register-Mock Get-SqlPackageCmdArgs { return "$sqlPackageEchoPrefix/p:DoNotDropObjectTypes=Users;Permissions" }
 
 Invoke-DacpacDeploymentV2 -dacpacFile "test.dacpac" -targetMethod "server" `
     -serverName "localhost" -databaseName "testdb" -authscheme "windowsAuthentication" `
     -additionalArguments ''
 
 Assert-WasCalled Get-SqlPackageCmdArgs -Times 1
+
+# ============================================================================
+# Write-Exception - ensure original errors are preserved
+# ============================================================================
+
+$mainPath = Join-Path (Join-Path $PSScriptRoot "..") "Main.ps1"
+$mainAst = [System.Management.Automation.Language.Parser]::ParseFile($mainPath, [ref]$null, [ref]$null)
+$writeExceptionAst = $mainAst.FindAll({
+    param($node)
+    $node -is [System.Management.Automation.Language.FunctionDefinitionAst] -and $node.Name -eq 'Write-Exception'
+}, $true)[0]
+. ([ScriptBlock]::Create($writeExceptionAst.Extent.Text))
+
+$messageWithFormatLikePattern = "path {0:%2F&version=sample&_a=contents}"
+$formatLikeException = [System.Exception]::new($messageWithFormatLikePattern)
+try {
+    # Write-Exception intentionally logs the error chain via Write-Error before
+    # rethrowing. Suppress that error-stream output here (2>$null) so the L0 test
+    # runner does not treat the logged records as a test failure; we only assert
+    # on the rethrown terminating error caught below.
+    Write-Exception -exception $formatLikeException -errorRecord $null 2>$null
+    throw "Expected Write-Exception to throw"
+}
+catch {
+    Assert-AreEqual $messageWithFormatLikePattern $_.Exception.Message "Write-Exception should preserve original exception message"
+}
+
+$errorRecord = [System.Management.Automation.ErrorRecord]::new($formatLikeException, "WriteExceptionTest", [System.Management.Automation.ErrorCategory]::NotSpecified, $null)
+try {
+    Write-Exception -exception $formatLikeException -errorRecord $errorRecord 2>$null
+    throw "Expected Write-Exception to throw"
+}
+catch {
+    Assert-AreEqual "WriteExceptionTest" $_.FullyQualifiedErrorId "Write-Exception should rethrow the original error record"
+}
 
 Write-Host "MachineGroup security function tests completed"

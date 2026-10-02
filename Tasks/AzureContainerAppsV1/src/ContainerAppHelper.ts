@@ -1,6 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 import { CommandHelper } from './CommandHelper';
 import { Utility } from './Utility';
 
@@ -434,22 +435,17 @@ export class ContainerAppHelper {
                 );
             }
 
-            // Read the temp file to get the runtime stack into a variable
-            const oryxRuntimeTxtPath = path.join(appSourcePath, 'oryx-runtime.txt');
-            let command: string = `head -n 1 ${oryxRuntimeTxtPath}`;
-            if (IS_WINDOWS_AGENT) {
-                command = `Get-Content -Path ${oryxRuntimeTxtPath} -Head 1`;
-            }
+            // Read the temp file to get the runtime stack into a variable. The file is read directly
+            // from the filesystem instead of through a shell command ('head'/'Get-Content' executed via
+            // 'bash -c'/'pwsh -command') so that a user-controlled appSourcePath cannot inject shell
+            // metacharacters and execute arbitrary commands on the agent (CWE-78).
+            const oryxRuntimeTxtPath: string = path.join(appSourcePath, 'oryx-runtime.txt');
+            const oryxRuntimeText: string = fs.readFileSync(oryxRuntimeTxtPath, 'utf8');
+            const runtimeStack: string = oryxRuntimeText.split(/\r?\n/)[0].trim();
 
-            const runtimeStack = await new CommandHelper().execCommandAsync(command);
-
-            // Delete the temp file
-            command = `rm ${oryxRuntimeTxtPath}`;
-            if (IS_WINDOWS_AGENT) {
-                command = `Remove-Item -Path ${oryxRuntimeTxtPath}`;
-            }
-
-            await new CommandHelper().execCommandAsync(command);
+            // Delete the temp file using the task-lib helper rather than a shell 'rm'/'Remove-Item'
+            // command, for the same command-injection reason described above.
+            tl.rmRF(oryxRuntimeTxtPath);
 
             return runtimeStack;
         } catch (err) {

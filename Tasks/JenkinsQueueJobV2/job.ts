@@ -5,6 +5,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
+import stream = require('stream');
 import url = require('url');
 import request = require('request');
 
@@ -14,6 +15,13 @@ import { unzip } from './unzip';
 import {JobState, checkStateTransitions} from './states';
 
 import * as Util from './util';
+
+export function createJenkinsConsoleOutputStream(destination: NodeJS.WritableStream): NodeJS.WritableStream {
+    return tl.createExternalOutputStream({
+        source: 'remote',
+        destination
+    });
+}
 
 export class Job {
     public Parent: Job; // if this job is a pipelined job, its parent that started it.
@@ -32,6 +40,7 @@ export class Job {
     private jobConsole: string = '';
     private jobConsoleOffset: number = 0;
     private jobConsoleEnabled: boolean = false;
+    private externalConsoleOutput: NodeJS.WritableStream;
 
     private working: boolean = true; // initially mark it as working
     private workDelay: number = 0;
@@ -50,6 +59,12 @@ export class Job {
         }
         this.queue = jobQueue;
         this.retryNumber = 0;
+        this.externalConsoleOutput = createJenkinsConsoleOutputStream(new stream.Writable({
+            write: (chunk: Buffer, _encoding: BufferEncoding, callback: (error?: Error | null) => void): void => {
+                this.consoleLog(chunk.toString('utf8'));
+                callback();
+            }
+        }));
         if (this.TaskUrl.startsWith(this.queue.TaskOptions.serverEndpointUrl)) {
             // simplest case (jobs run on the same server name as the endpoint)
             this.Identifier = this.TaskUrl.substr(this.queue.TaskOptions.serverEndpointUrl.length);
@@ -168,7 +183,7 @@ export class Job {
             this.consoleLog(this.getBlockMessage('Jenkins job started: ' + this.Name + '\n' + this.ExecutableUrl));
             // log any pending jobs
             if (this.queue.FindActiveConsoleJob() == null) {
-                console.log('Jenkins job pending: ' + this.ExecutableUrl);
+                tl.writeExternalOutput('Jenkins job pending: ' + this.ExecutableUrl + os.EOL, { source: 'remote' });
             }
         } else if (this.State === JobState.Joined || this.State === JobState.Cut) {
             Util.fail('Can not be set to streaming: ' + this);
@@ -195,7 +210,7 @@ export class Job {
     }
 
     public SetJoined(joinedJob: Job): void {
-        tl.debug(this + '.setJoined(' + joinedJob + ')');
+        tl.debugExternalOutput(this + '.setJoined(' + joinedJob + ')', { source: 'remote' });
         this.Joined = joinedJob;
         this.changeState(JobState.Joined);
         if (joinedJob.State === JobState.Joined || joinedJob.State === JobState.Cut) {
@@ -329,7 +344,7 @@ export class Job {
     private downloadResults(): void {
         const thisJob: Job = this;
         const downloadUrl: string = Util.addUrlSegment(thisJob.ExecutableUrl, 'team-results/zip');
-        tl.debug('downloadResults(), url:' + downloadUrl);
+        tl.debugExternalOutput('downloadResults(), url:' + downloadUrl, { source: 'remote' });
 
         const downloadRequest = request.get({ url: downloadUrl, strictSSL: thisJob.queue.TaskOptions.strictSSL })
             .auth(thisJob.queue.TaskOptions.username, thisJob.queue.TaskOptions.password, true)
@@ -338,7 +353,10 @@ export class Job {
                 thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
             })
             .on('response', (response) => {
-                tl.debug('downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage);
+                tl.debugExternalOutput(
+                    'downloadResults(), url:' + downloadUrl + ' , response.statusCode: ' + response.statusCode + ', response.statusMessage: ' + response.statusMessage,
+                    { source: 'remote' }
+                );
                 if (response.statusCode == 404) { // expected if there are no results
                     tl.debug('no results to download');
                     thisJob.stopWork(0, JobState.Done);
@@ -349,32 +367,35 @@ export class Job {
                     try {
                         // Create the destination folder if it doesn't exist
                         if (!tl.exist(destinationFolder)) {
-                            tl.debug('creating results destination folder: ' + destinationFolder);
+                            tl.debugExternalOutput('creating results destination folder: ' + destinationFolder, { source: 'remote' });
                             tl.mkdirP(destinationFolder);
                         }
 
-                        tl.debug('downloading results file: ' + fileName);
+                        tl.debugExternalOutput('downloading results file: ' + fileName, { source: 'remote' });
 
                         const file: fs.WriteStream = fs.createWriteStream(fileName);
                         downloadRequest.pipe(file)
                             .on('error', (err) => { throw err; })
                             .on('finish', function fileFinished() {
-                                tl.debug('successfully downloaded results to: ' + fileName);
+                                tl.debugExternalOutput('successfully downloaded results to: ' + fileName, { source: 'remote' });
                                 try {
                                     unzip(fileName, destinationFolder);
                                     thisJob.stopWork(0, JobState.Done);
                                 } catch (e) {
                                     tl.warning('unable to extract results file');
-                                    tl.debug(e.message);
-                                    process.stderr.write(e + os.EOL);
+                                    tl.debugExternalOutput(String(e.message), { source: 'remote' });
+                                    tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
                                     thisJob.stopWork(0, JobState.Done);
                                 }
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warning('unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl);
-                        tl.warning(err.message);
-                        process.stderr.write(err + os.EOL);
+                        tl.warningExternalOutput(
+                            'unable to download results to file: ' + fileName + ' for Jenkins Job: ' + thisJob.ExecutableUrl,
+                            { source: 'remote' }
+                        );
+                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
+                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
                         thisJob.stopWork(0, JobState.Done);
                     }
                 } else { // an unexepected error with results
@@ -387,13 +408,13 @@ export class Job {
                         downloadRequest.pipe(warningStream)
                             .on('error', (err) => { throw err; })
                             .on('finish', function finished() {
-                                tl.warning(warningStream);
+                                tl.warningExternalOutput(warningStream.toString(), { source: 'remote' });
                                 thisJob.stopWork(0, JobState.Done);
                             });
                     } catch (err) {
                         // don't fail the job if the results can not be downloaded successfully
-                        tl.warning(err.message);
-                        process.stderr.write(err + os.EOL);
+                        tl.warningExternalOutput(String(err.message), { source: 'remote' });
+                        tl.writeExternalOutput(String(err) + os.EOL, { source: 'remote', destination: process.stderr });
                         thisJob.stopWork(0, JobState.Done);
                     }
                 }
@@ -439,13 +460,14 @@ export class Job {
                     thisJob.RetryConnection();
                 }
             } else {
-                thisJob.consoleLog(thisJob.stripAnsiCodes(body)); // redirect Jenkins console to task console, strip ANSI codes
+                thisJob.externalConsoleOutput.write(thisJob.stripAnsiCodes(body));
                 const xMoreData: string = httpResponse.headers['x-more-data'];
                 if (xMoreData && xMoreData == 'true') {
                     const offset: string = httpResponse.headers['x-text-size'];
                     thisJob.jobConsoleOffset = Number.parseInt(offset);
                     thisJob.stopWork(thisJob.queue.TaskOptions.pollIntervalMillis, thisJob.State);
                 } else { // no more console, move to Finishing
+                    thisJob.externalConsoleOutput.end();
                     thisJob.stopWork(0, JobState.Finishing);
                 }
             }
@@ -465,7 +487,7 @@ export class Job {
         if (thisJob.queue.TaskOptions.captureConsole) {
             if (!this.jobConsoleEnabled) {
                 if (this.jobConsole != '') { // flush any queued output
-                    console.log(this.jobConsole);
+                    tl.writeExternalOutput(this.jobConsole + os.EOL, { source: 'remote' });
                 }
                 this.jobConsoleEnabled = true;
             }
@@ -479,7 +501,7 @@ export class Job {
     private consoleLog(message: string) {
         if (this.jobConsoleEnabled) {
             //only log it if the console is enabled.
-            console.log(message);
+            tl.writeExternalOutput(message + os.EOL, { source: 'remote' });
         }
         this.jobConsole += message;
     }
@@ -517,7 +539,7 @@ export class Job {
 
     private debug(message: string) {
         const fullMessage: string = this.toString() + ' debug: ' + message;
-        tl.debug(fullMessage);
+        tl.debugExternalOutput(fullMessage, { source: 'remote' });
     }
 
     private toString() {

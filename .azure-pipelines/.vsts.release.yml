@@ -28,6 +28,10 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: signNodeModules
+  displayName: Sign binaries inside node_modules
+  type: boolean
+  default: true
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
@@ -89,7 +93,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
-      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,PowerShellGallery,NuGet
+      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,NuGet
     featureFlags:
       autoBaseline: false
     sdl:
@@ -141,6 +145,7 @@ extends:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
             signTasks: true
+            signNodeModules: ${{ parameters.signNodeModules }}
 
       # Courtesy Push
       - job: courtesy_push
@@ -169,7 +174,7 @@ extends:
             condition: succeeded()
           - output: nuget
             packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
-            packageParentPath: '$(Build.SourcesDirectory)'
+            packageParentPath: '$(Build.SourcesDirectory)/_package/nuget-packages'
             condition: and(succeeded(), eq(variables['tasksSkipPublish'], 'false'))
             ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'

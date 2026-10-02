@@ -9,8 +9,9 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/azCliUtility";
-import { tryValidateScriptArgs, ArgsSanitizingError } from "./src/argsSanitizer";
+import { tryValidateScriptArgs, ArgsSanitizingError } from "azure-pipelines-tasks-args-sanitizer/argsSanitizer";
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
+import { createServicePrincipalCertificate, removeServicePrincipalCertificate } from "./src/AzureCliCredentialFile";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -30,6 +31,11 @@ export class azureclitask {
     public static async runMain(): Promise<void> {
         var toolExecutionError = null;
         var exitCode: number = 0;
+        this.isAzureCLICredentialFileIsolationEnabled = tl.getPipelineFeature('AzureCLICredentialFileIsolationEnabled');
+        if (this.isAzureCLICredentialFileIsolationEnabled) {
+            this.cliPasswordPath = null;
+            this.cliCredentialDirectory = null;
+        }
 
         if(tl.getBoolFeatureFlag('AZP_AZURECLIV2_SETUP_PROXY_ENV')) {
             const proxyConfig: tl.ProxyConfiguration | null = tl.getHttpProxyConfiguration();
@@ -41,7 +47,10 @@ export class azureclitask {
         }
 
         try{
-            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '');
+            tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '', {
+                taskName: 'AzureCLIV2',
+                pipelineFeatureFlag: 'EnableAzureCliArgsValidation'
+            });
             var scriptType: ScriptType = ScriptTypeFactory.getSriptType();
             var tool: any = await scriptType.getTool();
             var cwd: string = tl.getPathInput("cwd", true, false);
@@ -155,7 +164,11 @@ export class azureclitask {
                 }
             }
 
-            if (this.cliPasswordPath) {
+            if (this.isAzureCLICredentialFileIsolationEnabled) {
+                removeServicePrincipalCertificate(this.cliPasswordPath, this.cliCredentialDirectory);
+                this.cliPasswordPath = null;
+                this.cliCredentialDirectory = null;
+            } else if (this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
             }
@@ -236,6 +249,8 @@ export class azureclitask {
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static cliCredentialDirectory: string = null;
+    private static isAzureCLICredentialFileIsolationEnabled: boolean = false;
     private static azCliConfigPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
@@ -345,8 +360,14 @@ export class azureclitask {
                     authParam = "--certificate";
                 }
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-                cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-                fs.writeFileSync(cliPassword, certificateContent);
+                if (this.isAzureCLICredentialFileIsolationEnabled) {
+                    const certificate = createServicePrincipalCertificate(tl.getVariable('Agent.TempDirectory'), certificateContent);
+                    cliPassword = certificate.certificatePath;
+                    this.cliCredentialDirectory = certificate.directoryPath;
+                } else {
+                    cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+                    fs.writeFileSync(cliPassword, certificateContent);
+                }
                 this.cliPasswordPath = cliPassword;
             }
             else {
@@ -358,7 +379,7 @@ export class azureclitask {
             let escapedCliPassword = cliPassword.replace(/"/g, '\\"');
             tl.setSecret(escapedCliPassword.replace(/\\/g, '\"'));
             //login using svn
-            if (process.platform === 'win32' && tl.getBoolFeatureFlag('AZP_AZURECLI_USE_FILE_INVOCATION')) {
+            if (process.platform === 'win32' && tl.getPipelineFeature('AzureCliUseFileInvocation')) {
                 // Bypass az.cmd to avoid CMD metacharacter interpretation (e.g. ^ in passwords)
                 // Azure CLI MSI layout: <install>/wbin/az.cmd — go up 2 dirs to find <install>/python.exe
                 const azPath = tl.which('az', false);

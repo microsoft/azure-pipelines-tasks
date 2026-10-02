@@ -72,6 +72,13 @@ export function getBuildConfigs(task: string): string[] {
             }
         }
 
+        // Minified variants must run in addition to Node-version canaries because
+        // they can use the same handler while producing a different artifact.
+        const minifiedVariant = generatedVariants.find(variant => variant === `${task}_Minified`);
+        if (minifiedVariant && !configs.includes(minifiedVariant)) {
+            configs.push(minifiedVariant);
+        }
+
         // Default to base task if no configs found
         if (configs.length === 0) {
             configs.push(task);

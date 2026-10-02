@@ -53,7 +53,7 @@ namespace BuildConfigGen
                 ["azure-pipelines-task-lib"] = "^5.2.6",
                 ["azure-devops-node-api"] = "^15.1.3",
                 ["azure-pipelines-tasks-artifacts-common"] = "^2.273.0",
-                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.276.0",
+                ["azure-pipelines-tasks-azure-arm-rest"] = "^3.279.5",
                 ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
                 ["azure-pipelines-tasks-kubernetes-common"] = "^2.270.1",
                 ["azure-pipelines-tasks-packaging-common"] = "^3.273.1",
@@ -90,6 +90,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord WorkloadIdentityFederation = new ConfigRecord(name: nameof(WorkloadIdentityFederation), constMappingKey: "WorkloadIdentityFederation", isDefault: false, isNode: true, nodePackageVersion: "^16.11.39", isWif: true, nodeHandler: "Node16", preprocessorVariableName: "WORKLOADIDENTITYFEDERATION", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: false, writeNpmrc: false, typescriptVersion: null);
             public static readonly ConfigRecord wif_242 = new ConfigRecord(name: nameof(wif_242), constMappingKey: "wif_242", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: true, nodeHandler: "Node24", preprocessorVariableName: "WIF", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Wif",shouldUpdateLocalPkgs: false, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord LocalPackages = new ConfigRecord(name: nameof(LocalPackages), constMappingKey: "LocalPackages", isDefault: false, isNode: false, nodePackageVersion: "^20.3.1", isWif: false, nodeHandler: "Node20_1", preprocessorVariableName: "NODE20", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "LocalPackages", shouldUpdateLocalPkgs: true, useGlobalVersion: true, useAltGeneratedPath: true);
+            public static readonly ConfigRecord minified_278 = new ConfigRecord(name: nameof(minified_278), constMappingKey: "minified_278", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "MINIFIED", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Minified", shouldUpdateLocalPkgs: false, mergeToBase: false);
             public static readonly ConfigRecord Node24_1 = new ConfigRecord(name: nameof(Node24_1), constMappingKey: "Node24_1", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_2 = new ConfigRecord(name: nameof(Node24_2), constMappingKey: "Node24_2", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_3 = new ConfigRecord(name: nameof(Node24_3), constMappingKey: "Node24_3", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
@@ -101,7 +102,7 @@ namespace BuildConfigGen
             public static readonly ConfigRecord Node24_9 = new ConfigRecord(name: nameof(Node24_9), constMappingKey: "Node24_9", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_10 = new ConfigRecord(name: nameof(Node24_10), constMappingKey: "Node24_10", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: false, packageVersionOverrides: Node24PackageOverrides);
             public static readonly ConfigRecord Node24_overwrite = new ConfigRecord(name: nameof(Node24_overwrite), constMappingKey: "Node24-265-overwrite", isDefault: false, isNode: true, nodePackageVersion: "^24.10.0", isWif: false, nodeHandler: "Node24", preprocessorVariableName: "NODE24", enableBuildConfigOverrides: true, deprecated: false, shouldUpdateTypescript: true, writeNpmrc: true, overriddenDirectoryName: "Node24", shouldUpdateLocalPkgs: true, mergeToBase: true, packageVersionOverrides: Node24PackageOverrides);
-            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, Node24_1, Node24_2, Node24_3, Node24_4, Node24_5, Node24_6, Node24_7, Node24_8, Node24_9, Node24_10, Node24_overwrite };
+            public static ConfigRecord[] Configs = { Default, Node16, Node16_225, Node20, Node20_228, Node20_229_1, Node20_229_2, Node20_229_3, Node20_229_4, Node20_229_5, Node20_229_6, Node20_229_7, Node20_229_8, Node20_229_9, Node20_229_10, Node20_229_11, Node20_229_12, Node20_229_13, Node20_229_14, WorkloadIdentityFederation, wif_242, LocalPackages, minified_278, Node24_1, Node24_2, Node24_3, Node24_4, Node24_5, Node24_6, Node24_7, Node24_8, Node24_9, Node24_10, Node24_overwrite };
         }
 
         static List<string> notSyncronizedDependencies = [];
@@ -111,7 +112,7 @@ namespace BuildConfigGen
 
         /// <param name="task">The task to generate build configs for</param>
         /// <param name="configs">List of configs to generate seperated by |</param>
-        /// <param name="currentSprint">Overide current sprint; omit to get from whatsprintis.it</param>
+        /// <param name="currentSprint">Override current sprint; omit to calculate it from the standard three-week cadence</param>
         /// <param name="writeUpdates">Write updates if true, else validate that the output is up-to-date</param>
         /// <param name="allTasks"></param>
         /// <param name="getTaskVersionTable"></param>
@@ -131,7 +132,7 @@ namespace BuildConfigGen
             };
             Option<int?> currentSprintOption = new("--current-sprint")
             {
-                Description = "Overide current sprint; omit to get from whatsprintis.it"
+                Description = "Override current sprint; omit to calculate it from the standard three-week cadence"
             };
             Option<bool> writeUpdatesOption = new("--write-updates")
             {
@@ -643,20 +644,11 @@ namespace BuildConfigGen
             // Scheduled time for Cortesy Push
             var cortesyPushScheduleDay = DayOfWeek.Tuesday;
             var cortesyPushUtcTime = new TimeOnly(8, 30); //UTC time
-
-            string url = "https://whatsprintis.it";
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            string json = httpClient.GetStringAsync(url).Result;
-            JsonDocument currentSprintData = JsonDocument.Parse(json);
-            int currentSprint = currentSprintData.RootElement.GetProperty("sprint").GetInt32();
-            int week = currentSprintData.RootElement.GetProperty("week").GetInt32();
+            var nowUtc = DateTimeOffset.UtcNow;
+            (int currentSprint, int week) = CalculateSprint(nowUtc);
 
             if (week == 3) // if it is the end of the current sprint
             {
-                var nowUtc = DateTime.UtcNow;
-
                 // Increase sprint number if scheduled pipeline was already triggered
                 if (nowUtc.DayOfWeek > cortesyPushScheduleDay)
                 {
@@ -664,7 +656,7 @@ namespace BuildConfigGen
                 }
                 else if (nowUtc.DayOfWeek == cortesyPushScheduleDay)
                 {
-                    if (TimeOnly.FromDateTime(nowUtc) >= cortesyPushUtcTime)
+                    if (TimeOnly.FromDateTime(nowUtc.UtcDateTime) >= cortesyPushUtcTime)
                     {
                         currentSprint++;
                     }
@@ -672,6 +664,20 @@ namespace BuildConfigGen
             }
 
             return currentSprint;
+        }
+
+        private static (int Sprint, int Week) CalculateSprint(DateTimeOffset date)
+        {
+            // Sprint 267 started at this UTC instant, establishing the fixed three-week cadence.
+            const int sprintEpochNumber = 267;
+            const int daysPerSprint = 21;
+            const int daysPerWeek = 7;
+            var sprintEpochStart = new DateTimeOffset(2025, 11, 29, 0, 0, 0, TimeSpan.Zero);
+            double elapsedDays = (date.ToUniversalTime() - sprintEpochStart).TotalDays;
+            int sprintOffset = (int)Math.Floor(elapsedDays / daysPerSprint);
+            int dayInSprint = (int)Math.Floor(elapsedDays - sprintOffset * daysPerSprint);
+
+            return (sprintEpochNumber + sprintOffset, dayInSprint / daysPerWeek + 1);
         }
 
         private static void ThrowWithUserFriendlyErrorToRerunWithWriteUpdatesIfVeriferError(string? task, bool skipContentCheck)
@@ -2075,4 +2081,3 @@ always-auth=true", false);
         }
     }
 }
-

@@ -2,6 +2,7 @@ import assert = require("assert");
 import path = require("path");
 import * as cp from "child_process";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
+import { runConfigDirIsolationTests } from "./L0ConfigDirIsolation";
 
 // Uncomment to improve traces while testing
 // beforeEach(() => {
@@ -34,6 +35,10 @@ function assertOutputVariables(tr: ttm.MockTestRunner, expectedOutputs: { name: 
       `${testName}: should set output variable '${name}' to '${value}'\nExpected: ${expectedCommand}\nStdout: ${tr.stdout}`);
   });
 }
+
+describe("AZURE_CONFIG_DIR isolation", function() {
+  runConfigDirIsolationTests();
+});
 
 describe("run error handling tests", function() {
   this.timeout(30000);

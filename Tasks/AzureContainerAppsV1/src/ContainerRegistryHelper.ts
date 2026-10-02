@@ -1,6 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as child from 'child_process';
-import { CommandHelper } from './CommandHelper';
 import { Utility } from './Utility';
 
 export class ContainerRegistryHelper {

@@ -1,7 +1,18 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
 
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+
+describe('NuGet external output filtering', function () {
+    it('blocks PATH manipulation through a crafted nuspec path', () => {
+        const maliciousPath = 'repo/package.nuspec\n##vso[task.setvariable variable=PATH]/tmp/attacker';
+        const filteredPath = tl.filterExternalOutput(maliciousPath, { source: 'repository' }).toString('utf8');
+
+        assert.strictEqual(filteredPath, 'repo/package.nuspec\n##_vso[task.setvariable variable=PATH]/tmp/attacker');
+        assert.ok(!filteredPath.includes('##vso['));
+    });
+});
 
 describe('NuGetCommand Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 60000);
@@ -194,6 +205,28 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
+    it('pushes to an external feed without exposing an API key in process arguments', async () => {
+        const tp = path.join(__dirname, './PublishTests/externalFeedApiKey.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe push c:\\agent\\home\\directory\\foo.nupkg -NonInteractive -Source foobar -ConfigFile c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should not pass the API key to NuGet');
+        assert(!tr.stdOutContained('secret-api-key'), 'it should not print the API key');
+        assert(!tr.stdOutContained('setting up auth for the sources configured in the helper'), 'it should not invoke the setapikey helper path');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('fails securely when an external API key is used with an explicit old NuGet version', async () => {
+        const tp = path.join(__dirname, './PublishTests/externalFeedApiKeyOldNuGet.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 0, 'should not run an old NuGet client');
+        assert(!tr.stdOutContained('secret-api-key'), 'it should not print the API key');
+        assert(tr.stdOutContained('rmRF c:\\agent\\home\\directory\\tempNuGet_.config'), 'it should clean up the temporary NuGet config');
+        assert(tr.failed, 'should have failed');
+    });
+
     it('push passes -Timeout to nuget.exe when requestTimeout is set', async () => {
         const tp = path.join(__dirname, './PublishTests/internalFeedNuGetRequestTimeout.js')
         const tr = new ttm.MockTestRunner(tp);
@@ -337,10 +370,21 @@ describe('NuGetCommand Suite', function () {
         await tr.runAsync();
         assert(tr.invokedToolCount == 1, 'should have run NuGet once');
         assert(tr.ran('c:\\from\\tool\\installer\\nuget.exe pack c:\\agent\\home\\directory\\foo.nuspec -NonInteractive -OutputDirectory C:\\out\\dir -BasePath C:\\src'), 'it should have run NuGet');
+        assert(tr.stdOutContained('c:\\agent\\home\\directory\\foo.nuspec'), 'it should log the normal nuspec path unchanged');
         assert(tr.stdOutContained('setting console code page'), 'it should have run chcp');
         assert(tr.stdOutContained('NuGet output here'), 'should have nuget output');
         assert(tr.succeeded, 'should have succeeded');
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('filters logging commands from a nuspec path without changing the NuGet argument', async () => {
+        const tp = path.join(__dirname, './PackTests/packLoggingCommandPath.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=PATH]c:\\attacker'), 'it should neutralize the logging command marker');
+        assert(!tr.stdOutContained('\n##vso[task.setvariable variable=PATH]c:\\attacker'), 'it should not emit an active PATH logging command');
+        assert(tr.succeeded, 'the exact mock command should match, proving the complete nuspec path reached NuGet');
     });
 
     it('packs tool', async () => {

@@ -66,6 +66,31 @@ describe('AzureContainerAppsV0 Suite', function () {
         }, tr);
     });
 
+    it('Fails for appSourcePath containing shell metacharacters', async () => {
+        this.timeout(5000);
+
+        const tp: string = path.join(__dirname, 'L0FailsForAppSourcePathWithMetacharacters.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        runValidations(() => {
+            // Validate the task failed
+            assert(tr.failed, 'AzureContainerAppsV0 task should have failed when appSourcePath contains shell metacharacters.');
+
+            // Validate the correct error message was thrown
+            assert(tr.stdout.includes('InvalidAppSourcePathMessage'), 'AzureContainerAppsV0 task should reject an appSourcePath that contains shell metacharacters to prevent command injection.');
+
+            // Validate the correct result was logged to telemetry
+            assert(tr.stdout.includes('[MOCK] setFailedResult called'), 'AzureContainerAppsV0 task should signal to telemetry that the task failed.');
+
+            // Validate that the end-of-test scenarios are hit
+            assert(tr.stdout.includes('[MOCK] logoutAzure called'), 'AzureContainerAppsV0 task should try to logout of Azure at the end of the task.');
+            assert(tr.stdout.includes('[MOCK] logoutAcr called'), 'AzureContainerAppsV0 task should log Docker out of ACR at the end of the task to avoid leaving registry credentials on the agent.');
+            assert(tr.stdout.includes('[MOCK] sendLogs called'), 'AzureContainerAppsV0 task should send telemetry logs at the end of the task.');
+        }, tr);
+    });
+
     it('Fails for no service connection argument', async () => {
         this.timeout(5000);
 
