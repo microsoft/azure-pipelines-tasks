@@ -21,8 +21,9 @@
 //                     PowerShell argument list. The execution primitives that
 //                     do (`$( )`, `;`, `&`, `|`, `` ` `` outside the escape
 //                     position) remain blocked.
-//   * batch        -> Literal-only sanitization with the BashV3 allowlist
-//                     (no env expansion; cmd-specific allowlist is a TODO).
+//   * batch        -> Literal-only sanitization with the BashV3 allowlist (no env
+//                     expansion). cmd.exe %VAR% expansion is detected under the
+//                     EnableScriptArgumentsPercentExpansionValidation feature and rejected when enforcing (see hasBatchPercent).
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
@@ -472,6 +473,9 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     const normalizedScriptType = (scriptType || '').toLowerCase();
     const isBash = normalizedScriptType === 'bash';
     const isPowerShell = normalizedScriptType === 'pscore' || normalizedScriptType === 'ps';
+    // Anything that is not bash/PowerShell reaches the cmd.exe sink (AzureCLI routes scriptType 'batch'
+    // and any unrecognized value to Batch; AzurePowerShell always passes 'pscore', so it is unaffected).
+    const isBatch = !isBash && !isPowerShell;
 
     // MSRC 129198 hardening (CR/LF rejection and the data-constructor AST backstop) is gated behind
     // its own DistributedTask.Tasks.* pipeline features so it can be rolled out ring-by-ring, AND it
@@ -480,6 +484,10 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     const enforce = featureFlags.activate;
     const newlineValidation = enforce && tl.getPipelineFeature('EnableScriptArgumentsNewlineValidation');
     const expressionValidation = enforce && tl.getPipelineFeature('EnableScriptArgumentsExpressionValidation');
+    // Detection is intentionally NOT enforce-gated (unlike newline/expression): % is common in batch args
+    // (e.g. %TEMP%, %20), so audit/collect modes must measure the blast radius before the org enforces
+    // (MSRC 143550). The block itself stays enforce-gated below (only featureFlags.activate throws).
+    const percentExpansionValidation = tl.getPipelineFeature('EnableScriptArgumentsPercentExpansionValidation');
 
     let expandedArgs = inputArguments;
     let envTelemetry: BashEnvTelemetry | ProcessEnvPowerShellTelemetry | null = null;
@@ -541,18 +549,23 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     // expanded form so a newline introduced via $env: expansion is caught too.
     const hasPsNewline = isPowerShell && newlineValidation && /[\r\n]/.test(expandedArgs);
 
+    // cmd.exe %VAR% expansion turns a referenced variable's VALUE into command syntax at the batch
+    // `cmd /D /S /C "...bat"` sink (MSRC 143550); % is batch-allow-listed, so flag it here (rejected when enforcing).
+    const hasBatchPercent = isBatch && percentExpansionValidation && expandedArgs.includes('%');
+
     // Two different comparands, intentionally: the early-out below returns only when nothing was
     // sanitized relative to the RAW input (so a no-op is truly a no-op), while the block/telemetry
     // path compares against expandedArgs so that any change introduced by $env: expansion is reported.
-    if (sanitizedArgs === inputArguments && !hasPsNewline && astSafe) {
+    if (sanitizedArgs === inputArguments && !hasPsNewline && !hasBatchPercent && astSafe) {
         return;
     }
 
-    if (featureFlags.telemetry && (sanitizerTelemetry || envTelemetry || !astSafe)) {
+    if (featureFlags.telemetry && (sanitizerTelemetry || envTelemetry || hasBatchPercent || !astSafe)) {
         const telemetry = {
             scriptType: normalizedScriptType || 'unknown',
             ...(envTelemetry ?? {}),
             ...(sanitizerTelemetry ?? {}),
+            ...(hasBatchPercent ? { batchPercentDetected: true } : {}),
             ...(!astSafe ? { astBackstopRejected: true } : {})
         };
         try {
@@ -562,10 +575,11 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
         }
     }
 
-    if (sanitizedArgs !== expandedArgs || hasPsNewline || !astSafe) {
+    if (sanitizedArgs !== expandedArgs || hasPsNewline || hasBatchPercent || !astSafe) {
         const offendingChars = collectOffendingChars(
             (sanitizerTelemetry as { removedSymbols?: Record<string, number> } | null)?.removedSymbols,
-            hasPsNewline
+            hasPsNewline,
+            hasBatchPercent
         );
         const messageKey = isBash
             ? (opts.bashMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
@@ -589,11 +603,15 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
 // during sanitization, so the error message names exactly what to fix. Control
 // characters are rendered as escape sequences (\n, \r, \t, \xNN) so a rejected
 // newline is both visible and cannot inject a logging command into the build log.
-function collectOffendingChars(removedSymbols: Record<string, number> | undefined, hasPsNewline?: boolean): string {
+function collectOffendingChars(removedSymbols: Record<string, number> | undefined, hasPsNewline?: boolean, hasBatchPercent?: boolean): string {
     const chars = new Set<string>(removedSymbols ? Object.keys(removedSymbols) : []);
     // A backtick-preceded newline is exempted by the allowlist lookbehind, so name it explicitly.
     if (hasPsNewline) {
         chars.add('\n');
+    }
+    // % is allow-listed by the batch char pass, so name it explicitly when the percent-expansion ring flagged it.
+    if (hasBatchPercent) {
+        chars.add('%');
     }
     if (chars.size === 0) {
         return '';
