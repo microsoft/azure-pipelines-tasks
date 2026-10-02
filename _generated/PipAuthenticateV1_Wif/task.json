@@ -9,8 +9,8 @@
   "category": "Package",
   "version": {
     "Major": 1,
-    "Minor": 277,
-    "Patch": 1
+    "Minor": 280,
+    "Patch": 3
   },
   "runsOn": [
     "Agent",
@@ -127,6 +127,7 @@
     "Info_AddingPasswordAuthEntry": "Adding username password auth entry for feed %s",
     "Info_AddingTokenAuthEntry": "Adding token auth entry for feed %s",
     "Error_FailedToParseFeedUrlAndAuth": "Failed to parse the feed url and add auth information. %s",
+    "Error_WifFeedMustUseHttps": "Workload identity federation requires a valid HTTPS feed URL. No federated credentials were acquired or written for this feed.",
     "FailedToGetPackagingUri": "Unable to get packaging uri, using default collection uri.",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "FailedToAddAuthentication": "Failed to add authentication.",
@@ -134,8 +135,7 @@
     "Warning_SessionCreationFailed": "Could not create provenance session: %s"
   },
   "_buildConfigMapping": {
-    "Default": "1.277.0",
-    "LocalPackages": "1.249.4",
-    "wif_242": "1.277.1"
+    "Default": "1.280.2",
+    "wif_242": "1.280.3"
   }
 }

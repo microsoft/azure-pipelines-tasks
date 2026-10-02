@@ -94,7 +94,7 @@ jobs:
     name: Build and send triage report
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       # Install runtime deps from the internal Microsoft package feed proxy
       # (https://packagefeedproxy.microsoft.io/npm/) instead of the public npm

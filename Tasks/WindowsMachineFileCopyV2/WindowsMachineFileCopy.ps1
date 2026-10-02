@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 Trace-VstsEnteringInvocation $MyInvocation
@@ -23,15 +23,23 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments -join " "
+    if ($enableWindowsMachineFileCopyArgumentsHardening) {
+        $additionalArguments = $sanitizedArguments
+    }
+    else {
+        $additionalArguments = $sanitizedArguments -join ' '
+    }
 }
-
+elseif ($enableWindowsMachineFileCopyArgumentsHardening -and -not [string]::IsNullOrWhiteSpace($additionalArguments)) {
+    $additionalArguments = Split-AdditionalArguments -additionalArguments $additionalArguments
+}
 try 
 {
     $sourcePath = $sourcePath.Trim('"')
@@ -65,7 +73,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
         } 
     }
     else
@@ -77,7 +85,7 @@ try
 
             Write-Output (Get-VstsLocString -Key "WFC_CopyStartedFor0" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $machineCredential, $cleanTargetBeforeCopy, $additionalArguments, $PSScriptRoot, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening
 
             $Jobs.Add($job.Id, $machine)
         }        

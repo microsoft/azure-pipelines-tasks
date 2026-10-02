@@ -4,6 +4,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as utils from "./utils";
 import * as Q from 'q';
+import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string): Q.Promise<void> {
     let command = connection.createCommand();
@@ -12,7 +13,7 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
     command.arg(targetImage);
 
     tl.debug(`Tagging image ${sourceImage} with ${targetImage}.`);
-    return connection.execCommand(command);
+    return connection.execCommand(command, createSanitizedExecOptions());
 }
 
 export function run(connection: ContainerConnection): Q.Promise<void> {

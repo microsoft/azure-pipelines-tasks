@@ -1,4 +1,4 @@
-param (
+﻿param (
     [string]$environmentName,
     [string]$adminUserName,
     [string]$adminPassword,
@@ -6,7 +6,7 @@ param (
     [string]$machineNames,
     [string]$sourcePath,
     [string]$targetPath,
-    [string]$additionalArguments,
+    $additionalArguments,
     [string]$cleanTargetBeforeCopy,
     [string]$copyFilesInParallel
     )
@@ -37,14 +37,28 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 
+# Re-import VstsTaskSdk (-Force) here: the legacy Microsoft.TeamFoundation.DistributedTask.Task.Common
+# module imported above also exports a cmdlet named Get-TaskVariable, which can shadow VstsTaskSdk's
+# own Get-TaskVariable function of the same name and break Get-VstsPipelineFeature (it calls
+# Get-TaskVariable internally). Forcing VstsTaskSdk back in ensures its function wins the name collision.
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force
+$enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
+
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"
 }
 
 if ($useSanitizerActivate) {
-    $additionalArguments = $sanitizedArguments -join " "
+    if ($enableWindowsMachineFileCopyArgumentsHardening) {
+        $additionalArguments = $sanitizedArguments
+    }
+    else {
+        $additionalArguments = $sanitizedArguments -join " "
+    }
 }
-
+elseif ($enableWindowsMachineFileCopyArgumentsHardening -and -not [string]::IsNullOrWhiteSpace($additionalArguments)) {
+    $additionalArguments = Split-AdditionalArguments -additionalArguments $additionalArguments
+}
 # keep machineNames parameter name unchanged due to back compatibility
 $machineFilter = $machineNames
 $sourcePath = $sourcePath.Trim('"')
@@ -64,7 +78,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
     Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate
+                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening -scriptRoot $PSScriptRoot
     Write-Verbose "Files copied to destination successfully."
 }
 else
@@ -98,7 +112,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
         } 
     }
     else
@@ -113,7 +127,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
 
             $Jobs.Add($job.Id, $resourceProperties)
         }        

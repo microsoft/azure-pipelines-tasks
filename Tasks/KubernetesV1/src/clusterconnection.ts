@@ -10,7 +10,6 @@ import * as os from "os";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 
 import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
-
 export default class ClusterConnection {
     private kubectlPath: string;
     private kubeconfigFile: string;
@@ -131,12 +130,20 @@ export default class ClusterConnection {
             errlines.push(line);
         });
 
+        // Route untrusted kubectl output through task-lib's shared external-output filter so that
+        // Azure Pipelines logging-command markers (##vso[) in it are neutralized before display.
+        // Only applied when the output is echoed (not silent); the raw stdout events used to build
+        // KubectlOutput are preserved by task-lib.
+        if (!options || options.silent !== true) {
+            options = { ...(options || {}), externalOutput: { source: 'childProcess' } };
+        }
+
         tl.debug(tl.loc('CallToolRunnerExec'));
         
         let promise = command.exec(options)
         .fail(error => {
             tl.debug(tl.loc('ToolRunnerExecCallFailed', error));
-            errlines.forEach(line => tl.error(line));
+            errlines.forEach(line => tl.errorExternalOutput(line, { source: 'childProcess' }));
             throw error;
         })
         .then(() => {

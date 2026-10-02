@@ -1,4 +1,4 @@
-import { Utility } from './Utility';
+import { PowerShellScriptResult, Utility } from './Utility';
 import tl = require("azure-pipelines-task-lib/task");
 import os = require("os");
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
@@ -31,6 +31,7 @@ export abstract class ScriptType {
     protected _scriptLocation: string;
     protected _scriptArguments: string;
     protected _scriptPath: string;
+    protected _azShimDirectory: string;
 
     constructor(scriptLocation: string, scriptArguments: string) {
         this._scriptLocation = scriptLocation;
@@ -44,6 +45,18 @@ export abstract class ScriptType {
             await Utility.deleteFile(this._scriptPath);
         }
     }
+
+    protected async cleanUpFileInvocationArtifacts(reason: string): Promise<void> {
+        if (this._scriptPath) {
+            await Utility.deleteFile(this._scriptPath);
+            this._scriptPath = undefined;
+        }
+        if (this._azShimDirectory) {
+            const shimDirectory = this._azShimDirectory;
+            this._azShimDirectory = undefined;
+            Utility.deleteDirectory(shimDirectory, reason);
+        }
+    }
 }
 
 export class WindowsPowerShell extends ScriptType {
@@ -53,6 +66,7 @@ export class WindowsPowerShell extends ScriptType {
             try {
                 return await this.getToolWithFileInvocation();
             } catch (err) {
+                await this.cleanUpFileInvocationArtifacts('fileInvocationFallback');
                 tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
                 try {
                     emitTelemetry('AzureCLIV3', 'FileInvocationFallback', { scriptType: 'ps', error: err.message || String(err) });
@@ -75,7 +89,13 @@ export class WindowsPowerShell extends ScriptType {
     }
 
     private async getToolWithFileInvocation(): Promise<any> {
-        this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
+        const result: PowerShellScriptResult = await Utility.getPowerShellScriptPathWithAzModule(
+            this._scriptLocation, ['ps1'], this._scriptArguments
+        );
+
+        this._scriptPath = result.scriptPath;
+        this._azShimDirectory = result.azShimDirectory;
+
         let tool: any = tl.tool(tl.which('powershell', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -89,7 +109,7 @@ export class WindowsPowerShell extends ScriptType {
     }
 
     public async cleanUp(): Promise<void> {
-        await Utility.deleteFile(this._scriptPath);
+        await this.cleanUpFileInvocationArtifacts('taskCleanup');
     }
 }
 
@@ -100,6 +120,7 @@ export class PowerShellCore extends ScriptType {
             try {
                 return await this.getToolWithFileInvocation();
             } catch (err) {
+                await this.cleanUpFileInvocationArtifacts('fileInvocationFallback');
                 tl.debug(`File invocation failed, falling back to -Command invocation: ${err.message}`);
                 try {
                     emitTelemetry('AzureCLIV3', 'FileInvocationFallback', { scriptType: 'pscore', error: err.message || String(err) });
@@ -122,7 +143,13 @@ export class PowerShellCore extends ScriptType {
     }
 
     private async getToolWithFileInvocation(): Promise<any> {
-        this._scriptPath = await Utility.getPowerShellScriptPath(this._scriptLocation, ['ps1'], this._scriptArguments);
+        const result: PowerShellScriptResult = await Utility.getPowerShellScriptPathWithAzModule(
+            this._scriptLocation, ['ps1'], this._scriptArguments
+        );
+
+        this._scriptPath = result.scriptPath;
+        this._azShimDirectory = result.azShimDirectory;
+
         let tool: any = tl.tool(tl.which('pwsh', true))
             .arg('-NoLogo')
             .arg('-NoProfile')
@@ -136,7 +163,7 @@ export class PowerShellCore extends ScriptType {
     }
 
     public async cleanUp(): Promise<void> {
-        await Utility.deleteFile(this._scriptPath);
+        await this.cleanUpFileInvocationArtifacts('taskCleanup');
     }
 }
 

@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 277,
+    "Minor": 280,
     "Patch": 0
   },
   "demands": [],
@@ -128,6 +128,7 @@
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",
     "LinuxMysqlClientMissingError": "ms-resource:loc.messages.LinuxMysqlClientMissingError",
-    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern"
+    "Nopackagefoundwithspecifiedpattern": "ms-resource:loc.messages.Nopackagefoundwithspecifiedpattern",
+    "InvalidDatabaseName": "ms-resource:loc.messages.InvalidDatabaseName"
   }
 }

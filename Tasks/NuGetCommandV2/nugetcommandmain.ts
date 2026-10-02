@@ -1,6 +1,8 @@
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 
+import * as auth from "azure-pipelines-tasks-packaging-common/nuget/Authentication";
+import * as commandHelper from "azure-pipelines-tasks-packaging-common/nuget/CommandHelper";
 import * as nuGetGetter from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolGetter";
 import * as peParser from "azure-pipelines-tasks-packaging-common/pe-parser";
 import { VersionInfo } from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
@@ -12,6 +14,7 @@ import * as nugetRestore from "./nugetrestore";
 import * as linuxUtility from "./linuxutility";
 
 const NUGET_EXE_CUSTOM_LOCATION: string = "NuGetExeCustomLocation";
+const NUGET_API_KEY_ENVIRONMENT_VERSION = "7.6.0";
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, "task.json"));
@@ -31,7 +34,13 @@ async function main(): Promise<void> {
         nuGetPath = tl.getVariable(nuGetGetter.NUGET_EXE_TOOL_PATH_ENV_VAR)
             || tl.getVariable(NUGET_EXE_CUSTOM_LOCATION);
         if (!nuGetPath) {
-            const cachedVersionToUse = await nuGetGetter.cacheBundledNuGet();
+            const useApiKeyEnvironment = tl.getInput("command") === "push"
+                && tl.getInput("nuGetFeedType") === "external"
+                && commandHelper.GetExternalAuthInfoArray("externalEndpoint")
+                    .some((externalAuth) => externalAuth.authType === auth.ExternalAuthType.ApiKey);
+            const cachedVersionToUse = useApiKeyEnvironment
+                ? await nuGetGetter.cacheBundledNuGet(NUGET_API_KEY_ENVIRONMENT_VERSION, `NuGet/${NUGET_API_KEY_ENVIRONMENT_VERSION}/`)
+                : await nuGetGetter.cacheBundledNuGet();
             nuGetPath = await nuGetGetter.getNuGet(cachedVersionToUse);
         }
         const nugetVersionInfo: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);

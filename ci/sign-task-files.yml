@@ -169,6 +169,8 @@ steps:
         **/node_modules/**/*.exe
         **/node_modules/**/*.dll
         **/node_modules/**/*.node
+        !**/node_modules/deasync/bin/linux-*/**
+        !**/node_modules/deasync/bin/darwin-*/**
       UseMinimatch: true
       signConfigType: inlineSignParams
       inlineOperation: |

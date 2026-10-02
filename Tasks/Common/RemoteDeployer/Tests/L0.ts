@@ -70,5 +70,8 @@ describe('Remote Deployer Test Suite', function () {
         it('(defaultOutputHandler) publishes dry-run telemetry for ##vso[ commands without sanitizing', (done) => {
             psr.run(path.join(__dirname, 'DefaultOutputHandler.VsoCommandInjectionDryRun.ps1'), done);
         });
+        it('(defaultOutputHandler) escapes non-whitelisted ##vso[ commands and preserves whitelisted ones', (done) => {
+            psr.run(path.join(__dirname, 'DefaultOutputHandler.VsoCommandInjectionWhitelist.ps1'), done);
+        });
     }
 });
