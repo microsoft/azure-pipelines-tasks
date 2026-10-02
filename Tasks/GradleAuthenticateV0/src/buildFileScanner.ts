@@ -5,7 +5,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
-import { normalizeUrl, AZURE_ARTIFACTS_URL_PATTERN } from './urlUtils';
+import {
+    AZURE_ARTIFACTS_URL_PATTERN,
+    isValidAzureArtifactsUrl,
+    normalizeUrl,
+} from './urlUtils';
 
 /**
  * Feed URL entry discovered from build files or task inputs.
@@ -43,6 +47,10 @@ export function discoverFeedUrls(buildFiles: string[], repositoryUrls: string[])
         const matches = content.match(AZURE_ARTIFACTS_URL_PATTERN);
         if (matches) {
             for (const rawUrl of matches) {
+                if (!isValidAzureArtifactsUrl(rawUrl)) {
+                    tl.warning(tl.loc('Warning_InvalidRepositoryUrlSkipped'), IssueSource.TaskInternal);
+                    continue;
+                }
                 const normalized = normalizeUrl(rawUrl);
                 if (!seen.has(normalized)) {
                     seen.add(normalized);

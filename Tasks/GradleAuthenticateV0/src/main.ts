@@ -13,7 +13,7 @@ import { layoutMavenRepo } from './mavenLayout';
 import { generateInitScript } from './initScript';
 import { resolvePluginVersions } from './versionResolver';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { isAzureArtifactsUrl } from './urlUtils';
+import { isValidAzureArtifactsUrl } from './urlUtils';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -130,11 +130,11 @@ function readInputs(): TaskInputs {
 
     const validUrls: string[] = [];
     for (const url of repositoryUrls) {
-        if (!isAzureArtifactsUrl(url)) {
-            tl.warning(tl.loc('Warning_RepositoryUrlNotAzureArtifacts'), IssueSource.TaskInternal);
-        } else {
-            validUrls.push(url);
+        if (!isValidAzureArtifactsUrl(url)) {
+            tl.warning(tl.loc('Warning_InvalidRepositoryUrlSkipped'), IssueSource.TaskInternal);
+            continue;
         }
+        validUrls.push(url);
     }
 
     const pluginToolVersion = tl.getInput('pluginToolVersion', false) || '';

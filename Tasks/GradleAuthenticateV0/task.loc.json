@@ -125,10 +125,10 @@
     "Warning_BuildFileNotFound": "ms-resource:loc.messages.Warning_BuildFileNotFound",
     "Warning_CorruptAuthConfig": "ms-resource:loc.messages.Warning_CorruptAuthConfig",
     "Warning_CouldNotDetermineResourceTenant": "ms-resource:loc.messages.Warning_CouldNotDetermineResourceTenant",
+    "Warning_InvalidRepositoryUrlSkipped": "ms-resource:loc.messages.Warning_InvalidRepositoryUrlSkipped",
     "Warning_MissingSystemVariable": "ms-resource:loc.messages.Warning_MissingSystemVariable",
     "Warning_NoFeedsFound": "ms-resource:loc.messages.Warning_NoFeedsFound",
     "Warning_NoServiceConnection": "ms-resource:loc.messages.Warning_NoServiceConnection",
-    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed",
-    "Warning_RepositoryUrlNotAzureArtifacts": "ms-resource:loc.messages.Warning_RepositoryUrlNotAzureArtifacts"
+    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed"
   }
 }

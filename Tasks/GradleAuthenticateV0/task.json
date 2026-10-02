@@ -125,10 +125,10 @@
     "Warning_BuildFileNotFound": "A configured build file was not found.",
     "Warning_CorruptAuthConfig": "The existing auth config is corrupt and will be overwritten.",
     "Warning_CouldNotDetermineResourceTenant": "Could not determine the feed resource tenant.",
+    "Warning_InvalidRepositoryUrlSkipped": "A repository URL was skipped because it is not a valid HTTPS Azure Artifacts URL.",
     "Warning_MissingSystemVariable": "System variable %s is not set; WIF authentication may not work.",
     "Warning_NoFeedsFound": "No Azure Artifacts feed URLs (pkgs.dev.azure.com) found in the provided build files or repository URLs.",
     "Warning_NoServiceConnection": "No service connection configured. The credential provider will use the SYSTEM_ACCESSTOKEN or ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable for authentication. Set one of these variables in your pipeline or provide a service connection for Workload Identity Federation.",
-    "Warning_PostExecCleanupFailed": "Post-step cleanup failed.",
-    "Warning_RepositoryUrlNotAzureArtifacts": "A provided repositoryUrl does not appear to be an Azure Artifacts URL (expected pkgs.dev.azure.com). Authentication may not work correctly."
+    "Warning_PostExecCleanupFailed": "Post-step cleanup failed."
   }
 }

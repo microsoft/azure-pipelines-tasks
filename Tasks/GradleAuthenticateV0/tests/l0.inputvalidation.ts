@@ -34,6 +34,40 @@ describe('GradleAuthenticate L0 - Input Validation', function () {
         TestHelpers.assertSuccess(tr);
     });
 
+    it('should skip a malformed repositoryUrl', async () => {
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.repositoryUrl] = 'not-a-url';
+
+        await tr.runAsync();
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'Warning_InvalidRepositoryUrlSkipped');
+    });
+
+    it('should skip an HTTP repositoryUrl', async () => {
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.repositoryUrl] =
+            'http://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1';
+
+        await tr.runAsync();
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'Warning_InvalidRepositoryUrlSkipped');
+    });
+
+    it('should skip a non-Azure-Artifacts HTTPS repositoryUrl', async () => {
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.repositoryUrl] = 'https://example.com/feed';
+
+        await tr.runAsync();
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'Warning_InvalidRepositoryUrlSkipped');
+    });
+
     it('should reject an unsafe plugin version', async () => {
         const tp = path.join(__dirname, 'testsetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -98,6 +132,30 @@ dependencyResolutionManagement {
 
         TestHelpers.assertSuccess(tr);
         TestHelpers.assertOutputContains(tr, 'Info_DiscoveredFeed');
+    });
+
+    it('should skip an HTTP URL discovered from a build file', async () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-'));
+        const buildFile = path.join(tempDir, 'settings.gradle');
+        fs.writeFileSync(buildFile, `
+plugins {
+    id 'com.microsoft.azure.artifacts.credprovider' version '1.0.0'
+}
+repositories {
+    maven { url 'http://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1' }
+}
+`);
+
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.buildFiles] = buildFile;
+
+        await tr.runAsync();
+
+        fs.rmSync(tempDir, { recursive: true, force: true });
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'Warning_InvalidRepositoryUrlSkipped');
     });
 
     it('should neutralize logging commands in build-file-derived values', async () => {
