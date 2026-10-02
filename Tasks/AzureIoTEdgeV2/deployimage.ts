@@ -246,12 +246,12 @@ export async function run(telemetryEvent: TelemetryEvent): Promise<void> {
   }
 
   for (let path of findPaths) {
-    console.log(path);
+    tl.debug(path);
   }
 
   let deploymentJson: any = null;
   for (let path of findPaths) {
-    console.log(tl.loc('CheckValidJson', path));
+    tl.debug(tl.loc('CheckValidJson', path));
     try {
       deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8 as BufferEncoding));
     } catch (e) {
