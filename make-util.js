@@ -2146,11 +2146,12 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
                 }
             }
 
-            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
+            // Persist effective Node24/WIF manifests as well as their npm lockfiles.
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
+            const isConfigPackage = path.basename(dest).toLowerCase() == "package.json" && (config === "Node24" || config === "Wif");
 
-            if (fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap) {
+            if (fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap || isConfigPackage) {
                 const folderPath = path.dirname(dest);
                 if (!fs.existsSync(folderPath)) {
                     console.log(`Creating folder ${folderPath}`);
