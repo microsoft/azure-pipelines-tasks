@@ -14,7 +14,7 @@
   "preview": false,
   "version": {
     "Major": 1,
-    "Minor": 280,
+    "Minor": 282,
     "Patch": 0
   },
   "demands": [],
@@ -31,10 +31,10 @@
     {
       "name": "gitHubConnection",
       "type": "connectedService:github:OAuth,OAuth2,PersonalAccessToken,InstallationToken,Token",
-      "label": "GitHub connection (OAuth or PAT)",
+      "label": "GitHub connection",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "Specify the name of the GitHub service connection to use to connect to the GitHub repository. The connection must be based on a GitHub user's OAuth or a GitHub personal access token. Learn more about service connections [here](https://aka.ms/AA3am5s)."
+      "helpMarkDown": "Specify the name of the GitHub service connection to use to connect to the GitHub repository. The connection must use OAuth, a GitHub personal access token, a token, or a GitHub App installation token. Learn more about service connections [here](https://aka.ms/AA3am5s)."
     },
     {
       "name": "repositoryName",
@@ -348,7 +348,7 @@
     "FetchInitialCommit": "Fetching the initial commit...",
     "FetchInitialCommitSuccess": "Found the initial commit: %s",
     "InvalidGitHubEndpoint": "Invalid GitHub service endpoint: %s.",
-    "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only OAuth and GitHub personal access token connections are allowed.",
+    "InvalidEndpointAuthScheme": "Invalid GitHub service connection scheme: %s. Only OAuth, PersonalAccessToken, Token, and InstallationToken connections are allowed.",
     "FetchInitialCommitError": "An unexpected error occurred while fetching the initial commit.",
     "InvalidActionSet": "Invalid action: %s. Only 'create', 'edit', or 'delete' actions are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
     "InvalidTagSource": "Invalid tag source: %s. Only 'gitTag', or 'userSpecifiedTag' options are allowed.  For yaml syntax see: https://aka.ms/AA3m1bq",
