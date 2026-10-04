@@ -2146,12 +2146,11 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
                 }
             }
 
-            // Persist effective Node24/WIF manifests as well as their npm lockfiles.
+            // Update existing manifests; always persist npm lockfiles and shrinkwraps.
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
-            const isConfigPackage = path.basename(dest).toLowerCase() == "package.json" && (config === "Node24" || config === "Wif");
 
-            if (fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap || isConfigPackage) {
+            if (fs.existsSync(dest) || isPackageLock || isNpmShrinkWrap) {
                 const folderPath = path.dirname(dest);
                 if (!fs.existsSync(folderPath)) {
                     console.log(`Creating folder ${folderPath}`);
