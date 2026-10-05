@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as httpClient from 'typed-rest-client/HttpClient';
+import { setNpmArguments } from './npmarguments';
 
 import { NpmToolRunner } from './npmtoolrunner';
 
@@ -49,15 +50,14 @@ export async function run(): Promise<void> {
 
         const npm = new NpmToolRunner(path.dirname(npmrc), npmrc, false);
         let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
-        let command = "";
+        setNpmArguments(
+            npm,
+            packageDownloadPath,
+            packageName,
+            packageVersion,
+            tl.getPipelineFeature('DownloadGitHubNpmPackageArgumentIsolationFixEnabled')
+        );
 
-        if (packageVersion == "" || packageVersion == undefined) {
-            command = "install --prefix " + packageDownloadPath + " @" + packageName;
-        } else {
-            command = "install --prefix " + packageDownloadPath + " @" + packageName + "@" + packageVersion;
-        }
-
-        npm.line(command);
         npm.execSync();
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, "Some error occurred:" + err);

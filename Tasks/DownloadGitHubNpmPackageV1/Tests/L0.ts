@@ -4,6 +4,8 @@ import * as os from 'os';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+import { getNpmArguments, setNpmArguments } from '../npmarguments';
+
 describe('DownloadGitHubNpmPackage L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 20000);
 
@@ -58,5 +60,118 @@ describe('DownloadGitHubNpmPackage L0 Suite', function () {
         assert(tr.failed, tr.stdout);
         assert(tr.stdout.includes('loc_mock_Error_InvalidPackageName'), tr.stdout);
         assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
+    });
+});
+
+describe('DownloadGitHubNpmPackageV1 arguments', function () {
+    const packageDownloadPath = 'C:\\agent\\_work\\1\\shared-library';
+    const packageName = 'contoso/shared-library';
+
+    it('creates the expected arguments for a package without a version', function () {
+        assert.deepStrictEqual(
+            getNpmArguments(packageDownloadPath, packageName, ''),
+            ['install', '--prefix', packageDownloadPath, '@contoso/shared-library']
+        );
+    });
+
+    const validVersions = [
+        '1.0.0',
+        '1.0.0-beta.1',
+        '1.0.0+build.5',
+        'latest',
+        '>=1.0.0 <2.0.0'
+    ];
+
+    for (const version of validVersions) {
+        it(`keeps version '${version}' in one package argument`, function () {
+            const argumentsList = getNpmArguments(packageDownloadPath, packageName, version);
+
+            assert.strictEqual(argumentsList.length, 4);
+            assert.deepStrictEqual(argumentsList.slice(0, 3), ['install', '--prefix', packageDownloadPath]);
+            assert.strictEqual(argumentsList[3], `@contoso/shared-library@${version}`);
+        });
+    }
+
+    const injectionAttempts = [
+        '1.0.0 --registry https://example.invalid/',
+        '1.0.0 --prefix C:\\attacker-controlled',
+        '1.0.0 another-package',
+        '1.0.0\t--registry\thttps://example.invalid/',
+        '1.0.0\r\n--registry https://example.invalid/',
+        '1.0.0 "--registry" "https://example.invalid/"',
+        "1.0.0 '--registry' 'https://example.invalid/'"
+    ];
+
+    for (const version of injectionAttempts) {
+        it(`does not split untrusted version '${JSON.stringify(version)}'`, function () {
+            const argumentsList = getNpmArguments(packageDownloadPath, packageName, version);
+
+            assert.strictEqual(argumentsList.length, 4);
+            assert.strictEqual(argumentsList[3], `@contoso/shared-library@${version}`);
+            assert.strictEqual(argumentsList.includes('--registry'), false);
+            assert.strictEqual(argumentsList.includes('--prefix', 3), false);
+            assert.strictEqual(argumentsList.includes('another-package'), false);
+        });
+    }
+
+    it('does not split an option-looking package name', function () {
+        const optionLookingPackageName = 'contoso/shared-library --registry https://example.invalid/';
+        const argumentsList = getNpmArguments(packageDownloadPath, optionLookingPackageName, '1.0.0');
+
+        assert.strictEqual(argumentsList.length, 4);
+        assert.strictEqual(
+            argumentsList[3],
+            '@contoso/shared-library --registry https://example.invalid/@1.0.0'
+        );
+        assert.strictEqual(argumentsList.includes('--registry'), false);
+    });
+
+    it('uses discrete arguments when the feature flag is enabled', function () {
+        const argumentsList: string[] = [];
+        let commandLine: string | undefined;
+
+        setNpmArguments(
+            {
+                arg: argument => argumentsList.push(argument),
+                line: command => commandLine = command
+            },
+            packageDownloadPath,
+            packageName,
+            '1.0.0 --registry https://example.invalid/',
+            true
+        );
+
+        assert.deepStrictEqual(
+            argumentsList,
+            [
+                'install',
+                '--prefix',
+                packageDownloadPath,
+                '@contoso/shared-library@1.0.0 --registry https://example.invalid/'
+            ]
+        );
+        assert.strictEqual(commandLine, undefined);
+    });
+
+    it('uses the legacy command line when the feature flag is disabled', function () {
+        const argumentsList: string[] = [];
+        let commandLine: string | undefined;
+
+        setNpmArguments(
+            {
+                arg: argument => argumentsList.push(argument),
+                line: command => commandLine = command
+            },
+            packageDownloadPath,
+            packageName,
+            '1.0.0',
+            false
+        );
+
+        assert.deepStrictEqual(argumentsList, []);
+        assert.strictEqual(
+            commandLine,
+            `install --prefix ${packageDownloadPath} @contoso/shared-library@1.0.0`
+        );
     });
 });
