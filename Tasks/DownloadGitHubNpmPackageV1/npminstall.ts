@@ -55,7 +55,7 @@ export async function run(): Promise<void> {
             packageDownloadPath,
             packageName,
             packageVersion,
-            tl.getPipelineFeature('DownloadGitHubNpmPackageArgumentIsolationFixEnabled')
+            tl.getPipelineFeature('DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled')
         );
 
         npm.execSync();
