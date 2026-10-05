@@ -21,9 +21,8 @@
 //                     PowerShell argument list. The execution primitives that
 //                     do (`$( )`, `;`, `&`, `|`, `` ` `` outside the escape
 //                     position) remain blocked.
-//   * batch        -> Literal-only sanitization with the BashV3 allowlist (no env
-//                     expansion). cmd.exe %VAR% expansion is detected under the
-//                     EnableScriptArgumentsPercentExpansionValidation feature and rejected when enforcing (see hasBatchPercent).
+//   * batch        -> BashV3 allowlist without env expansion. Percent expansion
+//                     is detected by a separate pipeline feature.
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
@@ -473,8 +472,7 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     const normalizedScriptType = (scriptType || '').toLowerCase();
     const isBash = normalizedScriptType === 'bash';
     const isPowerShell = normalizedScriptType === 'pscore' || normalizedScriptType === 'ps';
-    // Anything that is not bash/PowerShell reaches the cmd.exe sink (AzureCLI routes scriptType 'batch'
-    // and any unrecognized value to Batch; AzurePowerShell always passes 'pscore', so it is unaffected).
+    // AzureCLI routes batch and unknown script types to cmd.exe.
     const isBatch = !isBash && !isPowerShell;
 
     // MSRC 129198 hardening (CR/LF rejection and the data-constructor AST backstop) is gated behind
@@ -484,9 +482,7 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     const enforce = featureFlags.activate;
     const newlineValidation = enforce && tl.getPipelineFeature('EnableScriptArgumentsNewlineValidation');
     const expressionValidation = enforce && tl.getPipelineFeature('EnableScriptArgumentsExpressionValidation');
-    // Detection is intentionally NOT enforce-gated (unlike newline/expression): % is common in batch args
-    // (e.g. %TEMP%, %20), so audit/collect modes must measure the blast radius before the org enforces
-    // (MSRC 143550). The block itself stays enforce-gated below (only featureFlags.activate throws).
+    // Collect and audit modes detect percent usage without enforcing it.
     const percentExpansionValidation = tl.getPipelineFeature('EnableScriptArgumentsPercentExpansionValidation');
 
     let expandedArgs = inputArguments;
@@ -549,8 +545,7 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     // expanded form so a newline introduced via $env: expansion is caught too.
     const hasPsNewline = isPowerShell && newlineValidation && /[\r\n]/.test(expandedArgs);
 
-    // cmd.exe %VAR% expansion turns a referenced variable's VALUE into command syntax at the batch
-    // `cmd /D /S /C "...bat"` sink (MSRC 143550); % is batch-allow-listed, so flag it here (rejected when enforcing).
+    // Percent is allow-listed, so detect cmd.exe expansion separately.
     const hasBatchPercent = isBatch && percentExpansionValidation && expandedArgs.includes('%');
 
     // Two different comparands, intentionally: the early-out below returns only when nothing was
@@ -609,7 +604,6 @@ function collectOffendingChars(removedSymbols: Record<string, number> | undefine
     if (hasPsNewline) {
         chars.add('\n');
     }
-    // % is allow-listed by the batch char pass, so name it explicitly when the percent-expansion ring flagged it.
     if (hasBatchPercent) {
         chars.add('%');
     }
