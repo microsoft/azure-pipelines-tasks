@@ -175,7 +175,7 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
-    it('rejects a replacement regular file when restoring a file', function () {
+    it('rejects a replacement regular file with a different identity when restoring', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
         try {
@@ -184,9 +184,14 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
 
             const manager = new NpmrcBackupManager(root);
             manager.ensureBackedUp(npmrcPath);
-            fs.unlinkSync(npmrcPath);
+            // Keep the original inode allocated so the replacement cannot reuse it.
+            fs.renameSync(npmrcPath, path.join(sourceDir, 'original.npmrc'));
             fs.writeFileSync(npmrcPath, 'replacement\n', 'utf8');
 
+            assert.notStrictEqual(
+                fs.statSync(npmrcPath, { bigint: true }).ino,
+                fs.statSync(path.join(sourceDir, 'original.npmrc'), { bigint: true }).ino
+            );
             assert.throws(
                 () => manager.restoreBackedUpFile(npmrcPath),
                 /no longer the same regular file/
@@ -226,7 +231,7 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
-    it('uses the trusted task identity when restoring a file', function () {
+    it('uses the trusted task identity instead of changed index metadata during restore', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
         try {
@@ -235,10 +240,12 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
 
             const manager = new NpmrcBackupManager(root);
             const trustedIdentity = manager.ensureBackedUp(npmrcPath);
-            fs.unlinkSync(npmrcPath);
+            // Keep the original inode allocated so the replacement cannot reuse it.
+            fs.renameSync(npmrcPath, path.join(sourceDir, 'original.npmrc'));
             fs.writeFileSync(npmrcPath, 'replacement\n', 'utf8');
 
             const replacementStats = fs.statSync(npmrcPath, { bigint: true });
+            assert.notStrictEqual(replacementStats.ino.toString(), trustedIdentity.inode);
             const indexPath = path.join(root, 'index.json');
             const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
             index.identities[npmrcPath] = {
