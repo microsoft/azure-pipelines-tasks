@@ -144,9 +144,6 @@ export const runValidateScriptArgsTests = () => {
         ['pscore: lone LF inert when newline FF off (enforce on) - deployed parity',
             '-Foo bar\nWrite-Host x', 'pscore',
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
-        // MSRC 143550: a batch %VAR% token triggers cmd.exe percent-expansion at the sink. % is allow-listed
-        // for batch and rejected only under EnableScriptArgumentsPercentExpansionValidation (+ enforce), so
-        // until that ring is on the behavior is unchanged (deployed parity), and it never touches bash/pscore.
         ['batch: %VAR% inert when percent-expansion FF off (enforce on) - deployed parity',
             'deploy %BUILD_TAG%', 'batch',
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=false']],
@@ -246,13 +243,10 @@ export const runValidateScriptArgsTests = () => {
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
             ['AZP_75787_ENABLE_NEW_LOGIC=true']],
-        // MSRC 143550: a %VAR% token in batch args triggers cmd.exe percent-expansion at the
-        // `cmd /D /S /C "<script>.bat <args>"` sink, turning the referenced variable's VALUE into command
-        // syntax. % is allow-listed by the char pass, so it is rejected only under the percent feature.
-        ['batch: %VAR% percent-expansion blocked under the percent feature (MSRC 143550)',
+        ['batch: %VAR% percent-expansion blocked under the percent feature',
             'deploy %BUILD_TAG%', 'batch',
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
-        ['batch: unrecognized scriptType also reaches the cmd.exe sink and is blocked (MSRC 143550)',
+        ['batch: unrecognized scriptType also reaches the cmd.exe sink and is blocked',
             'x %SYSTEM_ACCESSTOKEN%', 'cmd',
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']]
     ];
@@ -335,7 +329,7 @@ export const runValidateScriptArgsTests = () => {
             }
         });
 
-        it('percent rejection names only % , not the referenced variable name (MSRC 143550)', () => {
+        it('percent rejection does not expose the variable name', () => {
             const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
             setEnv(env);
             try {
@@ -351,9 +345,7 @@ export const runValidateScriptArgsTests = () => {
         });
     });
 
-    // MSRC 143550: detection is decoupled from enforce so audit warns and collect emits telemetry before
-    // an org enforces. Assert those two observable effects (not just "does not throw").
-    describe('Batch percent detection is observable in audit/collect before enforcing (MSRC 143550)', () => {
+    describe('Batch percent detection in audit and collect modes', () => {
         let originalWrite: typeof process.stdout.write;
         let captured: string;
         const start = () => {
