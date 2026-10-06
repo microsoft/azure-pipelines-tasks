@@ -8,7 +8,7 @@ import { validateAzModuleVersion } from "azure-pipelines-tasks-azure-arm-rest/az
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
 import { assertNoScriptNewline, tryValidateScriptArgs } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
-var uuidV4 = require('uuid/v4');
+import { v4 as uuidV4 } from 'uuid';
 
 function convertToNullIfUndefined<T>(arg: T): T|null {
     return arg ? arg : null;

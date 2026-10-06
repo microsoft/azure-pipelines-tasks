@@ -41,7 +41,7 @@ tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
     validateAzModuleVersion: () => Promise.resolve()
 });
 
-tmr.registerMock('uuid/v4', () => 'test-uuid');
+tmr.registerMock('uuid', { v4: () => 'test-uuid' });
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
