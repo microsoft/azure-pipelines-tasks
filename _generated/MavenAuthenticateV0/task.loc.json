@@ -89,10 +89,7 @@
     },
     "settableVariables": {
       "allowed": [
-        "FIRST_RUN_SETTINGS_XML_EXISTS_PATH",
-        "userM2SettingsXmlPath",
-        "originalUserM2SettingsFileMode",
-        "backupUserM2SettingsFilePath"
+        "FIRST_RUN_SETTINGS_XML_EXISTS_PATH"
       ]
     }
   },

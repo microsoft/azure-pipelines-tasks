@@ -2,6 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
 
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
