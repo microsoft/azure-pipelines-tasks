@@ -4,6 +4,7 @@ import util = require('./mavenutils');
 import * as fs from 'fs';
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
 import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 
@@ -17,7 +18,12 @@ function tryChmodSync(targetPath: string, mode: number): void {
     try {
         fs.chmodSync(targetPath, mode);
     } catch (err) {
-        tl.warning(tl.loc("Warning_ChmodFailed", targetPath, mode.toString(8), (err && err.message) ? err.message : err));
+        const errorMessage = err instanceof Error ? err.message : err;
+
+        tl.warning(
+            tl.loc("Warning_ChmodFailed", targetPath, mode.toString(8), errorMessage),
+            IssueSource.CustomerScript
+        );
     }
 }
 
@@ -57,7 +63,7 @@ async function run(): Promise<void> {
                         const originalSettingsXmlMode = fs.statSync(userSettingsXmlPath).mode & 0o777;
                         tl.setTaskVariable("originalUserM2SettingsFileMode", originalSettingsXmlMode.toString(8));
                     } catch (err) {
-                        tl.warning(tl.loc("Warning_StatFailed", userSettingsXmlPath, (err && err.message) ? err.message : err));
+                        tl.warning(tl.loc("Warning_StatFailed", userSettingsXmlPath, (err && err.message) ? err.message : err), IssueSource.CustomerScript);
                     }
                 }
                 tl.cp(userSettingsXmlPath, backupSettingsXmlPath);

@@ -126,6 +126,7 @@ describe('MavenAuthenticate L0 - File Permissions', function () {
             await tr.runAsync();
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertOutputContains(tr, 'Warning_ChmodFailed');
+            TestHelpers.assertOutputContains(tr, 'source=CustomerScript');
         } finally {
             delete process.env[TestEnvVars.chmodShouldFail];
         }

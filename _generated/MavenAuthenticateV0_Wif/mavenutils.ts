@@ -1,5 +1,6 @@
 import fs = require('fs');
 import Q = require('q');
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import stripbom = require('strip-bom');
@@ -183,17 +184,12 @@ function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string)
 
 function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
     const directoryPath = path.dirname(filePath);
-    const restrictPermissions = !tl.osType().match(/^Win/);
     const writeOptions: any = { encoding: 'utf-8' };
+    const restrictPermissions =
+        tl.osType() === 'Linux' || tl.osType() === 'Darwin';
 
     if (restrictPermissions) {
-        try {
-            fs.mkdirSync(directoryPath, { recursive: true, mode: 0o700 });
-        } catch (err) {
-            if (!err || (err as NodeJS.ErrnoException).code !== 'EEXIST') {
-                throw err;
-            }
-        }
+        fs.mkdirSync(directoryPath, { recursive: true, mode: 0o700 });
         writeOptions.mode = 0o600;
     } else {
         fs.mkdirSync(directoryPath, { recursive: true });
@@ -205,7 +201,11 @@ function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
                 try {
                     fs.chmodSync(filePath, 0o600);
                 } catch (err) {
-                    tl.warning(tl.loc('Warning_ChmodFailed', filePath, '600', (err && (err as Error).message) ? (err as Error).message : err));
+                    const errorMessage = (err && (err as Error).message) ? (err as Error).message : err;
+                    tl.warning(
+                        tl.loc('Warning_ChmodFailed', filePath, '600', errorMessage),
+                        IssueSource.CustomerScript
+                    );
                 }
             }
         });

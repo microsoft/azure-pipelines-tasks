@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 async function run() {
@@ -20,14 +21,19 @@ async function run() {
                     try {
                         fs.chmodSync(userM2SettingsXmlPath, parseInt(originalUserM2SettingsFileMode, 8));
                     } catch (err) {
-                        tl.warning(tl.loc('Warning_ChmodFailed', userM2SettingsXmlPath, originalUserM2SettingsFileMode, (err && err.message) ? err.message : err));
+                        const errorMessage = err instanceof Error ? err.message : err;
+                        
+                        tl.warning(
+                            tl.loc('Warning_ChmodFailed', userM2SettingsXmlPath, originalUserM2SettingsFileMode, errorMessage),
+                            IssueSource.CustomerScript
+                        );
                     }
                 }
                 tl.debug('Restored old user m2 settings.xml file: ' + backupUserM2SettingsFilePath);
             }
         }
     } catch (err) {
-        tl.warning(tl.loc('Error_FailedCleanupM2', err));
+        tl.warning(tl.loc('Error_FailedCleanupM2', err), IssueSource.CustomerScript);
     }
 }
 
