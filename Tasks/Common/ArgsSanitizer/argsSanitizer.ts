@@ -55,6 +55,8 @@ export interface SanitizerOptions {
     messageLocKey?: string;
     /** Loc key for the bash-path message. Default = messageLocKey. */
     bashMessageLocKey?: string;
+    /** Loc key for batch percent rejection. Default = messageLocKey. */
+    percentMessageLocKey?: string;
 }
 
 /**
@@ -576,9 +578,11 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
             hasPsNewline,
             hasBatchPercent
         );
-        const messageKey = isBash
-            ? (opts.bashMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
-            : (opts.messageLocKey ?? 'ScriptArgsSanitized');
+        const messageKey = hasBatchPercent
+            ? (opts.percentMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
+            : isBash
+                ? (opts.bashMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
+                : (opts.messageLocKey ?? 'ScriptArgsSanitized');
         let message = tl.loc(messageKey);
         if (offendingChars) {
             message = `${message} Offending characters: ${offendingChars}.`;

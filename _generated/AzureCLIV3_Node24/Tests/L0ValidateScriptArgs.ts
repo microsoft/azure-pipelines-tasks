@@ -334,8 +334,12 @@ export const runValidateScriptArgsTests = () => {
             setEnv(env);
             try {
                 assert.throws(
-                    () => validateScriptArgs(`deploy %${SECRET}%`, 'batch'),
+                    () => validateScriptArgs(`deploy %${SECRET}%`, 'batch', {
+                        taskName: 'AzureCLIV3',
+                        percentMessageLocKey: 'BatchPercentSignNotAllowed'
+                    }),
                     (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes('BatchPercentSignNotAllowed')
                         && err.message.includes("'%'")
                         && !err.message.includes(SECRET)
                 );

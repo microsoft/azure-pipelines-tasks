@@ -272,7 +272,8 @@
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
     "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
     "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "BatchPercentSignNotAllowed": "ms-resource:loc.messages.BatchPercentSignNotAllowed"
   },
   "_buildConfigMapping": {
     "Default": "3.281.2",
