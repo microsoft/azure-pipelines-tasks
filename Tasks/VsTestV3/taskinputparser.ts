@@ -173,7 +173,7 @@ function initTestConfigurations(testConfiguration: models.TestConfigurations) {
         console.log(tl.loc('vsVersionSelected', testConfiguration.vsTestVersion));
     } else {
         testConfiguration.vsTestLocation = tl.getInput('vsTestLocation');
-        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', testConfiguration.vsTestLocation));
+        console.log(tl.loc('vstestLocationSpecified', utils.Helper.getVsTestConsoleExeName(), testConfiguration.vsTestLocation));
     }
 
     if (tl.getBoolInput('uiTests') && testConfiguration.runInParallel) {

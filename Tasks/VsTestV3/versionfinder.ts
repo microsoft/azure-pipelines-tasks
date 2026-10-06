@@ -48,16 +48,16 @@ export function getVsTestRunnerDetails(testConfig: models.TestConfigurations) {
     }
 
     if (utils.Helper.isNullOrWhitespace(output)) {
-        tl.error(tl.loc('ErrorReadingVstestVersion'));
-        throw new Error(tl.loc('ErrorReadingVstestVersion'));
+        tl.error(utils.Helper.locVsTestConsole('ErrorReadingVstestVersion'));
+        throw new Error(utils.Helper.locVsTestConsole('ErrorReadingVstestVersion'));
     }
     output = output.trim();
     tl.debug('VSTest Version information: ' + output);
 
     const versionMatch = output.match(/(\d+)\.(\d+)\.(\d+)/);
     if (!versionMatch) {
-        tl.warning(tl.loc('UnexpectedVersionString', output));
-        throw new Error(tl.loc('UnexpectedVersionString', output));
+        tl.warning(utils.Helper.locVsTestConsole('UnexpectedVersionString', output));
+        throw new Error(utils.Helper.locVsTestConsole('UnexpectedVersionString', output));
     }
 
     const majorVersion = parseInt(versionMatch[1]);
@@ -98,7 +98,7 @@ function locateTestWindow(testConfig: models.TestConfigurations): string {
             utils.Helper.pathExistsAsFile(path.join(testConfig.vsTestLocation, 'vstest.console.exe'))) {
             return testConfig.vsTestLocation;
         }
-        throw (new Error(tl.loc('VstestLocationDoesNotExist', testConfig.vsTestLocation)));
+        throw (new Error(utils.Helper.locVsTestConsole('VstestLocationDoesNotExist', testConfig.vsTestLocation)));
     }
 
     if (testConfig.vsTestVersion.toLowerCase() === 'latest') {
