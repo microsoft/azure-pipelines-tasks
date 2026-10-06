@@ -450,7 +450,8 @@ namespace BuildConfigGen
                         hasGlobalVersion: globalVersion is not null,
                         generatedFolder: generatedFolder,
                         altGeneratedFolder: altGeneratedFolder,
-                        useSemverBuildConfig: useSemverBuildConfig);
+                        useSemverBuildConfig: useSemverBuildConfig,
+                        minifiedOnly: t.Value.Configs.Count == 1 && t.Value.Configs.Contains(Config.minified_278.name));
                 }
 
                 debugConfGen.WriteLaunchConfigurations();
@@ -716,7 +717,8 @@ namespace BuildConfigGen
             bool hasGlobalVersion,
             string generatedFolder,
             string altGeneratedFolder,
-            bool useSemverBuildConfig)
+            bool useSemverBuildConfig,
+            bool minifiedOnly)
         {
             if (string.IsNullOrEmpty(task))
             {
@@ -815,9 +817,15 @@ namespace BuildConfigGen
                             taskConfigPath = Path.Combine(taskOutput, "task.json");
                             var taskConfigExists = File.Exists(taskConfigPath);
 
+                            if (config.isDefault && minifiedOnly && !HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config))
+                            {
+                                ensureUpdateModeVerifier.DeleteDirectoryRecursive(taskOutput);
+                                taskOutput = taskTargetPath;
+                                taskConfigPath = Path.Combine(taskOutput, "task.json");
+                            }
                             // only update task output if a new version was added, the config exists, the task contains preprocessor instructions, or the config targets Node (not Default)
                             // Note: CheckTaskInputContainsPreprocessorInstructions is expensive, so only call if needed
-                            if (versionUpdated
+                            else if (versionUpdated
                                 || taskConfigExists
                                 || config.UpdatesOuputUnconditionally()
                                 || HasTaskInputContainsPreprocessorInstructions(gitRootPath, taskTargetPath, config))
