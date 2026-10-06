@@ -83,6 +83,19 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "FIRST_RUN_SETTINGS_XML_EXISTS_PATH",
+        "userM2SettingsXmlPath",
+        "originalUserM2SettingsFileMode",
+        "backupUserM2SettingsFilePath"
+      ]
+    }
+  },
   "messages": {
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",

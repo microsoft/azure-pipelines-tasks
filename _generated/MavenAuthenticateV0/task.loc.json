@@ -83,6 +83,19 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "FIRST_RUN_SETTINGS_XML_EXISTS_PATH",
+        "userM2SettingsXmlPath",
+        "originalUserM2SettingsFileMode",
+        "backupUserM2SettingsFilePath"
+      ]
+    }
+  },
   "messages": {
     "Warning_FeedEntryAlreadyExists": "ms-resource:loc.messages.Warning_FeedEntryAlreadyExists",
     "Warning_NoEndpointsToAuth": "ms-resource:loc.messages.Warning_NoEndpointsToAuth",
