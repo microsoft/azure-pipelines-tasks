@@ -4,6 +4,18 @@ param()
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $repositoryRoot = Resolve-Path "$PSScriptRoot\..\..\..\.."
+$repositoryAncestor = Get-Item $PSScriptRoot
+
+while ($repositoryAncestor) {
+    $sourceTaskScript = Join-Path $repositoryAncestor.FullName "Tasks\AzureFileCopyV1\AzureFileCopy.ps1"
+    if (Test-Path -LiteralPath $sourceTaskScript -PathType Leaf) {
+        $repositoryRoot = $repositoryAncestor.FullName
+        break
+    }
+
+    $repositoryAncestor = $repositoryAncestor.Parent
+}
+
 $taskScripts = @(
     "Tasks\AzureFileCopyV1\AzureFileCopy.ps1",
     "Tasks\AzureFileCopyV2\AzureFileCopy.ps1",
