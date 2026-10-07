@@ -5,6 +5,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import { runValidateScriptArgsTests } from './L0ValidateScriptArgs';
 import { runTryValidateScriptArgsTests } from './L0TryValidateScriptArgs';
 import { runConfigDirIsolationTests } from './L0ConfigDirIsolation';
+import { runCredentialFileIsolationTests } from './L0CredentialFileIsolation';
 
 describe('AzureCLIV2 Suite', function () {
     this.timeout(30000);
@@ -20,6 +21,8 @@ describe('AzureCLIV2 Suite', function () {
     describe('AZURE_CONFIG_DIR isolation', () => {
         runConfigDirIsolationTests();
     });
+
+    runCredentialFileIsolationTests();
 
     it('LateBoundIdToken: Feature Flag ON, Token Present -> Uses Token, Emits Telemetry', async () => {
         let tp = path.join(__dirname, 'LateBoundIdToken_FeatureFlagOn_TokenPresent.js');
@@ -67,7 +70,7 @@ describe('AzureCLIV2 Suite', function () {
         assert(tr.stdout.indexOf('MOCK_CREATE_OIDC_TOKEN_CALLED') >= 0, 'should call createOidcToken');
     });
 
-    it('Service Principal Authentication: Login with service principal key', async () => {
+    it('Service Principal Authentication: Login with an isolated service principal certificate', async () => {
         let tp = path.join(__dirname, 'ServicePrincipalCertificate_Login.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -78,6 +81,9 @@ describe('AzureCLIV2 Suite', function () {
         }
 
         assert(tr.succeeded, 'task should have succeeded with service principal authentication');
+        assert(tr.stdout.includes('isolated certificate created'), 'should create the isolated certificate');
+        assert(tr.stdout.includes('--certificate='), 'should pass the certificate to Azure CLI');
+        assert(tr.stdout.includes('isolated certificate removed'), 'should clean up the isolated certificate directory');
     });
 
     it('Managed Service Identity: Login with MSI authentication', async () => {

@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 280,
-    "Patch": 4
+    "Minor": 281,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -272,10 +272,11 @@
     "FailedToSetAzureDevOpsOrganization": "ms-resource:loc.messages.FailedToSetAzureDevOpsOrganization",
     "FailedToSetAzureDevOpsProject": "ms-resource:loc.messages.FailedToSetAzureDevOpsProject",
     "SkippingSubscriptionContext": "ms-resource:loc.messages.SkippingSubscriptionContext",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "BatchPercentSignNotAllowed": "ms-resource:loc.messages.BatchPercentSignNotAllowed"
   },
   "_buildConfigMapping": {
-    "Default": "3.280.4",
-    "Node24_1": "3.280.5"
+    "Default": "3.281.2",
+    "Node24_1": "3.281.3"
   }
 }
