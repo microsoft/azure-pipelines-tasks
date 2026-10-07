@@ -7,7 +7,7 @@ import * as http from 'http';
 import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl } from '../src/urlUtils';
+import { isValidAzureArtifactsUrl, normalizeUrl } from '../src/urlUtils';
 import { generateInitScript } from '../src/initScript';
 import { extractPluginVersion, discoverFeedUrls } from '../src/buildFileScanner';
 import { probeFeedTenantId } from '../src/authConfig';
@@ -32,6 +32,30 @@ describe('Unit Tests - Pure Functions', function () {
 
         it('should return empty string for empty input', () => {
             assert.strictEqual(normalizeUrl(''), '');
+        });
+    });
+
+    describe('isValidAzureArtifactsUrl', () => {
+        it('should accept an Azure Artifacts HTTPS URL', () => {
+            assert.strictEqual(
+                isValidAzureArtifactsUrl('https://PKGS.dev.azure.com/Org/'),
+                true);
+        });
+
+        it('should reject an HTTP URL', () => {
+            assert.strictEqual(
+                isValidAzureArtifactsUrl('http://pkgs.dev.azure.com/org'),
+                false);
+        });
+
+        it('should reject a malformed URL', () => {
+            assert.strictEqual(isValidAzureArtifactsUrl('not-a-url'), false);
+        });
+
+        it('should reject a non-Azure-Artifacts host', () => {
+            assert.strictEqual(
+                isValidAzureArtifactsUrl('https://example.com/org'),
+                false);
         });
     });
 
