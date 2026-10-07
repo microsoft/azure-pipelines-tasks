@@ -4,10 +4,9 @@ const rewiremock = require('rewiremock/node');
 import * as path from 'path';
 import { createDeploymentMockRunner } from './utils';
 
-const desiredExternalValue =
-  'before\n##vso[task.setvariable variable=externalValue]desired\nafter';
+const existingExternalValue =
+  'before\n##vso[task.setvariable variable=externalValue]existing\nafter';
 
-// Mock deploymentWhatIf to return successful what-if result
 const mockDeploymentWhatIf = async () => {
   return {
     changes: [
@@ -18,8 +17,8 @@ const mockDeploymentWhatIf = async () => {
         delta: [
           {
             path: 'tags',
-            propertyChangeType: 'Create',
-            after: { reviewMarker: desiredExternalValue }
+            propertyChangeType: 'Delete',
+            before: { reviewMarker: existingExternalValue }
           }
         ]
       }
@@ -27,10 +26,8 @@ const mockDeploymentWhatIf = async () => {
   };
 };
 
-// Enable rewiremock globally
 rewiremock.enable();
 
-// Mock the deployments module
 rewiremock('@azure/bicep-deploy-common/deployments')
   .callThrough()
   .with({ deploymentWhatIf: mockDeploymentWhatIf });
