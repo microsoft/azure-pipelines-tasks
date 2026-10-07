@@ -6,6 +6,7 @@ import { discoverPluginVersions } from './buildFileScanner';
 import { getJarVersion } from './ciJarResolver';
 
 const DEFAULT_VERSION = '1.0.0';
+const SAFE_PLUGIN_VERSION_PATTERN = /^[0-9A-Za-z.+_-]{1,64}$/;
 
 interface VersionInputs {
     buildFiles: string[];
@@ -16,6 +17,7 @@ interface VersionInputs {
 export interface VersionResult {
     versions: string[];
     source: 'buildfiles' | 'input' | 'jar' | 'fallback';
+    classpathVersion: string;
 }
 
 /**
@@ -29,29 +31,48 @@ export interface VersionResult {
  *    Maven repo layout — any value works)
  */
 export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
+    const classpathVersion = inputs.pluginToolVersion || '+';
+    if (inputs.pluginToolVersion) {
+        assertSafePluginVersions([inputs.pluginToolVersion]);
+    }
+
     const versions = discoverPluginVersions(inputs.buildFiles);
 
     if (versions.length > 0) {
-        return { versions, source: 'buildfiles' };
+        assertSafePluginVersions(versions);
+        return { versions, source: 'buildfiles', classpathVersion };
     }
 
     // Fallback chain when no versions found in build files
     if (inputs.pluginToolVersion) {
-        console.log(tl.loc('Info_PluginVersionFromInput', inputs.pluginToolVersion));
-        return { versions: [inputs.pluginToolVersion], source: 'input' };
+        tl.debugExternalOutput(
+            tl.loc('Info_PluginVersionFromInput', inputs.pluginToolVersion),
+            { source: 'repository' });
+        return {
+            versions: [inputs.pluginToolVersion],
+            source: 'input',
+            classpathVersion,
+        };
     }
 
     if (inputs.ciJarPath) {
         const jarVer = getJarVersion(inputs.ciJarPath);
         if (jarVer) {
-            console.log(tl.loc('Info_PluginVersionBundled', jarVer));
-            return { versions: [jarVer], source: 'jar' };
+            assertSafePluginVersions([jarVer]);
+            tl.debug(tl.loc('Info_PluginVersionBundled'));
+            return { versions: [jarVer], source: 'jar', classpathVersion };
         }
     }
 
     // Last resort: use a dummy version for the local Maven layout.
     // The version is cosmetic — the init script resolves the JAR from
     // the local file:// repo regardless of the version string.
-    console.log(tl.loc('Info_PluginVersionBundled', DEFAULT_VERSION));
-    return { versions: [DEFAULT_VERSION], source: 'fallback' };
+    console.log(tl.loc('Info_PluginVersionBundled'));
+    return { versions: [DEFAULT_VERSION], source: 'fallback', classpathVersion };
+}
+
+function assertSafePluginVersions(versions: string[]): void {
+    if (versions.some(version => !SAFE_PLUGIN_VERSION_PATTERN.test(version))) {
+        throw new Error(tl.loc('Error_InvalidPluginVersion'));
+    }
 }

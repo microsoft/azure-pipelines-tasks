@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 280,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 1
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -295,6 +295,19 @@
     "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
     "LoginRegistrySucess": "Successfully logged in to registry %s",
     "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "DOCKER_CLI_EXPERIMENTAL",
+        "DEPLOYMENT_FILE_PATH",
+        "_DEPLOYMENT_FILE_PATH",
+        "VSTS_EXTENSION_EDGE_DOCKER_CREDENTIAL"
+      ]
+    }
   },
   "OutputVariables": [
     {

@@ -117,14 +117,22 @@ try
     if ($targetAzurePs) {
         $CoreAzArgument += " -targetAzurePs $targetAzurePs"
     }
-    $contents += ". '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
-    $contents += "`$env:__VSTS_ACCESS_TOKEN = `$null"
+    $contents += "try {"
+    $contents += "    . '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
+    $contents += "    `$env:__VSTS_ACCESS_TOKEN = `$null"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")
     } else {
         $contents += ". '$("$scriptPath".Replace("'", "''"))' $scriptArguments".Trim()
     }
+    $contents += "}"
+    $contents += "finally {"
+    $contents += "    `$env:__VSTS_ACCESS_TOKEN = `$null"
+    $contents += "    if (Get-Command -Name Remove-EndpointSecrets -ErrorAction SilentlyContinue) {"
+    $contents += "        Remove-EndpointSecrets"
+    $contents += "    }"
+    $contents += "}"
 
     # Write the script to disk.
     $__vstsAzPSScriptPath = [System.IO.Path]::Combine($env:Agent_TempDirectory, ([guid]::NewGuid().ToString() + ".ps1"));
