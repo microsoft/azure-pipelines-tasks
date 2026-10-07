@@ -198,11 +198,13 @@ async function getTasksToBuildForPR (prId, forDowngradingCheck) {
         throw new Error(`The following tasks should have their versions bumped due to changes in common: ${shouldBeBumped}`);
     }
 
-    changedTests.forEach(task => {
-        if (!toBeBuilt.includes(task)) {
-            toBeBuilt.push(task);
-        }
-    });
+    if (!forDowngradingCheck) {
+        changedTests.forEach(task => {
+            if (!toBeBuilt.includes(task)) {
+                toBeBuilt.push(task);
+            }
+        });
+    }
 
     // Filter out fully removed tasks
     toBeBuilt = toBeBuilt.filter((taskName) => fs.existsSync(path.join(__dirname, '..', 'Tasks' , taskName)));
