@@ -50,7 +50,8 @@ export class azureclitask {
         try{
             tryValidateScriptArgs(tl.getInput('scriptArguments', false) || '', tl.getInput('scriptType', false) || '', {
                 taskName: 'AzureCLIV3',
-                pipelineFeatureFlag: 'EnableAzureCliArgsValidation'
+                pipelineFeatureFlag: 'EnableAzureCliArgsValidation',
+                percentMessageLocKey: 'BatchPercentSignNotAllowed'
             });
             var scriptType: ScriptType = ScriptTypeFactory.getScriptType();
             var tool: any = await scriptType.getTool();

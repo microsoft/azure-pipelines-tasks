@@ -6,7 +6,7 @@ import * as http from 'http';
 import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
-import { normalizeUrl } from './urlUtils';
+import { normalizeUrl } from './utils/urlUtils';
 
 const RESOURCE_TENANT_HEADER = 'x-vss-resourcetenant';
 
