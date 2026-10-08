@@ -15,7 +15,7 @@ param (
     [string]$useSanitizerActivate,
     [bool]$enableWindowsMachineFileCopyArgumentsHardening
     )
-    Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" 
+    Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
 
     # Clean-Target uses Split-AdditionalArguments from Sanitizer. The parallel-copy

@@ -89,8 +89,8 @@ export function createTaskMockRunner(rewiremock?: any) {
   tr.registerMock('./auth', createMockAuthHelper());
   registerToolLibMock(tr);
   if (rewiremock) {
-    const { createBicepNodeMock } = require('./bicepNodeMock');
-    rewiremock('bicep-node').with(createBicepNodeMock());
+    const { createBicepRpcClientMock } = require('./bicepRpcClientMock');
+    rewiremock('@azure/bicep-rpc-client').with(createBicepRpcClientMock());
   }
   tr.setInput('ConnectedServiceName', 'AzureRM');
   tr.setInput('scope', 'resourceGroup');
