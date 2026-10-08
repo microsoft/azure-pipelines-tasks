@@ -120,5 +120,16 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
 
             assert.throws(() => pf.validateNoLinks());
         });
+
+        it('revalidates the temporary archive before extraction', async () => {
+            (tl as any).getVariable = (name: string) => {
+                if (name === 'Agent.TempDirectory') return destination;
+                return undefined;
+            };
+            createDirectoryLink(outside, path.join(destination, 'package.nupkg'));
+            const pf = new PackageFile(true, '/dest/output', 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+        });
     });
 });

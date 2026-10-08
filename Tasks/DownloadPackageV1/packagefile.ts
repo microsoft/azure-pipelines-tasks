@@ -35,6 +35,7 @@ export class PackageFile {
 
     public async process(): Promise<void> {
         if (this.extractFile) {
+            this.validateNoLinks();
             return this.extract();
         }
     }
