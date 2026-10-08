@@ -16,10 +16,13 @@
   "dependencies": {
     "@types/node": "^24.10.0",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^5.280.3",
-    "uuid": "^11.1.1"
+    "@types/uuid": "^8.3.0",
+    "azure-pipelines-task-lib": "^5.2.4"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "minimatch": "^3.1.5"
   }
 }
