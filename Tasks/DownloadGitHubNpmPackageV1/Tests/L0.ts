@@ -4,7 +4,11 @@ import * as os from 'os';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-import { getNpmArguments, setNpmArguments } from '../npmarguments';
+import {
+    getNpmArguments,
+    getValidatedNpmPackageSpec,
+    setNpmArguments
+} from '../npmarguments';
 
 describe('DownloadGitHubNpmPackage L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT as string) || 20000);
@@ -23,7 +27,10 @@ describe('DownloadGitHubNpmPackage L0 Suite', function () {
     afterEach(() => {
         delete process.env['TEST_NPMRC_PATH'];
         delete process.env['TEST_NPM_SHOULD_FAIL'];
+        delete process.env['TEST_FEATURE_ENABLED'];
         delete process.env['TEST_PACKAGE_NAME'];
+        delete process.env['TEST_PACKAGE_VERSION'];
+        delete process.env['NPM_PACKAGE_VERSION'];
         fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
@@ -61,29 +68,52 @@ describe('DownloadGitHubNpmPackage L0 Suite', function () {
         assert(tr.stdout.includes('loc_mock_Error_InvalidPackageName'), tr.stdout);
         assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
     });
+
+    it('rejects a non-registry package specification before writing the temp npmrc', async () => {
+        process.env['TEST_FEATURE_ENABLED'] = 'true';
+        process.env['TEST_PACKAGE_VERSION'] = 'https://example.invalid/evil.tgz';
+
+        const tr = await runTask();
+
+        assert(tr.failed, tr.stdout);
+        assert(tr.stdout.includes('Package version must be a registry version, range, or tag.'), tr.stdout);
+        assert(!tr.stdout.includes('TEST_NPMRC_WRITTEN'), 'npm should not run');
+        assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
+    });
+
+    it('rejects Windows environment expansion before writing the temp npmrc', async () => {
+        process.env['TEST_FEATURE_ENABLED'] = 'true';
+        process.env['TEST_PACKAGE_VERSION'] = '%NPM_PACKAGE_VERSION%';
+        process.env['NPM_PACKAGE_VERSION'] = '1.0.0 --registry https://example.invalid/';
+
+        const tr = await runTask();
+
+        assert(tr.failed, tr.stdout);
+        assert(tr.stdout.includes('Package version must be a registry version, range, or tag.'), tr.stdout);
+        assert(!tr.stdout.includes('TEST_NPMRC_WRITTEN'), 'npm should not run');
+        assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
+    });
 });
 
 describe('DownloadGitHubNpmPackageV1 arguments', function () {
     const packageDownloadPath = 'C:\\agent\\_work\\1\\shared-library';
     const packageName = 'contoso/shared-library';
 
-    it('creates the expected arguments for a package without a version', function () {
-        assert.deepStrictEqual(
-            getNpmArguments(packageDownloadPath, packageName, ''),
-            ['install', '--prefix', packageDownloadPath, '@contoso/shared-library']
-        );
-    });
-
     const validVersions = [
         '1.0.0',
         '1.0.0-beta.1',
         '1.0.0+build.5',
         'latest',
-        '>=1.0.0 <2.0.0'
+        '>=1.0.0 <2.0.0',
+        '^1.2.3',
+        '~1.2.3',
+        '1.x',
+        '1.0.0 || 2.0.0',
+        '1.0.0 - 2.0.0'
     ];
 
     for (const version of validVersions) {
-        it(`keeps version '${version}' in one package argument`, function () {
+        it(`accepts registry version '${version}' as one package argument`, function () {
             const argumentsList = getNpmArguments(packageDownloadPath, packageName, version);
 
             assert.strictEqual(argumentsList.length, 4);
@@ -92,38 +122,86 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
         });
     }
 
-    const injectionAttempts = [
+    const invalidVersions = [
         '1.0.0 --registry https://example.invalid/',
         '1.0.0 --prefix C:\\attacker-controlled',
         '1.0.0 another-package',
         '1.0.0\t--registry\thttps://example.invalid/',
         '1.0.0\r\n--registry https://example.invalid/',
         '1.0.0 "--registry" "https://example.invalid/"',
-        "1.0.0 '--registry' 'https://example.invalid/'"
+        "1.0.0 '--registry' 'https://example.invalid/'",
+        'https://example.invalid/evil.tgz',
+        'git+https://example.invalid/repository.git',
+        'file:..\\evil',
+        '..\\evil',
+        '.beta',
+        '.\\evil',
+        './evil',
+        '../evil',
+        'evil.tgz',
+        'npm:other-package@1.0.0',
+        '%NPM_PACKAGE_VERSION%',
+        '',
+        ' ',
+        ' 1.0.0',
+        '1.0.0 '
     ];
 
-    for (const version of injectionAttempts) {
-        it(`does not split untrusted version '${JSON.stringify(version)}'`, function () {
-            const argumentsList = getNpmArguments(packageDownloadPath, packageName, version);
-
-            assert.strictEqual(argumentsList.length, 4);
-            assert.strictEqual(argumentsList[3], `@contoso/shared-library@${version}`);
-            assert.strictEqual(argumentsList.includes('--registry'), false);
-            assert.strictEqual(argumentsList.includes('--prefix', 3), false);
-            assert.strictEqual(argumentsList.includes('another-package'), false);
+    for (const version of invalidVersions) {
+        it(`rejects non-registry version '${JSON.stringify(version)}'`, function () {
+            assert.throws(
+                () => getValidatedNpmPackageSpec(packageName, version),
+                /Package version must be a registry version, range, or tag/
+            );
         });
     }
 
-    it('does not split an option-looking package name', function () {
+    it('rejects an invalid scoped package name', function () {
         const optionLookingPackageName = 'contoso/shared-library --registry https://example.invalid/';
-        const argumentsList = getNpmArguments(packageDownloadPath, optionLookingPackageName, '1.0.0');
 
-        assert.strictEqual(argumentsList.length, 4);
-        assert.strictEqual(
-            argumentsList[3],
-            '@contoso/shared-library --registry https://example.invalid/@1.0.0'
+        assert.throws(
+            () => getNpmArguments(packageDownloadPath, optionLookingPackageName, '1.0.0'),
+            /Package name must be a valid scoped npm package name/
         );
-        assert.strictEqual(argumentsList.includes('--registry'), false);
+
+        assert.throws(
+            () => getNpmArguments(packageDownloadPath, 'contoso/shared-library%PAYLOAD%', '1.0.0'),
+            /Package name must be a valid scoped npm package name/
+        );
+    });
+
+    it('rejects dot path segments in package names', function () {
+        for (const name of ['contoso/..', 'contoso/.', '../shared-library']) {
+            assert.throws(
+                () => getValidatedNpmPackageSpec(name, '1.0.0'),
+                /Package name must be a valid scoped npm package name/
+            );
+        }
+    });
+
+    it('accepts npm-compatible scoped package names', function () {
+        assert.strictEqual(
+            getValidatedNpmPackageSpec('contoso/.shared-library', '1.0.0'),
+            '@contoso/.shared-library@1.0.0'
+        );
+        assert.strictEqual(
+            getValidatedNpmPackageSpec('contoso/_shared-library', 'latest'),
+            '@contoso/_shared-library@latest'
+        );
+    });
+
+    it('enforces the 214-character limit on the complete scoped package name', function () {
+        const maxLengthPackageName = `contoso/${'p'.repeat(214 - '@contoso/'.length)}`;
+        const overLengthPackageName = `${maxLengthPackageName}p`;
+
+        assert.strictEqual(
+            getValidatedNpmPackageSpec(maxLengthPackageName, '1.0.0'),
+            `@${maxLengthPackageName}@1.0.0`
+        );
+        assert.throws(
+            () => getValidatedNpmPackageSpec(overLengthPackageName, '1.0.0'),
+            /Package name must be a valid scoped npm package name/
+        );
     });
 
     it('uses discrete arguments when the feature flag is enabled', function () {
@@ -137,7 +215,7 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
             },
             packageDownloadPath,
             packageName,
-            '1.0.0 --registry https://example.invalid/',
+            '>=1.0.0 <2.0.0',
             true
         );
 
@@ -147,10 +225,26 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
                 'install',
                 '--prefix',
                 packageDownloadPath,
-                '@contoso/shared-library@1.0.0 --registry https://example.invalid/'
+                '@contoso/shared-library@>=1.0.0 <2.0.0'
             ]
         );
         assert.strictEqual(commandLine, undefined);
+    });
+
+    it('rejects a source-changing package specification when the feature flag is enabled', function () {
+        assert.throws(
+            () => setNpmArguments(
+                {
+                    arg: () => assert.fail('npm arguments should not be written'),
+                    line: () => assert.fail('npm command line should not be written')
+                },
+                packageDownloadPath,
+                packageName,
+                'https://example.invalid/evil.tgz',
+                true
+            ),
+            /Package version must be a registry version, range, or tag/
+        );
     });
 
     it('uses the legacy command line when the feature flag is disabled', function () {
@@ -164,14 +258,14 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
             },
             packageDownloadPath,
             packageName,
-            '1.0.0',
+            '1.0.0 --registry https://example.invalid/',
             false
         );
 
         assert.deepStrictEqual(argumentsList, []);
         assert.strictEqual(
             commandLine,
-            `install --prefix ${packageDownloadPath} @contoso/shared-library@1.0.0`
+            `install --prefix ${packageDownloadPath} @contoso/shared-library@1.0.0 --registry https://example.invalid/`
         );
     });
 });
