@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 280,
+    "Minor": 281,
     "Patch": 2
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -216,7 +216,7 @@
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
   },
   "_buildConfigMapping": {
-    "Default": "4.280.2",
-    "Node24_1": "4.280.3"
+    "Default": "4.281.2",
+    "Node24_1": "4.281.3"
   }
 }
