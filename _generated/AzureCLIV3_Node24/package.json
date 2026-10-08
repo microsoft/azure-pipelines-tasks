@@ -21,6 +21,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
+    "agent-base": "^6.0.2",
     "azure-devops-node-api": "17.0.1",
     "azure-pipelines-task-lib": "^5.281.0",
     "azure-pipelines-tasks-args-sanitizer": "file:../../_build/Tasks/Common/azure-pipelines-tasks-args-sanitizer-1.0.0.tgz",
