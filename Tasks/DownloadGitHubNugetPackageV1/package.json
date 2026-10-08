@@ -23,7 +23,7 @@
     "@types/node": "^20.3.1",
     "@types/q": "1.0.7",
     "@types/uuid": "^8.3.0",
-    "azure-pipelines-task-lib": "^5.280.3",
+    "azure-pipelines-task-lib": "^5.281.0",
     "azure-pipelines-tasks-packaging-common": "^3.281.0",
     "azure-pipelines-tasks-utility-common": "^3.281.0",
     "q": "^1.4.1",
@@ -31,8 +31,5 @@
   },
   "devDependencies": {
     "typescript": "5.1.6"
-  },
-  "overrides": {
-    "serialize-javascript": "^7.0.5"
   }
 }
