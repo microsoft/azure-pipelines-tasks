@@ -13,7 +13,7 @@ import { layoutMavenRepo } from './mavenLayout';
 import { generateInitScript } from './initScript';
 import { resolvePluginVersions } from './versionResolver';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { isValidAzureArtifactsUrl } from './urlUtils';
+import { isValidAzureArtifactsUrl } from './utils/urlUtils';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 

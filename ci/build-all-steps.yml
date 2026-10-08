@@ -11,9 +11,15 @@ parameters:
 - name: signTasks
   type: boolean
   default: false
-- name: signNodeModules
-  type: boolean
-  default: false
+- name: nodeModulesSigningMode
+  type: string
+  default: 'Catalog signing'
+  values:
+  - 'Catalog signing'
+  - 'Individual file signing'
+- name: catalogGenerationThrottle
+  type: number
+  default: 4
 
 steps:
 
@@ -90,13 +96,13 @@ steps:
       ne(variables['numTasks'], 0)
     )
 
-- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks
-  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
-  condition: eq(${{ parameters.useSemverBuildConfig }}, false)
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --task "$(getTaskPattern.task_names)"
+  displayName: Verify generated files for selected tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq(${{ parameters.useSemverBuildConfig }}, false))
 
-- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --all-tasks --use-semver-build-config
-  displayName: Verify generated files across tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
-  condition: eq(${{ parameters.useSemverBuildConfig }}, true)
+- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --no-launch-profile  -- --task "$(getTaskPattern.task_names)" --use-semver-build-config
+  displayName: Verify generated files for selected tasks are up-to-date (Ensure BuildConfigGen outputs are consistent)
+  condition: and(succeeded(), ne(variables['numTasks'], 0), eq(${{ parameters.useSemverBuildConfig }}, true))
 
 - powershell: ./ci/set-sprint-variables.ps1
   displayName: Set currentSprint variables
@@ -175,7 +181,8 @@ steps:
     - template: /ci/sign-task-files.yml@self
       parameters:
         tasksRoot: $(Build.SourcesDirectory)\_build\Tasks
-        signNodeModules: ${{ parameters.signNodeModules }}
+        nodeModulesSigningMode: ${{ parameters.nodeModulesSigningMode }}
+        catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js true individually
