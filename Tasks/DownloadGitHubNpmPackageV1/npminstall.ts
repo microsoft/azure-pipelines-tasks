@@ -3,7 +3,10 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as httpClient from 'typed-rest-client/HttpClient';
-import { setNpmArguments } from './npmarguments';
+import {
+    getValidatedNpmPackageSpec,
+    setNpmArguments,
+} from './npmarguments';
 
 import { NpmToolRunner } from './npmtoolrunner';
 
@@ -24,6 +27,8 @@ export async function run(): Promise<void> {
 
         let packageNameInput = tl.getInputRequired("packageName");
         let packageVersion = tl.getInputRequired("version");
+        const isArgumentIsolationFixEnabled
+            = tl.getPipelineFeature('DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled');
 
         if (!packageNameInput || packageNameInput.indexOf("/") < 0) {
             throw Error(tl.loc('Error_InvalidPackageName'));
@@ -38,6 +43,11 @@ export async function run(): Promise<void> {
             tl.setSecret(token);
         }
 
+        let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
+        if (isArgumentIsolationFixEnabled) {
+            getValidatedNpmPackageSpec(packageName, packageVersion);
+        }
+
         const url = "https://npm.pkg.github.com/" + owner;
         let authDetails = "//npm.pkg.github.com/:_authToken=" + token;
         tl.debug(tl.loc('UsingRegistry', url));
@@ -47,15 +57,13 @@ export async function run(): Promise<void> {
         npmutil.appendToNpmrc(npmrc, `${authDetails}\n`);
 
         const packageDownloadPath = getProjectPath(packageNameInput);
-
         const npm = new NpmToolRunner(path.dirname(npmrc), npmrc, false);
-        let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
         setNpmArguments(
             npm,
             packageDownloadPath,
             packageName,
             packageVersion,
-            tl.getPipelineFeature('DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled')
+            isArgumentIsolationFixEnabled
         );
 
         npm.execSync();
