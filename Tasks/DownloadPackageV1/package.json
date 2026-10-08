@@ -21,7 +21,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-devops-node-api": "^15.1.3",
+    "azure-devops-node-api": "^17.0.1",
     "azure-pipelines-task-lib": "^5.281.0",
     "azure-pipelines-tasks-packaging-common": "^3.281.0",
     "azure-pipelines-tasks-utility-common": "^3.281.0",
