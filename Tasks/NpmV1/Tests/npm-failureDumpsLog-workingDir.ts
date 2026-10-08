@@ -9,10 +9,9 @@ let taskPath = path.join(__dirname, '..', 'npm.js');
 let cwd = process.cwd();
 let tmr = new NpmMockHelper(taskPath);
 
-tmr.setInput(NpmTaskInput.Command, NpmCommand.Custom);
-tmr.setInput(NpmTaskInput.CustomCommand, 'custom');
+tmr.setInput(NpmTaskInput.Command, NpmCommand.ContinuousIntegration);
 tmr.setInput(NpmTaskInput.WorkingDir, cwd);
-tmr.mockNpmCommand('custom', {
+tmr.mockNpmCommand('ci', {
     code: -1,
     stdout: 'some npm failure'
 } as TaskLibAnswerExecResult);

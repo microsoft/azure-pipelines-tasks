@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
@@ -136,10 +137,10 @@ describe('Npm Toolrunner', function () {
                 .filter(call => call.options.silent === true);
             assert(silentCalls.length > 0, 'silent npm probes should run');
             silentCalls.forEach(call => {
-                assert.strictEqual(
+                assert.deepStrictEqual(
                     call.options.externalOutput,
-                    undefined,
-                    'silent parsed output should not be filtered');
+                    { source: 'childProcess' },
+                    'silent parsed output should also use sanitized execution options');
             });
         } finally {
             if (originalValue === undefined) {
@@ -153,6 +154,15 @@ describe('Npm Toolrunner', function () {
 
 describe('Npm Task', function () {
     this.timeout(6000);
+
+    it('restricts logging commands and disallows setting variables', () => {
+        const task = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'task.json'), 'utf8'));
+
+        assert.deepStrictEqual(task.restrictions, {
+            commands: { mode: 'restricted' },
+            settableVariables: { allowed: [] }
+        });
+    });
 
     // npm failure dumps log
     it('npm failure dumps debug log from npm cache', async () => {
@@ -169,7 +179,7 @@ describe('Npm Task', function () {
         assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should not be executable');
     });
 
-    it('npm failure dumps debug log from working directory', async () => {
+    it('failing npm ci dumps a sanitized debug log from working directory', async () => {
         this.timeout(3000);
         const debugLog = 'NPM_DEBUG_LOG';
 
@@ -182,6 +192,32 @@ describe('Npm Task', function () {
         assert(tr.stdOutContained(debugLog));
         assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should be neutralized');
         assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should not be executable');
+    });
+
+    it('neutralizes a lockfile-sourced deprecated warning without registry access', async () => {
+        const tp = path.join(__dirname, 'ci-lockfileDeprecated.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'npm ci should have succeeded');
+        assert(tr.stdErrContained('##_vso[task.prependpath]/tmp/lockfile'), 'lockfile payload should be neutralized');
+        assert(!tr.stdErrContained('##vso[task.prependpath]/tmp/lockfile'), 'lockfile payload should not be executable');
+    });
+
+    it('neutralizes a registry-sourced deprecated warning', async () => {
+        const tp = path.join(__dirname, 'install-registryDeprecated.js');
+        const tr = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'npm install should have succeeded');
+        assert(
+            tr.stdErrContained('##_vso[task.setendpoint id=SystemVssConnection;field=url]'),
+            'registry payload should be neutralized');
+        assert(
+            !tr.stdErrContained('##vso[task.setendpoint id=SystemVssConnection;field=url]'),
+            'registry payload should not be executable');
     });
 
     // custom
@@ -210,6 +246,8 @@ describe('Npm Task', function () {
         assert(tr.stdOutContained('; cli configs') === false, 'should not have regular npm config output');
         assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'npm output command should be neutralized');
         assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'npm output command should not be executable');
+        assert(tr.stdErrContained('##_vso[task.prependpath]/tmp/malicious'), 'npm stderr command should be neutralized');
+        assert(!tr.stdErrContained('##vso[task.prependpath]/tmp/malicious'), 'npm stderr command should not be executable');
     });
 
     // show config

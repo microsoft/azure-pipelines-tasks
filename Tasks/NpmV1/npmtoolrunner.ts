@@ -108,7 +108,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         options.cwd = this.workingDirectory;
         options.env = { ...(options.env || process.env) };
 
-        if (options.silent !== true && options.externalOutput === undefined) {
+        if (options.externalOutput === undefined) {
             options.externalOutput = { source: 'childProcess' };
         }
 

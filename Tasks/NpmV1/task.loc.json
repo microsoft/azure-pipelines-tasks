@@ -187,6 +187,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
