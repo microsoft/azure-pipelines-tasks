@@ -12,6 +12,8 @@ export class PackageFile {
 
     // file will be downloaded here
     private initialLocation: string;
+    private rootLocation: string;
+    private filename: string;
 
     // file will be extracted to this location
     private finalLocation: string;
@@ -20,12 +22,15 @@ export class PackageFile {
     constructor(extract: boolean, destination: string, filename: string) {
         this.finalLocation = destination;
         this.extractFile = extract;
+        this.filename = filename;
 
         if (extract) {
-            this.initialLocation = this.resolveContainedPath(tl.getVariable('Agent.TempDirectory'), filename);
+            this.rootLocation = path.resolve(tl.getVariable('Agent.TempDirectory'));
         } else {
-            this.initialLocation = this.resolveContainedPath(destination, filename);
+            this.rootLocation = path.resolve(destination);
         }
+
+        this.initialLocation = this.resolveContainedPath(filename);
     }
 
     public async process(): Promise<void> {
@@ -38,8 +43,28 @@ export class PackageFile {
         return this.initialLocation;
     }
 
-    private resolveContainedPath(destination: string, filename: string): string {
-        const root = path.resolve(destination);
+    public validateNoLinks(): void {
+        const relativePath = path.relative(this.rootLocation, this.initialLocation);
+        let currentPath = this.rootLocation;
+
+        for (const segment of relativePath.split(path.sep)) {
+            currentPath = path.join(currentPath, segment);
+
+            try {
+                if (fs.lstatSync(currentPath).isSymbolicLink()) {
+                    throw new Error(tl.loc("InvalidPackageFileLink", this.filename));
+                }
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                    return;
+                }
+
+                throw error;
+            }
+        }
+    }
+
+    private resolveContainedPath(filename: string): string {
         const hasParentSegment = filename.split(/[\\/]+/).includes("..");
         const hasWindowsRoot = path.win32.parse(filename).root !== "";
 
@@ -47,8 +72,8 @@ export class PackageFile {
             throw new Error(tl.loc("InvalidPackageFilePath", filename));
         }
 
-        const resolvedPath = path.resolve(root, filename);
-        const relativePath = path.relative(root, resolvedPath);
+        const resolvedPath = path.resolve(this.rootLocation, filename);
+        const relativePath = path.relative(this.rootLocation, resolvedPath);
         const escapesRoot =
             !relativePath ||
             relativePath === ".." ||

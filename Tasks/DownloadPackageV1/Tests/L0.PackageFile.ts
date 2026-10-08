@@ -1,4 +1,6 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 // PackageFile constructor uses tl.getVariable('Agent.TempDirectory').
@@ -71,6 +73,52 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
 
             // Should resolve without error — no extraction attempted
             await pf.process();
+        });
+    });
+
+    describe('Link validation', function () {
+        let testRoot: string;
+        let destination: string;
+        let outside: string;
+
+        beforeEach(() => {
+            testRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'download-package-'));
+            destination = path.join(testRoot, 'destination');
+            outside = path.join(testRoot, 'outside');
+            fs.mkdirSync(destination);
+            fs.mkdirSync(outside);
+        });
+
+        afterEach(() => {
+            fs.rmSync(testRoot, { recursive: true, force: true });
+        });
+
+        function createDirectoryLink(target: string, linkPath: string): void {
+            fs.symlinkSync(target, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
+        }
+
+        it('allows the selected destination root to be a link', () => {
+            const linkedDestination = path.join(testRoot, 'linked-destination');
+            createDirectoryLink(destination, linkedDestination);
+            fs.mkdirSync(path.join(destination, 'lib'));
+
+            const pf = new PackageFile(false, linkedDestination, 'lib/package.jar');
+
+            assert.doesNotThrow(() => pf.validateNoLinks());
+        });
+
+        it('rejects a linked parent beneath the destination', () => {
+            createDirectoryLink(outside, path.join(destination, 'lib'));
+            const pf = new PackageFile(false, destination, 'lib/package.jar');
+
+            assert.throws(() => pf.validateNoLinks());
+        });
+
+        it('rejects a linked final target', () => {
+            createDirectoryLink(outside, path.join(destination, 'package.jar'));
+            const pf = new PackageFile(false, destination, 'package.jar');
+
+            assert.throws(() => pf.validateNoLinks());
         });
     });
 });
