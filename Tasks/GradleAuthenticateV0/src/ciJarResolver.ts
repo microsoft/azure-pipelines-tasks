@@ -16,7 +16,7 @@ export function resolveCiJar(): string {
     if (credproviderHome) {
         const jar = findJarInDir(credproviderHome);
         if (jar) {
-            console.log(tl.loc('Info_CiJarFromHome', jar));
+            tl.debug(tl.loc('Info_CiJarFromHome'));
             return jar;
         }
     }
@@ -25,7 +25,7 @@ export function resolveCiJar(): string {
     const bundledDir = path.join(__dirname, '..', 'GradleCredProvider');
     const jar = findJarInDir(bundledDir);
     if (jar) {
-        console.log(tl.loc('Info_CiJarFromBundled', jar));
+        tl.debug(tl.loc('Info_CiJarFromBundled'));
         return jar;
     }
 
