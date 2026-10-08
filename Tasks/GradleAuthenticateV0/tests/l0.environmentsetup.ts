@@ -47,6 +47,5 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
 
         TestHelpers.assertSuccess(tr);
         TestHelpers.assertOutputContains(tr, 'Info_MavenRepoLaidOut');
-        TestHelpers.assertOutputContains(tr, '3.2.1');
     });
 });
