@@ -9,7 +9,7 @@ import {
     AZURE_ARTIFACTS_URL_PATTERN,
     isValidAzureArtifactsUrl,
     normalizeUrl,
-} from './urlUtils';
+} from './utils/urlUtils';
 
 /**
  * Feed URL entry discovered from build files or task inputs.
