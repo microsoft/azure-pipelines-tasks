@@ -4,9 +4,9 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import { discoverPluginVersions } from './buildFileScanner';
 import { getJarVersion } from './ciJarResolver';
+import { assertSafePluginVersions } from './utils/pluginVersionUtils';
 
 const DEFAULT_VERSION = '1.0.0';
-const SAFE_PLUGIN_VERSION_PATTERN = /^[0-9A-Za-z.+_-]{1,64}$/;
 
 interface VersionInputs {
     buildFiles: string[];
@@ -69,10 +69,4 @@ export function resolvePluginVersions(inputs: VersionInputs): VersionResult {
     // the local file:// repo regardless of the version string.
     console.log(tl.loc('Info_PluginVersionBundled'));
     return { versions: [DEFAULT_VERSION], source: 'fallback', classpathVersion };
-}
-
-function assertSafePluginVersions(versions: string[]): void {
-    if (versions.some(version => !SAFE_PLUGIN_VERSION_PATTERN.test(version))) {
-        throw new Error(tl.loc('Error_InvalidPluginVersion'));
-    }
 }
