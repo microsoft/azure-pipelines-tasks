@@ -8,6 +8,7 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { isValidAzureArtifactsUrl, normalizeUrl } from '../src/utils/urlUtils';
+import { assertSafePluginVersions } from '../src/utils/pluginVersionUtils';
 import { generateInitScript } from '../src/initScript';
 import { extractPluginVersion, discoverFeedUrls } from '../src/buildFileScanner';
 import { probeFeedTenantId } from '../src/authConfig';
@@ -83,6 +84,37 @@ describe('Unit Tests - Pure Functions', function () {
 
             assert.throws(
                 () => generateInitScript(version),
+                /plugin version is invalid/i);
+        });
+    });
+
+    describe('assertSafePluginVersions', () => {
+        it('should accept all allowed version characters', () => {
+            assert.doesNotThrow(() => assertSafePluginVersions(['0Az.+_-']));
+        });
+
+        it('should accept a 64-character version', () => {
+            assert.doesNotThrow(() => assertSafePluginVersions(['a'.repeat(64)]));
+        });
+
+        for (const [description, version] of [
+            ['an empty version', ''],
+            ['a 65-character version', 'a'.repeat(65)],
+            ['a version containing whitespace', '1.0.0 beta'],
+            ['a version containing a newline', '1.0.0\nbeta'],
+            ['a version containing brackets', '1.0.0[beta]'],
+            ['a version containing a quote', "1.0.0'"],
+        ]) {
+            it(`should reject ${description}`, () => {
+                assert.throws(
+                    () => assertSafePluginVersions([version]),
+                    /plugin version is invalid/i);
+            });
+        }
+
+        it('should reject the complete collection when any version is unsafe', () => {
+            assert.throws(
+                () => assertSafePluginVersions(['1.0.0', '1.0.0 bad']),
                 /plugin version is invalid/i);
         });
     });
