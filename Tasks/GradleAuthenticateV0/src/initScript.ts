@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
+import { assertSafePluginVersions } from './utils/pluginVersionUtils';
+
 /**
  * Generate the Gradle init script that:
  * 1. Loads the CI JAR via initscript classpath from the local file:// repo
@@ -10,6 +12,8 @@
  * @param version The credprovider plugin version, or '+' to resolve the latest from the local repo.
  */
 export function generateInitScript(version: string): string {
+    assertSafePluginVersions([version]);
+
     return `// azure-artifacts-auth.gradle — written by GradleAuthenticate@0.
 // Deleted automatically after the build step completes.
 // Loaded BEFORE settings.gradle. The plugin is applied at the Gradle level via
