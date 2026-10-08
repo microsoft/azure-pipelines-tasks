@@ -1,4 +1,5 @@
-import { debug, loc } from 'azure-pipelines-task-lib/task';
+import { EOL } from 'os';
+import { debug, loc, writeExternalOutput } from 'azure-pipelines-task-lib/task';
 import { ArtifactDownloadTicket, ItemType, TicketState } from 'artifact-engine/Models';
 import { getFileSizeInBytes } from './file_helper';
 
@@ -16,7 +17,7 @@ export function handlerCheckDownloadedFiles(downloadTickets: Array<ArtifactDownl
 
     if (corruptedItems.length > 0) {
         console.log(loc('CorruptedArtifactItemsList'));
-        corruptedItems.map(item => console.log(item.artifactItem.metadata.destinationUrl));
+        corruptedItems.map(item => writeExternalOutput(item.artifactItem.metadata.destinationUrl + EOL, { source: 'remote' }));
 
         throw new Error(loc('IntegrityCheckNotPassed'));
     }
