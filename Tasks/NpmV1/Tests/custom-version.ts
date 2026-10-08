@@ -16,6 +16,6 @@ tmr.answers["stats"][process.cwd()] = {"isDirectory":true};
 tmr.setInput(NpmTaskInput.CustomCommand, '-v');
 tmr.mockNpmCommand('-v', {
     code: 0,
-    stdout: '4.6.1'
+    stdout: '4.6.1\n##vso[task.setvariable variable=NODE_OPTIONS]--require=malicious.js'
 } as TaskLibAnswerExecResult);
 tmr.run();

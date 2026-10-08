@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as npmToolRunnerModule from '../npmtoolrunner';
 
 class MockedTask {
@@ -9,6 +10,7 @@ class MockedTask {
     private _proxyPassword: string;
     private _proxyBypass: string;
     private _secret: string;
+    private _execSyncCalls: { args: string; options: tr.IExecSyncOptions }[] = [];
 
     public debug(message: string) {}
     public loc(message: string): string { return message; }
@@ -19,6 +21,7 @@ class MockedTask {
         this._proxyPassword = proxyPassword;
         this._proxyBypass = proxyBypass;
         this._secret = '';
+        this._execSyncCalls = [];
     }
 
     public getVariable(name: string) {
@@ -48,6 +51,27 @@ class MockedTask {
 
     public setResourcePath(s: string){
         
+    }
+
+    public stats(path: string) {
+        return { isDirectory: () => true };
+    }
+
+    public getBoolInput(name: string, required: boolean): boolean {
+        return false;
+    }
+
+    public execSync(tool: string, args: string, options: tr.IExecSyncOptions): tr.IExecSyncResult {
+        this._execSyncCalls.push({ args, options });
+        return {
+            code: 0,
+            stdout: args === 'config get cache' ? 'C:\\npm-cache' : '',
+            stderr: ''
+        } as tr.IExecSyncResult;
+    }
+
+    public getExecSyncCalls(): { args: string; options: tr.IExecSyncOptions }[] {
+        return this._execSyncCalls;
     }
 }
 
@@ -91,6 +115,40 @@ describe('Npm Toolrunner', function () {
         
         done();
     });
+
+    it('isolates npm environment changes and filters displayed child output', () => {
+        const variableName = 'NPM_CONFIG_USERCONFIG';
+        const originalValue = process.env[variableName];
+
+        try {
+            delete process.env[variableName];
+            mockedTask.setMockedValues();
+
+            const runner = new npmToolRunnerModule.NpmToolRunner('C:\\work', 'C:\\temp\\.npmrc', false);
+            const preparedOptions = runner._prepareNpmEnvironment({});
+
+            assert.strictEqual(process.env[variableName], undefined, 'process.env should not be modified');
+            assert.notStrictEqual(preparedOptions.env, process.env, 'npm should receive a cloned environment');
+            assert.strictEqual(preparedOptions.env[variableName], 'C:\\temp\\.npmrc');
+            assert.deepStrictEqual(preparedOptions.externalOutput, { source: 'childProcess' });
+
+            const silentCalls = mockedTask.getExecSyncCalls()
+                .filter(call => call.options.silent === true);
+            assert(silentCalls.length > 0, 'silent npm probes should run');
+            silentCalls.forEach(call => {
+                assert.strictEqual(
+                    call.options.externalOutput,
+                    undefined,
+                    'silent parsed output should not be filtered');
+            });
+        } finally {
+            if (originalValue === undefined) {
+                delete process.env[variableName];
+            } else {
+                process.env[variableName] = originalValue;
+            }
+        }
+    });
 });
 
 describe('Npm Task', function () {
@@ -107,6 +165,8 @@ describe('Npm Task', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained(debugLog));
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should not be executable');
     });
 
     it('npm failure dumps debug log from working directory', async () => {
@@ -120,6 +180,8 @@ describe('Npm Task', function () {
 
         assert(tr.failed, 'task should have failed');
         assert(tr.stdOutContained(debugLog));
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should not be executable');
     });
 
     // custom
@@ -146,6 +208,8 @@ describe('Npm Task', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdOutContained('; debug cli configs'), 'should have debug npm config output');
         assert(tr.stdOutContained('; cli configs') === false, 'should not have regular npm config output');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'npm output command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'npm output command should not be executable');
     });
 
     // show config

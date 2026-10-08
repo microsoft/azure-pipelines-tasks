@@ -3,6 +3,7 @@ import path = require('path');
 import url = require('url');
 import tl = require('azure-pipelines-task-lib/task');
 import trm = require('azure-pipelines-task-lib/toolrunner');
+import * as semver from 'semver';
 var extend = require('util')._extend;
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
@@ -38,7 +39,7 @@ async function executeTask() {
         await _logNpmStartupVariables(command, args);
         // deprecated version of task, which just runs the npm command with NO auth support.
         try{
-            var code : number = await npmRunner.exec();
+            var code : number = await npmRunner.exec(getNpmExecOptions());
             tl.setResult(code, tl.loc('NpmReturnCode', code));
         } catch (err) {
             tl.debug('taskRunner fail');
@@ -60,9 +61,7 @@ async function executeTask() {
             }
             
             // set required environment variables for npm execution
-            var npmExecOptions = <trm.IExecOptions>{
-                env: extend({}, process.env)
-            };
+            var npmExecOptions = getNpmExecOptions();
             
             if(shouldRunAuthHelper){
                 npmExecOptions.env['npm_config_userconfig'] = tempNpmrcPath;
@@ -87,9 +86,7 @@ async function executeTask() {
 
 async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<number> {
     try{
-        var execOptions = <trm.IExecOptions>{
-            env: extend({}, process.env)
-        };
+        var execOptions = getNpmExecOptions();
         execOptions.env = await addBuildCredProviderEnv(execOptions.env);
 
         var code : number = await npmAuthRunner.exec(execOptions);
@@ -99,6 +96,13 @@ async function runNpmAuthHelperAsync(npmAuthRunner: trm.ToolRunner) : Promise<nu
         // warn on any auth failure and try to run the task.
         tl.warning(tl.loc('NpmAuthFailed', err.message));
     }
+}
+
+function getNpmExecOptions(): trm.IExecOptions {
+    return {
+        env: extend({}, process.env),
+        externalOutput: { source: 'childProcess' }
+    };
 }
 
 function copyUserNpmrc(tempNpmrcPath: string) {
@@ -236,9 +240,10 @@ async function _logNpmStartupVariables(command: string, args?: string, npmrcPath
         // Log the NPM version
         let version: string;
         try {
-            const syncResult: IExecSyncResult = tl.execSync('npm', '--version');
-            if (syncResult.stdout) {
-                version = syncResult.stdout.trim();
+            const syncResult: IExecSyncResult = tl.execSync('npm', '--version', { silent: true });
+            const parsedVersion = syncResult.stdout && syncResult.stdout.trim();
+            if (parsedVersion && semver.valid(parsedVersion)) {
+                version = parsedVersion;
             }
         } catch (err) {
             tl.debug(`Unable to get NPM config info. Err:( ${err} )`);

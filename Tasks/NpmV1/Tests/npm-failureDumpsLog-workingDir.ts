@@ -21,6 +21,9 @@ tmr.answers.exist[path.join(cwd, "npm-debug.log")] = true;
 tmr.answers["stats"] = { [cwd] : { "isDirectory": true } };
 
 let fs = require('fs');
-fs.writeFileSync('npm-debug.log', 'NPM_DEBUG_LOG', 'utf-8');
+fs.writeFileSync(
+    'npm-debug.log',
+    'NPM_DEBUG_LOG\n##vso[task.setvariable variable=NODE_OPTIONS]--require=malicious.js',
+    'utf-8');
 
 tmr.run();

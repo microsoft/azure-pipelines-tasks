@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import { format, parse, Url } from 'url';
 import * as Q from 'q';
@@ -102,12 +103,13 @@ export class NpmToolRunner extends tr.ToolRunner {
         return undefined;
     }
 
-    private _prepareNpmEnvironment(options?: tr.IExecSyncOptions): tr.IExecSyncOptions {
+    public _prepareNpmEnvironment(options?: tr.IExecSyncOptions): tr.IExecSyncOptions {
         options = options || <tr.IExecSyncOptions>{};
         options.cwd = this.workingDirectory;
+        options.env = { ...(options.env || process.env) };
 
-        if (options.env === undefined) {
-            options.env = process.env;
+        if (options.silent !== true && options.externalOutput === undefined) {
+            options.externalOutput = { source: 'childProcess' };
         }
 
         if (this.dbg || tl.getBoolInput(NpmTaskInput.Verbose, false)) {
@@ -210,7 +212,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         const logs = tl.findMatch(path.join(this.cacheLocation, '_logs'), '*-debug.log');
         if (logs && logs.length > 0) {
             const debugLog = logs[logs.length - 1];
-            console.log(tl.loc('FoundNpmDebugLog', debugLog));
+            tl.writeExternalOutput(tl.loc('FoundNpmDebugLog', debugLog) + os.EOL, { source: 'childProcess' });
             return debugLog;
         }
 
@@ -219,7 +221,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         const debugLog = path.join(cwd, 'npm-debug.log');
         tl.debug(tl.loc('TestDebugLog', debugLog));
         if (tl.exist(debugLog)) {
-            console.log(tl.loc('FoundNpmDebugLog', debugLog));
+            tl.writeExternalOutput(tl.loc('FoundNpmDebugLog', debugLog) + os.EOL, { source: 'childProcess' });
             return debugLog;
         }
 
@@ -233,7 +235,7 @@ export class NpmToolRunner extends tr.ToolRunner {
         }
 
         return Q.nfcall(fs.readFile, log, 'utf-8').then((data: string) => {
-            console.log(data);
+            tl.writeExternalOutput(data + os.EOL, { source: 'childProcess' });
         });
     }
 
@@ -242,7 +244,7 @@ export class NpmToolRunner extends tr.ToolRunner {
             return;
         }
 
-        console.log(fs.readFileSync(log, 'utf-8'));
+        tl.writeExternalOutput(fs.readFileSync(log, 'utf-8') + os.EOL, { source: 'childProcess' });
     }
 
     private _saveProjectNpmrc(): void {
