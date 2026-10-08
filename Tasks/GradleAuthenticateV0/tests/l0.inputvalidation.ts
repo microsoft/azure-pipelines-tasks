@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
+import * as assert from 'assert';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -101,6 +102,42 @@ repositories {
 
         await tr.runAsync();
 
+        fs.rmSync(tempDir, { recursive: true, force: true });
+
+        TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'Error_InvalidPluginVersion');
+    });
+
+    it('should not write the init script for an unsafe input version', async () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-'));
+        const buildFile = path.join(tempDir, 'settings.gradle');
+        const gradleUserHome = path.join(tempDir, 'gradle-home');
+        fs.writeFileSync(buildFile, `
+plugins {
+    id 'com.microsoft.azure.artifacts.credprovider' version '1.0.0'
+}
+repositories {
+    maven { url 'https://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1' }
+}
+`);
+
+        const tp = path.join(__dirname, 'testsetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[TestEnvVars.buildFiles] = buildFile;
+        process.env[TestEnvVars.gradleUserHome] = gradleUserHome;
+        process.env[TestEnvVars.pluginToolVersion] =
+            "1.0.0'; println 'x'; classpath 'a:b:1.0.0";
+
+        await tr.runAsync();
+
+        const initScriptPath = path.join(
+            gradleUserHome,
+            'init.d',
+            'azure-artifacts-init.gradle');
+        assert.strictEqual(
+            fs.existsSync(initScriptPath),
+            false,
+            'The init script must not be written for an unsafe plugin version');
         fs.rmSync(tempDir, { recursive: true, force: true });
 
         TestHelpers.assertFailure(tr);
