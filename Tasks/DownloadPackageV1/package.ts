@@ -1,4 +1,3 @@
-var fs = require("fs");
 var path = require("path");
 
 import * as tl from "azure-pipelines-task-lib/task";
@@ -192,7 +191,7 @@ export abstract class Package {
                     var coreApi = await this.pkgsConnection.getCoreApi();
                     Object.keys(downloadUrls).map(fileName => {
                         const packageFile = new PackageFile(extract, downloadPath, fileName);
-                        tl.rmRF(packageFile.downloadPath);
+                        packageFile.removeExisting();
                         promises.push(
                             downloadUrls[fileName].IsUrl
                                 ? this.downloadFile(coreApi, downloadUrls[fileName].Value, packageFile)
@@ -210,16 +209,13 @@ export abstract class Package {
     }
 
     private async writeFile(content: string, packageFile: PackageFile): Promise<PackageFile> {
-        return new Promise<PackageFile>((resolve, reject) => {
-            fs.writeFile(packageFile.downloadPath, content, err => {
-                if (err) {
-                    tl.debug("Writing file content failed with error: " + err);
-                    return reject(err);
-                } else {
-                    return resolve(packageFile);
-                }
-            });
-        });
+        try {
+            await packageFile.writeContent(content);
+            return packageFile;
+        } catch (error) {
+            tl.debug("Writing file content failed with error: " + error);
+            throw error;
+        }
     }
 
     private async downloadFile(
@@ -232,7 +228,7 @@ export abstract class Package {
                 coreApi.http.get(downloadUrl).then(response => {
                     if (response.message.statusCode >= 200 && response.message.statusCode < 300) {
                         var responseStream = response.message as stream.Readable;
-                        var file = fs.createWriteStream(packageFile.downloadPath);
+                        var file = packageFile.createWriteStream();
 
                         responseStream.pipe(file);
 
