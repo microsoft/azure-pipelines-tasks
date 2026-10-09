@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "Buildctl 실행 파일이 %s 경로에 없습니다.",
   "loc.messages.FileContentSynced": "파일 콘텐츠를 디스크에 동기화했습니다. 콘텐츠는 %s입니다.",
   "loc.messages.VerifyBuildctlInstallation": "Buildctl 설치를 확인하는 중...",
-  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "임시 파일에 Docker 구성을 쓰는 중입니다. 파일 경로: %s, Docker 구성: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "리포지토리를 지정하지 않았으므로 빌드된 이미지에 태그가 추가되지 않습니다."
 }
