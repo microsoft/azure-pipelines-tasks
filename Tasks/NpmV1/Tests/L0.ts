@@ -76,6 +76,12 @@ class MockedTask {
     }
 }
 
+function createMockTestRunner(testPath: string): ttm.MockTestRunner {
+    const runner = new ttm.MockTestRunner(testPath);
+    runner.nodePath = process.execPath;
+    return runner;
+}
+
 describe('Npm Toolrunner', function () {
 
     var mockedTask: MockedTask = new MockedTask();
@@ -169,7 +175,7 @@ describe('Npm Task', function () {
         const debugLog = 'NPM_DEBUG_LOG';
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -184,7 +190,7 @@ describe('Npm Task', function () {
         const debugLog = 'NPM_DEBUG_LOG';
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-workingDir.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -196,7 +202,7 @@ describe('Npm Task', function () {
 
     it('neutralizes a lockfile-sourced deprecated warning without registry access', async () => {
         const tp = path.join(__dirname, 'ci-lockfileDeprecated.js');
-        const tr = new ttm.MockTestRunner(tp);
+        const tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -207,7 +213,7 @@ describe('Npm Task', function () {
 
     it('neutralizes a registry-sourced deprecated warning', async () => {
         const tp = path.join(__dirname, 'install-registryDeprecated.js');
-        const tr = new ttm.MockTestRunner(tp);
+        const tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -224,7 +230,7 @@ describe('Npm Task', function () {
     it('custom command succeeds with single service endpoint', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'custom-singleEndpoint.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -236,7 +242,7 @@ describe('Npm Task', function () {
     it('custom command should return npm version', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'custom-version.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -254,7 +260,7 @@ describe('Npm Task', function () {
     it('should execute \'npm config list\' without debug switch', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'config-noDebug.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -268,7 +274,7 @@ describe('Npm Task', function () {
     it('should fail when npm fails', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-npmFailure.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -278,7 +284,7 @@ describe('Npm Task', function () {
     it ('install using local feed', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-feed.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -292,7 +298,7 @@ describe('Npm Task', function () {
     it ('install using local project-scoped feed', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-project-scoped-feed.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -306,7 +312,7 @@ describe('Npm Task', function () {
     it ('install using npmrc', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-npmrc.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -320,7 +326,7 @@ describe('Npm Task', function () {
     it('install using multiple endpoints', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'install-multipleEndpoints.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -334,7 +340,7 @@ describe('Npm Task', function () {
     it ('publish using feed', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-feed.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -348,7 +354,7 @@ describe('Npm Task', function () {
     it ('publish using project-scoped feed', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-project-scoped-feed.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
@@ -362,7 +368,7 @@ describe('Npm Task', function () {
     it ('publish using external registry', async () => {
         this.timeout(1000);
         let tp = path.join(__dirname, 'publish-external.js');
-        let tr = new ttm.MockTestRunner(tp);
+        let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
 
