@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "El ejecutable de Buildctl no se encontró en la ruta de acceso %s",
   "loc.messages.FileContentSynced": "Se sincronizó el contenido del archivo con el disco. El contenido es %s.",
   "loc.messages.VerifyBuildctlInstallation": "Comprobando la instalación de Buildctl...",
-  "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Escribiendo la configuración de Docker en el archivo temporal. Ruta de acceso del archivo: %s. Configuración de Docker: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "No se está agregando ninguna etiqueta a la imagen compilada porque no se ha especificado ningún repositorio."
 }

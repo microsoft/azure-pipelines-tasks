@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "Instale dotnet core para ejecutar esta tarea.",
   "loc.messages.ErrorWhilePublishing": "Error al publicar la cobertura: ",
   "loc.messages.UpgradeAgentMessage": "Actualice la versión del agente. Se requiere v2.115.0 o posterior. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "No se han proporcionado archivos de entrada."
+  "loc.messages.NoInputFiles": "No se han proporcionado archivos de entrada.",
+  "loc.messages.InvalidCoverageWorkingDirectory": "El directorio de trabajo del publicador de cobertura no existe o no es un directorio: %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "La contención de la ruta de acceso de origen está habilitada, pero no se han configurado directorios de origen de confianza. Proporcione pathToSources o un directorio de área de trabajo.",
+  "loc.messages.CoveragePublisherExecutionFailed": "Error en la ejecución del publicador de cobertura: %s"
 }

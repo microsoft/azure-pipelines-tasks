@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "请安装 dotnet core 以运行此任务。",
   "loc.messages.ErrorWhilePublishing": "发布覆盖率时出错: ",
   "loc.messages.UpgradeAgentMessage": "请升级代理版本。需要 v2.115.0 或更高版本。https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "未提供输入文件。"
+  "loc.messages.NoInputFiles": "未提供输入文件。",
+  "loc.messages.InvalidCoverageWorkingDirectory": "覆盖率发布服务器工作目录不存在或不是目录: %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "已启用源路径包含，但未配置受信任的源目录。提供 pathToSources 或工作区目录。",
+  "loc.messages.CoveragePublisherExecutionFailed": "覆盖绿发布服务器执行失败: %s"
 }
