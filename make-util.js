@@ -2146,7 +2146,7 @@ function syncGeneratedFilesWrapper(originalFunction, basicGenTaskPath, basicGenT
                 }
             }
 
-            // Update existing manifests; always persist npm lockfiles and shrinkwraps.
+            // update Tasks/[task]/_buildConfigs/[configs]/package.json, etc if it already exists, unless it's package-lock.json/npm-shrinkwrap.json. (we need to update package-lock.json as the server build uses npm ci which requires package-lock.json to be in sync with package.json)
             const isPackageLock = path.basename(dest).toLowerCase() == "package-lock.json";
             const isNpmShrinkWrap = path.basename(dest).toLowerCase() == "npm-shrinkwrap.json";
 
