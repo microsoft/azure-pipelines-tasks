@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
+    "Minor": 282,
     "Patch": 1
   },
   "runsOn": [
@@ -126,7 +126,7 @@
     "Warning_StatFailed": "ms-resource:loc.messages.Warning_StatFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.281.0",
-    "wif_242": "0.281.1"
+    "Default": "0.282.0",
+    "wif_242": "0.282.1"
   }
 }
