@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "\"%s\" kann nicht hochgeladen werden, weil es sich um ein Verzeichnis handelt. Geben Sie eine Datei an.",
   "loc.messages.SearchingFileMatchingPattern": "Es wird nach Dateien gesucht, die mit \"%s\" übereinstimmen.",
   "loc.messages.IssuesFetchError": "Fehler beim Abrufen von Issues. Das Änderungsprotokoll kann nicht generiert werden.",
+  "loc.messages.NonBlockingIssuesFetchError": "Nicht blockierende GraphQL-Fehler beim Abrufen von Problemen aufgetreten: %s",
   "loc.messages.NoIssuesLinkedError": "Im angegebenen Commitvergleich sind keine Issues mit Commits verknüpft.",
   "loc.messages.LabelsSyntaxError": "Fehler beim Analysieren der Bezeichnungen. Informationen zur YAML-Syntax finden Sie hier: https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "Ungültiges ChangeLogType-Attribut: %s. Es sind nur die Optionen \"commitBased\" oder \"issueBased\" zulässig. Informationen zur YAML-Syntax finden Sie hier: https://aka.ms/AA3m1bq",

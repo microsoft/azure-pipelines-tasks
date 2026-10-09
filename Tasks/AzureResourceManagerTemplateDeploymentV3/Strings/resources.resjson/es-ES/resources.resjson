@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "El patrón del archivo de parámetros coincide con un directorio en lugar de un archivo.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "El patrón del archivo de plantilla coincide con un directorio en lugar de un archivo: %s",
   "loc.messages.AddedOutputVariable": "Se actualizó la variable de salida \"%s\", que contiene la sección de salidas del objeto de implementación actual con formato de cadena.",
+  "loc.messages.OutputVariableNameChanged": "El nombre de la variable de salida \"%s\" se descodificó o truncó previamente con un nombre diferente cuando se publicó la variable. El nombre declarado ahora se usa literalmente. Si la canalización hacía referencia al nombre anterior, actualícelo al nombre declarado.",
   "loc.messages.UnableToReadResponseBody": "No se puede leer el cuerpo de la respuesta. Error: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Más información sobre Azure Portal",
   "loc.messages.LogDeploymentName": "El nombre de la implementación es %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "Error en la configuración de la suscripción: %s",
   "loc.messages.BicepParamBuildFailed": "Error de \"az bicep build-param\". Error: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versión de la CLI de Azure debe ser >= 2.47.0 para usar el archivo .bicepparam",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "El archivo de metadatos proporcionado \"%s\"  carece de los metadatos del parámetro \"%s\""
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "El archivo de metadatos proporcionado \"%s\"  carece de los metadatos del parámetro \"%s\"",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Las variables de salida de implementación se publicaron con el formato anterior porque este trabajo está ejecutando la versión del agente '%s'. Se requiere la versión del agente %s o posterior para publicarlos con el formato seguro, lo que impide que los nombres y valores de salida se interpreten como comandos del agente. Actualice el agente para adoptar el formato seguro.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Las variables de salida de implementación se publicaron con el formato anterior porque la variable %s está establecida en un valor que impide que el agente descodifique los caracteres de escape de porcentaje. Quite esa variable o establézcala en true para adoptar el formato seguro, lo que impide que los nombres y valores de salida se interpreten como comandos de agente."
 }

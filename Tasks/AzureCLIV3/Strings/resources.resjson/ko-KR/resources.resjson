@@ -62,10 +62,16 @@
   "loc.messages.FailedToRefreshAzSession": "az-cli 세션을 새로 고치는 동안 %s 오류가 발생했습니다.",
   "loc.messages.RefreshingAzSession": "az-cli 세션을 새로 고치는 중...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 입력은 워크로드 ID 페더레이션 ARM 서비스 연결에만 사용할 수 있습니다. 참조된 서비스 엔드포인트 인증 체계가 예기치 않았습니다: %s. 스키마를 변경하거나 'keepAzSessionActive' 입력을 제거하세요.",
+  "loc.messages.AzureDevOpsExtensionNotFound": "작업 환경에서 Azure DevOps 확장을 찾을 수 없습니다. 설치를 시도하는 중입니다.",
+  "loc.messages.AzureDevOpsExtensionAlreadyInstalled": "Azure DevOps 확장이 이미 설치되어 있으므로 설치를 건너뜁니다.",
+  "loc.messages.AzureDevOpsExtensionInstalled": "Azure DevOps CLI 확장이 설치되었습니다.",
+  "loc.messages.AzureDevOpsExtensionInstalledNoDeps": "Azure DevOps CLI 확장이 설치되었습니다(no-deps 모드).",
+  "loc.messages.AzureDevOpsExtensionStandardInstallFailed": "azure-devops의 표준 확장을 설치하지 못했습니다. no-deps 설치로 대체하는 중입니다.",
   "loc.messages.FailedToInstallAzureDevOpsCLI": "Azure DevOps CLI 확장을 설치하지 못했습니다.",
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Azure DevOps CLI에 로그인하지 못했습니다.",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Azure DevOps 조직을 설정하지 못했습니다.",
   "loc.messages.FailedToSetAzureDevOpsProject": "Azure DevOps 프로젝트를 설정하지 못했습니다.",
   "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 입력 또는 빈 GUID 값당 구독 컨텍스트 건너뛰기",
-  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백슬래시(\\)를 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요."
+  "loc.messages.ScriptArgsSanitized": "셸에서 올바르게 실행되지 않을 수 있는 인수에서 검색된 문자입니다. 백슬래시(\\)를 사용하여 이스케이프 특수 문자를 만드세요. 자세한 내용은 https://aka.ms/ado/75787을 참조하세요.",
+  "loc.messages.BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
 }

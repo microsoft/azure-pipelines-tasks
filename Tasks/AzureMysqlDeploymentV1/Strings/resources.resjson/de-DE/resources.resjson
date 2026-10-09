@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "Regel nach Beendigung des Tasks löschen",
   "loc.input.help.DeleteFirewallRule": "Ist die Option aktiviert, wird die hinzugefügte Ausnahme für IP-Adressen des Automation-Agents für die entsprechende Azure Database for MySQL-Instanz entfernt.",
   "loc.messages.ARGD_ConstructorFailed": "Fehler beim Initialisieren der Aufgabe. Fehler: %s.",
+  "loc.messages.InvalidDatabaseName": "Ungültiger Datenbankname „%s“. Nur alphanumerische Zeichen, Unterstriche, Bindestriche und Dollarzeichen sind zulässig.",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "Der Name der Firewallregel darf nicht NULL sein.",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "Die Firewalladresse darf nicht NULL sein.",
   "loc.messages.StartIpAddressCannotBeEmpty": "Die IP-Startadresse der Firewallregel darf nicht NULL sein.",

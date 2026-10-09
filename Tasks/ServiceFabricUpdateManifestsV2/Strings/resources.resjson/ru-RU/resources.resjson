@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "Список имен образов и список дайджестов должны быть одинаковой длины. Число имен образов: \"{0}\"; число дайджестов образов: \"{1}\".",
   "loc.messages.AmbiguousImages": "Репозиторий \"{0}\" содержит более одного дайджеста. Для устранения неоднозначности необходимо указать путь к списку исходных имен образов во входном параметре \"Путь к именам образов\".",
   "loc.messages.ImageDigestNameMismatch": "Дайджест \"{0}\" не соответствует образу \"{1}\".",
-  "loc.messages.NoDigestForImage": "Не найден дайджест для образа \"{0}\"."
+  "loc.messages.NoDigestForImage": "Не найден дайджест для образа \"{0}\".",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

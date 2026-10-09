@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "Échec du listage des extensions pour la machine virtuelle : '%s'. Erreur '%s'",
   "loc.messages.ExtensionNotFound": "Extension introuvable sur la machine virtuelle : %s",
   "loc.messages.AddedOutputVariable": "Mise à jour effectuée de la variable de sortie '%s', qui contient la section outputs de l'objet de déploiement actuel au format chaîne.",
+  "loc.messages.OutputVariableNameChanged": "Le nom de la variable de sortie « %s » a déjà été décodé ou tronqué en un nom différent lors de la publication de la variable. Le nom déclaré est maintenant utilisé tel quel. Si votre pipeline faisait référence à l’ancien nom, mettez-le à jour pour utiliser le nom déclaré.",
   "loc.messages.UnableToFetchAuthorityURL": "Impossible de récupérer (fetch) l'URL d'autorité.",
   "loc.messages.UnableToFetchActiveDirectory": "Impossible de récupérer (fetch) l'ID de ressource Active Directory.",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "L'URL spécifiée pour la connexion de service AzureRM, '{0}', est non valide.",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "Des erreurs de validation ont été trouvées dans le modèle Azure Resource Manager. Cela peut entraîner l'échec du déploiement du modèle. %s. Accédez à https://docs.microsoft.com/fr-fr/azure/azure-resource-manager/templates/template-syntax",
   "loc.messages.ManagedServiceIdentityDetails": "Vérifiez que l'identité de service managé utilisée pour le déploiement est affectée aux rôles appropriés du groupe de ressources %s. Pour plus d'informations, accédez au lien suivant : https://docs.microsoft.com/fr-fr/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Défaillance de la machine virtuelle '%s' : %s",
-  "loc.messages.TroubleshootingGuide": "Consultez le guide de résolution des problèmes pour voir si votre problème y est traité : https://docs.microsoft.com/fr-fr/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "Consultez le guide de résolution des problèmes pour voir si votre problème y est traité : https://docs.microsoft.com/fr-fr/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Les variables de sortie du déploiement ont été publiées au format précédent, car ce travail exécute la version de l’agent '%s'. La version %s ou ultérieure de l’agent est nécessaire pour les publier au format sécurisé, ce qui empêche que les noms et les valeurs de sortie soient interprétés comme des commandes d’agent. Mettez à niveau l’agent pour qu’il adopte le format sécurisé.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Nous avons publié les variables de résultat du déploiement dans l’ancien format, car la variable %s est définie sur une valeur qui empêche l’agent de décoder l’échappement de pourcentage. Supprimez cette variable ou définissez-la sur la valeur true pour adopter le format sécurisé, qui empêche les noms et les valeurs de la sortie d’être interprétés en tant que commandes de l’agent."
 }

@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "无法上传“%s”，因为它是一个目录。请指定一个文件。",
   "loc.messages.SearchingFileMatchingPattern": "正在搜索匹配“%s”的文件。",
   "loc.messages.IssuesFetchError": "提取问题时出错。无法生成更改日志。",
+  "loc.messages.NonBlockingIssuesFetchError": "遇到非阻塞性问题 - 提取 GraphQL 错误: %s",
   "loc.messages.NoIssuesLinkedError": "在指定提交差异中，未将任何问题链接到提交。",
   "loc.messages.LabelsSyntaxError": "分析标签时出错。有关 yaml 语法，请参阅: https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "无效的 ChangeLogType 属性: %s。仅允许 \"commitBased\" 或 \"issueBased\" 选项。有关 yaml 语法，请参阅: https://aka.ms/AA3m1bq",
