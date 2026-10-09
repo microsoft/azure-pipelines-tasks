@@ -40,11 +40,35 @@ export class PackageFile {
         }
     }
 
+    public removeExisting(): void {
+        this.validateNoLinks();
+        tl.rmRF(this.initialLocation);
+    }
+
+    public writeContent(content: string): Promise<void> {
+        this.validateNoLinks();
+
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(this.initialLocation, content, error => {
+                if (error) {
+                    return reject(error);
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    public createWriteStream(): fs.WriteStream {
+        this.validateNoLinks();
+        return fs.createWriteStream(this.initialLocation);
+    }
+
     get downloadPath() {
         return this.initialLocation;
     }
 
-    public validateNoLinks(): void {
+    private validateNoLinks(): void {
         const relativePath = path.relative(this.rootLocation, this.initialLocation);
         let currentPath = this.rootLocation;
 

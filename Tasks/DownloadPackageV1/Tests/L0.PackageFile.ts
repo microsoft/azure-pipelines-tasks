@@ -97,28 +97,28 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             fs.symlinkSync(target, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
         }
 
-        it('allows the selected destination root to be a link', () => {
+        it('allows the selected destination root to be a link', async () => {
             const linkedDestination = path.join(testRoot, 'linked-destination');
             createDirectoryLink(destination, linkedDestination);
             fs.mkdirSync(path.join(destination, 'lib'));
 
             const pf = new PackageFile(false, linkedDestination, 'lib/package.jar');
 
-            assert.doesNotThrow(() => pf.validateNoLinks());
+            await assert.doesNotReject(() => pf.writeContent('package content'));
         });
 
         it('rejects a linked parent beneath the destination', () => {
             createDirectoryLink(outside, path.join(destination, 'lib'));
             const pf = new PackageFile(false, destination, 'lib/package.jar');
 
-            assert.throws(() => pf.validateNoLinks());
+            assert.throws(() => pf.removeExisting());
         });
 
         it('rejects a linked final target', () => {
             createDirectoryLink(outside, path.join(destination, 'package.jar'));
             const pf = new PackageFile(false, destination, 'package.jar');
 
-            assert.throws(() => pf.validateNoLinks());
+            assert.throws(() => pf.createWriteStream());
         });
 
         it('revalidates the temporary archive before extraction', async () => {
