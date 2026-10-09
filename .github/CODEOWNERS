@@ -224,7 +224,7 @@ Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manol
 
 Tasks/DownloadBuildArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
-Tasks/DownloadBuildArtifactsV2/   @microsoft/release-management-task-team @manolerazvan
+Tasks/DownloadBuildArtifactsV2/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
@@ -244,7 +244,7 @@ Tasks/DownloadPipelineArtifactV1/      @carl-tanner @fadnavistanmay @b-barthel @
 
 Tasks/DownloadPipelineArtifactV2/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/DownloadPipelineArtifactV3/      @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/DownloadPipelineArtifactV3/      @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/DownloadSecureFileV1/    @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
@@ -407,7 +407,7 @@ Tasks/PublishPipelineArtifactV0/       @carl-tanner @fadnavistanmay @b-barthel @
 
 Tasks/PublishPipelineArtifactV1/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
 
-Tasks/PublishPipelineArtifactV2/       @carl-tanner @fadnavistanmay @b-barthel @kutsen99 @kunalkaroth
+Tasks/PublishPipelineArtifactV2/       @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 Tasks/PublishPipelineMetadataV0/    @microsoft/release-management-task-team @manolerazvan 
 
