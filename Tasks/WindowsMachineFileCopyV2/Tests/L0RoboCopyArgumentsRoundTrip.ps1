@@ -120,6 +120,12 @@ try
         Reset-ImportModuleMockCallHistory
         & $copyJobInvocation.ScriptBlock @copyJobArguments
         Assert-WasCalled Import-Module -ArgumentsEvaluator { $args.Count -eq 1 -and $args[0] -eq (Join-Path (Split-Path $PSScriptRoot -Parent) 'ps_modules\Sanitizer') }
+        Assert-WasCalled Import-Module -ArgumentsEvaluator {
+            $moduleParameters = @($args | Where-Object { $_ -is [hashtable] })
+            $args[0] -eq (Join-Path (Split-Path $PSScriptRoot -Parent) 'ps_modules\VstsTaskSdk') -and
+                $moduleParameters.Count -eq 1 -and
+                $moduleParameters[0]['NonInteractive'] -eq $true
+        }
 
         $robocopyInvocation = @($global:robocopyInvocations[$global:robocopyInvocations.Count - 1])
         $actualTokens = @($robocopyInvocation | Select-Object -Skip $fixedArgumentCount)
