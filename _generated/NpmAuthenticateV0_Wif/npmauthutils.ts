@@ -8,6 +8,10 @@ import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locati
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
 
+export function writeRepositoryOutput(message: string): void {
+    tl.writeExternalOutput(message + os.EOL, { source: 'repository' });
+}
+
 export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] {
     const secureHosts = new Set<string>();
     const insecureHosts = new Set<string>();
@@ -17,7 +21,7 @@ export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] 
         try {
             parsed = new URL(registryUrl);
         } catch {
-            console.log(tl.loc('InvalidRegistryUrl', registryUrl));
+            writeRepositoryOutput(tl.loc('InvalidRegistryUrl', registryUrl));
             continue;
         }
         validRegistryUrls.push(registryUrl);
@@ -62,7 +66,7 @@ export function validateNpmrcPath(): string {
     if (!tl.exist(npmrcPath)) {
         throw new Error(tl.loc('NpmrcDoesNotExist', npmrcPath));
     }
-    console.log(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
+    writeRepositoryOutput(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
     return npmrcPath;
 }
 
