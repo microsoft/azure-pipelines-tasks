@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "업그레이드 설정을 재정의하거나 게시 프로필을 Azure Pipelines 작업에 지정해야 합니다.",
   "loc.messages.UnsupportedARMAuthScheme": "ARM 엔드포인트에 대해 인증 체계 '{0}'은(는) 지원되지 않습니다.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "인증 체계 '{0}'은(는) Azure Container Registry에서 지원되지 않습니다.",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "Invalid {0} value '{1}' found in the application package. This value is used as a folder name while building a file path from the application package, so it must be a simple name: it cannot be empty, contain a path separator or a relative path segment, be an absolute path, or end with a trailing '.' or ' ' character that Windows would normalize away.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0}은(는) 유효한 Service Fabric 응용 프로그램 패키지가 아닙니다.",
   "loc.messages.SFSDK_PackageValidationFailed": "{0} 패키지의 유효성을 검사하지 못했습니다.",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Service Fabric 클러스터에 대한 서비스 연결을 확인할 수 없습니다.",

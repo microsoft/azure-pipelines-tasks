@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "빌드 자격 증명을 찾았습니다.",
   "loc.messages.ServiceEndpointNotDefined": "서비스 연결을 찾을 수 없습니다. 선택한 서비스 연결이 여전히 있는지 확인하세요.",
   "loc.messages.NpmrcNotNpmrc": "인증하도록 선택한 파일(%s)이 유효한.npmrc 파일이 아닙니다.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "서비스 연결에 대한 URL을 찾을 수 없습니다. 서비스 연결이 올바르게 구성되었는지 확인하세요.",
   "loc.messages.SavingFile": "%s 파일 저장 중",
   "loc.messages.RestoringFile": "%s 파일 복원 중",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "feedUrl이 지정되지 않았습니다. .npmrc의 모든 %d 레지스트리에 WIF 자격 증명을 적용하고 있습니다.",
   "loc.messages.Error_UnsupportedAuthScheme": "서비스 연결에 지원되지 않는 인증 방식 '%s'입니다. 지원되는 방식은 'Token'과 'UsernamePassword'입니다.",
   "loc.messages.Warning_NpmrcFileNotFound": "npmrc 파일을 찾을 수 없습니다. %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "HTTPS가 아닌 레지스트리에 대해 WIF 인증을 건너뛰는 중: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "HTTPS URL과 HTTPS가 아닌 URL을 혼합한 '%s'의 레지스트리는 인증할 수 없습니다. npm 자격 증명은 구성표별로 범위가 지정되지 않습니다. 이 호스트와 포트의 모든 레지스트리에 HTTPS를 사용하세요.",
   "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal이 {0}ms 후에 시간 초과되었습니다.",
   "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal 확인 실패: %s"
 }

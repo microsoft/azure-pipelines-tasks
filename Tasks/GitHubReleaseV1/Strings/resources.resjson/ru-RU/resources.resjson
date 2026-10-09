@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "Не удается отправить \"%s\", так как это каталог. Укажите файл.",
   "loc.messages.SearchingFileMatchingPattern": "Поиск файлов, соответствующих \"%s\".",
   "loc.messages.IssuesFetchError": "Ошибка при получении вопросов. Не удается создать журнал изменений.",
+  "loc.messages.NonBlockingIssuesFetchError": "Обнаружены неблокирующие ошибки GraphQL при получении сведений о проблеме: %s",
   "loc.messages.NoIssuesLinkedError": "Нет вопросов, связанных с фиксациями в указанном инструменте сравнения фиксаций.",
   "loc.messages.LabelsSyntaxError": "При синтаксическом анализе меток произошла ошибка. Синтаксис YAML см. на странице https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "Недопустимый атрибут ChangeLogType: %s. Разрешены только параметры commitBased или issueBased. Синтаксис YAML см. на странице https://aka.ms/AA3m1bq",

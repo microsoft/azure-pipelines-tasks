@@ -35,6 +35,7 @@
   "loc.messages.GeneratingScript": "Формируется скрипт.",
   "loc.messages.JS_FormattedCommand": "Отформатирована команда: %s",
   "loc.messages.InvalidScriptArguments0": "Недопустимые аргументы скрипта \"{0}\". Разрывы строк запрещены.",
+  "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "Недопустимый путь к скрипту \"{0}\". Указаны символы, недопустимые в пути.",
   "loc.messages.InvalidAzurePsVersion": "Указанная версия Azure PowerShell \"{0}\" имеет неправильный формат. Проверьте формат. Пример правильного формата: 1.0.1",
   "loc.messages.JS_ExitCode": "Завершение работы PowerShell с кодом \"%s\".",

@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "工作結束後刪除規則",
   "loc.input.help.DeleteFirewallRule": "若選取，新增的自動化代理程式 IP 位址例外就會依據對應適用於 MySQL 的 Azure 資料庫而移除。",
   "loc.messages.ARGD_ConstructorFailed": "初始化時工作失敗。錯誤: %s。",
+  "loc.messages.InvalidDatabaseName": "無效的資料庫名稱 '%s'。只允許英數字元、底線、連字號和美元符號。",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "防火牆規則名稱不得為 null。",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "防火牆位址不得為 null。",
   "loc.messages.StartIpAddressCannotBeEmpty": "防火牆規則的開始 IP 位址不得為 null。",

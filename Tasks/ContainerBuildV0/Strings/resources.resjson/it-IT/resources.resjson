@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "L'eseguibile di Buildctl non è stato trovato nel percorso %s",
   "loc.messages.FileContentSynced": "Il contenuto del file è stato sincronizzato con il disco. Il contenuto è %s.",
   "loc.messages.VerifyBuildctlInstallation": "Verifica dell'installazione di Buildctl...",
-  "loc.messages.WritingDockerConfigToTempFile": "Scrittura della configurazione di Docker nel file temporaneo. Percorso del file: %s. Configurazione di Docker: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Scrittura della configurazione di Docker nel file temporaneo. Percorso del file: %s. Configurazione di Docker: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "Nessun tag viene aggiunto all'immagine creata perché non è stato specificato alcun repository."
 }

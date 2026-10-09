@@ -217,6 +217,7 @@
   "loc.messages.InvalidConnectionType": "Type de connexion de service non valide",
   "loc.messages.InvalidImageSourceType": "Type de source d'image non valide",
   "loc.messages.InvalidPublishProfile": "Le fichier de profil de publication est non valide.",
+  "loc.messages.InvalidPublishProfileValue": "La valeur de « %s » dans le profil de publication contient des caractères non autorisés.",
   "loc.messages.ASE_SSLIssueRecommendation": "Pour utiliser un certificat dans App Service, celui-ci doit être signé par une autorité de certification de confiance. Si votre application web génère des erreurs de validation de certificat, cela signifie probablement que vous utilisez un certificat auto-signé. Pour résoudre ces erreurs, vous devez affecter la valeur true à une variable nommée VSTS_ARM_REST_IGNORE_SSL_ERRORS dans le pipeline de build ou le pipeline de mise en production",
   "loc.messages.ZipDeployLogsURL": "Les journaux Zip Deploy peuvent être consultés sur %s",
   "loc.messages.DeployLogsURL": "Les journaux de déploiement peuvent être consultés sur %s",

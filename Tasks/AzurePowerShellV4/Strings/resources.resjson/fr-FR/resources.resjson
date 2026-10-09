@@ -35,6 +35,7 @@
   "loc.messages.GeneratingScript": "Génération du script.",
   "loc.messages.JS_FormattedCommand": "Commande mise en forme : %s",
   "loc.messages.InvalidScriptArguments0": "Arguments de script '{0}' non valides. Les sauts de ligne ne sont pas autorisés.",
+  "loc.messages.ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Veuillez échapper les caractères spéciaux en utilisant une barre oblique inverse (\\). Plus d'informations sont disponibles ici: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "Chemin de script '{0}' non valide. Caractères non valides spécifiés dans le chemin.",
   "loc.messages.InvalidAzurePsVersion": "La version '{0}' spécifiée pour Azure PowerShell n'est pas au format approprié. Vérifiez le format. Exemple de format correct : 1.0.1",
   "loc.messages.JS_ExitCode": "Arrêt de PowerShell. Code de sortie : '%s'.",

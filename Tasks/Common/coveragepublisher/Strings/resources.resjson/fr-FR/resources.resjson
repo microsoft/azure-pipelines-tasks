@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "Installez dotnet core pour exécuter cette tâche.",
   "loc.messages.ErrorWhilePublishing": "Une erreur s'est produite durant la publication de la couverture : ",
   "loc.messages.UpgradeAgentMessage": "Mettez à niveau votre version d'agent. Version 2.115.0 ou ultérieure nécessaire. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "Aucun fichier d'entrée n'a été fourni."
+  "loc.messages.NoInputFiles": "Aucun fichier d'entrée n'a été fourni.",
+  "loc.messages.InvalidCoverageWorkingDirectory": "Le répertoire de travail de l’éditeur de couverture n’existe pas ou n’est pas un répertoire : %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "L’autonomie du chemin source est activée, mais aucun répertoire source approuvé n’est configuré. Indiquez pathToSources ou un répertoire d’espace de travail.",
+  "loc.messages.CoveragePublisherExecutionFailed": "Échec de l’exécution du serveur de publication de la couverture : %s"
 }
