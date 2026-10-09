@@ -1,0 +1,35 @@
+{
+  "name": "azure-pipelines-tasks-pipeline-artifacts-common",
+  "version": "1.0.0",
+  "description": "Pure Node implementation of the Azure Pipelines artifact dedup (BlobStore) protocol, build artifact REST helpers and file selection logic shared by the PublishPipelineArtifact, DownloadPipelineArtifact and DownloadBuildArtifacts tasks.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "scripts": {
+    "test": "tsc --outDir _test --rootDir . && mocha --recursive _test/Tests --timeout 60000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/minimatch": "^3.0.5",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "minimatch": "^3.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

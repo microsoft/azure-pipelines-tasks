@@ -1,0 +1,1819 @@
+{
+  "generator": "Generate-DotNetParseVectors.ps1",
+  "runtime": ".NET 10.0.12",
+  "newtonsoft": "13.0.4.30916",
+  "culture": "en-US",
+  "whitespace": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    133,
+    160,
+    5760,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8199,
+    8200,
+    8201,
+    8202,
+    8232,
+    8233,
+    8239,
+    8287,
+    12288
+  ],
+  "guidLeading": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    133,
+    160,
+    5760,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8199,
+    8200,
+    8201,
+    8202,
+    8232,
+    8233,
+    8239,
+    8287,
+    12288
+  ],
+  "guidTrailing": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    133,
+    160,
+    5760,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8199,
+    8200,
+    8201,
+    8202,
+    8232,
+    8233,
+    8239,
+    8287,
+    12288
+  ],
+  "intLeading": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    43,
+    45,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+  ],
+  "intTrailing": [
+    0,
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57
+  ],
+  "boolLeading": [
+    0,
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    133,
+    160,
+    5760,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8199,
+    8200,
+    8201,
+    8202,
+    8232,
+    8233,
+    8239,
+    8287,
+    12288
+  ],
+  "boolTrailing": [
+    0,
+    9,
+    10,
+    11,
+    12,
+    13,
+    32,
+    133,
+    160,
+    5760,
+    8192,
+    8193,
+    8194,
+    8195,
+    8196,
+    8197,
+    8198,
+    8199,
+    8200,
+    8201,
+    8202,
+    8232,
+    8233,
+    8239,
+    8287,
+    12288
+  ],
+  "int32": [
+    {
+      "input": "8",
+      "value": 8
+    },
+    {
+      "input": " 8",
+      "value": 8
+    },
+    {
+      "input": "8 ",
+      "value": 8
+    },
+    {
+      "input": " 8 ",
+      "value": 8
+    },
+    {
+      "input": "+8",
+      "value": 8
+    },
+    {
+      "input": "-8",
+      "value": -8
+    },
+    {
+      "input": "0",
+      "value": 0
+    },
+    {
+      "input": "-0",
+      "value": 0
+    },
+    {
+      "input": "+0",
+      "value": 0
+    },
+    {
+      "input": "00012",
+      "value": 12
+    },
+    {
+      "input": "8x",
+      "value": null
+    },
+    {
+      "input": "x8",
+      "value": null
+    },
+    {
+      "input": "",
+      "value": null
+    },
+    {
+      "input": " ",
+      "value": null
+    },
+    {
+      "input": "+",
+      "value": null
+    },
+    {
+      "input": "-",
+      "value": null
+    },
+    {
+      "input": "--8",
+      "value": null
+    },
+    {
+      "input": "+-8",
+      "value": null
+    },
+    {
+      "input": "- 8",
+      "value": null
+    },
+    {
+      "input": "+ 8",
+      "value": null
+    },
+    {
+      "input": "1,000",
+      "value": null
+    },
+    {
+      "input": "1.0",
+      "value": null
+    },
+    {
+      "input": "1e3",
+      "value": null
+    },
+    {
+      "input": "0x10",
+      "value": null
+    },
+    {
+      "input": "2147483647",
+      "value": 2147483647
+    },
+    {
+      "input": "2147483648",
+      "value": null
+    },
+    {
+      "input": "-2147483648",
+      "value": -2147483648
+    },
+    {
+      "input": "-2147483649",
+      "value": null
+    },
+    {
+      "input": "9999999999999999999",
+      "value": null
+    },
+    {
+      "input": "4294967296",
+      "value": null
+    },
+    {
+      "input": "8\n",
+      "value": 8
+    },
+    {
+      "input": "\t8",
+      "value": 8
+    },
+    {
+      "input": "\r\n8\r\n",
+      "value": 8
+    },
+    {
+      "input": "8\u0000",
+      "value": 8
+    },
+    {
+      "input": "\u00008",
+      "value": null
+    },
+    {
+      "input": " 8",
+      "value": null
+    },
+    {
+      "input": "8 ",
+      "value": null
+    },
+    {
+      "input": " 8",
+      "value": null
+    },
+    {
+      "input": "　8",
+      "value": null
+    },
+    {
+      "input": "٣",
+      "value": null
+    },
+    {
+      "input": "８",
+      "value": null
+    },
+    {
+      "input": "－8",
+      "value": null
+    },
+    {
+      "input": "−8",
+      "value": null
+    },
+    {
+      "input": "1_000",
+      "value": null
+    },
+    {
+      "input": "(8)",
+      "value": null
+    },
+    {
+      "input": "8-",
+      "value": null
+    },
+    {
+      "input": "$8",
+      "value": null
+    },
+    {
+      "input": "8%",
+      "value": null
+    },
+    {
+      "input": "8 8",
+      "value": null
+    },
+    {
+      "input": "08",
+      "value": 8
+    },
+    {
+      "input": "0008",
+      "value": 8
+    },
+    {
+      "input": "٣",
+      "value": null
+    },
+    {
+      "input": "8\u000b",
+      "value": 8
+    },
+    {
+      "input": "\f8",
+      "value": 8
+    },
+    {
+      "input": "\u000b\f8\r",
+      "value": 8
+    },
+    {
+      "input": "true",
+      "value": null
+    },
+    {
+      "input": "NaN",
+      "value": null
+    },
+    {
+      "input": "1e",
+      "value": null
+    },
+    {
+      "input": ".5",
+      "value": null
+    },
+    {
+      "input": "5.",
+      "value": null
+    },
+    {
+      "input": "0.0",
+      "value": null
+    },
+    {
+      "input": "1 000",
+      "value": null
+    },
+    {
+      "input": "8\u0000\u0000",
+      "value": 8
+    },
+    {
+      "input": "8\u0000x",
+      "value": null
+    },
+    {
+      "input": "١٢٣",
+      "value": null
+    },
+    {
+      "input": "++8",
+      "value": null
+    },
+    {
+      "input": "8+",
+      "value": null
+    },
+    {
+      "input": " - 8",
+      "value": null
+    }
+  ],
+  "guid": [
+    {
+      "input": "11111111-1111-1111-1111-111111111111",
+      "value": "11111111-1111-1111-1111-111111111111"
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950e",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0F8FAD5B-D9CB-469F-A165-70867728950E",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0f8fad5bd9cb469fa16570867728950e",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0F8FAD5BD9CB469FA16570867728950E",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "{0f8fad5b-d9cb-469f-a165-70867728950e}",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "(0f8fad5b-d9cb-469f-a165-70867728950e)",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "{0f8fad5bd9cb469fa16570867728950e}",
+      "value": null
+    },
+    {
+      "input": "(0f8fad5bd9cb469fa16570867728950e)",
+      "value": null
+    },
+    {
+      "input": "{0x0f8fad5b,0xd9cb,0x469f,{0xa1,0x65,0x70,0x86,0x77,0x28,0x95,0x0e}}",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "{0x0,0x0,0x0,{0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0}}",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "input": " 0f8fad5b-d9cb-469f-a165-70867728950e",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950e ",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": " 0f8fad5b-d9cb-469f-a165-70867728950e\n",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": " 0f8fad5b-d9cb-469f-a165-70867728950e",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "00000000-0000-0000-0000-000000000000",
+      "value": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "input": "",
+      "value": null
+    },
+    {
+      "input": " ",
+      "value": null
+    },
+    {
+      "input": "project-a",
+      "value": null
+    },
+    {
+      "input": "MyProject",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950e0",
+      "value": null
+    },
+    {
+      "input": "0f8fad5bd9cb-469f-a165-70867728950e",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb469f-a165-70867728950e",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-7086-7728950e",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b_d9cb_469f_a165_70867728950e",
+      "value": null
+    },
+    {
+      "input": "{0f8fad5b-d9cb-469f-a165-70867728950e",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950e}",
+      "value": null
+    },
+    {
+      "input": "(0f8fad5b-d9cb-469f-a165-70867728950e}",
+      "value": null
+    },
+    {
+      "input": "{{0f8fad5b-d9cb-469f-a165-70867728950e}}",
+      "value": null
+    },
+    {
+      "input": "g f8fad5b-d9cb-469f-a165-70867728950e",
+      "value": null
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950g",
+      "value": null
+    },
+    {
+      "input": "123",
+      "value": null
+    },
+    {
+      "input": "12345678901234567890123456789012",
+      "value": "12345678-9012-3456-7890-123456789012"
+    },
+    {
+      "input": "1234567890123456789012345678901",
+      "value": null
+    },
+    {
+      "input": "123456789012345678901234567890123",
+      "value": null
+    },
+    {
+      "input": "{0f8fad5b-d9cb-469f-a165-70867728950e} ",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950e,0",
+      "value": null
+    },
+    {
+      "input": "{0X1,0X2,0X3,{0X4,0X5,0X6,0X7,0X8,0X9,0XA,0XB}}",
+      "value": "00000001-0002-0003-0405-060708090a0b"
+    },
+    {
+      "input": "{ 0x1 , 0x2 , 0x3 , { 0x4 , 0x5 , 0x6 , 0x7 , 0x8 , 0x9 , 0xa , 0xb } }",
+      "value": "00000001-0002-0003-0405-060708090a0b"
+    },
+    {
+      "input": "{0x123456789,0x2,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb}}",
+      "value": null
+    },
+    {
+      "input": "{0x1,0x12345,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb}}",
+      "value": "00000001-2345-0003-0405-060708090a0b"
+    },
+    {
+      "input": "{0x1,0x2,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa,0x123}}",
+      "value": null
+    },
+    {
+      "input": "{0x,0x2,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb}}",
+      "value": null
+    },
+    {
+      "input": "{0x1,0x2,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa}}",
+      "value": null
+    },
+    {
+      "input": "{1,2,3,{4,5,6,7,8,9,10,11}}",
+      "value": null
+    },
+    {
+      "input": "0x1,0x2,0x3,{0x4,0x5,0x6,0x7,0x8,0x9,0xa,0xb}",
+      "value": null
+    },
+    {
+      "input": "{0f8fad5b-d9cb-469f-a165-70867728950e}{",
+      "value": null
+    },
+    {
+      "input": "  {0f8fad5b-d9cb-469f-a165-70867728950e}  ",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0f8fad5b-d9cb-469f-a165-70867728950E",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    },
+    {
+      "input": "0F8FAD5B-d9cb-469F-a165-70867728950e",
+      "value": "0f8fad5b-d9cb-469f-a165-70867728950e"
+    }
+  ],
+  "bool": [
+    {
+      "input": "true",
+      "value": true
+    },
+    {
+      "input": "True",
+      "value": true
+    },
+    {
+      "input": "TRUE",
+      "value": true
+    },
+    {
+      "input": "tRuE",
+      "value": true
+    },
+    {
+      "input": "false",
+      "value": false
+    },
+    {
+      "input": "False",
+      "value": false
+    },
+    {
+      "input": "FALSE",
+      "value": false
+    },
+    {
+      "input": "fAlSe",
+      "value": false
+    },
+    {
+      "input": " true",
+      "value": true
+    },
+    {
+      "input": "true ",
+      "value": true
+    },
+    {
+      "input": " true ",
+      "value": true
+    },
+    {
+      "input": "true\n",
+      "value": true
+    },
+    {
+      "input": "\ttrue",
+      "value": true
+    },
+    {
+      "input": "\r\ntrue\r\n",
+      "value": true
+    },
+    {
+      "input": "true\u0000",
+      "value": true
+    },
+    {
+      "input": "\u0000true",
+      "value": true
+    },
+    {
+      "input": "\u0000 true \u0000",
+      "value": true
+    },
+    {
+      "input": " true",
+      "value": true
+    },
+    {
+      "input": "true ",
+      "value": true
+    },
+    {
+      "input": "\u0085true",
+      "value": true
+    },
+    {
+      "input": "true\u0085",
+      "value": true
+    },
+    {
+      "input": "﻿true",
+      "value": null
+    },
+    {
+      "input": "true﻿",
+      "value": null
+    },
+    {
+      "input": "​true",
+      "value": null
+    },
+    {
+      "input": "᠎true",
+      "value": null
+    },
+    {
+      "input": "tru",
+      "value": null
+    },
+    {
+      "input": "truee",
+      "value": null
+    },
+    {
+      "input": "t rue",
+      "value": null
+    },
+    {
+      "input": "tr\u0000ue",
+      "value": null
+    },
+    {
+      "input": "1",
+      "value": null
+    },
+    {
+      "input": "0",
+      "value": null
+    },
+    {
+      "input": "yes",
+      "value": null
+    },
+    {
+      "input": "no",
+      "value": null
+    },
+    {
+      "input": "on",
+      "value": null
+    },
+    {
+      "input": "off",
+      "value": null
+    },
+    {
+      "input": "",
+      "value": null
+    },
+    {
+      "input": " ",
+      "value": null
+    },
+    {
+      "input": "\u0000",
+      "value": null
+    },
+    {
+      "input": "+true",
+      "value": null
+    },
+    {
+      "input": "true;",
+      "value": null
+    },
+    {
+      "input": "\"true\"",
+      "value": null
+    },
+    {
+      "input": "'true'",
+      "value": null
+    },
+    {
+      "input": " False",
+      "value": false
+    },
+    {
+      "input": "False ",
+      "value": false
+    },
+    {
+      "input": " false ",
+      "value": false
+    },
+    {
+      "input": "\u0085false",
+      "value": false
+    },
+    {
+      "input": "﻿false",
+      "value": null
+    }
+  ],
+  "properties": [
+    {
+      "input": "{}",
+      "status": "ok",
+      "pairs": []
+    },
+    {
+      "input": "{\"user-a\":\"b\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1.0}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1.0"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1e3}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1e3"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1E+3}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1E+3"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1.50}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1.50"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-0}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-0"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-0.0}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-0.0"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":12345678901234567890}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "12345678901234567890"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":0.1e-2}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "0.1e-2"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":123456789012345678901234567890.123456789012345678901234567890}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "123456789012345678901234567890.123456789012345678901234567890"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":true}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "true"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":false}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "false"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":null}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          null
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"\\u0041\\n\\t\\\"x\\\\\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "A\n\t\"x\\"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"héllo ✓\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "héllo ✓"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"line1\nline2\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "line1\nline2"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"\\ud83d\\ude00\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "😀"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"bad \\q escape\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"it\\'s\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "it's"
+        ]
+      ]
+    },
+    {
+      "input": "{'user-a':'it\\'s \\\"q\\\"'}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "it's \"q\""
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"2020-01-01T00:00:00Z\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "2020-01-01T00:00:00Z"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"/Date(1234567890000)/\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "/Date(1234567890000)/"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":{\"x\":1}}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":[1,2]}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":[]}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":{}}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"x\",\"user-b\":{\"y\":2}}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"\":\"v\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "",
+          "v"
+        ]
+      ]
+    },
+    {
+      "input": "{\" \":\"v\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          " ",
+          "v"
+        ]
+      ]
+    },
+    {
+      "input": "{\"\":\"v\",\"bad\":\"w\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "",
+          "v"
+        ],
+        [
+          "bad",
+          "w"
+        ]
+      ]
+    },
+    {
+      "input": "{\"bad\":\"w\",\"\":\"v\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "bad",
+          "w"
+        ],
+        [
+          "",
+          "v"
+        ]
+      ]
+    },
+    {
+      "input": "{\"bad\":\"w\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "bad",
+          "w"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\",\"bad\":\"w\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ],
+        [
+          "bad",
+          "w"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"1\",\"user-a\":\"2\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "2"
+        ]
+      ]
+    },
+    {
+      "input": "{ \"user-a\" : \"b\" , \"user-c\" : \"d\" }",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ],
+        [
+          "user-c",
+          "d"
+        ]
+      ]
+    },
+    {
+      "input": "{\n  \"user-a\": \"b\",\r\n  \"user-c\": 3\n}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ],
+        [
+          "user-c",
+          "3"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\"} ",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": " {\"user-a\":\"b\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\"}x",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"}{\"user-c\":\"d\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\",}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{'user-a':'b'}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{user-a:\"b\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"/*c*/}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "// c\n{\"user-a\":\"b\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\"} // tail",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "[1,2]",
+      "status": "error",
+      "error": "JsonSerializationException",
+      "root": "JsonSerializationException",
+      "jsonException": true
+    },
+    {
+      "input": "\"abc\"",
+      "status": "error",
+      "error": "JsonSerializationException",
+      "root": "ArgumentException",
+      "jsonException": true
+    },
+    {
+      "input": "123",
+      "status": "error",
+      "error": "JsonSerializationException",
+      "root": "ArgumentException",
+      "jsonException": true
+    },
+    {
+      "input": "null",
+      "status": "null"
+    },
+    {
+      "input": "true",
+      "status": "error",
+      "error": "JsonSerializationException",
+      "root": "ArgumentException",
+      "jsonException": true
+    },
+    {
+      "input": "",
+      "status": "null"
+    },
+    {
+      "input": "   ",
+      "status": "null"
+    },
+    {
+      "input": "{\"user-a\":01}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "01"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":+1}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":.5}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          ".5"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1.}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1."
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":0x10}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "0x10"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":NaN}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "NaN"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":Infinity}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "Infinity"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-Infinity}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-Infinity"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\"",
+      "status": "error",
+      "error": "JsonSerializationException",
+      "root": "JsonSerializationException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\" \"b\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":undefined}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":True}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":TRUE}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"\"c\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1,\"user-b\":2.0,\"user-c\":\"3\",\"user-d\":true}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1"
+        ],
+        [
+          "user-b",
+          "2.0"
+        ],
+        [
+          "user-c",
+          "3"
+        ],
+        [
+          "user-d",
+          "true"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-1}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-1"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1e400}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "1e400"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-1e-400}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-1e-400"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":08}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "FormatException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":07}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "07"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":0x}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "FormatException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":0xFFFFFFFFFFFFFFFF}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "0xFFFFFFFFFFFFFFFF"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":0x10000000000000000}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "OverflowException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":00.5}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "FormatException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":0e1}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "0e1"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-.5}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-.5"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1e+}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1.2.3}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1f}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":12abc}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":-}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":--1}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1-2}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1e5.5}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"x\" \"y\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":0}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "0"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-1.5e-7}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-1.5e-7"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":1,,\"user-b\":2}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{,\"user-a\":1}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":1 \"user-b\":2}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"}/",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"}/* c */",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":\"b\"}/* c",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "/* c */{\"user-a\":\"b\"}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{/* c */\"user-a\"/* c */:/* c */\"b\"/* c */,/* c */}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"}   ",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "﻿{\"user-a\":\"b\"}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":\"b\"}\u0000",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "b"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-Infinity,\"user-b\":Infinity,\"user-c\":NaN}",
+      "status": "ok",
+      "pairs": [
+        [
+          "user-a",
+          "-Infinity"
+        ],
+        [
+          "user-b",
+          "Infinity"
+        ],
+        [
+          "user-c",
+          "NaN"
+        ]
+      ]
+    },
+    {
+      "input": "{\"user-a\":-NaN}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":infinity}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    },
+    {
+      "input": "{\"user-a\":nan}",
+      "status": "error",
+      "error": "JsonReaderException",
+      "root": "JsonReaderException",
+      "jsonException": true
+    }
+  ]
+}
