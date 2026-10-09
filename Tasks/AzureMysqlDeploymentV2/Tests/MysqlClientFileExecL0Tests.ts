@@ -16,6 +16,12 @@ const SQL_FILE_PATH = path.join(os.tmpdir(), 'test_azure_mysql_deploy.sql');
  */
 function createMockSpawnFn(exitCode: number, emitError?: Error): SpawnFn {
     return ((cmd: string, args: string[], opts: any) => {
+        const binaryModeIndex = args.lastIndexOf('--binary-mode');
+        const skipBinaryModeIndex = args.lastIndexOf('--skip-binary-mode');
+        if (binaryModeIndex === -1 || binaryModeIndex < skipBinaryModeIndex) {
+            throw new Error('--binary-mode must be enforced after user-provided arguments.');
+        }
+
         const proc = new EventEmitter() as any;
         proc.stdin = new PassThrough();
 
