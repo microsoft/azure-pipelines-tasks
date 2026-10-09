@@ -46,7 +46,7 @@ namespace BuildConfigGen
         {
             public static readonly string[] ExtensionsToPreprocess = new[] { ".ts", ".json" };
 
-            // Shared package minimums and tooling baseline for configs that reference this dictionary.
+            // Shared package version overrides for Node24 configurations
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
                 ["typescript"] = "^5.7.2",
@@ -900,16 +900,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(
-                                    taskOutput,
-                                    config.nodePackageVersion,
-                                    config.shouldUpdateTypescript,
-                                    config.shouldUpdateLocalPkgs,
-                                    config.PackageVersionOverrides,
-                                    Path.Combine(taskTargetPath, "package.json"),
-                                    buildConfigPackageJsonPath,
-                                    applyVariantPackageFloors: !config.mergeToBase,
-                                    writeUpdates: writeUpdates);
+                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides, Path.Combine(taskTargetPath, "package.json"));
                             }
 
                         }
@@ -1291,54 +1282,20 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides, string sourcePackagePath, string configPackagePath, bool applyVariantPackageFloors, bool writeUpdates)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides, string sourcePackagePath)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
             bool useMinimumVersions = packageVersionOverrides.Count > 0;
             JsonNode? sourcePackage = null;
-            JsonObject? configPackage = null;
-            JsonNode? configLock = null;
-            JsonObject? configLockRoot = null;
-            string configLockPath = Path.Combine(Path.GetDirectoryName(configPackagePath)!, "npm-shrinkwrap.json");
-            if (!File.Exists(configLockPath))
-            {
-                configLockPath = Path.Combine(Path.GetDirectoryName(configPackagePath)!, "package-lock.json");
-            }
             if (useMinimumVersions)
             {
                 sourcePackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(sourcePackagePath))!;
-                if (applyVariantPackageFloors)
-                {
-                    if (File.Exists(configPackagePath))
-                    {
-                        configPackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(configPackagePath))!.AsObject();
-                    }
-                    if (File.Exists(configLockPath))
-                    {
-                        configLock = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(configLockPath))!;
-                        configLockRoot = configLock["packages"]?[""]?.AsObject()
-                            ?? throw new Exception($"{configLockPath}: expected root package declarations in packages[\"\"].");
-                    }
-                    else if (!writeUpdates)
-                    {
-                        throw new Exception($"{configLockPath}: variant lockfile is missing. Build the task locally and commit its configuration lockfile.");
-                    }
-                }
-
                 foreach (var dependency in sourcePackage["dependencies"]!.AsObject())
                 {
                     if (dependency.Key != "@types/node")
                     {
-                        if (applyVariantPackageFloors && packageVersionOverrides.ContainsKey(dependency.Key))
-                        {
-                            continue;
-                        }
-
-                        var recordedRequirement = !writeUpdates && applyVariantPackageFloors
-                            ? configLockRoot?["dependencies"]?[dependency.Key]
-                            : null;
-                        outputNodePackagePathJsonNode["dependencies"]![dependency.Key] = (recordedRequirement ?? dependency.Value)?.GetValue<string>()
+                        outputNodePackagePathJsonNode["dependencies"]![dependency.Key] = dependency.Value?.GetValue<string>()
                             ?? throw new Exception($"{sourcePackagePath}: dependency {dependency.Key} must have a version requirement.");
                     }
                 }
@@ -1347,22 +1304,7 @@ namespace BuildConfigGen
 
             if (shouldUpdateTypescript && packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
             {
-                if (applyVariantPackageFloors && !writeUpdates)
-                {
-                    var recordedCompiler = configLockRoot?["devDependencies"]?["typescript"]?.GetValue<string>()
-                        ?? throw new Exception($"{configLockPath}: TypeScript requirement is missing from the root package.");
-                    var explicitCompiler = configPackage?["devDependencies"]?["typescript"]?.GetValue<string>();
-                    if (explicitCompiler != null && explicitCompiler != recordedCompiler)
-                    {
-                        throw new Exception($"{configPackagePath}: TypeScript requirement {explicitCompiler} does not match {recordedCompiler} in {configLockPath}.");
-                    }
-                    if (GetPackageMinimum(recordedCompiler, configLockPath, "typescript") < GetPackageMinimum(typescriptVersion, outputNodePackagePath, "typescript"))
-                    {
-                        throw new Exception($"{configLockPath}: TypeScript requirement {recordedCompiler} is below {typescriptVersion}.");
-                    }
-                    typescriptVersion = recordedCompiler;
-                }
-                else if (useMinimumVersions)
+                if (useMinimumVersions)
                 {
                     foreach (var candidate in new[]
                     {
@@ -1414,47 +1356,10 @@ namespace BuildConfigGen
             {
                 if (useMinimumVersions)
                 {
-                    if (applyVariantPackageFloors)
+                    var requirement = outputNodePackagePathJsonNode["dependencies"]?[kvp.Key]?.GetValue<string>();
+                    if (requirement != null && GetPackageMinimum(requirement, outputNodePackagePath, kvp.Key) < GetPackageMinimum(kvp.Value, outputNodePackagePath, kvp.Key))
                     {
-                        var sourceRequirement = sourcePackage?["dependencies"]?[kvp.Key]?.GetValue<string>();
-                        var explicitRequirement = configPackage?["dependencies"]?[kvp.Key]?.GetValue<string>();
-                        var lockedRequirement = configLockRoot?["dependencies"]?[kvp.Key]?.GetValue<string>();
-                        if (!writeUpdates && explicitRequirement != null && explicitRequirement != lockedRequirement)
-                        {
-                            throw new Exception($"{configPackagePath}: dependency {kvp.Key} requests {explicitRequirement}, which does not match {lockedRequirement ?? "<missing>"} in {configLockPath}.");
-                        }
-                        var configRequirement = explicitRequirement ?? lockedRequirement;
-                        var effectiveRequirement = ResolveVariantPackageRequirement(
-                            kvp.Key,
-                            sourceRequirement,
-                            configRequirement,
-                            kvp.Value,
-                            outputNodePackagePath,
-                            sourcePackagePath,
-                            explicitRequirement != null ? configPackagePath : configLockPath,
-                            writeUpdates);
-
-                        if (effectiveRequirement != null)
-                        {
-                            if (!writeUpdates)
-                            {
-                                var resolvedVersion = configLock?["packages"]?[$"node_modules/{kvp.Key}"]?["version"]?.GetValue<string>()
-                                    ?? throw new Exception($"{configLockPath}: variant dependency {kvp.Key} has no direct resolved version.");
-                                if (GetPackageMinimum(resolvedVersion, configLockPath, kvp.Key) < GetPackageMinimum(kvp.Value, outputNodePackagePath, kvp.Key))
-                                {
-                                    throw new Exception($"{configLockPath}: variant dependency {kvp.Key} resolves to {resolvedVersion}, below minimum {kvp.Value}.");
-                                }
-                            }
-                            outputNodePackagePathJsonNode["dependencies"]![kvp.Key] = effectiveRequirement;
-                        }
-                    }
-                    else
-                    {
-                        var requirement = outputNodePackagePathJsonNode["dependencies"]?[kvp.Key]?.GetValue<string>();
-                        if (requirement != null && GetPackageMinimum(requirement, outputNodePackagePath, kvp.Key) < GetPackageMinimum(kvp.Value, outputNodePackagePath, kvp.Key))
-                        {
-                            throw new Exception($"{outputNodePackagePath}: dependency {kvp.Key} requests {requirement}, below minimum {kvp.Value}. Update {sourcePackagePath}.");
-                        }
+                        throw new Exception($"{outputNodePackagePath}: dependency {kvp.Key} requests {requirement}, below minimum {kvp.Value}. Update {sourcePackagePath}.");
                     }
                 }
                 else
@@ -1467,57 +1372,6 @@ namespace BuildConfigGen
             // https://github.com/npm/npm/issues/18545
             string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
-        }
-
-        private static string? ResolveVariantPackageRequirement(
-            string packageName,
-            string? sourceRequirement,
-            string? configRequirement,
-            string minimumRequirement,
-            string outputPackagePath,
-            string sourcePackagePath,
-            string configPackagePath,
-            bool writeUpdates)
-        {
-            if (sourceRequirement is null && configRequirement is null)
-            {
-                return null;
-            }
-
-            Version minimum = GetPackageMinimum(minimumRequirement, outputPackagePath, packageName);
-            Version? sourceMinimum = sourceRequirement is null || !writeUpdates
-                ? null
-                : GetPackageMinimum(sourceRequirement, sourcePackagePath, packageName);
-            Version? configMinimum = configRequirement is null
-                ? null
-                : GetPackageMinimum(configRequirement, configPackagePath, packageName);
-
-            if (configMinimum is not null && configMinimum < minimum)
-            {
-                throw new Exception($"{configPackagePath}: variant dependency {packageName} requests {configRequirement}, below minimum {minimumRequirement}.");
-            }
-
-            if (!writeUpdates)
-            {
-                return configRequirement
-                    ?? throw new Exception($"{configPackagePath}: variant dependency {packageName} has no recorded requirement. Build the task locally and commit its configuration lockfile.");
-            }
-
-            string? effectiveRequirement = minimumRequirement;
-            Version effectiveMinimum = minimum;
-
-            if (sourceMinimum is not null && sourceMinimum >= effectiveMinimum)
-            {
-                effectiveRequirement = sourceRequirement;
-                effectiveMinimum = sourceMinimum;
-            }
-
-            if (configMinimum is not null && configMinimum > effectiveMinimum)
-            {
-                effectiveRequirement = configRequirement;
-            }
-
-            return effectiveRequirement;
         }
 
         private static Version GetPackageMinimum(string requirement, string packagePath, string packageName)
