@@ -891,7 +891,7 @@ namespace BuildConfigGen
 
                                 string buildConfigPackageJsonPath = Path.Combine(taskTargetPath, buildConfigs, configTaskPath, "package.json");
 
-                                if (config.PackageVersionOverrides.Count == 0 && File.Exists(buildConfigPackageJsonPath))
+                                if (File.Exists(buildConfigPackageJsonPath))
                                 {
                                     EnsureDependencyVersionsAreSyncronized(
                                         task,
@@ -900,7 +900,7 @@ namespace BuildConfigGen
 
                                 }
 
-                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides, Path.Combine(taskTargetPath, "package.json"));
+                                WriteNodePackageJson(taskOutput, config.nodePackageVersion, config.shouldUpdateTypescript, config.shouldUpdateLocalPkgs, config.PackageVersionOverrides);
                             }
 
                         }
@@ -1282,49 +1282,22 @@ namespace BuildConfigGen
             ensureUpdateModeVerifier!.WriteAllText(outputTaskPath, outputTaskNode.ToJsonString(jso), suppressValidationErrorIfTargetPathDoesntExist: false);
         }
 
-        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides, string sourcePackagePath)
+        private static void WriteNodePackageJson(string taskOutputNode, string nodeVersion, bool shouldUpdateTypescript, bool shouldUpdateTaskLib, Dictionary<string, string> packageVersionOverrides)
         {
             string outputNodePackagePath = Path.Combine(taskOutputNode, "package.json");
             JsonNode outputNodePackagePathJsonNode = JsonNode.Parse(ensureUpdateModeVerifier!.FileReadAllText(outputNodePackagePath))!;
-            bool useMinimumVersions = packageVersionOverrides.Count > 0;
-            JsonNode? sourcePackage = null;
-            if (useMinimumVersions)
-            {
-                sourcePackage = JsonNode.Parse(ensureUpdateModeVerifier.FileReadAllText(sourcePackagePath))!;
-                foreach (var dependency in sourcePackage["dependencies"]!.AsObject())
-                {
-                    if (dependency.Key != "@types/node")
-                    {
-                        outputNodePackagePathJsonNode["dependencies"]![dependency.Key] = dependency.Value?.GetValue<string>()
-                            ?? throw new Exception($"{sourcePackagePath}: dependency {dependency.Key} must have a version requirement.");
-                    }
-                }
-            }
             outputNodePackagePathJsonNode["dependencies"]!["@types/node"] = nodeVersion;
 
+            // Upgrade typescript version if specified from packageVersionOverrides
             if (shouldUpdateTypescript && packageVersionOverrides.TryGetValue("typescript", out var typescriptVersion))
             {
-                if (useMinimumVersions)
-                {
-                    foreach (var candidate in new[]
-                    {
-                        outputNodePackagePathJsonNode["devDependencies"]?["typescript"]?.GetValue<string>(),
-                        sourcePackage?["devDependencies"]?["typescript"]?.GetValue<string>()
-                    })
-                    {
-                        if (candidate != null && GetPackageMinimum(candidate, outputNodePackagePath, "typescript") > GetPackageMinimum(typescriptVersion, outputNodePackagePath, "typescript"))
-                        {
-                            typescriptVersion = candidate;
-                        }
-                    }
-                }
                 outputNodePackagePathJsonNode["devDependencies"]!["typescript"] = typescriptVersion;
             }
 
             // Determine task-lib version from packageVersionOverrides
             string? effectiveTaskLibVersion = packageVersionOverrides.TryGetValue("azure-pipelines-task-lib", out var tlVersion) ? tlVersion : null;
 
-            if (shouldUpdateTaskLib && !useMinimumVersions)
+            if (shouldUpdateTaskLib)
             {
                 // Upgrade task-lib to npm version if specified, otherwise use local file path
                 if (!string.IsNullOrEmpty(effectiveTaskLibVersion))
@@ -1352,39 +1325,17 @@ namespace BuildConfigGen
                 }
             }
 
-            foreach (var kvp in packageVersionOverrides.Where(kvp => kvp.Key != "typescript" && (useMinimumVersions || kvp.Key != "azure-pipelines-task-lib")))
+            // Update optional npm package versions from packageVersionOverrides dictionary
+            // Skip typescript and azure-pipelines-task-lib as they're already handled above
+            foreach (var kvp in packageVersionOverrides.Where(kvp => kvp.Key != "typescript" && kvp.Key != "azure-pipelines-task-lib"))
             {
-                if (useMinimumVersions)
-                {
-                    var requirement = outputNodePackagePathJsonNode["dependencies"]?[kvp.Key]?.GetValue<string>();
-                    if (requirement != null && GetPackageMinimum(requirement, outputNodePackagePath, kvp.Key) < GetPackageMinimum(kvp.Value, outputNodePackagePath, kvp.Key))
-                    {
-                        throw new Exception($"{outputNodePackagePath}: dependency {kvp.Key} requests {requirement}, below minimum {kvp.Value}. Update {sourcePackagePath}.");
-                    }
-                }
-                else
-                {
-                    UpdateDependencyIfExists(outputNodePackagePathJsonNode, kvp.Key, kvp.Value);
-                }
+                UpdateDependencyIfExists(outputNodePackagePathJsonNode, kvp.Key, kvp.Value);
             }
 
             // We need to add newline since npm install command always add newline at the end of package.json
             // https://github.com/npm/npm/issues/18545
             string nodePackageContent = outputNodePackagePathJsonNode.ToJsonString(jso) + Environment.NewLine;
             ensureUpdateModeVerifier!.WriteAllText(outputNodePackagePath, nodePackageContent, suppressValidationErrorIfTargetPathDoesntExist: false);
-        }
-
-        private static Version GetPackageMinimum(string requirement, string packagePath, string packageName)
-        {
-            string numericVersion = requirement.StartsWith("^") || requirement.StartsWith("~") ? requirement[1..] : requirement;
-            if (!Version.TryParse(numericVersion, out var version)
-                || version.Build < 0
-                || version.Revision >= 0
-                || numericVersion != version.ToString(3))
-            {
-                throw new Exception($"{packagePath}: unsupported version requirement '{requirement}' for {packageName}. Expected an exact three-part version, ^version, or ~version.");
-            }
-            return version;
         }
 
         private static void UpdateDependencyIfExists(JsonNode packageJsonNode, string packageName, string? version)
