@@ -107,6 +107,9 @@ try {
     if ($VerifyRoleInstanceStatus -eq $true) {
         Validate-AzureCloudServiceStatus -cloudServiceName $ServiceName -resourceGroupName $ResourceGroupName
     }
+
 } finally {
+    Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+    Remove-EndpointSecrets
 	Trace-VstsLeavingInvocation $MyInvocation
 }

@@ -13,7 +13,7 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // ---------------------------------------------------------------------------
 // System variables (set by test scenarios via process.env)
 // ---------------------------------------------------------------------------
-tmr.registerMockExport('getVariable', (name: string) => {
+tmr.registerMockExport('getTaskVariable', (name: string) => {
     const vars: Record<string, string> = {
         'ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH': process.env['__postexec_initScriptPath__'] || '',
         'ARTIFACTS_GRADLE_AUTH_TEMP_DIR': process.env['__postexec_tempDir__'] || '',

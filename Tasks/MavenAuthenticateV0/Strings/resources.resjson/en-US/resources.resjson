@@ -21,5 +21,7 @@
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
   "loc.messages.Error_InvalidServiceConnection": "The service connection for %s is invalid.",
   "loc.messages.Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
-  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+  "loc.messages.Warning_ChmodFailed": "Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.",
+  "loc.messages.Warning_StatFailed": "Unable to read permissions on %s: %s. Original permissions may not be restored."
 }
