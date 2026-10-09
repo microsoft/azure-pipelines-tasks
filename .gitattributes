@@ -87,4 +87,10 @@
 *.rtf   diff=astextplain
 *.RTF   diff=astextplain
 
+<<<<<<< HEAD
 *.lcl text=auto
+=======
+*.lcl text=auto
+
+.github/workflows/*.lock.yml linguist-generated=true merge=ours
+>>>>>>> origin/master

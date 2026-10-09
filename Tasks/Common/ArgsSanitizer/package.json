@@ -1,0 +1,25 @@
+{
+  "name": "azure-pipelines-tasks-args-sanitizer",
+  "version": "1.0.0",
+  "description": "Shared script-argument sanitizer (WI-75787) reused by the Node/TS tasks. Single source for the PowerShell/bash allow-lists, env-variable expansion, the CR/LF newline guard, and the AZP_75787 feature-flag gating.",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "main": "argsSanitizer.js",
+  "types": "argsSanitizer.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "azure-pipelines-task-lib": "^5.2.11",
+    "azure-pipelines-tasks-utility-common": "3.272.0",
+    "@types/node": "^24.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
+}

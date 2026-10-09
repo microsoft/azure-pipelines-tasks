@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 270,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "2.0.0",
@@ -355,6 +355,7 @@
     "ExtractingPackerCompleted": "ms-resource:loc.messages.ExtractingPackerCompleted",
     "CreatedStagingDirectory": "ms-resource:loc.messages.CreatedStagingDirectory",
     "CouldNotDeleteStagingDirectory": "ms-resource:loc.messages.CouldNotDeleteStagingDirectory",
+    "CouldNotDeleteTempFile": "ms-resource:loc.messages.CouldNotDeleteTempFile",
     "InstalledPackerVersion": "ms-resource:loc.messages.InstalledPackerVersion",
     "PackerToolBusy": "ms-resource:loc.messages.PackerToolBusy",
     "ResolvingDeployPackageInput": "ms-resource:loc.messages.ResolvingDeployPackageInput",

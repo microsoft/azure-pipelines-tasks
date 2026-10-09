@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer se ha extraído correctamente en la ruta de acceso: %s.",
   "loc.messages.CreatedStagingDirectory": "Directorio de almacenamiento provisional creado para mantener las plantillas y los archivos binarios de Packer: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "No se puede eliminar el directorio de almacenamiento provisional %s. Elimínelo manualmente.",
+  "loc.messages.CouldNotDeleteTempFile": "No se ha podido eliminar el archivo de variables temporales %s. Elimínelo manualmente.",
   "loc.messages.InstalledPackerVersion": "La versión instalada de Packer es %s.",
   "loc.messages.PackerToolBusy": "La herramienta Packer parece estar ocupada. Se reintentará en 1 segundo...",
   "loc.messages.ResolvingDeployPackageInput": "Resolviendo la ruta de acceso del paquete de Deploy.",

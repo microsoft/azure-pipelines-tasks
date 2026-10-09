@@ -1,6 +1,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import * as os from 'os';
+import * as fs from 'fs';
 import { CommandHelper } from './CommandHelper';
 import { Utility } from './Utility';
 
@@ -351,15 +352,28 @@ export class ContainerAppHelper {
         runtimeStack: string) {
             tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
             try {
-                let telemetryArg = `--env "CALLER_ID=azure-pipelines-v1"`;
-                if (this.disableTelemetry) {
-                    telemetryArg = `--env "ORYX_DISABLE_TELEMETRY=true"`;
-                }
+                const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+                if (useArgArray) {
+                    let telemetryArg = 'CALLER_ID=azure-pipelines-v1';
+                    if (this.disableTelemetry) {
+                        telemetryArg = 'ORYX_DISABLE_TELEMETRY=true';
+                    }
 
-                new Utility().throwIfError(
-                    tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`),
-                    tl.loc('CreateImageWithBuilderFailed')
-                );
+                    new Utility().throwIfError(
+                        tl.execSync(PACK_CMD, ['build', `${imageToDeploy}`, '--path', `${appSourcePath}`, '--builder', `${ORYX_BUILDER_IMAGE}`, '--run-image', `mcr.microsoft.com/oryx/${runtimeStack}`, '--env', telemetryArg]),
+                        tl.loc('CreateImageWithBuilderFailed')
+                    );
+                } else {
+                    let telemetryArg = `--env "CALLER_ID=azure-pipelines-v1"`;
+                    if (this.disableTelemetry) {
+                        telemetryArg = `--env "ORYX_DISABLE_TELEMETRY=true"`;
+                    }
+
+                    new Utility().throwIfError(
+                        tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`),
+                        tl.loc('CreateImageWithBuilderFailed')
+                    );
+                }
             } catch (err) {
                 tl.error(err.message);
                 throw err;
@@ -379,10 +393,18 @@ export class ContainerAppHelper {
         dockerfilePath: string) {
             tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
             try {
-                new Utility().throwIfError(
-                    tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`),
-                    tl.loc('CreateImageWithDockerfileFailed')
-                );
+                const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+                if (useArgArray) {
+                    new Utility().throwIfError(
+                        tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`]),
+                        tl.loc('CreateImageWithDockerfileFailed')
+                    );
+                } else {
+                    new Utility().throwIfError(
+                        tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`),
+                        tl.loc('CreateImageWithDockerfileFailed')
+                    );
+                }
             } catch (err) {
                 tl.error(err.message);
                 throw err;
@@ -398,28 +420,32 @@ export class ContainerAppHelper {
         tl.debug('Attempting to determine the runtime stack needed for the provided application source');
         try {
             // Use 'oryx dockerfile' command to determine the runtime stack to use and write it to a temp file
-            const dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
-            new Utility().throwIfError(
-                tl.execSync('docker', dockerCommand),
-                tl.loc('DetermineRuntimeStackFailed', appSourcePath)
-            );
-
-            // Read the temp file to get the runtime stack into a variable
-            const oryxRuntimeTxtPath = path.join(appSourcePath, 'oryx-runtime.txt');
-            let command: string = `head -n 1 ${oryxRuntimeTxtPath}`;
-            if (IS_WINDOWS_AGENT) {
-                command = `Get-Content -Path ${oryxRuntimeTxtPath} -Head 1`;
+            const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+            if (useArgArray) {
+                const dockerCommand: string[] = ['run', '--rm', '-v', `${appSourcePath}:/app`, `${ORYX_CLI_IMAGE}`, '/bin/bash', '-c', "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"];
+                new Utility().throwIfError(
+                    tl.execSync('docker', dockerCommand),
+                    tl.loc('DetermineRuntimeStackFailed', appSourcePath)
+                );
+            } else {
+                const dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
+                new Utility().throwIfError(
+                    tl.execSync('docker', dockerCommand),
+                    tl.loc('DetermineRuntimeStackFailed', appSourcePath)
+                );
             }
 
-            const runtimeStack = await new CommandHelper().execCommandAsync(command);
+            // Read the temp file to get the runtime stack into a variable. The file is read directly
+            // from the filesystem instead of through a shell command ('head'/'Get-Content' executed via
+            // 'bash -c'/'pwsh -command') so that a user-controlled appSourcePath cannot inject shell
+            // metacharacters and execute arbitrary commands on the agent (CWE-78).
+            const oryxRuntimeTxtPath: string = path.join(appSourcePath, 'oryx-runtime.txt');
+            const oryxRuntimeText: string = fs.readFileSync(oryxRuntimeTxtPath, 'utf8');
+            const runtimeStack: string = oryxRuntimeText.split(/\r?\n/)[0].trim();
 
-            // Delete the temp file
-            command = `rm ${oryxRuntimeTxtPath}`;
-            if (IS_WINDOWS_AGENT) {
-                command = `Remove-Item -Path ${oryxRuntimeTxtPath}`;
-            }
-
-            await new CommandHelper().execCommandAsync(command);
+            // Delete the temp file using the task-lib helper rather than a shell 'rm'/'Remove-Item'
+            // command, for the same command-injection reason described above.
+            tl.rmRF(oryxRuntimeTxtPath);
 
             return runtimeStack;
         } catch (err) {

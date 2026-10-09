@@ -6,6 +6,7 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { AzureRMEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint';
+import { assertNoScriptNewline, tryValidateScriptArgs } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 var uuidV4 = require('uuid/v4');
 
 function convertToNullIfUndefined<T>(arg: T): T|null {
@@ -13,8 +14,12 @@ function convertToNullIfUndefined<T>(arg: T): T|null {
 }
 
 async function run() {
+    let filePath: string;
+    let cleanupTempScriptEnabled = false;
+
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        cleanupTempScriptEnabled = tl.getPipelineFeature('CleanupAzurePowerShellTempScript');
 
         // Get inputs.
         console.log("## Validating Inputs");
@@ -31,6 +36,21 @@ async function run() {
         let scriptPath = convertToNullIfUndefined(tl.getPathInput('ScriptPath', false));
         let scriptInline: string = convertToNullIfUndefined(tl.getInput('Inline', false));
         let scriptArguments: string = convertToNullIfUndefined(tl.getInput('ScriptArguments', false));
+        // MSRC 129198: reject CR/LF in the script arguments and FilePath (a statement separator at the
+        // `. '<script>' <args>` dot-source sink), gated by the EnableScriptArgumentsNewlineValidation
+        // pipeline feature AND the org sanitization enforce toggle so it rolls out ring-by-ring.
+        if (tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC') && tl.getPipelineFeature('EnableScriptArgumentsNewlineValidation')) {
+            assertNoScriptNewline(scriptArguments, scriptPath, scriptType.toUpperCase() === 'FILEPATH');
+        }
+        // MSRC 129198: char + data-constructor AST validation for the Node (Linux) handler, gated by the new
+        // EnableScriptArgumentsExpressionValidation ring — NOT the on-everywhere EnableAzurePowerShellArgumentsSanitization
+        // master — so this surface rolls out ring-by-ring and never starts blocking on deploy. Enforce toggle applies inside.
+        if (scriptType.toUpperCase() === 'FILEPATH') {
+            tryValidateScriptArgs(scriptArguments || '', 'pscore', {
+                taskName: 'AzurePowerShellV4',
+                pipelineFeatureFlag: 'EnableScriptArgumentsExpressionValidation'
+            });
+        }
         let _vsts_input_failOnStandardError = convertToNullIfUndefined(tl.getBoolInput('FailOnStandardError', false));
         let targetAzurePs: string = convertToNullIfUndefined(tl.getInput('TargetAzurePs', false));
         let customTargetAzurePs: string = convertToNullIfUndefined(tl.getInput('CustomTargetAzurePs', false));
@@ -54,7 +74,7 @@ async function run() {
             targetAzurePs = ""
         }
 
-        var endpoint = JSON.stringify(endpointObject);
+        var endpoint = JSON.stringify(endpointObject).replace(/'/g, "''");
 
         if (scriptType.toUpperCase() == 'FILEPATH') {
             if (!tl.stats(scriptPath).isFile() || !scriptPath.toUpperCase().match(/\.PS1$/)) {
@@ -101,15 +121,10 @@ async function run() {
         tl.assertAgent('2.115.0');
         let tempDirectory = tl.getVariable('agent.tempDirectory');
         tl.checkPath(tempDirectory, `${tempDirectory} (agent.tempDirectory)`);
-        let filePath = path.join(tempDirectory, uuidV4() + '.ps1');
-        await fs.writeFile(
-            filePath,
-            '\ufeff' + contents.join(os.EOL), // Prepend the Unicode BOM character.
-            { encoding: 'utf8' }, // Since UTF8 encoding is specified, node will
-            function (err) { // encode the BOM into its UTF8 binary sequence.
-                if (err) throw err;
-                console.log('Saved!');
-            });
+        filePath = path.join(tempDirectory, uuidV4() + '.ps1');
+        const fileContent = '\ufeff' + contents.join(os.EOL);
+        await fs.promises.writeFile(filePath, fileContent, { encoding: 'utf8', mode: 0o600 });
+        console.log('Saved!');
         console.log("## Az module initialization Complete");
         console.log("## Beginning Script Execution");
         // Run the script.
@@ -163,7 +178,64 @@ async function run() {
         console.log(`##[error] run failed: For troubleshooting, refer: ${troubleshoot}`);
         tl.setResult(tl.TaskResult.Failed, err.message || 'run() failed');
     }
+    finally {
+        if (cleanupTempScriptEnabled) {
+            deleteGeneratedScript(filePath);
+        }
+    }
 }
 
+function deleteGeneratedScript(filePath: string): void {
+    if (!filePath) {
+        return;
+    }
+
+    try {
+        fs.truncateSync(filePath, 0);
+    } catch (err) {
+        tl.debug(`Unable to truncate the temporary Azure PowerShell script. Error code: ${getErrorCode(err)}.`);
+    }
+
+    try {
+        fs.unlinkSync(filePath);
+        tl.debug('Deleted the temporary Azure PowerShell script.');
+        emitTempScriptDeleteTelemetry('DeleteSucceeded');
+    } catch (err) {
+        if (err && err.code === 'ENOENT') {
+            emitTempScriptDeleteTelemetry('DeleteAlreadyAbsent');
+            return;
+        }
+
+        const errorCode = getErrorCode(err);
+        tl.warning(`Failed to delete the temporary Azure PowerShell script. Error code: ${errorCode}.`);
+        emitTempScriptDeleteTelemetry('DeleteFailed', errorCode);
+    }
+}
+
+function getErrorCode(err: any): string {
+    return err && typeof err.code === 'string' ? err.code : 'UNKNOWN';
+}
+
+function emitTempScriptDeleteTelemetry(outcome: 'DeleteSucceeded' | 'DeleteAlreadyAbsent' | 'DeleteFailed', errorCode?: string): void {
+    try {
+        telemetry.emitTelemetry('TaskHub', 'AzurePowerShellTempScriptCleanup', {
+            TaskVersion: getTaskVersion(),
+            Outcome: outcome,
+            ErrorCode: errorCode
+        });
+    } catch {
+        tl.debug('Unable to publish temporary script cleanup telemetry.');
+    }
+}
+
+function getTaskVersion(): string {
+    try {
+        const version = require('./task.json').version;
+        return `${version.Major}.${version.Minor}.${version.Patch}`;
+    } catch (err) {
+        tl.debug(`Unable to read task version: ${err && err.message ? err.message : err}`);
+        return '4';
+    }
+}
 
 run();

@@ -5,7 +5,7 @@ import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager } from './npmrcBackupManager';
+import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
@@ -20,7 +20,9 @@ async function main(): Promise<void> {
     // Preserve the original user provided .npmrc on first task execution, so the post-job cleanup can restore it. 
     const backupDirectory = npmauthutils.initializeBackupDirectory();
     const backupManager = new NpmrcBackupManager(backupDirectory);
-    backupManager.ensureBackedUp(npmrc);
+    const fileIdentity = backupManager.ensureBackedUp(npmrc);
+    tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
+    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
     
     let packagingLocation;
     try {
@@ -38,13 +40,13 @@ async function main(): Promise<void> {
     const npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
     const addedRegistries: URL[] = [];
-    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
     const feedUrl = tl.getInput("feedUrl");
     let federatedAuthToken: string | undefined;
 
     if (entraWifServiceConnectionName) {
+        npmrcRegistries = npmauthutils.validateAndFilterRegistryUrls(npmrcRegistries);
         federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName);
 
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
@@ -73,6 +75,11 @@ async function main(): Promise<void> {
         // Auth resolution priority: WIF > external service connection > internal feed.
         // First match wins; subsequent sources are skipped for this registry.
         if (entraWifServiceConnectionName) {
+            if (registryURL.protocol !== 'https:') {
+                console.log(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
+                continue;
+            }
+
             console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };

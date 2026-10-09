@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer가 경로 %s에 추출되었습니다.",
   "loc.messages.CreatedStagingDirectory": "Packer를 이진 및 템플릿으로 유지하기 위해 스테이징 디렉터리를 생성함: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "스테이징 디렉터리 %s을(를) 삭제할 수 없습니다. 수동으로 삭제하세요.",
+  "loc.messages.CouldNotDeleteTempFile": "임시 변수 파일 %s을(를) 삭제할 수 없음 수동으로 삭제하세요.",
   "loc.messages.InstalledPackerVersion": "현재 설치된 Packer 버전은 %s입니다.",
   "loc.messages.PackerToolBusy": "Packer 도구가 사용 중인 것 같습니다. 1초 후에 다시 시도합니다.",
   "loc.messages.ResolvingDeployPackageInput": "배포 패키지 경로를 확인 중입니다.",

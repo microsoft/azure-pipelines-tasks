@@ -47,7 +47,8 @@ export let Commands = {
     upgrade: "upgrade",
     package: "package",
     push: "push",
-    init: "init"
+    init: "init",
+    uninstall: "uninstall"
 };
 
 export let ChartTypes = {

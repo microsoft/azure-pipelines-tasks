@@ -67,6 +67,10 @@ describe('SqlAzureDacpacDeployment - SqlAzureActions Suite', function () {
         it ('Validate Get-EffectiveOutputPath with feature flag and user /OutputPath', (done) => {
             psr.run(path.join(__dirname, 'L0GetEffectiveOutputPath.ps1'), done);
         });
+
+        it ('Validate Extract-Dacpac and Export-Bacpac generate unique output file paths', (done) => {
+            psr.run(path.join(__dirname, 'L0UniqueOutputFilenames.ps1'), done);
+        });
     }
 });
 

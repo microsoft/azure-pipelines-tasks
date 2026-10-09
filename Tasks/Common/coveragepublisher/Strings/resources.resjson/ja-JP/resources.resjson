@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "このタスクを実行するには、dotnet core をインストールしてください。",
   "loc.messages.ErrorWhilePublishing": "カバレッジの発行中にエラーが発生しました",
   "loc.messages.UpgradeAgentMessage": "エージェントのバージョンをアップグレードしてください。v2.115.0 以上が必要です。https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "入力ファイルが指定されていません。"
+  "loc.messages.NoInputFiles": "入力ファイルが指定されていません。",
+  "loc.messages.InvalidCoverageWorkingDirectory": "カバレッジ発行元の作業ディレクトリが存在しないか、ディレクトリではありません: %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "ソース パスの包含は有効になっていますが、信頼済みのソース ディレクトリが構成されていません。pathToSources またはワークスペース ディレクトリを指定してください。",
+  "loc.messages.CoveragePublisherExecutionFailed": "カバレッジ パブリッシャーの実行に失敗しました: %s"
 }

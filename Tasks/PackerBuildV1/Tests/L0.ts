@@ -35,6 +35,51 @@ describe('PackerBuild Suite V1', function() {
 
     });
 
+    it('Configures filtered child-process output without disconnecting the parser', async () => {
+        const originalAgentTempDirectory = process.env['AGENT_TEMPDIRECTORY'];
+        process.env['AGENT_TEMPDIRECTORY'] = originalAgentTempDirectory || process.env['TEMP'];
+        try {
+            const PackerHost = require('../src/packerHost').default;
+            const host = Object.create(PackerHost.prototype);
+            let capturedOptions: any;
+            const parsedOutput: string[] = [];
+            const command = {
+                exec: (options: any): Promise<number> => {
+                    capturedOptions = options;
+                    return Promise.resolve(0);
+                }
+            } as any;
+            const parser = {
+                parse: (output: string): void => {
+                    parsedOutput.push(output);
+                },
+                getExtractedOutputs: (): Map<string, string> => new Map<string, string>()
+            };
+
+            await host.execTool(command, parser);
+
+            assert.deepStrictEqual(capturedOptions.externalOutput, { source: 'childProcess' });
+
+            await new Promise<void>((resolve, reject) => {
+                capturedOptions.outStream.write('ManagedImageId: expected-image-id', (error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+
+            assert.deepStrictEqual(parsedOutput, ['ManagedImageId: expected-image-id']);
+        } finally {
+            if (originalAgentTempDirectory === undefined) {
+                delete process.env['AGENT_TEMPDIRECTORY'];
+            } else {
+                process.env['AGENT_TEMPDIRECTORY'] = originalAgentTempDirectory;
+            }
+        }
+    });
+
     if(tl.osType().match(/^Win/)) {
         it('Runs successfully for windows template', async () => {
             let tp = path.join(__dirname, 'L0Windows.js');
@@ -57,6 +102,18 @@ describe('PackerBuild Suite V1', function() {
             assert(tr.invokedToolCount == 4, 'should have invoked tool four times. actual: ' + tr.invokedToolCount);
             assert(tr.stdout.indexOf(match1) > -1, 'correctly writes contents of var file (containing azure spn details)');
             assert(tr.stdout.indexOf(match2) > -1, 'correctly writes contents of var file (containing template variables)');
+        });
+
+        it('Deletes packer var file (containing credentials) after execution', async () => {
+            let tp = path.join(__dirname, 'L0Windows.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            let deleteMatch = 'rmRF C:\\somefolder\\somevarfile.json';
+            await tr.runAsync();
+
+            runValidations(() => {
+                assert(tr.succeeded, 'task should have succeeded');
+                assert(tr.stdout.indexOf(deleteMatch) > -1, 'should delete var file containing credentials from Agent.TempDirectory after execution');
+            }, tr);
         });
 
         it('Runs successfully for windows template with managed image', async () => {

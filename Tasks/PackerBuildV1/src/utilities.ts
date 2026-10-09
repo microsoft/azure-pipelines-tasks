@@ -13,9 +13,9 @@ export function copyFile(sourceFile: string, destinationFolder: string): void {
     tl.checkPath(sourceFile, tl.loc("CopySourceNotExists", sourceFile));
 
     if(!tl.exist(destinationFolder)) {
-        console.log(tl.loc("CreatingDestinationDir", destinationFolder));
+        tl.writeExternalOutput(tl.loc("CreatingDestinationDir", destinationFolder) + os.EOL, { source: "repository" });
         tl.mkdirP(destinationFolder);
-        console.log(tl.loc("CreatedDestinationDir", destinationFolder));
+        tl.writeExternalOutput(tl.loc("CreatedDestinationDir", destinationFolder) + os.EOL, { source: "repository" });
     }
 
     tl.cp(sourceFile, destinationFolder, "-f")
@@ -153,9 +153,7 @@ export function deleteDirectory(dir: string): void {
 
     if(tl.exist(dir)) {
         tl.debug("Cleaning-up directory " + dir);
-        try {
-            tl.rmRF(dir);
-        } catch(error) {}
+        tl.rmRF(dir);
     }
 }
 

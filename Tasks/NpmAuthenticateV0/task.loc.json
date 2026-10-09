@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 273,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -74,6 +74,9 @@
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
+    "NpmrcMustBeRegularFile": "ms-resource:loc.messages.NpmrcMustBeRegularFile",
+    "NpmrcChangedSinceBackup": "ms-resource:loc.messages.NpmrcChangedSinceBackup",
+    "UnableToWriteFileContents": "ms-resource:loc.messages.UnableToWriteFileContents",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
     "RestoringFile": "ms-resource:loc.messages.RestoringFile",
@@ -99,6 +102,8 @@
     "Info_ApplyingWifToAllRegistries": "ms-resource:loc.messages.Info_ApplyingWifToAllRegistries",
     "Error_UnsupportedAuthScheme": "ms-resource:loc.messages.Error_UnsupportedAuthScheme",
     "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound",
+    "Info_SkippingNonHttpsWifRegistry": "ms-resource:loc.messages.Info_SkippingNonHttpsWifRegistry",
+    "Error_MixedRegistrySchemes": "ms-resource:loc.messages.Error_MixedRegistrySchemes",
     "Debug_EndpointProbeTimedOut": "ms-resource:loc.messages.Debug_EndpointProbeTimedOut",
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   }

@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Invoke-ScriptArgumentSanitization
 Unregister-Mock Get-VstsInput
 $targetAzurePs = "4.1.0"
 if([string]::IsNullOrEmpty($env:Agent_TempDirectory)) {

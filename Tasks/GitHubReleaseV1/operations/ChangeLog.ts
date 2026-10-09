@@ -114,9 +114,10 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, true);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body?.errors;
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
@@ -124,7 +125,8 @@ export class ChangeLog {
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
                 let index = 0;
-                let issuesList = issuesListResponse.body.data.repository;
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 let labelsRankDictionary = this._getLabelsRankDictionary(labels);
                 tl.debug("labelsRankDictionary: " + JSON.stringify(labelsRankDictionary));
@@ -181,16 +183,18 @@ export class ChangeLog {
 
         let issuesListResponse = await release.getIssuesList(githubEndpointToken, repositoryName, issues, false);
         if (issuesListResponse.statusCode === 200) {
-            if (!!issuesListResponse.body.errors) {
+            let graphQLErrors = issuesListResponse.body?.errors;
+            if (!this._areIssueFetchErrorsIgnorable(graphQLErrors)) {
                 console.log(tl.loc("IssuesFetchError"));
-                tl.warning(JSON.stringify(issuesListResponse.body.errors));
+                tl.warning(JSON.stringify(graphQLErrors));
                 return "";
             }
             else {
                 let changeLog: string = "";
                 let topXChangeLog: string = ""; // where 'X' is the this._changeLogVisibleLimit.
                 let seeMoreChangeLog: string = "";
-                let issuesList = issuesListResponse.body.data.repository;
+                this._logNonBlockingIssueFetchErrors(Array.isArray(graphQLErrors) ? graphQLErrors : []);
+                let issuesList = this._getNonNullIssuesList(issuesListResponse.body);
                 tl.debug("issuesListResponse: " + JSON.stringify(issuesList));
                 Object.keys(issuesList).forEach((key: string, index: number) => {
                     let changeLogPerIssue = this._getChangeLogPerIssue(key.substr(1), issuesList[key].title);
@@ -528,6 +532,66 @@ export class ChangeLog {
      */
     private _getChangeLogPerIssue(issueId: number | string, issueTitle: string){
         return Delimiters.star + Delimiters.space + Delimiters.hash + issueId + Delimiters.colon + Delimiters.space + issueTitle;
+    }
+
+    /**
+     * Returns true if there are no GraphQL errors, or if all errors are ignorable NOT_FOUND errors.
+     * NOT_FOUND errors can occur when a commit references a discussion number.
+     * Non-array values are treated as non-ignorable to preserve fail-fast behavior.
+     * @param errors GraphQL errors from getIssuesList response.
+     */
+    private _areIssueFetchErrorsIgnorable(errors: unknown): boolean {
+        if (!errors) {
+            return true;
+        }
+
+        if (!Array.isArray(errors)) {
+            return false;
+        }
+
+        if (errors.length === 0) {
+            return true;
+        }
+
+        let definedErrors = errors.filter(error => error !== null && error !== undefined);
+        if (definedErrors.length !== errors.length) {
+            tl.debug("GraphQL issue fetch errors contained null or undefined entries.");
+        }
+        return definedErrors.every(error => {
+            let errorType = error.type || error.extensions?.type || error.extensions?.code;
+            tl.debug("GraphQL issue fetch error type: " + (typeof errorType === "string" ? errorType : "none"));
+            return typeof errorType === "string" && errorType.toUpperCase() === "NOT_FOUND";
+        });
+    }
+
+    private _logNonBlockingIssueFetchErrors(errors: unknown): void {
+        if (Array.isArray(errors) && errors.length > 0 && this._areIssueFetchErrorsIgnorable(errors)) {
+            tl.warning(tl.loc("NonBlockingIssuesFetchError", JSON.stringify(errors)));
+        }
+    }
+
+    /**
+     * Returns issues fetched from GraphQL response after removing null entries.
+     * Null entries are returned when issueOrPullRequest cannot be resolved.
+     * @param issuesListResponseBody GraphQL response body from getIssuesList.
+     */
+    private _getNonNullIssuesList(issuesListResponseBody: any): any {
+        let issuesList = issuesListResponseBody &&
+            issuesListResponseBody.data &&
+            issuesListResponseBody.data.repository;
+
+        if (!issuesList) {
+            return {};
+        }
+
+        let filteredIssues: { [key: string]: any } = {};
+        Object.keys(issuesList).forEach((issueKey: string) => {
+            if (issuesList[issueKey]) {
+                filteredIssues[issueKey] = issuesList[issueKey];
+            }
+        });
+
+        return filteredIssues;
     }
 
     /**

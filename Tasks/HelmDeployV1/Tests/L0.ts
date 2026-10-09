@@ -232,6 +232,53 @@ describe("HelmDeployV1 Suite", function () {
         assert(tr.succeeded, "task should have succeeded");
     });
 
+    it("Run successfully with Helm uninstall command with arguments", async function () {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
+        process.env[shared.TestEnvVars.command] = shared.Commands.uninstall;
+        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
+        process.env[shared.TestEnvVars.arguments] = "--ignore-not-found";
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV3orHigher] = "true";
+
+        await tr.runAsync();
+        assert(tr.stdout.indexOf(`release "${shared.testReleaseName}" uninstalled`) != -1, "Release should have been uninstalled");
+        assert(tr.stdout.indexOf("--ignore-not-found") != -1, "Arguments should have been passed to uninstall command");
+        assert(tr.succeeded, "task should have succeeded");
+    });
+
+    it("Run successfully with Helm uninstall command without arguments", async function () {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
+        process.env[shared.TestEnvVars.command] = shared.Commands.uninstall;
+        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV3orHigher] = "true";
+
+        await tr.runAsync();
+        assert(tr.stdout.indexOf(`release "${shared.testReleaseName}" uninstalled`) != -1, "Release should have been uninstalled");
+        assert(tr.succeeded, "task should have succeeded");
+    });
+
+    it("Run successfully with Helm uninstall command with namespace and arguments", async function () {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
+        process.env[shared.TestEnvVars.command] = shared.Commands.uninstall;
+        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
+        process.env[shared.TestEnvVars.namespace] = shared.testNamespace;
+        process.env[shared.TestEnvVars.arguments] = "--ignore-not-found";
+        process.env[shared.TestEnvVars.failOnStderr] = "false";
+        process.env[shared.isHelmV3orHigher] = "true";
+
+        await tr.runAsync();
+        assert(tr.stdout.indexOf(`release "${shared.testReleaseName}" uninstalled`) != -1, "Release should have been uninstalled");
+        assert(tr.stdout.indexOf("--ignore-not-found") != -1, "Arguments should have been passed to uninstall command");
+        assert(tr.succeeded, "task should have succeeded");
+    });
+
     // NEW TESTS: Testing feature flag behavior
     it("Run with feature flag OFF - uses legacy helm version command (--client --short)", async function () {
         const tp = path.join(__dirname, "TestSetup.js");

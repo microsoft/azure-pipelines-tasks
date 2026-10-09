@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "Non è stato possibile elencare le estensioni per la macchina virtuale: '%s'. Errore: %s",
   "loc.messages.ExtensionNotFound": "Estensione non trovata nella macchina virtuale: %s",
   "loc.messages.AddedOutputVariable": "La variabile di output '%s', che contiene la sezione di output dell'oggetto distribuzione corrente in formato stringa, è stata aggiornata.",
+  "loc.messages.OutputVariableNameChanged": "Il nome della variabile di output '%s' è stato precedentemente decodificato o troncato con un nome diverso al momento della pubblicazione della variabile. Il nome dichiarato è ora usato letteralmente. Se la pipeline fa riferimento al nome precedente, aggiornarla con il nome dichiarato.",
   "loc.messages.UnableToFetchAuthorityURL": "Non è possibile recuperare l'URL dell'autorità.",
   "loc.messages.UnableToFetchActiveDirectory": "Non è possibile recuperare l'ID risorsa di Active Directory.",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "L'URL della connessione al servizio AzureRM specificato '{0}' non è valido.",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "Sono stati trovati errori di convalida nel modello di Azure Resource Manager. L'errore potrebbe impedire la corretta distribuzione del modello. %s. Vedere https://docs.microsoft.com/it-it/azure/azure-resource-manager/templates/template-syntax",
   "loc.messages.ManagedServiceIdentityDetails": "Assicurarsi che all'identità del servizio gestita usata per la distribuzione siano assegnati i ruoli corretti per il gruppo di risorse %s. Per maggiori dettagli, vedere il collegamento: https://docs.microsoft.com/it-it/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "Errore relativo alla macchina virtuale '%s': %s",
-  "loc.messages.TroubleshootingGuide": "Vedere la guida alla risoluzione dei problemi per verificare se il problema è stato risolto: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "Vedere la guida alla risoluzione dei problemi per verificare se il problema è stato risolto: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché questo processo viene eseguito con la versione dell'agente '%s'. Per pubblicarle usando il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente, è necessaria la versione dell'agente %s o successiva. Aggiornare l'agente per adottare il formato sicuro.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché la variabile %s è impostata su un valore che impedisce all'agente di decodificare la codifica con percentuale. Rimuovere la variabile oppure impostala su true per adottare il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente."
 }

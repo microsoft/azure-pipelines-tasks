@@ -379,7 +379,7 @@ npm ls <PACKAGE_NAME>
 
 This repository has a Copilot hook (`.github/hooks/bump-task-version.sh`) that automatically provides version bumping guidance when you edit task files. Simply ask Copilot to bump the task version, and it will:
 
-1. Fetch the current sprint information from `https://whatsprintis.it/?json`
+1. Calculate the current sprint information with `node ci/sprint.js`
 2. Calculate the target Minor version based on sprint rules
 3. Update both `task.json` and `task.loc.json` accordingly
 
@@ -402,7 +402,7 @@ node make.js bump --sprint 271
 
 This command will:
 - Detect which tasks have been modified
-- Fetch the current sprint information
+- Calculate the current sprint information locally
 - Apply the sprint-based versioning rules automatically
 - Update both `task.json` and `task.loc.json` for each affected task
 
@@ -410,9 +410,9 @@ This command will:
 
 If you need to bump the version manually, follow these sprint-based rules:
 
-1. **Fetch current sprint information:**
+1. **Calculate current sprint information:**
    ```bash
-   curl -s 'https://whatsprintis.it/?json' | jq '{sprint: .sprint, week: .week}'
+   node ci/sprint.js
    ```
 
 2. **Determine target Minor version:**

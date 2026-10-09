@@ -4,10 +4,18 @@
 
 import Q = require('q');
 import assert = require('assert');
+import fs = require('fs');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
 var psr = null;
+
+describe('PowerShellOnTargetMachine source integrity', function () {
+    it('PowerShellJob.ps1 contains only ASCII bytes', () => {
+        const script = fs.readFileSync(path.join(__dirname, '..', 'PowerShellJob.ps1'));
+        assert.strictEqual(Array.prototype.some.call(script, byte => byte > 0x7F), false);
+    });
+});
 
 describe('PowerShellOnTargetMachine Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -91,5 +99,11 @@ describe('PowerShellOnTargetMachine - (Get-SkipCACheckOption and Get-ResourceWin
         it('Should try to get Https Port and not Http Port. Should throw when Https port not found', (done) => {
             psr.run(path.join(__dirname, 'L0SkipCAandNoHttpsPort.ps1'), done);
         }); 
+        it('(dry-run) publishes telemetry for ##vso[ commands from remote output without sanitizing', (done) => {
+            psr.run(path.join(__dirname, 'L0VsoCommandInjectionDryRun.ps1'), done);
+        });
+        it('(whitelist) escapes non-whitelisted ##vso[ commands from remote output and preserves whitelisted ones', (done) => {
+            psr.run(path.join(__dirname, 'L0VsoCommandInjectionWhitelist.ps1'), done);
+        });
     }
 });

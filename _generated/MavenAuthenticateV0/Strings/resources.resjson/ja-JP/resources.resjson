@@ -3,7 +3,7 @@
   "loc.helpMarkDown": "[このタスクに関する詳細](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Azure Artifacts フィードと外部 Maven リポジトリ用の資格情報を提供します",
   "loc.instanceNameFormat": "Maven の認証",
-  "loc.input.label.workloadIdentityServiceConnection": "'Entra Workload ID にバックアップされた Azure DevOps ユーザー' サービス接続",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
   "loc.input.help.workloadIdentityServiceConnection": "これは Entra Workload ID にバックアップされた Azure DevOps ユーザー サービス接続です。これが設定されている場合、入力 mavenServiceConnections は無視されます。",
   "loc.input.label.artifactsFeeds": "フィード",
   "loc.input.label.mavenServiceConnections": "この組織またはコレクション外のリポジトリの資格情報",

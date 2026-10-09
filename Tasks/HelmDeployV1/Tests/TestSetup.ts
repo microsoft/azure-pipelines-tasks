@@ -252,6 +252,21 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.package) {
     }
 }
 
+if (process.env[shared.TestEnvVars.command] === shared.Commands.uninstall) {
+    let helmUninstallCommand = `helm uninstall${formatDebugFlag()} ${process.env[shared.TestEnvVars.releaseName]}`;
+
+    if (process.env[shared.TestEnvVars.namespace])
+        helmUninstallCommand = helmUninstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
+
+    if (process.env[shared.TestEnvVars.arguments])
+        helmUninstallCommand = helmUninstallCommand.concat(` ${process.env[shared.TestEnvVars.arguments]}`);
+
+    a.exec[helmUninstallCommand] = {
+        "code": 0,
+        "stdout": `release "${process.env[shared.TestEnvVars.releaseName]}" uninstalled`
+    };
+}
+
 // Mock BOTH helm version commands - the task will choose which one based on feature flag
 const helmVersionCommandLegacy = "helm version --client --short";
 const helmVersionCommandNew = "helm version --short";

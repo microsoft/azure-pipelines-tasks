@@ -9,6 +9,8 @@
   "loc.input.help.pathToSources": "Il percorso dei file di origine è obbligatorio quando i report XML di code coverage non contengono il percorso assoluto dei file di origine. Ad esempio, i report JaCoCo non usano percorsi assoluti e quando si pubblicano le informazioni di code coverage JaCoCo per le app Java, il percorso sarà simile a `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />Questo valore di input è necessario anche se i test vengono eseguiti in un contenitore Docker e deve puntare al percorso assoluto dei file di origine nell'host, ad esempio `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.failIfCoverageEmpty": "Non eseguire se mancano i risultati del code coverage",
   "loc.input.help.failIfCoverageEmpty": "Non esegue l'attività se il code coverage non ha prodotto risultati da pubblicare.",
+  "loc.input.label.publishHtmlReport": "Pubblica report HTML",
+  "loc.input.help.publishHtmlReport": "Pubblica un report sulla code coverage HTML. Disabilitare questa opzione per evitare di generare e pubblicare il report HTML.",
   "loc.messages.FoundNMatchesForPattern": "Sono stati trovati %s risultato/i corrispondenti al criterio: %s",
   "loc.messages.NoCodeCoverage": "Non sono stati trovati risultati del code coverage da pubblicare."
 }

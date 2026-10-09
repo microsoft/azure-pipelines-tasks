@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "매개 변수 파일 패턴이 파일이 아니라 디렉터리를 찾습니다.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "템플릿 파일 패턴이 파일이 아니라 디렉터리를 찾습니다. %s",
   "loc.messages.AddedOutputVariable": "현재 배포 개체의 출력 섹션을 문자열 형식으로 포함하는 출력 변수 '%s'을(를) 업데이트했습니다.",
+  "loc.messages.OutputVariableNameChanged": "출력 변수 이름 '%s'이(가) 변수를 게시할 때 이전에 다른 이름으로 디코딩되거나 잘렸습니다. 이제 선언된 이름이 그대로 사용됩니다. 파이프라인에서 이전 이름을 참조한 경우 선언된 이름으로 업데이트하세요.",
   "loc.messages.UnableToReadResponseBody": "응답 본문을 읽을 수 없습니다. 오류: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Azure Portal에 대한 자세한 정보",
   "loc.messages.LogDeploymentName": "배포 이름은 %s입니다.",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "구독 설정 오류: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\"이 실패했습니다. 오류: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam 파일을 사용하려면 Azure CLI 버전이 >= 2.47.0이어야 함",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "제공된 메타데이터 파일 '%s'에 매개 변수 '%s'의 메타데이터가 없습니다."
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "제공된 메타데이터 파일 '%s'에 매개 변수 '%s'의 메타데이터가 없습니다.",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "이 작업은 에이전트 버전 '%s'를 실행하고 있으므로 이전 형식을 사용하여 배포 출력 변수가 게시되었습니다. 출력 이름과 값이 에이전트 명령으로 해석되지 않도록 안전한 형식을 사용하여 게시하려면 에이전트 버전 %s 이상이 필요합니다. 안전한 형식을 채택하도록 에이전트를 업그레이드합니다.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "%s 변수가 에이전트에서 백분율 이스케이프를 디코딩하지 못하도록 하는 값으로 설정되어 있기 때문에 배포 출력 변수가 이전 형식으로 게시되었습니다. 해당 변수를 삭제하거나 true로 설정하세요. 그러면 출력 이름과 값이 에이전트 명령으로 해석되지 않는 안전한 형식을 사용할 수 있습니다."
 }

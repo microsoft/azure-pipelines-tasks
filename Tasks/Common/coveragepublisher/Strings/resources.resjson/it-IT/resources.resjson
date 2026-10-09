@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "Per eseguire questa attività, installare .NET Core.",
   "loc.messages.ErrorWhilePublishing": "Si è verificato un errore durante la pubblicazione del code coverage: ",
   "loc.messages.UpgradeAgentMessage": "Aggiornare la versione dell'agente. È richiesta la versione 2.115.0 o successiva. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "Non è stato specificato alcun file di input."
+  "loc.messages.NoInputFiles": "Non è stato specificato alcun file di input.",
+  "loc.messages.InvalidCoverageWorkingDirectory": "La directory di lavoro dell'entità di pubblicazione della copertura non esiste o non è una directory: %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "Il contenimento del percorso di origine è abilitato, ma non sono configurate directory di origine attendibili. Specificare pathToSources o una directory dell'area di lavoro.",
+  "loc.messages.CoveragePublisherExecutionFailed": "Esecuzione dell'entità di pubblicazione di copertura non riuscita: %s"
 }

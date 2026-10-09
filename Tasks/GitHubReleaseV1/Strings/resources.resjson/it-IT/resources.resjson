@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "Non è possibile caricare '%s' perché è una directory. Specificare un file.",
   "loc.messages.SearchingFileMatchingPattern": "Ricerca dei file corrispondenti a '%s'.",
   "loc.messages.IssuesFetchError": "Si è verificato un errore durante il recupero dei problemi. Non è possibile generare il log delle modifiche.",
+  "loc.messages.NonBlockingIssuesFetchError": "Rilevati errori GraphQL di recupero dei problemi non bloccanti: %s",
   "loc.messages.NoIssuesLinkedError": "Non è stato collegato alcun problema ai commit nel Diff di commit specificato.",
   "loc.messages.LabelsSyntaxError": "Si è verificato un errore durante l'analisi delle etichette. Per la sintassi YAML, vedere: https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "L'attributo di ChangeLogType non è valido: %s. Sono consentite solo le opzioni 'commitBased' o 'issueBased'. Per la sintassi YAML, vedere: https://aka.ms/AA3m1bq",

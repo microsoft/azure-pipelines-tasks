@@ -1,4 +1,4 @@
-function ThrowError
+﻿function ThrowError
 {
     param([string]$errorMessage)
   
@@ -98,10 +98,12 @@ function Copy-OnLocalMachine(
     [string] $adminUserName,
     [string] $adminPassword,
     [string] $cleanTargetBeforeCopy,
-    [string] $additionalArguments,
-    [bool] $useSanitizerActivate = $false
+    [object] $additionalArguments,
+    [bool] $useSanitizerActivate = $false,
+    [bool] $enableWindowsMachineFileCopyArgumentsHardening = $false,
+    [string] $scriptRoot = ""
     )
 {
     $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $adminUserName, $adminPassword
-    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate
+    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $scriptRoot
 }

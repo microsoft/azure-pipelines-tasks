@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 273,
+    "Minor": 281,
     "Patch": 1
   },
   "runsOn": [
@@ -96,6 +96,9 @@
     "FoundBuildCredentials": "Found build credentials",
     "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
+    "NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+    "NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+    "UnableToWriteFileContents": "Unable to write the contents of %s.",
     "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
     "SavingFile": "Saving file %s",
     "RestoringFile": "Restoring file %s",
@@ -121,12 +124,13 @@
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
     "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
     "Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+    "Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
+    "Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
     "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.273.0",
-    "LocalPackages": "0.249.4",
-    "wif_242": "0.273.1"
+    "Default": "0.281.0",
+    "wif_242": "0.281.1"
   }
 }

@@ -65,6 +65,105 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
 
+# DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
+# Instead of sanitizing ##vso[ commands from remote machine output, this only publishes telemetry
+# describing which ##vso[ commands WOULD have been blocked. The remote output is still written
+# unchanged so customers who intentionally rely on ##vso[ commands from remote machines keep working
+# while we analyze real-world usage.
+function Publish-VsoCommandInjectionDryRunTelemetry {
+    param(
+        [string] $source,
+        [string] $text
+    )
+    try {
+        if ([string]::IsNullOrEmpty($text)) { return }
+        $occurrences = [regex]::Matches($text, '##vso\[')
+        if ($occurrences.Count -eq 0) { return }
+        # Capture only the command name (e.g. task.setvariable) using a restricted character set so
+        # the telemetry payload can never itself contain a ##vso[ sequence or leak command values.
+        $commandCounts = @{}
+        foreach ($match in [regex]::Matches($text, '##vso\[([\w.]+)')) {
+            $command = $match.Groups[1].Value
+            if ($commandCounts.ContainsKey($command)) { $commandCounts[$command] = $commandCounts[$command] + 1 }
+            else { $commandCounts[$command] = 1 }
+        }
+        $telemetryData = @{
+            "Source" = $source;
+            "TotalCount" = $occurrences.Count;
+            "Commands" = $commandCounts;
+        }
+        $telemetryDataJson = ConvertTo-Json $telemetryData -Compress -Depth 5
+        $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+        Write-Verbose "VSO command injection dry-run telemetry: $telemetryDataJson"
+        Write-Host "##vso[telemetry.publish area=TaskHub;feature=RemoteVsoCommandInjectionDryRun]$telemetryDataJson"
+    } catch {
+        Write-Verbose "Unable to publish VSO command injection dry-run telemetry. Error: $($_.Exception.Message)"
+    }
+}
+
+# Whitelist-aware neutralization of ##vso[ logging commands from remote machine output
+# (ICM 31000000640794 / MSRC 122214). The allowed commands are delivered by the server as the
+# read-only pipeline variable 'agent.allowedLoggingCommands' (ConfigFramework), surfaced on the agent
+# as the environment variable AGENT_ALLOWEDLOGGINGCOMMANDS (comma-separated, case-insensitive).
+#   - whitelist empty/unset   -> nothing is changed (feature-off).
+#   - command NOT whitelisted -> its "##vso[" prefix is escaped to "##_vso[" so the agent does not
+#     execute it (the line is still printed as text).
+#   - command whitelisted     -> left unchanged so legitimate usage keeps working.
+function Get-AllowedLoggingCommands {
+    $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $raw = $env:AGENT_ALLOWEDLOGGINGCOMMANDS
+    if ([string]::IsNullOrWhiteSpace($raw)) { return ,$set }
+    foreach ($command in $raw.Split(',')) {
+        $trimmed = $command.Trim()
+        if (-not [string]::IsNullOrEmpty($trimmed)) { [void]$set.Add($trimmed) }
+    }
+    return ,$set
+}
+
+function ConvertTo-SanitizedRemoteOutput {
+    param(
+        [string] $text,
+        [System.Collections.Generic.HashSet[string]] $allowedCommands
+    )
+    if ([string]::IsNullOrEmpty($text)) { return $text }
+    # Feature-off when no whitelist is configured: never modify customer output.
+    if (($null -eq $allowedCommands) -or ($allowedCommands.Count -eq 0)) { return $text }
+    $evaluator = {
+        param($match)
+        $command = $match.Groups['cmd'].Value
+        if ($allowedCommands.Contains($command)) { return $match.Value }
+        return '##_vso[' + $command
+    }
+    return [regex]::Replace($text, '##vso\[(?<cmd>[\w.]+)', $evaluator, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+}
+# Override Write-ResponseLogs exported by the DTT module (Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal).
+# Script-scope functions take precedence over module-exported functions in PowerShell command resolution,
+# so this definition shadows the module's version for all call sites in this script. It preserves the
+# original pass-through behavior (output is NOT modified) and only adds dry-run telemetry.
+function Write-ResponseLogs {
+    [CmdletBinding()]
+    param(
+        [string][Parameter(Mandatory=$true)] $operationName,
+        [string][Parameter(Mandatory=$true)] $fqdn,
+        [object][Parameter(Mandatory=$true)] $deploymentResponse
+    )
+    Write-Verbose "Finished $operationName operation on $fqdn"
+    if (-not [string]::IsNullOrEmpty($deploymentResponse.DeploymentLog)) {
+        $deploymentLogText = ($deploymentResponse.DeploymentLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:DeploymentLog" -text $deploymentLogText
+        $deploymentLogText = ConvertTo-SanitizedRemoteOutput -text $deploymentLogText -allowedCommands (Get-AllowedLoggingCommands)
+        Write-Output "Deployment logs for $operationName operation on $fqdn "
+        Write-Output $deploymentLogText
+    }
+    if (-not [string]::IsNullOrEmpty($deploymentResponse.ServiceLog)) {
+        $serviceLogText = ($deploymentResponse.ServiceLog | Format-List | Out-String)
+        Publish-VsoCommandInjectionDryRunTelemetry -source "AzureFileCopyV1:ServiceLog" -text $serviceLogText
+        $serviceLogText = ConvertTo-SanitizedRemoteOutput -text $serviceLogText -allowedCommands (Get-AllowedLoggingCommands)
+        Write-Verbose "Service logs for $operationName operation on $fqdn "
+        Write-Verbose $serviceLogText
+    }
+}
+
 if ($featureFlags.retireAzureRM)
 {
     Modify-PSModulePathForHostedAgent
@@ -72,6 +171,7 @@ if ($featureFlags.retireAzureRM)
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 Initialize-Azure
 
 # Enabling detailed logging only when system.debug is true
@@ -98,7 +198,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try
     {
         # Importing required version of azure cmdlets according to azureps installed on machine
@@ -234,5 +333,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $connectionType -ErrorAction SilentlyContinue
 }

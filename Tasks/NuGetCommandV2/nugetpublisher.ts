@@ -7,16 +7,16 @@ import { NuGetConfigHelper2 } from "azure-pipelines-tasks-packaging-common/nuget
 import * as ngToolRunner from "azure-pipelines-tasks-packaging-common/nuget/NuGetToolRunner2";
 import peParser = require("azure-pipelines-tasks-packaging-common/pe-parser/index");
 import { VersionInfo } from "azure-pipelines-tasks-packaging-common/pe-parser/VersionResource";
+import VersionInfoVersion from "azure-pipelines-tasks-packaging-common/pe-parser/VersionInfoVersion";
 import * as nutil from "azure-pipelines-tasks-packaging-common/nuget/Utility";
 import * as pkgLocationUtils from "azure-pipelines-tasks-packaging-common/locationUtilities";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import INuGetCommandOptions from "azure-pipelines-tasks-packaging-common/nuget/INuGetCommandOptions2";
-import { RequestOptions } from "azure-pipelines-tasks-packaging-common/universal/RequestUtilities";
 import * as vstsNuGetPushToolRunner from "./Common/VstsNuGetPushToolRunner";
 import * as vstsNuGetPushToolUtilities from "./Common/VstsNuGetPushToolUtilities";
 import { getProjectAndFeedIdFromInputParam } from 'azure-pipelines-tasks-packaging-common/util';
 import { logError } from 'azure-pipelines-tasks-packaging-common/util';
-import { WebRequest, WebRequestOptions, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
+import { WebRequest, WebResponse, sendRequest } from 'azure-pipelines-tasks-utility-common/restutilities';
 
 
 class PublishOptions implements INuGetCommandOptions {
@@ -27,7 +27,9 @@ class PublishOptions implements INuGetCommandOptions {
         public configFile: string,
         public verbosity: string,
         public authInfo: auth.NuGetExtendedAuthInfo,
-        public environment: ngToolRunner.NuGetEnvironmentSettings) { }
+        public environment: ngToolRunner.NuGetEnvironmentSettings,
+        public useApiKeyEnvironment: boolean,
+        public timeoutSeconds?: number) { }
 }
 
 interface IVstsNuGetPushOptions {
@@ -45,16 +47,10 @@ interface EndpointCredentials {
 }
 
 export async function run(nuGetPath: string): Promise<void> {
-    const timeout = getRequestTimeout();
+    const timeoutSeconds = getRequestTimeoutSeconds();
     let packagingLocation: pkgLocationUtils.PackagingLocation;
     try {
-        const webApiOptions: RequestOptions | undefined = timeout === undefined ? undefined : {
-            socketTimeout: timeout,
-            globalAgentOptions: {
-                timeout,
-            },
-        };
-        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet, webApiOptions);
+        packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.NuGet);
     } catch (error) {
         tl.debug("Unable to get packaging URIs");
         logError(error);
@@ -117,7 +113,7 @@ export async function run(nuGetPath: string): Promise<void> {
         let accessToken;
         let feed;
         const isInternalFeed: boolean = nugetFeedType === "internal";
-        accessToken = await getAccessToken(isInternalFeed, urlPrefixes, timeout);
+        accessToken = await getAccessToken(isInternalFeed, urlPrefixes);
         const quirks = await ngToolRunner.getNuGetQuirksAsync(nuGetPath);
 
         // Clauses ordered in this way to avoid short-circuit evaluation, so the debug info printed by the functions
@@ -142,6 +138,7 @@ export async function run(nuGetPath: string): Promise<void> {
 
         let configFile = null;
         let apiKey: string;
+        let useApiKeyEnvironment = false;
         let credCleanup = () => { return; };
 
         let feedUri: string;
@@ -200,13 +197,14 @@ export async function run(nuGetPath: string): Promise<void> {
                 case (auth.ExternalAuthType.ApiKey):
                     const apiKeyAuthInfo = externalAuth as auth.ApiKeyExternalAuthInfo;
                     apiKey = apiKeyAuthInfo.apiKey;
+                    useApiKeyEnvironment = true;
                     break;
                 default:
                     break;
             }
         }
 
-        if (isInternalFeed === false || useCredConfig) {
+        if ((isInternalFeed === false && !useApiKeyEnvironment) || useCredConfig) {
             nuGetConfigHelper.setAuthForSourcesInTempNuGetConfig();
         }
 
@@ -247,6 +245,14 @@ export async function run(nuGetPath: string): Promise<void> {
             }
             else {
                 tl.debug("Using NuGet.exe to push the packages");
+                if (useApiKeyEnvironment) {
+                    const nuGetVersion: VersionInfo = await peParser.getFileVersionInfoAsync(nuGetPath);
+                    const minimumApiKeyEnvironmentVersion = new VersionInfoVersion(7, 6, 0, 0);
+                    if (!nuGetVersion.fileVersion || VersionInfoVersion.compare(nuGetVersion.fileVersion, minimumApiKeyEnvironmentVersion) < 0) {
+                        throw new Error(tl.loc("Error_ApiKeyRequiresNuGet76", nuGetVersion.fileVersion || "unknown"));
+                    }
+                }
+
                 const publishOptions = new PublishOptions(
                     nuGetPath,
                     feedUri,
@@ -254,7 +260,9 @@ export async function run(nuGetPath: string): Promise<void> {
                     configFile,
                     verbosity,
                     authInfo,
-                    environmentSettings);
+                    environmentSettings,
+                    useApiKeyEnvironment,
+                    timeoutSeconds);
 
                 for (const packageFile of filesList) {
                     await publishPackageNuGet(packageFile, publishOptions, authInfo, continueOnConflict);
@@ -294,7 +302,7 @@ async function publishPackageNuGet(
 
     nugetTool.arg(["-Source", options.feedUri]);
 
-    nugetTool.argIf(options.apiKey, ["-ApiKey", options.apiKey]);
+    nugetTool.argIf(options.apiKey && !options.useApiKeyEnvironment, ["-ApiKey", options.apiKey]);
 
     if (options.configFile) {
         nugetTool.arg("-ConfigFile");
@@ -306,13 +314,24 @@ async function publishPackageNuGet(
         nugetTool.arg(options.verbosity);
     }
 
+    if (options.timeoutSeconds !== undefined) {
+        nugetTool.arg(["-Timeout", String(options.timeoutSeconds)]);
+    }
+
     // Listen for stderr output to write timeline results for the build.
     let stdErrText = "";
     nugetTool.on('stderr', (data: Buffer) => {
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult = await nugetTool.exec({ ignoreReturnCode: true } as IExecOptions);
+    const execOptions = {
+        ignoreReturnCode: true,
+        externalOutput: { source: "childProcess" }
+    } as IExecOptions;
+    if (options.useApiKeyEnvironment) {
+        execOptions.env = { ...process.env, NUGET_API_KEY: options.apiKey };
+    }
+    const execResult = await nugetTool.exec(execOptions);
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);
@@ -350,7 +369,9 @@ async function publishPackageVstsNuGetPush(packageFile: string, options: IVstsNu
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult: number = await vstsNuGetPushTool.exec();
+    const execResult: number = await vstsNuGetPushTool.exec({
+        externalOutput: { source: "childProcess" }
+    });
     if (execResult === 0) {
         return;
     }
@@ -422,23 +443,31 @@ function shouldUseVstsNuGetPush(isInternalFeed: boolean, conflictsAllowed: boole
     return false;
 }
 
-function getRequestTimeout(): number | undefined {
+// Reads the optional requestTimeout input (in seconds) for `nuget.exe push -Timeout`.
+// Returns undefined if not set. Emits a warning when the input is invalid (not a positive whole number).
+// Caps the value at 600 seconds (10 minutes).
+function getRequestTimeoutSeconds(): number | undefined {
     const inputValue: string = tl.getInput("requestTimeout", false);
-    if (inputValue && !(Number.isNaN(Number(inputValue)))) {
-        const parsedTimeout = Number(inputValue);
-        if (parsedTimeout < 0) {
-            tl.warning(tl.loc("Warning_NegativeRequestTimeoutIgnored", inputValue));
-            return undefined;
-        }
-
-        const maxTimeout = 60_000 * 10;
-        return Math.min(parseInt(inputValue, 10), maxTimeout);
+    if (!inputValue) {
+        return undefined;
     }
 
-    return undefined;
+    const parsed = Number(inputValue);
+    if (Number.isNaN(parsed)) {
+        tl.warning(tl.loc("Warning_InvalidRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    if (parsed < 0) {
+        tl.warning(tl.loc("Warning_NegativeRequestTimeoutIgnored", inputValue));
+        return undefined;
+    }
+
+    const maxTimeoutSeconds = 600; // 10 minutes
+    return Math.min(Math.floor(parsed), maxTimeoutSeconds);
 }
 
-async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout?: number): Promise<string> {
+async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promise<string> {
     let allowServiceConnection = tl.getVariable('PUBLISH_VIA_SERVICE_CONNECTION');
     let accessToken: string;
 
@@ -472,7 +501,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout
                 for (const e of endpointsArray.endpointCredentials) {
                     for (const prefix of uriPrefixes) {
                         if (e.endpoint.toUpperCase().startsWith(prefix.toUpperCase())) {
-                            let isServiceConnectionValid = await tryServiceConnection(e, feed, timeout);
+                            let isServiceConnectionValid = await tryServiceConnection(e, feed);
                             if (isServiceConnectionValid) {
                                 matchingEndpoint = e;
                                 break;
@@ -495,7 +524,7 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any, timeout
     return accessToken;
 }
 
-async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, timeout?: number): Promise<boolean> {
+async function tryServiceConnection(endpoint: EndpointCredentials, feed: any): Promise<boolean> {
     // Create request
     const request = new WebRequest();
     const token64 = Buffer.from(`${endpoint.username}:${endpoint.password}`).toString('base64');
@@ -506,27 +535,7 @@ async function tryServiceConnection(endpoint: EndpointCredentials, feed: any, ti
         "Authorization": "Basic " + token64
     };
 
-    let response: WebResponse;
-    if (timeout === undefined) {
-        response = await sendRequest(request);
-    } else {
-        const retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
-        const retriableStatusCodes = [408, 409, 500, 502, 503, 504];
-
-        const options: WebRequestOptions = {
-            retryCount: 3,
-            retryIntervalInSeconds: 5,
-            retriableErrorCodes,
-            retriableStatusCodes,
-            retryRequestTimedout: true,
-            socketTimeout: timeout,
-            httpGlobalAgentOptions: {
-                timeout,
-            },
-        };
-
-        response = await sendRequest(request, options);
-    }
+    const response: WebResponse = await sendRequest(request);
 
     if (response.statusCode == 200) {
         if (response.body) {

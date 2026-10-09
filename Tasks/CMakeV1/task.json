@@ -21,8 +21,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 274,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 1
   },
   "minimumAgentVersion": "1.91.0",
   "instanceNameFormat": "CMake $(cmakeArgs)",

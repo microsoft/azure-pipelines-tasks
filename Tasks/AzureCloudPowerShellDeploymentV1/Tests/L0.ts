@@ -27,4 +27,10 @@ describe('AzureCloudPowerShellDeploymentV1 Suite', function () {
         // TODO - add real tests
         done();
     });
+
+    if (psm.testSupported()) {
+        it('Wires Invoke-ScriptArgumentSanitization onto NewServiceAdditionalArguments (MSRC 115118 Bug 2)', (done) => {
+            psr.run(path.join(__dirname, 'L0NewServiceAdditionalArgumentsSanitizerWiring.ps1'), done);
+        });
+    }
 });

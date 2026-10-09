@@ -1,10 +1,54 @@
 import * as path from "path";
+import * as fs from "fs";
+import * as os from "os";
 import * as assert from "assert";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as dockerCommandUtils from "azure-pipelines-tasks-docker-common/dockercommandutils";
 import * as pipelineutils from "azure-pipelines-tasks-docker-common/pipelineutils";
+import * as utils from "../utils";
 import * as shared from "./TestShared";
+
+describe('writeTaskOutput', () => {
+  let tempDirectory = '';
+  let originalAgentTempDirectory: string | undefined;
+
+  beforeEach(() => {
+    originalAgentTempDirectory = process.env['AGENT_TEMPDIRECTORY'];
+    tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'DockerV2-writeTaskOutput-'));
+    process.env['AGENT_TEMPDIRECTORY'] = tempDirectory;
+  });
+
+  afterEach(() => {
+    try {
+      if (tempDirectory) {
+        fs.rmSync(tempDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+      }
+    } finally {
+      tempDirectory = '';
+      if (originalAgentTempDirectory === undefined) {
+        delete process.env['AGENT_TEMPDIRECTORY'];
+      } else {
+        process.env['AGENT_TEMPDIRECTORY'] = originalAgentTempDirectory;
+      }
+    }
+  });
+
+  it('writes an empty output file without warning', () => {
+    const originalWarning = tl.warning;
+    let warningCount = 0;
+    Object.assign(tl, { warning: () => warningCount++ });
+
+    try {
+      const taskOutputPath = utils.writeTaskOutput('build', '');
+
+      assert.equal(fs.readFileSync(taskOutputPath, 'utf8'), '', 'empty output should be preserved');
+      assert.equal(warningCount, 0, 'empty output should not emit a warning');
+    } finally {
+      Object.assign(tl, { warning: originalWarning });
+    }
+  });
+});
 
 describe("DockerV2 Suite", function () {
   this.timeout(30000);

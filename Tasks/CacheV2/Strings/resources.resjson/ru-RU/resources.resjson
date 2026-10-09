@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "Переменная попадания в кэше",
   "loc.input.help.cacheHitVar": "Переменная, для которой устанавливается значение true при восстановлении кэша (например, при попадании в кэше), в противном случае устанавливается значение false.",
   "loc.input.label.restoreKeys": "Дополнительные префиксы ключей восстановления",
-  "loc.input.help.restoreKeys": "Дополнительные префиксы ключей восстановления, которые используются при промахе первичного ключа. Это может быть список префиксов ключей, разделенных символами новой строки."
+  "loc.input.help.restoreKeys": "Дополнительные префиксы ключей восстановления, которые используются при промахе первичного ключа. Это может быть список префиксов ключей, разделенных символами новой строки.",
+  "loc.input.label.saveOnPartialSuccess": "Save cache on partial success",
+  "loc.input.help.saveOnPartialSuccess": "When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds."
 }

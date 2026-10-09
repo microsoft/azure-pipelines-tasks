@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "忽略無效的 requestTimeout 值 '%s'。請提供非負整數 (以秒為單位)。將使用 NuGet 的預設逾時 300 秒。",
   "loc.messages.Error_CommandNotRecognized": "無法辨認命令 %s。",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore 目前不支援使用加密的 API 金鑰。",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "使用 API 金鑰驗證的外部服務連線需要 NuGet 7.6 或更新版本。選取的 NuGet 版本 %s。",
   "loc.messages.Error_ExpectedConfigurationElement": "XML 無效。應有名為 'configuration' 的元素。",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "使用下列搜尋模式找不到任何相符的檔案: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "找不到 %s 的下載 URL",

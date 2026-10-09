@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Invoke-ScriptArgumentSanitization
 $targetAzurePs = "4.1.0"
 $input_workingDirectory = "C:\Users"
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require

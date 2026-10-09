@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "Ungültiger requestTimeout-Wert „%s“ wird ignoriert. Geben Sie eine nicht negative ganze Zahl (Sekunden) an. Die Standardzeitüberschreitung von NuGet von 300 Sekunden wird verwendet.",
   "loc.messages.Error_CommandNotRecognized": "Der Befehl %s wurde nicht erkannt.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore unterstützt die Verwendung eines verschlüsselten API-Schlüssels derzeit nicht.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "Externe Dienstverbindungen, die die API-Schlüsselauthentifizierung verwenden, erfordern NuGet 7.6 oder höher. Die ausgewählte NuGet-Version ist %s.",
   "loc.messages.Error_ExpectedConfigurationElement": "Ungültiges XML. Es wurde ein Element mit dem Namen \"configuration\" erwartet.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Es wurden keine mit dem Suchmuster übereinstimmenden Dateien gefunden: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Keine Download-URL für %s gefunden",

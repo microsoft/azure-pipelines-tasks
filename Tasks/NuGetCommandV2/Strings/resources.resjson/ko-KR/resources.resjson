@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "잘못된 requestTimeout 값 '%s'을(를) 무시합니다. 음수가 아닌 정수(초)를 입력하세요. NuGet의 기본 시간 제한 300초를 사용합니다.",
   "loc.messages.Error_CommandNotRecognized": "%s 명령을 인식할 수 없습니다.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore는 현재 암호화된 API 키 사용을 지원하지 않습니다.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "API 키 인증을 사용하는 외부 서비스 연결에는 NuGet 7.6 이상이 필요합니다. 선택한 NuGet 버전이 %s입니다.",
   "loc.messages.Error_ExpectedConfigurationElement": "잘못된 XML입니다. 'configuration' 요소가 필요합니다.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "다음 검색 패턴과 일치하는 파일을 찾을 수 없습니다. %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "%s에 대한 다운로드 URL을 찾을 수 없습니다.",

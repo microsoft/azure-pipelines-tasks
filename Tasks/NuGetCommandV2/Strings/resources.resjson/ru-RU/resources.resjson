@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "Игнорируется недопустимое значение requestTimeout \"%s\". Укажите неотрицательное целое число (в секундах). Будет использоваться время ожидания по умолчанию в NuGet, равное 300 секундам.",
   "loc.messages.Error_CommandNotRecognized": "Нераспознанная команда %s.",
   "loc.messages.Error_ApiKeyNotSupported": ".NET Core сейчас не поддерживает использование зашифрованных ключей API.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "Внешние подключения к службам, использующие проверку подлинности с ключом API, требуют NuGet версии 7.6 или более поздней. Выбранная версия NuGet: %s.",
   "loc.messages.Error_ExpectedConfigurationElement": "Недопустимый код XML. Ожидается элемент \"configuration\".",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Не найдены файлы, соответствующие шаблону поиска: %s.",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL-адрес скачивания для %s не найден.",

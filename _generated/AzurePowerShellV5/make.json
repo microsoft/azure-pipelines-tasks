@@ -5,7 +5,9 @@
                 "node_modules/https-proxy-agent/node_modules/agent-base",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
-                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib"
+                "node_modules/azure-pipelines-tasks-utility-common/node_modules/azure-pipelines-tool-lib/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-args-sanitizer/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-args-sanitizer/node_modules/azure-pipelines-tasks-utility-common"
             ],
             "options": "-Rf"
         }
@@ -18,6 +20,15 @@
         {
             "module": "../Common/TlsHelper_",
             "type": "ps"
+        },
+        {
+            "module": "../Common/Sanitizer",
+            "type": "ps"
+        },
+        {
+            "module": "../Common/ArgsSanitizer",
+            "type": "node",
+            "compile": true
         }
     ],
     "externals": {
@@ -25,7 +36,7 @@
             {
                 "name": "VstsTaskSdk",
                 "version": "0.21.0",
-                "repository": "https://www.powershellgallery.com/api/v2/",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v2",
                 "cp": [
                     {
                         "source": [

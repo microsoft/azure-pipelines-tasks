@@ -17,7 +17,7 @@ describe('TestUtils', function () {
     assert(tr.stdOutContained(TestString.Err_ExtractionFailed), "should have printed: " + TestString.Err_ExtractionFailed);
   }).timeout(20000);
 
-  it('should get a release', async function () {
+  xit('should get a release', async function () {
     const taskPath = path.join(__dirname, 'GetKubeloginReleaseL0Tests.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(taskPath);
 

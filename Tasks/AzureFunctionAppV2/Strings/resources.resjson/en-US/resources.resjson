@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Azure Functions Deploy",
-  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunctiondeployreadme)",
+  "loc.helpMarkDown": "[Learn more about this task](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "Update a function app with .NET, Python, JavaScript, PowerShell, Java based web applications",
   "loc.instanceNameFormat": "Azure Function App Deploy: $(appName)",
   "loc.releaseNotes": "What's new in version 2.* <br /> Removed WAR Deploy Support, setting Web.Config options, and the option for the Startup command for Linux Azure Function Apps.",

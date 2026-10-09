@@ -1,0 +1,18 @@
+{
+    "externals": {
+        "archivePackages": [
+            {
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/GradleCredProviderCI/0.0.0/artifacts-gradle-credprovider-ci.zip",
+                "dest": "./GradleCredProvider/"
+            }
+        ]
+    },
+    "rm": [
+        {
+            "items": [
+                "node_modules/azure-pipelines-tasks-artifacts-common/node_modules/azure-pipelines-task-lib"
+            ],
+            "options": "-Rf"
+        }
+    ]
+}

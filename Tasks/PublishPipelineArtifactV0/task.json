@@ -1,52 +1,52 @@
 {
-    "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
-    "name": "PublishPipelineArtifact",
-    "friendlyName": "Publish pipeline artifact",
-    "description": "Publish a local directory or file as a named artifact for the current pipeline",
-    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
-    "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
-    "category": "Utility",
-    "author": "Microsoft Corporation",
-    "version": {
-        "Major": 0,
-        "Minor": 242,
-        "Patch": 0
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "Publish pipeline artifact",
+  "description": "Publish a local directory or file as a named artifact for the current pipeline",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+  "helpMarkDown": "Publish a local directory or file as a named artifact for the current pipeline.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 0,
+    "Minor": 281,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "minimumAgentVersion": "2.199.0",
+  "preview": false,
+  "inputs": [
+    {
+      "name": "artifactName",
+      "type": "string",
+      "label": "The name of this artifact",
+      "defaultValue": "drop",
+      "required": true,
+      "helpMarkDown": "The name of this artifact."
     },
-    "groups": [],
-    "demands": [],
-    "minimumAgentVersion": "2.199.0",
-    "preview": false,
-    "inputs": [
-        {
-            "name": "artifactName",
-            "type": "string",
-            "label": "The name of this artifact",
-            "defaultValue": "drop",
-            "required": true,
-            "helpMarkDown": "The name of this artifact."
-        },
-        {
-            "name": "targetPath",
-            "type": "filePath",
-            "label": "Path to publish",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
-        },
-        {
-            "name": "properties",
-            "type": "string",
-            "label": "Custom properties",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
-        }
-    ],
-    "instanceNameFormat": "Publish Pipeline Artifact",
-    "execution": {
-        "AgentPlugin": {
-            "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
-        }
+    {
+      "name": "targetPath",
+      "type": "filePath",
+      "label": "Path to publish",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The folder or file path to publish. This can be a fully-qualified path or a path relative to the root of the repository. Wildcards are not supported. [Variables](https://go.microsoft.com/fwlink/?LinkID=550988) are supported."
     },
-    "messages": {}
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "Custom properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+    }
+  ],
+  "instanceNameFormat": "Publish Pipeline Artifact",
+  "execution": {
+    "AgentPlugin": {
+      "target": "Agent.Plugins.PipelineArtifact.PublishPipelineArtifactTask, Agent.Plugins"
+    }
+  },
+  "messages": {}
 }
