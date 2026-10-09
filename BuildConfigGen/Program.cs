@@ -49,9 +49,9 @@ namespace BuildConfigGen
             // Shared package version overrides for Node24 configurations
             public static readonly Dictionary<string, string> Node24PackageOverrides = new Dictionary<string, string>
             {
-                ["typescript"] = "^5.7.2",
+                ["typescript"] = "^5.1.6",
                 ["azure-pipelines-task-lib"] = "^5.2.6",
-                ["azure-devops-node-api"] = "^14.0.2",
+                ["azure-devops-node-api"] = "^12.1.0",
                 ["azure-pipelines-tasks-artifacts-common"] = "^2.273.0",
                 ["azure-pipelines-tasks-azure-arm-rest"] = "^3.279.5",
                 ["azure-pipelines-tasks-azurermdeploycommon"] = "^3.270.0",
