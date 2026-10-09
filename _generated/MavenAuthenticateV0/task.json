@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 281,
     "Patch": 0
   },
   "runsOn": [
@@ -83,6 +83,16 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "FIRST_RUN_SETTINGS_XML_EXISTS_PATH"
+      ]
+    }
+  },
   "messages": {
     "Warning_FeedEntryAlreadyExists": "The settings for the feed or repository '%s' already exists in the users settings.xml file.",
     "Warning_NoEndpointsToAuth": "No repositories were selected to authenticate, please check your task configuration.",
@@ -97,10 +107,12 @@
     "Info_SuccessAddingFederatedFeedAuth": "Successfully added auth for feed %s with federated credentials.",
     "Error_InvalidServiceConnection": "The service connection for %s is invalid.",
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
-    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s."
+    "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
+    "Warning_ChmodFailed": "Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.",
+    "Warning_StatFailed": "Unable to read permissions on %s: %s. Original permissions may not be restored."
   },
   "_buildConfigMapping": {
-    "Default": "0.280.0",
-    "wif_242": "0.280.1"
+    "Default": "0.281.0",
+    "wif_242": "0.281.1"
   }
 }

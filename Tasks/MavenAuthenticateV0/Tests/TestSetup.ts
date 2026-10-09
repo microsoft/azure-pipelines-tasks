@@ -48,6 +48,9 @@ const m2FolderExists = process.env[TestEnvVars.m2FolderExists] !== 'false';
 const systemAccessToken = process.env[TestEnvVars.systemAccessToken] || TestConstants.systemToken;
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
+const osType = process.env[TestEnvVars.osType] || 'Windows NT';
+const settingsXmlMode = parseInt(process.env[TestEnvVars.settingsXmlMode] || '644', 8);
+const chmodShouldFail = process.env[TestEnvVars.chmodShouldFail] === 'true';
 
 // Suppress debug output in tests — SYSTEM_DEBUG=true is set globally by make.js
 // for the test-runner process but should not be inherited by the task child process.
@@ -271,22 +274,28 @@ existAnswers[backupSettingsXmlPath] = false; // Backup doesn't exist initially
 
 tr.setAnswers({
     osType: {
-        'osType': 'Windows NT'
+        'osType': osType
     },
     exist: existAnswers
 });
 
-// If settings.xml should exist, mock the file reading
-if (settingsXmlExists && settingsXmlContent) {
+if (!osType.match(/^Win/)) {
     const fs = require('fs');
-    const originalReadFileSync = fs.readFileSync;
     tr.registerMock('fs', {
         ...fs,
-        readFileSync: (filePath: string, encoding?: string) => {
+        statSync: (filePath: string) => {
             if (filePath === settingsXmlPath) {
-                return settingsXmlContent;
+                return { mode: settingsXmlMode };
             }
-            return originalReadFileSync(filePath, encoding);
+            return fs.statSync(filePath);
+        },
+        chmodSync: (filePath: string, mode: number) => {
+            if (chmodShouldFail) {
+                const err: NodeJS.ErrnoException = new Error(`EPERM: operation not permitted, chmod '${filePath}'`);
+                err.code = 'EPERM';
+                throw err;
+            }
+            console.log(`chmodSync ${filePath} ${mode.toString(8)}`);
         }
     });
 }
