@@ -10,5 +10,7 @@ process.env['SYSTEM_SERVERTYPE'] = 'Hosted';
 process.env['SYSTEM_DEFAULTWORKINGDIRECTORY'] = __dirname;
 process.env['SYSTEM_TEAMPROJECTID'] = '11111111-1111-1111-1111-111111111111';
 process.env['SYSTEM_HOSTTYPE'] = 'Release';
+// The agent that runs these tests sets BUILD_BUILDID too.
+delete process.env['BUILD_BUILDID'];
 
 tr.run();

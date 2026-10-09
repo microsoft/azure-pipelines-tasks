@@ -33,8 +33,11 @@ export function createRunner(options: ScenarioOptions = {}): tmrm.TaskMockRunner
     const variables = { ...baseVariables, ...options.variables };
     for (const name of Object.keys(variables)) {
         const value = variables[name];
+        const key = name.replace(/\./g, '_').replace(/ /g, '_').toUpperCase();
         if (value !== undefined) {
-            process.env[name.replace(/\./g, '_').replace(/ /g, '_').toUpperCase()] = value;
+            process.env[key] = value;
+        } else {
+            delete process.env[key];
         }
     }
     process.env['ENDPOINT_AUTH_SYSTEMVSSCONNECTION'] = '{"parameters":{"AccessToken":"token"},"scheme":"OAuth"}';

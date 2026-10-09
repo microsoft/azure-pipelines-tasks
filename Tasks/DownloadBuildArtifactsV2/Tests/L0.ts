@@ -27,7 +27,10 @@ describe('DownloadBuildArtifactsV2 Suite', function () {
         assert(tr.failed, 'task should have failed');
     }).timeout(10000);
 
-    it('Tar extraction on Windows should fail fast', async () => {
+    it('Tar extraction on Windows should fail fast', async function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
         const tp: string = path.join(__dirname, 'L0TarExtractionOnWindowsFail.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
