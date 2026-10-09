@@ -1,11 +1,8 @@
 import tl = require('azure-pipelines-task-lib/task');
 import util = require('./mavenutils');
 
-import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
 
 const M2FolderName: string = ".m2";
@@ -14,25 +11,11 @@ const backupSettingsXmlName: string = "_settings.xml";
 
 tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-function tryChmodSync(targetPath: string, mode: number): void {
-    try {
-        fs.chmodSync(targetPath, mode);
-    } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : err;
-
-        tl.warning(
-            tl.loc("Warning_ChmodFailed", targetPath, mode.toString(8), errorMessage),
-            IssueSource.CustomerScript
-        );
-    }
-}
-
 async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
     let federatedFeedAuthSuccessCount: number = 0;
     try {
-        const restrictPermissions = !tl.osType().match(/^Win/);
         let userM2FolderPath: string = "";
 
         if (tl.osType().match(/^Win/)) {
@@ -44,9 +27,6 @@ async function run(): Promise<void> {
         if (!tl.exist(userM2FolderPath)) {
             tl.debug(tl.loc("Info_M2FolderDoesntExist", userM2FolderPath));
             tl.mkdirP(userM2FolderPath);
-            if (restrictPermissions) {
-                tryChmodSync(userM2FolderPath, 0o700);
-            }
         }
 
         let userSettingsXmlPath: string = path.join(userM2FolderPath, SettingsXmlName);
@@ -58,22 +38,8 @@ async function run(): Promise<void> {
         if (tl.exist(userSettingsXmlPath)) {
             tl.debug(tl.loc("Info_SettingsXmlRead", userSettingsXmlPath));
             if (!tl.getVariable('FIRST_RUN_SETTINGS_XML_EXISTS_PATH') && !tl.exist(backupSettingsXmlPath)) {
-                if (restrictPermissions) {
-                    try {
-                        const originalSettingsXmlMode = fs.statSync(userSettingsXmlPath).mode & 0o777;
-                        tl.setTaskVariable("originalUserM2SettingsFileMode", originalSettingsXmlMode.toString(8));
-                    } catch (err) {
-                        tl.warning(tl.loc("Warning_StatFailed", userSettingsXmlPath, (err && err.message) ? err.message : err), IssueSource.CustomerScript);
-                    }
-                }
                 tl.cp(userSettingsXmlPath, backupSettingsXmlPath);
                 tl.setTaskVariable("backupUserM2SettingsFilePath", backupSettingsXmlPath);
-                if (restrictPermissions) {
-                    tryChmodSync(backupSettingsXmlPath, 0o600);
-                }
-            }
-            if (restrictPermissions) {
-                tryChmodSync(userSettingsXmlPath, 0o600);
             }
             settingsJson = await util.readXmlFileAsJson(userSettingsXmlPath);
         }

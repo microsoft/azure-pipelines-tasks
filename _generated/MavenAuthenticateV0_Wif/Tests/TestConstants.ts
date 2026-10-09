@@ -101,8 +101,5 @@ export const TestEnvVars = {
     m2FolderExists: '__m2FolderExists__',
     systemAccessToken: '__systemAccessToken__',
     wifToken: '__wifToken__',
-    wifShouldFail: '__wifShouldFail__',
-    osType: '__osType__',
-    settingsXmlMode: '__settingsXmlMode__',
-    chmodShouldFail: '__chmodShouldFail__'
+    wifShouldFail: '__wifShouldFail__'
 };
