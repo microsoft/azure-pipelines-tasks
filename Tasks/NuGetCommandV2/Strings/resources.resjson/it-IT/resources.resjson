@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "Viene ignorato il valore requestTimeout non valido \"%s\". Specificare un numero intero non negativo (secondi). Verrà usato il timeout predefinito di NuGet di 300 secondi.",
   "loc.messages.Error_CommandNotRecognized": "Il comando %s non è stato riconosciuto.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore non supporta attualmente una chiave API crittografata.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "Le connessioni al servizio esterno che usano l'autenticazione tramite chiave API richiedono NuGet 7.6 o versione successiva. La versione di NuGet selezionata è %s.",
   "loc.messages.Error_ExpectedConfigurationElement": "XML non valido. È previsto un elemento denominato 'configuration'.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Non sono stati trovati file corrispondenti con il criterio di ricerca: %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "Non è stato trovato alcun URL di download per %s",
