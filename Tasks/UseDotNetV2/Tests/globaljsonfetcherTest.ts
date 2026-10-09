@@ -64,7 +64,8 @@ mockery.registerMock('azure-pipelines-task-lib/task', {
     },
     loc: function (locString, ...param: string[]) { return tl.loc(locString, param); },
     debug: function (message) { return tl.debug(message); },
-    warning: function (message) { console.log("WARNING: " + message); }
+    warning: function (message) { console.log("WARNING: " + message); },
+    writeExternalOutput: function (message: string, options?: any) { process.stdout.write(message); }
 });
 
 mockery.registerMock('fs', {

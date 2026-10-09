@@ -1,6 +1,7 @@
 "use strict";
 
 import * as path from "path";
+import * as os from "os";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
 import * as utils from "./utilities";
@@ -78,13 +79,13 @@ export default class TaskParameters {
 
                 console.log(tl.loc("ResolvingDeployPackageInput"));
                 this.packagePath = this._getResolvedPath(tl.getVariable('System.DefaultWorkingDirectory'), tl.getInput(constants.DeployPackageInputName, true));
-                console.log(tl.loc("ResolvedDeployPackgePath", this.packagePath));
+                tl.writeExternalOutput(tl.loc("ResolvedDeployPackgePath", this.packagePath) + os.EOL, { source: "repository" });
 
                 console.log(tl.loc("ResolvingDeployScriptInput"));
                 var deployScriptAbsolutePath = this._getResolvedPath(this.packagePath, tl.getInput(constants.DeployScriptPathInputName, true));
                 var scriptRelativePath = path.relative(this.packagePath, deployScriptAbsolutePath);
                 this.deployScriptPath = this._normalizeRelativePathForTargetOS(scriptRelativePath);
-                console.log(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath));
+                tl.writeExternalOutput(tl.loc("ResolvedDeployScriptPath", this.deployScriptPath) + os.EOL, { source: "repository" });
 
                 this.deployScriptArguments = tl.getInput(constants.DeployScriptArgumentsInputName, false);
 
