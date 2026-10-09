@@ -53,7 +53,9 @@ async function downloadPythonVersion(versionSpec: string, parameters: TaskParame
 
     task.debug('Downloading manifest');
 
-    const restClient = new rest.RestClient('vsts-node-tool');
+    const restClient = new rest.RestClient('vsts-node-tool', undefined, undefined, {
+        proxy: task.getHttpProxyConfiguration(MANIFEST_URL)
+    });
     const response: rest.IRestResponse<PythonRelease[]> = await restClient.get(MANIFEST_URL, {
         additionalHeaders
     });
