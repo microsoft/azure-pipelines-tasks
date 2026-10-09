@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "Supprimer la règle une fois la tâche terminée",
   "loc.input.help.DeleteFirewallRule": "Si cette option est sélectionnée, l'exception ajoutée pour les adresses IP de l'agent Automation est supprimée du service Azure Database pour MySQL correspondant.",
   "loc.messages.ARGD_ConstructorFailed": "Échec de la tâche durant l'initialisation. Erreur : %s.",
+  "loc.messages.InvalidDatabaseName": "Nom de base de données « %s » incorrect. Seuls les caractères alphanumériques, les traits de soulignement, les traits d’union et les signes de dollar sont autorisés.",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "Le nom de la règle de pare-feu ne doit pas avoir une valeur null.",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "L'adresse du pare-feu ne doit pas avoir une valeur null.",
   "loc.messages.StartIpAddressCannotBeEmpty": "L'adresse IP de début de la règle de pare-feu ne doit pas avoir une valeur null.",
