@@ -1,5 +1,6 @@
 import fs = require('fs');
 import Q = require('q');
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import stripbom = require('strip-bom');
@@ -7,7 +8,6 @@ import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/web
 
 import * as xml2js from 'xml2js';
 import * as os from 'os';
-import * as fse from 'fs-extra';
 
 import { getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection, PrivateKeyServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 
@@ -183,8 +183,32 @@ function writeJsonAsXmlFile(filePath: string, jsonContent: any, rootName:string)
 }
 
 function writeFile(filePath: string, fileContent: string): Q.Promise<void> {
-    fse.mkdirpSync(path.dirname(filePath));
-    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, { encoding: 'utf-8' });
+    const directoryPath = path.dirname(filePath);
+    const writeOptions: any = { encoding: 'utf-8' };
+    const restrictPermissions =
+        tl.osType() === 'Linux' || tl.osType() === 'Darwin';
+
+    if (restrictPermissions) {
+        fs.mkdirSync(directoryPath, { recursive: true, mode: 0o700 });
+        writeOptions.mode = 0o600;
+    } else {
+        fs.mkdirSync(directoryPath, { recursive: true });
+    }
+
+    return Q.nfcall<void>(fs.writeFile, filePath, fileContent, writeOptions)
+        .then(() => {
+            if (restrictPermissions) {
+                try {
+                    fs.chmodSync(filePath, 0o600);
+                } catch (err) {
+                    const errorMessage = (err && (err as Error).message) ? (err as Error).message : err;
+                    tl.warning(
+                        tl.loc('Warning_ChmodFailed', filePath, '600', errorMessage),
+                        IssueSource.CustomerScript
+                    );
+                }
+            }
+        });
 }
 
 function readFile(filePath: string, encoding: string): Q.Promise<string> {
