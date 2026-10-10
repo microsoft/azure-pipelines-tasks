@@ -1,0 +1,1461 @@
+{
+  "source": "ArtifactTool 0.2.574 installed public BuildXL hashing API; local synthetic inputs only",
+  "seed": "az-artifacts local chunker vectors v1",
+  "recipe": "seeded parts restart SHA256(UTF8(seed) + NUL + uint64_le(i)) at i=0; zero parts contain zero bytes",
+  "vectors": [
+    {
+      "name": "zeros-0",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 0
+        }
+      ],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "root": "CF83E1357EEFB8BDF1542850D66D8007D620E4050B5715DC83F4A921D36CE9CE01",
+      "chunks": [
+        {
+          "id": "CF83E1357EEFB8BDF1542850D66D8007D620E4050B5715DC83F4A921D36CE9CE01",
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "seeded-0",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 0
+        }
+      ],
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "root": "CF83E1357EEFB8BDF1542850D66D8007D620E4050B5715DC83F4A921D36CE9CE01",
+      "chunks": [
+        {
+          "id": "CF83E1357EEFB8BDF1542850D66D8007D620E4050B5715DC83F4A921D36CE9CE01",
+          "size": 0
+        }
+      ]
+    },
+    {
+      "name": "zeros-1",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 1
+        }
+      ],
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "root": "B8244D028981D693AF7B456AF8EFA4CAD63D282E19FF14942C246E50D9351D2201",
+      "chunks": [
+        {
+          "id": "B8244D028981D693AF7B456AF8EFA4CAD63D282E19FF14942C246E50D9351D2201",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "seeded-1",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 1
+        }
+      ],
+      "sha256": "50868f20258bbc9cce0da2719e8654c108733dd2f663b8737c574ec0ead93eb3",
+      "root": "2069676B207ACE4D73B4FFDB05E184F914B0C427DA4830EDB3A699011BC6D84E01",
+      "chunks": [
+        {
+          "id": "2069676B207ACE4D73B4FFDB05E184F914B0C427DA4830EDB3A699011BC6D84E01",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "zeros-32767",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 32767
+        }
+      ],
+      "sha256": "65dd4ac834511120d81d123f3e01b8acf90c895e88ace62916581fc8e952a62a",
+      "root": "874EFDBEF5CC034B716636A5B2173B9D5B50BF08648AA36CF1477EA7A6C1FD0301",
+      "chunks": [
+        {
+          "id": "874EFDBEF5CC034B716636A5B2173B9D5B50BF08648AA36CF1477EA7A6C1FD0301",
+          "size": 32767
+        }
+      ]
+    },
+    {
+      "name": "seeded-32767",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 32767
+        }
+      ],
+      "sha256": "133d23854a53216aa2e42646e6060939940bdd47202c247be7696162ea0d8a28",
+      "root": "AED68097DF1CB24F8DA4681B2D64B127E58E559B1757A8BB7F67525C84088B0801",
+      "chunks": [
+        {
+          "id": "AED68097DF1CB24F8DA4681B2D64B127E58E559B1757A8BB7F67525C84088B0801",
+          "size": 32767
+        }
+      ]
+    },
+    {
+      "name": "zeros-32768",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 32768
+        }
+      ],
+      "sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+      "root": "768007E06B0CD9E62D50F458B9435C6DDA0A6D272F0B15550F97C478394B743301",
+      "chunks": [
+        {
+          "id": "768007E06B0CD9E62D50F458B9435C6DDA0A6D272F0B15550F97C478394B743301",
+          "size": 32768
+        }
+      ]
+    },
+    {
+      "name": "seeded-32768",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 32768
+        }
+      ],
+      "sha256": "1233dc9edba409f37ff44c611feb787bb6c66f9e6cb0a8a8518e02832530308d",
+      "root": "5834A9C606271D20D97907B3368C01A984ECB7866E2018BAAAFFE118A66DC27401",
+      "chunks": [
+        {
+          "id": "5834A9C606271D20D97907B3368C01A984ECB7866E2018BAAAFFE118A66DC27401",
+          "size": 32768
+        }
+      ]
+    },
+    {
+      "name": "zeros-32769",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 32769
+        }
+      ],
+      "sha256": "7ef43086d6ff0877a42e27bfa629270eacb2e6a327950020a4e426f0281a1e63",
+      "root": "0CCA81DA5AB6ADF93C93F3F8492C5AE94F1BDA0D9C3F56F4D572B2950B14DF9C01",
+      "chunks": [
+        {
+          "id": "0CCA81DA5AB6ADF93C93F3F8492C5AE94F1BDA0D9C3F56F4D572B2950B14DF9C01",
+          "size": 32769
+        }
+      ]
+    },
+    {
+      "name": "seeded-32769",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 32769
+        }
+      ],
+      "sha256": "9a64a9b8b42e551e2fc26f91ca76e8020b2be5703be5bd7466713d908964d8fa",
+      "root": "1747CB8FFA9589267C0DBE52E8112FB8103DE34A5B9DD3A4D014778CD9F5C97401",
+      "chunks": [
+        {
+          "id": "1747CB8FFA9589267C0DBE52E8112FB8103DE34A5B9DD3A4D014778CD9F5C97401",
+          "size": 32769
+        }
+      ]
+    },
+    {
+      "name": "zeros-131071",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 131071
+        }
+      ],
+      "sha256": "667af27ba601c75c75dfdb1004bb3da61dccabbe0cea4c3cb02427d880f75b63",
+      "root": "050CBD635FB5A9F7CFFD1AB8217AE522C38AA4F5101ACBFCCBF786BB6FCEE53201",
+      "chunks": [
+        {
+          "id": "050CBD635FB5A9F7CFFD1AB8217AE522C38AA4F5101ACBFCCBF786BB6FCEE53201",
+          "size": 131071
+        }
+      ]
+    },
+    {
+      "name": "seeded-131071",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 131071
+        }
+      ],
+      "sha256": "6ade0e4a185f08052f103da48115461ea1f3b08f1bb4a280c0013e63ae85b82b",
+      "root": "38436E849EA562090F0F16C138572A93FF71E88CE0AE7B9E40FD5DB42DFE419302",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "666033EF1D25998B16A6FB57852B5D171B09E9DC04F87A79761A1F975299BB2D01",
+          "size": 8790
+        }
+      ]
+    },
+    {
+      "name": "zeros-131072",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 131072
+        }
+      ],
+      "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471",
+      "root": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        }
+      ]
+    },
+    {
+      "name": "seeded-131072",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 131072
+        }
+      ],
+      "sha256": "817499ac57b86fa5679c466eb4c440d34c0db7f82f231963342579035371787a",
+      "root": "A2470724BCB62AD2D977B0891CE490746E2F5F247D4E97E04080EE9C81A92BE702",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "E2458E216193BE05556A2D756760494705E941E3189DBB89A3F6AF304253DCEF01",
+          "size": 8791
+        }
+      ]
+    },
+    {
+      "name": "zeros-131073",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 131073
+        }
+      ],
+      "sha256": "d281209cc72d47b090175b22621840d9eb8267d09cc05dc122bfaa759a82830f",
+      "root": "F0D3A41AF14908E120BBCEFC431E2FE191A7D9D63BCC4FD13AE31C056E5F7A1902",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "B8244D028981D693AF7B456AF8EFA4CAD63D282E19FF14942C246E50D9351D2201",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "seeded-131073",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 131073
+        }
+      ],
+      "sha256": "0184a186c0d783295e7c13e0ddaef6cfe975e5bbe15e18c6333de703ea76ce0a",
+      "root": "A3AC81F1EA5860E40C4EDB84AC4680F1B891D9FA82F47F9F00C7B78DFE4B6B9002",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "4E3ECACE0CE8C2E19CB8D6466B63926F0CBB9219B297B11E93CEEF609587448301",
+          "size": 8792
+        }
+      ]
+    },
+    {
+      "name": "zeros-1048575",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 1048575
+        }
+      ],
+      "sha256": "ca7ed0c4a8e67cbdc461c4cb0d286d2fabbd9f0c41a7f42b665f72ebaa8aec56",
+      "root": "3917A5315BF6C30029ABA7A979882CA45425E20658ABBB7BA8A773718DD7289602",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "050CBD635FB5A9F7CFFD1AB8217AE522C38AA4F5101ACBFCCBF786BB6FCEE53201",
+          "size": 131071
+        }
+      ]
+    },
+    {
+      "name": "seeded-1048575",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 1048575
+        }
+      ],
+      "sha256": "c44a27ff90d6d404f8d2e4c95f3e8540b7dfd157b6af0dd3d5719bc4e7414bdb",
+      "root": "7CC21BD64C228C6021A97043B0425693CC8650C766DF4B2CE9A45C83BD997EDD02",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "5CD2CFCFEB7BDA7EB29B3DC5145922276EEC10C2B58CD2DB27EBC28EC7CF0EF001",
+          "size": 16900
+        }
+      ]
+    },
+    {
+      "name": "zeros-1048576",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 1048576
+        }
+      ],
+      "sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58",
+      "root": "48B59F990BD33E2B185DE8216D2DB5FF71173A4324709471F35A13BEAEDE93E602",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        }
+      ]
+    },
+    {
+      "name": "seeded-1048576",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 1048576
+        }
+      ],
+      "sha256": "1890abd970aac7e7aac741fd3a1ab6e44361d6acc17d725c7d8cb427654a7955",
+      "root": "574BAD8D5C7A46A71E16B3DF604A339D0DDA3CA993205634D93021019939F11602",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "F109E3A7DDCF871557E5E106B87A276436E697144D8BB4FF1B0A5E1C88655DC801",
+          "size": 16901
+        }
+      ]
+    },
+    {
+      "name": "zeros-1048577",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 1048577
+        }
+      ],
+      "sha256": "2cb74edba754a81d121c9db6833704a8e7d417e5b13d1a19f4a52f007d644264",
+      "root": "ECDC8B0210D223ACE688076A8A5DA02F9283C9BC4A71623F3A62771B30BE0B1E02",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "B8244D028981D693AF7B456AF8EFA4CAD63D282E19FF14942C246E50D9351D2201",
+          "size": 1
+        }
+      ]
+    },
+    {
+      "name": "seeded-1048577",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 1048577
+        }
+      ],
+      "sha256": "18cfe978cf5f4326382d21139cc0e74f13f1b6fb2e3ab7f2c4e33c53cb611656",
+      "root": "28217D8AF36F0953A01DB10C9E0E7AAD844AE256884005F72A4163492B1A85DD02",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "38A683CD845FAE4509D8E6548B71DD1CA54F0C2E16985DC8F2B0FE99CC08EAED01",
+          "size": 16902
+        }
+      ]
+    },
+    {
+      "name": "zeros-2097171",
+      "recipe": [
+        {
+          "kind": "zeros",
+          "length": 2097171
+        }
+      ],
+      "sha256": "f236c4734114cf12740168ec0cfae36457bfe5c8c4db505a026b97408d2c590a",
+      "root": "981CEF7C9E1D3794AE501F13BDA7245FB3858F8A293B1D42E613A7E940A05C3702",
+      "chunks": [
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "2D6F4BCE07D729E2385A3B7F3643C4EE8EAA7AB88AEC3486F0DA1D49325047B101",
+          "size": 19
+        }
+      ]
+    },
+    {
+      "name": "seeded-2097171",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 2097171
+        }
+      ],
+      "sha256": "f533312792d85f3e387a09142e0e39fa2d7d148d571c5344a9781970eb82a550",
+      "root": "9BEA40396E12C9DDBC552EACBE928518EE7BC40461CEDD9778E4BEA9A4E4510802",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "FE5012DAE4021D2D7B2942DB0C6AE29C9B78D5CCF041FBFCD9B737044EEAD42601",
+          "size": 45166
+        },
+        {
+          "id": "F88969AFB01095C4CEAED3E5379DB36594C66C42EE7EEC56489E4E61356401FB01",
+          "size": 91898
+        },
+        {
+          "id": "5060CD48F5DEE4A0B0383A058C38C360756A9A4D137EC8A12D8BF8134BA5763B01",
+          "size": 40550
+        },
+        {
+          "id": "6A5E127A4DE7E093858A380DA48135467126049C2E5E6DEB5008C245D43B8BAA01",
+          "size": 111123
+        },
+        {
+          "id": "A188B6ADC8517DD016EC73083701C9526DFA8E322DDAE02EDB18D28E0C9941BB01",
+          "size": 98886
+        },
+        {
+          "id": "C5F6B679FA176D61962D13C52B0A017C6D1FE1856598EF6EBE26EBF520685EA301",
+          "size": 46185
+        },
+        {
+          "id": "C5A007F1FE8F17AF2434A6DB028B33B6EECD58B3E013CD8B2A893BDF6A1C455801",
+          "size": 108737
+        },
+        {
+          "id": "66DCBFC9A9DD9882484F1C04C1EA59AB2322D86225E0A8AC7EB565070B09B13801",
+          "size": 34267
+        },
+        {
+          "id": "696D62AE880BF0947A0F61A3C266ABCA878F0D997A69ED8B08F410404602D96001",
+          "size": 55861
+        },
+        {
+          "id": "557AD8066307F42C0073B8FC8F8F888008262DC81CC154BBF9786861264A03C501",
+          "size": 83535
+        },
+        {
+          "id": "8F3AF4CA8F64A24AB8F6F1BEAF84B22F3777209ED7AB9634F9A7026FE487A59701",
+          "size": 90092
+        },
+        {
+          "id": "0460556F5D35F66BDCBF4BBEC253A86C9AD8A8EBACC4DFF6F8D45B671495030E01",
+          "size": 94548
+        },
+        {
+          "id": "9D4737024D232464A8188D92A4EEA461270D30CF8457581D73B90556A3978ED701",
+          "size": 33023
+        },
+        {
+          "id": "0D1BE27BAB3462CBECD608EEF0EFF1269B92C256D98B8B805C3D0F8309690EE201",
+          "size": 87755
+        },
+        {
+          "id": "0AD7DE3703D20C4BAC2755C44EE91903F8D869AA13CC6E569811A7635E596EAB01",
+          "size": 35651
+        },
+        {
+          "id": "787E524949FEEE2B51165421DF8831FC719E6921FD89F425F6DD15A8399A2B5201",
+          "size": 8219
+        }
+      ]
+    },
+    {
+      "name": "transition-15",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 15
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "3bac1582cb19949215977f40125564717e8d14031a596ae65d2c4b98609ec240",
+      "root": "8D7E4DDF3FCFB23BE5626DDF1C379DDCA65F6760C57C98694996B74E3CE3A95902",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "BCDFDBFD1C19A8B8C37E629585A21CB3D38E34B0A413C6A1CBE8095EBD0B4EEE01",
+          "size": 53184
+        },
+        {
+          "id": "EA154C3C7A2966F15FE985E305C5707B8672A4E382C8F36324AEB9A72FF3D24A01",
+          "size": 108783
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    },
+    {
+      "name": "transition-16",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 16
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "8deff28c2fc09858b883aefddf05312449bb7210866758367ac774a7f1dab069",
+      "root": "0625275026DB80632A959C17F8E62FD94B44CE1F4752B5E29384BF75F719A49402",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "C44BE9783D80B867F44FE37DE0C27F7E7E3B8ACF8D965380FF81646455281F6B01",
+          "size": 53185
+        },
+        {
+          "id": "EA154C3C7A2966F15FE985E305C5707B8672A4E382C8F36324AEB9A72FF3D24A01",
+          "size": 108783
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    },
+    {
+      "name": "transition-32767",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 32767
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "7a030189acf88f012abb481f0aec70eff16530d0b9330b249f9d50adfb21f8c1",
+      "root": "3A6AFE4B1172C1289D1B1D3F5D16E5E830E648CF373E25FCFE167B74F0B6F65C02",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "0ED326A13ED3D80CF080C61B2C37030845C1C0D25176788F0967F0A3C73641E201",
+          "size": 85936
+        },
+        {
+          "id": "EA154C3C7A2966F15FE985E305C5707B8672A4E382C8F36324AEB9A72FF3D24A01",
+          "size": 108783
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    },
+    {
+      "name": "transition-32768",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 32768
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "136883ef43a18969bd879ab3f80a3fedb4854236ae2596502695b78f65d6d0c9",
+      "root": "17D7F624D9D1DE9DC2A7BDE4F7347B21B9C28721288D182DA554EA126CC91DCD02",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "8128E2BFF077104A815147DBB2D3F34D95411FAD0EBAD6148A1D0CBD589F5AA001",
+          "size": 85937
+        },
+        {
+          "id": "EA154C3C7A2966F15FE985E305C5707B8672A4E382C8F36324AEB9A72FF3D24A01",
+          "size": 108783
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    },
+    {
+      "name": "transition-131072",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 131072
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "1d16eee701a357d4897ceddeb1cecade0125a12705e9230b62c13d184fb039f0",
+      "root": "A4F3AA89F4C7E330BA69EA6536669E2AF8EF5470778D4D11C1DD042710C0717E02",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "7B483FC5964A20B9AF044A3B4BC5F94EF0855996C24855D7404788578FC5416D01",
+          "size": 131072
+        },
+        {
+          "id": "938713E617D9CC0C0BE79B013D1BBA09D575F59931EFF2E3C483D4B892D7EA7901",
+          "size": 39671
+        },
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    },
+    {
+      "name": "transition-1048576",
+      "recipe": [
+        {
+          "kind": "seeded",
+          "length": 196619
+        },
+        {
+          "kind": "zeros",
+          "length": 1048576
+        },
+        {
+          "kind": "seeded",
+          "length": 1048591
+        }
+      ],
+      "sha256": "7aa698519c025c22794fff48a48be46d694eaa1e5bc4685d6e4d9119952261d2",
+      "root": "04AD3AF82D6158DEB3C06AA196A1D588F664E6BFBD60395713E2D276F3C638D802",
+      "chunks": [
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "7B483FC5964A20B9AF044A3B4BC5F94EF0855996C24855D7404788578FC5416D01",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "4ED83E40C9CF32AC2C59125A01170BC97F20550952C8CA20FFE1B2A59D1B1ED901",
+          "size": 131072
+        },
+        {
+          "id": "938713E617D9CC0C0BE79B013D1BBA09D575F59931EFF2E3C483D4B892D7EA7901",
+          "size": 39671
+        },
+        {
+          "id": "74E5108EA4D773DC91EDDE2B3039174A3E343D350A01A7F9B3410DD46C2012A701",
+          "size": 122281
+        },
+        {
+          "id": "3EE23BE5314166CF237498A93B0C90881D90D528ED1126150D1946F8FCF3731101",
+          "size": 34667
+        },
+        {
+          "id": "2EE148DF83E4C7D49F8BDC40C1B88999A47564AA5BF298855B627268FA09242F01",
+          "size": 45129
+        },
+        {
+          "id": "F9C78521B720B94F3E08D84C843CBD2B7BC93153B5A8B2F153F7DA669D0D7DA201",
+          "size": 56208
+        },
+        {
+          "id": "ECAA24CA9C88893AC5C7E76D0345BFDC41A2C20A91BE19B1B225162F732096E501",
+          "size": 98800
+        },
+        {
+          "id": "C8769C9F45AD836CA489F2F235D94614854C8A43B9635DE7E567AB0526DAB35801",
+          "size": 82504
+        },
+        {
+          "id": "99ECCD923290297FB0C93D6ECF8D9D393863C338CFD93EBFC0862D7A58CC892201",
+          "size": 35560
+        },
+        {
+          "id": "C9EDB540A305B763C3E26137D91C2BB7EA313BC1977CEFF0EB422159EA28DD6801",
+          "size": 79818
+        },
+        {
+          "id": "3893DE33EC683FE2E4A0E5B4B188706A6B33CE7E4654E802898F08028B78A91D01",
+          "size": 84535
+        },
+        {
+          "id": "A15360583E4D15C4A025732EAE18FE26C1E07B1B65B77251B00F897A120022CA01",
+          "size": 103090
+        },
+        {
+          "id": "46FC42867026D52F5F80ECC018CD0705F74577DF964557A8F5EDC6F83878082801",
+          "size": 59818
+        },
+        {
+          "id": "4F3872FED144AACB118CB0F37DB3C97A5799D1C08E19513DC188B7B5280912A701",
+          "size": 86111
+        },
+        {
+          "id": "FFFB288E7A5F37B6EEFBC6E321B3C9E2D77730EC1C6CD881784A9EC7DA06EB4301",
+          "size": 109877
+        },
+        {
+          "id": "DAD636C861F551B0C531DA55D6AF6735FF4A74CFA7184DADB5F3099550DBDC9001",
+          "size": 33277
+        },
+        {
+          "id": "1126101184C775A89D15CDA9352033F04D304FFAA5FD91D510FB1C0086FD1F0301",
+          "size": 16916
+        }
+      ]
+    }
+  ]
+}
