@@ -5,7 +5,7 @@ import * as  path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as  helmutility from 'azure-pipelines-tasks-kubernetes-common/helmutility';
-import * as uuidV4 from 'uuid/v4';
+import { v4 as uuidV4 } from 'uuid';
 import { IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 
 import { getTempDirectory } from '../utils/FileHelper';
