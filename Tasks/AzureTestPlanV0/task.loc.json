@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 280,
-    "Patch": 0
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -169,6 +169,14 @@
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.failTaskOnMissingResultsFile"
+    },
+    {
+      "name": "failOnUnmatchedTests",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.failOnUnmatchedTests",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.failOnUnmatchedTests"
     }
   ],
   "dataSourceBindings": [
