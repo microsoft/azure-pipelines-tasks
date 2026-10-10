@@ -101,7 +101,8 @@ export class PlaywrightTestExecutor implements ITestExecutor {
 
         let grepArg = '';
         try {
-            const junitOutput = 'test-results/test-results.xml';
+
+            const junitOutput = 'test-results/TEST-playwright-junit.xml';
             tl.setVariable('PLAYWRIGHT_JUNIT_OUTPUT_NAME', junitOutput);
             const resultsDir = path.join(process.cwd(), 'test-results');
             if (!fs.existsSync(resultsDir)) {
