@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "Failed to add a certificate to trust store: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "Failed to get workload identity token: %s.",
   "loc.messages.FailedToImportTrustPolicy": "Failed to import trust policy: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "Failed to list the trust store.",
   "loc.messages.FailedToShowTrustPolicy": "Failed to show trust policy.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Try to get artifact references from Docker task.",

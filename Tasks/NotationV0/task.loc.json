@@ -254,6 +254,7 @@
     "FailedToAddCertToTrustStore": "ms-resource:loc.messages.FailedToAddCertToTrustStore",
     "FailedToGetWorkloadIdToken": "ms-resource:loc.messages.FailedToGetWorkloadIdToken",
     "FailedToImportTrustPolicy": "ms-resource:loc.messages.FailedToImportTrustPolicy",
+    "FailedToRemoveCredentialFile": "ms-resource:loc.messages.FailedToRemoveCredentialFile",
     "FailedToListTrustStore": "ms-resource:loc.messages.FailedToListTrustStore",
     "FailedToShowTrustPolicy": "ms-resource:loc.messages.FailedToShowTrustPolicy",
     "TryToGetArtifactRefsFromDockerTask": "ms-resource:loc.messages.TryToGetArtifactRefsFromDockerTask",

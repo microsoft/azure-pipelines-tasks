@@ -254,6 +254,7 @@
     "FailedToAddCertToTrustStore": "Failed to add a certificate to trust store: %s.",
     "FailedToGetWorkloadIdToken": "Failed to get workload identity token: %s.",
     "FailedToImportTrustPolicy": "Failed to import trust policy: %s.",
+    "FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
     "FailedToListTrustStore": "Failed to list the trust store.",
     "FailedToShowTrustPolicy": "Failed to show trust policy.",
     "TryToGetArtifactRefsFromDockerTask": "Try to get artifact references from Docker task.",
