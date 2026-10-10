@@ -63,6 +63,17 @@ taskRunner.registerMock('./taskutil', {
 
 const tl = require('azure-pipelines-task-lib/mock-task');
 const tlClone = Object.assign({}, tl);
+const proxyConfiguration = {
+    proxyUrl: 'http://proxy.example:8080',
+    proxyFormattedUrl: 'http://proxy.example:8080'
+};
+tlClone.getHttpProxyConfiguration = function(requestUrl: string) {
+    if (requestUrl !== 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json') {
+        throw new Error(`Unexpected proxy configuration request for ${requestUrl}`);
+    }
+
+    return proxyConfiguration;
+};
 tlClone.exec = function(command, args, options) {
     if (command !== 'powershell' || args !== './setup.ps1') {
         throw new Error(`Invalid command and arguments: ${command} ${args}`);
@@ -79,6 +90,12 @@ taskRunner.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 // Test manifest contains stable python 3.10.1, so the task should find it
 taskRunner.registerMock('typed-rest-client', {
     RestClient: class {
+        constructor(_userAgent: string, _baseUrl: string, _handlers: unknown[], options: { proxy: unknown }) {
+            if (options.proxy !== proxyConfiguration) {
+                throw new Error('The manifest request must use the agent proxy configuration.');
+            }
+        }
+
         get(_url: string) {
             return Promise.resolve({
                 result: JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'versions-manifest.json')).toString())
