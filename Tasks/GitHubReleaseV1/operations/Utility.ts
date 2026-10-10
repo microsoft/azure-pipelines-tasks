@@ -17,8 +17,7 @@ export class Utility {
             } else if (githubEndpointObject.scheme === 'OAuth'){
                 // scheme: 'OAuth'
                 githubEndpointToken = githubEndpointObject.parameters.AccessToken
-            } else if (githubEndpointObject.scheme === 'Token'){
-                // scheme: 'Token'
+            } else if (githubEndpointObject.scheme === 'Token' || githubEndpointObject.scheme === 'InstallationToken'){
                 githubEndpointToken = githubEndpointObject.parameters.AccessToken
             } else if (githubEndpointObject.scheme) {
                 throw new Error(tl.loc("InvalidEndpointAuthScheme", githubEndpointObject.scheme));
