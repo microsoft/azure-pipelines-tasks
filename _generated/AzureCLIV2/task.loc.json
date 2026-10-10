@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 281,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -232,7 +232,7 @@
     "BatchPercentSignNotAllowed": "ms-resource:loc.messages.BatchPercentSignNotAllowed"
   },
   "_buildConfigMapping": {
-    "Default": "2.281.2",
-    "Node24_1": "2.281.3"
+    "Default": "2.282.0",
+    "Node24_1": "2.282.1"
   }
 }

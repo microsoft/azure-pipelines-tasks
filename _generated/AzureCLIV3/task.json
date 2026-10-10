@@ -19,8 +19,8 @@
   "demands": [],
   "version": {
     "Major": 3,
-    "Minor": 281,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "Azure CLI $(scriptPath)",
@@ -276,7 +276,7 @@
     "BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
   },
   "_buildConfigMapping": {
-    "Default": "3.281.2",
-    "Node24_1": "3.281.3"
+    "Default": "3.282.0",
+    "Node24_1": "3.282.1"
   }
 }
