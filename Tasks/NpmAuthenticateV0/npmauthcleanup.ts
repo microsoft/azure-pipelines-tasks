@@ -2,6 +2,7 @@ import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { writeRepositoryOutput } from './npmauthutils';
 
 async function run() {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -24,7 +25,7 @@ async function run() {
         }
         const restored = backupManager.restoreBackedUpFile(workingFilePath, trustedIdentity);
         if (restored) {
-            console.log(tl.loc("RevertedChangesToNpmrc", workingFilePath));
+            writeRepositoryOutput(tl.loc("RevertedChangesToNpmrc", workingFilePath));
         }
         const tempDirectoryPath = tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY");
         if (tl.exist(tempDirectoryPath) && backupManager.isOnlyIndexFileRemaining()) {
@@ -32,7 +33,7 @@ async function run() {
         }
     }
     else {
-        console.log(tl.loc("NoIndexJsonFile"));
+        writeRepositoryOutput(tl.loc("NoIndexJsonFile"));
     }
 }
 run().catch(error => {
