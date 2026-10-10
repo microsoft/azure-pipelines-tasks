@@ -448,7 +448,7 @@ export class KuduServiceUtility {
             throw response;
         }
         catch(error) {
-            throw Error("Failed to gte deployment logs.\n" + this._getFormattedError(error));
+            throw Error("Failed to get deployment logs.\n" + this._getFormattedError(error));
         }
     }
 
