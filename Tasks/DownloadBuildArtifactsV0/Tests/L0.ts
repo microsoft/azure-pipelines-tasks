@@ -3,9 +3,22 @@ import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
 describe('DownloadBuildArtifactsV0 Suite', function () {
+    let nodePath: string;
+
+    before(async function () {
+        this.timeout(120000);
+
+        const setupRunner = new ttm.MockTestRunner(
+            path.join(__dirname, 'L0NoBuildTypeProvidedFail.js')
+        );
+        await setupRunner.LoadAsync();
+        nodePath = setupRunner.nodePath;
+    });
+
     it('No build type provided should fail', async () => {
       const tp: string = path.join(__dirname, 'L0NoBuildTypeProvidedFail.js');
       const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+      tr.nodePath = nodePath;
 
       try {
           await tr.runAsync();
@@ -23,6 +36,7 @@ describe('DownloadBuildArtifactsV0 Suite', function () {
   it('No download path provided should fail', async () => {
     const tp: string = path.join(__dirname, 'L0NoDownloadPathProvidedFail.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    tr.nodePath = nodePath;
 
     try {
         await tr.runAsync();
@@ -39,6 +53,7 @@ describe('DownloadBuildArtifactsV0 Suite', function () {
   it('No download type provided should fail', async () => {
     const tp: string = path.join(__dirname, 'L0NoDownloadTypeProvidedFail.js');
     const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    tr.nodePath = nodePath;
 
     try {
         await tr.runAsync();
