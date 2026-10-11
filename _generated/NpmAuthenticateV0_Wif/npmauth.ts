@@ -76,23 +76,23 @@ async function main(): Promise<void> {
         // First match wins; subsequent sources are skipped for this registry.
         if (entraWifServiceConnectionName) {
             if (registryURL.protocol !== 'https:') {
-                console.log(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
+                npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
                 continue;
             }
 
-            console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
-            console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;
         }
 
         if (endpointRegistries.length > 0) {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
                 continue;
@@ -106,13 +106,13 @@ async function main(): Promise<void> {
             registryURL.host
         );
         if (npmrcEntry) {
-            console.log(tl.loc("AddingLocalCredentials"));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
             internalFeedSuccessCount++;
             continue;
         }
 
-        console.log(tl.loc("IgnoringRegistry", registryURL.host));
+        npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
     }
 }
 
