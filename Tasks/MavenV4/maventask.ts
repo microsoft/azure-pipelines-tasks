@@ -154,7 +154,11 @@ async function execBuild() {
 
     // 1. Check that Maven exists by executing it to retrieve its version.
     let settingsXmlFile: string = null;
-    await mvnGetVersion.exec()
+    await mvnGetVersion.exec({
+        externalOutput: {
+            source: 'childProcess'
+        }
+    })
         .fail(function (err) {
             console.error("Maven is not installed on the agent");
             tl.setResult(tl.TaskResult.Failed, "Build failed."); // tl.exit sets the step result but does not stop execution
@@ -176,7 +180,11 @@ async function execBuild() {
                     if (mavenOptions) {
                         mvnRun.line(mavenOptions);
                     }
-                    repositories = util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync()['stdout']);
+                    repositories = util.collectFeedRepositoriesFromEffectivePom(mvnRun.execSync({
+                        externalOutput: {
+                            source: 'childProcess'
+                        }
+                    })['stdout']);
                 }
                 return repositories
                 .then(function (repositories) {
@@ -475,7 +483,11 @@ function publishCodeCoverage(isCodeCoverageOpted: boolean): Q.Promise<boolean> {
                 mvnReport.line(mavenOptions);
                 mvnReport.arg("verify");
                 mvnReport.arg("-Dmaven.test.skip=true"); // This argument added to skip tests to avoid running them twice. More about this argument: http://maven.apache.org/surefire/maven-surefire-plugin/examples/skipping-tests.html
-                mvnReport.exec().then(function (code) {
+                mvnReport.exec({
+                    externalOutput: {
+                        source: 'childProcess'
+                    }
+                }).then(function (code) {
                     publishCCToTfs();
                     defer.resolve(true);
                 }).fail(function (err) {
