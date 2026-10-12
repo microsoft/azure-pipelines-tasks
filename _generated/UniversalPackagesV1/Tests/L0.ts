@@ -139,6 +139,32 @@ describe('UniversalPackages Suite', function () {
     });
 
     describe('Provenance Session Handling', function() {
+#if WIF
+        it('publishes package with provenance session ID', async function() {
+            const expectedCommandString = buildCommandString({
+                command: 'publish',
+                feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_FEED': TEST_CONSTANTS.FEED_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'PROVENANCE_PROVIDES_SESSION_ID': 'true',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+            });
+        });
+#endif
 
         it('publishes package when provenance session returns null', async function() {
             const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.FEED_NAME });
@@ -158,11 +184,98 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
+#if WIF
+        it('publishes package with provenance session and project-scoped feed', async function() {
+            const expectedCommandString = buildCommandString({
+                command: 'publish',
+                feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID,
+                projectName: TEST_CONSTANTS.PROJECT_NAME,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_FEED': TEST_CONSTANTS.PROJECT_SCOPED_FEED_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'PROVENANCE_PROVIDES_SESSION_ID': 'true',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'publish',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesPublished', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+            });
+        });
+#endif
     });
 
     describe('Authentication', function() {
         this.timeout(10000);
 
+#if WIF
+        it('uses WIF token when service connection is specified and WIF succeeds', async function() {
+            const expectedCommandString = buildCommandString({
+                command: 'download',
+                feed: TEST_CONSTANTS.FEED_NAME,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download', // download and publish use the same path for auth
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+            });
+        });
+
+        it('fails when WIF throws error and service connection is specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'throws',
+                'SYSTEM_TOKEN_AVAILABLE': 'true'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('fails when WIF returns null and service connection is specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'returns-null',
+                'SYSTEM_TOKEN_AVAILABLE': 'true'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('rejects an insecure feed service before exporting a WIF token', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'MOCK_FEED_SERVICE_URL': 'http://feeds.example.test/'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+#endif
 
         it('uses pipeline identity when no service connection is specified', async function() {
             const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
@@ -180,11 +293,82 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
+#if WIF
+        it('requires a feed URL when a service connection is specified', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('uses the target Azure Artifacts organization URL for a cross-org feed', async function() {
+            const expectedCommandString = buildCommandString({
+                command: 'download',
+                feed: TEST_CONSTANTS.FEED_NAME,
+                serviceUrl: TEST_CONSTANTS.CROSS_ORG_FEED_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.CROSS_ORG_FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+            assertArtifactToolCommand({
+                tr,
+                command: 'download',
+                shouldSucceed: true,
+                expectedCommandString,
+                expectedMessage: tl.loc(
+                    'Success_PackagesDownloaded',
+                    TEST_CONSTANTS.PACKAGE_NAME,
+                    TEST_CONSTANTS.PACKAGE_VERSION,
+                    TEST_CONSTANTS.FEED_NAME
+                )
+            });
+        });
+#endif
     });
 
     describe('Error Handling', function() {
         this.timeout(10000);
 
+#if WIF
+        it('fails when no authentication token is available (download)', async function() {
+            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'returns-null',
+                'SYSTEM_TOKEN_AVAILABLE': 'false',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('fails when no authentication token is available (publish)', async function() {
+            const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.FEED_NAME });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'publish',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'returns-null',
+                'SYSTEM_TOKEN_AVAILABLE': 'false',
+                'EXPECTED_COMMAND_STRING': expectedCommandString
+            });
+
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+#endif
 
         it('fails when running against on-premises server', async function() {
             let tr = await runTestWithEnv('./testRunner.js', {

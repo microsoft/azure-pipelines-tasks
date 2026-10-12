@@ -2,6 +2,7 @@ import * as tl from "azure-pipelines-task-lib";
 import type { IExecSyncResult } from "azure-pipelines-task-lib/toolrunner";
 import { retryOnException } from "azure-pipelines-tasks-artifacts-common/retryUtils";
 import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { ProvenanceHelper } from "azure-pipelines-tasks-packaging-common/provenance";
 import type { SessionRequest, SessionResponse } from "azure-pipelines-tasks-packaging-common/provenance";
 import type * as restClient from 'typed-rest-client/RestClient';
@@ -164,5 +165,5 @@ async function getProvenanceSessionId(context: UniversalPackageContext): Promise
 async function getUniversalPackagesUri(context: UniversalPackageContext): Promise<string> {
     const upackAreaId = 'd397749b-f115-4027-b6dd-77a65dd10d21';
     const resourceArea = await retryOnException(() => context.locationApi.getResourceArea(upackAreaId), 3, 1000);
-    return resourceArea.locationUrl;
+    return requireHttpsUrl(resourceArea.locationUrl).href;
 }

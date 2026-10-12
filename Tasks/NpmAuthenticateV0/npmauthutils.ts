@@ -7,7 +7,12 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 #if WIF
-import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
+import {
+    FederatedFeedCredentials,
+    getFederatedWorkloadIdentityCredentialsForFeed
+} from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
+import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
+import { parseAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
 #endif
 
 export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] {
@@ -102,7 +107,14 @@ export function resolveInternalFeedCredentials(
     }
 
     const packagingOrigins = packagingUris
-        .map(uri => { try { return new URL(uri).origin; } catch { return undefined; } })
+        .map(uri => {
+            try {
+                const parsedUri = new URL(uri);
+                return parsedUri.protocol === 'https:' ? parsedUri.origin : undefined;
+            } catch {
+                return undefined;
+            }
+        })
         .filter((origin): origin is string => origin !== undefined && origin !== 'null');
 
     const allRegistries = getRegistriesFromNpmrc(npmrc);
@@ -240,14 +252,17 @@ export function removeExistingCredentialEntries(
 }
 
 #if WIF
-export async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string): Promise<string | undefined> {
-    if (!adoServiceConnection) {
-        return undefined;
-    }
-    const federatedAuthToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
-    if (!federatedAuthToken) {
+export async function getAzureDevOpsServiceConnectionCredentials(
+    adoServiceConnection: string,
+    feedUrl: string
+): Promise<FederatedFeedCredentials> {
+    const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+        adoServiceConnection,
+        parseAzureArtifactsFeedUrl(feedUrl),
+        ProtocolType.Npm);
+    if (!credentials) {
         throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
     }
-    return federatedAuthToken;
+    return credentials;
 }
 #endif

@@ -28,11 +28,11 @@
             }
         },
         {
-            "name": "organization",
+            "name": "feedUrl",
             "type": "string",
-            "label": "ms-resource:loc.input.label.organization",
+            "label": "ms-resource:loc.input.label.feedUrl",
             "required": false,
-            "helpMarkDown": "ms-resource:loc.input.help.organization",
+            "helpMarkDown": "ms-resource:loc.input.help.feedUrl",
             "visibleRule": "adoServiceConnection != ''"
         },
         {

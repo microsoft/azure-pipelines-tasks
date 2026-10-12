@@ -164,6 +164,7 @@
     "Error_InvalidVersionIncrement": "ms-resource:loc.messages.Error_InvalidVersionIncrement",
     "Error_NoAccessToken": "ms-resource:loc.messages.Error_NoAccessToken",
     "Error_NoAuthToken": "ms-resource:loc.messages.Error_NoAuthToken",
+    "Error_FeedUrlRequired": "ms-resource:loc.messages.Error_FeedUrlRequired",
     "Error_PackageVersionRequired": "ms-resource:loc.messages.Error_PackageVersionRequired",
     "Error_PackagesFailedToDownload": "ms-resource:loc.messages.Error_PackagesFailedToDownload",
     "Error_PackagesFailedToPublish": "ms-resource:loc.messages.Error_PackagesFailedToPublish",

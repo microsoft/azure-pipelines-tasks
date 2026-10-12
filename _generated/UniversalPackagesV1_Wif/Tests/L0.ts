@@ -140,12 +140,16 @@ describe('UniversalPackages Suite', function () {
 
     describe('Provenance Session Handling', function() {
         it('publishes package with provenance session ID', async function() {
-            const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID });
+            const expectedCommandString = buildCommandString({
+                command: 'publish',
+                feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
                 'INPUT_FEED': TEST_CONSTANTS.FEED_NAME,
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'success',
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
@@ -179,12 +183,17 @@ describe('UniversalPackages Suite', function () {
         });
 
         it('publishes package with provenance session and project-scoped feed', async function() {
-            const expectedCommandString = buildCommandString({ command: 'publish', feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID, projectName: TEST_CONSTANTS.PROJECT_NAME });
+            const expectedCommandString = buildCommandString({
+                command: 'publish',
+                feed: TEST_CONSTANTS.PROVENANCE_SESSION_ID,
+                projectName: TEST_CONSTANTS.PROJECT_NAME,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
                 'INPUT_FEED': TEST_CONSTANTS.PROJECT_SCOPED_FEED_NAME,
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'success',
                 'PROVENANCE_PROVIDES_SESSION_ID': 'true',
@@ -204,11 +213,15 @@ describe('UniversalPackages Suite', function () {
         this.timeout(10000);
 
         it('uses WIF token when service connection is specified and WIF succeeds', async function() {
-            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+            const expectedCommandString = buildCommandString({
+                command: 'download',
+                feed: TEST_CONSTANTS.FEED_NAME,
+                serviceUrl: TEST_CONSTANTS.FEED_URL
+            });
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download', // download and publish use the same path for auth
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'success',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
@@ -226,7 +239,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'throws',
                 'SYSTEM_TOKEN_AVAILABLE': 'true'
@@ -238,10 +251,22 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'true'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('rejects an insecure feed service before exporting a WIF token', async function() {
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success',
+                'MOCK_FEED_SERVICE_URL': 'http://feeds.example.test/'
             });
             assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
         });
@@ -262,46 +287,41 @@ describe('UniversalPackages Suite', function () {
             });
         });
 
-        it('uses pipeline organization when organization is not specified with service connection', async function() {
-            const expectedCommandString = buildCommandString({ command: 'download', feed: TEST_CONSTANTS.FEED_NAME });
+        it('requires a feed URL when a service connection is specified', async function() {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
+                'WIF_AUTH_BEHAVIOR': 'success'
+            });
+            assertTaskFailedBeforeToolExecution(tr, tl.loc('Error_AuthenticationFailed'));
+        });
+
+        it('uses the target Azure Artifacts organization URL for a cross-org feed', async function() {
+            const expectedCommandString = buildCommandString({
+                command: 'download',
+                feed: TEST_CONSTANTS.FEED_NAME,
+                serviceUrl: TEST_CONSTANTS.CROSS_ORG_FEED_URL
+            });
+            let tr = await runTestWithEnv('./testRunner.js', {
+                ...getDefaultEnvVars(),
+                'INPUT_COMMAND': 'download',
+                'INPUT_FEEDURL': TEST_CONSTANTS.CROSS_ORG_FEED_URL,
+                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'success',
                 'EXPECTED_COMMAND_STRING': expectedCommandString
             });
-            
             assertArtifactToolCommand({
                 tr,
                 command: 'download',
                 shouldSucceed: true,
                 expectedCommandString,
-                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
-            });
-        });
-
-        it('uses cross-org service URL when organization is specified with service connection', async function() {
-            const crossOrgCommandString = buildCommandString({ 
-                command: 'download', 
-                feed: TEST_CONSTANTS.FEED_NAME,
-                serviceUrl: TEST_CONSTANTS.CROSS_ORG_SERVICE_URL
-            });
-            let tr = await runTestWithEnv('./testRunner.js', {
-                ...getDefaultEnvVars(),
-                'INPUT_COMMAND': 'download',
-                'INPUT_ORGANIZATION': 'other-org',
-                'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
-                'WIF_AUTH_BEHAVIOR': 'success',
-                'MOCK_SERVICE_URL': TEST_CONSTANTS.CROSS_ORG_SERVICE_URL,
-                'EXPECTED_COMMAND_STRING': crossOrgCommandString
-            });
-            assertArtifactToolCommand({
-                tr,
-                command: 'download',
-                shouldSucceed: true,
-                expectedCommandString: crossOrgCommandString,
-                expectedMessage: tl.loc('Success_PackagesDownloaded', TEST_CONSTANTS.PACKAGE_NAME, TEST_CONSTANTS.PACKAGE_VERSION, TEST_CONSTANTS.FEED_NAME)
+                expectedMessage: tl.loc(
+                    'Success_PackagesDownloaded',
+                    TEST_CONSTANTS.PACKAGE_NAME,
+                    TEST_CONSTANTS.PACKAGE_VERSION,
+                    TEST_CONSTANTS.FEED_NAME
+                )
             });
         });
     });
@@ -314,7 +334,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'download',
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'false',
@@ -329,7 +349,7 @@ describe('UniversalPackages Suite', function () {
             let tr = await runTestWithEnv('./testRunner.js', {
                 ...getDefaultEnvVars(),
                 'INPUT_COMMAND': 'publish',
-                'INPUT_ORGANIZATION': TEST_CONSTANTS.ORGANIZATION_NAME,
+                'INPUT_FEEDURL': TEST_CONSTANTS.FEED_URL,
                 'INPUT_ADOSERVICECONNECTION': TEST_CONSTANTS.SERVICE_CONNECTION_NAME,
                 'WIF_AUTH_BEHAVIOR': 'returns-null',
                 'SYSTEM_TOKEN_AVAILABLE': 'false',

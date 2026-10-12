@@ -74,6 +74,21 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
         });
 
+        it('does not expose System.AccessToken to an HTTP registry on an allowed host', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.withDefaults({
+                    '__mockConfigContent__': `
+[registries]
+test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/test-feed/Cargo/index/" }
+`
+                })
+            );
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
+            TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
+        });
+
         it('handles packaging location service failure gracefully', async () => {
             // Arrange & Act
             const tr = await TestHelpers.runTest(

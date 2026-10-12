@@ -9,7 +9,7 @@ export enum OperationType {
 
 export class UniversalPackageContext {
     // Input properties
-    organization?: string;
+    feedUrl?: string;
     projectAndFeed: string;
     packageName: string;
     packageVersion?: string;
@@ -45,6 +45,10 @@ export class UniversalPackageContext {
     buildServiceAccountId?: string;
 
     constructor() {
+#if WIF
+        this.adoServiceConnection = tl.getInput("adoServiceConnection", false);
+        this.feedUrl = tl.getInput("feedUrl", false);
+#endif
         this.projectAndFeed = tl.getInput("feed", true);
         this.packageName = tl.getInput("packageName", true);
         this.packageVersion = tl.getInput("packageVersion", false);

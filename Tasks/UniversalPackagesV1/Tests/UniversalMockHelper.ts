@@ -9,7 +9,7 @@ export interface MockConfig {
     inputs: {
         command: string;
         directory: string;
-        organization?: string;
+        feedUrl?: string;
         feed: string;
         packageName: string;
         packageVersion?: string;
@@ -220,11 +220,16 @@ export class UniversalMockHelper {
     }
 
     private registerAuthenticationMocks() {
-        // Mock getFederatedWorkloadIdentityCredentials
         const wifMock = {
-            getFederatedWorkloadIdentityCredentials: async (serviceConnectionName: string) => {
+            getFederatedWorkloadIdentityCredentialsForFeed: async (
+                serviceConnectionName: string,
+                feedUrl: URL
+            ) => {
                 if (this.config.wifAuthBehavior === 'success') {
-                    return TEST_CONSTANTS.WIF_TOKEN;
+                    return {
+                        accessToken: TEST_CONSTANTS.WIF_TOKEN,
+                        feedUrl
+                    };
                 } else if (this.config.wifAuthBehavior === 'returns-null') {
                     return null;
                 } else if (this.config.wifAuthBehavior === 'throws') {
@@ -238,6 +243,14 @@ export class UniversalMockHelper {
         // Mock getSystemAccessToken and getWebApiWithProxy for provenance
         const provenanceSessionId = this.provenanceSessionId;
         const webapiMock = {
+            getSystemServiceUrl: () => new URL(TEST_CONSTANTS.SERVICE_URL),
+            requireHttpsUrl: (value: string) => {
+                const url = new URL(value);
+                if (url.protocol !== 'https:') {
+                    throw new Error('Error_ServiceUrlHttpsRequired');
+                }
+                return url;
+            },
             getSystemAccessToken: () => {
                 if (this.config.systemTokenAvailable) {
                     return TEST_CONSTANTS.SYSTEM_TOKEN;
@@ -296,6 +309,21 @@ export class UniversalMockHelper {
         
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', wifMock);
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', webapiMock);
+        this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', {
+            getServiceUriFromAreaId: async (
+                _areaId: string,
+                connection: { serviceUrl: string }
+            ) => {
+                const serviceUrl = process.env['MOCK_FEED_SERVICE_URL'] ||
+                    (connection.serviceUrl.includes('other-org')
+                    ? TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
+                    : TEST_CONSTANTS.FEED_SERVICE_URL);
+                if (new URL(serviceUrl).protocol !== 'https:') {
+                    throw new Error('Error_ServiceUrlHttpsRequired');
+                }
+                return serviceUrl;
+            }
+        });
     }
 
     private mockUniversalCommand() {

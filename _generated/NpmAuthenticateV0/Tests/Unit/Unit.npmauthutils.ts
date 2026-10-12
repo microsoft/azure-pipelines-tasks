@@ -1,8 +1,12 @@
 import assert from 'assert';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import {
 	validateAndFilterRegistryUrls,
 	normalizeRegistry,
 	toNerfDart,
+	resolveInternalFeedCredentials,
 	tryResolveFromEndpoints,
 	tryResolveFromLocalRegistries
 } from '../../npmauthutils';
@@ -57,6 +61,21 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			const nerfed = toNerfDart(registryUrl);
 
 			assert.strictEqual(nerfed, '//pkgs.dev.azure.com/OrgName/_packaging/Feed/npm/registry/');
+		});
+
+		describe('resolveInternalFeedCredentials', function () {
+			it('does not create System.AccessToken credentials for HTTP packaging origins', function () {
+				const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npm-auth-http-origin-'));
+				const npmrc = path.join(tempDir, '.npmrc');
+				const registry = 'http://pkgs.dev.azure.com/org/_packaging/feed/npm/registry/';
+				fs.writeFileSync(npmrc, `registry=${registry}`);
+
+				try {
+					assert.deepStrictEqual(resolveInternalFeedCredentials(npmrc, [registry]), []);
+				} finally {
+					fs.rmSync(tempDir, { recursive: true, force: true });
+				}
+			});
 		});
 
 		it('normalizes host casing and ensures trailing slash', function () {

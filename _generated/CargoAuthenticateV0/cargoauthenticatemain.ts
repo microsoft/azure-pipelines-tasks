@@ -158,6 +158,9 @@ function setRegistryVars(urlStr: string, registryName: string): readonly [url.Ur
 }
 
 const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
-    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
+    registryUrl &&
+    registryUrl.protocol === "https:" &&
+    registryUrl.host &&
+    collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();

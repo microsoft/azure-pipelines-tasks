@@ -49,7 +49,7 @@ describe('GradleAuthenticate L0 - Authentication', function () {
         TestHelpers.assertOutputContains(tr, 'Info_AuthConfigWritten');
     });
 
-    it('should write WIF auth entry when service connection is provided', async () => {
+    it('should write feed-bound auth when a WIF service connection is provided', async () => {
         const tp = path.join(__dirname, 'testsetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[TestEnvVars.repositoryUrl] = 'https://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1';
@@ -60,7 +60,6 @@ describe('GradleAuthenticate L0 - Authentication', function () {
 
         TestHelpers.assertSuccess(tr);
         TestHelpers.assertOutputContains(tr, 'Info_AuthConfigWritten');
-        // Verify the WIF path was taken (feed tenant was probed)
-        TestHelpers.assertOutputContains(tr, 'Info_FeedResourceTenant');
+        TestHelpers.assertOutputDoesNotContain(tr, 'Warning_NoServiceConnection');
     });
 });

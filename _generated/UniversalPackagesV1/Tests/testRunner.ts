@@ -13,9 +13,9 @@ const mockFetch = async (url: string, options?: RequestInit): Promise<Response> 
 
     // Anonymous GET to resource areas API → returns feed service locationUrl
     if (method === 'GET' && url.includes('/_apis/resourceAreas/')) {
-        const feedServiceUrl = url.includes('other-org')
+        const feedServiceUrl = process.env['MOCK_FEED_SERVICE_URL'] || (url.includes('other-org')
             ? TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
-            : TEST_CONSTANTS.FEED_SERVICE_URL;
+            : TEST_CONSTANTS.FEED_SERVICE_URL);
         return {
             ok: true,
             status: 200,
@@ -61,7 +61,7 @@ const config: MockConfig = {
     inputs: {
         command: process.env['INPUT_COMMAND'] || 'download',
         directory: TEST_CONSTANTS.DOWNLOAD_PATH,
-        organization: process.env['INPUT_ORGANIZATION'],
+        feedUrl: process.env['INPUT_FEEDURL'],
         feed: process.env['INPUT_FEED'] || TEST_CONSTANTS.FEED_NAME,
         packageName: TEST_CONSTANTS.PACKAGE_NAME,
         packageVersion: process.env['INPUT_PACKAGEVERSION'],
@@ -113,7 +113,9 @@ config.commandString = testHelpers.buildCommandString({
     feed: effectiveFeed,
     projectName: config.projectId,
     description: config.inputs.packageDescription,
-    serviceUrl: config.serviceUrl,
+    serviceUrl: config.inputs.adoServiceConnection && config.inputs.feedUrl
+        ? config.inputs.feedUrl
+        : config.serviceUrl,
     packageVersion: expectedPackageVersion
 });
 

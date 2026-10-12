@@ -8,8 +8,10 @@ export const TEST_CONSTANTS = {
     DOWNLOAD_PATH: 'c:\\temp',
     ORGANIZATION_NAME: 'example',
     SERVICE_URL: 'https://dev.azure.com/example/',
+    FEED_URL: 'https://pkgs.dev.azure.com/example/',
     FEED_SERVICE_URL: 'https://feeds.dev.azure.com/example/',
     CROSS_ORG_SERVICE_URL: 'https://dev.azure.com/other-org/',
+    CROSS_ORG_FEED_URL: 'https://pkgs.dev.azure.com/other-org/',
     CROSS_ORG_FEED_SERVICE_URL: 'https://feeds.dev.azure.com/other-org/',
     ARTIFACT_TOOL_PATH: 'c:\\mock\\location\\ArtifactTool.exe',
     

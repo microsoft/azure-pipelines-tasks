@@ -3,6 +3,7 @@ import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/con
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 
 export interface IPackageSource {
     feedName: string;
@@ -60,8 +61,9 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<Set<Au
         pypiUploadApiLocationId,
         feed.feedId,
         feed.projectId);
+    const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(new URL(feedUri), ProtocolType.PyPi);
 
-    const packageSource = { feedName: feed.feedId, feedUri: feedUri, isInternalSource: true } as IPackageSource;
+    const packageSource = { feedName: feed.feedId, feedUri: verifiedFeedUri.href, isInternalSource: true } as IPackageSource;
     internalAuthArray.add(new AuthInfo(packageSource, AuthType.Token, "build", localAccessToken));
 
     return internalAuthArray;

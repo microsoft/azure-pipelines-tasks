@@ -7,6 +7,9 @@ import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import { normalizeUrl } from './utils/urlUtils';
+import { parseAzureArtifactsFeedUrl, verifyAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
+import { getFederatedWorkloadIdentityCredentialsForFeed } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
+import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 
 const RESOURCE_TENANT_HEADER = 'x-vss-resourcetenant';
 
@@ -96,53 +99,34 @@ export async function buildAuthEntries(
     feeds: { url: string }[],
     adoServiceConnection: string
 ): Promise<FeedAuthEntry[]> {
-    if (!adoServiceConnection) {
-        return feeds.map(feed => ({ url: feed.url, auth: 'sat' as const, ciSystem: 'ado' as const }));
+    if (adoServiceConnection) {
+        return await Promise.all(feeds.map(async feed => {
+            const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                adoServiceConnection,
+                parseAzureArtifactsFeedUrl(feed.url),
+                ProtocolType.Maven);
+            if (!credentials) {
+                throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
+            }
+
+            return {
+                url: credentials.feedUrl.href,
+                auth: 'sat' as const,
+                ciSystem: 'ado' as const,
+                accessToken: credentials.accessToken
+            };
+        }));
     }
 
-    const tenantIds = await Promise.all(feeds.map(feed => probeFeedTenantId(feed.url)));
-
-    const entries: FeedAuthEntry[] = [];
-    for (let i = 0; i < feeds.length; i++) {
-        const feed = feeds[i];
-        const feedTenantId = tenantIds[i];
-
-        if (feedTenantId) {
-            tl.debug(tl.loc('Info_FeedResourceTenant'));
-        } else {
-            tl.warning(tl.loc('Warning_CouldNotDetermineResourceTenant'), IssueSource.TaskInternal);
-        }
-
-        entries.push(buildWifEntry(feed.url, adoServiceConnection, feedTenantId));
-    }
-
-    return entries;
-}
-
-function buildWifEntry(feedUrl: string, serviceConnection: string, feedTenantId: string | null): FeedAuthEntry {
-    const oidcRequestUri = tl.getVariable('System.OidcRequestUri');
-    if (!oidcRequestUri) {
-        tl.warning(tl.loc('Warning_MissingSystemVariable', 'System.OidcRequestUri'), IssueSource.TaskInternal);
-    }
-
-    const oidcEndpoint = oidcRequestUri
-        ? `${oidcRequestUri}?api-version=7.1&serviceConnectionId=${serviceConnection}`
-        : '';
-
-    let clientId = '';
-    let tenantId = feedTenantId || '';
-    try {
-        clientId = tl.getEndpointAuthorizationParameter(serviceConnection, 'serviceprincipalid', false) || '';
-    } catch {
-        tl.warning(tl.loc('Warning_MissingSystemVariable', 'serviceprincipalid'), IssueSource.TaskInternal);
-    }
-    if (!tenantId) {
-        try {
-            tenantId = tl.getEndpointAuthorizationParameter(serviceConnection, 'tenantid', false) || '';
-        } catch {
-            tl.warning(tl.loc('Warning_MissingSystemVariable', 'tenantid'), IssueSource.TaskInternal);
-        }
-    }
-
-    return { url: feedUrl, auth: 'wif' as const, ciSystem: 'ado' as const, oidcEndpoint, clientId, tenantId };
+    const verifiedFeeds = await Promise.all(feeds.map(async feed => ({
+        url: (await verifyAzureArtifactsFeedUrl(
+            parseAzureArtifactsFeedUrl(feed.url),
+            ProtocolType.Maven
+        )).href
+    })));
+    return verifiedFeeds.map(feed => ({
+        url: feed.url,
+        auth: 'sat' as const,
+        ciSystem: 'ado' as const
+    }));
 }

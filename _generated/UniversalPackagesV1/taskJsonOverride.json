@@ -28,11 +28,11 @@
             }
         },
         {
-            "name": "organization",
+            "name": "feedUrl",
             "type": "string",
-            "label": "Organization",
+            "label": "Azure Artifacts organization URL",
             "required": false,
-            "helpMarkDown": "Optional. The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg). Required when using a service connection for cross-organization access. When not specified, uses the current pipeline's organization.",
+            "helpMarkDown": "Required when using an Azure DevOps service connection. Specify the target Azure Artifacts organization root, for example `https://pkgs.dev.azure.com/myorg/`.",
             "visibleRule": "adoServiceConnection != ''"
         },
         {

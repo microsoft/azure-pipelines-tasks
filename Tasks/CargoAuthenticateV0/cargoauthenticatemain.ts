@@ -10,7 +10,8 @@ import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 #if WIF
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 #endif
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
@@ -65,11 +66,6 @@ async function main(): Promise<void> {
 
         if (entraWifServiceConnectionName && registries) {
             const registryNames = registries.split(',');
-            const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
-
-            if (!token) {
-                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-            }
 
             for (let registryName of registryNames) {
                 if(!result.registries[registryName]) {
@@ -81,17 +77,22 @@ async function main(): Promise<void> {
             for (let registryInfo of registriesInfo)
             {
                 var registryUrlStr = url.parse(registryInfo[1].index.replace("sparse+", "")).href;
-                const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registryInfo[0]);
-                if (isValidRegistry(registryUrl, collectionHosts, connectionType))
-                {
-                    if (tl.getVariable(tokenName)) {
-                        tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
-                    }
-                    
-                    setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${token}`))}`);
-                    tl.setVariable(credProviderName, "cargo:token");
-                    federatedAuthCount++;
+                const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                    entraWifServiceConnectionName,
+                    parseAzureArtifactsFeedUrl(registryUrlStr));
+                if (!credentials) {
+                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
                 }
+
+                const [, tokenName, credProviderName, connectionType] = setRegistryVars(
+                    credentials.feedUrl.href,
+                    registryInfo[0]);
+                if (tl.getVariable(tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
+                }
+                setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${credentials.accessToken}`))}`);
+                tl.setVariable(credProviderName, "cargo:token");
+                federatedAuthCount++;
             }
 
             return;
@@ -202,6 +203,9 @@ function setRegistryVars(urlStr: string, registryName: string): readonly [url.Ur
 }
 
 const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
-    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
+    registryUrl &&
+    registryUrl.protocol === "https:" &&
+    registryUrl.host &&
+    collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();

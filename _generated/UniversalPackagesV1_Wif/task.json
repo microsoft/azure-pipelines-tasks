@@ -50,11 +50,11 @@
       }
     },
     {
-      "name": "organization",
+      "name": "feedUrl",
       "type": "string",
-      "label": "Organization",
+      "label": "Azure Artifacts organization URL",
       "required": false,
-      "helpMarkDown": "Optional. The Azure DevOps organization name where the feed is located (e.g., 'myorg' from dev.azure.com/myorg). Required when using a service connection for cross-organization access. When not specified, uses the current pipeline's organization.",
+      "helpMarkDown": "Required when using an Azure DevOps service connection. Specify the target Azure Artifacts organization root, for example `https://pkgs.dev.azure.com/myorg/`.",
       "visibleRule": "adoServiceConnection != ''"
     },
     {
@@ -187,6 +187,7 @@
     "Error_InvalidVersionIncrement": "Invalid version increment value: %s. Expected 'major', 'minor', or 'patch'.",
     "Error_NoAccessToken": "Unable to obtain access token from the SYSTEMVSSCONNECTION endpoint.",
     "Error_NoAuthToken": "Unable to obtain authentication token. The SYSTEMVSSCONNECTION endpoint is not configured correctly. Ensure this task runs in an Azure Pipelines build or release, or provide a service connection via the 'adoServiceConnection' input.",
+    "Error_FeedUrlRequired": "The feedUrl input is required when an Azure DevOps service connection is specified.",
     "Error_PackageVersionRequired": "Package version is required for download operations.",
     "Error_PackagesFailedToDownload": "Failed to download package '%s' version '%s' from feed '%s'",
     "Error_PackagesFailedToPublish": "Failed to publish package '%s' version '%s' to feed '%s'",

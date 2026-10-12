@@ -44,11 +44,9 @@ async function main(): Promise<void> {
 #if WIF
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
     const feedUrl = tl.getInput("feedUrl");
-    let federatedAuthToken: string | undefined;
 
     if (entraWifServiceConnectionName) {
         npmrcRegistries = npmauthutils.validateAndFilterRegistryUrls(npmrcRegistries);
-        federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName);
 
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
         // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
@@ -78,15 +76,17 @@ async function main(): Promise<void> {
         // First match wins; subsequent sources are skipped for this registry.
 #if WIF
         if (entraWifServiceConnectionName) {
-            if (registryURL.protocol !== 'https:') {
-                console.log(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
-                continue;
-            }
+            const credentials = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(
+                entraWifServiceConnectionName,
+                registryUrlString);
 
             console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
-            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
+            const npmrcEntry: NpmrcCredential = {
+                url: credentials.feedUrl.href,
+                auth: `${npmauthutils.toNerfDart(credentials.feedUrl.href)}:_authToken=${credentials.accessToken}`
+            };
+            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, credentials.feedUrl, addedRegistries);
             federatedFeedAuthSuccessCount++;
             console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;

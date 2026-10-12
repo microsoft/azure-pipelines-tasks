@@ -1,7 +1,12 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
+#if WIF
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+#endif
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
-import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getSystemServiceUrl, getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getServiceUriFromAreaId } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
+import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
 
@@ -51,40 +56,60 @@ function tryGetSystemAccessToken(context: UniversalPackageContext): boolean {
     return !!context.accessToken;
 }
 
+#if WIF
+async function tryGetWifToken(context: UniversalPackageContext): Promise<boolean> {
+    tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
+
+    try {
+        if (!context.feedUrl) {
+            throw new Error(tl.loc('Error_FeedUrlRequired'));
+        }
+        const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+            context.adoServiceConnection,
+            parseAzureArtifactsFeedUrl(context.feedUrl)
+        );
+        if (credentials) {
+            context.accessToken = credentials.accessToken;
+            context.serviceUri = credentials.feedUrl.href;
+            tl.debug(tl.loc('Debug_WifTokenObtained'));
+            return true;
+        } else {
+            tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
+            return false;
+        }
+    } catch (err) {
+        tl.warning(tl.loc('Warning_WifAuthFailed', context.adoServiceConnection, err));
+        return false;
+    }
+}
+#endif
 
 async function trySetAccessToken(context: UniversalPackageContext): Promise<boolean> {
+#if WIF
+    if (context.adoServiceConnection) {
+        return await tryGetWifToken(context);
+    }
+#endif
     return tryGetSystemAccessToken(context);
 }
 
 const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
 
-async function getAnonymousFeedServiceUri(serviceUri: string): Promise<string> {
-    const url = `${serviceUri}_apis/resourceAreas/${FEED_RESOURCE_AREA_ID}?api-version=5.0-preview.1`;
-    tl.debug(tl.loc('Debug_ResolvingFeedServiceUri', url));
-
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(tl.loc('Error_FeedServiceUriRequestFailed', response.status, response.statusText));
+function setSystemServiceUri(context: UniversalPackageContext): void {
+    if (!context.adoServiceConnection) {
+        context.serviceUri = getSystemServiceUrl().href;
+        tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
     }
-
-    const data = await response.json() as { locationUrl?: string };
-    if (!data.locationUrl) {
-        throw new Error(tl.loc('Error_FeedServiceUriNoLocationUrl'));
-    }
-
-    return data.locationUrl;
-}
-
-function setServiceUri(context: UniversalPackageContext): void {
-    context.serviceUri = context.adoServiceConnection && context.organization
-        ? `https://dev.azure.com/${encodeURIComponent(context.organization)}/`
-        : tl.getEndpointUrl("SYSTEMVSSCONNECTION", false);
-    tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
 }
 
 async function setFeedServiceUri(context: UniversalPackageContext): Promise<void> {
     try {
-        context.feedServiceUri = await getAnonymousFeedServiceUri(context.serviceUri);
+        context.feedServiceUri = await getServiceUriFromAreaId(
+            FEED_RESOURCE_AREA_ID,
+            {
+                serviceUrl: context.serviceUri,
+                accessToken: context.accessToken
+            });
         tl.debug(tl.loc('Debug_FeedServiceUri', context.feedServiceUri));
     } catch (error) {
         throw new Error(tl.loc('Error_FailedToResolveFeedUri', context.serviceUri, error.message || error));
@@ -116,13 +141,16 @@ async function setIdentityInformation(context: UniversalPackageContext): Promise
 
 export async function trySetAuth(context: UniversalPackageContext): Promise<boolean> {
     try {
-        setServiceUri(context);
-        await setFeedServiceUri(context);
+        setSystemServiceUri(context);
 
         if (!await trySetAccessToken(context)) {
             throw new Error(tl.loc('Error_NoAuthToken'));
         }
+        if (!context.serviceUri) {
+            throw new Error(tl.loc('Error_FailedToResolveFeedUri', context.feedUrl));
+        }
 
+        await setFeedServiceUri(context);
         await setIdentityInformation(context);
 
         const toolRunnerOptions = artifactToolRunner.getOptions();
@@ -165,7 +193,6 @@ export function logArtifactToolTelemetry(context: UniversalPackageContext): void
     try {
         let artifactToolTelemetry = {
             "command": context.command,
-            "organization": context.organization,
             "feed": context.projectAndFeed,
             "packageName": context.packageName,
             "packageVersion": context.packageVersion,
@@ -192,4 +219,3 @@ export function logCommandResult(area: string, feature: string, resultCode: numb
 export function logInfo(key: string, ...params: any[]): void {
     console.log(tl.loc(key, ...params));
 }
-

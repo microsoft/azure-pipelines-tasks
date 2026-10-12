@@ -49,7 +49,6 @@ tmr.registerMockExport('getEndpointAuthorizationParameter', (id: string, key: st
 // ---------------------------------------------------------------------------
 tmr.registerMockExport('getVariable', (name: string) => {
     const vars: Record<string, string> = {
-        'System.OidcRequestUri': 'https://dev.azure.com/testorg/test-project-id/_apis/distributedtask/hubs/build/plans/test-plan-id/jobs/test-job-id/oidctoken',
         'ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH': '',
         'ARTIFACTS_GRADLE_AUTH_TEMP_DIR': '',
     };
@@ -76,6 +75,18 @@ tmr.registerMock('http', httpMock);
 // Mock telemetry to avoid agent version checks in tests
 tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
     emitTelemetry: (_area: string, _feature: string, _data: any) => {}
+});
+tmr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async (feedUrl: string) => new URL(feedUrl)
+});
+tmr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
+    getFederatedWorkloadIdentityCredentialsForFeed: async (
+        _serviceConnection: string,
+        feedUrl: string
+    ) => ({
+        accessToken: 'mock-wif-access-token',
+        feedUrl: new URL(feedUrl)
+    })
 });
 
 tmr.run();

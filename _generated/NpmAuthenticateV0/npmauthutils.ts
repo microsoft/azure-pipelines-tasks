@@ -99,7 +99,14 @@ export function resolveInternalFeedCredentials(
     }
 
     const packagingOrigins = packagingUris
-        .map(uri => { try { return new URL(uri).origin; } catch { return undefined; } })
+        .map(uri => {
+            try {
+                const parsedUri = new URL(uri);
+                return parsedUri.protocol === 'https:' ? parsedUri.origin : undefined;
+            } catch {
+                return undefined;
+            }
+        })
         .filter((origin): origin is string => origin !== undefined && origin !== 'null');
 
     const allRegistries = getRegistriesFromNpmrc(npmrc);
@@ -235,4 +242,3 @@ export function removeExistingCredentialEntries(
     fs.writeFileSync(npmrcPath, lines.join(os.EOL));
     return lines;
 }
-

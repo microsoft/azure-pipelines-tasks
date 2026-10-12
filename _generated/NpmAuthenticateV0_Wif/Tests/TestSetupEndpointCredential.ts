@@ -71,8 +71,7 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 });
 
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
-    getFederatedWorkloadIdentityCredentials: async function () { return null; },
-    getFeedTenantId: async function () { return 'mock-tenant-id'; }
+    getFederatedWorkloadIdentityCredentialsForFeed: async function () { return undefined; }
 });
 
 // Mock http/https for isEndpointInternal probe
