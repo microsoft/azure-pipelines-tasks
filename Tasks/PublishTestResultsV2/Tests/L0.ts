@@ -58,6 +58,42 @@ describe('PublishTestResults Suite', function() {
     after(function () {
     });
 
+    ['Windows_NT', 'Linux', 'Darwin'].forEach((osType) => {
+        it(`Publishes results without probing the .NET SDK on ${osType}`, (done: Mocha.Done) => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+            setCommonRetryDetectionInputs();
+            process.env[constants.osType] = osType;
+
+            tr.run();
+
+            assert(tr.succeeded, 'Task should have succeeded');
+            assert(tr.stdOutContained('##vso[results.publish '), 'Results should still be published');
+            assert.equal(tr.invokedToolCount, osType === 'Windows_NT' ? 1 : 0,
+                'Only the Windows test results publisher should invoke a tool');
+            assert(!tr.stdOutContained('dotnet --version'), 'The SDK version probe should not run');
+            assert(tr.stdOutContained('##vso[telemetry.publish '), 'Other telemetry should still be published');
+            assert(!tr.stdOutContained('"dotnetVersion"'), 'SDK version telemetry should be omitted');
+
+            done();
+        });
+    });
+
+    it('Does not probe the .NET SDK when no result files match', (done: Mocha.Done) => {
+        const tr = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        setCommonRetryDetectionInputs();
+        process.env[constants.testResultsFiles] = '"missing-results.xml"';
+
+        tr.run();
+
+        assert(tr.succeeded, 'Missing results should remain a warning by default');
+        assert.equal(tr.warningIssues.length, 1, 'Missing results should produce a warning');
+        assert.equal(tr.invokedToolCount, 0, 'No tools should be invoked without result files');
+        assert(!tr.stdOutContained('##vso[results.publish '), 'No results should be published');
+        assert(!tr.stdOutContained('"dotnetVersion"'), 'SDK version telemetry should be omitted');
+
+        done();
+    });
+
     it('TestResultsPublisher.exe is called on Windows OS', (done: Mocha.Done) => {
         console.log('TestCaseName: TestResultsPublisher.exe is called on Windows OS');
 
