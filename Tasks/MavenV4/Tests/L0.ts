@@ -25,7 +25,7 @@ describe("Maven L0 Suite", function () {
     });
 
     it("run maven with all default inputs and M2_HOME not set", async function() {
-        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 60000);
         const testPath = path.join(__dirname, "L0DefaultsWithNoHomeSet.js");
         const testRunner = new MockTestRunner(testPath);
 

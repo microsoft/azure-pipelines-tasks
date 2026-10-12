@@ -397,7 +397,7 @@ function publishJUnitTestResults(testResultsFiles: string) {
     }
 
     if (!matchingJUnitResultFiles || matchingJUnitResultFiles.length == 0) {
-        console.log(tl.loc('NoTestResults', testResultsFiles));
+        tl.writeExternalOutput(tl.loc('NoTestResults', testResultsFiles) + os.EOL, { source: 'repository' });
         return 0;
     }
 
