@@ -59,6 +59,7 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | Maven V3 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | MysqlDeploymentOnMachineGroup V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NodeTool V0 | [PR #21902](https://github.com/microsoft/azure-pipelines-tasks/pull/21902) | 2026-03-20 |
+| Npm V0 | N/A | 2026-10-12 |
 | NuGet V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetAuthenticate V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetInstaller V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
@@ -66,12 +67,14 @@ For migration guidance and replacement tasks, please refer to the deprecation me
 | NuGetPublisher V0 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | NuGetRestore V1 | [PR #20222](https://github.com/microsoft/azure-pipelines-tasks/pull/20222) | 2024-08-05 |
 | PackerBuild V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
+| PipAuthenticate V0 | N/A | 2026-10-12 |
 | PowerShellOnTargetMachines V1 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | PowerShellOnTargetMachines V2 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | PublishCodeCoverageResults V1 | N/A | N/A |
 | QuickPerfTest V1 | N/A | N/A |
 | ServiceFabricComposeDeploy V0 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | SqlServerDacpacDeployment V1 | [PR #8481](https://github.com/microsoft/azure-pipelines-tasks/pull/8481) | 2018-10-05 |
+| TwineAuthenticate V0 | N/A | 2026-10-12 |
 | VSTest V1 | [PR #20231](https://github.com/microsoft/azure-pipelines-tasks/pull/20231) | 2024-08-06 |
 | XamarinAndroid V1 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |
 | XamariniOS V2 | [PR #20199](https://github.com/microsoft/azure-pipelines-tasks/pull/20199) | 2024-08-02 |

@@ -10,13 +10,16 @@
   "version": {
     "Major": 0,
     "Minor": 279,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
     "DeploymentGroup"
   ],
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "removalDate": "2026-06-30",
+  "deprecationMessage": "The TwineAuthenticate@0 task has been deprecated. Please switch to using TwineAuthenticate@1.",
   "instanceNameFormat": "Twine Authenticate $(message)",
   "groups": [
     {

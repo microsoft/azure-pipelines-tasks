@@ -20,6 +20,9 @@
     "npm"
   ],
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "removalDate": "2026-06-30",
+  "deprecationMessage": "The Npm@0 task has been deprecated. Please switch to using NpmAuthenticate and script tasks, or Npm@1.",
   "instanceNameFormat": "npm $(command)",
   "inputs": [
     {
