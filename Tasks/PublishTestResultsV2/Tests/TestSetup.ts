@@ -27,17 +27,10 @@ const PublishExeArgs = ['@' + path.join(__dirname, newUuid + '.txt')];
 // Construct the answers object
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     'which': {
-        'dotnet': 'dotnet'
     },
     'checkPath': {
-        'dotnet': true
     },
     'exec': {
-        'dotnet --version': {
-            'code': 0,
-            'stdout': 'mock SDK version',
-            'stderr': ''
-        }
     }
 };
 
@@ -72,9 +65,6 @@ tlClone.osType = function () {
 }
 
 tlClone.findMatch = function () {
-    if (process.env[constants.testResultsFiles] === '"missing-results.xml"') {
-        return [];
-    }
     let matchingFiles: string[] = ["n-files0.xml"];
     return matchingFiles;
 }
@@ -85,5 +75,4 @@ tlClone.getEndpointAuthorizationParameter = function () {
 tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 
 // Start the run
-process.env.AGENT_VERSION = '2.200.0';
 tr.run();
