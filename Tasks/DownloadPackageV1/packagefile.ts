@@ -12,6 +12,8 @@ export class PackageFile {
 
     // file will be downloaded here
     private initialLocation: string;
+    private rootLocation: string;
+    private filename: string;
 
     // file will be extracted to this location
     private finalLocation: string;
@@ -20,22 +22,94 @@ export class PackageFile {
     constructor(extract: boolean, destination: string, filename: string) {
         this.finalLocation = destination;
         this.extractFile = extract;
+        this.filename = filename;
 
         if (extract) {
-            this.initialLocation = path.resolve(tl.getVariable('Agent.TempDirectory'), filename);
+            this.rootLocation = path.resolve(tl.getVariable('Agent.TempDirectory'));
         } else {
-            this.initialLocation = path.resolve(destination, filename);
+            this.rootLocation = path.resolve(destination);
         }
+
+        this.initialLocation = this.resolveContainedPath(filename);
     }
 
     public async process(): Promise<void> {
         if (this.extractFile) {
+            this.validateNoLinks();
             return this.extract();
         }
     }
 
+    public removeExisting(): void {
+        this.validateNoLinks();
+        tl.rmRF(this.initialLocation);
+    }
+
+    public writeContent(content: string): Promise<void> {
+        this.validateNoLinks();
+
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(this.initialLocation, content, error => {
+                if (error) {
+                    return reject(error);
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    public createWriteStream(): fs.WriteStream {
+        this.validateNoLinks();
+        return fs.createWriteStream(this.initialLocation);
+    }
+
     get downloadPath() {
         return this.initialLocation;
+    }
+
+    private validateNoLinks(): void {
+        const relativePath = path.relative(this.rootLocation, this.initialLocation);
+        let currentPath = this.rootLocation;
+
+        for (const segment of relativePath.split(path.sep)) {
+            currentPath = path.join(currentPath, segment);
+
+            try {
+                if (fs.lstatSync(currentPath).isSymbolicLink()) {
+                    throw new Error(tl.loc("InvalidPackageFileLink", this.filename));
+                }
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                    return;
+                }
+
+                throw error;
+            }
+        }
+    }
+
+    private resolveContainedPath(filename: string): string {
+        const hasParentSegment = filename.split(/[\\/]+/).includes("..");
+        const hasWindowsRoot = path.win32.parse(filename).root !== "";
+
+        if (!filename || path.posix.isAbsolute(filename) || hasWindowsRoot || hasParentSegment) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        const resolvedPath = path.resolve(this.rootLocation, filename);
+        const relativePath = path.relative(this.rootLocation, resolvedPath);
+        const escapesRoot =
+            !relativePath ||
+            relativePath === ".." ||
+            relativePath.startsWith(`..${path.sep}`) ||
+            path.isAbsolute(relativePath);
+
+        if (escapesRoot) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        return resolvedPath;
     }
 
     private async extract(): Promise<void> {
