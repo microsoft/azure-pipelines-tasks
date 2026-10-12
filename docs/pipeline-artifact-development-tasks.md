@@ -1,5 +1,8 @@
 # Local ArtifactTool development tasks
 
+For the architecture, implementation walkthrough, and test strategy, see the
+[Node task migration overview](pipeline-artifact-node-migration.md).
+
 These **test-only** tasks exercise the Node migration without changing production
 `PublishPipelineArtifact@1`, `DownloadPipelineArtifact@2`, YAML shortcuts, or agent
 plug-in registrations:
