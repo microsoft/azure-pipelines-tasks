@@ -20,7 +20,7 @@
   "version": {
     "Major": 2,
     "Minor": 281,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -232,10 +232,11 @@
     "FailedToRefreshAzSession": "ms-resource:loc.messages.FailedToRefreshAzSession",
     "RefreshingAzSession": "ms-resource:loc.messages.RefreshingAzSession",
     "KeepingAzSessionActiveUnsupportedScheme": "ms-resource:loc.messages.KeepingAzSessionActiveUnsupportedScheme",
-    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized"
+    "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
+    "BatchPercentSignNotAllowed": "ms-resource:loc.messages.BatchPercentSignNotAllowed"
   },
   "_buildConfigMapping": {
-    "Default": "2.281.0",
-    "Node24_1": "2.281.1"
+    "Default": "2.281.2",
+    "Node24_1": "2.281.3"
   }
 }

@@ -16,12 +16,12 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
-    "@azure/bicep-deploy-common": "^0.0.6",
+    "@azure/bicep-deploy-common": "^0.4.1",
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
     "@types/q": "^1.5.8",
     "agent-base": "^6.0.2",
-    "azure-pipelines-task-lib": "^5.279.0",
+    "azure-pipelines-task-lib": "^5.280.2",
     "azure-pipelines-tasks-azure-arm-rest": "^3.279.0",
     "azure-pipelines-tool-lib": "^2.279.0"
   },

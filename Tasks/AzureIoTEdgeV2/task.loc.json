@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 281,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -295,6 +295,19 @@
     "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
     "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
     "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "DOCKER_CLI_EXPERIMENTAL",
+        "DEPLOYMENT_FILE_PATH",
+        "_DEPLOYMENT_FILE_PATH",
+        "VSTS_EXTENSION_EDGE_DOCKER_CREDENTIAL"
+      ]
+    }
   },
   "OutputVariables": [
     {
