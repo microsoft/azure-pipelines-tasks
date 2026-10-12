@@ -48,6 +48,7 @@ function Get-azCopyExeLocation
     param([string]$location)
     if ($location -eq 'latest') {
         Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts >= 5.0.0"
+        Write-Verbose "Using AzCopy (10.29.1) - Az.Accounts >= 5.0.0"
         return 'AzCopy\AzCopy.exe'
     } else {
         Write-Verbose "Using AzCopy_Prev (10.25.1) - Az.Accounts < 5.0.0"
