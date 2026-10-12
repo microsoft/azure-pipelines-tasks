@@ -68,6 +68,105 @@ a Linux executable. Host/container path translation remains the agent's job.
 | Output variables and task completion | Node task |
 | Tool release, acquisition, and deployment policy | Not implemented by this local-build prototype |
 
+## OS, architecture, and container coverage
+
+The migration needs to cover the environment where the task executes, not just
+the machine where the agent listener runs. CPU architecture and the Linux C
+runtime are part of that contract.
+
+### Agent host platforms versus ArtifactTool targets
+
+The agent's published 5.280.0 packages and current build configuration cover ten
+runtime identifiers (RIDs). ArtifactTool's build/release pipeline currently
+configures seven corresponding modern targets:
+
+| Agent host platform | Agent RID | Node24 packaged by the agent | ArtifactTool build/release target |
+|---|---|---|---|
+| Windows x64 | `win-x64` | Yes | Present |
+| Windows ARM64 | `win-arm64` | Yes | Present |
+| Windows x86 | `win-x86` | **No** | **Missing** |
+| Linux glibc x64 | `linux-x64` | Yes | Present |
+| Linux glibc ARM64 | `linux-arm64` | Yes | Present |
+| Linux glibc ARM32 / ARMv7 | `linux-arm` | **No** | **Missing** |
+| Linux musl x64, e.g. Alpine | `linux-musl-x64` | Yes | Present |
+| Linux musl ARM64 | `linux-musl-arm64` | Yes | **Missing** |
+| macOS x64 | `osx-x64` | Yes | Present |
+| macOS ARM64 | `osx-arm64` | Yes | Present |
+
+This is a package/build-target comparison, not a guarantee of compatibility with
+every version of an OS or distribution. Those versions must also satisfy the
+agent, Node, .NET, and native artifact client's runtime requirements.
+
+The source of truth is the
+[agent RID list](https://github.com/microsoft/azure-pipelines-agent/blob/master/src/dev.sh)
+and [Node packaging logic](https://github.com/microsoft/azure-pipelines-agent/blob/master/src/Misc/externals.sh),
+along with ArtifactTool's
+[build matrix](https://dev.azure.com/mseng/AzureDevOps/_git/ArtifactTool?path=%2Fpipelines%2FArtifactTool.1ESPT.Template.yaml)
+and [release registration](https://dev.azure.com/mseng/AzureDevOps/_git/ArtifactTool?path=%2Fpipelines%2FArtifactTool.1ESPT.ReleaseTemplate.yaml).
+ArtifactTool's project-level RID list is shorter than its pipeline matrix: ARM64
+RIDs are supplied by the pipeline. Adding those existing ARM64 targets again would
+not close the missing-platform gaps.
+
+The Node24-only prototype cannot claim Windows x86 or Linux ARM32 parity.
+Adding ArtifactTool binaries for those platforms would not resolve the absent
+Node24 handler runtime; they need an explicit task-runtime compatibility decision.
+
+### Agent running inside a container
+
+In this model, Docker supplies the agent's machine environment, and the pipeline
+uses ordinary jobs:
+
+- A Linux image needs Linux agent/tool binaries for its CPU architecture and
+  glibc or musl runtime.
+- A Windows image needs Windows binaries and a supported image/host configuration.
+- There is no separate Docker RID or ArtifactTool build.
+- An agent running inside Docker does not imply support for nested Azure Pipelines
+  container jobs.
+
+This is the model exercised by the Docker-hosted Linux agent in run 947.
+
+### Host agent targeting container steps or jobs
+
+| Agent host | Container target |
+|---|---|
+| Linux | Linux images with compatible architecture, runtime, and prerequisites. |
+| Windows | Windows or Linux images, depending on the Docker backend and supported host/image configuration. |
+| macOS | Azure Pipelines container jobs are not documented as supported. Linux-container handling in source is not a support commitment. |
+
+Linux images used with a Windows agent must provide Node themselves; these tasks
+require Node24. Nonglibc images also need compatible Node and native libraries.
+Windows images require compatible host/image versions or a supported isolation
+configuration. The table does not promise every architecture cross-combination,
+Windows ARM64 container support, or emulation-based execution. See the
+[container job prerequisites](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/container-phases?view=azure-devops).
+
+Tool selection must use the actual task target's OS, architecture, and Linux
+runtime flavor. Host variables such as `Agent.OS` are not sufficient by themselves.
+For example, a Windows x64 host can execute a Linux x64 step that needs
+`linux-x64`, while a musl ARM64 image needs `linux-musl-arm64` rather than the
+host's tool. The local-path prototype leaves this selection to the test setup;
+an eventual acquisition implementation must determine it for each target.
+
+### Required additions and validation
+
+1. **Add `linux-musl-arm64`** to ArtifactTool build, packaging, release registration,
+   and execution tests. This is the immediate binary gap for the Node24-capable
+   agent platform set.
+2. **Decide Windows x86 and Linux ARM32 compatibility.** Full agent-platform parity
+   requires both ArtifactTool targets and a viable task handler/runtime strategy.
+   Do not implicitly remove those platforms by switching production tasks to Node24.
+3. **Exercise all eight Node24-capable target combinations:** Windows x64/ARM64,
+   Linux glibc x64/ARM64, Linux musl x64/ARM64, and macOS x64/ARM64. A successful
+   cross-publish does not establish that native dedup dependencies work at runtime.
+4. **Test container ABI and targeting separately:** glibc and musl images, Windows
+   images, and host/container path mapping. Binaries, image prerequisites, and
+   execution-test coverage are separate deliverables.
+
+Current live coverage establishes Windows x64 host execution and glibc Linux x64
+execution, including the Docker-hosted agent, selected Linux steps on Windows,
+and full Linux container jobs. ARM64, ARM32, Windows x86, musl, macOS, and
+Windows-container execution have not been verified by these prototype E2E runs.
+
 ## Implementation map
 
 The entry points deliberately contain very little logic:
@@ -285,6 +384,8 @@ cache handling and task upload.
   acquisition with the approved distribution mechanism.
 - Decide how and when to migrate production task identities, minimum agent
   requirements, pinned task versions, YAML shortcuts, and automatic downloads.
+- Close the `linux-musl-arm64` tool gap, decide Windows x86/Linux ARM32 task
+  compatibility, and complete the OS/architecture execution matrix above.
 - Complete matching/layout coverage across resource types, including empty
   directories and file-share behavior outside the local Windows test setup.
 - Validate Windows containers, other architectures, non-default domains, remote
