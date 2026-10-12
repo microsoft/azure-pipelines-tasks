@@ -205,6 +205,19 @@ describe('NuGetCommand Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
+    it('does not log credential provider endpoint JSON during push', async () => {
+        const tp = path.join(__dirname, './PublishTests/internalFeedNuGetCredentialProvider.js')
+        const tr = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        assert(tr.invokedToolCount == 1, 'should have run NuGet once');
+        assert(!tr.stdOutContained('credential-provider-secret'), 'should not print the credential provider secret');
+        assert(!tr.stdOutContained('VSS_NUGET_EXTERNAL_FEED_ENDPOINTS'), 'should not print the credential environment variable');
+        assert(!tr.stdOutContained('Endpoints found:'), 'should not print the endpoint JSON');
+        assert(tr.stdOutContained('External credential endpoints found: 1'), 'should retain a non-secret diagnostic');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
     it('pushes to an external feed without exposing an API key in process arguments', async () => {
         const tp = path.join(__dirname, './PublishTests/externalFeedApiKey.js')
         const tr = new ttm.MockTestRunner(tp);

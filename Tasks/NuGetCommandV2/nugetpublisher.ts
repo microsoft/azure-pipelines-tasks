@@ -494,9 +494,9 @@ async function getAccessToken(isInternalFeed: boolean, uriPrefixes: any): Promis
 
             if (JsonEndpointsString) {
                 tl.debug(`Feed details ${feed.feedId} ${feed.projectId}`);
-                tl.debug(`Endpoints found: ${JsonEndpointsString}`);
 
                 let endpointsArray: { endpointCredentials: EndpointCredentials[] } = JSON.parse(JsonEndpointsString);
+                tl.debug(`External credential endpoints found: ${endpointsArray.endpointCredentials.length}`);
                 let matchingEndpoint: EndpointCredentials;
                 for (const e of endpointsArray.endpointCredentials) {
                     for (const prefix of uriPrefixes) {
