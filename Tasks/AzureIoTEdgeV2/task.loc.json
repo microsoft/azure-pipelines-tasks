@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -294,7 +294,7 @@
     "StartGenerateDeploymentManifest": "ms-resource:loc.messages.StartGenerateDeploymentManifest",
     "FinishGenerateDeploymentManifest": "ms-resource:loc.messages.FinishGenerateDeploymentManifest",
     "LoginRegistrySucess": "ms-resource:loc.messages.LoginRegistrySucess",
-    "SkipSettingEnvironmentVariableForSecret": "ms-resource:loc.messages.SkipSettingEnvironmentVariableForSecret"
+    "SecretVariableNotMapped": "ms-resource:loc.messages.SecretVariableNotMapped"
   },
   "restrictions": {
     "commands": {

@@ -11,6 +11,8 @@ import * as registryToken from 'azure-pipelines-tasks-docker-common/registryauth
 import Constants from '../constant';
 import util from '../util';
 import * as pushImage from '../pushimage';
+import * as genConfig from '../genconfig';
+import * as buildImage from '../buildimage';
 
 const credentialVariable = Constants.fileNameDockerCredential;
 
@@ -20,6 +22,13 @@ function fakeToken(username: string, password: string, server: string): any {
         getPassword: () => password,
         getLoginServerUrl: () => server
     };
+}
+
+function stub(target: any, saved: any, overrides: any): void {
+    for (const key of Object.keys(overrides)) {
+        saved[key] = target[key];
+    }
+    Object.assign(target, overrides);
 }
 
 // Runs fn while capturing stdout and returns the lines that set the credential variable.
@@ -73,13 +82,6 @@ describe('AzureIoTEdgeV2 push', function () {
     let fillRegistryCredential = false;
     let storeCalls = 0;
     const originals: { tl: any, util: any, registryToken: any } = { tl: {}, util: {}, registryToken: {} };
-
-    function stub(target: any, saved: any, overrides: any): void {
-        for (const key of Object.keys(overrides)) {
-            saved[key] = target[key];
-        }
-        Object.assign(target, overrides);
-    }
 
     beforeEach(() => {
         tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'AzureIoTEdgeV2-push-'));
@@ -139,6 +141,111 @@ describe('AzureIoTEdgeV2 push', function () {
         assert.strictEqual(lines.length, 1);
         assert.ok(lines[0].indexOf('issecret=true;') >= 0);
         assert.deepStrictEqual(util.readDockerCredentials(), [{ username: 'user', password: 'secret', address: 'contoso.azurecr.io' }]);
+    });
+});
+
+describe('AzureIoTEdgeV2 iotedgedev environment', function () {
+    const registryEnv = Object.keys(Constants.iotedgedevEnv).map(k => (Constants.iotedgedevEnv as any)[k]);
+    const secretValue = 'vault-only-value';
+    let tempDir = '';
+    let templatePath = '';
+    let warnings: string[] = [];
+    let execEnvs: NodeJS.ProcessEnv[] = [];
+    let savedEnv: { [key: string]: string | undefined } = {};
+    const originals: { tl: any, util: any, registryToken: any } = { tl: {}, util: {}, registryToken: {} };
+
+    beforeEach(() => {
+        const touchedEnv = registryEnv.concat(['MY_SECRET', 'MAPPED_SECRET', Constants.outputVariableDeploymentPathKey, '_' + Constants.outputVariableDeploymentPathKey]);
+        savedEnv = {};
+        touchedEnv.forEach(name => savedEnv[name] = process.env[name]);
+        delete process.env['MY_SECRET'];
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'AzureIoTEdgeV2-env-'));
+        templatePath = path.join(tempDir, 'deployment.template.json');
+        fs.writeFileSync(templatePath, '{}');
+        warnings = [];
+        execEnvs = [];
+        // Simulates a secret the owner mapped to this step with env:.
+        process.env['MAPPED_SECRET'] = 'mapped-value';
+
+        const inputs: { [key: string]: string } = {
+            containerregistrytype: 'Generic Container Registry',
+            dockerRegistryEndpoint: 'registry',
+            bypassModules: '',
+            defaultPlatform: 'amd64',
+            deploymentManifestOutputPath: path.join(tempDir, 'deployment.json')
+        };
+        stub(tl, originals.tl, {
+            getInput: (name: string) => inputs[name],
+            getPathInput: () => templatePath,
+            getBoolInput: () => false,
+            getVariables: () => [{ name: 'my.secret', value: secretValue, secret: true }],
+            warning: (message: string) => { warnings.push(message); },
+            loc: (key: string, ...args: any[]) => [key].concat(args).join(' '),
+            exec: (tool: string, args: any, options: any) => { execEnvs.push(Object.assign({}, options.env)); return Promise.resolve(0); }
+        });
+        stub(registryToken, originals.registryToken, {
+            getDockerRegistryEndpointAuthenticationToken: () => Promise.resolve(fakeToken('user', 'secret', 'contoso.azurecr.io'))
+        });
+        stub(util, originals.util, {
+            setTaskRootPath: () => { },
+            setupIotedgedev: () => { },
+            dockerLogin: () => ({ code: 0, stdout: '', stderr: '' }),
+            dockerLogout: () => ({ code: 0, stdout: '', stderr: '' })
+        });
+    });
+
+    afterEach(() => {
+        Object.assign(tl, originals.tl);
+        Object.assign(util, originals.util);
+        Object.assign(registryToken, originals.registryToken);
+        Object.keys(savedEnv).forEach(name => {
+            if (savedEnv[name] === undefined) {
+                delete process.env[name];
+            } else {
+                process.env[name] = savedEnv[name];
+            }
+        });
+        fs.rmSync(tempDir, { recursive: true, force: true });
+    });
+
+    [['genconfig', genConfig], ['build', buildImage], ['push', pushImage]].forEach(([name, command]: [string, any]) => {
+        it(`${name} passes only mapped secrets to iotedgedev`, async () => {
+            await command.run();
+
+            assert.strictEqual(execEnvs.length, 1);
+            assert.ok(Object.keys(execEnvs[0]).every(key => execEnvs[0][key] !== secretValue), 'unmapped secret should not reach iotedgedev');
+            assert.strictEqual(execEnvs[0]['MAPPED_SECRET'], 'mapped-value');
+        });
+    });
+
+    it('warns when the template uses an unmapped secret', async () => {
+        fs.writeFileSync(templatePath, '{"password": "${MY_SECRET}"}');
+        await genConfig.run();
+
+        assert.deepStrictEqual(warnings, ['SecretVariableNotMapped my.secret MY_SECRET']);
+        assert.ok(warnings.every(w => w.indexOf(secretValue) < 0));
+    });
+
+    it('does not warn when the secret is mapped', async () => {
+        fs.writeFileSync(templatePath, '{"password": "${MY_SECRET}"}');
+        process.env['MY_SECRET'] = 'mapped';
+        await genConfig.run();
+
+        assert.deepStrictEqual(warnings, []);
+    });
+
+    it('does not warn for a longer name sharing the prefix', async () => {
+        fs.writeFileSync(templatePath, '{"other": "${MY_SECRETS}"}');
+        await genConfig.run();
+
+        assert.deepStrictEqual(warnings, []);
+    });
+
+    it('does not warn for an unclosed placeholder', async () => {
+        fs.writeFileSync(templatePath, '{"other": "${MY_SECRET-X}"}');
+        await genConfig.run();
+
+        assert.deepStrictEqual(warnings, []);
     });
 });
 

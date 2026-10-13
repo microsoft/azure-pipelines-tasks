@@ -72,5 +72,5 @@
   "loc.messages.StartGenerateDeploymentManifest": "Start generating deployment manifest...",
   "loc.messages.FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
   "loc.messages.LoginRegistrySucess": "Successfully logged in to registry %s",
-  "loc.messages.SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
+  "loc.messages.SecretVariableNotMapped": "Secret variable %s is used in the template but is not mapped to this task, so it will not be expanded. Map it as environment variable %s on this task (YAML: env)."
 }

@@ -14,7 +14,7 @@
   "version": {
     "Major": 2,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "preview": false,
   "showEnvironmentVariables": true,
@@ -294,7 +294,7 @@
     "StartGenerateDeploymentManifest": "Start generating deployment manifest...",
     "FinishGenerateDeploymentManifest": "Finished generating deployment manifest.",
     "LoginRegistrySucess": "Successfully logged in to registry %s",
-    "SkipSettingEnvironmentVariableForSecret": "Environment variable %s already exist. Skip setting environment varialbe for secret: %s."
+    "SecretVariableNotMapped": "Secret variable %s is used in the template but is not mapped to this task, so it will not be expanded. Map it as environment variable %s on this task (YAML: env)."
   },
   "restrictions": {
     "commands": {

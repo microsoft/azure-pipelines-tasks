@@ -27,8 +27,7 @@ export async function run() {
   tl.debug(`Setting deployment manifest output file name to ${outputFileName}`)
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.deploymentFileOutputName, outputFileName)
 
-  // Pass secrets to sub process
-  util.populateSecretToEnvironmentVariable(envList);
+  util.warnUnmappedSecrets(templateFilePath, envList);
 
   let execOptions: IExecOptions = {
     cwd: tl.cwd(),

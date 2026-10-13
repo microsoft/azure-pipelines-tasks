@@ -59,8 +59,7 @@ export async function run() {
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryUsername, authenticationToken.getUsername());
   util.setCliVarialbe(envList, Constants.iotedgedevEnv.registryPassword, authenticationToken.getPassword());
 
-  // Pass secrets to sub process
-  util.populateSecretToEnvironmentVariable(envList);
+  util.warnUnmappedSecrets(templateFilePath, envList);
 
   tl.debug(`Following variables will be passed to the iotedgedev command: ${Object.keys(envList).join(", ")}`);
 
