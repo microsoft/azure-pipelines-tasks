@@ -4,9 +4,9 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
-import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { getServiceUriFromAreaId } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
+import { getWebApiWithProxy, requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
+import { getAreaIdForProtocol, ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
 
@@ -93,8 +93,6 @@ async function trySetAccessToken(context: UniversalPackageContext): Promise<bool
     return tryGetSystemAccessToken(context);
 }
 
-const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
-
 function setSystemServiceUri(context: UniversalPackageContext): void {
     if (!context.adoServiceConnection) {
         context.serviceUri = tl.getEndpointUrlRequired("SYSTEMVSSCONNECTION");
@@ -104,10 +102,16 @@ function setSystemServiceUri(context: UniversalPackageContext): void {
 
 async function setFeedServiceUri(context: UniversalPackageContext): Promise<void> {
     try {
-        context.feedServiceUri = await getServiceUriFromAreaId(
-            FEED_RESOURCE_AREA_ID,
-            context.serviceUri,
-            context.accessToken);
+        const rootServiceUrl = requireHttpsUrl(context.serviceUri).href;
+        const webApi = getWebApiWithProxy(
+            rootServiceUrl,
+            context.accessToken,
+            { maxRedirects: 0 });
+        const locationApi = await webApi.getLocationsApi();
+        const resourceArea = await locationApi.getResourceArea(
+            getAreaIdForProtocol(ProtocolType.Universal));
+        context.feedServiceUri =
+            requireHttpsUrl(resourceArea.locationUrl).href;
         tl.debug(tl.loc('Debug_FeedServiceUri', context.feedServiceUri));
     } catch (error) {
         throw new Error(tl.loc('Error_FailedToResolveFeedUri', context.serviceUri, error.message || error));

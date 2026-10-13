@@ -291,8 +291,11 @@ export class UniversalMockHelper {
                     },
                     getLocationsApi: async () => ({
                         getResourceArea: async (areaId: string) => {
-                            // Mock the UPack area ID returning a packaging service URL
-                            return { locationUrl: `${serviceUri}/_apis/packaging` };
+                            const locationUrl = process.env['MOCK_FEED_SERVICE_URL'] ||
+                                (serviceUri.includes('other-org')
+                                ? TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
+                                : TEST_CONSTANTS.FEED_SERVICE_URL);
+                            return { locationUrl };
                         },
                         getConnectionData: async () => ({
                             authenticatedUser: {
@@ -305,24 +308,9 @@ export class UniversalMockHelper {
                 };
             }
         };
-        
+
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', wifMock);
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', webapiMock);
-        this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', {
-            getServiceUriFromAreaId: async (
-                _areaId: string,
-                connection: { serviceUrl: string }
-            ) => {
-                const serviceUrl = process.env['MOCK_FEED_SERVICE_URL'] ||
-                    (connection.serviceUrl.includes('other-org')
-                    ? TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
-                    : TEST_CONSTANTS.FEED_SERVICE_URL);
-                if (new URL(serviceUrl).protocol !== 'https:') {
-                    throw new Error('Error_ServiceUrlHttpsRequired');
-                }
-                return serviceUrl;
-            }
-        });
     }
 
     private mockUniversalCommand() {
