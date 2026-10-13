@@ -7,6 +7,7 @@ param()
 #path to Utility.ps1 for SqlAzureDacpacDeployment task
 . "$PSScriptRoot\..\Utility.ps1"
 . "$PSScriptRoot\..\SqlAzureActions.ps1"
+. "$PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1"
 
 # Mock feature flag to use legacy path
 Register-Mock Should-UseSanitizedArguments { return $false }

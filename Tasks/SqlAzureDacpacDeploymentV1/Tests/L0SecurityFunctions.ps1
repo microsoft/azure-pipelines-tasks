@@ -7,6 +7,7 @@ param()
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\SqlAzureActions.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1
 
 # ============================================================================
 # Should-UseSanitizedArguments - real calls with mocked FF dependencies

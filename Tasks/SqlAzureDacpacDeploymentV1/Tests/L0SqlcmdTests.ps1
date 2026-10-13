@@ -6,6 +6,7 @@ param()
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\SqlAzureActions.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1
 
 # Mock feature flag to use legacy path (backward compat)
 Register-Mock Get-SanitizerCallStatus { return $false }

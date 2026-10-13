@@ -357,7 +357,7 @@ function Run-SqlCmd {
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
 
-        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
+        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | Protect-ExternalOutput | foreach-object { $_ }
 
         if ($errors.Count -gt 0) {
             throw $errMsg
@@ -366,7 +366,7 @@ function Run-SqlCmd {
         $ErrorActionPreference = 'Stop'
     }
     else {
-        Invoke-Expression $commandToRun
+        Invoke-Expression $commandToRun | Out-String | Protect-ExternalOutput | foreach-object { $_ }
     }
 }
 
@@ -437,13 +437,13 @@ function Run-SqlCmdV2 {
     # Execute
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
-        (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
+        (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | Protect-ExternalOutput | ForEach-Object { $_ }
         if ($errors.Count -gt 0) {
             throw "SQL command execution failed with errors."
         }
         $ErrorActionPreference = 'Stop'
     } else {
-        Invoke-SqlCmd @splatArgs
+        Invoke-SqlCmd @splatArgs | Out-String | Protect-ExternalOutput | ForEach-Object { $_ }
     }
 }
 

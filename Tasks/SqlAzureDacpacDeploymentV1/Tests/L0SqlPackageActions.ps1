@@ -5,6 +5,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\SqlAzureActions.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1
 
 $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY = "C:\DefaultWorkingDirectory"
 
