@@ -166,7 +166,8 @@ export default class VirtualMachineScaleSet {
             }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-            invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'`;
+            const validateArgs = sanitizerEnabled && tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC');
+            invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'${validateArgs ? ' -validateArgs' : ''}`;
         } else {
             // escape shell special characters. This is needed as this script will be executed in a shell
             let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');

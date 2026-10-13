@@ -4,18 +4,10 @@
 //   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
 //   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
 //
-// The sanitizer is dispatched per scriptType so that allowlists and pre-
-// expansion match the target shell the custom script runs in on the VMSS:
-//   * bash         -> BashV3 allowlist (a-zA-Z0-9 _'"-=/:.*+%) and $VAR /
-//                     ${VAR} expansion of process env (catches value-
-//                     injected secrets like VAR=";rm -rf /").
-//   * pscore / ps  -> PowerShellV2 allowlist (adds \n , ~ ? # and backtick
-//                     escaping, plus $true/$false via lookahead) and
-//                     $env:VAR / ${env:VAR} expansion. The allowlist also
-//                     accepts the PowerShell *data* constructors `@ { } [ ]`
-//                     (hashtable, splatting, array, indexing). The execution
-//                     primitives that turn data into code (`$( )`, `;`, `&`,
-//                     `|`, `` ` `` outside the escape position) remain blocked.
+// Character policies match the target shell without expanding the agent's
+// environment. Windows invocation syntax is additionally checked on the VM
+// when enforcement is active; constructor punctuation alone is not proof
+// that an argument is data.
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
@@ -89,12 +81,13 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(inputArguments, {
             // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
-            // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
-            // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // plus constructor punctuation, checked structurally by the Windows invoker.
+            // Only dollar-prefixed Boolean tokens get an exception. The shared helper
+            // splits escape pairs before applying the backtick-aware expression.
             // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: new RegExp("(?<!`)(\\$(?!true\\b|false\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).

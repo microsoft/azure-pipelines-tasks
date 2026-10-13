@@ -38,6 +38,10 @@ if (process.env["_crlfBacktick2_"] === "true") {
     tr.setInput("customScriptArguments", "arg1``\nWrite-Host pwned");
 }
 
+if (process.env["_scriptArgs_"] !== undefined) {
+    tr.setInput("customScriptArguments", process.env["_scriptArgs_"]);
+}
+
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
 process.env["ENDPOINT_AUTH_AzureRM"] = "{\"parameters\":{\"serviceprincipalid\":\"id\",\"serviceprincipalkey\":\"key\",\"tenantid\":\"tenant\"},\"scheme\":\"ServicePrincipal\"}";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_SERVICEPRINCIPALID"] = "id";
@@ -85,6 +89,14 @@ tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require(
 if (process.env["_sanitizeArgsActivate_"] === "true") {
     process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = "true";
     process.env["AZP_75787_ENABLE_NEW_LOGIC"] = "true";
+}
+
+if (process.env["_argsValidationMode_"]) {
+    const mode = process.env["_argsValidationMode_"];
+    process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = mode === "outer-off" ? "false" : "true";
+    process.env["AZP_75787_ENABLE_NEW_LOGIC"] = mode === "activate" || mode === "outer-off" ? "true" : "false";
+    process.env["AZP_75787_ENABLE_NEW_LOGIC_LOG"] = mode === "audit" ? "true" : "false";
+    process.env["AZP_75787_ENABLE_COLLECT"] = mode === "telemetry" ? "true" : "false";
 }
 
 tr.run();
