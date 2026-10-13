@@ -167,6 +167,73 @@ execution, including the Docker-hosted agent, selected Linux steps on Windows,
 and full Linux container jobs. ARM64, ARM32, Windows x86, musl, macOS, and
 Windows-container execution have not been verified by these prototype E2E runs.
 
+## ArtifactTool runtime and package size
+
+The Node tasks require Node24, not a separately installed .NET runtime. The
+official agent package is self-contained as well.
+
+For ArtifactTool, deployment mode determines the runtime requirement:
+
+| Tool distribution | Requirement in the actual task target |
+|---|---|
+| Framework-dependent Debug build used by the original Windows tests | `Microsoft.NETCore.App` 10.0.12 or a compatible later patch. A matching SDK also supplies a runtime, but an SDK is not required just to run the tool. |
+| Self-contained Release build | No separately installed managed .NET runtime; the complete publish output contains it. Native OS/library prerequisites still apply. |
+| Compressed single-file profile | Self-contained; additionally needs a writable extraction cache for the bundled native/managed files. |
+
+Host .NET installations are not automatically available in containers, and the
+agent's bundled runtime is not automatically a shared runtime installation for a
+framework-dependent tool. The requirement applies where ArtifactTool runs.
+Our Linux E2E image includes the .NET SDK to compile the fixture application,
+not because self-contained ArtifactTool requires an SDK.
+
+The companion ArtifactTool implementation now filters foreign-OS native content
+from RID-specific publishes and excludes PDB/DBG/MDB/dSYM symbols from the runtime
+package. Symbols remain in build outputs; exporting them to a separate directory
+is opt-in and cannot target the runtime publish directory.
+
+Default Release publishing remains untrimmed and multi-file. Additional profiles
+are explicit build options:
+
+- `Compact`: full command set, compressed self-contained single-file package.
+- `PipelineCompact`: pipeline artifact commands and `--patvar` authentication;
+  not a replacement for the general-purpose tool.
+- `ExperimentalTrimmedPipeline`: the pipeline profile with trimming and explicit
+  preservation of command, service, and serialization contracts. Linker diagnostics
+  remain visible; this is not an automatic production setting.
+
+The bundled profiles use full content extraction because the client SDK's
+telemetry requires physical assembly paths. Native-only extraction passed CLI
+smoke tests but failed actual transfers. Initial trimming trials likewise passed
+smoke tests but lost service metadata and JSON constructors; live transfer tests
+identified the additional preservation requirements.
+
+### Measured Linux x64 payloads
+
+| Variant | Publish MiB | ZIP MiB | Extracted MiB | Publish + extraction MiB |
+|---|---:|---:|---:|---:|
+| Original self-contained baseline | 222.28 | 87.59 | 0 | 222.28 |
+| Filtered multi-file default | 174.43 | 70.54 | 0 | 174.43 |
+| Compact Full | 71.87 | 64.95 | 154.44 | 226.31 |
+| Compact Pipeline | 71.50 | 64.59 | 153.52 | 225.03 |
+| Experimental trimmed Pipeline, preserved contracts | 42.61 | 35.66 | 86.01 | 128.62 |
+
+ZIP measurements used Optimal compression. Full-extraction bundles produce one
+publish file, but their extracted files still consume disk. The pipeline-only
+untrimmed profile provides little size reduction because common dependencies
+dominate; the final trimmed ZIP is approximately 59% smaller than the original.
+
+With Docker Desktop and a Windows bind-mounted extraction directory, first/warm
+CLI invocation measurements were approximately 0.93/0.94 seconds for filtered
+multi-file, 38.88/2.73 seconds for Compact Full, and 18.19/1.66 seconds for the final
+trimmed profile. First invocation used a fresh bundle cache; warm values average
+five further invocations. No OS page-cache flush was performed. These are startup
+probes in that environment, not production throughput or latency budgets.
+
+The ArtifactTool repository provides publish-asset, published-CLI, and package
+measurement scripts. Use a local extraction cache through
+`DOTNET_BUNDLE_EXTRACT_BASE_DIR` where needed. A bundled binary still has to match
+the target OS/architecture/libc; compression does not expand platform support.
+
 ## Implementation map
 
 The entry points deliberately contain very little logic:
@@ -330,10 +397,12 @@ validation diagnostic. They verify CLI discovery/parsing without reaching the
 service or reading a properties file. The suite skips when
 `PIPELINE_ARTIFACT_DEV_TOOL` is unset.
 
-The companion ArtifactTool changes add 42 regression cases for publish metadata,
+The companion ArtifactTool migration changes add 42 regression cases for publish metadata,
 properties, service settings, domain selection, layouts/pattern options, errors,
-and cancellation. Its last full solution validation passed 210 tests, including
-80 in the CLI test project.
+and cancellation. The packaging follow-up adds three location-independent version
+fallback cases. Full solution validation now passes 213 tests, including 83 in
+the CLI test project; publish-asset fixtures also cover all seven configured RIDs
+and reject symbol export into the runtime package.
 
 ### Live E2E: actual transfers and builds
 
@@ -349,6 +418,20 @@ created, and default branches were not changed. Runs on October 10 succeeded:
 | [948](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=948) | Windows agent with selected Linux container steps | Host and container OS assertions, shared workspace mapping, transfers in both directions, compiled-file hashes, outputs, and application execution inside Linux. |
 | [949](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=949) | Two Linux container jobs on the Windows agent | Separate publisher/consumer targets; mixed layouts; Node/reference interoperability; compiled-file hashes; application execution; positive filtering. |
 | [950](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=950) | Original cross-run mode rerun | Confirms the original consumer path still works after adding container templates. |
+
+Additional packaging validation on October 12 succeeded in
+[954](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=954)
+for Compact Full,
+[955](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=955)
+for Compact Pipeline, and
+[958](https://dev.azure.com/jerickmsft/EnterpriseVisible/_build/results?buildId=958)
+for the final preserved trimmed profile. These reuse the Docker-hosted Linux
+agent's compilation, Node/reference publish/download, mixed resources, hash,
+application-execution, output, and metadata assertions.
+The Windows compact tool also downloaded and verified an existing artifact, and
+the final trimmed tool completed a real publish/download in a Linux `runtime-deps`
+image with no installed `dotnet` command. These checks do not expand the verified
+OS/architecture matrix beyond Windows/Linux x64.
 
 An agent whose machine is a Docker container runs ordinary jobs in run 947. That
 is different from Azure Pipelines selecting container step/job targets in runs
