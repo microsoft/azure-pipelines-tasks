@@ -2,6 +2,27 @@ import { TaskLibAnswers, TaskLibAnswerExecResult } from 'azure-pipelines-task-li
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import * as clientMock from 'azure-pipelines-tasks-packaging-common/Tests/ClientToolMockHelper';
 
+function registerClientToolRunnerMock(tmr: tmrm.TaskMockRunner) {
+    var mtt = require('azure-pipelines-task-lib/mock-toolrunner');
+    tmr.registerMock('./clientToolRunner', {
+        getClientToolOptions: function () {
+            return {
+                cwd: process.cwd(),
+                env: Object.assign({}, process.env),
+                silent: false,
+                failOnStdErr: false,
+                ignoreReturnCode: false,
+                windowsVerbatimArguments: false
+            }
+        },
+        runClientTool: function (clientToolPath: string, command: string[], execOptions) {
+            var tr = new mtt.ToolRunner(clientToolPath)
+            tr.arg(command);
+            return tr.execSync(execOptions);
+        }
+    });
+}
+
 export class ClientToolMockHelper {
     private static ClientToolCmd: string = 'mock/location/symbol.exe';
 
@@ -35,7 +56,7 @@ export class ClientToolMockHelper {
         this.tmr.setAnswers(this.answers);
 
         clientMock.registerClientToolUtilitiesMock(tmr, ClientToolMockHelper.ClientToolCmd);
-        clientMock.registerClientToolRunnerMock(tmr);
+        registerClientToolRunnerMock(tmr);
         this.registerOtherMock(tmr);
     }
 
