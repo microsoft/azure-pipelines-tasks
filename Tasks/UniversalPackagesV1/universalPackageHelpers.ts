@@ -108,10 +108,8 @@ async function setFeedServiceUri(context: UniversalPackageContext): Promise<void
     try {
         context.feedServiceUri = await getServiceUriFromAreaId(
             FEED_RESOURCE_AREA_ID,
-            {
-                serviceUrl: context.serviceUri,
-                accessToken: context.accessToken
-            });
+            context.serviceUri,
+            context.accessToken);
         tl.debug(tl.loc('Debug_FeedServiceUri', context.feedServiceUri));
     } catch (error) {
         throw new Error(tl.loc('Error_FailedToResolveFeedUri', context.serviceUri, error.message || error));
