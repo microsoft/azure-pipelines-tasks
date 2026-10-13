@@ -81,6 +81,7 @@ const extractedTarsTempDir = 'extracted_tars';
                 validateSymbolicLinks(extractedFilesDir, extractedFilesDir);
             } catch (err) {
                 tl.rmRF(extractedFilesDir);
+                tl.rmRF(tarArchivePath);
                 throw err;
             }
         }
