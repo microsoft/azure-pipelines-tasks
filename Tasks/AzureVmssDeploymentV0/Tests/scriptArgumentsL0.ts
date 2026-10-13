@@ -136,6 +136,24 @@ describe('VMSS PowerShell argument validation', function () {
         assert(command.includes('customScriptInvoker.sh'));
         assert(!command.includes('-validateArgs'));
     });
+    for (const fixture of ['updateImageOnWindowsAgent', 'updateImageOnLinuxAgent']) {
+        it(`isolates legacy ${fixture} commands from inherited rollout flags`, async () => {
+            process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'True';
+            process.env[fixFlagVariable] = 'True';
+            process.env['AZP_75787_ENABLE_NEW_LOGIC'] = 'true';
+            process.env['AZP_75787_ENABLE_NEW_LOGIC_LOG'] = 'true';
+            process.env['AZP_75787_ENABLE_COLLECT'] = 'true';
+            process.env['existingExtensionName'] = 'extensionNameTest';
+            const runner = new ttm.MockTestRunner(path.join(__dirname, `${fixture}.js`));
+            await runner.runAsync();
+            assert(runner.succeeded, runner.stdout + runner.stderr);
+            const debugLine = runner.stdout.split(/\r?\n/).find(line => line.startsWith('##vso[task.debug]Invoker command: '));
+            assert(debugLine, 'the legacy fixture must produce an invoker command');
+            const command = commandFromString(debugLine).message;
+            assert(command.includes("-scriptArgs '\"\"\"first ''arg''\"\"\" seco``nd`$arg'"));
+            assert(!command.includes('-validateArgs'));
+        });
+    }
     it('rejects a Boolean-prefix separator before upload when both gates and activation are enabled', async () => {
         process.env['_scriptArgs_'] = ';true';
         process.env['_argsValidationMode_'] = 'activate';
