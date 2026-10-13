@@ -4,6 +4,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
 import SqlProjectBuilder from '../src/SqlProjectBuilder';
+import { SqlcmdExecutor } from '../src/SqlcmdExecutor';
 
 describe('MicrosoftSqlDeployment Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -24,6 +25,61 @@ describe('MicrosoftSqlDeployment Suite', function () {
 
     after(() => {
         // Cleanup
+    });
+
+    describe('SqlcmdExecutor - Credential environment', function() {
+        it('removes ambient Azure credentials before applying a certificate service connection', function() {
+            const originalSecret = process.env['AZURE_CLIENT_SECRET'];
+            const originalFederatedTokenFile = process.env['AZURE_FEDERATED_TOKEN_FILE'];
+            process.env['AZURE_CLIENT_SECRET'] = 'ambient-secret';
+            process.env['AZURE_FEDERATED_TOKEN_FILE'] = '/tmp/ambient-token';
+
+            try {
+                const config = new SqlConnectionConfig(
+                    'Server=server;Database=db;Authentication=Active Directory Default;');
+                const environment = SqlcmdExecutor.buildEnvironment(config, {
+                    source: 'clientCertificate',
+                    envOverrides: {
+                        AZURE_TENANT_ID: 'tenant',
+                        AZURE_CLIENT_ID: 'client',
+                        AZURE_CLIENT_CERTIFICATE_PATH: '/tmp/service-connection.pem'
+                    }
+                });
+
+                assert.strictEqual(environment['AZURE_CLIENT_SECRET'], undefined);
+                assert.strictEqual(environment['AZURE_FEDERATED_TOKEN_FILE'], undefined);
+                assert.strictEqual(environment['AZURE_CLIENT_CERTIFICATE_PATH'], '/tmp/service-connection.pem');
+            } finally {
+                if (originalSecret === undefined) {
+                    delete process.env['AZURE_CLIENT_SECRET'];
+                } else {
+                    process.env['AZURE_CLIENT_SECRET'] = originalSecret;
+                }
+                if (originalFederatedTokenFile === undefined) {
+                    delete process.env['AZURE_FEDERATED_TOKEN_FILE'];
+                } else {
+                    process.env['AZURE_FEDERATED_TOKEN_FILE'] = originalFederatedTokenFile;
+                }
+            }
+        });
+
+        it('preserves ambient Azure credentials when no service connection credential is intended', function() {
+            const originalSecret = process.env['AZURE_CLIENT_SECRET'];
+            process.env['AZURE_CLIENT_SECRET'] = 'ambient-secret';
+
+            try {
+                const config = new SqlConnectionConfig(
+                    'Server=server;Database=db;Authentication=Active Directory Default;');
+                const environment = SqlcmdExecutor.buildEnvironment(config);
+                assert.strictEqual(environment['AZURE_CLIENT_SECRET'], 'ambient-secret');
+            } finally {
+                if (originalSecret === undefined) {
+                    delete process.env['AZURE_CLIENT_SECRET'];
+                } else {
+                    process.env['AZURE_CLIENT_SECRET'] = originalSecret;
+                }
+            }
+        });
     });
 
     // ============================================
@@ -577,6 +633,15 @@ describe('MicrosoftSqlDeployment Suite', function () {
             assert(tr.succeeded, 'task should succeed after auto-installing go-sqlcmd');
             assert(tr.stdout.indexOf('SqlCmdInstalling') >= 0 || tr.stdout.indexOf('sqlcmd-extracted') >= 0,
                 'should have triggered auto-install when ODBC sqlcmd was on PATH');
+        }, tr);
+    });
+
+    it('should auto-install go-sqlcmd when PATH contains version 1.9', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdOldGoVersionFallsToAutoInstall.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded, 'task should use the installed version that supports -J');
         }, tr);
     });
 

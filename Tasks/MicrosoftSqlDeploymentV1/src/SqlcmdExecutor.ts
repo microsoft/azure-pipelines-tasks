@@ -2,6 +2,17 @@ import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
 import Constants from './Constants';
 
+const AZURE_IDENTITY_CREDENTIAL_ENV_VARS = [
+    'AZURE_CLIENT_ID',
+    'AZURE_CLIENT_SECRET',
+    'AZURE_CLIENT_CERTIFICATE_PATH',
+    'AZURE_CLIENT_CERTIFICATE_PASSWORD',
+    'AZURE_FEDERATED_TOKEN_FILE',
+    'AZURE_TENANT_ID',
+    'AZURE_USERNAME',
+    'AZURE_PASSWORD'
+];
+
 /**
  * Identity material derived from the Azure service connection, used to make go-sqlcmd
  * authenticate as the service connection rather than the agent's ambient identity.
@@ -85,7 +96,15 @@ export class SqlcmdExecutor {
         connectionConfig: SqlConnectionConfig,
         credentials?: SqlcmdCredentials
     ): { [key: string]: string } {
-        const envVars: { [key: string]: string } = Object.assign({}, process.env, credentials?.envOverrides);
+        const envVars: { [key: string]: string } = Object.assign({}, process.env);
+
+        if (credentials?.source && credentials.source !== 'tenantOnly') {
+            for (const variableName of AZURE_IDENTITY_CREDENTIAL_ENV_VARS) {
+                delete envVars[variableName];
+            }
+        }
+
+        Object.assign(envVars, credentials?.envOverrides);
 
         // Names only, never values: several of these carry secrets. Which variables were applied is
         // the one thing that cannot be recovered from the command line afterwards, and it is what

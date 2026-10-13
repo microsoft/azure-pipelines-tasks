@@ -10,7 +10,7 @@ const SQLCMD_VERSION = '1.10.0';
 // connections authenticate. Older binaries found on PATH are rejected so the
 // task never silently falls back to the agent's ambient identity.
 const MIN_SQLCMD_MAJOR = 1;
-const MIN_SQLCMD_MINOR = 9;
+const MIN_SQLCMD_MINOR = 10;
 
 export default class SqlcmdHelper {
     /**
@@ -22,7 +22,7 @@ export default class SqlcmdHelper {
      *
      * Discovery order:
      * 1. User-provided sqlcmdPath input (accepted as-is, user's responsibility)
-     * 2. PATH — must be go-sqlcmd AND >= 1.9.0; otherwise falls through to auto-install
+    * 2. PATH — must be go-sqlcmd AND >= 1.10.0; otherwise falls through to auto-install
      * 3. Auto-install go-sqlcmd from GitHub releases
      */
     public static async findSqlcmd(sqlcmdPathInput?: string): Promise<string> {
