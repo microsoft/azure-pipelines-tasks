@@ -61,4 +61,12 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage', requir
 tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
+for (const flag of [
+    'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
+    'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED',
+    'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT'
+]) {
+    process.env[flag] = 'false';
+}
+
 tr.run();

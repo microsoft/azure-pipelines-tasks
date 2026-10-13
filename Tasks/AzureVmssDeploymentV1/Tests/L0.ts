@@ -1,5 +1,7 @@
 'use strict';
 
+import './windowsInvokerL0';
+
 const assert = require('assert');
 const ttm = require('azure-pipelines-task-lib/mock-test');
 const tl = require('azure-pipelines-task-lib');
@@ -16,6 +18,7 @@ function runValidations(validator: () => void, tr) {
     catch (error) {
         console.log("STDERR", tr.stderr);
         console.log("STDOUT", tr.stdout);
+        throw error;
     }
 }
 

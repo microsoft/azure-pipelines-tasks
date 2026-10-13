@@ -4,23 +4,24 @@
 //   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
 //   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
 //
-// The sanitizer is dispatched per scriptType so that allowlists and pre-
-// expansion match the target shell the custom script runs in on the VMSS:
-//   * bash         -> BashV3 allowlist (a-zA-Z0-9 _'"-=/:.*+%) and $VAR /
-//                     ${VAR} expansion of process env (catches value-
-//                     injected secrets like VAR=";rm -rf /").
-//   * pscore / ps  -> PowerShellV2 allowlist (adds \n , ~ ? # and backtick
-//                     escaping, plus $true/$false via lookahead) and
-//                     $env:VAR / ${env:VAR} expansion. The allowlist also
-//                     accepts the PowerShell *data* constructors `@ { } [ ]`
-//                     (hashtable, splatting, array, indexing). The execution
-//                     primitives that turn data into code (`$( )`, `;`, `&`,
-//                     `|`, `` ` `` outside the escape position) remain blocked.
+// The protected Windows path requires the old and new task feature gates.
+// It transports arguments as data and validates their syntax on the target.
+// Legacy activation/audit/telemetry behavior is retained when the fix is off.
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
+
+export const VmssCustomScriptArgsValidationFixEnabled = 'VmssCustomScriptArgsValidationFixEnabled';
+
+export function getVmssCustomScriptArgsValidationFixEnabled(scriptType: string): boolean {
+    const normalizedType = (scriptType || '').toLowerCase();
+    // Additive rollout: getPipelineFeature adds the DistributedTask.Tasks. prefix.
+    return (normalizedType === 'ps' || normalizedType === 'pscore')
+        && tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation')
+        && tl.getPipelineFeature(VmssCustomScriptArgsValidationFixEnabled);
+}
 
 export class ArgsSanitizingError extends Error {
     constructor(message: string) {
@@ -62,9 +63,10 @@ export function tryValidateScriptArgs(
 }
 
 export function validateScriptArgs(inputArguments: string, scriptType: string): void {
+    const isVmssCustomScriptArgsValidationFixEnabled = getVmssCustomScriptArgsValidationFixEnabled(scriptType);
     const featureFlags = {
         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+        activate: isVmssCustomScriptArgsValidationFixEnabled || tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
         telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
     };
 
@@ -89,12 +91,14 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(inputArguments, {
             // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
-            // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
-            // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // Constructor punctuation also requires target AST validation.
+            // The hardened exception is limited to dollar-prefixed constant words.
             // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: isVmssCustomScriptArgsValidationFixEnabled
+                ? new RegExp("(?<!`)(\\$(?!true\\b|false\\b|null\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
+                : new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).
