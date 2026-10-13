@@ -1,4 +1,5 @@
 import { Stats, statSync as getFile, readdirSync } from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 import * as tl from 'azure-pipelines-task-lib/task';
@@ -96,7 +97,7 @@ function extractTar(tarArchivePath: string, extractedFilesDir: string): void {
     const tar: tr.ToolRunner = tl.tool(tl.which('tar', true));
     tl.mkdirP(extractedFilesDir);
     tar.arg(['xf', tarArchivePath, '--directory', extractedFilesDir]);
-    const tarExecResult: tr.IExecSyncResult = tar.execSync();
+    const tarExecResult: tr.IExecSyncResult = tar.execSync({ externalOutput: { source: 'childProcess' } } as tr.IExecSyncOptions);
 
     if (tarExecResult.error || tarExecResult.code !== 0) {
         throw new Error(`Couldn't extract artifact files from a tar archive: ${tarExecResult.error}`);
@@ -110,7 +111,7 @@ function extractTar(tarArchivePath: string, extractedFilesDir: string): void {
  * @returns void
  */
 export function cleanUpFolder(folderToClean: string): void {
-    console.log(tl.loc('CleaningDestinationFolder', folderToClean));
+    tl.writeExternalOutput(tl.loc('CleaningDestinationFolder', folderToClean) + os.EOL, { source: 'repository' });
 
     // stat the specified folder path
     let destinationFolderStats: Stats;

@@ -9,7 +9,7 @@
   "author": "ms-vscs-rm",
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 282,
     "Patch": 0
   },
   "demands": [],
@@ -195,6 +195,8 @@
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
     "RedirectUrlError": "ms-resource:loc.messages.RedirectUrlError",
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
+    "InvalidPackageFilePath": "ms-resource:loc.messages.InvalidPackageFilePath",
+    "InvalidPackageFileLink": "ms-resource:loc.messages.InvalidPackageFileLink",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",
