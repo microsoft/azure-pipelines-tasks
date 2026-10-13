@@ -77,7 +77,12 @@ const extractedTarsTempDir = 'extracted_tars';
 
         extractTar(tarArchivePath, extractedFilesDir);
         if (tl.getPipelineFeature('EnableTarSymlinkValidation')) {
-            validateSymbolicLinks(extractedFilesDir, extractedFilesDir);
+            try {
+                validateSymbolicLinks(extractedFilesDir, extractedFilesDir);
+            } catch (err) {
+                tl.rmRF(extractedFilesDir);
+                throw err;
+            }
         }
 
         // Remove tar archive after extracting
