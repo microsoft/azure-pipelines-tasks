@@ -3,6 +3,7 @@ import { FilesystemProvider } from 'artifact-engine/Providers';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 
 /**
  * Handler for download artifact via local file share
@@ -24,10 +25,10 @@ export class DownloadHandlerFilePath extends DownloadHandler {
         const artifactName = this.config.artifactInfo.name.replace('/', '\\');
         let artifactLocation = path.join(downloadUrl, artifactName);
 
-        console.log(tl.loc('DownloadArtifacts', artifactName, artifactLocation));
+        tl.writeExternalOutput(tl.loc('DownloadArtifacts', artifactName, artifactLocation) + os.EOL, { source: 'remote' });
 
         if (!fs.existsSync(artifactLocation)) {
-            console.log(tl.loc('ArtifactNameDirectoryNotFound', artifactLocation, downloadUrl));
+            tl.writeExternalOutput(tl.loc('ArtifactNameDirectoryNotFound', artifactLocation, downloadUrl) + os.EOL, { source: 'remote' });
             artifactLocation = downloadUrl;
         }
 
