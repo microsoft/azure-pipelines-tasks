@@ -14,6 +14,7 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
+import { JenkinsArtifactProvider } from "./JenkinsArtifactProvider";
 import * as extract from 'extract-zip'
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
@@ -21,11 +22,10 @@ var uuidv4 = require('uuid/v4');
 
 const area: string = 'JenkinsDownloadArtifacts';
 
-async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
+async function getArtifactsFromUrl(artifactQueryUrl: string, artifactBaseUrl: string, strictSSL: boolean, localPathRoot: string, handler: handlers.BasicCredentialHandler) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
-    var templatePath = path.join(__dirname, 'jenkins.handlebars.txt');
-    var webProvider = new providers.WebProvider(artifactQueryUrl, templatePath, variables, handler, { ignoreSslError: !strictSSL });
+    var webProvider = new JenkinsArtifactProvider(artifactQueryUrl, artifactBaseUrl, handler, { ignoreSslError: !strictSSL });
     var localFileProvider = new providers.FilesystemProvider(localPathRoot);
 
     var downloaderOptions = configureDownloaderOptions();
@@ -140,14 +140,7 @@ async function doWork() {
             console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
 
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
-            var variables = {
-                "endpoint": {
-                    "url": serverEndpointUrl
-                },
-                "jobUrlInfix": jenkinsJobDetails.jobUrlInfix,
-                "multibranchPipelineUrlInfix": jenkinsJobDetails.multiBranchPipelineUrlInfix,
-                "version": jenkinsJobDetails.buildId
-            };
+            const artifactBaseUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/artifact/`;
 
             var handler = new handlers.BasicCredentialHandler(username, password);
             var hasArtifacts = await jenkinsClient.HasAssociatedArtifacts(artifactQueryUrl);
@@ -188,7 +181,7 @@ async function doWork() {
                         });
                 }
                 else {
-                    await getArtifactsFromUrl(artifactQueryUrl, strictSSL, localPathRoot, itemPattern, handler, variables);
+                    await getArtifactsFromUrl(artifactQueryUrl, artifactBaseUrl, strictSSL, localPathRoot, handler);
                 }
             }
             else {
