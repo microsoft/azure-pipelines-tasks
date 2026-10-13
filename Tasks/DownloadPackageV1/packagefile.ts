@@ -20,7 +20,7 @@ export class PackageFile {
     private extractFile: boolean;
 
     constructor(extract: boolean, destination: string, filename: string) {
-        this.finalLocation = destination;
+        this.finalLocation = path.resolve(destination);
         this.extractFile = extract;
         this.filename = filename;
 
@@ -36,6 +36,7 @@ export class PackageFile {
     public async process(): Promise<void> {
         if (this.extractFile) {
             this.validateNoLinks();
+            this.validateExtractionDestination();
             return this.extract();
         }
     }
@@ -69,23 +70,47 @@ export class PackageFile {
     }
 
     private validateNoLinks(): void {
+        if (!this.validatePathIsNotLink(this.rootLocation)) {
+            return;
+        }
+
         const relativePath = path.relative(this.rootLocation, this.initialLocation);
         let currentPath = this.rootLocation;
 
         for (const segment of relativePath.split(path.sep)) {
             currentPath = path.join(currentPath, segment);
 
-            try {
-                if (fs.lstatSync(currentPath).isSymbolicLink()) {
-                    throw new Error(tl.loc("InvalidPackageFileLink", this.filename));
-                }
-            } catch (error) {
-                if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-                    return;
-                }
-
-                throw error;
+            if (!this.validatePathIsNotLink(currentPath)) {
+                return;
             }
+        }
+    }
+
+    private validateExtractionDestination(): void {
+        this.validatePathIsNotLink(
+            this.finalLocation,
+            "InvalidPackageDestinationLink",
+            this.finalLocation
+        );
+    }
+
+    private validatePathIsNotLink(
+        pathToValidate: string,
+        errorKey: string = "InvalidPackageFileLink",
+        errorValue: string = this.filename
+    ): boolean {
+        try {
+            if (fs.lstatSync(pathToValidate).isSymbolicLink()) {
+                throw new Error(tl.loc(errorKey, errorValue));
+            }
+
+            return true;
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                return false;
+            }
+
+            throw error;
         }
     }
 
