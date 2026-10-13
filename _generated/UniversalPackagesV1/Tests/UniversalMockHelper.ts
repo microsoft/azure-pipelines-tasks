@@ -243,7 +243,6 @@ export class UniversalMockHelper {
         // Mock getSystemAccessToken and getWebApiWithProxy for provenance
         const provenanceSessionId = this.provenanceSessionId;
         const webapiMock = {
-            getSystemServiceUrl: () => new URL(TEST_CONSTANTS.SERVICE_URL),
             requireHttpsUrl: (value: string) => {
                 const url = new URL(value);
                 if (url.protocol !== 'https:') {

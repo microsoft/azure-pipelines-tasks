@@ -4,7 +4,7 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
-import { getSystemServiceUrl, getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getWebApiWithProxy } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getServiceUriFromAreaId } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
@@ -97,7 +97,7 @@ const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
 
 function setSystemServiceUri(context: UniversalPackageContext): void {
     if (!context.adoServiceConnection) {
-        context.serviceUri = getSystemServiceUrl().href;
+        context.serviceUri = tl.getEndpointUrlRequired("SYSTEMVSSCONNECTION");
         tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
     }
 }
