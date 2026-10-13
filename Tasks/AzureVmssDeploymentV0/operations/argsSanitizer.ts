@@ -1,18 +1,29 @@
 // Reuses the work-item-75787 argument sanitizer used by BashV3 and the
-// PowerShell ArgumentsSanitizer. Three feature flags drive behavior:
+// PowerShell ArgumentsSanitizer. Three legacy feature flags drive behavior:
 //   AZP_75787_ENABLE_NEW_LOGIC      -> throw on disallowed characters
 //   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
 //   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
 //
 // Character policies match the target shell without expanding the agent's
-// environment. Windows invocation syntax is additionally checked on the VM
-// when enforcement is active; constructor punctuation alone is not proof
-// that an argument is data.
+// environment. VmssCustomScriptArgsValidationFixEnabled adds the hardened
+// Windows policy inside the legacy validation gate. Activation still follows
+// AZP_75787_ENABLE_NEW_LOGIC; off preserves the legacy character policy.
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
+
+// getPipelineFeature supplies the DistributedTask.Tasks. prefix.
+export const VmssCustomScriptArgsValidationFixEnabled = 'VmssCustomScriptArgsValidationFixEnabled';
+
+export function getVmssCustomScriptArgsValidationFixEnabled(scriptType: string): boolean {
+    const normalizedScriptType = (scriptType || '').toLowerCase();
+    // The new fix is additive to the existing VMSS validation gate.
+    return (normalizedScriptType === 'ps' || normalizedScriptType === 'pscore')
+        && tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation')
+        && tl.getPipelineFeature(VmssCustomScriptArgsValidationFixEnabled);
+}
 
 export class ArgsSanitizingError extends Error {
     constructor(message: string) {
@@ -21,8 +32,8 @@ export class ArgsSanitizingError extends Error {
     }
 }
 
-// Outer gate (`EnableVmssCustomScriptArgsValidation`, default OFF) decides
-// whether the sanitizer runs at all. When it runs, every exception thrown by
+// EnableVmssCustomScriptArgsValidation decides whether validation runs.
+// When it runs, every exception thrown by
 // the validator (intentional `ArgsSanitizingError` blocks as well as
 // unexpected errors) is reported as an `ArgsValidationFailure` telemetry event
 // and then rethrown so the task fails.
@@ -54,6 +65,7 @@ export function tryValidateScriptArgs(
 }
 
 export function validateScriptArgs(inputArguments: string, scriptType: string): void {
+    const isVmssCustomScriptArgsValidationFixEnabled = getVmssCustomScriptArgsValidationFixEnabled(scriptType);
     const featureFlags = {
         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
         activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
@@ -82,12 +94,14 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
         ? sanitizeArgs(inputArguments, {
             // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
             // plus constructor punctuation, checked structurally by the Windows invoker.
-            // Only dollar-prefixed Boolean tokens get an exception. The shared helper
-            // splits escape pairs before applying the backtick-aware expression.
+            // The fix gate tightens Boolean exceptions; off preserves the legacy policy.
+            // The shared helper splits escape pairs before checking each chunk.
             // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)(\\$(?!true\\b|false\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
+            saniziteRegExp: isVmssCustomScriptArgsValidationFixEnabled
+                ? new RegExp("(?<!`)(\\$(?!true\\b|false\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
+                : new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).

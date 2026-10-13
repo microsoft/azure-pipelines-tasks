@@ -93,7 +93,7 @@ if (process.env["_sanitizeArgsActivate_"] === "true") {
 
 if (process.env["_argsValidationMode_"]) {
     const mode = process.env["_argsValidationMode_"];
-    process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = mode === "outer-off" ? "false" : "true";
+    process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = mode === "outer-off" || mode === "all-off" ? "false" : "true";
     process.env["AZP_75787_ENABLE_NEW_LOGIC"] = mode === "activate" || mode === "outer-off" ? "true" : "false";
     process.env["AZP_75787_ENABLE_NEW_LOGIC_LOG"] = mode === "audit" ? "true" : "false";
     process.env["AZP_75787_ENABLE_COLLECT"] = mode === "telemetry" ? "true" : "false";

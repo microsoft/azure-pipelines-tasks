@@ -7,9 +7,13 @@ import { commandFromString } from 'azure-pipelines-task-lib/taskcommand';
 import { spawnSync } from 'child_process';
 import { ArgsSanitizingError, tryValidateScriptArgs, validateScriptArgs } from '../operations/argsSanitizer';
 
+type FixFlagState = 'on' | 'off' | 'missing';
+
 describe('VMSS PowerShell argument validation', function () {
     this.timeout(60000);
+    const fixFlagVariable = 'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED';
     const environmentKeys = [
+        fixFlagVariable,
         'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
         'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT',
         '_scriptArgs_', '_argsValidationMode_', '_doNotArchive_', '_vmssOsType_', 'existingExtensionName'
@@ -23,6 +27,7 @@ describe('VMSS PowerShell argument validation', function () {
             delete process.env[key];
         }
         process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'true';
+        process.env[fixFlagVariable] = 'true';
         process.env['AZP_75787_ENABLE_NEW_LOGIC'] = 'true';
     });
     afterEach(() => {
@@ -48,20 +53,41 @@ describe('VMSS PowerShell argument validation', function () {
             assert.throws(() => validateScriptArgs(args, 'ps'), ArgsSanitizingError);
         });
     }
-    it('does not call the validator when the outer gate is disabled', () => {
+    it('does not call the validator when the new and legacy outer gates are disabled', () => {
+        process.env[fixFlagVariable] = 'false';
         process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'false';
         tryValidateScriptArgs(';true', 'ps', () => { assert.fail('validator must not run'); });
     });
+    for (const scriptType of ['ps', 'pscore']) {
+        it(`does not override the legacy ${scriptType} outer gate when the new flag is enabled`, () => {
+            process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'false';
+            tryValidateScriptArgs(';true', scriptType, () => { assert.fail('the old outer gate must remain authoritative'); });
+        });
+    }
+    it('preserves the legacy character policy when only the new flag is enabled', () => {
+        process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'false';
+        assert.doesNotThrow(() => validateScriptArgs(';true', 'ps'));
+    });
+    it('does not override the Linux outer gate when the new flag is enabled', () => {
+        process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = 'false';
+        tryValidateScriptArgs(';value', 'bash', () => { assert.fail('Linux validation must retain its outer gate'); });
+    });
     for (const mode of ['disabled', 'audit', 'telemetry']) {
-        it(`retains non-enforcing character validation in ${mode} mode`, () => {
+        it(`retains legacy non-enforcing character validation in ${mode} mode with the fix disabled`, () => {
+            process.env[fixFlagVariable] = 'false';
             process.env['AZP_75787_ENABLE_NEW_LOGIC'] = 'false';
             process.env['AZP_75787_ENABLE_NEW_LOGIC_LOG'] = mode === 'audit' ? 'true' : 'false';
             process.env['AZP_75787_ENABLE_COLLECT'] = mode === 'telemetry' ? 'true' : 'false';
-            assert.doesNotThrow(() => validateScriptArgs(';true', 'ps'));
+            assert.doesNotThrow(() => validateScriptArgs(';value', 'ps'));
         });
     }
 
-    async function getInvokerCommand(args: string, mode = 'activate', targetOs = 'Windows'): Promise<string> {
+    async function getInvokerCommand(args: string, mode = 'activate', targetOs = 'Windows', fixState: FixFlagState = 'on'): Promise<string> {
+        if (fixState === 'missing') {
+            delete process.env[fixFlagVariable];
+        } else {
+            process.env[fixFlagVariable] = fixState === 'on' ? 'true' : 'false';
+        }
         process.env['_scriptArgs_'] = args;
         process.env['_argsValidationMode_'] = mode;
         process.env['_doNotArchive_'] = 'true';
@@ -76,10 +102,33 @@ describe('VMSS PowerShell argument validation', function () {
         return commandFromString(debugLine).message.substring('Invoker command: '.length);
     }
 
-    for (const mode of ['activate', 'outer-off', 'disabled', 'audit', 'telemetry']) {
-        it(`propagates the exact enforcement state to the Windows VM in ${mode} mode`, async () => {
+    for (const mode of ['activate', 'outer-off', 'disabled', 'all-off', 'audit', 'telemetry']) {
+        it(`requires legacy validation and activation for the new Windows check in ${mode} mode`, async () => {
             const command = await getInvokerCommand('plain', mode);
             assert.strictEqual(command.endsWith(' -validateArgs'), mode === 'activate');
+        });
+    }
+    const disabledFixStates: FixFlagState[] = ['off', 'missing'];
+    for (const fixState of disabledFixStates) {
+        it(`preserves the pre-fix Boolean-prefix policy when the new flag is ${fixState}`, () => {
+            if (fixState === 'missing') {
+                delete process.env[fixFlagVariable];
+            } else {
+                process.env[fixFlagVariable] = 'false';
+            }
+            for (const args of [';true', '|false', '>true', '$trueSuffix']) {
+                assert.doesNotThrow(() => validateScriptArgs(args, 'ps'));
+            }
+        });
+        for (const mode of ['activate', 'outer-off', 'disabled', 'all-off', 'audit', 'telemetry']) {
+            it(`omits the new target check when the flag is ${fixState} and legacy mode is ${mode}`, async () => {
+                const command = await getInvokerCommand('plain', mode, 'Windows', fixState);
+                assert(!command.includes('-validateArgs'));
+            });
+        }
+        it(`preserves legacy backtick transport when the new flag is ${fixState}`, async () => {
+            const command = await getInvokerCommand('a`;b', 'all-off', 'Windows', fixState);
+            assert(command.includes("-scriptArgs 'a``;b'"));
         });
     }
     it('does not add Windows validation to a Linux target', async () => {
@@ -87,7 +136,7 @@ describe('VMSS PowerShell argument validation', function () {
         assert(command.includes('customScriptInvoker.sh'));
         assert(!command.includes('-validateArgs'));
     });
-    it('rejects a Boolean-prefix separator before upload or extension update', async () => {
+    it('rejects a Boolean-prefix separator before upload when both gates and activation are enabled', async () => {
         process.env['_scriptArgs_'] = ';true';
         process.env['_argsValidationMode_'] = 'activate';
         const runner = new ttm.MockTestRunner(path.join(__dirname, 'updateImageOnWindowsAgent.js'));
@@ -142,6 +191,15 @@ describe('VMSS PowerShell argument validation', function () {
             }
         });
     }
+    it('preserves legacy escaped-argument transport when the old gate is disabled and the new flag is enabled', async () => {
+        const command = await getInvokerCommand('a`;b', 'outer-off');
+        assert(!command.includes('-validateArgs'));
+        assert(command.includes("-scriptArgs 'a``;b'"));
+    });
+    it('does not force target enforcement when both gates are on but legacy activation is off', async () => {
+        const command = await getInvokerCommand('@{ k = Get-Date }', 'disabled');
+        assert(!command.includes('-validateArgs'));
+    });
     for (const args of ['@{ k = Get-Date }', '@{ k = @{ value = Get-Date } }', '{ value }',
         '@{ k = [string]1 }', '@{ k = 1 + 2 }', '@{ k = [DateTime]::Now }', '@{ k = $false }',
         '--% literal', "@{ k = 'unfinished }"]) {
