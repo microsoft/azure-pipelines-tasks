@@ -9,17 +9,13 @@ export class NpmMockHelper {
     static AgentBuildDirectory = 'c:\\agent\\work\\build';
     static BuildBuildId = '12345';
 
-    // public answers: ma.TaskLibAnswers = {
-    //     which: {},
-    //     exec: {},
-    //     checkPath: {},
-    //     exist: {},
-    //     filter: {},
-    //     find: {},
-    //     match: {}
-    // };
-
-    public answers: ma.TaskLibAnswers;
+    public answers: ma.TaskLibAnswers = {
+        which: {},
+        exec: {},
+        checkPath: {},
+        exist: {},
+        find: {}
+    };
 
     constructor(
         private tmr: tmrm.TaskMockRunner,

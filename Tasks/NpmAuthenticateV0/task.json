@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
+    "Minor": 282,
     "Patch": 0
   },
   "runsOn": [
@@ -68,6 +68,18 @@
     "Node24": {
       "target": "npmauthcleanup.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SAVE_NPMRC_PATH",
+        "NPM_AUTHENTICATE_TEMP_DIRECTORY",
+        "EXISTING_ENDPOINTS"
+      ]
     }
   },
   "messages": {
