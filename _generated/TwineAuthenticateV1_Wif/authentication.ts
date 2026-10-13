@@ -61,7 +61,7 @@ export async function getInternalAuthInfoArray(inputKey: string): Promise<Set<Au
         pypiUploadApiLocationId,
         feed.feedId,
         feed.projectId);
-    const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(new URL(feedUri), ProtocolType.PyPi);
+    const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(feedUri, ProtocolType.PyPi);
 
     const packageSource = { feedName: feed.feedId, feedUri: verifiedFeedUri.href, isInternalSource: true } as IPackageSource;
     internalAuthArray.add(new AuthInfo(packageSource, AuthType.Token, "build", localAccessToken));

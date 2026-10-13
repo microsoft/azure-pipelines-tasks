@@ -39,7 +39,7 @@ async function main(): Promise<void> {
                     pypiSimpleApiLocationId,
                     feed.feedId,
                     feed.projectId);
-                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(new URL(feedUri), ProtocolType.PyPi);
+                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(feedUri, ProtocolType.PyPi);
                 const pipUri = utils.addCredentialsToUri("build", localAccessToken, verifiedFeedUri.href);
                 internalAndExternalEndpoints.push(pipUri);
             }

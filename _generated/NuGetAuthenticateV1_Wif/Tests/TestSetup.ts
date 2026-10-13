@@ -82,7 +82,22 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/credentialProviderUtils
         if (process.env[testConstants.TestEnvVars.wifShouldFail] === 'true') {
             throw new Error('Simulated WIF authentication failure');
         }
-        // Simulate successful WIF configuration
+        let parsedFeedUrl: URL;
+        try {
+            parsedFeedUrl = new URL(feedUrl);
+        } catch {
+            throw new Error('Error_UrlInvalid');
+        }
+        const hostname = parsedFeedUrl.hostname.toLowerCase();
+        if (parsedFeedUrl.protocol !== 'https:' ||
+            (hostname !== 'dev.azure.com' &&
+             hostname !== 'pkgs.dev.azure.com' &&
+             !hostname.endsWith('.visualstudio.com') &&
+             !hostname.endsWith('.vsts.me') &&
+             !hostname.endsWith('.codedev.ms') &&
+             !hostname.endsWith('.devppe.azure.com'))) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
     }
 });
 

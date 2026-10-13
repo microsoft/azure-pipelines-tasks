@@ -2,7 +2,6 @@
 // This file imports all scenario-based test modules to run the complete test suite
 
 // Scenario-based test modules (organized by feature/user journey)
-import './L0.URLValidation';          // isValidFeed() URL validation tests
 import './L0.InputValidation';        // Input validation and error handling
 #if WIF
 import './L0.WIF';                    // Workload Identity Federation scenarios

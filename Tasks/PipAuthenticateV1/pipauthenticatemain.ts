@@ -4,7 +4,7 @@ import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-
 #if WIF
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 #endif
-import { parseAzureArtifactsFeedUrl, verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -30,7 +30,7 @@ async function main(): Promise<void> {
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
             const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
                 entraWifServiceConnectionName,
-                parseAzureArtifactsFeedUrl(feedUrl),
+                feedUrl,
                 ProtocolType.PyPi);
             if(credentials)
             {
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
                     pypiSimpleApiLocationId,
                     feed.feedId,
                     feed.projectId);
-                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(new URL(feedUri), ProtocolType.PyPi);
+                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(feedUri, ProtocolType.PyPi);
                 const pipUri = utils.addCredentialsToUri("build", localAccessToken, verifiedFeedUri.href);
                 internalAndExternalEndpoints.push(pipUri);
             }

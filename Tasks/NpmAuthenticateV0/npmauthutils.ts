@@ -12,7 +12,6 @@ import {
     getFederatedWorkloadIdentityCredentialsForFeed
 } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
-import { parseAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
 #endif
 
 export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] {
@@ -258,7 +257,7 @@ export async function getAzureDevOpsServiceConnectionCredentials(
 ): Promise<FederatedFeedCredentials> {
     const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
         adoServiceConnection,
-        parseAzureArtifactsFeedUrl(feedUrl),
+        feedUrl,
         ProtocolType.Npm);
     if (!credentials) {
         throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));

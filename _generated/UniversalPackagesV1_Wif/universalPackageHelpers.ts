@@ -3,7 +3,6 @@ import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getWebApiWithProxy, requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
-import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { getAreaIdForProtocol, ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import * as artifactToolRunner from "azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner";
 import { UniversalPackageContext, OperationType } from "./UniversalPackageContext";
@@ -63,7 +62,8 @@ async function tryGetWifToken(context: UniversalPackageContext): Promise<boolean
         }
         const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
             context.adoServiceConnection,
-            parseAzureArtifactsFeedUrl(context.feedUrl)
+            context.feedUrl,
+            ProtocolType.Universal
         );
         if (credentials) {
             context.accessToken = credentials.accessToken;

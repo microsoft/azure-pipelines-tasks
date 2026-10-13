@@ -33,7 +33,7 @@ export const TestData = {
     visualStudioUri: 'https://testorg.visualstudio.com/',
     onPremUri: 'https://azdo.company.com/DefaultCollection/',
     
-    // Valid feed URLs (for isValidFeed tests)
+    // Valid feed URLs
     validFeedUrls: {
         devAzure: 'https://pkgs.dev.azure.com/testorg/_packaging/test-feed/nuget/v3/index.json',
         devAzureWithProject: 'https://pkgs.dev.azure.com/testorg/testproject/_packaging/test-feed/nuget/v3/index.json',

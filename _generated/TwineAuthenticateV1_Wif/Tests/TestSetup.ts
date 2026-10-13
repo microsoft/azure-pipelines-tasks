@@ -86,9 +86,8 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/serviceConnectionUtils',
     }
 });
 tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
-    parseAzureArtifactsFeedUrl: (feedUrl: string) => new URL(feedUrl),
-    verifyAzureArtifactsFeedUrl: async function(feedUrl: URL) {
-        const parsedFeedUrl = feedUrl;
+    verifyAzureArtifactsFeedUrl: async function(feedUrl: string | URL) {
+        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
         if (parsedFeedUrl.protocol !== 'https:' ||
             (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com'))) {
             throw new Error('Error_FeedUrlUntrustedHost');

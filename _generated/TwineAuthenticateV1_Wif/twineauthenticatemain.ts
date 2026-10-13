@@ -8,7 +8,6 @@ import * as utils from "./utilities";
 
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils"
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
-import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 
  // tslint:disable-next-line:max-classes-per-file
 export class Repository
@@ -57,7 +56,7 @@ async function main(): Promise<void> {
         if (entraWifServiceConnectionName && feedUrl) {
             const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
                 entraWifServiceConnectionName,
-                parseAzureArtifactsFeedUrl(feedUrl),
+                feedUrl,
                 ProtocolType.PyPi);
             if (!credentials) {
                 throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));

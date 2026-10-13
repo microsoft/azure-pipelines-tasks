@@ -246,7 +246,7 @@ export class UniversalMockHelper {
             requireHttpsUrl: (value: string) => {
                 const url = new URL(value);
                 if (url.protocol !== 'https:') {
-                    throw new Error('Error_ServiceUrlHttpsRequired');
+                    throw new Error('Error_UrlHttpsRequired');
                 }
                 return url;
             },

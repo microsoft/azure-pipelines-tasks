@@ -11,7 +11,6 @@ import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
 #if WIF
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-import { parseAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 #endif
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
@@ -80,7 +79,7 @@ async function main(): Promise<void> {
                 var registryUrlStr = url.parse(registryInfo[1].index.replace("sparse+", "")).href;
                 const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
                     entraWifServiceConnectionName,
-                    parseAzureArtifactsFeedUrl(registryUrlStr),
+                    registryUrlStr,
                     ProtocolType.Cargo);
                 if (!credentials) {
                     throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));

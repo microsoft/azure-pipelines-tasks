@@ -7,7 +7,7 @@ import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
 import { normalizeUrl } from './utils/urlUtils';
-import { parseAzureArtifactsFeedUrl, verifyAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
+import { verifyAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
 import { getFederatedWorkloadIdentityCredentialsForFeed } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
 import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 
@@ -103,7 +103,7 @@ export async function buildAuthEntries(
         return await Promise.all(feeds.map(async feed => {
             const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
                 adoServiceConnection,
-                parseAzureArtifactsFeedUrl(feed.url),
+                feed.url,
                 ProtocolType.Maven);
             if (!credentials) {
                 throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
@@ -120,7 +120,7 @@ export async function buildAuthEntries(
 
     const verifiedFeeds = await Promise.all(feeds.map(async feed => ({
         url: (await verifyAzureArtifactsFeedUrl(
-            parseAzureArtifactsFeedUrl(feed.url),
+            feed.url,
             ProtocolType.Maven
         )).href
     })));

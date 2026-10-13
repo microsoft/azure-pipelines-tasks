@@ -156,7 +156,7 @@ describe('NuGetAuthenticate L0 Suite - Workload Identity Federation', function (
     });
 
     describe('WIF URL Normalization', function() {
-        it('normalizes feedUrl with smart quotes before WIF authentication', async () => {
+        it('rejects feedUrl with smart quotes before WIF authentication', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -168,8 +168,7 @@ describe('NuGetAuthenticate L0 Suite - Workload Identity Federation', function (
             await tr.runAsync();
             
             // Assert
-            // Should normalize smart quotes and validate successfully
-            assert(tr.succeeded, 'Task should normalize smart quotes and succeed');
+            assert(tr.failed, 'Task should reject smart quotes');
         });
 
         it('normalizes feedUrl with whitespace before WIF authentication', async () => {
