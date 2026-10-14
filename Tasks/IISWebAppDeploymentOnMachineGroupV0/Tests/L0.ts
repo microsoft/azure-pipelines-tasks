@@ -8,11 +8,28 @@ var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function () {
     var taskSrcPath = path.join(__dirname, '..', 'deployiiswebapp.js');
+    const compatibilityFeatureVariable = 'DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED';
+    const secureMSDeployFeatureVariable = 'DISTRIBUTEDTASK_TASKS_SECUREMSDEPLOYCOMMANDEXECUTION';
+    const originalCompatibilityFeature = process.env[compatibilityFeatureVariable];
+    const originalSecureMSDeployFeature = process.env[secureMSDeployFeatureVariable];
     this.timeout(60000);
     before((done) => {
+        process.env[compatibilityFeatureVariable] = 'false';
+        process.env[secureMSDeployFeatureVariable] = 'false';
         done();
     });
     after(function () {
+        if (originalCompatibilityFeature === undefined) {
+            delete process.env[compatibilityFeatureVariable];
+        } else {
+            process.env[compatibilityFeatureVariable] = originalCompatibilityFeature;
+        }
+
+        if (originalSecureMSDeployFeature === undefined) {
+            delete process.env[secureMSDeployFeatureVariable];
+        } else {
+            process.env[secureMSDeployFeatureVariable] = originalSecureMSDeployFeature;
+        }
     });
 
     if (!tl.osType().match(/^Win/)) {
