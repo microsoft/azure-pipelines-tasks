@@ -70,34 +70,44 @@ export class PackageFile {
     }
 
     private validateNoLinks(): void {
-        if (!this.validatePathIsNotLink(this.rootLocation)) {
-            return;
-        }
-
-        const relativePath = path.relative(this.rootLocation, this.initialLocation);
-        let currentPath = this.rootLocation;
-
-        for (const segment of relativePath.split(path.sep)) {
-            currentPath = path.join(currentPath, segment);
-
-            if (!this.validatePathIsNotLink(currentPath)) {
-                return;
-            }
-        }
+        this.validatePathComponentsNoLinks(
+            this.initialLocation,
+            "InvalidPackageFileLink",
+            this.filename
+        );
     }
 
     private validateExtractionDestination(): void {
-        this.validatePathIsNotLink(
+        this.validatePathComponentsNoLinks(
             this.finalLocation,
             "InvalidPackageDestinationLink",
             this.finalLocation
         );
     }
 
+    private validatePathComponentsNoLinks(
+        pathToValidate: string,
+        errorKey: string,
+        errorValue: string
+    ): void {
+        const resolvedPath = path.resolve(pathToValidate);
+        const pathRoot = path.parse(resolvedPath).root;
+        const relativePath = path.relative(pathRoot, resolvedPath);
+        let currentPath = pathRoot;
+
+        for (const segment of relativePath.split(path.sep).filter(Boolean)) {
+            currentPath = path.join(currentPath, segment);
+
+            if (!this.validatePathIsNotLink(currentPath, errorKey, errorValue)) {
+                return;
+            }
+        }
+    }
+
     private validatePathIsNotLink(
         pathToValidate: string,
-        errorKey: string = "InvalidPackageFileLink",
-        errorValue: string = this.filename
+        errorKey: string,
+        errorValue: string
     ): boolean {
         try {
             if (fs.lstatSync(pathToValidate).isSymbolicLink()) {
