@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import  * as semver from "semver"
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import { RestClient } from 'typed-rest-client/RestClient';
 import * as ci from './cieventlogger';
 
@@ -105,14 +106,16 @@ function trimTrailingSlash(url: string): string {
     return url.replace(/\/+$/, '');
 }
 
-function getDotNetVersion(): string {
+function getDotNetVersion() {
+    let dotnet: tr.ToolRunner;
     const dotnetPath = tl.which('dotnet', false);
-    if (dotnetPath) {
+
+    if (dotnetPath){
         try {
-            return tl.tool(dotnetPath).arg('--version').execSync().stdout.trim();
-        } catch (err) {
-            tl.debug('Unable to determine the .NET SDK version for telemetry.');
-        }
+            dotnet = tl.tool(dotnetPath);
+            dotnet.arg('--version');
+            return dotnet.execSync().stdout.trim();
+        } catch (err) {}
     }
     return '';
 }
@@ -179,7 +182,8 @@ async function run() {
         ci.addToConsolidatedCi('allowPtrToDetectTestRunRetryFiles', allowPtrToDetectTestRunRetryFiles);
 
         if (!await isFeatureFlagEnabled('TestManagement.PublishTestResultsTask.DisableDotNetVersionTelemetry')) {
-            ci.addToConsolidatedCi('dotnetVersion', getDotNetVersion());
+            const dotnetVersion = getDotNetVersion();
+            ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
         }
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
