@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[设置为 true 时，除“已成功”外，即使作业状态为 ‌"SucceededWithIssues‌" (部分成功)，也会保存缓存条目。默认情况下，仅当作业成功时才保存缓存。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cacheHitVar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cache hit variable]]></Val>
@@ -104,6 +113,15 @@
           <Val><![CDATA[Additional restore key prefixes]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[其他还原键前缀]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Save cache on partial success]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[部分成功时保存缓存]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

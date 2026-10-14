@@ -339,11 +339,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.NpmrcChangedSinceBackup" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le fichier .npmrc situé sur %s n’est plus le même fichier ordinaire que celui qui a été sauvegardé. Refus de sa restauration.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NpmrcDoesNotExist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The .npmrc file you selected at %s does not currently exist.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Le fichier .npmrc que vous avez sélectionné sur %s n'existe pas.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NpmrcMustBeRegularFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc file at %s must be a regular file and cannot be a symbolic link.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le fichier .npmrc situé sur %s doit être un fichier ordinaire et ne peut pas être un lien symbolique.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -407,6 +425,15 @@
           <Val><![CDATA[Successfully appended .npmrc]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Le fichier .npmrc est correctement ajouté]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnableToWriteFileContents" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to write the contents of %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Nous ne pouvons pas écrire le contenu de %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

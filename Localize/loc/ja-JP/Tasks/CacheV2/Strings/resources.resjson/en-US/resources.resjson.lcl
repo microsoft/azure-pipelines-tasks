@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[true に設定すると、ジョブの状態が 'Succeeded' に加えて 'SucceededWithIssues' (部分的に成功) の場合でも、キャッシュ エントリが保存されます。既定では、キャッシュはジョブが成功した場合にのみ保存されます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cacheHitVar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cache hit variable]]></Val>
@@ -105,6 +114,12 @@
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[追加の復元キーのプレフィックス]]></Val>
           </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Save cache on partial success]]></Val>
         </Str>
         <Disp Icon="Str" />
       </Item>
