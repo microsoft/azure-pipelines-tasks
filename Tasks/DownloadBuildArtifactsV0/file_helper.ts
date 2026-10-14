@@ -69,14 +69,21 @@ const extractedTarsTempDir = 'extracted_tars';
  function extractTars(tarArchivesPaths: string[], destination: string): void {
     const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), extractedTarsTempDir);
 
+    const validateSymlinks: boolean = tl.getPipelineFeature('EnableTarSymlinkValidation');
+
     tarArchivesPaths.forEach((tarArchivePath: string) => {
         const tarArchiveFileName: string = path.basename(tarArchivePath);
         const artifactName: string = tarArchiveFileName.slice(0, tarArchiveFileName.length - '.tar'.length);
 
         const extractedFilesDir: string = path.join(extractedTarsPath, artifactName);
+        // Names like '...tar' or '.tar' resolve to the temp folder or the staging root; cleanup must stay below the staging root
+        const relativeDir: string = path.relative(extractedTarsPath, extractedFilesDir);
+        if (validateSymlinks && (relativeDir === '' || relativeDir === '..' || relativeDir.startsWith('..' + path.sep))) {
+            throw new Error(`Invalid TAR archive name: ${tarArchiveFileName}`);
+        }
 
         extractTar(tarArchivePath, extractedFilesDir);
-        if (tl.getPipelineFeature('EnableTarSymlinkValidation')) {
+        if (validateSymlinks) {
             try {
                 validateSymbolicLinks(extractedFilesDir, extractedFilesDir);
             } catch (err) {

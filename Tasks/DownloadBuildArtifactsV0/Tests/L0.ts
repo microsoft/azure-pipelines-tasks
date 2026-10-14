@@ -3,7 +3,7 @@ import fs = require('fs');
 import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import { validateSymbolicLinks } from '../file_helper';
+import { validateSymbolicLinks, extractTarsIfPresent } from '../file_helper';
 
 describe('DownloadBuildArtifactsV0 Suite', function () {
     let nodePath: string;
@@ -119,4 +119,69 @@ describe('DownloadBuildArtifactsV0 symlink validation', function () {
         assert.throws(() => validateSymbolicLinks(root, root));
     });
 
+});
+
+describe('DownloadBuildArtifactsV0 tar extraction directory', function () {
+    let tempRoot: string;
+    let tempDir: string;
+    let stagingDir: string;
+    let originalTempDir: string | undefined;
+    let originalFlag: string | undefined;
+
+    const ticketFor = (tarPath: string): any[][] => [[{ artifactItem: { itemType: 'file', path: tarPath } }]];
+
+    beforeEach(() => {
+        tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'dba-tar-'));
+        tempDir = path.join(tempRoot, '_temp');
+        stagingDir = path.join(tempDir, 'extracted_tars');
+        fs.mkdirSync(stagingDir, { recursive: true });
+        fs.writeFileSync(path.join(tempDir, 'temp-marker.txt'), 'x');
+        fs.writeFileSync(path.join(stagingDir, 'staging-marker.txt'), 'x');
+        originalTempDir = process.env['AGENT_TEMPDIRECTORY'];
+        process.env['AGENT_TEMPDIRECTORY'] = tempDir;
+        originalFlag = process.env['DISTRIBUTEDTASK_TASKS_ENABLETARSYMLINKVALIDATION'];
+        process.env['DISTRIBUTEDTASK_TASKS_ENABLETARSYMLINKVALIDATION'] = 'true';
+    });
+
+    afterEach(() => {
+        if (originalTempDir === undefined) {
+            delete process.env['AGENT_TEMPDIRECTORY'];
+        } else {
+            process.env['AGENT_TEMPDIRECTORY'] = originalTempDir;
+        }
+        if (originalFlag === undefined) {
+            delete process.env['DISTRIBUTEDTASK_TASKS_ENABLETARSYMLINKVALIDATION'];
+        } else {
+            process.env['DISTRIBUTEDTASK_TASKS_ENABLETARSYMLINKVALIDATION'] = originalFlag;
+        }
+        fs.rmSync(tempRoot, { recursive: true, force: true });
+    });
+
+    const nameError = /Invalid TAR archive name/;
+
+    it('rejects ...tar and leaves the temp directory untouched', () => {
+        assert.throws(() => extractTarsIfPresent(ticketFor('drop/...tar') as any, path.join(tempRoot, 'dl')), nameError);
+        assert.ok(fs.existsSync(path.join(tempDir, 'temp-marker.txt')));
+    });
+
+    it('rejects .tar and leaves the staging directory untouched', () => {
+        assert.throws(() => extractTarsIfPresent(ticketFor('drop/.tar') as any, path.join(tempRoot, 'dl')), nameError);
+        assert.ok(fs.existsSync(path.join(stagingDir, 'staging-marker.txt')));
+    });
+
+    it('does not reject a valid name that starts with dots', () => {
+        try {
+            extractTarsIfPresent(ticketFor('drop/..foo.tar') as any, path.join(tempRoot, 'dl'));
+        } catch (err) {
+            assert.ok(!nameError.test(err.message), err.message);
+        }
+    });
+
+    it('does not reject a normal archive name', () => {
+        try {
+            extractTarsIfPresent(ticketFor('drop/links.tar') as any, path.join(tempRoot, 'dl'));
+        } catch (err) {
+            assert.ok(!nameError.test(err.message), err.message);
+        }
+    });
 });
