@@ -197,7 +197,7 @@
     "UnsupportedArchiveType": "Unsupported archive type: %s",
     "InvalidPackageFilePath": "Package file path '%s' must be relative to and remain within the destination directory.",
     "InvalidPackageFileLink": "Package file path '%s' cannot contain a symbolic link or junction beneath the destination directory.",
-    "InvalidPackageDestinationLink": "Package destination '%s' cannot be a symbolic link or junction.",
+    "InvalidPackageDestinationLink": "Package destination path '%s' cannot contain a symbolic link or junction.",
     "Error_UnexpectedErrorArtifactToolDownload": "An unexpected error occurred while trying to download the package. Exit code(%s) and error(%s)",
     "Info_ResolvedToolFromCache": "Resolved from tool cache: %s",
     "Info_DownloadingArtifactTool": "Downloading artifact tool from %s",

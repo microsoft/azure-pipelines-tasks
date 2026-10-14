@@ -144,5 +144,19 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
 
             await assert.rejects(() => pf.process());
         });
+
+        it('rejects a link in an intermediate extraction destination component', async () => {
+            (tl as any).getVariable = (name: string) => {
+                if (name === 'Agent.TempDirectory') return destination;
+                return undefined;
+            };
+            fs.writeFileSync(path.join(destination, 'package.nupkg'), 'archive content');
+            fs.mkdirSync(path.join(outside, 'output'));
+            const linkedParent = path.join(testRoot, 'linked-parent');
+            createDirectoryLink(outside, linkedParent);
+            const pf = new PackageFile(true, path.join(linkedParent, 'output'), 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+        });
     });
 });
