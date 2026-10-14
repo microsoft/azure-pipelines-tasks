@@ -1,0 +1,28 @@
+{
+  "name": "downloadpipelineartifact",
+  "version": "3.280.0",
+  "description": "Download pipeline artifacts by delegating to ArtifactTool.",
+  "main": "download.js",
+  "scripts": {
+    "build": "node ../../make.js build --task DownloadPipelineArtifactV3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.10",
+    "pipeline-artifact-common": "file:../../_build/Tasks/Common/pipeline-artifact-common-0.0.1.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
