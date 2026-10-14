@@ -8,7 +8,7 @@ import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
 const TESTRUN_SYSTEM = 'VSTS - PTR';
-export const TCM_RESOURCE_AREA_ID = '00000054-0000-8888-8000-000000000000';
+const TCM_RESOURCE_AREA_ID = '00000054-0000-8888-8000-000000000000';
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
