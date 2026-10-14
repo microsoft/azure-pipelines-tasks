@@ -3,6 +3,7 @@ import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
 import * as os from 'os';
 import * as path from 'path';
 import { AZURE_KV_PLUGIN_VERSION_FILE, NOTATION, NOTATION_BINARY, PLUGINS } from './lib/constants';
+import { removeCredentialFile } from './lib/credentialFile';
 import { getVaultCredentials } from './lib/credentials';
 import { getConfigHome } from './lib/fs';
 import { getDownloadInfo, installFromURL } from './lib/install';
@@ -36,25 +37,29 @@ export async function sign(): Promise<void> {
             const timestampRootCert = taskLib.getInput('timestampRootCert', false) || '';
 
             // setup env
-            const [credentialEnvs, credentialType] = await getVaultCredentials();
-            const keyVaultPluginEnv = { ...env, ...credentialEnvs}
+            const credentials = await getVaultCredentials();
+            try {
+                const keyVaultPluginEnv = { ...env, ...credentials.env };
 
-            await notationRunner(artifactRefs, async (notation: ToolRunner, artifactRef: string, execOptions: IExecOptions) => {
-                execOptions.env = keyVaultPluginEnv;
-                return notation
-                    .arg(['sign', artifactRef,
-                        '--plugin', 'azure-kv',
-                        '--id', keyid,
-                        '--signature-format', signatureFormat])
-                    .argIf(timestampURL, `--timestamp-url=${timestampURL}`)
-                    .argIf(timestampRootCert, `--timestamp-root-cert=${timestampRootCert}`)
-                    .argIf(allowReferrerAPI, '--allow-referrers-api')
-                    .argIf(caCertBundle, `--plugin-config=ca_certs=${caCertBundle}`)
-                    .argIf(selfSignedCert, '--plugin-config=self_signed=true')
-                    .argIf(isSupportCredentialType(installedVersion), `--plugin-config=credential_type=${credentialType}`)
-                    .argIf(debug && debug.toLowerCase() === 'true', '--debug')
-                    .exec(execOptions);
-            })
+                await notationRunner(artifactRefs, async (notation: ToolRunner, artifactRef: string, execOptions: IExecOptions) => {
+                    execOptions.env = keyVaultPluginEnv;
+                    return notation
+                        .arg(['sign', artifactRef,
+                            '--plugin', 'azure-kv',
+                            '--id', keyid,
+                            '--signature-format', signatureFormat])
+                        .argIf(timestampURL, `--timestamp-url=${timestampURL}`)
+                        .argIf(timestampRootCert, `--timestamp-root-cert=${timestampRootCert}`)
+                        .argIf(allowReferrerAPI, '--allow-referrers-api')
+                        .argIf(caCertBundle, `--plugin-config=ca_certs=${caCertBundle}`)
+                        .argIf(selfSignedCert, '--plugin-config=self_signed=true')
+                        .argIf(isSupportCredentialType(installedVersion), `--plugin-config=credential_type=${credentials.credentialType}`)
+                        .argIf(debug && debug.toLowerCase() === 'true', '--debug')
+                        .exec(execOptions);
+                })
+            } finally {
+                removeCredentialFile(credentials.credentialFile);
+            }
             break;
         default:
             throw new Error(taskLib.loc('UnknownPlugin', pluginName));
