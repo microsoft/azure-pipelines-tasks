@@ -2,8 +2,63 @@ import * as path from 'path';
 import * as assert from 'assert';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as sinon from 'sinon';
 
 import { TestString } from './TestStrings';
+import { Utility } from '../operations/Utility';
+
+describe('GitHub service connection authentication', function() {
+    let sandbox: sinon.SinonSandbox;
+    let authorization: sinon.SinonStub;
+
+    beforeEach(() => {
+        sandbox = sinon.sandbox.create();
+        authorization = sandbox.stub(tl, 'getEndpointAuthorization');
+        sandbox.stub(tl, 'loc').callsFake((key: string, ...args: string[]) => [key, ...args].join(': '));
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+    });
+
+    [
+        { scheme: 'PersonalAccessToken', parameter: 'accessToken' },
+        { scheme: 'OAuth', parameter: 'AccessToken' },
+        { scheme: 'Token', parameter: 'AccessToken' },
+        { scheme: 'InstallationToken', parameter: 'AccessToken' }
+    ].forEach(({ scheme, parameter }) => {
+        it(`Extracts the token for ${scheme} connections`, () => {
+            authorization.returns({ scheme, parameters: { [parameter]: 'test-token' } });
+
+            assert.strictEqual(Utility.getGithubEndPointToken('connection'), 'test-token');
+            assert(authorization.calledWithExactly('connection', false));
+        });
+
+        [undefined, ''].forEach(token => {
+            it(`Rejects ${scheme} connections with a ${token === undefined ? 'missing' : 'empty'} token`, () => {
+                authorization.returns({ scheme, parameters: { [parameter]: token } });
+
+                assert.throws(() => Utility.getGithubEndPointToken('connection'),
+                    /^Error: InvalidGitHubEndpoint: connection$/);
+            });
+        });
+    });
+
+    it('Rejects unsupported authentication schemes', () => {
+        authorization.returns({ scheme: 'Basic', parameters: { AccessToken: 'test-token' } });
+
+        assert.throws(() => Utility.getGithubEndPointToken('connection'),
+            /^Error: InvalidEndpointAuthScheme: Basic$/);
+    });
+
+    it('Rejects missing endpoint authorization', () => {
+        authorization.returns(null);
+
+        assert.throws(() => Utility.getGithubEndPointToken('connection'),
+            /^Error: InvalidGitHubEndpoint: connection$/);
+    });
+});
 
 describe('GitHubReleaseTaskTests Suite', function() {
     this.timeout(60000);

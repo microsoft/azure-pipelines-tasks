@@ -20,7 +20,7 @@ In order to perform operations on the GitHub repository, the task needs a GitHub
 
 The GitHub Release task can run in 3 action types, viz. create, edit or delete. Based on the action chosen by the user certain parameters will be ignored. The following is the list of parameters required for this task.
 
-* **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one. Note that the service connection should use OAuth or PAT for authentication.
+* **Service Connection:** This is the name of GitHub service connection which will be used to connect to target GitHub account. You can use an existing GitHub service connection or create a new one. The service connection can use OAuth, a personal access token (PAT), a token, or a GitHub App installation token for authentication. For installation tokens, the GitHub App must have access to the target repository and Contents read and write permission to manage releases.
 
 * **GitHub Repository:** This is the name of the GitHub repository where GitHub releases will be managed. E.g. `microsoft/vscode`.
 
