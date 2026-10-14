@@ -18,6 +18,8 @@
   "loc.input.help.interpreterCommand": "Path to the command interpreter used to execute the script. Adds a shebang line to the beginning of the script. Relevant only for UNIX-like operating systems. Please use empty string for Windows-based remote hosts. [See more about shebang (#!)](https://homepages.cwi.nl/~aeb/std/shebang/unix-faq.txt)",
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments to pass to the shell script.",
+  "loc.input.label.targetShellType": "Target shell",
+  "loc.input.help.targetShellType": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core; otherwise leave the default.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",
   "loc.input.help.failOnStdErr": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
   "loc.input.label.interactiveSession": "Enable interactive session",
@@ -37,5 +39,7 @@
   "loc.messages.SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
   "loc.messages.SshConnectionSuccessful": "Successfully connected.",
   "loc.messages.UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+  "loc.messages.ScriptArgsSanitizedPowerShell": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787",
+  "loc.messages.ScriptArgsSanitizedCmd": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using caret (^). More information is available here: https://aka.ms/ado/75787"
 }
