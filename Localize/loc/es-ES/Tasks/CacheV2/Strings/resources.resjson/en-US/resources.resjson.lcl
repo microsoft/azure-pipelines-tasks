@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Cuando se establece en true, la entrada de caché se guarda incluso cuando el estado del trabajo es "SucceededWithIssues" (parcialmente correcto), además de "Succeeded". De forma predeterminada, la memoria caché solo se guarda cuando el trabajo se realiza correctamente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cacheHitVar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cache hit variable]]></Val>
@@ -104,6 +113,15 @@
           <Val><![CDATA[Additional restore key prefixes]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Prefijos de claves de restauración adicionales]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Save cache on partial success]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Guardar caché si se realiza correctamente parcialmente]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

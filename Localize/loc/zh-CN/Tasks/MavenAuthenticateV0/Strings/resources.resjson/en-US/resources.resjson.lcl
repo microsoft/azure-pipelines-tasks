@@ -195,6 +195,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_ChmodFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法对 %s (模式 %s)设置限制性权限: %s。将在未收紧权限的情况下继续。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_FeedEntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository '%s' already exists in the users settings.xml file.]]></Val>
@@ -209,6 +218,15 @@
           <Val><![CDATA[No repositories were selected to authenticate, please check your task configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未选择要进行身份验证的存储库，请检查任务配置。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_StatFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to read permissions on %s: %s. Original permissions may not be restored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法读取 %s 的权限： %s。可能无法还原原始权限。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

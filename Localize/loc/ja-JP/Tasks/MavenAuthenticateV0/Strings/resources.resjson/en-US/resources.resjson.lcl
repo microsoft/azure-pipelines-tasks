@@ -195,6 +195,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_ChmodFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s (モード %s) に制限の厳しいアクセス許可を設定できません: %s。厳格なアクセス許可なしで続行します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_FeedEntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository '%s' already exists in the users settings.xml file.]]></Val>
@@ -209,6 +218,15 @@
           <Val><![CDATA[No repositories were selected to authenticate, please check your task configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[認証するリポジトリが選択されていません。タスクの構成をご確認ください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_StatFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to read permissions on %s: %s. Original permissions may not be restored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s %s のアクセス許可を読み取ることができません。元のアクセス許可は復元されない可能性があります。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

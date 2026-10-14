@@ -339,11 +339,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.NpmrcChangedSinceBackup" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Файл .npmrc по пути %s больше не совпадает с обычным файлом из резервной копии. Восстановление отклонено.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NpmrcDoesNotExist" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The .npmrc file you selected at %s does not currently exist.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Файл NPMRC, выбранный в %s, в настоящее время не существует.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NpmrcMustBeRegularFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc file at %s must be a regular file and cannot be a symbolic link.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Файл .npmrc по пути %s должен быть обычным файлом и не может быть символической ссылкой.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -407,6 +425,15 @@
           <Val><![CDATA[Successfully appended .npmrc]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Добавлен файл .npmrc.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnableToWriteFileContents" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to write the contents of %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось записать содержимое %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

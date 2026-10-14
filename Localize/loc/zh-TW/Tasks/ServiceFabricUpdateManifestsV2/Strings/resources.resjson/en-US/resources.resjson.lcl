@@ -387,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidManifestPathSegment" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 值 '{1}' 無效。資訊清單路徑區段名稱必須是單一非空白名稱、不能是 '.' 或 '..'、不能包含路徑分隔符號或無效的檔名字元，而且不能以點或空格結尾。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.ItemSearchMoreThanOneFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one item with search pattern {0}. There can be only one.]]></Val>

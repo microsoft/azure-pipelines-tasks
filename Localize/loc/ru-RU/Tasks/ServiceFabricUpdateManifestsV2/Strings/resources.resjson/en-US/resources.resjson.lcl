@@ -387,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidManifestPathSegment" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Значение {0} '{1}' недопустимо. Имена сегментов пути манифеста должны быть одним непустым именем, не могут быть "." или "..", не должны содержать разделители пути или недопустимые символы имени файла, а также не должны заканчиваться точкой или пробелом.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.ItemSearchMoreThanOneFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one item with search pattern {0}. There can be only one.]]></Val>

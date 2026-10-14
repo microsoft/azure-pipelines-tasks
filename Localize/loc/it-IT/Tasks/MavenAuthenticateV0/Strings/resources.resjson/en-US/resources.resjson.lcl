@@ -195,6 +195,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_ChmodFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossibile impostare autorizzazioni restrittive per %s (modalità %s): %s. Continuazione senza autorizzazioni limitate.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_FeedEntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository '%s' already exists in the users settings.xml file.]]></Val>
@@ -209,6 +218,15 @@
           <Val><![CDATA[No repositories were selected to authenticate, please check your task configuration.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Non è stato selezionato alcun repository per l'autenticazione. Verificare la configurazione dell'attività.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_StatFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to read permissions on %s: %s. Original permissions may not be restored.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile leggere le autorizzazioni per %s: %s. Impossibile ripristinare le autorizzazioni originali.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
