@@ -19,7 +19,7 @@
   "loc.input.label.args": "Arguments",
   "loc.input.help.args": "Arguments to pass to the shell script.",
   "loc.input.label.targetShellType": "Target shell",
-  "loc.input.help.targetShellType": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core; otherwise leave the default.",
+  "loc.input.help.targetShellType": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core, 'Cmd' if it's Windows cmd.exe, or leave the default for bash/sh and similar Unix shells.",
   "loc.input.label.failOnStdErr": "Fail on STDERR",
   "loc.input.help.failOnStdErr": "If this option is selected, the build will fail when the remote commands or script write to STDERR.",
   "loc.input.label.interactiveSession": "Enable interactive session",

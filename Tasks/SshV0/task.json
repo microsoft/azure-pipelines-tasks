@@ -112,7 +112,7 @@
       "defaultValue": "bash",
       "required": false,
       "visibleRule": "runOptions = script",
-      "helpMarkDown": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core; otherwise leave the default.",
+      "helpMarkDown": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core, 'Cmd' if it's Windows cmd.exe, or leave the default for bash/sh and similar Unix shells.",
       "options": {
         "bash": "bash/sh and similar Unix shells (zsh, ksh, csh, fish, etc. - default)",
         "powershell": "PowerShell or PowerShell Core",
