@@ -87,6 +87,19 @@ describe('CargoAuthenticate L0 Suite - External Authentication (Service Connecti
     });
 
     describe('External Authentication Edge Cases', function() {
+        it('fails before external authentication when registry environment keys collide', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forExternalAuth('test-registry', 'ExternalConnection', {
+                    '__mockConfigContent__': testConstants.TestData.collidingRegistryToml
+                })
+            );
+
+            TestHelpers.assertFailure(tr, {
+                expectedError: 'loc_mock_RegistryEnvKeyCollision'
+            });
+            TestHelpers.assertTelemetryEmitted(tr, { ExternalFeedAuthCount: 0 });
+        });
+
         it('handles empty service connections array', async () => {
             // Arrange & Act
             const tr = await TestHelpers.runTest(

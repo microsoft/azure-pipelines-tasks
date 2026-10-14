@@ -71,6 +71,7 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             
             // Assert
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, 'loc_mock_SkippingNonAzureDevOpsRegistry');
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
         });
 
@@ -87,6 +88,28 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             TestHelpers.assertSuccess(tr);
             TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
+        });
+
+        it('fails when an ADO registry shares a Cargo environment key with another registry', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.withDefaults({
+                    '__mockConfigContent__': testConstants.TestData.collidingRegistryToml
+                })
+            );
+
+            TestHelpers.assertFailure(tr, {
+                expectedError: 'loc_mock_RegistryEnvKeyCollision'
+            });
+            TestHelpers.assertStdoutContains(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+        });
+
+        it('uses ASCII uppercase when computing the Cargo environment key', async () => {
+            const tr = await TestHelpers.runTest(
+                TestDataBuilder.forInternalAuth('i-registry')
+            );
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
+            TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
         });
 
         it('handles packaging location service failure gracefully', async () => {
