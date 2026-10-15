@@ -58,8 +58,8 @@ class TestHelpers {
         this._tempDirs.push(tmpDir);
         return tmpDir;
     }
-    static createTempNpmrc(content = '') {
-        const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npm-auth-test-'));
+    static createTempNpmrc(content = '', prefix = 'npm-auth-test-') {
+        const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
         this._tempDirs.push(tmpDir);
         const npmrcPath = path.join(tmpDir, '.npmrc');
         fs.writeFileSync(npmrcPath, content, 'utf8');

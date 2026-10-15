@@ -105,6 +105,16 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
             assert(tr.failed, 'Task should fail when WIF registry name not found in TOML');
             assert(tr.stdout.indexOf('non-existent-registry') > 0 || tr.errorIssues.length > 0, 'Should reference the missing registry name in error');
         }));
+        it('fails before WIF authentication when registry environment keys collide', () => __awaiter(this, void 0, void 0, function* () {
+            const tr = yield TestHelpers_1.TestHelpers.runTest(testConstants.TestDataBuilder.forWifAuth('test-registry', {
+                [testConstants.TestEnvVars.registryNames]: testConstants.TestData.testRegistry,
+                '__mockConfigContent__': testConstants.TestData.collidingRegistryToml
+            }));
+            TestHelpers_1.TestHelpers.assertFailure(tr, {
+                expectedError: 'loc_mock_RegistryEnvKeyCollision'
+            });
+            TestHelpers_1.TestHelpers.assertTelemetryEmitted(tr, { FederatedConnectionAuthCount: 0 });
+        }));
         it('fails when WIF returns null token', () => __awaiter(this, void 0, void 0, function* () {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');

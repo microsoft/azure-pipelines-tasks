@@ -42,6 +42,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.writeRepositoryOutput = writeRepositoryOutput;
 exports.validateAndFilterRegistryUrls = validateAndFilterRegistryUrls;
 exports.normalizeRegistry = normalizeRegistry;
 exports.toNerfDart = toNerfDart;
@@ -67,7 +68,9 @@ const pkgLocationUtils = __importStar(require("azure-pipelines-tasks-packaging-c
 const npmrcCredential_1 = require("./npmrcCredential");
 const EntraWifUserServiceConnectionUtils_1 = require("azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils");
 const protocols_1 = require("azure-pipelines-tasks-artifacts-common/protocols");
-const feedUrlUtils_1 = require("azure-pipelines-tasks-artifacts-common/feedUrlUtils");
+function writeRepositoryOutput(message) {
+    tl.writeExternalOutput(message + os.EOL, { source: 'repository' });
+}
 function validateAndFilterRegistryUrls(registryUrls) {
     const secureHosts = new Set();
     const insecureHosts = new Set();
@@ -78,7 +81,7 @@ function validateAndFilterRegistryUrls(registryUrls) {
             parsed = new URL(registryUrl);
         }
         catch (_a) {
-            console.log(tl.loc('InvalidRegistryUrl', registryUrl));
+            writeRepositoryOutput(tl.loc('InvalidRegistryUrl', registryUrl));
             continue;
         }
         validRegistryUrls.push(registryUrl);
@@ -121,7 +124,7 @@ function validateNpmrcPath() {
     if (!tl.exist(npmrcPath)) {
         throw new Error(tl.loc('NpmrcDoesNotExist', npmrcPath));
     }
-    console.log(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
+    writeRepositoryOutput(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
     return npmrcPath;
 }
 function getPreviouslyAuthenticatedUrls() {
@@ -274,7 +277,7 @@ function removeExistingCredentialEntries(npmrcPath, lines, registryUrl, addedReg
 }
 function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection, feedUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        const credentials = yield (0, EntraWifUserServiceConnectionUtils_1.getFederatedWorkloadIdentityCredentialsForFeed)(adoServiceConnection, (0, feedUrlUtils_1.parseAzureArtifactsFeedUrl)(feedUrl), protocols_1.ProtocolType.Npm);
+        const credentials = yield (0, EntraWifUserServiceConnectionUtils_1.getFederatedWorkloadIdentityCredentialsForFeed)(adoServiceConnection, feedUrl, protocols_1.ProtocolType.Npm);
         if (!credentials) {
             throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
         }

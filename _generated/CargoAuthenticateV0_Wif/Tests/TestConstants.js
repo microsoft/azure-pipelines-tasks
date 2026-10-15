@@ -71,6 +71,11 @@ crates-io = { index = "sparse+https://crates.io/api/v1/crates" }
 [registries]
 external-registry = { index = "sparse+https://external-server.com/api/v1/crates" }
 `,
+    collidingRegistryToml: `
+[registries]
+test-registry = { index = "sparse+https://pkgs.dev.azure.com/testorg/_packaging/test-feed/Cargo/index/" }
+test_registry = { index = "sparse+https://external-server.com/api/v1/crates" }
+`,
     // External service connection registries
     externalAzureDevOpsToml: `
 [registries]

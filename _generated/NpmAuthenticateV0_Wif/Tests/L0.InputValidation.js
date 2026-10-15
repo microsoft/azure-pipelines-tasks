@@ -41,7 +41,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const assert_1 = __importDefault(require("assert"));
+const fs = __importStar(require("fs"));
 const os = __importStar(require("os"));
 const path = __importStar(require("path"));
 const TestConstants_1 = require("./TestConstants");
@@ -77,4 +82,29 @@ describe('NpmAuthenticate L0 - Input Validation', function () {
         TestHelpers_1.TestHelpers.assertFailure(tr, 'Task should fail when the .npmrc file is missing');
         TestHelpers_1.TestHelpers.assertOutputContains(tr, 'NpmrcDoesNotExist');
     }));
+    it('neutralizes logging commands in repository-controlled paths', () => __awaiter(this, void 0, void 0, function* () {
+        const marker = '##vso[task.setvariable variable=unexpected;]injected';
+        const npmrcPath = TestHelpers_1.TestHelpers.createTempNpmrc('', `npm-auth-${marker}-`);
+        const tr = yield TestHelpers_1.TestHelpers.runTestWithEnv({
+            [TestConstants_1.TestEnvVars.npmrcPath]: npmrcPath
+        });
+        TestHelpers_1.TestHelpers.assertSuccess(tr);
+        const outputLines = tr.stdout.split(/\r?\n/);
+        const repositoryOutput = outputLines.find(line => line.includes('AuthenticatingThisNpmrc'));
+        (0, assert_1.default)(repositoryOutput, 'Expected the task to display the .npmrc path');
+        (0, assert_1.default)(!outputLines.some(line => line.startsWith(marker)), 'Logging command must not begin an output line');
+    }));
+    it('restricts commands and only allows task-owned variables', function () {
+        const task = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'task.json'), 'utf8'));
+        assert_1.default.deepStrictEqual(task.restrictions, {
+            commands: { mode: 'restricted' },
+            settableVariables: {
+                allowed: [
+                    'SAVE_NPMRC_PATH',
+                    'NPM_AUTHENTICATE_TEMP_DIRECTORY',
+                    'EXISTING_ENDPOINTS'
+                ]
+            }
+        });
+    });
 });

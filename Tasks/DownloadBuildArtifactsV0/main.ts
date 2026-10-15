@@ -18,6 +18,7 @@ import { DownloadHandlerContainerZip } from './DownloadHandlers/DownloadHandlerC
 import { DownloadHandlerFilePath } from './DownloadHandlers/DownloadHandlerFilePath';
 
 import { resolveParallelProcessingLimit } from './download_helper';
+import * as os from 'os';
 
 import { extractTarsIfPresent, cleanUpFolder } from './file_helper';
 
@@ -185,7 +186,7 @@ async function main(): Promise<void> {
                 }
 
                 definitionId = String(definitions[0].id);
-                console.log(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId));
+                tl.writeExternalOutput(tl.loc("DefinitionNameMatchFound", definitionIdSpecified, definitionId) + os.EOL, { source: 'repository' });
             }
 
             if (!definitionId) {
@@ -361,7 +362,7 @@ async function main(): Promise<void> {
                                 retryRedirectLimitDownload,
                                 ErrorDisplayMode.ShowWarning
                             ).catch((reason) => {
-                                console.log(tl.loc("FollowingDownloadRedirectFailed", reason));
+                                tl.writeExternalOutput(tl.loc("FollowingDownloadRedirectFailed", reason) + os.EOL, { source: 'remote' });
                                 publishEvent('download-redirect', { "redirectLimit": retryRedirectLimitDownload, "err": JSON.stringify(reason, Object.getOwnPropertyNames(reason)) });
                                 const handlerConfig: IContainerHandlerConfig = { ...config, endpointUrl, templatePath, handler, preferRedirect: false  };
                                 const downloadHandler: DownloadHandlerContainer = new DownloadHandlerContainer(handlerConfig);
@@ -395,12 +396,12 @@ async function main(): Promise<void> {
                     downloadPromises.push(downloadPromise);
                     await downloadPromise;
                 } else {
-                    console.log(tl.loc("UnsupportedArtifactType", artifact.resource.type));
+                    tl.writeExternalOutput(tl.loc("UnsupportedArtifactType", artifact.resource.type) + os.EOL, { source: 'remote' });
                 }
             });
 
             Promise.all(downloadPromises).then((tickets: models.ArtifactDownloadTicket[][]) => {
-                console.log(tl.loc('ArtifactsSuccessfullyDownloaded', downloadPath));
+                tl.writeExternalOutput(tl.loc('ArtifactsSuccessfullyDownloaded', downloadPath) + os.EOL, { source: 'repository' });
 
                 if (shouldExtractTars) {
                     extractTarsIfPresent(tickets, downloadPath);
@@ -437,7 +438,7 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
             reject(error);
         }
         else {
-            console.log(tl.loc('RetryingOperation', operationName, currentRetryCount));
+            tl.writeExternalOutput(tl.loc('RetryingOperation', operationName, currentRetryCount) + os.EOL, { source: 'remote' });
             currentRetryCount = currentRetryCount - 1;
             setTimeout(() => executeWithRetriesImplementation(operationName, operation, currentRetryCount, resolve, reject, retryCountLimit, errorDisplayMode), getRetryIntervalInSeconds(retryCountLimit - currentRetryCount) * 1000);
         }

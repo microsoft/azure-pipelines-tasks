@@ -63,6 +63,7 @@ describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessTok
             }));
             // Assert
             TestHelpers_1.TestHelpers.assertSuccess(tr);
+            TestHelpers_1.TestHelpers.assertStdoutContains(tr, 'loc_mock_SkippingNonAzureDevOpsRegistry');
             TestHelpers_1.TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
         }));
         it('does not expose System.AccessToken to an HTTP registry on an allowed host', () => __awaiter(this, void 0, void 0, function* () {
@@ -75,6 +76,21 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             TestHelpers_1.TestHelpers.assertSuccess(tr);
             TestHelpers_1.TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
             TestHelpers_1.TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
+        }));
+        it('fails when an ADO registry shares a Cargo environment key with another registry', () => __awaiter(this, void 0, void 0, function* () {
+            const tr = yield TestHelpers_1.TestHelpers.runTest(TestConstants_1.TestDataBuilder.withDefaults({
+                '__mockConfigContent__': testConstants.TestData.collidingRegistryToml
+            }));
+            TestHelpers_1.TestHelpers.assertFailure(tr, {
+                expectedError: 'loc_mock_RegistryEnvKeyCollision'
+            });
+            TestHelpers_1.TestHelpers.assertStdoutContains(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_TOKEN');
+        }));
+        it('uses ASCII uppercase when computing the Cargo environment key', () => __awaiter(this, void 0, void 0, function* () {
+            const tr = yield TestHelpers_1.TestHelpers.runTest(TestConstants_1.TestDataBuilder.forInternalAuth('i-registry'));
+            TestHelpers_1.TestHelpers.assertSuccess(tr);
+            TestHelpers_1.TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
+            TestHelpers_1.TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
         }));
         it('handles packaging location service failure gracefully', () => __awaiter(this, void 0, void 0, function* () {
             // Arrange & Act

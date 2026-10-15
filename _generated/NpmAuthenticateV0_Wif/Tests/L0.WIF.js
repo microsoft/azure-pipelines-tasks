@@ -141,6 +141,21 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         assert_1.default.strictEqual(tr.warningIssues.length, 0);
         TestHelpers_1.TestHelpers.assertNpmrcContains(npmrcPath, TestConstants_1.TestData.wifToken);
     }));
+    it('neutralizes logging commands in registry values from .npmrc', () => __awaiter(this, void 0, void 0, function* () {
+        const marker = '##vso[task.setvariable variable=unexpected;]injected';
+        const registry = `https://pkgs.dev.azure.com/test/#metadata${marker}`;
+        const npmrcPath = TestHelpers_1.TestHelpers.createTempNpmrc(`registry="${registry}"`);
+        const tr = yield TestHelpers_1.TestHelpers.runTestWithEnv({
+            [TestConstants_1.TestEnvVars.npmrcPath]: npmrcPath,
+            [TestConstants_1.TestEnvVars.workloadIdentityServiceConnection]: TestConstants_1.TestData.wifServiceConnection,
+            [TestConstants_1.TestEnvVars.wifToken]: TestConstants_1.TestData.wifToken
+        });
+        TestHelpers_1.TestHelpers.assertSuccess(tr);
+        const outputLines = tr.stdout.split(/\r?\n/);
+        const repositoryOutput = outputLines.find(line => line.includes('Info_AddingFederatedFeedAuth'));
+        (0, assert_1.default)(repositoryOutput, 'Expected the task to display the registry URL');
+        (0, assert_1.default)(!outputLines.some(line => line.startsWith(marker)), 'Logging command must not begin an output line');
+    }));
     it('fails when feedUrl is provided without a service connection', () => __awaiter(this, void 0, void 0, function* () {
         // Arrange: feedUrl is set but workloadIdentityServiceConnection is not
         const npmrcPath = TestHelpers_1.TestHelpers.createTempNpmrc(`registry=${TestConstants_1.TestData.wifRegistryUrl}`);

@@ -46,6 +46,7 @@ const constants = __importStar(require("./constants"));
 const tl = __importStar(require("azure-pipelines-task-lib/task"));
 const path = __importStar(require("path"));
 const npmrcBackupManager_1 = require("./npmrcBackupManager");
+const npmauthutils_1 = require("./npmauthutils");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -69,7 +70,7 @@ function run() {
             }
             const restored = backupManager.restoreBackedUpFile(workingFilePath, trustedIdentity);
             if (restored) {
-                console.log(tl.loc("RevertedChangesToNpmrc", workingFilePath));
+                (0, npmauthutils_1.writeRepositoryOutput)(tl.loc("RevertedChangesToNpmrc", workingFilePath));
             }
             const tempDirectoryPath = tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY");
             if (tl.exist(tempDirectoryPath) && backupManager.isOnlyIndexFileRemaining()) {
@@ -77,7 +78,7 @@ function run() {
             }
         }
         else {
-            console.log(tl.loc("NoIndexJsonFile"));
+            (0, npmauthutils_1.writeRepositoryOutput)(tl.loc("NoIndexJsonFile"));
         }
     });
 }

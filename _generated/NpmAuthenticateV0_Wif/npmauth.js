@@ -110,21 +110,21 @@ function main() {
             // First match wins; subsequent sources are skipped for this registry.
             if (entraWifServiceConnectionName) {
                 const credentials = yield npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName, registryUrlString);
-                console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
-                console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+                npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
                 const npmrcEntry = {
                     url: credentials.feedUrl.href,
                     auth: `${npmauthutils.toNerfDart(credentials.feedUrl.href)}:_authToken=${credentials.accessToken}`
                 };
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, credentials.feedUrl, addedRegistries);
                 federatedFeedAuthSuccessCount++;
-                console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
+                npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
                 continue;
             }
             if (endpointRegistries.length > 0) {
                 const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
                 if (npmrcEntry) {
-                    console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                    npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                     writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                     externalFeedSuccessCount++;
                     continue;
@@ -132,12 +132,12 @@ function main() {
             }
             const npmrcEntry = npmauthutils.tryResolveFromLocalRegistries(registryUrlString, internalFeedCredentials, previouslyAuthenticatedUrls, registryURL.host);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingLocalCredentials"));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 internalFeedSuccessCount++;
                 continue;
             }
-            console.log(tl.loc("IgnoringRegistry", registryURL.host));
+            npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
         }
     });
 }
