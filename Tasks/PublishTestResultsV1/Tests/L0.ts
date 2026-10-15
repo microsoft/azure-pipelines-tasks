@@ -125,63 +125,56 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         done();
     });
 
-    it('Publish test results with resultFiles filter that does not match with any files', function (done: Mocha.Done) {
+    it('Publish test results with resultFiles filter that does not match with any files', async function () {
         const testPath = path.join(__dirname, 'L0FilterDoesNotMatchAnyFile.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-        done();
     });
 
-    it('Publish test results with resultFiles filter that matches with some files', function (done: Mocha.Done) {
+    it('Publish test results with resultFiles filter that matches with some files', async function () {
         const testPath = path.join(__dirname, 'L0FilterMatchesSomeFile.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;resultFiles=/) >= 0, 'should publish test results.');
-        done();
     });
 
-    it('Publish test results with resultFiles as file path', function (done: Mocha.Done) {
+    it('Publish test results with resultFiles as file path', async function () {
         const testPath = path.join(__dirname, 'L0ResultFilesAsFilePath.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stderr.length == 0, 'should not have written to stderr. error: ' + tr.stderr);
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.search(/##vso\[results.publish type=JUnit;resultFiles=/) >= 0, 'should publish test results.');
-        done();
     });
 
-    it('Publish test results when test result files input is not provided', function (done: Mocha.Done) {
+    it('Publish test results when test result files input is not provided', async function () {
         const testPath = path.join(__dirname, 'L0InputIsNotProvided.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdout.length > 0, 'should have written to stderr');
         assert(tr.stdout.indexOf('Input required: testResultsFiles') >= 0, 'wrong error message: "' + tr.stdout + '"');
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-
-        done();
     });
 
-    it('Publish test results when test runner type input is not provided', function (done: Mocha.Done) {
+    it('Publish test results when test runner type input is not provided', async function () {
         const testPath = path.join(__dirname, 'L0TestRunnerTypeIsNotProvided.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.stdout.length > 0, 'should have written to stdout');
         assert(tr.stdout.indexOf('Input required: testRunner') >= 0, 'wrong error message: "' + tr.stdout + '"');
         assert(tr.failed, 'task should have failed');
         assert(tr.invokedToolCount == 0, 'should exit before running PublishTestResults');
-
-        done();
     });
 
 });
