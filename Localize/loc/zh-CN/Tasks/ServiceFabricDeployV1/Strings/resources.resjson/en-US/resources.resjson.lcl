@@ -945,6 +945,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.SFSDK_InvalidManifestPathSegment" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid {0} value '{1}' found in the application package. This value is used as a folder name while building a file path from the application package, so it must be a simple name: it cannot be empty, contain a path separator or a relative path segment, be an absolute path, or end with a trailing '.' or ' ' character that Windows would normalize away.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[在应用程序包中发现无效的 {0} 值“{1}”。从应用程序包构建文件路径时，此值用作文件夹名称，因此它必须是简单名称: 不能为空、不能包含路径分隔符或相对路径段、不能是绝对路径，也不能以 Windows 会规范化移除的尾随 ‌".‌" 或 ‌" ‌" 字符结尾。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.SFSDK_InvalidSFPackage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[{0} is not a valid Service Fabric application package.]]></Val>
