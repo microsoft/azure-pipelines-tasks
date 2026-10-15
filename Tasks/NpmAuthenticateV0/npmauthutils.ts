@@ -82,8 +82,14 @@ export function initializeBackupDirectory(): string {
     if (tl.getVariable('SAVE_NPMRC_PATH')) {
         return tl.getVariable('SAVE_NPMRC_PATH');
     }
-    let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
-    tempPath = path.join(tempPath, 'npmAuthenticate');
+    // Agent.HomeDirectory (the agent's install root) is never bind-mounted into job
+    // containers. Agent.BuildDirectory/Agent.TempDirectory live under the agent's Work
+    // directory, which *is* mounted read/write into job containers by default, so a
+    // lower-trust container process could otherwise tamper with the backup that the
+    // trusted post-job cleanup later restores. Fall back to Agent.TempDirectory only if
+    // Agent.HomeDirectory is unavailable, for compatibility with older agents.
+    let tempPath = tl.getVariable('Agent.HomeDirectory') || tl.getVariable('Agent.TempDirectory');
+    tempPath = path.join(tempPath, 'npmAuthenticateBackup');
     tl.mkdirP(tempPath);
     const backupDirectory = fs.mkdtempSync(tempPath + path.sep);
     tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
