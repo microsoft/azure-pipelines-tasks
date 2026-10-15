@@ -5,6 +5,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import { Writable } from 'stream';
+import * as utils from '../Common/utils';
 
 var isWindows = os.type().match(/^Win/);
 
@@ -181,5 +182,11 @@ export async function executeGoCommand(goPath: string, argument: string): Promis
 export async function executeJestCommand(jestPath: string, argument: string): Promise<number> {
     let jest: tr.ToolRunner = tl.tool(jestPath);
     jest.line(argument);
+    return await jest.exec(<tr.IExecOptions>{ cwd: "" });
+}
+
+export async function executeJestTest(jestPath: string, testName: string, useStructuredArguments: boolean): Promise<number> {
+    let jest: tr.ToolRunner = tl.tool(jestPath);
+    utils.setJestTestRunnerArguments(jest, testName, useStructuredArguments);
     return await jest.exec(<tr.IExecOptions>{ cwd: "" });
 }
