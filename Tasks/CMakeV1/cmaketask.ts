@@ -5,6 +5,7 @@ import { shellSplit } from 'azure-pipelines-tasks-utility-common/shellEscaping';
 
 function neutralizeCmdSubstitution(value: string): string {
     return value
+        .replace(/\\/g, '\\\\')
         .replace(/`/g, '\\`')
         .replace(/\$\(/g, '\\$(');
 }
