@@ -198,6 +198,53 @@ export default class SqlConnectionConfig {
     }
 
     /**
+     * Properties that name or carry an identity. A token supplies the identity on its own, and
+     * SqlPackage rejects a connection string that also tries to authenticate.
+     */
+    private static readonly AuthenticationKeys: ReadonlySet<string> = new Set<string>([
+        'authentication',
+        'user id',
+        'password',
+        'integrated security'
+    ]);
+
+    /**
+     * The connection string with every authentication property removed, for use alongside an
+     * access token.
+     *
+     * Rebuilding the target from server and database alone silently dropped the rest of the
+     * caller's settings, so an explicit `Encrypt=Strict` or a pinned `ServerCertificate` was not
+     * applied to a token-authenticated deployment. SqlPackage has no /Target switch for several of
+     * those properties, so they can only be preserved by passing a connection string.
+     *
+     * The server value is emitted exactly as it was supplied, which keeps a `host,port` endpoint
+     * such as a managed instance on its own port instead of falling back to 1433.
+     */
+    public get ConnectionStringWithoutCredentials(): string {
+        const pairs: string[] = [];
+
+        for (const [key, value] of this._parsedConnectionString) {
+            if (SqlConnectionConfig.AuthenticationKeys.has(key)) {
+                continue;
+            }
+            pairs.push(`${key}=${SqlConnectionConfig._escapeValue(value)}`);
+        }
+
+        return pairs.join(';');
+    }
+
+    /**
+     * Quote a value the way SqlConnectionStringBuilder does, so a value containing a separator or
+     * a quote survives being parsed back out of the connection string.
+     */
+    private static _escapeValue(value: string): string {
+        if (!/[;'"=]|^\s|\s$/.test(value)) {
+            return value;
+        }
+        return `"${value.replace(/"/g, '""')}"`;
+    }
+
+    /**
      * Parse connection string into key-value pairs.
      * Handles quoted values and unquotes them.
      */

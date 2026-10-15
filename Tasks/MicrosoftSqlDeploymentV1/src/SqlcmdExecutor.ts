@@ -330,9 +330,19 @@ export class SqlcmdExecutor {
     /**
      * Returns true when the caller has already specified sqlcmd's error-handling behaviour,
      * so the task should not impose its own default.
+     *
+     * The decision is made on parsed argv elements rather than the raw text, because the raw text
+     * also contains the values of other options. `-v Label="release -b canary"` names -b inside a
+     * variable value and never reaches sqlcmd as a switch, so matching the text suppressed the
+     * task's -b and let a failing script exit 0.
      */
     private static specifiesErrorHandling(additionalArguments?: string): boolean {
-        return /(^|\s)(-b|--exit-on-error)(\s|=|$)/.test(additionalArguments ?? '');
+        if (!additionalArguments) {
+            return false;
+        }
+
+        return this.parseAdditionalArguments(additionalArguments)
+            .some(token => /^(-b|--exit-on-error)(=.*)?$/.test(token));
     }
 
     /**
@@ -364,7 +374,7 @@ export class SqlcmdExecutor {
             } else if (char === quoteChar && inQuotes) {
                 inQuotes = false;
                 quoteChar = '';
-            } else if (char === ' ' && !inQuotes) {
+            } else if (/\s/.test(char) && !inQuotes) {
                 if (current.length > 0 || hasContent) {
                     flush();
                 }

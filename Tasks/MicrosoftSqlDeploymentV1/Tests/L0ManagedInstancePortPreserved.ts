@@ -56,7 +56,7 @@ const a: ma.TaskLibAnswers = {
 };
 
 // Only the port-carrying form is answered: dropping the port leaves the command unmatched.
-(a.exec as any)['/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:mi.public.zone.database.windows.net,3342 /TargetDatabaseName:testdb /AccessToken:sql-access-token'] = {
+(a.exec as any)['/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=mi.public.zone.database.windows.net,3342;database=testdb /AccessToken:sql-access-token'] = {
     code: 0,
     stdout: 'Successfully published database.'
 };

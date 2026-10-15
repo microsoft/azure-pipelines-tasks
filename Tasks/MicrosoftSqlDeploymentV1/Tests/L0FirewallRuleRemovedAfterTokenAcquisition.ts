@@ -104,7 +104,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage', '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
         // The deployment must still receive a SQL-audience token.
-        [`/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:myserver.database.windows.net /TargetDatabaseName:testdb /AccessToken:token-for:${SQL_RESOURCE}`]: {
+        [`/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=myserver.database.windows.net;database=testdb /AccessToken:token-for:${SQL_RESOURCE}`]: {
             code: 0,
             stdout: 'Successfully published database.'
         }

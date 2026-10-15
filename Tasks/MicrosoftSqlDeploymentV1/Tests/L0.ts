@@ -1006,7 +1006,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
         }, tr);
     });
 
-    it('should keep the port on /TargetServerName for a managed instance public endpoint', async () => {
+    it('should keep the port on the token-authenticated target for a managed instance public endpoint', async () => {
         const tp = path.join(__dirname, 'L0ManagedInstancePortPreserved.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -1063,6 +1063,48 @@ describe('MicrosoftSqlDeployment Suite', function () {
         runValidations(() => {
             assert(tr.succeeded,
                 'dropping the pin validates against the machine trust store instead of the certificate the caller named');
+        }, tr);
+    });
+
+    it('should still apply -b when the text appears inside another option value', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdErrorHandlingInQuotedValue.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'go-sqlcmd defaults exit-on-error to false, so suppressing -b here reports a failing script as success');
+        }, tr);
+    });
+
+    it('should split additional arguments written across lines and tabs', async () => {
+        const tp = path.join(__dirname, 'L0SqlcmdMultilineArguments.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'a YAML block scalar is the documented way to pass several options and must not arrive as one argument');
+        }, tr);
+    });
+
+    it('should preserve non-authentication connection properties alongside an access token', async () => {
+        const tp = path.join(__dirname, 'L0SqlPackageTokenPreservesConnectionProperties.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'rebuilding the target from server and database alone drops the requested encryption and certificate pin');
+        }, tr);
+    });
+
+    it('should use the last value when an output path is repeated', async () => {
+        const tp = path.join(__dirname, 'L0SqlProjRepeatedOutputPathLastWins.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        await tr.runAsync();
+        runValidations(() => {
+            assert(tr.succeeded,
+                'MSBuild applies the last value, so reading the first can deploy a stale dacpac from an earlier build');
+            assert(tr.stdout.indexOf('loc_mock_DacpacNotFoundAfterBuild') < 0,
+                'the dacpac must be looked for where the build actually wrote it');
         }, tr);
     });
 
@@ -1249,7 +1291,7 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
     const ARM = 'https://management.azure.com/';
     const SQL = 'https://database.windows.net/';
 
-    function newRealCredential(useMSAL: boolean, scheme: string) {
+    function newRealCredential(useMSAL: boolean, scheme: string, msiClientId: string = '') {
         return new ApplicationTokenCredentials(
             'connected-service',            // connectedServiceName
             'client-id',                    // clientId
@@ -1260,7 +1302,7 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
             ARM,                            // activeDirectoryResourceId
             false,                          // isAzureStackEnvironment
             scheme,                         // scheme
-            '',                             // msiClientId
+            msiClientId,                    // msiClientId
             '',                             // authType
             '',                             // certFilePath
             false,                          // isADFSEnabled
@@ -1285,6 +1327,30 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
 
         assert.strictEqual(clone.activeDirectoryResourceId, SQL, 'ADAL SP and MSAL read this field');
         assert.strictEqual(clone.baseUrl, SQL, 'ADAL managed identity reads baseUrl');
+    });
+
+    // configureMSALWithMSI builds the IMDS request from the resource alone, so on a VM holding
+    // both a system-assigned and a user-assigned identity the MSAL path returns a token for the
+    // wrong principal - and the deployment still reports success.
+    it('should take the ADAL path for a user-assigned managed identity', () => {
+        const real = newRealCredential(true, 'ManagedServiceIdentity', 'user-assigned-client-id');
+        const clone = createSqlScopedCredentials(
+            { scheme: 'ManagedServiceIdentity', applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(clone.useMSAL, false,
+            'only the ADAL path sends client_id, so MSAL would authenticate as the system-assigned identity');
+        assert.strictEqual(clone.msiClientId, 'user-assigned-client-id',
+            'the selected identity must survive the clone, since the ADAL path reads it');
+        assert.strictEqual(real.getUseMSAL(), true, 'the shared ARM credential must keep its own token path');
+    });
+
+    it('should leave the token path alone for a system-assigned managed identity', () => {
+        const real = newRealCredential(true, 'ManagedServiceIdentity');
+        const clone = createSqlScopedCredentials(
+            { scheme: 'ManagedServiceIdentity', applicationTokenCredentials: real }, SQL);
+
+        assert.strictEqual(clone.useMSAL, true,
+            'with no client id both paths resolve the same identity, so the default must not be overridden');
     });
 
     it('should clear every token cache on the clone', () => {

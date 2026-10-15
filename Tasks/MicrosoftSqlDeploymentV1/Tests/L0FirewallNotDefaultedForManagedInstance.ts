@@ -67,7 +67,7 @@ const a: ma.TaskLibAnswers = {
     checkPath: { 'test.dacpac': true, '/usr/local/bin/sqlpackage': true },
     which: { '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage' },
     exec: {
-        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:myinstance.abc123def.database.windows.net /TargetDatabaseName:testdb /AccessToken:access-token': {
+        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=myinstance.abc123def.database.windows.net;database=testdb /AccessToken:access-token': {
             code: 0,
             stdout: 'Successfully published database.'
         }

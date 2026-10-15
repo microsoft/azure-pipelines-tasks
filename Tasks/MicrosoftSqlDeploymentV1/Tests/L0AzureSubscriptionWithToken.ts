@@ -69,7 +69,7 @@ const a: ma.TaskLibAnswers = {
         '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage'
     },
     exec: {
-        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:myserver.database.windows.net /TargetDatabaseName:testdb /AccessToken:fake-sql-access-token': {
+        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=myserver.database.windows.net;database=testdb /AccessToken:fake-sql-access-token': {
             code: 0,
             stdout: 'Successfully published database.'
         }

@@ -65,6 +65,10 @@ export default class SqlProjectBuilder {
      *
      * Detection runs over the same tokens that are passed to dotnet, so a value can never be read
      * differently from the way it is executed.
+     *
+     * Repeated options are resolved the way MSBuild resolves them: the last one wins. Returning the
+     * first match made the task look for the .dacpac in a directory the build had not written to,
+     * and a stale artifact left there by an earlier build would have been deployed instead.
      */
     public static findUserSpecifiedOutputDirectory(projectPath: string, buildArguments?: string): string | undefined {
         if (!buildArguments) {
@@ -72,6 +76,7 @@ export default class SqlProjectBuilder {
         }
 
         const tokens = this.parseArguments(buildArguments);
+        let effectiveOutput: string | undefined;
 
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
@@ -79,24 +84,26 @@ export default class SqlProjectBuilder {
             if (/^(--output|-o)$/i.test(token)) {
                 const value = tokens[i + 1];
                 if (value) {
-                    return path.resolve(process.cwd(), value);
+                    effectiveOutput = path.resolve(process.cwd(), value);
+                    // The value is this option's argument, never an option in its own right.
+                    i++;
                 }
+                continue;
             }
 
             const inlineOutput = /^(?:--output|-o)[:=](.+)$/i.exec(token);
             if (inlineOutput) {
-                return path.resolve(process.cwd(), inlineOutput[1]);
+                effectiveOutput = path.resolve(process.cwd(), inlineOutput[1]);
+                continue;
             }
-        }
 
-        for (const token of tokens) {
             const outputPath = /^(?:-p|--property|\/p):OutputPath=(.+)$/i.exec(token);
             if (outputPath) {
-                return path.resolve(path.dirname(projectPath), outputPath[1]);
+                effectiveOutput = path.resolve(path.dirname(projectPath), outputPath[1]);
             }
         }
 
-        return undefined;
+        return effectiveOutput;
     }
 
     /**
@@ -199,7 +206,7 @@ export default class SqlProjectBuilder {
             } else if (char === quoteChar && inQuotes) {
                 inQuotes = false;
                 quoteChar = '';
-            } else if (char === ' ' && !inQuotes) {
+            } else if (/\s/.test(char) && !inQuotes) {
                 if (current.length > 0 || hasContent) {
                     flush();
                 }

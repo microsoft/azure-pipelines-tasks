@@ -45,6 +45,14 @@ export function getSqlAudienceFromEnvironment(environment: string): string {
  * parameters, several of which are TypeScript-private. Note this relies on those fields
  * being enumerable own properties at runtime - if the library moves to true private fields
  * or a WeakMap, the unit tests covering this function are what will catch it.
+ *
+ * A user-assigned managed identity is additionally pinned to the ADAL path. In
+ * azure-pipelines-tasks-azure-arm-rest@3.277.1, configureMSALWithMSI builds the IMDS request from
+ * the resource alone and never sends client_id, so on a VM carrying both a system-assigned and a
+ * user-assigned identity the MSAL path returns a token for the system-assigned one. The ADAL path
+ * passes msiClientId through to getMSIAuthorizationToken, so it is the only one of the two that
+ * authenticates as the identity the service connection actually names. This pin belongs with the
+ * dependency: if that package starts sending client_id, it should be removed.
  */
 export function createSqlScopedCredentials(azureEndpoint: any, sqlAudience: string): any {
     const armCredentials = azureEndpoint.applicationTokenCredentials;
@@ -57,5 +65,18 @@ export function createSqlScopedCredentials(azureEndpoint: any, sqlAudience: stri
     sqlCredentials.activeDirectoryResourceId = sqlAudience;
     sqlCredentials.baseUrl = sqlAudience;
 
+    if (isUserAssignedManagedIdentity(azureEndpoint, armCredentials)) {
+        sqlCredentials.useMSAL = false;
+    }
+
     return sqlCredentials;
+}
+
+/**
+ * True when the service connection names a specific user-assigned managed identity, which is the
+ * only case where the two token paths resolve to different principals.
+ */
+function isUserAssignedManagedIdentity(azureEndpoint: any, armCredentials: any): boolean {
+    const scheme = (azureEndpoint?.scheme ?? '').toLowerCase();
+    return scheme === 'managedserviceidentity' && !!armCredentials?.msiClientId;
 }

@@ -81,7 +81,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage', '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
         // Only the SQL-audience token matches. An ARM-audience token fails the run.
-        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:myserver.database.windows.net /TargetDatabaseName:testdb /AccessToken:token-for:https://database.windows.net/': {
+        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=myserver.database.windows.net;database=testdb /AccessToken:token-for:https://database.windows.net/': {
             code: 0,
             stdout: 'Successfully published database.'
         }

@@ -115,14 +115,13 @@ export class SqlPackageExecutor {
         const useAccessToken = !!accessToken && tokenBasedAuthTypes.includes(authType);
 
         if (useAccessToken) {
-            // The Server getter returns the host alone, because callers such as ARM lookup and DNS
-            // need it without a port. SqlPackage needs the port back: a managed instance public
-            // endpoint listens on 3342, and dropping it sends the deployment to 1433 instead. The
-            // sqlcmd path rebuilds it the same way.
-            args.push(`/TargetServerName:${connectionConfig.Port
-                ? `${connectionConfig.Server},${connectionConfig.Port}`
-                : connectionConfig.Server}`);
-            args.push(`/TargetDatabaseName:${connectionConfig.Database}`);
+            // The token carries the identity, so the connection string is stripped of its
+            // authentication properties and passed on whole. Naming only the server and the
+            // database here dropped everything else the caller asked for - Encrypt, the pinned
+            // ServerCertificate, HostNameInCertificate, ApplicationIntent and the timeout - and
+            // SqlPackage exposes no /Target switch for several of them. The server value keeps any
+            // explicit port, so a managed instance public endpoint still goes to 3342 and not 1433.
+            args.push(`/TargetConnectionString:${connectionConfig.ConnectionStringWithoutCredentials}`);
             args.push(`/AccessToken:${accessToken}`);
         } else {
             args.push(`/TargetConnectionString:${connectionConfig.ConnectionString}`);
@@ -193,7 +192,7 @@ export class SqlPackageExecutor {
             } else if (char === quoteChar && inQuotes) {
                 inQuotes = false;
                 quoteChar = '';
-            } else if (char === ' ' && !inQuotes) {
+            } else if (/\s/.test(char) && !inQuotes) {
                 if (current.length > 0 || hasContent) {
                     flush();
                 }

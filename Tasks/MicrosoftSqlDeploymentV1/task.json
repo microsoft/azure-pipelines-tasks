@@ -17,10 +17,10 @@
   "version": {
     "Major": 1,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
-  "minimumAgentVersion": "2.144.0",
+  "minimumAgentVersion": "3.230.2",
   "instanceNameFormat": "Microsoft SQL Deployment: $(action)",
   "inputs": [
     {

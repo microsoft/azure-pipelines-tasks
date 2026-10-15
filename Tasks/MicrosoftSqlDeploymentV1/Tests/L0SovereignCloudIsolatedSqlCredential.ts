@@ -66,7 +66,7 @@ const a: ma.TaskLibAnswers = {
     checkPath: { 'test.dacpac': true, '/usr/local/bin/sqlpackage': true },
     which: { '/usr/local/bin/sqlpackage': '/usr/local/bin/sqlpackage' },
     exec: {
-        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetServerName:myserver.database.usgovcloudapi.net /TargetDatabaseName:testdb /AccessToken:fake-usgov-sql-token': {
+        '/usr/local/bin/sqlpackage /Action:Publish /SourceFile:test.dacpac /TargetConnectionString:server=myserver.database.usgovcloudapi.net;database=testdb /AccessToken:fake-usgov-sql-token': {
             code: 0,
             stdout: 'Successfully published database.'
         }
