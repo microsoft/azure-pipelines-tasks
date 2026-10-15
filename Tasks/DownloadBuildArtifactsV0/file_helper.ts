@@ -1,4 +1,4 @@
-import { Stats, statSync as getFile, readdirSync } from 'fs';
+import { Stats, statSync as getFile, readdirSync, realpathSync } from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -69,13 +69,29 @@ const extractedTarsTempDir = 'extracted_tars';
  function extractTars(tarArchivesPaths: string[], destination: string): void {
     const extractedTarsPath: string = path.join(tl.getVariable('Agent.TempDirectory'), extractedTarsTempDir);
 
+    const validateSymlinks: boolean = tl.getPipelineFeature('EnableTarSymlinkValidation');
+
     tarArchivesPaths.forEach((tarArchivePath: string) => {
         const tarArchiveFileName: string = path.basename(tarArchivePath);
         const artifactName: string = tarArchiveFileName.slice(0, tarArchiveFileName.length - '.tar'.length);
 
         const extractedFilesDir: string = path.join(extractedTarsPath, artifactName);
+        // Names like '...tar' or '.tar' resolve to the temp folder or the staging root; cleanup must stay below the staging root
+        const relativeDir: string = path.relative(extractedTarsPath, extractedFilesDir);
+        if (validateSymlinks && (relativeDir === '' || relativeDir === '..' || relativeDir.startsWith('..' + path.sep))) {
+            throw new Error(`Invalid TAR archive name: ${tarArchiveFileName}`);
+        }
 
         extractTar(tarArchivePath, extractedFilesDir);
+        if (validateSymlinks) {
+            try {
+                validateSymbolicLinks(extractedFilesDir, extractedFilesDir);
+            } catch (err) {
+                tl.rmRF(extractedFilesDir);
+                tl.rmRF(tarArchivePath);
+                throw err;
+            }
+        }
 
         // Remove tar archive after extracting
         tl.rmRF(tarArchivePath);
@@ -83,6 +99,36 @@ const extractedTarsTempDir = 'extracted_tars';
 
     // Copy extracted files to the download directory
     tl.cp(`${extractedTarsPath}/.`, destination, '-r');
+}
+
+/** Returns true if `target` is `directory` itself or under it. Expects real paths. */
+function isInsideDirectory(directory: string, target: string): boolean {
+    const dirWithSeparator: string = directory.endsWith(path.sep) ? directory : directory + path.sep;
+    return target === directory || target.startsWith(dirWithSeparator);
+}
+
+/** Throws if any symbolic link under `currentDir` resolves outside `extractedRoot`. */
+export function validateSymbolicLinks(currentDir: string, extractedRoot: string): void {
+    const realRoot: string = realpathSync(extractedRoot);
+
+    readdirSync(currentDir, { withFileTypes: true }).forEach((entry) => {
+        const itemPath: string = path.join(currentDir, entry.name);
+
+        if (entry.isSymbolicLink()) {
+            let realTarget: string;
+            try {
+                realTarget = realpathSync(itemPath);
+            } catch {
+                throw new Error(`TAR archive contains a symbolic link that cannot be resolved: ${itemPath}`);
+            }
+
+            if (!isInsideDirectory(realRoot, realTarget)) {
+                throw new Error(`TAR archive contains a symbolic link pointing outside of the artifact folder: ${itemPath} -> ${realTarget}`);
+            }
+        } else if (entry.isDirectory()) {
+            validateSymbolicLinks(itemPath, extractedRoot);
+        }
+    });
 }
 
 /**
