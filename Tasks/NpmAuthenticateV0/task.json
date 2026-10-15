@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 282,
     "Patch": 2
   },
   "runsOn": [
@@ -70,10 +70,25 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SAVE_NPMRC_PATH",
+        "NPM_AUTHENTICATE_TEMP_DIRECTORY",
+        "EXISTING_ENDPOINTS"
+      ]
+    }
+  },
   "messages": {
     "FoundBuildCredentials": "Found build credentials",
     "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
+    "NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+    "NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+    "UnableToWriteFileContents": "Unable to write the contents of %s.",
     "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
     "SavingFile": "Saving file %s",
     "RestoringFile": "Restoring file %s",

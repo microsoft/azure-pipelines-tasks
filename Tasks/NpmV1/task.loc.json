@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 280,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -185,6 +185,14 @@
     "Node24": {
       "target": "npm.js",
       "argumentFormat": ""
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
     }
   },
   "messages": {

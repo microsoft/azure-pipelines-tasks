@@ -1,11 +1,14 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
+import { URL } from 'url';
+
 /**
  * Known Azure Artifacts / Azure DevOps domain patterns.
  * Requires 'pkgs' subdomain — e.g. pkgs.dev.azure.com or {org}.pkgs.visualstudio.com.
  */
 const AZURE_ARTIFACTS_DOMAINS = '(?:[\\w.-]+\\.)*pkgs\\.(?:dev\\.azure\\.com|visualstudio\\.com|vsts\\.me|codedev\\.ms|devppe\\.azure\\.com|codeapp\\.ms)';
+const AZURE_ARTIFACTS_HOST_PATTERN = new RegExp(`^${AZURE_ARTIFACTS_DOMAINS}$`, 'i');
 
 /**
  * Regex matching Azure Artifacts feed URLs across all known domains.
@@ -16,10 +19,16 @@ export const AZURE_ARTIFACTS_URL_PATTERN = new RegExp(
     `https?:\\/\\/${AZURE_ARTIFACTS_DOMAINS}\\/[^\\s'")<>]+`, 'gi');
 
 /**
- * Returns true when the URL belongs to a known Azure Artifacts domain.
+ * Returns true when the value is an absolute HTTPS URL on a known Azure Artifacts domain.
  */
-export function isAzureArtifactsUrl(url: string): boolean {
-    return url.match(AZURE_ARTIFACTS_URL_PATTERN) !== null;
+export function isValidAzureArtifactsUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'https:'
+            && AZURE_ARTIFACTS_HOST_PATTERN.test(parsed.hostname);
+    } catch {
+        return false;
+    }
 }
 
 /**

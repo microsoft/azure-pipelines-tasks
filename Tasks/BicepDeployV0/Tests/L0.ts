@@ -1,7 +1,10 @@
 import assert = require("assert");
+import os = require("os");
 import path = require("path");
 import * as cp from "child_process";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
+import tl = require("azure-pipelines-task-lib/task");
+import { TaskLogger } from "../logging";
 import { runConfigDirIsolationTests } from "./L0ConfigDirIsolation";
 
 // Uncomment to improve traces while testing
@@ -61,6 +64,95 @@ describe("run error handling tests", function() {
   });
 });
 
+describe("TaskLogger external output", function() {
+  const sources = ["remote", "repository", "childProcess"] as const;
+  const levels = ["info", "debug", "warning", "error"] as const;
+
+  for (const source of sources) {
+    for (const level of levels) {
+      it(`maps ${source} ${level} output to the task-lib filter`, function() {
+        const calls: Array<{ level: string, message: string | Buffer, options: tl.ExternalOutputOptions }> = [];
+        const originalWriteExternalOutput = tl.writeExternalOutput;
+        const originalDebugExternalOutput = tl.debugExternalOutput;
+        const originalWarningExternalOutput = tl.warningExternalOutput;
+        const originalErrorExternalOutput = tl.errorExternalOutput;
+
+        tl.writeExternalOutput = (message, options): void => {
+          calls.push({ level: "info", message, options });
+        };
+        tl.debugExternalOutput = (message, options): void => {
+          calls.push({ level: "debug", message, options });
+        };
+        tl.warningExternalOutput = (message, options): void => {
+          calls.push({ level: "warning", message, options });
+        };
+        tl.errorExternalOutput = (message, options): void => {
+          calls.push({ level: "error", message, options });
+        };
+
+        try {
+          new TaskLogger().logExternalOutput("external output", { source, level });
+
+          assert.deepStrictEqual(calls, [{
+            level,
+            message: level === "info" ? `external output${os.EOL}` : "external output",
+            options: { source }
+          }]);
+        } finally {
+          tl.writeExternalOutput = originalWriteExternalOutput;
+          tl.debugExternalOutput = originalDebugExternalOutput;
+          tl.warningExternalOutput = originalWarningExternalOutput;
+          tl.errorExternalOutput = originalErrorExternalOutput;
+        }
+      });
+    }
+  }
+
+  for (const level of levels) {
+    it(`neutralizes executable commands in ${level} output`, function() {
+      const command = "##vso[task.setvariable variable=externalValue]unsafe";
+      const originalWrite = process.stdout.write;
+      let output = "";
+      process.stdout.write = ((chunk: Uint8Array | string): boolean => {
+        output += chunk.toString();
+        return true;
+      }) as typeof process.stdout.write;
+
+      try {
+        new TaskLogger().logExternalOutput(
+          `\x1b[34mbefore\n${command}\nafter\x1b[0m`,
+          { source: "remote", level }
+        );
+      } finally {
+        process.stdout.write = originalWrite;
+      }
+
+      assert(output.includes("##_vso[task.setvariable variable=externalValue]unsafe"));
+      assert(!output.includes(command));
+    });
+  }
+
+  it("preserves multiline ANSI info output with one final record boundary", function() {
+    const originalWriteExternalOutput = tl.writeExternalOutput;
+    let actualMessage: string | Buffer;
+    let actualOptions: tl.ExternalOutputOptions;
+    tl.writeExternalOutput = (message, options): void => {
+      actualMessage = message;
+      actualOptions = options;
+    };
+
+    try {
+      const message = "\x1b[34mfirst line\nsecond line\x1b[0m";
+      new TaskLogger().logExternalOutput(message, { source: "remote", level: "info" });
+
+      assert.strictEqual(actualMessage, `${message}${os.EOL}`);
+      assert.deepStrictEqual(actualOptions, { source: "remote" });
+    } finally {
+      tl.writeExternalOutput = originalWriteExternalOutput;
+    }
+  });
+});
+
 describe("deployments tests", function() {
   // Bicep is mocked - no real installation needed
   this.timeout(30000);
@@ -113,6 +205,32 @@ describe("deployments tests", function() {
     await tr.runAsync();
 
     assertSucceeded(tr, this.test!.title);
+    assert(
+      tr.stdOutContained("##_vso[task.setvariable variable=externalValue]desired"),
+      "desired What-If value should be neutralized"
+    );
+    assert(
+      !tr.stdOutContained("##vso[task.setvariable variable=externalValue]desired"),
+      "desired What-If value should not contain an executable command"
+    );
+  });
+
+  it("filters existing removed values from what-if output", async function() {
+    let tp: string = path.join(__dirname, "deploymentsWhatIfExistingValue.js");
+
+    let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+    await tr.runAsync();
+
+    assertSucceeded(tr, this.test!.title);
+    assert(
+      tr.stdOutContained("##_vso[task.setvariable variable=externalValue]existing"),
+      "existing What-If value should be neutralized"
+    );
+    assert(
+      !tr.stdOutContained("##vso[task.setvariable variable=externalValue]existing"),
+      "existing What-If value should not contain an executable command"
+    );
   });
 
   it("handles inline yaml parameters", async function() {

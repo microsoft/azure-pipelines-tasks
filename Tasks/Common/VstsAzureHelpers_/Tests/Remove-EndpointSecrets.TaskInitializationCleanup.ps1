@@ -4,6 +4,9 @@ param()
 . $PSScriptRoot\..\..\..\..\Tests\lib\Initialize-Test.ps1
 
 $repositoryRoot = Resolve-Path "$PSScriptRoot\..\..\..\.."
+if ((Split-Path $repositoryRoot -Leaf) -eq "_build") {
+    $repositoryRoot = Resolve-Path "$repositoryRoot\.."
+}
 $taskScripts = @(
     "Tasks\AzureFileCopyV1\AzureFileCopy.ps1",
     "Tasks\AzureFileCopyV2\AzureFileCopy.ps1",

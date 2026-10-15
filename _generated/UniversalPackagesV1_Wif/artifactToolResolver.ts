@@ -7,12 +7,19 @@ import { getSystemAccessToken, validateServerType } from "./universalPackageHelp
 const VARIABLE_NAME = "UPACK_ARTIFACTTOOL_PATH";
 
 /**
- * Resolves the artifact tool path, checking the job variable first
+ * Resolves the artifact tool path, checking the task variable first
  * and downloading from the blob store if not already available.
- * Sets the job variable so subsequent task instances can reuse it.
+ * Sets the task variable so subsequent task instances can reuse it.
+ *
+ * A task variable (as opposed to a regular job variable) is used here because it is
+ * never exported to process.env under its plain name and cannot be set by queue-time
+ * parameters or other pipeline steps. This prevents a caller-controlled job variable
+ * (including one whose dotted name collides with this name after the agent's
+ * dot-to-underscore canonicalization) from being trusted as the path to this
+ * executable.
  */
 export async function getArtifactToolPath(): Promise<string> {
-    const cachedPath = tl.getVariable(VARIABLE_NAME);
+    const cachedPath = tl.getTaskVariable(VARIABLE_NAME);
     if (cachedPath) {
         tl.debug(tl.loc("Info_ArtifactToolPathResolvedFromCache"));
         return cachedPath;
@@ -42,6 +49,6 @@ export async function getArtifactToolPath(): Promise<string> {
             "artifacttool"), 3, 1000);
 
     tl.debug(tl.loc("Debug_ArtifactToolPath", artifactToolPath));
-    tl.setVariable(VARIABLE_NAME, artifactToolPath);
+    tl.setTaskVariable(VARIABLE_NAME, artifactToolPath);
     return artifactToolPath;
 }

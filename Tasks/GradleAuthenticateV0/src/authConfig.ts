@@ -5,7 +5,8 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as https from 'https';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { normalizeUrl } from './urlUtils';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
+import { normalizeUrl } from './utils/urlUtils';
 
 const RESOURCE_TENANT_HEADER = 'x-vss-resourcetenant';
 
@@ -43,7 +44,7 @@ export function writeAuthConfig(configPath: string, newEntries: FeedAuthEntry[])
             const content = fs.readFileSync(configPath, 'utf-8');
             existing = JSON.parse(content) as AuthConfigFile;
         } catch {
-            tl.warning(tl.loc('Warning_CorruptAuthConfig', configPath));
+            tl.warning(tl.loc('Warning_CorruptAuthConfig'), IssueSource.TaskInternal);
         }
     }
 
@@ -107,9 +108,9 @@ export async function buildAuthEntries(
         const feedTenantId = tenantIds[i];
 
         if (feedTenantId) {
-            console.log(tl.loc('Info_FeedResourceTenant', feed.url, feedTenantId));
+            tl.debug(tl.loc('Info_FeedResourceTenant'));
         } else {
-            tl.warning(tl.loc('Warning_CouldNotDetermineResourceTenant', feed.url));
+            tl.warning(tl.loc('Warning_CouldNotDetermineResourceTenant'), IssueSource.TaskInternal);
         }
 
         entries.push(buildWifEntry(feed.url, adoServiceConnection, feedTenantId));
@@ -121,7 +122,7 @@ export async function buildAuthEntries(
 function buildWifEntry(feedUrl: string, serviceConnection: string, feedTenantId: string | null): FeedAuthEntry {
     const oidcRequestUri = tl.getVariable('System.OidcRequestUri');
     if (!oidcRequestUri) {
-        tl.warning(tl.loc('Warning_MissingSystemVariable', 'System.OidcRequestUri'));
+        tl.warning(tl.loc('Warning_MissingSystemVariable', 'System.OidcRequestUri'), IssueSource.TaskInternal);
     }
 
     const oidcEndpoint = oidcRequestUri
@@ -133,13 +134,13 @@ function buildWifEntry(feedUrl: string, serviceConnection: string, feedTenantId:
     try {
         clientId = tl.getEndpointAuthorizationParameter(serviceConnection, 'serviceprincipalid', false) || '';
     } catch {
-        tl.warning(tl.loc('Warning_MissingSystemVariable', 'serviceprincipalid'));
+        tl.warning(tl.loc('Warning_MissingSystemVariable', 'serviceprincipalid'), IssueSource.TaskInternal);
     }
     if (!tenantId) {
         try {
             tenantId = tl.getEndpointAuthorizationParameter(serviceConnection, 'tenantid', false) || '';
         } catch {
-            tl.warning(tl.loc('Warning_MissingSystemVariable', 'tenantid'));
+            tl.warning(tl.loc('Warning_MissingSystemVariable', 'tenantid'), IssueSource.TaskInternal);
         }
     }
 

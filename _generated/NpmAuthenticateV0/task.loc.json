@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 282,
     "Patch": 2
   },
   "runsOn": [
@@ -70,10 +70,25 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "SAVE_NPMRC_PATH",
+        "NPM_AUTHENTICATE_TEMP_DIRECTORY",
+        "EXISTING_ENDPOINTS"
+      ]
+    }
+  },
   "messages": {
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
+    "NpmrcMustBeRegularFile": "ms-resource:loc.messages.NpmrcMustBeRegularFile",
+    "NpmrcChangedSinceBackup": "ms-resource:loc.messages.NpmrcChangedSinceBackup",
+    "UnableToWriteFileContents": "ms-resource:loc.messages.UnableToWriteFileContents",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
     "RestoringFile": "ms-resource:loc.messages.RestoringFile",
@@ -105,7 +120,7 @@
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.280.2",
-    "wif_242": "0.280.3"
+    "Default": "0.282.2",
+    "wif_242": "0.282.3"
   }
 }
