@@ -3,10 +3,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as httpClient from 'typed-rest-client/HttpClient';
-import {
-    getValidatedNpmPackageSpec,
-    setNpmArguments,
-} from './npmarguments';
+import { getValidatedNpmPackageSpec } from './npmarguments';
 
 import { NpmToolRunner } from './npmtoolrunner';
 
@@ -44,8 +41,9 @@ export async function run(): Promise<void> {
         }
 
         let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
+        let packageSpec: string | undefined;
         if (isArgumentIsolationFixEnabled) {
-            getValidatedNpmPackageSpec(packageName, packageVersion);
+            packageSpec = getValidatedNpmPackageSpec(packageName, packageVersion);
         }
 
         const url = "https://npm.pkg.github.com/" + owner;
@@ -58,13 +56,12 @@ export async function run(): Promise<void> {
 
         const packageDownloadPath = getProjectPath(packageNameInput);
         const npm = new NpmToolRunner(path.dirname(npmrc), npmrc, false);
-        setNpmArguments(
-            npm,
-            packageDownloadPath,
-            packageName,
-            packageVersion,
-            isArgumentIsolationFixEnabled
-        );
+        if (packageSpec !== undefined) {
+            npm.arg(['install', '--prefix', packageDownloadPath, packageSpec]);
+        } else {
+            const legacyPackageSpec = `@${packageName}${packageVersion ? `@${packageVersion}` : ''}`;
+            npm.line(`install --prefix ${packageDownloadPath} ${legacyPackageSpec}`);
+        }
 
         npm.execSync();
     } catch (err) {

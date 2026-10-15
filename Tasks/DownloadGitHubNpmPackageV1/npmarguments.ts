@@ -1,9 +1,5 @@
 import semver = require('semver');
-
-interface NpmArgumentWriter {
-    arg(argument: string): void;
-    line(command: string): void;
-}
+import * as tl from 'azure-pipelines-task-lib/task';
 
 const scopedPackageNamePattern = /^@([^/]+)\/([^/]+)$/;
 const disallowedNewPackageNameCharacters = /[~'!()*]/;
@@ -14,11 +10,11 @@ export function getValidatedNpmPackageSpec(packageName: string, packageVersion: 
     const expectedName = `@${packageName}`;
 
     if (!isValidScopedPackageName(expectedName)) {
-        throw new Error('Package name must be a valid scoped npm package name.');
+        throw new Error(tl.loc('Error_InvalidNpmPackageName'));
     }
 
     if (!isRegistryVersionRangeOrTag(packageVersion)) {
-        throw new Error('Package version must be a registry version, range, or tag.');
+        throw new Error(tl.loc('Error_InvalidNpmPackageVersion'));
     }
 
     return `${expectedName}@${packageVersion}`;
@@ -59,30 +55,4 @@ function isRegistryVersionRangeOrTag(packageVersion: string): boolean {
     }
 
     return !packageVersion.startsWith('.') && registryTagPattern.test(packageVersion);
-}
-
-export function getNpmArguments(
-    packageDownloadPath: string,
-    packageName: string,
-    packageVersion: string
-): string[] {
-    const packageSpec = getValidatedNpmPackageSpec(packageName, packageVersion);
-    return ['install', '--prefix', packageDownloadPath, packageSpec];
-}
-
-export function setNpmArguments(
-    npm: NpmArgumentWriter,
-    packageDownloadPath: string,
-    packageName: string,
-    packageVersion: string,
-    isArgumentIsolationFixEnabled: boolean
-): void {
-    if (isArgumentIsolationFixEnabled) {
-        for (const argument of getNpmArguments(packageDownloadPath, packageName, packageVersion)) {
-            npm.arg(argument);
-        }
-    } else {
-        const packageSpec = `@${packageName}${packageVersion ? `@${packageVersion}` : ''}`;
-        npm.line(`install --prefix ${packageDownloadPath} ${packageSpec}`);
-    }
 }
