@@ -137,7 +137,12 @@ tr.registerMock('fs', {
     ReadStream: fs.ReadStream,
     WriteStream: fs.WriteStream,
     openSync: function (fd, options) {
-        return true;
+        return 1;
+    },
+    readSync: function (fd, buffer) {
+        const contents = Buffer.from('<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"><appSettings xdt:Transform="SetAttributes" /></configuration>');
+        contents.copy(buffer);
+        return contents.length;
     },
     closeSync: function (fd) {
         return true;

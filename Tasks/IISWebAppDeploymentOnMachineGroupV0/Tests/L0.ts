@@ -6,13 +6,23 @@ var ltx = require('ltx');
 import fs = require('fs');
 var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-common/fileencoding.js");
 
+const secureMsDeployFeature = 'DISTRIBUTEDTASK_TASKS_SECUREMSDEPLOYCOMMANDEXECUTION';
+let originalSecureMsDeployFeature: string | undefined;
+
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function () {
     var taskSrcPath = path.join(__dirname, '..', 'deployiiswebapp.js');
     this.timeout(60000);
     before((done) => {
+        originalSecureMsDeployFeature = process.env[secureMsDeployFeature];
+        process.env[secureMsDeployFeature] = 'false';
         done();
     });
     after(function () {
+        if (originalSecureMsDeployFeature === undefined) {
+            delete process.env[secureMsDeployFeature];
+        } else {
+            process.env[secureMsDeployFeature] = originalSecureMsDeployFeature;
+        }
     });
 
     if (!tl.osType().match(/^Win/)) {

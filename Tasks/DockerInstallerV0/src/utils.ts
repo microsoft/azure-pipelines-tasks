@@ -6,8 +6,8 @@ import fs = require('fs');
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import * as os from "os";
 import * as util from "util";
+import { v4 as uuidV4 } from 'uuid';
 
-const uuidV4 = require('uuid/v4');
 const dockerToolName = "docker";
 const isWindows = os.type().match(/^Win/);
 const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
