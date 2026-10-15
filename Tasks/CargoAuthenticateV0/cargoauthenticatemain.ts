@@ -87,29 +87,23 @@ async function main(): Promise<void> {
             const selectedRegistriesInfo = registriesInfo.filter(registry => registryNames.includes(registry.name));
             for (let registryInfo of selectedRegistriesInfo)
             {
-                if (isValidRegistry(registryInfo.url, collectionHosts))
-                {
-                    const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
-                        entraWifServiceConnectionName,
-                        registryInfo.urlString,
-                        ProtocolType.Cargo);
-                    if (!credentials) {
-                        throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-                    }
-
-                    if (tl.getVariable(registryInfo.tokenName)) {
-                        tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
-                    }
-
-                    setSecretEnvVariable(
-                        registryInfo.tokenName,
-                        `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${credentials.accessToken}`))}`);
-                    tl.setVariable(registryInfo.credProviderName, "cargo:token");
-                    federatedAuthCount++;
+                const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                    entraWifServiceConnectionName,
+                    registryInfo.urlString,
+                    ProtocolType.Cargo);
+                if (!credentials) {
+                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
                 }
-                else {
-                    warnRegistrySkipped(registryInfo);
+
+                if (tl.getVariable(registryInfo.tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
                 }
+
+                setSecretEnvVariable(
+                    registryInfo.tokenName,
+                    `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${credentials.accessToken}`))}`);
+                tl.setVariable(registryInfo.credProviderName, "cargo:token");
+                federatedAuthCount++;
             }
 
             return;

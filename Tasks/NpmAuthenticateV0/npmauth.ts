@@ -80,15 +80,15 @@ async function main(): Promise<void> {
                 entraWifServiceConnectionName,
                 registryUrlString);
 
-            console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
-            console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = {
                 url: credentials.feedUrl.href,
                 auth: `${npmauthutils.toNerfDart(credentials.feedUrl.href)}:_authToken=${credentials.accessToken}`
             };
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, credentials.feedUrl, addedRegistries);
             federatedFeedAuthSuccessCount++;
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;
         }
 #endif
@@ -96,7 +96,7 @@ async function main(): Promise<void> {
         if (endpointRegistries.length > 0) {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
                 continue;
@@ -110,13 +110,13 @@ async function main(): Promise<void> {
             registryURL.host
         );
         if (npmrcEntry) {
-            console.log(tl.loc("AddingLocalCredentials"));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
             internalFeedSuccessCount++;
             continue;
         }
 
-        console.log(tl.loc("IgnoringRegistry", registryURL.host));
+        npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
     }
 }
 

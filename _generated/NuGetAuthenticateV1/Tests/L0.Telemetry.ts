@@ -131,22 +131,6 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track isFeedUrlIncluded as false');
         });
 
-        it('tracks isFeedUrlValid=true when feedUrl is valid', async () => {
-            // Arrange
-            const tp = path.join(__dirname, 'TestSetup.js');
-            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            TestHelpers.setupWifAuth(testConstants.TestData.validFeedUrls.devAzure);
-            
-            // Act
-            await tr.runAsync();
-            
-            // Assert
-            assert(tr.succeeded, 'Task should succeed');
-            assert(tr.stdout.indexOf('"isFeedUrlValid":true') > 0 ||
-                   tr.stdout.indexOf('"isFeedUrlValid": true') > 0,
-                'Should track isFeedUrlValid as true');
-        });
-
 
         it('tracks isEntraWifServiceConnectionNameIncluded=true when WIF connection provided', async () => {
             // Arrange

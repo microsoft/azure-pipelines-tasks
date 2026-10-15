@@ -1,8 +1,5 @@
 import * as tl from "azure-pipelines-task-lib";
 import * as telemetry from "azure-pipelines-tasks-utility-common/telemetry";
-#if WIF
-import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
-#endif
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { getWebApiWithProxy, requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
 import { getAreaIdForProtocol, ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
@@ -55,40 +52,8 @@ function tryGetSystemAccessToken(context: UniversalPackageContext): boolean {
     return !!context.accessToken;
 }
 
-#if WIF
-async function tryGetWifToken(context: UniversalPackageContext): Promise<boolean> {
-    tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
-
-    try {
-        if (!context.feedUrl) {
-            throw new Error(tl.loc('Error_FeedUrlRequired'));
-        }
-        const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
-            context.adoServiceConnection,
-            context.feedUrl
-        );
-        if (credentials) {
-            context.accessToken = credentials.accessToken;
-            context.serviceUri = credentials.feedUrl.href;
-            tl.debug(tl.loc('Debug_WifTokenObtained'));
-            return true;
-        } else {
-            tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
-            return false;
-        }
-    } catch (err) {
-        tl.warning(tl.loc('Warning_WifAuthFailed', context.adoServiceConnection, err));
-        return false;
-    }
-}
-#endif
 
 async function trySetAccessToken(context: UniversalPackageContext): Promise<boolean> {
-#if WIF
-    if (context.adoServiceConnection) {
-        return await tryGetWifToken(context);
-    }
-#endif
     return tryGetSystemAccessToken(context);
 }
 

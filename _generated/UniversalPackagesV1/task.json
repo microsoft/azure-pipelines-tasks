@@ -188,5 +188,9 @@
     "Warning_ServiceConnectionIdentityHint": "Operation was attempted using service connection '%s' with identity: %s (%s).",
     "Warning_WifAuthFailed": "WIF authentication failed for service connection '%s': %s",
     "Warning_WifAuthNoToken": "WIF authentication returned no token for service connection '%s'"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.280.0",
+    "wif_242": "1.280.1"
   }
 }

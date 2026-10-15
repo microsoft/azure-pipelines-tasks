@@ -57,7 +57,7 @@ async function main(): Promise<void> {
         if (endpointRegistries.length > 0) {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
                 continue;
@@ -71,13 +71,13 @@ async function main(): Promise<void> {
             registryURL.host
         );
         if (npmrcEntry) {
-            console.log(tl.loc("AddingLocalCredentials"));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
             internalFeedSuccessCount++;
             continue;
         }
 
-        console.log(tl.loc("IgnoringRegistry", registryURL.host));
+        npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
     }
 }
 

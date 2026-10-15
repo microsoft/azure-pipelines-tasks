@@ -148,6 +148,7 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track isFeedUrlIncluded as false');
         });
 
+#if WIF
         it('tracks isFeedUrlValid=true when feedUrl is valid', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
@@ -164,7 +165,6 @@ describe('NuGetAuthenticate L0 Suite - Telemetry and Logging', function () {
                 'Should track isFeedUrlValid as true');
         });
 
-#if WIF
         it('tracks isFeedUrlValid=false when feedUrl is invalid', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');

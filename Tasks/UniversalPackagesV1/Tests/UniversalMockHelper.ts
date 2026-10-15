@@ -223,12 +223,12 @@ export class UniversalMockHelper {
         const wifMock = {
             getFederatedWorkloadIdentityCredentialsForFeed: async (
                 serviceConnectionName: string,
-                feedUrl: URL
+                feedUrl: string
             ) => {
                 if (this.config.wifAuthBehavior === 'success') {
                     return {
                         accessToken: TEST_CONSTANTS.WIF_TOKEN,
-                        feedUrl
+                        feedUrl: new URL(feedUrl)
                     };
                 } else if (this.config.wifAuthBehavior === 'returns-null') {
                     return null;

@@ -188,5 +188,9 @@
     "Warning_ServiceConnectionIdentityHint": "ms-resource:loc.messages.Warning_ServiceConnectionIdentityHint",
     "Warning_WifAuthFailed": "ms-resource:loc.messages.Warning_WifAuthFailed",
     "Warning_WifAuthNoToken": "ms-resource:loc.messages.Warning_WifAuthNoToken"
+  },
+  "_buildConfigMapping": {
+    "Default": "1.280.0",
+    "wif_242": "1.280.1"
   }
 }
