@@ -165,8 +165,10 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
         '%NPM_PACKAGE_VERSION%',
         '',
         ' ',
-        ' 1.0.0',
-        '1.0.0 '
+        '1.2.3-payload.tgz\n0',
+        '1.0.0\n--registry x',
+        '1.0.0\u00e9',
+        '1.0.0\0'
     ];
 
     for (const version of invalidVersions) {
@@ -177,6 +179,10 @@ describe('DownloadGitHubNpmPackageV1 arguments', function () {
             );
         });
     }
+
+    it('trims surrounding whitespace and newlines from the version', function () {
+        assert.strictEqual(getValidatedNpmPackageSpec(packageName, ' 1.0.0 \r\n'), '@contoso/shared-library@1.0.0');
+    });
 
     it('rejects an invalid scoped package name', function () {
         const optionLookingPackageName = 'contoso/shared-library --registry https://example.invalid/';

@@ -4,6 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 const scopedPackageNamePattern = /^@([^/]+)\/([^/]+)$/;
 const disallowedNewPackageNameCharacters = /[~'!()*]/;
 const archivePackageSpecPattern = /[.](?:tgz|tar.gz|tar)$/i;
+const printableAsciiPattern = /^[\x20-\x7E]+$/;
 const registryTagPattern = /^[A-Za-z0-9._-]+$/;
 
 export function getValidatedNpmPackageSpec(packageName: string, packageVersion: string): string {
@@ -13,11 +14,12 @@ export function getValidatedNpmPackageSpec(packageName: string, packageVersion: 
         throw new Error(tl.loc('Error_InvalidNpmPackageName'));
     }
 
-    if (!isRegistryVersionRangeOrTag(packageVersion)) {
+    const trimmedVersion = packageVersion.trim();
+    if (!isRegistryVersionRangeOrTag(trimmedVersion)) {
         throw new Error(tl.loc('Error_InvalidNpmPackageVersion'));
     }
 
-    return `${expectedName}@${packageVersion}`;
+    return `${expectedName}@${trimmedVersion}`;
 }
 
 function isValidScopedPackageName(packageName: string): boolean {
@@ -42,7 +44,7 @@ function isValidScopedPackageName(packageName: string): boolean {
 }
 
 function isRegistryVersionRangeOrTag(packageVersion: string): boolean {
-    if (packageVersion === '' || packageVersion.trim() !== packageVersion) {
+    if (!printableAsciiPattern.test(packageVersion)) {
         return false;
     }
 
