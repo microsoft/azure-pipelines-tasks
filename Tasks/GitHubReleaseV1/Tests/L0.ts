@@ -2,8 +2,16 @@ import * as path from 'path';
 import * as assert from 'assert';
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as stream from 'stream';
+import * as fs from 'fs';
+import * as os from 'os';
+import { spawnSync } from 'child_process';
 
 import { TestString } from './TestStrings';
+import { Utility } from '../operations/Utility';
+import { Action } from '../operations/Action';
+import { Release } from '../operations/Release';
 
 describe('GitHubReleaseTaskTests Suite', function() {
     this.timeout(60000);
@@ -143,5 +151,146 @@ describe('GitHubReleaseTaskTests Suite', function() {
             assert(tr.stdout.search(TestString.deleteReleaseSuccessKeyword) >= 0, 'should have printed: ' + TestString.deleteReleaseSuccessKeyword);
             done();
         });
+    });
+});
+
+describe('GitHubRelease repository output filtering', function() {
+    const featureVariable = 'DISTRIBUTEDTASK_TASKS_GITHUBRELEASEENABLEVSOCOMMANDBLOCKING';
+    const asset = 'release-assets/prefix\n##vso[task.setvariable variable=PATH]/untrusted/bin\n##vso[task.complete result=Succeeded;done=true;]/asset.bin';
+    let output: string;
+    let telemetry: string;
+    let originalFeature: string;
+    let originalWriter: typeof tl.writeExternalOutput;
+    let originalGetAssets: typeof Utility.getUploadAssets;
+    let originalIsFile: typeof Utility.isFile;
+    let originalValidateAssets: typeof Utility.validateUploadAssets;
+    let originalUpload: typeof Release.prototype.uploadReleaseAsset;
+
+    beforeEach(() => {
+        output = '';
+        telemetry = '';
+        originalFeature = process.env[featureVariable];
+        originalWriter = tl.writeExternalOutput;
+        originalGetAssets = Utility.getUploadAssets;
+        originalIsFile = Utility.isFile;
+        originalValidateAssets = Utility.validateUploadAssets;
+        originalUpload = Release.prototype.uploadReleaseAsset;
+        const destination = new stream.Writable({
+            write(chunk, encoding, callback) {
+                output += chunk.toString();
+                callback();
+            }
+        });
+        tl.setStdStream(new stream.Writable({
+            write(chunk, encoding, callback) {
+                telemetry += chunk.toString();
+                callback();
+            }
+        }));
+        Object.assign(tl, {
+            writeExternalOutput: (message: string | Buffer, options: tl.ExternalOutputOptions) => originalWriter(message, { ...options, destination })
+        });
+        Utility.getUploadAssets = () => [asset];
+        Utility.isFile = () => true;
+        Utility.validateUploadAssets = () => {};
+    });
+
+    afterEach(() => {
+        if (originalFeature === undefined) {
+            delete process.env[featureVariable];
+        } else {
+            process.env[featureVariable] = originalFeature;
+        }
+        Object.assign(tl, { writeExternalOutput: originalWriter });
+        tl.setStdStream(process.stdout);
+        Utility.getUploadAssets = originalGetAssets;
+        Utility.isFile = originalIsFile;
+        Utility.validateUploadAssets = originalValidateAssets;
+        Release.prototype.uploadReleaseAsset = originalUpload;
+    });
+
+    for (const featureValue of [undefined, 'false', 'true']) {
+        it(`selects the expected filtering mode when the dynamic flag is ${featureValue}`, () => {
+            if (featureValue === undefined) {
+                delete process.env[featureVariable];
+            } else {
+                process.env[featureVariable] = featureValue;
+            }
+            Utility.logRepositoryMessage(asset);
+            const blocked = featureValue === 'true';
+            assert.strictEqual(output, (blocked ? asset.replace(/##vso\[/g, '##_vso[') : asset) + '\n');
+            assert(telemetry.includes('"source":"repository","commandName":"task.setvariable","blocked":' + blocked));
+            assert(telemetry.includes('"source":"repository","commandName":"task.complete","blocked":' + blocked));
+            assert(!telemetry.includes('/untrusted/bin'), 'telemetry must not include command payloads');
+        });
+    }
+
+    for (const uploadMode of ['success', 'skip', 'replace']) {
+        for (const featureValue of ['false', 'true']) {
+            it(`filters ${uploadMode} asset logs with the dynamic flag ${featureValue}`, async () => {
+                process.env[featureVariable] = featureValue;
+                const uploadedPaths: string[] = [];
+                Release.prototype.uploadReleaseAsset = async (token, filePath, uploadUrl) => {
+                    uploadedPaths.push(filePath);
+                    return {
+                        statusCode: uploadMode === 'success' || uploadedPaths.length > 1 ? 201 : 422,
+                        body: { errors: [{ code: 'already_exists' }] }
+                    } as any;
+                };
+                const action = new Action();
+                let deletions = 0;
+                (action as any)._deleteAssets = async () => { deletions++; };
+                await (action as any)._uploadAssetsForGivenPattern('synthetic-token', 'repo', 'url', [{ name: 'asset.bin' }], 'release-assets/**/asset.bin', uploadMode);
+                assert(uploadedPaths.every(filePath => filePath === asset), 'upload must receive the original path');
+                assert.strictEqual(path.basename(uploadedPaths[0]), 'asset.bin');
+                assert.strictEqual(deletions, uploadMode === 'replace' ? 1 : 0);
+                assert.strictEqual(output.includes('##vso['), featureValue === 'false');
+                assert(output.includes(featureValue === 'true' ? '##_vso[task.setvariable' : '##vso[task.setvariable'));
+                const events = telemetry.split('\n').filter(line => line.includes('"commandName":"task.setvariable"'));
+                assert.strictEqual(events.length, uploadMode === 'replace' ? 5 : 2, 'every asset-path log must pass through the filter');
+            });
+        }
+    }
+
+    it('preserves a committed and cloned LF path while blocking upload-log commands', async function() {
+        if (process.platform !== 'linux') {
+            this.skip();
+        }
+        const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'github-release-output-'));
+        try {
+            const source = path.join(fixture, 'source');
+            const checkout = path.join(fixture, 'checkout');
+            const sourceAsset = path.join(source, asset);
+            fs.mkdirSync(path.dirname(sourceAsset), { recursive: true });
+            fs.writeFileSync(sourceAsset, 'passive asset bytes');
+            const git = (args: string[]) => {
+                const result = spawnSync('git', args, { encoding: 'utf8' });
+                assert.strictEqual(result.status, 0, result.stderr);
+            };
+            git(['init', '--quiet', source]);
+            git(['-C', source, 'add', '--all']);
+            git(['-C', source, '-c', 'user.name=Task Test', '-c', 'user.email=task-test@example.invalid', 'commit', '--quiet', '-m', 'Passive filename fixture']);
+            git(['clone', '--quiet', source, checkout]);
+            const checkoutAsset = path.join(checkout, asset);
+            assert.strictEqual(fs.readFileSync(checkoutAsset, 'utf8'), 'passive asset bytes');
+            assert(fs.lstatSync(checkoutAsset).isFile());
+            Utility.getUploadAssets = originalGetAssets;
+            Utility.isFile = originalIsFile;
+            Utility.validateUploadAssets = originalValidateAssets;
+            process.env[featureVariable] = 'true';
+            let uploads = 0;
+            Release.prototype.uploadReleaseAsset = async (token, filePath, uploadUrl) => {
+                assert.strictEqual(filePath, checkoutAsset);
+                assert.strictEqual(path.basename(filePath), 'asset.bin');
+                uploads++;
+                return { statusCode: 201 } as any;
+            };
+            await (new Action() as any)._uploadAssetsForGivenPattern('synthetic-token', 'repo', 'url', [], path.join(checkout, 'release-assets/**/asset.bin'), 'replace');
+            assert.strictEqual(uploads, 1);
+            assert(!output.includes('##vso['));
+            assert(output.includes('##_vso[task.setvariable'));
+        } finally {
+            fs.rmSync(fixture, { recursive: true, force: true });
+        }
     });
 });
