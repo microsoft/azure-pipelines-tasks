@@ -7,7 +7,8 @@ interface NpmArgumentWriter {
 
 const scopedPackageNamePattern = /^@([^/]+)\/([^/]+)$/;
 const disallowedNewPackageNameCharacters = /[~'!()*]/;
-const archivePackageSpecPattern = /\.(?:tgz|tar|tar\.gz)$/i;
+const archivePackageSpecPattern = /[.](?:tgz|tar.gz|tar)$/i;
+const registryTagPattern = /^[A-Za-z0-9._-]+$/;
 
 export function getValidatedNpmPackageSpec(packageName: string, packageVersion: string): string {
     const expectedName = `@${packageName}`;
@@ -49,13 +50,15 @@ function isRegistryVersionRangeOrTag(packageVersion: string): boolean {
         return false;
     }
 
+    if (archivePackageSpecPattern.test(packageVersion)) {
+        return false;
+    }
+
     if (semver.valid(packageVersion) !== null || semver.validRange(packageVersion) !== null) {
         return true;
     }
 
-    return !packageVersion.startsWith('.')
-        && !archivePackageSpecPattern.test(packageVersion)
-        && encodeURIComponent(packageVersion) === packageVersion;
+    return !packageVersion.startsWith('.') && registryTagPattern.test(packageVersion);
 }
 
 export function getNpmArguments(
