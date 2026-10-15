@@ -394,14 +394,20 @@ export class ContainerAppHelper {
             tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
             try {
                 const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+                const externalOutput: tl.ExternalOutputOptions = {
+                    source: 'childProcess',
+                    vsoCommandMode: tl.getPipelineFeature('AzureContainerAppsEnableVsoCommandBlocking')
+                        ? 'blockAndTelemetry'
+                        : 'telemetryOnly'
+                };
                 if (useArgArray) {
                     new Utility().throwIfError(
-                        tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`]),
+                        tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`], { externalOutput }),
                         tl.loc('CreateImageWithDockerfileFailed')
                     );
                 } else {
                     new Utility().throwIfError(
-                        tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`),
+                        tl.execSync('docker', `build --tag ${imageToDeploy} --file ${dockerfilePath} ${appSourcePath}`, { externalOutput }),
                         tl.loc('CreateImageWithDockerfileFailed')
                     );
                 }
