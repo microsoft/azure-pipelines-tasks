@@ -7,6 +7,7 @@ import url = require('url');
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
+import {writeRemoteOutput} from "../remoteOutput"
 
 var handlebars = require('handlebars');
 
@@ -59,7 +60,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
+            writeRemoteOutput(tl.loc("GetCommitMessagesFailed", error, commits));
             throw error;
         }
 
@@ -182,7 +183,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                console.log(tl.loc("CannotParseCommits", commits, error));
+                writeRemoteOutput(tl.loc("CannotParseCommits", commits, error));
                 throw error;
             }
         }

@@ -554,4 +554,29 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             
         }
     });
+
+    it('Should block logging commands in artifact-engine output when SanitizeJenkinsArtifactPathsFixEnabled is enabled', async () => {
+        process.env['DISTRIBUTEDTASK_TASKS_SANITIZEJENKINSARTIFACTPATHSFIXENABLED'] = 'true';
+        try {
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(path.join(__dirname, 'L0FiltersArtifactEngineOutput.js'));
+            await tr.runAsync();
+
+            assert(tr.succeeded, tr.stdout);
+            assert(tr.stdout.indexOf('##vso[task.setvariable') === -1, tr.stdout);
+            assert(tr.stdout.indexOf('x##_vso[task.setvariable variable=BASH_ENV]') !== -1, tr.stdout);
+            assert(tr.stdout.indexOf('##vso[telemetry.publish area=artifact-engine;feature=performance]') !== -1, tr.stdout);
+            assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":true') !== -1, tr.stdout);
+        } finally {
+            delete process.env['DISTRIBUTEDTASK_TASKS_SANITIZEJENKINSARTIFACTPATHSFIXENABLED'];
+        }
+    });
+
+    it('Should only report logging commands in artifact-engine output when SanitizeJenkinsArtifactPathsFixEnabled is disabled', async () => {
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(path.join(__dirname, 'L0FiltersArtifactEngineOutput.js'));
+        await tr.runAsync();
+
+        assert(tr.succeeded, tr.stdout);
+        assert(tr.stdout.indexOf('x##vso[task.setvariable variable=BASH_ENV]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":false') !== -1, tr.stdout);
+    });
 });

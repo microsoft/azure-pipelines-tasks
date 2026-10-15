@@ -8,6 +8,7 @@ import {
 } from "artifact-engine/Providers/typed-rest-client/HttpClient";
 
 import { IRequestOptions as IHttpRequestOptions } from "artifact-engine/Providers/typed-rest-client/Interfaces";
+import { writeRemoteOutput } from "../remoteOutput";
 
 var handlebars = require('handlebars');
 
@@ -216,7 +217,7 @@ export class JenkinsRestClient {
         tl.debug(`RetryLimit set to ${retryLimit}`);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
-        console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
+        writeRemoteOutput(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
         let httpClient: HttpClient = this.GetClient();
         this.ExecuteWithRetries("DownloadJsonContent", () => this.DownloadJsonContentWithRetries(httpClient, requestUrl, handlebarSource, additionalHandlebarContext), retryLimit).then((result) => {
@@ -300,7 +301,7 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            console.log(tl.loc("FoundJobType", result));
+            writeRemoteOutput(tl.loc("FoundJobType", result));
             defer.resolve(result.trim());
         }, (error) => {
             console.log(tl.loc("CannotFindJobType"));
