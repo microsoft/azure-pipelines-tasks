@@ -4,7 +4,7 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\..\SqlAzureActions.ps1
-. $PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 # Test 1 - ipDetectionMethod = IPAddressRange
 Register-Mock Get-AgentIPRange { }

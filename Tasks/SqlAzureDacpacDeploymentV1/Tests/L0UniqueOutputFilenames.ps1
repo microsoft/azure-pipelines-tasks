@@ -10,7 +10,7 @@ $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY = "C:\DefaultWorkingDirectory"
 
 Register-Mock Get-VstsPipelineFeature { return $false }
 . $PSScriptRoot\..\SqlAzureActions.ps1
-. $PSScriptRoot\..\..\Common\Sanitizer\ExternalOutputSanitizer.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 $guidPattern = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 

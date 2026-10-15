@@ -12,10 +12,10 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-    "Major": 3,
-    "Minor": 282,
-    "Patch": 0
-  },
+        "Major": 3,
+        "Minor": 279,
+        "Patch": 0
+    },
     "groups": [
         {
             "name": "ScriptOptions",

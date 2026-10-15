@@ -1,6 +1,6 @@
 # Neutralizes "##vso[...]" and "##[...]" logging-command markers in untrusted
 # external output (e.g. SQL query results) so they can't be executed as agent
-# commands. Shared under Tasks/Common/Sanitizer for reuse by other tasks.
+# commands. Shared so other tasks printing untrusted external output can reuse it.
 function Protect-ExternalOutput {
     [CmdletBinding()]
     [OutputType([string])]

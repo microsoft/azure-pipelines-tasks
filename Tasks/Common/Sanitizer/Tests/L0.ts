@@ -109,10 +109,4 @@ describe('Security Suite', function () {
             psr.run(path.join(__dirname, 'L0Get-SourcePathHardeningFeatureFlag.ps1'), done);
         });
     }
-
-    if (psm.testSupported()) {
-        it('Protect-ExternalOutput neutralizes untrusted logging command markers (default-deny and allowlist modes)', (done) => {
-            psr.run(path.join(__dirname, 'L0Protect-ExternalOutput.ps1'), done);
-        });
-    }
 });

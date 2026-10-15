@@ -15,10 +15,10 @@
     ],
     "author": "Microsoft Corporation",
     "version": {
-    "Major": 0,
-    "Minor": 282,
-    "Patch": 0
-  },
+        "Major": 0,
+        "Minor": 280,
+        "Patch": 0
+    },
     "demands": [],
     "minimumAgentVersion": "1.102.0",
     "groups": [],

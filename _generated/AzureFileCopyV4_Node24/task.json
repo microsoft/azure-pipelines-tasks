@@ -14,7 +14,7 @@
   "version": {
     "Major": 4,
     "Minor": 282,
-    "Patch": 3
+    "Patch": 1
   },
   "demands": [
     "azureps"
@@ -309,7 +309,7 @@
     "ServicePrincipalError": "There was an error with the service principal used for the deployment."
   },
   "_buildConfigMapping": {
-    "Default": "4.282.2",
-    "Node24_1": "4.282.3"
+    "Default": "4.282.0",
+    "Node24_1": "4.282.1"
   }
 }
