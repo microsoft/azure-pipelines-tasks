@@ -135,7 +135,7 @@
     "Warning_SessionCreationFailed": "ms-resource:loc.messages.Warning_SessionCreationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "1.280.2",
-    "wif_242": "1.280.3"
+    "Default": "1.282.0",
+    "wif_242": "1.282.1"
   }
 }

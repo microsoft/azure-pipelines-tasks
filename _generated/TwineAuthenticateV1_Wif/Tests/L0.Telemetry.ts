@@ -105,8 +105,8 @@ describe('TwineAuthenticate L0 Suite - Telemetry & Logging', function () {
             
             // Assert
             assert(tr.succeeded, 'Task should succeed with debug enabled');
-            assert(tr.stdout.indexOf('##vso[task.debug]') >= 0, 
-                'Should log debug messages when SYSTEM_DEBUG is enabled');
+            assert(tr.stdout.indexOf('##vso[task.debug]Adding authentication to configuration for registry') >= 0,
+                'Should log feed names through task-lib debug logging');
         });
 
         it('logs informational messages about feeds', async () => {
