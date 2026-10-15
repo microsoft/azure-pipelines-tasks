@@ -80,8 +80,6 @@ export function initializeBackupDirectory(): string {
     if (tl.getVariable('SAVE_NPMRC_PATH')) {
         return tl.getVariable('SAVE_NPMRC_PATH');
     }
-    // Agent.HomeDirectory isn't bind-mounted into job containers, unlike Agent.BuildDirectory/
-    // Agent.TempDirectory. Fall back to Agent.TempDirectory if it's unset or unwritable.
     const candidateDirectories = [tl.getVariable('Agent.HomeDirectory'), tl.getVariable('Agent.TempDirectory')]
         .filter((candidate) => !!candidate);
 

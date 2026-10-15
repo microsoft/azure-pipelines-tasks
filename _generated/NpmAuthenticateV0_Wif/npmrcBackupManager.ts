@@ -19,8 +19,6 @@ export class NpmrcBackupManager {
     private nextId: number;
     private entries: { [npmrcPath: string]: number };
     private identities: { [npmrcPath: string]: FileIdentity };
-    // SHA-256 digest of each backup's content at backup time, keyed by npmrc path.
-    // Catches in-place content tampering that identity checks alone would miss.
     private digests: { [npmrcPath: string]: string };
 
     constructor(private readonly backupDirectory: string) {
@@ -65,7 +63,6 @@ export class NpmrcBackupManager {
             return false;
         }
 
-        // Verify content against the digest recorded at backup time before trusting it.
         const backupContents = fs.readFileSync(backupPath);
         const expectedDigest = this.digests[npmrcPath];
         if (expectedDigest) {
