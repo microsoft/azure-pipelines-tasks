@@ -80,14 +80,8 @@ export function initializeBackupDirectory(): string {
     if (tl.getVariable('SAVE_NPMRC_PATH')) {
         return tl.getVariable('SAVE_NPMRC_PATH');
     }
-    // Agent.HomeDirectory (the agent's install root) is never bind-mounted into job
-    // containers. Agent.BuildDirectory/Agent.TempDirectory live under the agent's Work
-    // directory, which *is* mounted read/write into job containers by default, so a
-    // lower-trust container process could otherwise tamper with the backup that the
-    // trusted post-job cleanup later restores. Agent.TempDirectory is only used as a
-    // fallback: for older agents that don't set Agent.HomeDirectory, and for the rare
-    // case where Agent.HomeDirectory exists but isn't writable (for example, a container
-    // configured with a custom read-only root filesystem) so the task keeps working.
+    // Agent.HomeDirectory isn't bind-mounted into job containers, unlike Agent.BuildDirectory/
+    // Agent.TempDirectory. Fall back to Agent.TempDirectory if it's unset or unwritable.
     const candidateDirectories = [tl.getVariable('Agent.HomeDirectory'), tl.getVariable('Agent.TempDirectory')]
         .filter((candidate) => !!candidate);
 

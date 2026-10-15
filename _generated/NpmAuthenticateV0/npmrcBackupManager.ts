@@ -19,11 +19,8 @@ export class NpmrcBackupManager {
     private nextId: number;
     private entries: { [npmrcPath: string]: number };
     private identities: { [npmrcPath: string]: FileIdentity };
-    // SHA-256 digest of the backup *contents* taken at backup time, keyed by the
-    // original npmrc path. This binds restoreBackedUpFile() to the exact bytes that
-    // were saved, so that content written in-place over an existing backup entry
-    // (same device/inode, so identity checks alone don't catch it) is detected and
-    // rejected rather than silently restored.
+    // SHA-256 digest of each backup's content at backup time, keyed by npmrc path.
+    // Catches in-place content tampering that identity checks alone would miss.
     private digests: { [npmrcPath: string]: string };
 
     constructor(private readonly backupDirectory: string) {
@@ -68,10 +65,7 @@ export class NpmrcBackupManager {
             return false;
         }
 
-        // Read the backup once and verify it against the digest captured when it was
-        // written, before trusting its bytes for the restore. Device/inode identity
-        // alone cannot detect content overwritten in place (same file, new bytes), so
-        // this closes that gap independently of where the backup directory lives.
+        // Verify content against the digest recorded at backup time before trusting it.
         const backupContents = fs.readFileSync(backupPath);
         const expectedDigest = this.digests[npmrcPath];
         if (expectedDigest) {
