@@ -24,8 +24,9 @@ export async function run(): Promise<void> {
 
         let packageNameInput = tl.getInputRequired("packageName");
         let packageVersion = tl.getInputRequired("version");
+        // Enabled by default; the feature flag acts only as a kill switch when explicitly set to false.
         const isArgumentIsolationFixEnabled
-            = tl.getPipelineFeature('DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled');
+            = (tl.getVariable('DistributedTask.Tasks.DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled') || '').toLowerCase() !== 'false';
 
         if (!packageNameInput || packageNameInput.indexOf("/") < 0) {
             throw Error(tl.loc('Error_InvalidPackageName'));

@@ -65,6 +65,26 @@ describe('DownloadGitHubNpmPackage L0 Suite', function () {
         assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
     });
 
+    it('validates by default when the feature flag is not set', async () => {
+        process.env['TEST_PACKAGE_VERSION'] = 'https://example.invalid/evil.tgz';
+
+        const tr = await runTask();
+
+        assert(tr.failed, tr.stdout);
+        assert(tr.stdout.includes('loc_mock_Error_InvalidNpmPackageVersion'), tr.stdout);
+        assert(!fs.existsSync(npmrcPath), 'temp npmrc should not exist');
+    });
+
+    it('skips the new validation when the kill switch is set to false', async () => {
+        process.env['TEST_FEATURE_ENABLED'] = 'false';
+        process.env['TEST_PACKAGE_VERSION'] = '1.0.0 --prefix C:\\temp';
+
+        const tr = await runTask();
+
+        assert(tr.succeeded, tr.stdout);
+        assert(!tr.stdout.includes('Error_InvalidNpmPackageVersion'), tr.stdout);
+    });
+
     it('rejects a non-registry package specification before writing the temp npmrc', async () => {
         process.env['TEST_FEATURE_ENABLED'] = 'true';
         process.env['TEST_PACKAGE_VERSION'] = 'https://example.invalid/evil.tgz';
