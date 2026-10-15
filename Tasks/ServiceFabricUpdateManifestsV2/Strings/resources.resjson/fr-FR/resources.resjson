@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "La liste des noms d'images et la liste des condensats doivent avoir la même longueur. Nombre de noms d'images : '{0}', nombre de condensats d'image : '{1}'.",
   "loc.messages.AmbiguousImages": "Le dépôt '{0}' a plusieurs condensats. Vous devez indiquer le chemin de la liste des noms d'images d'origine dans l'entrée \"Chemin des noms d'images\" pour lever toute ambiguïté.",
   "loc.messages.ImageDigestNameMismatch": "Le condensat '{0}' ne correspond pas à l'image '{1}'.",
-  "loc.messages.NoDigestForImage": "Condensat introuvable pour l'image '{0}'."
+  "loc.messages.NoDigestForImage": "Condensat introuvable pour l'image '{0}'.",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

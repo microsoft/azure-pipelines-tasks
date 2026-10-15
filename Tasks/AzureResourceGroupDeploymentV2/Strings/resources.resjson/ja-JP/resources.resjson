@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "VM '%s' の拡張機能の一覧を取得できませんでした。エラー: '%s'",
   "loc.messages.ExtensionNotFound": "VM %s に拡張機能が見つかりません",
   "loc.messages.AddedOutputVariable": "出力変数 '%s' が更新されました。この変数には、現在の配置オブジェクトの出力セクションが文字列形式で格納されています。",
+  "loc.messages.OutputVariableNameChanged": "出力変数名 '%s' は、変数の発行時に以前は別の名前にデコードまたは切り詰められていました。宣言された名前が文字どおり使用されるようになりました。パイプラインで以前の名前を参照していた場合は、宣言された名前に更新してください。",
   "loc.messages.UnableToFetchAuthorityURL": "機関の URL をフェッチできません。",
   "loc.messages.UnableToFetchActiveDirectory": "Active Directory リソース ID をフェッチできません。",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定された AzureRm サービス接続の URL: '{0}' が無効です。",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "Azure Resource Manager テンプレートで検証エラーが見つかりました。これにより、テンプレートのデプロイが失敗する可能性があります。%s。https://docs.microsoft.com/ja-jp/azure/azure-resource-manager/templates/template-syntax の内容に従ってください",
   "loc.messages.ManagedServiceIdentityDetails": "デプロイに使用するマネージド サービス ID に、リソース グループ %s に対する適切なロールが割り当てられていることを確認してください。詳細については次のリンクをご覧ください: https://docs.microsoft.com/ja-jp/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "仮想マシン '%s' でエラーが発生しました。%s",
-  "loc.messages.TroubleshootingGuide": "トラブルシューティング ガイドを参照して、自分の問題が取り上げられていないかご確認ください。https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "トラブルシューティング ガイドを参照して、自分の問題が取り上げられていないかご確認ください。https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "このジョブはエージェント バージョン '%s' で実行されているため、展開の出力変数は以前の形式を使用して発行されました。安全な形式を使用してそれらを発行するには、エージェント バージョン %s 以降が必要です。安全な形式を使用すると、出力の名前と値がエージェント コマンドとして解釈されるのを防ぎます。エージェントをアップグレードして、安全な形式を採用してください。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "%s 変数が、エージェントによるパーセント エスケープのデコードを停止する値に設定されているため、展開の出力変数は以前の形式を使用して発行されました。その変数を削除するか、true に設定して、安全な形式を採用してください。これにより、出力の名前と値がエージェント コマンドとして解釈されるのを防ぎます。"
 }

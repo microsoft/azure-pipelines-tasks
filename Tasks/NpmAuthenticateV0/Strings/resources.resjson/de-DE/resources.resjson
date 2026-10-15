@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Buildanmeldeinformationen gefunden",
   "loc.messages.ServiceEndpointNotDefined": "Die Dienstverbindung wurde nicht gefunden. Stellen Sie sicher, dass die ausgewählte Dienstverbindung noch vorhanden ist.",
   "loc.messages.NpmrcNotNpmrc": "Die für die Authentifizierung ausgewählte Datei (%s) ist keine gültige NPMRC-Datei.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "Die URL für die Dienstverbindung wurde nicht gefunden. Stellen Sie sicher, dass die Dienstverbindung ordnungsgemäß konfiguriert ist.",
   "loc.messages.SavingFile": "Datei %s wird gespeichert",
   "loc.messages.RestoringFile": "Datei %s wird wiederhergestellt",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "Keine feedUrl angegeben. WIF-Anmeldeinformationen werden auf alle %d-Registrierungen in NPMRC angewendet.",
   "loc.messages.Error_UnsupportedAuthScheme": "Nicht unterstütztes Authentifizierungsschema „%s“ für die Dienstverbindung. Unterstützte Schemata sind „Token“ und „UsernamePassword“.",
   "loc.messages.Warning_NpmrcFileNotFound": "Die NPMRC-Datei wurde nicht gefunden: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "WIF-Authentifizierung für Nicht-HTTPS-Registrierung wird übersprungen: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Registrierungen unter „%s“, die HTTPS- und Nicht-HTTPS-URLs mischen, können nicht authentifiziert werden. npm-Anmeldeinformationen sind nicht nach Protokoll getrennt. Verwenden Sie HTTPS für alle Registrierungen auf diesem Host und Port.",
   "loc.messages.Debug_EndpointProbeTimedOut": "Timeout bei isEndpointInternal nach %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Fehler bei der isEndpointInternal-Prüfung: %s"
 }

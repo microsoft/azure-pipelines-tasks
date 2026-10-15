@@ -55,5 +55,6 @@
   "loc.messages.FailedToRefreshAzSession": "При попытке обновить сеанс az-cli произошла следующая ошибка: %s",
   "loc.messages.RefreshingAzSession": "Попытка обновить сеанс az-cli...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "Входные данные \"keepAzSessionActive\" могут использоваться только для подключения службы ARM федерации удостоверений рабочей нагрузки. Указана непредвиденная схема проверки подлинности конечной точки службы: %s. Измените схему или удалите входные данные \"keepAzSessionActive\".",
-  "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787",
+  "loc.messages.BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
 }

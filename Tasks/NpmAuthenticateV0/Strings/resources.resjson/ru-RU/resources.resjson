@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Найдены учетные данные сборки",
   "loc.messages.ServiceEndpointNotDefined": "Не удалось найти подключение службы. Убедитесь в том, что выбранное подключение службы все еще существует.",
   "loc.messages.NpmrcNotNpmrc": "Файл, выбранный для проверки подлинности (%s), не является допустимым файлом NPMRC.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "Не удалось найти URL-адрес подключения службы. Убедитесь в том, что подключение службы настроено правильно.",
   "loc.messages.SavingFile": "Сохраняется файл %s",
   "loc.messages.RestoringFile": "Восстанавливается файл %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "Не указан feedUrl. Применяются учетные данные WIF ко всем реестрам %d в файле NPMRC.",
   "loc.messages.Error_UnsupportedAuthScheme": "Неподдерживаемая схема проверки подлинности \"%s\" для подключения к службе. Поддерживаются схемы \"Token\" и \"UsernamePassword\".",
   "loc.messages.Warning_NpmrcFileNotFound": "Файл NPMRC не найден: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Проверка подлинности WIF для реестра не HTTPS пропущена: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Не удается выполнить проверку подлинности реестров на \"%s\", в которых смешаны URL-адреса HTTPS и не HTTPS. Учетные данные npm не привязаны к схеме. Используйте HTTPS для всех реестров на этом узле и порту.",
   "loc.messages.Debug_EndpointProbeTimedOut": "Время ожидания isEndpointInternal истекло через %d мс.",
   "loc.messages.Debug_EndpointProbeFailed": "Сбой проверки isEndpointInternal: %s"
 }

@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "パラメーター ファイル パターンがファイルではなくディレクトリと一致しました。",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "テンプレート ファイル パターンがファイルではなくディレクトリと一致しました: %s",
   "loc.messages.AddedOutputVariable": "出力変数 '%s' が更新されました。この変数には、現在の配置オブジェクトの出力セクションが文字列形式で格納されています。",
+  "loc.messages.OutputVariableNameChanged": "出力変数名 '%s' は、変数の発行時に以前は別の名前にデコードまたは切り詰められていました。宣言された名前が文字どおり使用されるようになりました。パイプラインで以前の名前を参照していた場合は、宣言された名前に更新してください。",
   "loc.messages.UnableToReadResponseBody": "応答本文を読み取ることができません。エラー: %s",
   "loc.messages.MoreInformationOnAzurePortal": "詳細は Azure portal にあります",
   "loc.messages.LogDeploymentName": "配置名は %s です",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定中にエラーが発生しました: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" が失敗しました。エラー: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "このジョブはエージェント バージョン '%s' で実行されているため、展開の出力変数は以前の形式を使用して発行されました。安全な形式を使用してそれらを発行するには、エージェント バージョン %s 以降が必要です。安全な形式を使用すると、出力の名前と値がエージェント コマンドとして解釈されるのを防ぎます。エージェントをアップグレードして、安全な形式を採用してください。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "%s 変数が、エージェントによるパーセント エスケープのデコードを停止する値に設定されているため、展開の出力変数は以前の形式を使用して発行されました。その変数を削除するか、true に設定して、安全な形式を採用してください。これにより、出力の名前と値がエージェント コマンドとして解釈されるのを防ぎます。"
 }

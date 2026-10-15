@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Die Upgradeeinstellungen müssen überschrieben werden, oder es muss ein Veröffentlichungsprofil in der Azure Pipelines-Aufgabe angegeben werden.",
   "loc.messages.UnsupportedARMAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für ARM-Endpunkt.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für Azure Container Registry.",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "Invalid {0} value '{1}' found in the application package. This value is used as a folder name while building a file path from the application package, so it must be a simple name: it cannot be empty, contain a path separator or a relative path segment, be an absolute path, or end with a trailing '.' or ' ' character that Windows would normalize away.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} ist kein gültiges Service Fabric-Anwendungspaket.",
   "loc.messages.SFSDK_PackageValidationFailed": "Fehler bei der Überprüfung für das Paket: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Die Dienstverbindung mit dem Service Fabric-Cluster kann nicht überprüft werden.",

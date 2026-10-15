@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "映像名稱的清單，和摘要的清單長度必須相同。映像名稱數: '{0}'，映像摘要數: '{1}'。",
   "loc.messages.AmbiguousImages": "存放庫 '{0}' 有多個摘要。您必須在輸入 \"Image Names Path\" 中提供原始映像名稱清單的路徑以供識別。",
   "loc.messages.ImageDigestNameMismatch": "摘要 '{0}' 與映像 '{1}' 不相符。",
-  "loc.messages.NoDigestForImage": "找不到映像 '{0}' 的摘要。"
+  "loc.messages.NoDigestForImage": "找不到映像 '{0}' 的摘要。",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

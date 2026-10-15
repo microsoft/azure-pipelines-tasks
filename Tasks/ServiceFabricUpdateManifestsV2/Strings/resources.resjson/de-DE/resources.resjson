@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "Die Liste der Imagenamen und die Liste der Digests muss gleich lang sein. Anzahl von Imagenamen: {0}, Anzahl von Imagedigests: {1}.",
   "loc.messages.AmbiguousImages": "Das Repository \"{0}\" enthält mehr als einen Digest. Sie müssen zur eindeutigen Kennzeichnung einen Pfad zur Liste mit den ursprünglichen Imagenamen in der Eingabe für den Pfad mit Imagenamen angeben.",
   "loc.messages.ImageDigestNameMismatch": "Der Digest \"{0}\" entspricht nicht dem Image \"{1}\".",
-  "loc.messages.NoDigestForImage": "Kein Digest für Image \"{0}\" gefunden."
+  "loc.messages.NoDigestForImage": "Kein Digest für Image \"{0}\" gefunden.",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "ビルドの資格情報が見つかりました",
   "loc.messages.ServiceEndpointNotDefined": "サービス接続が見つかりませんでした。選択したサービス接続がまだ存在していることをご確認ください。",
   "loc.messages.NpmrcNotNpmrc": "認証するために選択したファイル (%s) が有効な .npmrc ファイルではありません。",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "サービス接続の URL が見つかりませんでした。サービス接続が正しく構成されていることをご確認ください。",
   "loc.messages.SavingFile": "ファイル %s を保存しています",
   "loc.messages.RestoringFile": "ファイルを復元しています %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "feedUrl が指定されていません。.npmrc 内のすべての %d レジストリに WIF 資格情報を適用しています。",
   "loc.messages.Error_UnsupportedAuthScheme": "サービス接続でサポートされていない認証スキーム '%s' です。サポートされているスキームは 'Token' および 'UsernamePassword' です。",
   "loc.messages.Warning_NpmrcFileNotFound": "npmrc ファイルが見つかりません: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "非 HTTPS のレジストリの WIF 認証をスキップしています: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "HTTPS と非 HTTPS の URL が混在する '%s' 上のレジストリを認証できません。npm の資格情報はスキームによってスコープが設定されません。このホストとポート上のすべてのレジストリで HTTPS を使用してください。",
   "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal が %d ミリ秒後にタイムアウトしました。",
   "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal チェックに失敗しました: %s"
 }

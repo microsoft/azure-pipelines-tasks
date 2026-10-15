@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Informations d'identification de build trouvées",
   "loc.messages.ServiceEndpointNotDefined": "La connexion de service est introuvable. Vérifiez que la connexion de service sélectionnée existe toujours.",
   "loc.messages.NpmrcNotNpmrc": "Le fichier que vous avez sélectionné pour l'authentification (%s) n'est pas un fichier .npmrc valide.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "L'URL de la connexion de service est introuvable. Vérifiez que la connexion de service est correctement configurée.",
   "loc.messages.SavingFile": "Enregistrement du fichier %s",
   "loc.messages.RestoringFile": "Restauration du fichier %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "Aucun feedUrl spécifié. Application des informations d’identification WIF à tous les %d registres dans .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Schéma d’authentification non pris en charge « %s » pour la connexion de service. Les schémas pris en charge sont « Token » et « UsernamePassword ».",
   "loc.messages.Warning_NpmrcFileNotFound": "Désolé, nous n’avons pas pu trouver le fichier npmrc : %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "L’authentification WIF est ignorée pour le registre non HTTPS : %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Nous ne pouvons pas authentifier les registres sur « %s » qui utilisent à la fois des URL HTTPS et non HTTPS. Les informations d’identification npm ne sont pas limitées par schéma. Utilisez HTTPS pour tous les registres de cet hôte et de ce port.",
   "loc.messages.Debug_EndpointProbeTimedOut": "Le délai d’attente de isEndpointInternal a expiré après %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Échec de la vérification isEndpointInternal : %s"
 }

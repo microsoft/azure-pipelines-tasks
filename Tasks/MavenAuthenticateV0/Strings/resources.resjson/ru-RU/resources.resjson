@@ -3,11 +3,11 @@
   "loc.helpMarkDown": "[Подробнее об этой задаче](https://docs.microsoft.com/azure/devops/pipelines/tasks/package/maven-authenticate)",
   "loc.description": "Предоставляет учетные данные для веб-каналов Azure Artifacts и внешних репозиториев Maven",
   "loc.instanceNameFormat": "Проверка подлинности Maven",
-  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
-  "loc.input.help.workloadIdentityServiceConnection": "Это — подключение к службе пользователя Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra. Если этот параметр задан, входные данные mavenServiceConnections будут игнорироваться.",
   "loc.input.label.artifactsFeeds": "Веб-каналы",
   "loc.input.label.mavenServiceConnections": "Учетные данные для репозиториев за пределами этой организации и коллекции",
   "loc.input.help.mavenServiceConnections": "Учетные данные, используемые для внешних репозиториев, расположенных в файле pom.xml проекта.",
+  "loc.input.label.workloadIdentityServiceConnection": "Подключение службы \"Azure DevOps\"",
+  "loc.input.help.workloadIdentityServiceConnection": "Это — подключение к службе пользователя Azure DevOps с поддержкой Идентификации рабочей нагрузки Microsoft Entra. Если этот параметр задан, входные данные mavenServiceConnections будут игнорироваться.",
   "loc.messages.Warning_FeedEntryAlreadyExists": "Параметры для веб-канала или репозитория \"%s\" уже имеются в файле settings.xml пользователя.",
   "loc.messages.Warning_NoEndpointsToAuth": "Не выбраны репозитории для проверки подлинности; проверьте конфигурацию задачи.",
   "loc.messages.Warning_TokenNotGenerated": "Не удалось использовать федеративный токен",
@@ -21,5 +21,7 @@
   "loc.messages.Info_SuccessAddingFederatedFeedAuth": "Проверка подлинности для веб-канала %s с федеративными учетными данными успешно добавлена.",
   "loc.messages.Error_InvalidServiceConnection": "Недопустимое подключение службы для %s.",
   "loc.messages.Error_FailedCleanupM2": "Не удалось удалить учетные данные из файла settings.xml пользователя: %s",
-  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Не удалось получить федеративные учетные данные из подключения службы: %s."
+  "loc.messages.Error_FailedToGetServiceConnectionAuth": "Не удалось получить федеративные учетные данные из подключения службы: %s.",
+  "loc.messages.Warning_ChmodFailed": "Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.",
+  "loc.messages.Warning_StatFailed": "Unable to read permissions on %s: %s. Original permissions may not be restored."
 }

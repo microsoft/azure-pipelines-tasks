@@ -62,10 +62,16 @@
   "loc.messages.FailedToRefreshAzSession": "При попытке обновить сеанс az-cli произошла следующая ошибка: %s",
   "loc.messages.RefreshingAzSession": "Попытка обновить сеанс az-cli...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "Входные данные \"keepAzSessionActive\" могут использоваться только для подключения службы ARM федерации удостоверений рабочей нагрузки. Указана непредвиденная схема проверки подлинности конечной точки службы: %s. Измените схему или удалите входные данные \"keepAzSessionActive\".",
+  "loc.messages.AzureDevOpsExtensionNotFound": "Расширение Azure DevOps не найдено в рабочей среде. Попытка установки.",
+  "loc.messages.AzureDevOpsExtensionAlreadyInstalled": "Расширение Azure DevOps уже установлено, поэтому установка пропускается.",
+  "loc.messages.AzureDevOpsExtensionInstalled": "Расширение Azure DevOps CLI установлено.",
+  "loc.messages.AzureDevOpsExtensionInstalledNoDeps": "Расширение Azure DevOps CLI установлено (режим без зависимостей).",
+  "loc.messages.AzureDevOpsExtensionStandardInstallFailed": "Стандартная установка расширения azure-devops завершилась сбоем. Возврат к установке без зависимостей.",
   "loc.messages.FailedToInstallAzureDevOpsCLI": "Не удалось установить расширение Azure DevOps CLI",
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Не удалось войти в Azure DevOps CLI",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Не удалось настроить организацию Azure DevOps",
   "loc.messages.FailedToSetAzureDevOpsProject": "Не удалось настроить проект Azure DevOps",
   "loc.messages.SkippingSubscriptionContext": "Пропуск контекста подписки согласно входным данным allowNoSubscriptions или при пустом значении GUID",
-  "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787",
+  "loc.messages.BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
 }

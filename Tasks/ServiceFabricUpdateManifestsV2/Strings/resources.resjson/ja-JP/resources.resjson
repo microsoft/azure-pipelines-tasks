@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "イメージ名のリストとダイジェストのリストは、同じ長さである必要があります。イメージ名の数: '{0}'、イメージ ダイジェストの数: '{1}'。",
   "loc.messages.AmbiguousImages": "リポジトリ '{0}' に複数のダイジェストが含まれています。明確にするには、[イメージ名のパス] に元のイメージ名のリストへのパスを指定する必要があります。",
   "loc.messages.ImageDigestNameMismatch": "ダイジェスト '{0}' がイメージ '{1}' と一致しません。",
-  "loc.messages.NoDigestForImage": "イメージ '{0}' のダイジェストが見つかりません。"
+  "loc.messages.NoDigestForImage": "イメージ '{0}' のダイジェストが見つかりません。",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

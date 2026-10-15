@@ -62,10 +62,16 @@
   "loc.messages.FailedToRefreshAzSession": "az-cli セッションの更新中に次のエラーが発生しました: %s",
   "loc.messages.RefreshingAzSession": "az-cli セッションを更新しようとしています...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "'keepAzSessionActive' 入力は、ワークロード ID フェデレーション ARM サービス接続でのみ使用できます。参照されたサービス エンドポイント認証スキームは予期されていませんでした: %s。スキームを変更するか、'keepAzSessionActive' 入力を削除します。",
+  "loc.messages.AzureDevOpsExtensionNotFound": "Azure DevOps 拡張機能が作業中の環境に見つかりません。インストールを試行しています。",
+  "loc.messages.AzureDevOpsExtensionAlreadyInstalled": "Azure DevOps 拡張機能は既にインストールされているため、インストールをスキップしています。",
+  "loc.messages.AzureDevOpsExtensionInstalled": "Azure DevOps CLI 拡張機能が正常にインストールされました。",
+  "loc.messages.AzureDevOpsExtensionInstalledNoDeps": "Azure DevOps CLI 拡張機能が正常にインストールされました (no-deps モード)。",
+  "loc.messages.AzureDevOpsExtensionStandardInstallFailed": "azure-devops 拡張機能の標準インストールに失敗しました。no-deps インストールにフォール バックしています。",
   "loc.messages.FailedToInstallAzureDevOpsCLI": "Azure DevOps CLI 拡張機能をインストールできませんでした",
   "loc.messages.FailedToLoginAzureDevOpsCLI": "Azure DevOps CLI にログインできませんでした",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "Azure DevOps 組織を設定できませんでした",
   "loc.messages.FailedToSetAzureDevOpsProject": "Azure DevOps プロジェクトを設定できませんでした",
   "loc.messages.SkippingSubscriptionContext": "'allowNoSubscriptions' 入力または空の GUID 値に基づき、サブスクリプション コンテキストをスキップしています",
-  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787",
+  "loc.messages.BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
 }

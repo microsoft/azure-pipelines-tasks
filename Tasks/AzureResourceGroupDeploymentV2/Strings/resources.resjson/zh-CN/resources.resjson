@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "未能列出 VM“%s”的扩展。错误“%s”",
   "loc.messages.ExtensionNotFound": "未在 VM %s 上找到扩展",
   "loc.messages.AddedOutputVariable": "已更新的输出变量“%s”，该变量包含字符串格式的当前部署对象的输出部分。",
+  "loc.messages.OutputVariableNameChanged": "输出变量名称 '%s' 之前在发布变量时已解码或截断为其他名称。现在按字面使用声明的名称。如果管道引用了以前的名称，请将其更新为声明的名称。",
   "loc.messages.UnableToFetchAuthorityURL": "无法提取授权 URL。",
   "loc.messages.UnableToFetchActiveDirectory": "无法提取 Active Directory 资源 ID。",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定的 AzureRm 服务连接 URL: “{0}”无效。",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "在 Azure 资源管理器模板中发现验证错误。这可能会导致模板部署失败。%s。请遵循 https://docs.microsoft.com/zh-cn/azure/azure-resource-manager/templates/template-syntax",
   "loc.messages.ManagedServiceIdentityDetails": "请确保为用于部署的托管服务标识分配了资源组 %s 的正确角色。访问链接以了解更多详细信息: https://docs.microsoft.com/zh-cn/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "虚拟机 \"%s\" 失败: %s",
-  "loc.messages.TroubleshootingGuide": "查看故障排除指南以了解你的问题是否已解决: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "查看故障排除指南以了解你的问题是否已解决: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "已使用以前的格式发布部署输出变量，因为此作业正在运行代理版本 '%s'。需要代理版本 %s 或更高版本才能使用安全格式发布它们，这可防止输出名称和值被解释为代理命令。升级代理以采用安全格式。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "部署输出变量是使用以前的格式发布的，因为已将 %s 变量设置为可阻止智能体解码百分号转义的值。移除该变量或将其设置为 true 以采用安全格式，这可以阻止将输出名称和值解释为代理命令。"
 }

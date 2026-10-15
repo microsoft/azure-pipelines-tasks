@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "找到組建認證",
   "loc.messages.ServiceEndpointNotDefined": "找不到服務連線。請確定選取的服務連線仍然存在。",
   "loc.messages.NpmrcNotNpmrc": "您選取要驗證的檔案 (%s) 不是有效的 .npmrc 檔案。",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "找不到服務連線的 URL。請確定服務連線的設定正確。",
   "loc.messages.SavingFile": "正在儲存檔案 %s",
   "loc.messages.RestoringFile": "正在還原檔案 %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "未指定 feedUrl。正在將 WIF 認證套用至 .npmrc 中的所有 %d 登錄。",
   "loc.messages.Error_UnsupportedAuthScheme": "不支援服務連線的驗證方案 '%s'。支援的方案為 'Token' 和 'UsernamePassword'。",
   "loc.messages.Warning_NpmrcFileNotFound": "找不到 npmrc 檔案: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "略過非 HTTPS 登錄的 WIF 驗證: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "無法驗證在「%s」上混用 HTTPS 和非 HTTPS URL 的登錄。npm 認證資訊不會依通訊協定配置範圍。請在此主機和連接埠上的所有登錄都使用 HTTPS。",
   "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal 在 %dms 後逾時。",
   "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal 檢查失敗: %s"
 }

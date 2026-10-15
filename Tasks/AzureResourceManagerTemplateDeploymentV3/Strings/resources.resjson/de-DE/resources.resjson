@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Das Parameterdateimuster stimmt mit einem Verzeichnis und nicht mit einer Datei überein.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Das Vorlagendateimuster stimmt mit einem Verzeichnis und nicht mit einer Datei überein: %s",
   "loc.messages.AddedOutputVariable": "Die Ausgabevariable \"%s\" wurde aktualisiert, die den Ausgabeabschnitt des aktuellen Bereitstellungsobjekts im Zeichenfolgenformat enthält.",
+  "loc.messages.OutputVariableNameChanged": "Der Name der Ausgabevariable „%s“ wurde beim Veröffentlichen der Variablen zuvor in einen anderen Namen dekodiert oder gekürzt. Der deklarierte Name wird jetzt wörtlich verwendet. Wenn Ihre Pipeline auf den vorherigen Namen verweist, aktualisieren Sie sie auf den deklarierten Namen.",
   "loc.messages.UnableToReadResponseBody": "Antworttext konnte nicht gelesen werden. Fehler: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Weitere Informationen zum Azure-Portal",
   "loc.messages.LogDeploymentName": "Der Bereitstellungsname lautet \"%s\".",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "Fehler beim Einrichten des Abonnements: %s",
   "loc.messages.BicepParamBuildFailed": "Fehler bei \"az bicep build-param\". Fehler: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI Version muss >= 2.47.0 sein, um die .bicepparam-Datei zu verwenden.",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "In der angegebenen Metadatendatei „%s“ fehlen die Metadaten des Parameters „%s“."
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "In der angegebenen Metadatendatei „%s“ fehlen die Metadaten des Parameters „%s“.",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Bereitstellungsausgabevariablen wurden im vorherigen Format veröffentlicht, da dieser Auftrag mit der Agentversion „%s“ ausgeführt wird. Zum Veröffentlichen im sicheren Format ist die Agentversion %s oder höher erforderlich. Dieses Format verhindert, dass Ausgabenamen und -werte als Agentbefehle interpretiert werden. Aktualisieren Sie den Agent, um das sichere Format zu übernehmen.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Ausgabevariablen der Bereitstellung wurden im vorherigen Format veröffentlicht, da die %s-Variable auf einen Wert festgelegt ist, der den Agent daran hindert, die Prozentkodierung zu dekodieren. Entfernen Sie diese Variable oder legen Sie sie auf „true“ fest, um das sichere Format zu verwenden. Dadurch wird verhindert, dass Ausgabenamen und -werte als Agentbefehle interpretiert werden."
 }

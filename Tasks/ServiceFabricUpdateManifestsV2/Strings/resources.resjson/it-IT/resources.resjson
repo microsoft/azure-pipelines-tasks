@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "L'elenco dei nomi delle immagini e l'elenco dei digest devono contenere lo stesso numero di voci. Numero di nomi delle immagini: '{0}'. Numero dei digest delle immagini: '{1}'.",
   "loc.messages.AmbiguousImages": "Il repository '{0}' contiene più di un digest. Per evitare ambiguità, è necessario specificare il percorso dell'elenco dei nomi delle immagini originali nel campo di input \"Percorso dei nomi delle immagini\".",
   "loc.messages.ImageDigestNameMismatch": "Il digest '{0}' non corrisponde all'immagine '{1}'.",
-  "loc.messages.NoDigestForImage": "Non è stato trovato alcun digest per l'immagine '{0}'."
+  "loc.messages.NoDigestForImage": "Non è stato trovato alcun digest per l'immagine '{0}'.",
+  "loc.messages.InvalidManifestPathSegment": "The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space."
 }

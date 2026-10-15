@@ -62,10 +62,16 @@
   "loc.messages.FailedToRefreshAzSession": "Error al intentar actualizar la sesión de az-cli: %s",
   "loc.messages.RefreshingAzSession": "Intentando actualizar la sesión de az-cli...",
   "loc.messages.KeepingAzSessionActiveUnsupportedScheme": "La entrada \"keepAzSessionActive\" solo se puede usar para la conexión del servicio ARM de federación de identidades de carga de trabajo. No se esperaba el esquema de autenticación del punto de conexión de servicio al que se hace referencia: %s. Cambie el esquema o quite la entrada \"keepAzSessionActive\".",
+  "loc.messages.AzureDevOpsExtensionNotFound": "No se encontró la extensión de Azure DevOps en el entorno de trabajo. Se intentará instalarla.",
+  "loc.messages.AzureDevOpsExtensionAlreadyInstalled": "La extensión de Azure DevOps ya está instalada; se omite la instalación.",
+  "loc.messages.AzureDevOpsExtensionInstalled": "La extensión de la CLI de Azure DevOps se instaló correctamente.",
+  "loc.messages.AzureDevOpsExtensionInstalledNoDeps": "La extensión de la CLI de Azure DevOps se instaló correctamente (modo sin dependencias).",
+  "loc.messages.AzureDevOpsExtensionStandardInstallFailed": "Error en la instalación estándar de la extensión azure-devops. Se usará la instalación sin dependencias.",
   "loc.messages.FailedToInstallAzureDevOpsCLI": "No se pudo instalar la extensión de la CLI de Azure DevOps",
   "loc.messages.FailedToLoginAzureDevOpsCLI": "No se pudo iniciar sesión en Azure DevOps CLI",
   "loc.messages.FailedToSetAzureDevOpsOrganization": "No se pudo establecer Azure DevOps organización",
   "loc.messages.FailedToSetAzureDevOpsProject": "No se pudo establecer Azure DevOps proyecto",
   "loc.messages.SkippingSubscriptionContext": "Omitiendo el contexto de suscripción por entrada \"allowNoSubscriptions\" o valor GUID vacío",
-  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\\). Puede obtener más información aquí: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\\). Puede obtener más información aquí: https://aka.ms/ado/75787",
+  "loc.messages.BatchPercentSignNotAllowed": "Percent signs are not allowed in AzureCLI batch script arguments. Remove '%' from the arguments."
 }

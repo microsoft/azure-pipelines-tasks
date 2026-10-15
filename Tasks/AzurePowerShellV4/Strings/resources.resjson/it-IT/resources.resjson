@@ -35,6 +35,7 @@
   "loc.messages.GeneratingScript": "Generazione dello script.",
   "loc.messages.JS_FormattedCommand": "Comando formattato: %s",
   "loc.messages.InvalidScriptArguments0": "Gli argomenti '{0}' dello script non sono validi. Le interruzioni di riga non sono consentite.",
+  "loc.messages.ScriptArgsSanitized": "Sono stati rilevati caratteri negli argomenti che potrebbero non essere eseguiti correttamente dalla shell. Eseguire l'escape dei caratteri speciali usando la barra rovesciata (\\). Ulteriori informazioni sono disponibili qui: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "Il percorso '{0}' dello script non è valido. Sono stati specificati caratteri non validi.",
   "loc.messages.InvalidAzurePsVersion": "Il formato della versione di Azure PowerShell '{0}' specificata non è corretto. Controllare il formato. Un esempio di formato corretto è 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell terminato con codice '%s'.",

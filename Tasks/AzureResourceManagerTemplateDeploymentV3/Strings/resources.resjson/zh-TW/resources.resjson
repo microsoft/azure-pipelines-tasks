@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "與範本檔案模式相符的是目錄而非檔案。",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "與範本檔案模式相符的是目錄而非檔案: %s",
   "loc.messages.AddedOutputVariable": "已更新輸出變數 '%s'，其包含格式為字串之目前部署物件的輸出區段。",
+  "loc.messages.OutputVariableNameChanged": "輸出變數名稱 '%s' 在變數發佈時先前曾被解碼或截斷成不同的名稱。現在會原樣使用宣告的名稱。如果您的管線參考了先前的名稱，請將其更新為宣告的名稱。",
   "loc.messages.UnableToReadResponseBody": "無法讀取回應主體。錯誤: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Azure 入口網站的詳細資訊",
   "loc.messages.LogDeploymentName": "部署名稱為 %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "設定訂用帳戶時發生錯誤: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" 已失敗。錯誤: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本應 >= 2.47.0，才能使用 .bicepparam 檔案",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "提供的中繼資料檔案 '%s' 遺漏參數 '%s' 的中繼資料"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "提供的中繼資料檔案 '%s' 遺漏參數 '%s' 的中繼資料",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "部署輸出變數使用先前的格式發佈，因為此作業執行於代理程式版本 '%s'。若要使用安全格式發佈，必須使用代理程式版本 %s 或更新版本；安全格式可避免輸出名稱和值遭解讀為代理程式命令。請升級代理程式，以採用安全格式。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "部署輸出變數使用先前的格式發佈，因為 %s 變數的值會阻止代理程式解碼百分比逸出。移除該變數，或將其設定為 true，以採用安全格式，避免輸出名稱和值遭解讀為代理程式命令。"
 }

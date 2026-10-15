@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Credenciales de compilación encontradas",
   "loc.messages.ServiceEndpointNotDefined": "No se encontró la conexión de servicio. Asegúrese de que la conexión de servicio seleccionada aún existe.",
   "loc.messages.NpmrcNotNpmrc": "El archivo que ha seleccionado para autenticar (%s) no es un archivo .npmrc válido.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "No se encontró la dirección URL para la conexión de servicio. Asegúrese de que la conexión de servicio está configurada correctamente.",
   "loc.messages.SavingFile": "Guardando el archivo %s",
   "loc.messages.RestoringFile": "Restaurando el archivo %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "No se especificó feedUrl. Aplicando credenciales de WIF a todos los %d registros de .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Esquema de autenticación \"%s\" no admitido para la conexión de servicio. Los esquemas admitidos son \"Token\" y \"UsernamePassword\".",
   "loc.messages.Warning_NpmrcFileNotFound": "No se encontró el archivo npmrc: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Omitiendo la autenticación WIF para el registro que no es HTTPS: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "No se pueden autenticar registros en “%s” que mezclan direcciones URL HTTPS y no HTTPS. El ámbito de las credenciales npm no se delimitan por esquema. Use HTTPS para todos los registros de este host y puerto.",
   "loc.messages.Debug_EndpointProbeTimedOut": "se agotó el tiempo de espera de isEndpointInternal después de %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Error en la comprobación de isEndpointInternal: %s"
 }

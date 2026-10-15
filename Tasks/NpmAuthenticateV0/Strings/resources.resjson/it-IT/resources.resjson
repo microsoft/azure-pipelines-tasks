@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Sono state trovate le credenziali di compilazione",
   "loc.messages.ServiceEndpointNotDefined": "Non è stato possibile trovare la connessione al servizio. Assicurarsi che la connessione al servizio selezionata sia ancora esistente.",
   "loc.messages.NpmrcNotNpmrc": "Il file selezionato per l'autenticazione (%s) non è un file con estensione npmrc valido.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "Non è stato possibile trovare l'URL per la connessione al servizio. Assicurarsi che la connessione al servizio sia correttamente configurata.",
   "loc.messages.SavingFile": "Salvataggio del file %s",
   "loc.messages.RestoringFile": "Ripristino del file %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "Nessun feedUrl specificato. Applicazione delle credenziali WIF a tutti i registri %d in .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Schema di autenticazione '%s' non supportato per la connessione al servizio. Gli schemi supportati sono 'Token' e 'UsernamePassword'.",
   "loc.messages.Warning_NpmrcFileNotFound": "File npmrc non trovato: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Autenticazione WIF ignorata per il registro non HTTPS: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Non è possibile autenticare i registri in '%s' che combinano URL HTTPS e non HTTPS. Le credenziali npm non sono associate allo schema. Usare HTTPS per tutti i registri su questo host e questa porta.",
   "loc.messages.Debug_EndpointProbeTimedOut": "Timeout di isEndpointInternal dopo %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Controllo di isEndpointInternal non riuscito: %s"
 }

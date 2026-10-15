@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "Variable de correspondance dans le cache",
   "loc.input.help.cacheHitVar": "Variable qui doit prendre la valeur 'true' quand le cache est restauré (c'est-à-dire en cas de correspondance dans le cache), sinon la valeur est 'false'.",
   "loc.input.label.restoreKeys": "Préfixes de clé de restauration supplémentaires",
-  "loc.input.help.restoreKeys": "Préfixes de clé de restauration supplémentaires à utiliser si la clé primaire est absente. Il peut s'agir d'une liste de préfixes de clé délimités par des nouvelles lignes."
+  "loc.input.help.restoreKeys": "Préfixes de clé de restauration supplémentaires à utiliser si la clé primaire est absente. Il peut s'agir d'une liste de préfixes de clé délimités par des nouvelles lignes.",
+  "loc.input.label.saveOnPartialSuccess": "Save cache on partial success",
+  "loc.input.help.saveOnPartialSuccess": "When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds."
 }

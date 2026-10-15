@@ -111,6 +111,7 @@
   "loc.messages.Warning_InvalidRequestTimeoutIgnored": "Ignorance de la valeur invalide « %s » pour requestTimeout. Fournissez un entier non négatif (en secondes). Le délai d'attente par défaut de NuGet, fixé à 300 secondes, sera utilisé.",
   "loc.messages.Error_CommandNotRecognized": "La commande %s n'a pas été reconnue.",
   "loc.messages.Error_ApiKeyNotSupported": "DotNetCore ne prend pas en charge l'utilisation d'une clé API chiffrée.",
+  "loc.messages.Error_ApiKeyRequiresNuGet76": "Les connexions de service externes qui utilisent l’authentification par clé API nécessitent NuGet 7.6 ou version ultérieure. La version NuGet sélectionnée est %s.",
   "loc.messages.Error_ExpectedConfigurationElement": "Contenu xml non valide. L'élément nommé 'configuration' est attendu.",
   "loc.messages.Error_NoMatchingFilesFoundForPattern": "Il n'existe aucun fichier correspondant au modèle de recherche : %s",
   "loc.messages.Error_NoUrlWasFoundWhichMatches": "URL de téléchargement introuvable pour %s",

@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Il criterio dei file di parametri corrisponde a una directory anziché a un file.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Il criterio dei file modello corrisponde a una directory anziché a un file: %s",
   "loc.messages.AddedOutputVariable": "La variabile di output '%s', che contiene la sezione di output dell'oggetto distribuzione corrente in formato stringa, è stata aggiornata.",
+  "loc.messages.OutputVariableNameChanged": "Il nome della variabile di output '%s' è stato precedentemente decodificato o troncato con un nome diverso al momento della pubblicazione della variabile. Il nome dichiarato è ora usato letteralmente. Se la pipeline fa riferimento al nome precedente, aggiornarla con il nome dichiarato.",
   "loc.messages.UnableToReadResponseBody": "Non è possibile leggere il corpo della risposta. Errore: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Altre informazioni sul portale di Azure",
   "loc.messages.LogDeploymentName": "Il nome della distribuzione è %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "Errore durante la configurazione della sottoscrizione: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" non riuscito. Errore: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La versione dell'interfaccia della riga di comando di Azure deve essere >= 2.47.0 per usare il file con estensione bicepparam",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "Nel file di metadati specificato '%s' mancano i metadati del parametro '%s'"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "Nel file di metadati specificato '%s' mancano i metadati del parametro '%s'",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché questo processo viene eseguito con la versione dell'agente '%s'. Per pubblicarle usando il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente, è necessaria la versione dell'agente %s o successiva. Aggiornare l'agente per adottare il formato sicuro.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Le variabili di output della distribuzione sono state pubblicate usando il formato precedente perché la variabile %s è impostata su un valore che impedisce all'agente di decodificare la codifica con percentuale. Rimuovere la variabile oppure impostala su true per adottare il formato sicuro, che impedisce di interpretare i nomi e i valori di output come comandi dell'agente."
 }
