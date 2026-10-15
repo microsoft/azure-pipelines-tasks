@@ -9,6 +9,8 @@ import * as url from 'url';
 import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 
 interface RegistryInfo {
@@ -92,7 +94,8 @@ async function main(): Promise<void> {
         }
 
         for (let registryInfo of registriesInfo) {
-            if (isValidRegistry(registryInfo.url, collectionHosts)) {
+            if (isRegistryOnDiscoveredPackagingHost(registryInfo.url, collectionHosts)) {
+                await verifyAzureArtifactsFeedUrl(registryInfo.urlString, ProtocolType.Cargo);
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
                     if (url.parse(serviceConnection.packageSource.uri).href === registryInfo.urlString) {
@@ -185,7 +188,7 @@ function validateRegistryEnvKeyCollisions(registriesInfo: RegistryInfo[], collec
 
     for (let tokenName of Object.keys(registriesByTokenName)) {
         const collidingRegistries = registriesByTokenName[tokenName];
-        if (collidingRegistries.length > 1 && collidingRegistries.some(registry => isValidRegistry(registry.url, collectionHosts))) {
+        if (collidingRegistries.length > 1 && collidingRegistries.some(registry => isRegistryOnDiscoveredPackagingHost(registry.url, collectionHosts))) {
             throw new Error(tl.loc('RegistryEnvKeyCollision', collidingRegistries.map(registry => registry.name).join(', '), tokenName));
         }
     }
@@ -195,7 +198,7 @@ function warnRegistrySkipped(registryInfo: RegistryInfo): void {
     tl.warning(tl.loc('SkippingNonAzureDevOpsRegistry', registryInfo.name, registryInfo.urlString));
 }
 
-const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[]) =>
+const isRegistryOnDiscoveredPackagingHost = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[]) =>
     registryUrl &&
     registryUrl.protocol === "https:" &&
     registryUrl.host &&

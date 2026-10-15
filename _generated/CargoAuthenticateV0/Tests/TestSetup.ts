@@ -67,6 +67,20 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConne
     }
 });
 
+tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async function(feedUrl: string | URL) {
+        console.log(`Mock: verifyAzureArtifactsFeedUrl called with ${feedUrl}`);
+        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        if (parsedFeedUrl.protocol !== 'https:' ||
+            (parsedFeedUrl.hostname !== 'dev.azure.com' &&
+                parsedFeedUrl.hostname !== 'pkgs.dev.azure.com' &&
+                !parsedFeedUrl.hostname.endsWith('.visualstudio.com'))) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
+        return parsedFeedUrl;
+    }
+});
+
 // Mock packaging location utilities
 const packagingLocationShouldFail = process.env['__packagingLocationShouldFail__'] === 'true';
 
