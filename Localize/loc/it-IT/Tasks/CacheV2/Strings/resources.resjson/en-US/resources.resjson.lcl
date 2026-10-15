@@ -72,6 +72,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[When set to true, the cache entry is saved even when the job status is 'SucceededWithIssues' (partial success), in addition to 'Succeeded'. By default, the cache is only saved when the job succeeds.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Se questa opzione è impostata su true, la voce della cache viene salvata anche quando lo stato del processo è 'SucceededWithIssues' (esito positivo parziale), oltre a 'Succeeded'. Per impostazione predefinita, la cache viene salvata solo quando il processo ha esito positivo.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.cacheHitVar" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Cache hit variable]]></Val>
@@ -104,6 +113,15 @@
           <Val><![CDATA[Additional restore key prefixes]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Prefissi di chiavi di ripristino aggiuntive]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.saveOnPartialSuccess" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Save cache on partial success]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Salva cache in caso di esito positivo parziale]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

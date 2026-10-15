@@ -387,6 +387,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidManifestPathSegment" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The {0} value '{1}' is invalid. Manifest path segment names must be a single non-empty name, must not be '.' or '..', must not contain path separators or invalid file-name characters, and must not end in a dot or space.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[{0} 값 '{1}'이(가) 잘못되었습니다. 매니페스트 경로 세그먼트 이름은 비어 있지 않은 단일 이름이어야 합니다. '.' 또는 '..'이어서는 안 됩니다. 경로 구분자나 파일 이름에 사용할 수 없는 문자를 포함해서도 안 되며, 마침표나 공백으로 끝나서도 안 됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.ItemSearchMoreThanOneFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Found more than one item with search pattern {0}. There can be only one.]]></Val>
