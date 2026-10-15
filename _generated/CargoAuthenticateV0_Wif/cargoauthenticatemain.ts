@@ -3,8 +3,6 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as toml from 'toml';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as util from 'azure-pipelines-tasks-packaging-common/util';
-import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import * as url from 'url';
 import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
@@ -16,7 +14,6 @@ import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry'
 
 interface RegistryInfo {
     name: string;
-    url: url.UrlWithStringQuery;
     urlString: string;
     tokenName: string;
     credProviderName: string;
@@ -51,24 +48,8 @@ async function main(): Promise<void> {
             throw new Error(tl.loc('ConfigTomlMissingRegistry'));
         }
 
-        let packagingLocation: pkgLocationUtils.PackagingLocation;
-        try {
-            packagingLocation = await pkgLocationUtils.getPackagingUris(pkgLocationUtils.ProtocolType.Cargo);
-        } catch (error) {
-            tl.debug('Unable to get packaging URIs');
-            util.logError(error);
-            throw error;
-        }
-
-        const collectionHosts = packagingLocation.PackagingUris.map((pkgUrl: string) => {
-            const parsedUrl = url.parse(pkgUrl);
-            if (parsedUrl && parsedUrl.host) {
-                return parsedUrl.host.toLowerCase();
-            }
-            return undefined;
-        });
         const registriesInfo = getRegistriesInfo(result.registries);
-        validateRegistryEnvKeyCollisions(registriesInfo, collectionHosts);
+        validateRegistryEnvKeyCollisions(registriesInfo);
 
         const registries = tl.getInput("registryNames");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
@@ -134,11 +115,11 @@ async function main(): Promise<void> {
         }
 
         for (let registryInfo of registriesInfo) {
-            if (isRegistryOnDiscoveredPackagingHost(registryInfo.url, collectionHosts)) {
-                await verifyAzureArtifactsFeedUrl(registryInfo.urlString, ProtocolType.Cargo);
+            const verifiedRegistryUrl = await tryVerifyRegistryUrl(registryInfo.urlString);
+            if (verifiedRegistryUrl) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
-                    if (url.parse(serviceConnection.packageSource.uri).href === registryInfo.urlString) {
+                    if (url.parse(serviceConnection.packageSource.uri).href === verifiedRegistryUrl.href) {
                         if (tl.getVariable(registryInfo.tokenName)) {
                             tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
                         };
@@ -202,24 +183,23 @@ function getRegistryAuthStatus(tokenName: string, registryName: string): string{
 }
 
 // Sets variables later needed for authenticating registries
-function setRegistryVars(urlStr: string, registryName: string): readonly [url.UrlWithStringQuery, string, string, string] {
-    const registryUrl = url.parse(urlStr);
+function setRegistryVars(registryName: string): readonly [string, string, string] {
     const registryConfigName = registryName.toUpperCase().replace(/-/g, "_");
     const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
     const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
     const connectionType = getRegistryAuthStatus(tokenName, registryName);
-    return [registryUrl, tokenName, credProviderName, connectionType] as const;
+    return [tokenName, credProviderName, connectionType] as const;
 }
 
 function getRegistriesInfo(registries: { [name: string]: { index: string } }): RegistryInfo[] {
     return Object.keys(registries).map(name => {
         const urlString = url.parse(registries[name].index.replace("sparse+", "")).href;
-        const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(urlString, name);
-        return { name, url: registryUrl, urlString, tokenName, credProviderName, connectionType };
+        const [tokenName, credProviderName, connectionType] = setRegistryVars(name);
+        return { name, urlString, tokenName, credProviderName, connectionType };
     });
 }
 
-function validateRegistryEnvKeyCollisions(registriesInfo: RegistryInfo[], collectionHosts: string[]): void {
+function validateRegistryEnvKeyCollisions(registriesInfo: RegistryInfo[]): void {
     const registriesByTokenName: { [tokenName: string]: RegistryInfo[] } = {};
     for (let registryInfo of registriesInfo) {
         registriesByTokenName[registryInfo.tokenName] = registriesByTokenName[registryInfo.tokenName] || [];
@@ -228,20 +208,40 @@ function validateRegistryEnvKeyCollisions(registriesInfo: RegistryInfo[], collec
 
     for (let tokenName of Object.keys(registriesByTokenName)) {
         const collidingRegistries = registriesByTokenName[tokenName];
-        if (collidingRegistries.length > 1 && collidingRegistries.some(registry => isRegistryOnDiscoveredPackagingHost(registry.url, collectionHosts))) {
+        if (collidingRegistries.length > 1) {
             throw new Error(tl.loc('RegistryEnvKeyCollision', collidingRegistries.map(registry => registry.name).join(', '), tokenName));
         }
     }
 }
 
+async function tryVerifyRegistryUrl(registryUrl: string): Promise<URL | undefined> {
+    try {
+        return await verifyAzureArtifactsFeedUrl(registryUrl, ProtocolType.Cargo);
+    } catch (error) {
+        if (!isFeedValidationError(error)) {
+            throw error;
+        }
+        return undefined;
+    }
+}
+
+function isFeedValidationError(error: unknown): boolean {
+    if (!(error instanceof Error)) {
+        return false;
+    }
+
+    return [
+        "Error_FeedUrlUntrustedHost",
+        "Error_UrlCredentialsNotAllowed",
+        "Error_UrlHttpsRequired",
+        "Error_UrlInvalid"
+    ].some(resourceKey =>
+        error.message === resourceKey || error.message === tl.loc(resourceKey)
+    );
+}
+
 function warnRegistrySkipped(registryInfo: RegistryInfo): void {
     tl.warning(tl.loc('SkippingNonAzureDevOpsRegistry', registryInfo.name, registryInfo.urlString));
 }
-
-const isRegistryOnDiscoveredPackagingHost = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[]) =>
-    registryUrl &&
-    registryUrl.protocol === "https:" &&
-    registryUrl.host &&
-    collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();

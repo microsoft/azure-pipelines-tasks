@@ -51,6 +51,7 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 // Mock WIF credentials provider
 const wifToken = process.env[testConstants.TestEnvVars.wifToken];
 const wifShouldFail = process.env[testConstants.TestEnvVars.wifShouldFail] === 'true';
+const feedVerificationShouldFail = process.env['__feedVerificationShouldFail__'] === 'true';
 
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
     getFederatedWorkloadIdentityCredentialsForFeed: async function(serviceConnectionName: string, feedUrl: string) {
@@ -70,35 +71,23 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConne
 tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
     verifyAzureArtifactsFeedUrl: async function(feedUrl: string | URL) {
         console.log(`Mock: verifyAzureArtifactsFeedUrl called with ${feedUrl}`);
-        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        if (feedVerificationShouldFail) {
+            throw new Error('Simulated feed verification failure');
+        }
+
+        let parsedFeedUrl: URL;
+        try {
+            parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        } catch {
+            throw new Error('loc_mock_Error_UrlInvalid');
+        }
         if (parsedFeedUrl.protocol !== 'https:' ||
             (parsedFeedUrl.hostname !== 'dev.azure.com' &&
                 parsedFeedUrl.hostname !== 'pkgs.dev.azure.com' &&
                 !parsedFeedUrl.hostname.endsWith('.visualstudio.com'))) {
-            throw new Error('Error_FeedUrlUntrustedHost');
+            throw new Error('loc_mock_Error_FeedUrlUntrustedHost');
         }
         return parsedFeedUrl;
-    }
-});
-
-// Mock packaging location utilities
-const packagingLocationShouldFail = process.env['__packagingLocationShouldFail__'] === 'true';
-
-tr.registerMock('azure-pipelines-tasks-packaging-common/locationUtilities', {
-    getPackagingUris: async function(protocolType: any) {
-        console.log(`Mock: getPackagingUris called with protocol ${protocolType}`);
-        if (packagingLocationShouldFail) {
-            throw new Error('Unable to get packaging URIs - simulated service failure');
-        }
-        return {
-            PackagingUris: [
-                'https://pkgs.dev.azure.com/testorg/',
-                'https://dev.azure.com/testorg/'
-            ]
-        };
-    },
-    ProtocolType: {
-        Cargo: 'Cargo'
     }
 });
 
@@ -115,13 +104,6 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/serviceConnectionUtils',
     ServiceConnectionAuthType: {
         UsernamePassword: 'UsernamePassword',
         Token: 'Token'
-    }
-});
-
-// Mock util
-tr.registerMock('azure-pipelines-tasks-packaging-common/util', {
-    logError: function(error: any) {
-        console.log(`Mock util.logError: ${error}`);
     }
 });
 

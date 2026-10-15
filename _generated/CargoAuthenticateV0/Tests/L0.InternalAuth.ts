@@ -113,17 +113,17 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
         });
 
-        it('handles packaging location service failure gracefully', async () => {
+        it('fails when shared feed verification cannot complete', async () => {
             // Arrange & Act
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forInternalAuth('test-registry', {
-                    '__packagingLocationShouldFail__': 'true'
+                    '__feedVerificationShouldFail__': 'true'
                 })
             );
             
             // Assert
             TestHelpers.assertFailure(tr, {
-                expectedError: 'Unable to get packaging URIs'
+                expectedError: 'Simulated feed verification failure'
             });
         });
     });
