@@ -9,8 +9,18 @@ import * as url from 'url';
 import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
+
+interface RegistryInfo {
+    name: string;
+    url: url.UrlWithStringQuery;
+    urlString: string;
+    tokenName: string;
+    credProviderName: string;
+    connectionType: string;
+}
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -56,17 +66,14 @@ async function main(): Promise<void> {
             }
             return undefined;
         });
+        const registriesInfo = getRegistriesInfo(result.registries);
+        validateRegistryEnvKeyCollisions(registriesInfo, collectionHosts);
 
         const registries = tl.getInput("registryNames");
         const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
 
         if (entraWifServiceConnectionName && registries) {
             const registryNames = registries.split(',');
-            const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName);
-
-            if (!token) {
-                throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-            }
 
             for (let registryName of registryNames) {
                 if(!result.registries[registryName]) {
@@ -74,21 +81,26 @@ async function main(): Promise<void> {
                 }
             }
 
-            const registriesInfo = (<any>Object).entries(result.registries).filter(registry => registryNames.includes(registry[0]));
-            for (let registryInfo of registriesInfo)
+            const selectedRegistriesInfo = registriesInfo.filter(registry => registryNames.includes(registry.name));
+            for (let registryInfo of selectedRegistriesInfo)
             {
-                var registryUrlStr = url.parse(registryInfo[1].index.replace("sparse+", "")).href;
-                const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registryInfo[0]);
-                if (isValidRegistry(registryUrl, collectionHosts, connectionType))
-                {
-                    if (tl.getVariable(tokenName)) {
-                        tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo[0], connectionType));
-                    }
-                    
-                    setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${token}`))}`);
-                    tl.setVariable(credProviderName, "cargo:token");
-                    federatedAuthCount++;
+                const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                    entraWifServiceConnectionName,
+                    registryInfo.urlString,
+                    ProtocolType.Cargo);
+                if (!credentials) {
+                    throw new Error(tl.loc("FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
                 }
+
+                if (tl.getVariable(registryInfo.tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
+                }
+
+                setSecretEnvVariable(
+                    registryInfo.tokenName,
+                    `Basic ${base64.encode(utf8.encode(`${entraWifServiceConnectionName}:${credentials.accessToken}`))}`);
+                tl.setVariable(registryInfo.credProviderName, "cargo:token");
+                federatedAuthCount++;
             }
 
             return;
@@ -120,37 +132,37 @@ async function main(): Promise<void> {
             }
         }
 
-        for (let registry of Object.keys(result.registries)) {
-            const registryUrlStr = url.parse(result.registries[registry].index.replace("sparse+", "")).href;
-            const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(registryUrlStr, registry);
-
-            if (isValidRegistry(registryUrl, collectionHosts, connectionType)) {
+        for (let registryInfo of registriesInfo) {
+            if (isValidRegistry(registryInfo.url, collectionHosts)) {
                 let currentRegistry : string;
                 for (let serviceConnection of externalServiceConnections) {
-                    if (url.parse(serviceConnection.packageSource.uri).href === registryUrlStr) {
-                        if (tl.getVariable(tokenName)) {
-                            tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registry, connectionType));
+                    if (url.parse(serviceConnection.packageSource.uri).href === registryInfo.urlString) {
+                        if (tl.getVariable(registryInfo.tokenName)) {
+                            tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
                         };
                         const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
-                        currentRegistry = registry;
+                        currentRegistry = registryInfo.name;
                         tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
-                        tl.debug(tl.loc('AddingAuthExternalRegistry', registry, tokenName));
-                        setSecretEnvVariable(tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
-                        tl.setVariable(credProviderName, "cargo:token");
+                        tl.debug(tl.loc('AddingAuthExternalRegistry', registryInfo.name, registryInfo.tokenName));
+                        setSecretEnvVariable(registryInfo.tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
+                        tl.setVariable(registryInfo.credProviderName, "cargo:token");
                         externalAuthCount++;
                     }      
                 }
                 // Default to internal registry if no token has been set yet, warn if token is already set
-                if (!currentRegistry && !tl.getVariable(tokenName)) {
-                    tl.debug(tl.loc('AddingAuthRegistry', registry, tokenName));
-                    setSecretEnvVariable(tokenName, localAccesstoken);
-                    tl.setVariable(credProviderName, "cargo:token");
+                if (!currentRegistry && !tl.getVariable(registryInfo.tokenName)) {
+                    tl.debug(tl.loc('AddingAuthRegistry', registryInfo.name, registryInfo.tokenName));
+                    setSecretEnvVariable(registryInfo.tokenName, localAccesstoken);
+                    tl.setVariable(registryInfo.credProviderName, "cargo:token");
                     internalAuthCount++;
                 }  
-                else if (!currentRegistry && tl.getVariable(tokenName)) {
-                    tl.warning(tl.loc('ConnectionAlreadySet', registry, connectionType));
+                else if (!currentRegistry && tl.getVariable(registryInfo.tokenName)) {
+                    tl.warning(tl.loc('ConnectionAlreadySet', registryInfo.name, registryInfo.connectionType));
                 } 
-            } 
+            }
+            else {
+                warnRegistrySkipped(registryInfo);
+            }
         }
     }
 
@@ -190,14 +202,44 @@ function getRegistryAuthStatus(tokenName: string, registryName: string): string{
 // Sets variables later needed for authenticating registries
 function setRegistryVars(urlStr: string, registryName: string): readonly [url.UrlWithStringQuery, string, string, string] {
     const registryUrl = url.parse(urlStr);
-    const registryConfigName = registryName.toLocaleUpperCase().replace(/-/g, "_");
+    const registryConfigName = registryName.toUpperCase().replace(/-/g, "_");
     const tokenName = `CARGO_REGISTRIES_${registryConfigName}_TOKEN`;
     const credProviderName = `CARGO_REGISTRIES_${registryConfigName}_CREDENTIAL_PROVIDER`;
     const connectionType = getRegistryAuthStatus(tokenName, registryName);
     return [registryUrl, tokenName, credProviderName, connectionType] as const;
 }
 
-const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[], connectionType: string) => 
-    registryUrl && registryUrl.host && collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
+function getRegistriesInfo(registries: { [name: string]: { index: string } }): RegistryInfo[] {
+    return Object.keys(registries).map(name => {
+        const urlString = url.parse(registries[name].index.replace("sparse+", "")).href;
+        const [registryUrl, tokenName, credProviderName, connectionType] = setRegistryVars(urlString, name);
+        return { name, url: registryUrl, urlString, tokenName, credProviderName, connectionType };
+    });
+}
+
+function validateRegistryEnvKeyCollisions(registriesInfo: RegistryInfo[], collectionHosts: string[]): void {
+    const registriesByTokenName: { [tokenName: string]: RegistryInfo[] } = {};
+    for (let registryInfo of registriesInfo) {
+        registriesByTokenName[registryInfo.tokenName] = registriesByTokenName[registryInfo.tokenName] || [];
+        registriesByTokenName[registryInfo.tokenName].push(registryInfo);
+    }
+
+    for (let tokenName of Object.keys(registriesByTokenName)) {
+        const collidingRegistries = registriesByTokenName[tokenName];
+        if (collidingRegistries.length > 1 && collidingRegistries.some(registry => isValidRegistry(registry.url, collectionHosts))) {
+            throw new Error(tl.loc('RegistryEnvKeyCollision', collidingRegistries.map(registry => registry.name).join(', '), tokenName));
+        }
+    }
+}
+
+function warnRegistrySkipped(registryInfo: RegistryInfo): void {
+    tl.warning(tl.loc('SkippingNonAzureDevOpsRegistry', registryInfo.name, registryInfo.urlString));
+}
+
+const isValidRegistry = (registryUrl: url.UrlWithStringQuery, collectionHosts: string[]) =>
+    registryUrl &&
+    registryUrl.protocol === "https:" &&
+    registryUrl.host &&
+    collectionHosts.indexOf(registryUrl.host.toLowerCase()) >= 0;
 
 main();

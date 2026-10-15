@@ -53,16 +53,17 @@ const wifToken = process.env[testConstants.TestEnvVars.wifToken];
 const wifShouldFail = process.env[testConstants.TestEnvVars.wifShouldFail] === 'true';
 
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
-    getFederatedWorkloadIdentityCredentials: async function(serviceConnectionName: string, tenantId?: string) {
-        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentials called with ${serviceConnectionName}`);
+    getFederatedWorkloadIdentityCredentialsForFeed: async function(serviceConnectionName: string, feedUrl: string) {
+        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called with ${serviceConnectionName} and ${feedUrl}`);
         if (wifShouldFail) {
             throw new Error('Simulated WIF authentication failure');
         }
-        return wifToken;
-    },
-    getFeedTenantId: function(feedUrl: string) {
-        console.log(`Mock WIF: getFeedTenantId called with ${feedUrl}`);
-        return 'mock-tenant-id';
+        const verifiedFeedUrl = new URL(feedUrl);
+        if (verifiedFeedUrl.protocol !== 'https:' ||
+            !verifiedFeedUrl.hostname.toLowerCase().endsWith('dev.azure.com')) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
+        return wifToken ? { accessToken: wifToken, feedUrl: verifiedFeedUrl } : undefined;
     }
 });
 

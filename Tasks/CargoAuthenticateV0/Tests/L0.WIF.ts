@@ -26,7 +26,7 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
             
             // Assert
             assert(tr.succeeded, 'Task should succeed with WIF authentication');
-            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentials called') > 0,
+            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called') > 0,
                 'Should call WIF credentials provider');
         });
 
@@ -43,7 +43,7 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
             
             // Assert
             assert(tr.succeeded, 'Task should succeed with System.AccessToken fallback');
-            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentials called') < 0,
+            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called') < 0,
                 'Should NOT call WIF credentials provider when not configured');
         });
 
@@ -61,7 +61,7 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
             
             // Assert
             assert(tr.failed, 'Task should fail when WIF authentication fails');
-            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentials called') > 0,
+            assert(tr.stdout.indexOf('Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called') > 0,
                 'Should attempt WIF authentication');
         });
 
@@ -122,6 +122,20 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
                 'Should reference the missing registry name in error');
         });
 
+        it('fails before WIF authentication when registry environment keys collide', async () => {
+            const tr = await TestHelpers.runTest(
+                testConstants.TestDataBuilder.forWifAuth('test-registry', {
+                    [testConstants.TestEnvVars.registryNames]: testConstants.TestData.testRegistry,
+                    '__mockConfigContent__': testConstants.TestData.collidingRegistryToml
+                })
+            );
+
+            TestHelpers.assertFailure(tr, {
+                expectedError: 'loc_mock_RegistryEnvKeyCollision'
+            });
+            TestHelpers.assertTelemetryEmitted(tr, { FederatedConnectionAuthCount: 0 });
+        });
+
         it('fails when WIF returns null token', async () => {
             // Arrange
             const tp = path.join(__dirname, 'TestSetup.js');
@@ -136,6 +150,26 @@ describe('CargoAuthenticate L0 Suite - Workload Identity Federation', function (
             
             // Assert
             assert(tr.failed, 'Task should fail when WIF returns null/empty token');
+        });
+
+        it('rejects a spoofed registry before setting a WIF token', async () => {
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
+            process.env[testConstants.TestEnvVars.registryNames] = testConstants.TestData.testRegistry;
+            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
+            process.env['__mockConfigContent__'] = `
+[registries]
+test-registry = { index = "sparse+https://pkgs.dev.azure.com.attacker.example/feed/Cargo/index/" }
+`;
+
+            await tr.runAsync();
+
+            assert(tr.failed, 'Task should reject an untrusted WIF registry');
+            assert(tr.stdout.indexOf('Error_FeedUrlUntrustedHost') > 0,
+                'Task should report the feed URL validation failure');
+            assert(tr.stdout.indexOf('##vso[task.setvariable variable=CARGO_REGISTRIES_TEST_REGISTRY_TOKEN;') < 0,
+                'Task must not set a token for the untrusted registry');
         });
     });
 });
