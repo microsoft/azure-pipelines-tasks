@@ -21,14 +21,9 @@ exports.logCommandResult = logCommandResult;
 exports.logInfo = logInfo;
 const tl = require("azure-pipelines-task-lib");
 const telemetry = require("azure-pipelines-tasks-utility-common/telemetry");
-#if;
-WIF;
-const EntraWifUserServiceConnectionUtils_1 = require("azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils");
-#endif;
 const stringUtils_1 = require("azure-pipelines-tasks-artifacts-common/stringUtils");
 const webapi_1 = require("azure-pipelines-tasks-artifacts-common/webapi");
-const connectionDataUtils_1 = require("azure-pipelines-tasks-artifacts-common/connectionDataUtils");
-const feedUrlUtils_1 = require("azure-pipelines-tasks-artifacts-common/feedUrlUtils");
+const protocols_1 = require("azure-pipelines-tasks-artifacts-common/protocols");
 const artifactToolRunner = require("azure-pipelines-tasks-packaging-common/universal/ArtifactToolRunner");
 exports.artifactToolRunner = artifactToolRunner;
 const UniversalPackageContext_1 = require("./UniversalPackageContext");
@@ -76,59 +71,26 @@ function tryGetSystemAccessToken(context) {
     context.accessToken = getSystemAccessToken();
     return !!context.accessToken;
 }
-#if;
-WIF;
-function tryGetWifToken(context) {
-    return __awaiter(this, void 0, void 0, function* () {
-        tl.debug(tl.loc('Debug_UsingWifAuth', context.adoServiceConnection));
-        try {
-            if (!context.feedUrl) {
-                throw new Error(tl.loc('Error_FeedUrlRequired'));
-            }
-            const credentials = yield (0, EntraWifUserServiceConnectionUtils_1.getFederatedWorkloadIdentityCredentialsForFeed)(context.adoServiceConnection, (0, feedUrlUtils_1.parseAzureArtifactsFeedUrl)(context.feedUrl));
-            if (credentials) {
-                context.accessToken = credentials.accessToken;
-                context.serviceUri = credentials.feedUrl.href;
-                tl.debug(tl.loc('Debug_WifTokenObtained'));
-                return true;
-            }
-            else {
-                tl.warning(tl.loc('Warning_WifAuthNoToken', context.adoServiceConnection));
-                return false;
-            }
-        }
-        catch (err) {
-            tl.warning(tl.loc('Warning_WifAuthFailed', context.adoServiceConnection, err));
-            return false;
-        }
-    });
-}
-#endif;
 function trySetAccessToken(context) {
     return __awaiter(this, void 0, void 0, function* () {
-        #if;
-        WIF;
-        if (context.adoServiceConnection) {
-            return yield tryGetWifToken(context);
-        }
-        #endif;
         return tryGetSystemAccessToken(context);
     });
 }
-const FEED_RESOURCE_AREA_ID = '7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5';
 function setSystemServiceUri(context) {
     if (!context.adoServiceConnection) {
-        context.serviceUri = (0, webapi_1.getSystemServiceUrl)().href;
+        context.serviceUri = tl.getEndpointUrlRequired("SYSTEMVSSCONNECTION");
         tl.debug(tl.loc('Debug_UsingServiceUri', context.serviceUri));
     }
 }
 function setFeedServiceUri(context) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            context.feedServiceUri = yield (0, connectionDataUtils_1.getServiceUriFromAreaId)(FEED_RESOURCE_AREA_ID, {
-                serviceUrl: context.serviceUri,
-                accessToken: context.accessToken
-            });
+            const rootServiceUrl = (0, webapi_1.requireHttpsUrl)(context.serviceUri).href;
+            const webApi = (0, webapi_1.getWebApiWithProxy)(rootServiceUrl, context.accessToken, { maxRedirects: 0 });
+            const locationApi = yield webApi.getLocationsApi();
+            const resourceArea = yield locationApi.getResourceArea((0, protocols_1.getAreaIdForProtocol)(protocols_1.ProtocolType.Universal));
+            context.feedServiceUri =
+                (0, webapi_1.requireHttpsUrl)(resourceArea.locationUrl).href;
             tl.debug(tl.loc('Debug_FeedServiceUri', context.feedServiceUri));
         }
         catch (error) {

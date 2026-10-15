@@ -185,7 +185,7 @@ class UniversalMockHelper {
                 if (this.config.wifAuthBehavior === 'success') {
                     return {
                         accessToken: testConstants_1.TEST_CONSTANTS.WIF_TOKEN,
-                        feedUrl
+                        feedUrl: new URL(feedUrl)
                     };
                 }
                 else if (this.config.wifAuthBehavior === 'returns-null') {
@@ -201,11 +201,10 @@ class UniversalMockHelper {
         // Mock getSystemAccessToken and getWebApiWithProxy for provenance
         const provenanceSessionId = this.provenanceSessionId;
         const webapiMock = {
-            getSystemServiceUrl: () => new URL(testConstants_1.TEST_CONSTANTS.SERVICE_URL),
             requireHttpsUrl: (value) => {
                 const url = new URL(value);
                 if (url.protocol !== 'https:') {
-                    throw new Error('Error_ServiceUrlHttpsRequired');
+                    throw new Error('Error_UrlHttpsRequired');
                 }
                 return url;
             },
@@ -251,8 +250,11 @@ class UniversalMockHelper {
                     getLocationsApi: () => __awaiter(this, void 0, void 0, function* () {
                         return ({
                             getResourceArea: (areaId) => __awaiter(this, void 0, void 0, function* () {
-                                // Mock the UPack area ID returning a packaging service URL
-                                return { locationUrl: `${serviceUri}/_apis/packaging` };
+                                const locationUrl = process.env['MOCK_FEED_SERVICE_URL'] ||
+                                    (serviceUri.includes('other-org')
+                                        ? testConstants_1.TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
+                                        : testConstants_1.TEST_CONSTANTS.FEED_SERVICE_URL);
+                                return { locationUrl };
                             }),
                             getConnectionData: () => __awaiter(this, void 0, void 0, function* () {
                                 return ({
@@ -270,18 +272,6 @@ class UniversalMockHelper {
         };
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', wifMock);
         this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/webapi', webapiMock);
-        this.tmr.registerMock('azure-pipelines-tasks-artifacts-common/connectionDataUtils', {
-            getServiceUriFromAreaId: (_areaId, connection) => __awaiter(this, void 0, void 0, function* () {
-                const serviceUrl = process.env['MOCK_FEED_SERVICE_URL'] ||
-                    (connection.serviceUrl.includes('other-org')
-                        ? testConstants_1.TEST_CONSTANTS.CROSS_ORG_FEED_SERVICE_URL
-                        : testConstants_1.TEST_CONSTANTS.FEED_SERVICE_URL);
-                if (new URL(serviceUrl).protocol !== 'https:') {
-                    throw new Error('Error_ServiceUrlHttpsRequired');
-                }
-                return serviceUrl;
-            })
-        });
     }
     mockUniversalCommand() {
         if (!this.config.commandString) {

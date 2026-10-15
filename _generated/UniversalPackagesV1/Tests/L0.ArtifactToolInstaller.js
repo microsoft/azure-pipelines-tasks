@@ -34,7 +34,7 @@ describe('UniversalPackagesV1 - Artifact Tool Installer (Pre-Job)', function () 
             assert.strictEqual(vars.get('UPACK_ARTIFACTTOOL_PATH'), testConstants_1.TEST_CONSTANTS.ARTIFACT_TOOL_PATH, 'Should cache path in pipeline variable');
         }));
         it('skips installation if artifact tool is already cached', () => __awaiter(this, void 0, void 0, function* () {
-            const tr = yield (0, testHelpers_1.runTestWithEnv)('./testRunner.js', Object.assign(Object.assign({}, PRE_JOB_ENV), { 'UPACK_ARTIFACTTOOL_PATH': testConstants_1.TEST_CONSTANTS.ARTIFACT_TOOL_PATH }));
+            const tr = yield (0, testHelpers_1.runTestWithEnv)('./testRunner.js', Object.assign(Object.assign({}, PRE_JOB_ENV), { 'VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH': testConstants_1.TEST_CONSTANTS.ARTIFACT_TOOL_PATH }));
             assert(tr.succeeded, 'Task should have succeeded');
             assert(tr.stdOutContained('loc_mock_Info_ArtifactToolPathResolvedFromCache'), 'Should use cached path');
         }));
