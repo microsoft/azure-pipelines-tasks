@@ -76,39 +76,38 @@ async function main(): Promise<void> {
 
         for (let registryInfo of registriesInfo) {
             const verifiedRegistryUrl = await tryVerifyRegistryUrl(registryInfo.urlString);
-            if (verifiedRegistryUrl) {
-                let currentRegistry : string;
-                for (let serviceConnection of externalServiceConnections) {
-                    if (url.parse(serviceConnection.packageSource.uri).href === verifiedRegistryUrl.href) {
-                        if (tl.getVariable(registryInfo.tokenName)) {
-                            tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
-                        };
-                        const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
-                        currentRegistry = registryInfo.name;
-                        tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
-                        tl.debug(tl.loc('AddingAuthExternalRegistry', registryInfo.name, registryInfo.tokenName));
-                        setSecretEnvVariable(registryInfo.tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
-                        tl.setVariable(registryInfo.credProviderName, "cargo:token");
-                        externalAuthCount++;
-                    }      
-                }
-                // Default to internal registry if no token has been set yet, warn if token is already set
-                if (!currentRegistry && !tl.getVariable(registryInfo.tokenName)) {
-                    tl.debug(tl.loc('AddingAuthRegistry', registryInfo.name, registryInfo.tokenName));
-                    setSecretEnvVariable(registryInfo.tokenName, localAccesstoken);
-                    tl.setVariable(registryInfo.credProviderName, "cargo:token");
-                    internalAuthCount++;
-                }  
-                else if (!currentRegistry && tl.getVariable(registryInfo.tokenName)) {
-                    tl.warning(tl.loc('ConnectionAlreadySet', registryInfo.name, registryInfo.connectionType));
-                } 
-            }
-            else {
+            if (!verifiedRegistryUrl) {
                 warnRegistrySkipped(registryInfo);
+                continue;
+            }
+
+            let currentRegistry : string;
+            for (let serviceConnection of externalServiceConnections) {
+                if (url.parse(serviceConnection.packageSource.uri).href === verifiedRegistryUrl.href) {
+                    if (tl.getVariable(registryInfo.tokenName)) {
+                        tl.warning(tl.loc('ConnectionAlreadySetOverwriting', registryInfo.name, registryInfo.connectionType));
+                    };
+                    const usernamePasswordAuthInfo = serviceConnection as UsernamePasswordServiceConnection;
+                    currentRegistry = registryInfo.name;
+                    tl.debug(`Detected username/password or PAT credentials for '${serviceConnection.packageSource.uri}'`);
+                    tl.debug(tl.loc('AddingAuthExternalRegistry', registryInfo.name, registryInfo.tokenName));
+                    setSecretEnvVariable(registryInfo.tokenName, `Basic ${base64.encode(utf8.encode(`${usernamePasswordAuthInfo.username}:${usernamePasswordAuthInfo.password}`))}`);
+                    tl.setVariable(registryInfo.credProviderName, "cargo:token");
+                    externalAuthCount++;
+                }
+            }
+            // Default to internal registry if no token has been set yet, warn if token is already set
+            if (!currentRegistry && !tl.getVariable(registryInfo.tokenName)) {
+                tl.debug(tl.loc('AddingAuthRegistry', registryInfo.name, registryInfo.tokenName));
+                setSecretEnvVariable(registryInfo.tokenName, localAccesstoken);
+                tl.setVariable(registryInfo.credProviderName, "cargo:token");
+                internalAuthCount++;
+            }
+            else if (!currentRegistry && tl.getVariable(registryInfo.tokenName)) {
+                tl.warning(tl.loc('ConnectionAlreadySet', registryInfo.name, registryInfo.connectionType));
             }
         }
     }
-
     catch(error) {
         tl.error(error);
         tl.setResult(tl.TaskResult.Failed, tl.loc("FailedToAddAuthentication"));
@@ -178,26 +177,8 @@ async function tryVerifyRegistryUrl(registryUrl: string): Promise<URL | undefine
     try {
         return await verifyAzureArtifactsFeedUrl(registryUrl, ProtocolType.Cargo);
     } catch (error) {
-        if (!isFeedValidationError(error)) {
-            throw error;
-        }
         return undefined;
     }
-}
-
-function isFeedValidationError(error: unknown): boolean {
-    if (!(error instanceof Error)) {
-        return false;
-    }
-
-    return [
-        "Error_FeedUrlUntrustedHost",
-        "Error_UrlCredentialsNotAllowed",
-        "Error_UrlHttpsRequired",
-        "Error_UrlInvalid"
-    ].some(resourceKey =>
-        error.message === resourceKey || error.message === tl.loc(resourceKey)
-    );
 }
 
 function warnRegistrySkipped(registryInfo: RegistryInfo): void {
