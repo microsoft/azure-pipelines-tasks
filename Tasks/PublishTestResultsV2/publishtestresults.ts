@@ -9,7 +9,6 @@ import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
 const TESTRUN_SYSTEM = 'VSTS - PTR';
-const TCM_RESOURCE_AREA_ID = '00000054-0000-8888-8000-000000000000';
 
 function isNullOrWhitespace(input: any) {
     if (typeof input === 'undefined' || input === null) {
@@ -71,39 +70,26 @@ async function isFeatureFlagEnabled(featureFlag: string): Promise<boolean> {
             throw new Error('Collection access token is unavailable');
         }
 
-        const normalizedCollectionUrl = trimTrailingSlash(collectionUrl);
+        const featureFlagUrl = `${collectionUrl.replace(/\/+$/, '')}/_apis/FeatureFlags/${featureFlag}`;
         const client = new RestClient('PublishTestResults', undefined, undefined, {
             socketTimeout: 5000,
             allowRetries: false,
             allowRedirects: false,
-            proxy: tl.getHttpProxyConfiguration(normalizedCollectionUrl),
+            proxy: tl.getHttpProxyConfiguration(featureFlagUrl),
             cert: tl.getHttpCertConfiguration()
         });
-
-        const requestOptions = {
+        const response = await client.get<{ effectiveState?: string }>(featureFlagUrl, {
             additionalHeaders: { Authorization: `Bearer ${token}` }
-        };
-        const resourceAreaUrl = `${normalizedCollectionUrl}/_apis/resourceAreas/${TCM_RESOURCE_AREA_ID}?api-version=5.0-preview.1`;
-        const resourceAreaResponse = await client.get<{ locationUrl?: string }>(resourceAreaUrl, requestOptions);
-        if (resourceAreaResponse.statusCode !== 200 || typeof resourceAreaResponse.result?.locationUrl !== 'string') {
-            throw new Error('TCM service URL is unavailable');
-        }
-
-        const featureFlagUrl = `${trimTrailingSlash(resourceAreaResponse.result.locationUrl)}/_apis/FeatureFlags/${featureFlag}`;
-        const response = await client.get<{ effectiveState?: string }>(featureFlagUrl, requestOptions);
+        });
         if (response.statusCode !== 200 || typeof response.result?.effectiveState !== 'string'
             || !/^(on|off)$/i.test(response.result.effectiveState)) {
-            throw new Error('TCM feature flag state is unavailable');
+            throw new Error('TFS feature flag state is unavailable');
         }
         return response.result.effectiveState.toLowerCase() === 'on';
     } catch (err) {
-        tl.debug(`Unable to read TCM feature flag '${featureFlag}'. Retaining .NET SDK version telemetry.`);
+        tl.debug(`Unable to read TFS feature flag '${featureFlag}'. Retaining .NET SDK version telemetry.`);
         return false;
     }
-}
-
-function trimTrailingSlash(url: string): string {
-    return url.replace(/\/+$/, '');
 }
 
 function getDotNetVersion() {
