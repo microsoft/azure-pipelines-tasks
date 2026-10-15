@@ -1019,7 +1019,11 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $inlineScriptText = $fileCopyJobScript.ToString()
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments'"
+    # Escape embedded single-quotes so $containerURL/$targetPath cannot break out of the
+    # single-quoted literals below and inject additional PowerShell statements.
+    $escapedContainerURL = $containerURL.Replace("'", "''")
+    $escapedTargetPath = $targetPath.Replace("'", "''")
+    $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$additionalArguments'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
