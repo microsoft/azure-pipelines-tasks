@@ -86,12 +86,33 @@ export function initializeBackupDirectory(): string {
     // containers. Agent.BuildDirectory/Agent.TempDirectory live under the agent's Work
     // directory, which *is* mounted read/write into job containers by default, so a
     // lower-trust container process could otherwise tamper with the backup that the
-    // trusted post-job cleanup later restores. Fall back to Agent.TempDirectory only if
-    // Agent.HomeDirectory is unavailable, for compatibility with older agents.
-    let tempPath = tl.getVariable('Agent.HomeDirectory') || tl.getVariable('Agent.TempDirectory');
-    tempPath = path.join(tempPath, 'npmAuthenticateBackup');
-    tl.mkdirP(tempPath);
-    const backupDirectory = fs.mkdtempSync(tempPath + path.sep);
+    // trusted post-job cleanup later restores. Agent.TempDirectory is only used as a
+    // fallback: for older agents that don't set Agent.HomeDirectory, and for the rare
+    // case where Agent.HomeDirectory exists but isn't writable (for example, a container
+    // configured with a custom read-only root filesystem) so the task keeps working.
+    const candidateDirectories = [tl.getVariable('Agent.HomeDirectory'), tl.getVariable('Agent.TempDirectory')]
+        .filter((candidate) => !!candidate);
+
+    let tempPath: string;
+    let backupDirectory: string;
+    let lastError: Error;
+    for (let i = 0; i < candidateDirectories.length; i++) {
+        try {
+            tempPath = path.join(candidateDirectories[i], 'npmAuthenticateBackup');
+            tl.mkdirP(tempPath);
+            backupDirectory = fs.mkdtempSync(tempPath + path.sep);
+            if (i > 0) {
+                tl.warning(tl.loc('Warning_HomeDirectoryNotWritable', lastError.message));
+            }
+            break;
+        } catch (err) {
+            lastError = err;
+        }
+    }
+    if (!backupDirectory) {
+        throw lastError || new Error('Unable to determine a writable npmAuthenticate backup directory.');
+    }
+
     tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
     tl.setVariable('NPM_AUTHENTICATE_TEMP_DIRECTORY', tempPath, false);
     return backupDirectory;
