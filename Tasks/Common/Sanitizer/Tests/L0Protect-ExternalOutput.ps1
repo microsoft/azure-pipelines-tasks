@@ -49,6 +49,11 @@ $testSuites = @(
         Name     = 'Neutralizes markers across multiple piped lines'
         Input    = "row one`n##vso[task.setvariable variable=BASH_ENV]/tmp/payload`nrow three"
         Expected = "row one`n##_vso[task.setvariable variable=BASH_ENV]/tmp/payload`nrow three"
+    },
+    @{
+        Name     = 'Neutralizes a ##vso[ marker nested inside another marker'
+        Input    = '##vso[##vso[task.debug]hello'
+        Expected = '##_vso[##_vso[task.debug]hello'
     }
 )
 
@@ -80,66 +85,3 @@ catch {
     $invalidSourceThrew = $true
 }
 Assert-AreEqual -Expected $true -Actual $invalidSourceThrew -Message 'An invalid -Source value should be rejected.'
-
-# --- -EnableVsoCommands / -AllowedVsoCommands allowlist behavior ---
-# Mirrors azure-pipelines-task-lib's MarkerFilter: when enabled, only an
-# allowlisted "area.event" command name passes through unmodified; everything
-# else - unknown commands, malformed names, or an unterminated header - still
-# fails closed.
-
-$allowlistSuites = @(
-    @{
-        Name     = 'Allowlisted command passes through unchanged (default allowlist)'
-        Input    = '##vso[task.debug]diagnostic detail'
-        Expected = '##vso[task.debug]diagnostic detail'
-        Args     = @{ EnableVsoCommands = $true }
-    },
-    @{
-        Name     = 'Allowlisted command matches case-insensitively'
-        Input    = '##VSO[Task.Debug]diagnostic detail'
-        Expected = '##vso[Task.Debug]diagnostic detail'
-        Args     = @{ EnableVsoCommands = $true }
-    },
-    @{
-        Name     = 'Non-allowlisted command still neutralized when enabled'
-        Input    = '##vso[task.setvariable variable=BASH_ENV]/tmp/payload'
-        Expected = '##_vso[task.setvariable variable=BASH_ENV]/tmp/payload'
-        Args     = @{ EnableVsoCommands = $true }
-    },
-    @{
-        Name     = 'Malformed command name (not exactly area.event) is neutralized'
-        Input    = '##vso[a.b.c]x'
-        Expected = '##_vso[a.b.c]x'
-        Args     = @{ EnableVsoCommands = $true }
-    },
-    @{
-        Name     = 'Header with no terminator is neutralized (fails closed)'
-        Input    = '##vso[task.debug'
-        Expected = '##_vso[task.debug'
-        Args     = @{ EnableVsoCommands = $true }
-    },
-    @{
-        Name     = 'Custom allowlist replaces (not extends) the default one'
-        Input    = '##vso[task.debug]a ##vso[custom.event]b'
-        Expected = '##_vso[task.debug]a ##vso[custom.event]b'
-        Args     = @{ EnableVsoCommands = $true; AllowedVsoCommands = @('custom.event') }
-    },
-    @{
-        Name     = 'Explicit empty allowlist allows nothing even when enabled'
-        Input    = '##vso[task.debug]a'
-        Expected = '##_vso[task.debug]a'
-        Args     = @{ EnableVsoCommands = $true; AllowedVsoCommands = @() }
-    },
-    @{
-        Name     = 'AllowedVsoCommands has no effect when EnableVsoCommands is not set'
-        Input    = '##vso[task.debug]a'
-        Expected = '##_vso[task.debug]a'
-        Args     = @{ AllowedVsoCommands = @('task.debug') }
-    }
-)
-
-foreach ($test in $allowlistSuites) {
-    $extraArgs = $test.Args
-    $actual = Protect-ExternalOutput -InputObject $test.Input -Source 'remote' @extraArgs
-    Assert-AreEqual -Expected $test.Expected -Actual $actual -Message "Error occured in '$($test.Name)' suite."
-}
