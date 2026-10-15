@@ -96,6 +96,8 @@ describe('TwineAuthenticate L0 Suite - Telemetry & Logging', function () {
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env[testConstants.TestEnvVars.systemDebug] = 'true';
+            // Task-lib caches debug mode at import time in the child process.
+            process.env['SYSTEM_DEBUG'] = 'true';
             process.env[testConstants.TestEnvVars.systemAccessToken] = testConstants.TestData.defaultAccessToken;
             process.env[testConstants.TestEnvVars.systemTeamFoundationCollectionUri] = testConstants.TestData.defaultCollectionUri;
             process.env[testConstants.TestEnvVars.artifactFeed] = testConstants.TestData.singleFeed;
