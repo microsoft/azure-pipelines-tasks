@@ -201,7 +201,7 @@ export function initializeBackupDirectory(): string {
         }
     }
     if (!backupDirectory) {
-        throw lastError || new Error('Unable to determine a writable npmAuthenticate backup directory.');
+        throw lastError || new Error(tl.loc('Error_NoWritableBackupDirectory'));
     }
 
     tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
