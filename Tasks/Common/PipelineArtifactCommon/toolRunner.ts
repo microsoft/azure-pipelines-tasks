@@ -12,13 +12,86 @@ export function neutralizeLoggingCommands(line: string): string {
     return line.replace(/##vso\[/gi, "##_vso[");
 }
 
+/** Receives relayed ArtifactTool output. Warnings become task warnings; debug output is shown only in debug runs. */
+export interface OutputSink {
+    info(line: string): void;
+    warning(message: string): void;
+    debug(message: string): void;
+}
+
+export interface ToolLogEntry {
+    level: "debug" | "info" | "warning" | "error";
+    text: string;
+}
+
+/**
+ * Converts one line of ArtifactTool console output into readable text. ArtifactTool writes Serilog compact
+ * JSON events ({"@m": message, "@l": level, "@x": exception}); anything else is passed through as information.
+ */
+export function parseToolLine(line: string): ToolLogEntry {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("{")) {
+        try {
+            const event = JSON.parse(trimmed) as Record<string, unknown>;
+            if (event && typeof event["@m"] === "string") {
+                const exception = typeof event["@x"] === "string" ? `\n${event["@x"]}` : "";
+                return { level: toLevel(event["@l"]), text: `${event["@m"]}${exception}` };
+            }
+        } catch {
+            // Not a structured event; relay as-is.
+        }
+    }
+    return { level: "info", text: line };
+}
+
+function toLevel(level: unknown): ToolLogEntry["level"] {
+    switch (level) {
+        case "Verbose":
+        case "Debug":
+            return "debug";
+        case "Warning":
+            return "warning";
+        case "Error":
+        case "Fatal":
+            return "error";
+        default:
+            return "info";
+    }
+}
+
+/**
+ * Relays one line of tool output with logging commands neutralized. Errors are printed as text rather than
+ * logged as issues, because the task reports the failure once from the result file.
+ */
+export function relayToolLine(line: string, sink: OutputSink): void {
+    const entry = parseToolLine(line);
+    const lines = entry.text.split(/\r?\n/).map(neutralizeLoggingCommands);
+    switch (entry.level) {
+        case "warning":
+            sink.warning(lines.join(" ").trim());
+            break;
+        case "debug":
+            lines.forEach(text => sink.debug(text));
+            break;
+        default:
+            lines.forEach(text => sink.info(text));
+            break;
+    }
+}
+
+const consoleSink: OutputSink = {
+    info: line => process.stdout.write(`${line}\n`),
+    warning: message => process.stdout.write(`${message}\n`),
+    debug: () => undefined
+};
+
 export interface RunOptions {
     executable: string;
     args: string[];
     token: string;
     cwd: string;
     signal: AbortSignal;
-    write?: (line: string) => void;
+    sink?: OutputSink;
 }
 
 /**
@@ -26,7 +99,7 @@ export interface RunOptions {
  * never on the command line. Every output line is relayed with logging commands neutralized.
  */
 export function runArtifactTool(options: RunOptions): Promise<number> {
-    const write = options.write ?? (line => process.stdout.write(`${line}\n`));
+    const sink = options.sink ?? consoleSink;
     options.signal.throwIfAborted();
     return new Promise<number>((resolve, reject) => {
         const child = spawn(options.executable, options.args, {
@@ -44,11 +117,11 @@ export function runArtifactTool(options: RunOptions): Promise<number> {
             pending[index] += text;
             let newline: number;
             while ((newline = pending[index].indexOf("\n")) >= 0) {
-                write(neutralizeLoggingCommands(pending[index].slice(0, newline).replace(/\r$/, "")));
+                relayToolLine(pending[index].slice(0, newline).replace(/\r$/, ""), sink);
                 pending[index] = pending[index].slice(newline + 1);
             }
             if (final && pending[index]) {
-                write(neutralizeLoggingCommands(pending[index]));
+                relayToolLine(pending[index], sink);
                 pending[index] = "";
             }
         };

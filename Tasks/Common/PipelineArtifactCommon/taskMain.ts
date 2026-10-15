@@ -70,7 +70,12 @@ export async function runTask(buildArguments: (task: TaskInputs) => string[], ou
             args,
             token,
             cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd(),
-            signal: controller.signal
+            signal: controller.signal,
+            sink: {
+                info: line => console.log(line),
+                warning: message => tl.warning(message),
+                debug: message => tl.debug(message)
+            }
         });
 
         const result = fs.existsSync(resultFile) ? parseResult(fs.readFileSync(resultFile, "utf8"), outputs) : undefined;
