@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+import os = require("os");
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
 import path = require('path');
@@ -21,6 +22,21 @@ var uuidv4 = require('uuid/v4');
 
 const area: string = 'JenkinsDownloadArtifacts';
 
+const externalOutputOpts: tl.ExternalOutputOptions = {
+    source: "remote",
+    enableVsoCommands: true,
+    allowedVsoCommands: ["telemetry.publish"]
+};
+
+async function withSanitizedConsole<T>(fn: () => Promise<T> | T): Promise<T> {
+    const origLog = console.log;
+    console.log = (...args: any[]) => {
+        const formatted = args.map(a => typeof a === 'string' ? a : String(a)).join(' ');
+        tl.writeExternalOutput(formatted + os.EOL, externalOutputOpts);
+    };
+    try { return await fn(); } finally { console.log = origLog; }
+}
+
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
     console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
@@ -30,7 +46,7 @@ async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean,
 
     var downloaderOptions = configureDownloaderOptions();
     var downloader = new engine.ArtifactEngine();
-    await downloader.processItems(webProvider, localFileProvider, downloaderOptions);
+    await withSanitizedConsole(() => downloader.processItems(webProvider, localFileProvider, downloaderOptions));
 }
 
 async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, localPathRoot: string, handler: handlers.BasicCredentialHandler) {
@@ -41,7 +57,7 @@ async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, loc
     var zipProvider = new providers.ZipProvider(artifactArchiveUrl, handler, { ignoreSslError: !strictSSL });
     var filesystemProvider = new providers.FilesystemProvider(localPathRoot);
 
-    await downloader.processItems(zipProvider, filesystemProvider, downloaderOptions)
+    await withSanitizedConsole(() => downloader.processItems(zipProvider, filesystemProvider, downloaderOptions));
 }
 
 function configureDownloaderOptions(): engine.ArtifactEngineOptions {
@@ -129,7 +145,7 @@ async function doWork() {
                         tl.getInput('storageAccountName', true),
                         tl.getInput('containerName', true),
                         tl.getInput('commonVirtualPath', false));
-                    await azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**");
+                    await withSanitizedConsole(() => azureDownloader.downloadArtifacts(localPathRoot, tl.getInput('itemPattern', false) || "**"));
                     break;
                 default:
                     throw Error(tl.loc('ArtifactProviderNotSupported', artifactProvider));
@@ -137,7 +153,7 @@ async function doWork() {
         }
         else {
             jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+            tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
 
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
@@ -203,7 +219,7 @@ async function doWork() {
             if (tl.getBoolInput('propagatedArtifacts') == true) {
                 try {
                     jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                    tl.writeExternalOutput(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName) + os.EOL, { source: "remote" });
                 }
                 catch (error) {
                     tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));

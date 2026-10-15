@@ -59,7 +59,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
+            tl.writeExternalOutput(tl.loc("GetCommitMessagesFailed", error, commits) + os.EOL, { source: "remote" });
             throw error;
         }
 
@@ -182,7 +182,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                console.log(tl.loc("CannotParseCommits", commits, error));
+                tl.writeExternalOutput(tl.loc("CannotParseCommits", commits, error) + os.EOL, { source: "remote" });
                 throw error;
             }
         }
