@@ -78,8 +78,9 @@ export class PlaywrightTestExecutor implements ITestExecutor {
     async discoverTests(listOfTestsToBeExecuted: string[], ciData: ciDictionary, listOfTestsToBeRan: string[]): Promise<IOperationResult> {
         let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
 
+        // Names are resolved to exact test locations in executeTests.
         listOfTestsToBeExecuted.forEach(test => {
-            listOfTestsToBeRan.push(utils.separatePlaywrightTestName ? utils.separatePlaywrightTestName(test) : test);
+            listOfTestsToBeRan.push(test);
         });
 
         return operationResult;
@@ -99,7 +100,9 @@ export class PlaywrightTestExecutor implements ITestExecutor {
             };
         }
 
-        let grepArg = '';
+        let resolvedLocations: string[] = [];
+        let batchCount = 1;
+        executionTimer.start();
         try {
             const junitOutput = 'test-results/test-results.xml';
             tl.setVariable('PLAYWRIGHT_JUNIT_OUTPUT_NAME', junitOutput);
@@ -108,30 +111,78 @@ export class PlaywrightTestExecutor implements ITestExecutor {
                 fs.mkdirSync(resultsDir);
             }
 
-            // Playwright test name selection usually uses 'grep'
-            const grepPattern = testsToBeExecuted.map(t => utils.escapeRegex(t)).join('|');
-            grepArg = grepPattern;
-
-            tl.debug(`Grep Argument: ${grepArg}`);
-
-            executionTimer.start();
-
-            const commandPreview = `npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput} playwright test --reporter=junit -g "${grepArg}"`;
-            tl.debug(`Executing Playwright test command: ${commandPreview}`);
-
-            // Building the command: npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=... playwright test --reporter=junit -g ...
+            // 1. List all tests as JSON; written to a file since stdout may
+            // contain config/global-setup output.
+            const listReportFile = path.join(resultsDir, 'playwright-list-report.json');
             this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
             this.toolRunner = tl.tool(this.toolRunnerPath);
-
             this.toolRunner.arg('cross-env');
-            this.toolRunner.arg(`PLAYWRIGHT_JUNIT_OUTPUT_NAME=${junitOutput}`);
+            this.toolRunner.arg(`PLAYWRIGHT_JSON_OUTPUT_NAME=${listReportFile}`);
             this.toolRunner.arg('playwright');
             this.toolRunner.arg('test');
-            this.toolRunner.arg('--reporter=junit');
-            this.toolRunner.arg('-g');
-            this.toolRunner.arg(grepArg);
+            this.toolRunner.arg('--list');
+            this.toolRunner.arg('--reporter=json');
 
-            operationResult.returnCode = await this.toolRunner.execAsync();
+            const listReturnCode = await this.toolRunner.execAsync();
+            if (listReturnCode !== 0 || !fs.existsSync(listReportFile)) {
+                throw new Error(`Failed to list Playwright tests (exit code ${listReturnCode})`);
+            }
+
+            const listReport = JSON.parse(fs.readFileSync(listReportFile, 'utf8'));
+            const resolved = utils.resolvePlaywrightTestLocations(listReport, testsToBeExecuted);
+            resolvedLocations = resolved.locations;
+
+            for (const name of resolved.unmatched) {
+                tl.warning(`No Playwright test matched the automated test name: ${name}`);
+            }
+            tl.debug(`Resolved ${resolvedLocations.length} test location(s): ${JSON.stringify(resolvedLocations)}`);
+
+            if (resolvedLocations.length === 0) {
+                throw new Error('None of the selected test points matched a Playwright test');
+            }
+            if (resolved.unmatched.length > 0 && tl.getBoolInput('failOnUnmatchedTests', false)) {
+                throw new Error(`${resolved.unmatched.length} selected test point(s) did not match any Playwright test`);
+            }
+
+            // 2. Run the resolved tests by location. A large plan can resolve
+            // to more locations than one command line accepts, so the
+            // locations are packed into batches that never split a spec file.
+            const locationBatches = utils.batchPlaywrightTestLocations(resolvedLocations);
+            batchCount = locationBatches.length;
+            tl.debug(`Executing ${batchCount} Playwright invocation(s) for ${resolvedLocations.length} resolved location(s)`);
+
+            let firstFailureCode = 0;
+            for (let batchIndex = 0; batchIndex < locationBatches.length; batchIndex++) {
+                // Batching must not depend on the single-invocation report
+                // name (a separate change renames it), so every batch writes
+                // its own report for the publisher's glob to collect.
+                const batchJunitOutput = batchCount === 1
+                    ? junitOutput
+                    : `test-results/TEST-playwright-${batchIndex + 1}.xml`;
+                const batchLocations = locationBatches[batchIndex];
+
+                tl.debug(`Executing Playwright test command: npx cross-env PLAYWRIGHT_JUNIT_OUTPUT_NAME=${batchJunitOutput} playwright test --reporter=junit ${batchLocations.join(' ')}`);
+                this.toolRunnerPath = tl.which(constants.NPX_EXECUTABLE, true);
+                this.toolRunner = tl.tool(this.toolRunnerPath);
+
+                this.toolRunner.arg('cross-env');
+                this.toolRunner.arg(`PLAYWRIGHT_JUNIT_OUTPUT_NAME=${batchJunitOutput}`);
+                this.toolRunner.arg('playwright');
+                this.toolRunner.arg('test');
+                this.toolRunner.arg('--reporter=junit');
+                for (const location of batchLocations) {
+                    this.toolRunner.arg(location);
+                }
+
+                const batchReturnCode = await this.toolRunner.execAsync();
+                // Run every batch so the published results stay complete, and
+                // report the first non-zero exit code.
+                if (batchReturnCode !== 0 && firstFailureCode === 0) {
+                    firstFailureCode = batchReturnCode;
+                }
+            }
+
+            operationResult.returnCode = firstFailureCode;
 
         } catch (error) {
             tl.debug(`Error during test execution: ${error.message}`);
@@ -145,7 +196,8 @@ export class PlaywrightTestExecutor implements ITestExecutor {
         }
 
         executionTimer.stop(ciData);
-        ciData['grepArgument'] = grepArg;
+        ciData['resolvedTestLocations'] = resolvedLocations.join('|');
+        ciData['playwrightInvocationCount'] = batchCount;
         ciData['executionStatus'] = operationResult.returnCode === 0 ? 'Success' : 'Failure';
 
         return operationResult;

@@ -31,6 +31,8 @@
   "loc.input.help.failTaskOnFailureToPublishResults": "Fail if there is failure in publishing test results. Check this option to fail the task if publishing test results is failed partially.",
   "loc.input.label.failTaskOnMissingResultsFile": "Fail if no result files are found",
   "loc.input.help.failTaskOnMissingResultsFile": "Fail the task if no result files are found.",
+  "loc.input.label.failOnUnmatchedTests": "Fail if selected test points do not match any test",
+  "loc.input.help.failOnUnmatchedTests": "Fail the task if one or more selected test points do not match any test in the test suite. When unchecked, unmatched test points are reported as warnings and the matched tests are run.",
   "loc.messages.testPlanInput": "Test plan Id : %s",
   "loc.messages.testplanConfigInput": "Test plan configuration Id : %s",
   "loc.messages.testSuiteSelected": "Test suite Id selected: %s",
