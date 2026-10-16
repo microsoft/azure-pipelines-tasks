@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("action", "Update image");
+tr.setInput("action", process.env['_protocolAction_'] || "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
 tr.setInput("vmssOsType", process.env["_vmssOsType_"] === "Linux" ? "Linux" : "Windows");
@@ -36,10 +36,6 @@ if (process.env["_crlfBacktick1_"] === "true") {
 if (process.env["_crlfBacktick2_"] === "true") {
     // Two backticks before LF: first escapes the second, the LF still separates statements; must be rejected.
     tr.setInput("customScriptArguments", "arg1``\nWrite-Host pwned");
-}
-
-if (process.env["_scriptArgs_"] !== undefined) {
-    tr.setInput("customScriptArguments", process.env["_scriptArgs_"]);
 }
 
 process.env["AZURE_HTTP_USER_AGENT"] = "L0test";
@@ -86,30 +82,31 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage', requir
 tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
-// Dedicated argument tests provide an explicit mode; legacy tests start with all controls off.
-if (!process.env['_argsValidationMode_']) {
-    for (const flag of [
-        'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
-        'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED',
-        'AZP_75787_ENABLE_NEW_LOGIC',
-        'AZP_75787_ENABLE_NEW_LOGIC_LOG',
-        'AZP_75787_ENABLE_COLLECT'
-    ]) {
-        process.env[flag] = 'false';
+for (const flag of [
+    'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
+    'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED',
+    'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT'
+]) {
+    process.env[flag] = 'false';
+}
+if (process.env['_dataProtocolScripts_']) {
+    tr.setInput('customScriptsDirectory', process.env['_dataProtocolScripts_']);
+    tr.setInput('customScript', 'deploy.ps1');
+    tr.setInput('customScriptArguments', process.env['_dataProtocolArgs_'] || '');
+    tr.setInput('skipArchivingCustomScripts', 'true');
+    os.tmpdir = () => process.env['AGENT_TEMPDIRECTORY'];
+    process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = process.env['_protocolOldFlag_'];
+    if (process.env['_protocolFixFlag_'] === 'missing') {
+        delete process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'];
+    } else {
+        process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'] = process.env['_protocolFixFlag_'];
     }
+    process.env['AZP_75787_ENABLE_NEW_LOGIC'] = process.env['_protocolActivate_'];
 }
 
 if (process.env["_sanitizeArgsActivate_"] === "true") {
     process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = "true";
     process.env["AZP_75787_ENABLE_NEW_LOGIC"] = "true";
-}
-
-if (process.env["_argsValidationMode_"]) {
-    const mode = process.env["_argsValidationMode_"];
-    process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = mode === "outer-off" || mode === "all-off" ? "false" : "true";
-    process.env["AZP_75787_ENABLE_NEW_LOGIC"] = mode === "activate" || mode === "outer-off" ? "true" : "false";
-    process.env["AZP_75787_ENABLE_NEW_LOGIC_LOG"] = mode === "audit" ? "true" : "false";
-    process.env["AZP_75787_ENABLE_COLLECT"] = mode === "telemetry" ? "true" : "false";
 }
 
 tr.run();

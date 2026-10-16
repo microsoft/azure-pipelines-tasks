@@ -9,7 +9,8 @@ import azureModel = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
-import { getVmssCustomScriptArgsValidationFixEnabled, tryValidateScriptArgs } from './argsSanitizer';
+import { tryValidateScriptArgs } from './argsSanitizer';
+import { prepareWindowsInvoker, removeWindowsInvoker } from './windowsInvoker';
 import { AzureRMEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint";
 import utils = require("./Utils")
 
@@ -84,12 +85,18 @@ export default class VirtualMachineScaleSet {
                     typeHandlerVersion: extensionMetadata.typeHandlerVersion,
                     autoUpgradeMinorVersion: true,
                     settings: {
-                        "commandToExecute": customScriptInfo.command,
-                        "fileUris": customScriptInfo.blobUris,
-                        "managedIdentity":{}
+                        ...(customScriptInfo.safeWindowsInvoker ? {} : {
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris,
+                            managedIdentity: {}
+                        })
                     },
                     protectedSettings: {
-                        "storageAccountName": customScriptInfo.storageAccount.name
+                        ...(customScriptInfo.safeWindowsInvoker ? {
+                            managedIdentity: {},
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris
+                        } : { storageAccountName: customScriptInfo.storageAccount.name })
                     }
                 }
             };
@@ -111,15 +118,21 @@ export default class VirtualMachineScaleSet {
         let customScriptInfo: CustomScriptsInfo = this._createCustomScriptInvoker(osType, archiveInfo);
 
         // upload custom script directory to blob storage
+        let uploadFailed = false;
         try {
             var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
+            uploadFailed = true;
             if (error.statusCode && error.statusCode == 403) {
                 throw tl.loc("UploadingToStorageBlobsAuthenticationFailed", this.taskParameters.customScriptsStorageAccount );
             }
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
+        } finally {
+            if (customScriptInfo.safeWindowsInvoker) {
+                removeWindowsInvoker(customScriptInfo.localDirPath, uploadFailed);
+            }
         }
 
         return customScriptInfo;
@@ -137,16 +150,21 @@ export default class VirtualMachineScaleSet {
             archiveFile = archiveInfo.fileName
         }
 
+        const argsPolicy = tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+
+        if (argsPolicy.protectedWindows) {
+            const invoker = prepareWindowsInvoker(this.taskParameters.customScriptsDirectory,
+                this.taskParameters.customScript, this.taskParameters.customScriptArguments,
+                archiveInfo ? archiveInfo.filePath : undefined);
+            tl.debug("Invoker command: " + invoker.command);
+            return <CustomScriptsInfo>{ ...invoker, safeWindowsInvoker: true };
+        }
         let blobsPefixPath = this._getBlobsPrefixPath();
 
-        // The new Windows fix is additive to the existing validation and activation controls.
-        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
-
-        // Preserve legacy backtick transport behavior.
-        const sanitizerEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
+        // WI-75787: our own backtick escaping doubles/backslashes the sanitizer-trusted escape and revives it at the Invoke-Expression/eval sink, so pass args verbatim when the gate is on.
+        const sanitizerEnabled = argsPolicy.legacyValidationEnabled;
 
         if (osType === "Windows") {
-            const isVmssCustomScriptArgsValidationFixEnabled = getVmssCustomScriptArgsValidationFixEnabled('ps');
             // escape powershell special characters. This is needed as this script will be executed in a powershell session
             let script = this.taskParameters.customScript.replace(/`/g, '``').replace(/\$/g, '`$');
 
@@ -167,8 +185,7 @@ export default class VirtualMachineScaleSet {
             }
 
             invokerScriptPath = path.join(__dirname, "..", "Resources", "customScriptInvoker.ps1");
-            const validateArgs = isVmssCustomScriptArgsValidationFixEnabled && tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC');
-            invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'${validateArgs ? ' -validateArgs' : ''}`;
+            invokerCommand = `powershell ./${blobsPefixPath}/customScriptInvoker.ps1 -zipName '${archiveFile}' -script '${escapedScript}' -scriptArgs '${escapedArgs}' -prefixPath '${blobsPefixPath}'`;
         } else {
             // escape shell special characters. This is needed as this script will be executed in a shell
             let script = this.taskParameters.customScript.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/`/g, '\\`').replace(/\$/g, '\\$');
@@ -386,6 +403,7 @@ class CustomScriptsInfo {
     public storageAccount: StorageAccountInfo;
     public blobUris: string[];
     public blobsPrefixPath: string;
+    public safeWindowsInvoker?: boolean;
 }
 
 class ArchiveInfo {

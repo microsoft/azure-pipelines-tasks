@@ -232,6 +232,9 @@
     "UploadingToStorageBlobsAuthenticationFailed": "ms-resource:loc.messages.UploadingToStorageBlobsAuthenticationFailed",
     "SettingVMExtensionFailedwithAuthentication": "ms-resource:loc.messages.SettingVMExtensionFailedwithAuthentication",
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
-    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash"
+    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash",
+    "InvalidWindowsCustomScript": "ms-resource:loc.messages.InvalidWindowsCustomScript",
+    "WindowsScriptPayloadTooLarge": "ms-resource:loc.messages.WindowsScriptPayloadTooLarge",
+    "WindowsScriptCleanupFailed": "ms-resource:loc.messages.WindowsScriptCleanupFailed"
   }
 }
