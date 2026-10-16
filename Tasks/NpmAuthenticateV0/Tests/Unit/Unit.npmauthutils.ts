@@ -1,10 +1,14 @@
 import assert from 'assert';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 import {
 	validateAndFilterRegistryUrls,
 	normalizeRegistry,
 	toNerfDart,
 	tryResolveFromEndpoints,
-	tryResolveFromLocalRegistries
+	tryResolveFromLocalRegistries,
+	initializeBackupDirectory
 } from '../../npmauthutils';
 import { NpmrcCredential } from '../../npmrcCredential';
 
@@ -163,6 +167,70 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			);
 
 			assert.strictEqual(resolved, null);
+		});
+	});
+
+	describe('initializeBackupDirectory', function () {
+		const savedEnv: { [key: string]: string } = {};
+		const envKeys = ['SAVE_NPMRC_PATH', 'NPM_AUTHENTICATE_TEMP_DIRECTORY', 'AGENT_HOMEDIRECTORY', 'AGENT_TEMPDIRECTORY'];
+		let scratchRoot: string;
+
+		beforeEach(function () {
+			for (const key of envKeys) {
+				savedEnv[key] = process.env[key];
+				delete process.env[key];
+			}
+			scratchRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauthutils-test-'));
+		});
+
+		afterEach(function () {
+			for (const key of envKeys) {
+				if (savedEnv[key] === undefined) {
+					delete process.env[key];
+				} else {
+					process.env[key] = savedEnv[key];
+				}
+			}
+			fs.rmSync(scratchRoot, { recursive: true, force: true });
+		});
+
+		it('prefers Agent.HomeDirectory when it is writable', function () {
+			const homeDirectory = path.join(scratchRoot, 'home');
+			fs.mkdirSync(homeDirectory);
+			process.env['AGENT_HOMEDIRECTORY'] = homeDirectory;
+			process.env['AGENT_TEMPDIRECTORY'] = path.join(scratchRoot, 'temp');
+
+			const backupDirectory = initializeBackupDirectory();
+
+			assert.ok(backupDirectory.startsWith(path.join(homeDirectory, 'npmAuthenticateBackup')));
+			assert.ok(fs.existsSync(backupDirectory));
+		});
+
+		it('falls back to Agent.TempDirectory when Agent.HomeDirectory is not writable', function () {
+			const homeDirectory = path.join(scratchRoot, 'home');
+			fs.mkdirSync(homeDirectory);
+			// Pre-create a regular file where the task needs to create a directory, so
+			// tl.mkdirP() reliably fails regardless of platform/permission semantics.
+			fs.writeFileSync(path.join(homeDirectory, 'npmAuthenticateBackup'), 'not a directory');
+			const tempDirectory = path.join(scratchRoot, 'temp');
+			fs.mkdirSync(tempDirectory);
+			process.env['AGENT_HOMEDIRECTORY'] = homeDirectory;
+			process.env['AGENT_TEMPDIRECTORY'] = tempDirectory;
+
+			const backupDirectory = initializeBackupDirectory();
+
+			assert.ok(backupDirectory.startsWith(path.join(tempDirectory, 'npmAuthenticateBackup')));
+			assert.ok(fs.existsSync(backupDirectory));
+		});
+
+		it('throws when neither Agent.HomeDirectory nor Agent.TempDirectory is usable', function () {
+			const homeDirectory = path.join(scratchRoot, 'home');
+			fs.mkdirSync(homeDirectory);
+			fs.writeFileSync(path.join(homeDirectory, 'npmAuthenticateBackup'), 'not a directory');
+			process.env['AGENT_HOMEDIRECTORY'] = homeDirectory;
+			// No AGENT_TEMPDIRECTORY set.
+
+			assert.throws(() => initializeBackupDirectory());
 		});
 	});
 });
