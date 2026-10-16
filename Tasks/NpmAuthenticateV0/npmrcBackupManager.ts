@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as crypto from 'crypto';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 export interface FileIdentity {
@@ -18,6 +19,7 @@ export class NpmrcBackupManager {
     private nextId: number;
     private entries: { [npmrcPath: string]: number };
     private identities: { [npmrcPath: string]: FileIdentity };
+    private digests: { [npmrcPath: string]: string };
 
     constructor(private readonly backupDirectory: string) {
         this.indexFilePath = path.join(backupDirectory, 'index.json');
@@ -25,6 +27,7 @@ export class NpmrcBackupManager {
         this.nextId = data.nextId;
         this.entries = data.entries;
         this.identities = data.identities || {};
+        this.digests = data.digests || {};
     }
 
     ensureBackedUp(npmrcPath: string): FileIdentity {
@@ -60,31 +63,35 @@ export class NpmrcBackupManager {
             return false;
         }
 
-        const backupHandle = fs.openSync(backupPath, 'r');
+        const backupContents = fs.readFileSync(backupPath);
+        const expectedDigest = this.digests[npmrcPath];
+        if (expectedDigest) {
+            const actualDigest = crypto.createHash('sha256').update(backupContents).digest('hex');
+            if (actualDigest !== expectedDigest) {
+                throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
+            }
+        }
+
+        const destinationStats = fs.lstatSync(npmrcPath, { bigint: true });
+        const expectedIdentity = trustedIdentity || this.identities[npmrcPath];
+        if (!destinationStats.isFile()
+            || (expectedIdentity && !this.hasIdentity(destinationStats, expectedIdentity))) {
+            throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
+        }
+
+        const destinationHandle = fs.openSync(npmrcPath, 'r+');
         try {
-            const destinationStats = fs.lstatSync(npmrcPath, { bigint: true });
-            const expectedIdentity = trustedIdentity || this.identities[npmrcPath];
-            if (!destinationStats.isFile()
-                || (expectedIdentity && !this.hasIdentity(destinationStats, expectedIdentity))) {
+            const openedStats = fs.fstatSync(destinationHandle, { bigint: true });
+            if (!openedStats.isFile()
+                || !this.hasIdentity(openedStats, this.getIdentity(destinationStats))
+                || (expectedIdentity && !this.hasIdentity(openedStats, expectedIdentity))) {
                 throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
             }
 
-            const destinationHandle = fs.openSync(npmrcPath, 'r+');
-            try {
-                const openedStats = fs.fstatSync(destinationHandle, { bigint: true });
-                if (!openedStats.isFile()
-                    || !this.hasIdentity(openedStats, this.getIdentity(destinationStats))
-                    || (expectedIdentity && !this.hasIdentity(openedStats, expectedIdentity))) {
-                    throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
-                }
-
-                fs.ftruncateSync(destinationHandle, 0);
-                this.copyFileContents(backupHandle, destinationHandle, npmrcPath);
-            } finally {
-                fs.closeSync(destinationHandle);
-            }
+            fs.ftruncateSync(destinationHandle, 0);
+            this.writeBufferContents(destinationHandle, backupContents, npmrcPath);
         } finally {
-            fs.closeSync(backupHandle);
+            fs.closeSync(destinationHandle);
         }
         fs.unlinkSync(backupPath);
         return true;
@@ -98,18 +105,20 @@ export class NpmrcBackupManager {
         nextId: number;
         entries: { [npmrcPath: string]: number };
         identities?: { [npmrcPath: string]: FileIdentity };
+        digests?: { [npmrcPath: string]: string };
     } {
         if (fs.existsSync(this.indexFilePath)) {
             return JSON.parse(fs.readFileSync(this.indexFilePath, 'utf8'));
         }
-        return { nextId: 0, entries: {}, identities: {} };
+        return { nextId: 0, entries: {}, identities: {}, digests: {} };
     }
 
     private saveIndex(): void {
         fs.writeFileSync(this.indexFilePath, JSON.stringify({
             nextId: this.nextId,
             entries: this.entries,
-            identities: this.identities
+            identities: this.identities,
+            digests: this.digests
         }));
     }
 
@@ -133,6 +142,7 @@ export class NpmrcBackupManager {
         } finally {
             fs.closeSync(source.handle);
         }
+        this.digests[sourcePath] = crypto.createHash('sha256').update(fs.readFileSync(backupPath)).digest('hex');
         return source.identity;
     }
 
@@ -191,6 +201,23 @@ export class NpmrcBackupManager {
                 }
                 offset += bytesWritten;
             }
+        }
+    }
+
+    private writeBufferContents(destinationHandle: number, contents: Buffer, destinationPath: string): void {
+        let offset = 0;
+        while (offset < contents.length) {
+            const bytesWritten = fs.writeSync(
+                destinationHandle,
+                contents,
+                offset,
+                contents.length - offset,
+                offset
+            );
+            if (bytesWritten === 0) {
+                throw new Error(tl.loc('UnableToWriteFileContents', destinationPath));
+            }
+            offset += bytesWritten;
         }
     }
 
