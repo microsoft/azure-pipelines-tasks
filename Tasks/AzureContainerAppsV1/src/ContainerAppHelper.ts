@@ -394,11 +394,12 @@ export class ContainerAppHelper {
             tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
             try {
                 const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+                const commandBlockingEnabled = tl.getPipelineFeature('AzureContainerAppsEnableVsoCommandBlocking');
                 const externalOutput: tl.ExternalOutputOptions = {
                     source: 'childProcess',
-                    vsoCommandMode: tl.getPipelineFeature('AzureContainerAppsEnableVsoCommandBlocking')
-                        ? 'blockAndTelemetry'
-                        : 'telemetryOnly'
+                    vsoCommandMode: this.disableTelemetry
+                        ? (commandBlockingEnabled ? 'blockOnly' : 'disabled')
+                        : (commandBlockingEnabled ? 'blockAndTelemetry' : 'telemetryOnly')
                 };
                 if (useArgArray) {
                     new Utility().throwIfError(
