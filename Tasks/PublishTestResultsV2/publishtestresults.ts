@@ -4,6 +4,7 @@ import  * as semver from "semver"
 import * as publishTestResultsTool from './publishtestresultstool';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import { RestClient } from 'typed-rest-client/RestClient';
 import * as ci from './cieventlogger';
 
 const MERGE_THRESHOLD = 100;
@@ -57,10 +58,44 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     tl.command('results.publish', properties, '');
 }
 
+async function isFeatureFlagEnabled(featureFlag: string): Promise<boolean> {
+    try {
+        const collectionUrl = tl.getVariable('System.TeamFoundationCollectionUri');
+        if (!collectionUrl) {
+            throw new Error('Collection URL is unavailable');
+        }
+
+        const token = tl.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', true);
+        if (!token) {
+            throw new Error('Collection access token is unavailable');
+        }
+
+        const featureFlagUrl = `${collectionUrl.replace(/\/+$/, '')}/_apis/FeatureFlags/${featureFlag}`;
+        const client = new RestClient('PublishTestResults', undefined, undefined, {
+            socketTimeout: 5000,
+            allowRetries: false,
+            allowRedirects: false,
+            proxy: tl.getHttpProxyConfiguration(featureFlagUrl),
+            cert: tl.getHttpCertConfiguration()
+        });
+        const response = await client.get<{ effectiveState?: string }>(featureFlagUrl, {
+            additionalHeaders: { Authorization: `Bearer ${token}` }
+        });
+        if (response.statusCode !== 200 || typeof response.result?.effectiveState !== 'string'
+            || !/^(on|off)$/i.test(response.result.effectiveState)) {
+            throw new Error('TFS feature flag state is unavailable');
+        }
+        return response.result.effectiveState.toLowerCase() === 'on';
+    } catch (err) {
+        tl.debug(`Unable to read TFS feature flag '${featureFlag}'. Retaining .NET SDK version telemetry.`);
+        return false;
+    }
+}
+
 function getDotNetVersion() {
     let dotnet: tr.ToolRunner;
     const dotnetPath = tl.which('dotnet', false);
-    
+
     if (dotnetPath){
         try {
             dotnet = tl.tool(dotnetPath);
@@ -132,8 +167,10 @@ async function run() {
         ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
         ci.addToConsolidatedCi('allowPtrToDetectTestRunRetryFiles', allowPtrToDetectTestRunRetryFiles);
 
-        const dotnetVersion = getDotNetVersion();
-        ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
+        if (!await isFeatureFlagEnabled('TestManagement.PublishTestResultsTask.DisableDotNetVersionTelemetry')) {
+            const dotnetVersion = getDotNetVersion();
+            ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
+        }
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
         if (forceMerge) {

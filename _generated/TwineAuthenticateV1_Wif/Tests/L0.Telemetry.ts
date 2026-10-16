@@ -96,6 +96,8 @@ describe('TwineAuthenticate L0 Suite - Telemetry & Logging', function () {
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             process.env[testConstants.TestEnvVars.systemDebug] = 'true';
+            // Task-lib caches debug mode at import time in the child process.
+            process.env['SYSTEM_DEBUG'] = 'true';
             process.env[testConstants.TestEnvVars.systemAccessToken] = testConstants.TestData.defaultAccessToken;
             process.env[testConstants.TestEnvVars.systemTeamFoundationCollectionUri] = testConstants.TestData.defaultCollectionUri;
             process.env[testConstants.TestEnvVars.artifactFeed] = testConstants.TestData.singleFeed;
@@ -105,8 +107,12 @@ describe('TwineAuthenticate L0 Suite - Telemetry & Logging', function () {
             
             // Assert
             assert(tr.succeeded, 'Task should succeed with debug enabled');
-            assert(tr.stdout.indexOf('##vso[task.debug]') >= 0, 
-                'Should log debug messages when SYSTEM_DEBUG is enabled');
+            const feedDebugMessages = [
+                `##vso[task.debug]Adding authentication to configuration for registry ${testConstants.TestData.singleFeed}`,
+                `##vso[task.debug]loc_mock_Info_AddingAuthForRegistry ${testConstants.TestData.singleFeed}`
+            ];
+            assert(feedDebugMessages.some(message => tr.stdout.includes(message)),
+                'Should log feed names through task-lib debug logging');
         });
 
         it('logs informational messages about feeds', async () => {
