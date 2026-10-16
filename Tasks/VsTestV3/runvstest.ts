@@ -122,38 +122,10 @@ function isHydraFlowToBeEnabled(inputDataContract: InputDataContract) {
     return false;
 }
 
-// Feature flag registries are per service, so a TCM owned flag has to be queried against the TCM url and not the collection url.
-export function getServiceUrlFromResourceArea(collectionUri: string, resourceAreaId: string, token: string): Promise<string> {
-    const options = {
-        url: `${trimTrailingSlash(collectionUri)}/_apis/resourceAreas/${resourceAreaId}?api-version=5.0-preview.1`,
-        json: true,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        }
-    };
-
-    return new Promise((resolve) => {
-        request(options, (err, res, resourceArea) => {
-            if (err) {
-                tl.debug(`Unable to resolve resource area ${resourceAreaId}. Error: ${err.message}`);
-                return resolve(collectionUri);
-            }
-            const statusCode = res && res.statusCode;
-            if (resourceArea && resourceArea.locationUrl) {
-                tl.debug(`Resolved resource area ${resourceAreaId} to ${resourceArea.locationUrl}`);
-                return resolve(resourceArea.locationUrl);
-            }
-            tl.debug(`Resource area ${resourceAreaId} did not return a locationUrl. Status: ${statusCode}. Falling back to ${collectionUri}`);
-            resolve(collectionUri);
-        });
-    });
-}
-
-export function isFeatureFlagEnabled(serviceUrl: string, featureFlag: string, token: string): Promise<boolean> {
+export function isFeatureFlagEnabled(collectionUri: string, featureFlag: string, token: string): Promise<boolean> {
     let state = false;
     const options = {
-        url: `${trimTrailingSlash(serviceUrl)}/_apis/FeatureFlags/${featureFlag}`,
+        url: collectionUri + '/_apis/FeatureFlags/' + featureFlag,
         json: true,
         headers: {
             'Content-Type': 'application/json',
@@ -166,22 +138,15 @@ export function isFeatureFlagEnabled(serviceUrl: string, featureFlag: string, to
             if (err) {
                 tl.warning(tl.loc('UnableToGetFeatureFlag', featureFlag));
                 tl.debug('Unable to get feature flag ' + featureFlag + ' Error:' + err.message);
-                return resolve(state);
+                resolve(state);
             }
-            const statusCode = res && res.statusCode;
             if (faModel && faModel.effectiveState) {
                 state = ('on' === faModel.effectiveState.toLowerCase());
-                tl.debug(`Feature flag ${featureFlag} effectiveState: ${faModel.effectiveState}, status: ${statusCode}, final state: ${state}`);
-            } else {
-                tl.debug(`Feature flag ${featureFlag} returned no effectiveState from ${options.url}. Status: ${statusCode}`);
+                tl.debug(' Final feature flag state: ' + state);
             }
             resolve(state);
         });
     });
-}
-
-function trimTrailingSlash(url: string): string {
-    return url ? url.replace(/\/+$/, '') : url;
 }
 
 function isMultiConfigOnDemandRun(): boolean {
