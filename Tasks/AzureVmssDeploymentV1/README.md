@@ -3,7 +3,7 @@
 ## Protected Windows custom-script invocation
 
 Enable both `DistributedTask.Tasks.EnableVmssCustomScriptArgsValidation` and
-`DistributedTask.Tasks.VmssCustomScriptArgsValidationFixEnabled` to use the
+`DistributedTask.Tasks.VmssWindowsArgumentDataTransportFixEnabled` to use the
 protected Windows path. Their combined check is sufficient; legacy AZP activation
 and audit settings do not disable this path.
 

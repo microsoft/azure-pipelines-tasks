@@ -13,8 +13,9 @@ import { prepareWindowsInvoker, removeWindowsInvoker, WindowsInvokerInfo, Window
 describe('VMSS protected Windows data transport', function () {
     this.timeout(60000);
     const oldFlag = 'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION';
-    const fixFlag = 'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED';
-    const keys = [oldFlag, fixFlag, 'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG',
+    const fixFlag = 'DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED';
+    const supersededFlag = 'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED';
+    const keys = [oldFlag, fixFlag, supersededFlag, 'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG',
         'AZP_75787_ENABLE_COLLECT', '_dataProtocolScripts_', '_dataProtocolArgs_', '_protocolOldFlag_',
         '_protocolFixFlag_', '_protocolActivate_', '_uploadCaptureRoot_', '_protocolAction_', 'existingExtensionName'];
     let saved: Record<string, string | undefined>;
@@ -62,7 +63,7 @@ describe('VMSS protected Windows data transport', function () {
             assert.strictEqual(result.protectedWindows, true);
             assert.deepStrictEqual(reads, {
                 EnableVmssCustomScriptArgsValidation: 1,
-                VmssCustomScriptArgsValidationFixEnabled: 1
+                VmssWindowsArgumentDataTransportFixEnabled: 1
             });
         } finally {
             tl.getPipelineFeature = original;
@@ -135,6 +136,19 @@ describe('VMSS protected Windows data transport', function () {
                 assert.strictEqual(resolveScriptArgsPolicy('bash').protectedWindows, false);
             });
         }
+    }
+    for (const state of ['false', 'missing']) {
+        it(`does not alias the superseded flag when the transport flag is ${state}`, () => {
+            process.env[supersededFlag] = 'true';
+            if (state === 'missing') {
+                delete process.env[fixFlag];
+            } else {
+                process.env[fixFlag] = state;
+            }
+            const policy = resolveScriptArgsPolicy('ps');
+            assert.strictEqual(policy.protectedWindows, false);
+            assert.strictEqual(policy.activate, false);
+        });
     }
     for (const mode of ['activate', 'audit', 'telemetry', 'inactive']) {
         it(`enforces protected mode independently of the legacy ${mode} setting`, () => {

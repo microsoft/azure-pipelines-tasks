@@ -84,7 +84,7 @@ tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require(
 
 for (const flag of [
     'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
-    'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED',
+    'DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED',
     'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT'
 ]) {
     process.env[flag] = 'false';
@@ -97,9 +97,9 @@ if (process.env['_dataProtocolScripts_']) {
     os.tmpdir = () => process.env['AGENT_TEMPDIRECTORY'];
     process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = process.env['_protocolOldFlag_'];
     if (process.env['_protocolFixFlag_'] === 'missing') {
-        delete process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'];
+        delete process.env['DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED'];
     } else {
-        process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'] = process.env['_protocolFixFlag_'];
+        process.env['DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED'] = process.env['_protocolFixFlag_'];
     }
     process.env['AZP_75787_ENABLE_NEW_LOGIC'] = process.env['_protocolActivate_'];
 }

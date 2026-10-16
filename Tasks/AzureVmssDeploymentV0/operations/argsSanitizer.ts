@@ -13,7 +13,7 @@ import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
-export const VmssCustomScriptArgsValidationFixEnabled = 'VmssCustomScriptArgsValidationFixEnabled';
+export const VmssWindowsArgumentDataTransportFixEnabled = 'VmssWindowsArgumentDataTransportFixEnabled';
 
 export interface ScriptArgsPolicy {
     scriptType: string;
@@ -31,7 +31,7 @@ export function resolveScriptArgsPolicy(scriptType: string): ScriptArgsPolicy {
     const legacyValidationEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
     // Additive rollout: the old gate remains required; activation does not weaken protected mode.
     const protectedWindows = isPowerShell && legacyValidationEnabled
-        && tl.getPipelineFeature(VmssCustomScriptArgsValidationFixEnabled);
+        && tl.getPipelineFeature(VmssWindowsArgumentDataTransportFixEnabled);
     return {
         scriptType: normalizedType,
         isPowerShell,
@@ -89,7 +89,7 @@ export function validateScriptArgs(
     scriptType: string,
     featureFlags: ScriptArgsPolicy = resolveScriptArgsPolicy(scriptType)
 ): void {
-    const isVmssCustomScriptArgsValidationFixEnabled = featureFlags.protectedWindows;
+    const isVmssWindowsArgumentDataTransportFixEnabled = featureFlags.protectedWindows;
 
     if (!(featureFlags.activate || featureFlags.audit || featureFlags.telemetry)) {
         return;
@@ -117,7 +117,7 @@ export function validateScriptArgs(
             // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: isVmssCustomScriptArgsValidationFixEnabled
+            saniziteRegExp: isVmssWindowsArgumentDataTransportFixEnabled
                 ? new RegExp("(?<!`)(\\$(?!true\\b|false\\b|null\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
                 : new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
