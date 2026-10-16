@@ -57,7 +57,6 @@ export class UniversalMockHelper {
         this.registerArtifactToolUtilitiesMock();
         artMock.registerArtifactToolRunnerMock(tmr);
         clientMock.registerClientToolUtilitiesMock(tmr, UniversalMockHelper.ArtifactToolCmd);
-        clientMock.registerClientToolRunnerMock(tmr);
         pkgMock.registerLocationHelpersMock(tmr);
         this.registerRetryUtilitiesMock();
         this.registerAuthenticationMocks();
