@@ -602,3 +602,98 @@ describe('AzureContainerAppsV1 Suite', function () {
         assert(capturedArgs.indexOf(`--path ${appSourcePath}`) !== -1, 'appSourcePath should be interpolated into the legacy command string when the feature flag is disabled.');
     });
 });
+
+describe('AzureContainerApps Docker output filtering', function () {
+    const tl = require('azure-pipelines-task-lib/task');
+    const childProcess = require('child_process');
+    const { Writable } = require('stream');
+    const { ContainerAppHelper } = require('../src/ContainerAppHelper');
+    const blockingFeature = 'DISTRIBUTEDTASK_TASKS_AZURECONTAINERAPPSENABLEVSOCOMMANDBLOCKING';
+    const argumentFeature = 'DISTRIBUTEDTASK_TASKS_USEARGARRAYFORFILEPATH';
+    const stdout = 'ordinary build output\n##vso[task.setvariable variable=NODE_OPTIONS]--trace-warnings\n';
+    const stderr = '#9 0.055 ##vso[task.setvariable variable=NODE_OPTIONS]--trace-warnings\nordinary build diagnostic\n';
+
+    for (const featureValue of [undefined, 'false', 'true']) {
+        for (const disableTelemetry of [false, true]) {
+            for (const useArgArray of ['false', 'true']) {
+                for (const exitCode of [0, 1]) {
+                    it(`filters both build streams with blocking=${featureValue}, telemetry disabled=${disableTelemetry}, argument arrays=${useArgArray}, exit=${exitCode}`, () => {
+                        const originalExecSync = tl.execSync;
+                        const originalSpawnSync = childProcess.spawnSync;
+                        const originalBlockingFeature = process.env[blockingFeature];
+                        const originalArgumentFeature = process.env[argumentFeature];
+                        let loggedStdout = '';
+                        let loggedStderr = '';
+                        let telemetry = '';
+                        let executions = 0;
+                        let failure: any;
+                        const capture = (write: (value: string) => void) => new Writable({
+                            write(chunk, encoding, callback) {
+                                write(chunk.toString());
+                                callback();
+                            }
+                        });
+                        try {
+                            if (featureValue === undefined) {
+                                delete process.env[blockingFeature];
+                            } else {
+                                process.env[blockingFeature] = featureValue;
+                            }
+                            process.env[argumentFeature] = useArgArray;
+                            tl.setStdStream(capture(value => { telemetry += value; }));
+                            childProcess.spawnSync = () => ({ status: exitCode, stdout: Buffer.from(stdout), stderr: Buffer.from(stderr) });
+                            tl.execSync = (tool: string, args: string | string[], options: any) => {
+                                executions++;
+                                assert.strictEqual(tool, 'docker');
+                                assert.deepStrictEqual(args, useArgArray === 'true'
+                                    ? ['build', '--tag', 'sample-image:tag', '--file', '/samplepath/Dockerfile', '/samplepath']
+                                    : 'build --tag sample-image:tag --file /samplepath/Dockerfile /samplepath');
+                                assert.deepStrictEqual(options.externalOutput, {
+                                    source: 'childProcess',
+                                    vsoCommandMode: disableTelemetry
+                                        ? (featureValue === 'true' ? 'blockOnly' : 'disabled')
+                                        : (featureValue === 'true' ? 'blockAndTelemetry' : 'telemetryOnly')
+                                });
+                                return originalExecSync.call(tl, process.execPath, args, {
+                                    ...options,
+                                    outStream: capture(value => { loggedStdout += value; }),
+                                    errStream: capture(value => { loggedStderr += value; })
+                                });
+                            };
+                            try {
+                                new ContainerAppHelper(disableTelemetry).createRunnableAppImageFromDockerfile('sample-image:tag', '/samplepath', '/samplepath/Dockerfile');
+                            } catch (error) {
+                                failure = error;
+                            }
+                            assert.strictEqual(executions, 1);
+                            if (exitCode === 0) {
+                                assert.strictEqual(failure, undefined);
+                            } else {
+                                assert.strictEqual(failure && failure.code, exitCode);
+                            }
+                            const blocked = featureValue === 'true';
+                            assert(loggedStdout.endsWith(blocked ? stdout.replace(/##vso\[/g, '##_vso[') : stdout));
+                            assert.strictEqual(loggedStderr, blocked ? stderr.replace(/##vso\[/g, '##_vso[') : stderr);
+                            const events = telemetry.split('\n').filter(line => line.includes('"commandName":"task.setvariable"'));
+                            assert.strictEqual(events.length, disableTelemetry ? 0 : 2);
+                            assert(events.every(event => event.includes('"source":"childProcess"') && event.includes('"blocked":' + blocked)));
+                            assert(!telemetry.includes('NODE_OPTIONS'), 'telemetry must exclude command properties');
+                            assert(!telemetry.includes('--trace-warnings'), 'telemetry must exclude command data');
+                        } finally {
+                            tl.execSync = originalExecSync;
+                            childProcess.spawnSync = originalSpawnSync;
+                            tl.setStdStream(process.stdout);
+                            for (const [name, value] of [[blockingFeature, originalBlockingFeature], [argumentFeature, originalArgumentFeature]]) {
+                                if (value === undefined) {
+                                    delete process.env[name];
+                                } else {
+                                    process.env[name] = value;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    }
+});
