@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -371,6 +371,8 @@
     "DownloadingKubeCtlFromUrl": "Downloading Kubectl from URL: %s",
     "DownloadPathForStableTxt": "Download path for stable.txt: %s",
     "DownloadKubeCtlFailed": "Can not download the kubectl client of version %s. Check if the version is correct https://github.com/kubernetes/kubernetes/releases",
+    "InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0.",
+    "InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
     "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
     "ReturningToolRunnerExecPromise": "Called Toolrunner exec() method asynchronously. Returning the promise.",
     "ToolRunnerExecCallFailed": "Toolrunner exec() method returned error for the kubectl command. Error: %s.",

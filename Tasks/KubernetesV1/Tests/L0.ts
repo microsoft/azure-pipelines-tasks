@@ -748,3 +748,144 @@ describe('execCommand external-output filtering', function () {
         assert(!runner.execOptions.externalOutput, 'externalOutput must not be set for silent callers');
     });
 });
+
+// The kubectl version is embedded in the download URL, which azure-pipelines-tool-lib writes to the task log.
+// These tests run the real utilities module (only the kubectlutility network edges are stubbed) and verify that
+// a version carrying URL delimiters or logging-command markers is rejected before any download is attempted.
+import * as utils from '../src/utilities';
+import kubectlutility = require('azure-pipelines-tasks-kubernetes-common/kubectlutility');
+
+describe('kubectl version validation', function () {
+    this.timeout(10000);
+
+    // Test titles and assertion messages use the labels, never the values, so that the test runner does not
+    // write a logging-command marker to the CI log.
+    const invalidVersions: { label: string, value: string }[] = [
+        { label: 'a download path followed by a logging command', value: '1.31.0/bin/linux/amd64/kubectl##vso[task.setvariable variable=BASH_ENV]payload' },
+        { label: 'a version followed by a logging command', value: '1.31.0##vso[task.setvariable variable=BASH_ENV]payload' },
+        { label: 'a v-prefixed version followed by a logging command', value: 'v1.31.0##vso[task.setvariable variable=BASH_ENV]payload' },
+        { label: 'a version followed by a line break and a logging command', value: '1.31.0\n##vso[task.setvariable variable=BASH_ENV]payload' },
+        { label: 'a URL fragment', value: '1.31.0#fragment' },
+        { label: 'a URL query', value: '1.31.0?query=1' },
+        { label: 'a path traversal', value: '1.31.0/../../evil' },
+        { label: 'a backslash', value: '1.31.0\\evil' },
+        { label: 'percent-encoded URL delimiters', value: '1.31.0%23%23vso%5Btask.setvariable' },
+        { label: 'an unexpanded macro', value: '$(KUBE_VERSION)' },
+        { label: 'a word', value: 'latest' },
+        { label: 'a version range', value: '1.x.0' },
+        { label: 'a version without a patch number', value: '1.31' }
+    ];
+
+    const emptyVersions: { label: string, value: string }[] = [
+        { label: 'an empty string', value: '' },
+        { label: 'undefined', value: undefined },
+        { label: 'null', value: null }
+    ];
+
+    const invalidStableVersions: { label: string, value: string }[] = [
+        { label: 'a logging command', value: 'v1.99.0##vso[task.setvariable variable=BASH_ENV]payload' },
+        { label: 'an HTML page', value: '<html><body>Sign in</body></html>' }
+    ];
+
+    const originalWarning = tl.warning;
+    const originalGetStableKubectlVersion = kubectlutility.getStableKubectlVersion;
+    const originalDownloadKubectl = kubectlutility.downloadKubectl;
+    let warnings: string[];
+
+    before(() => {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
+    beforeEach(() => {
+        warnings = [];
+        (tl as any).warning = (message: string) => { warnings.push(message); };
+    });
+
+    afterEach(() => {
+        (tl as any).warning = originalWarning;
+        (kubectlutility as any).getStableKubectlVersion = originalGetStableKubectlVersion;
+        (kubectlutility as any).downloadKubectl = originalDownloadKubectl;
+    });
+
+    it('normalizes valid versions to a v-prefixed semantic version', () => {
+        assert.strictEqual(utils.validateKubectlVersion('1.31.0'), 'v1.31.0');
+        assert.strictEqual(utils.validateKubectlVersion('v1.31.0'), 'v1.31.0');
+        assert.strictEqual(utils.validateKubectlVersion('1.31.0-rc.1'), 'v1.31.0-rc.1');
+        assert.strictEqual(utils.validateKubectlVersion('v1.33.0-alpha.1.123'), 'v1.33.0-alpha.1.123');
+    });
+
+    it('normalizes surrounding whitespace, a leading = and build metadata the way semver.clean does', () => {
+        assert.strictEqual(utils.validateKubectlVersion(' 1.31.0 '), 'v1.31.0');
+        assert.strictEqual(utils.validateKubectlVersion('=v1.31.0'), 'v1.31.0');
+        assert.strictEqual(utils.validateKubectlVersion('1.31.0+build.5'), 'v1.31.0');
+    });
+
+    [...invalidVersions, ...emptyVersions].forEach(({ label, value }) => {
+        it(`rejects ${label}`, () => {
+            assert.throws(() => utils.validateKubectlVersion(value), /not valid/);
+        });
+    });
+
+    it('does not echo any rejected value in the error message', () => {
+        for (const { label, value } of invalidVersions) {
+            assert.throws(
+                () => utils.validateKubectlVersion(value),
+                (err: Error) => err.message === tl.loc('InvalidKubectlVersion'),
+                `should not echo ${label}`);
+        }
+    });
+
+    it('getKubectlVersion returns the validated version for an explicit versionSpec', async () => {
+        assert.strictEqual(await utils.getKubectlVersion('1.31.0', false), 'v1.31.0');
+        assert.strictEqual(await utils.getKubectlVersion('v1.31.0', false), 'v1.31.0');
+    });
+
+    it('getKubectlVersion rejects an invalid versionSpec', async () => {
+        for (const { label, value } of invalidVersions) {
+            await assert.rejects(utils.getKubectlVersion(value, false), /not valid/, `should reject ${label}`);
+        }
+    });
+
+    it('getKubectlVersion ignores versionSpec when checkLatest is true', async () => {
+        (kubectlutility as any).getStableKubectlVersion = async () => 'v1.99.0';
+        assert.strictEqual(await utils.getKubectlVersion('not-a-version', true), 'v1.99.0');
+    });
+
+    it('getKubectlVersion keeps the backward compatible 1.7 behavior', async () => {
+        (kubectlutility as any).getStableKubectlVersion = async () => 'v1.99.0';
+        assert.strictEqual(await utils.getKubectlVersion('1.7', false), 'v1.99.0');
+        assert.strictEqual(warnings.length, 1, 'the 1.7 compatibility warning must still be emitted');
+    });
+
+    it('defines a dedicated message for a stable version that cannot be used', () => {
+        const stableMessage = tl.loc('InvalidStableKubectlVersion');
+        assert.notStrictEqual(stableMessage, tl.loc('InvalidKubectlVersion'));
+        assert(/stable\.txt/.test(stableMessage), 'the message must explain that stable.txt is the problem');
+    });
+
+    [
+        { scenario: 'checkLatest', versionSpec: '1.31.0', checkLatest: true },
+        { scenario: 'the 1.7 compatibility spec', versionSpec: '1.7', checkLatest: false }
+    ].forEach(({ scenario, versionSpec, checkLatest }) => {
+        invalidStableVersions.forEach(({ label, value }) => {
+            it(`getKubectlVersion rejects a stable version containing ${label} for ${scenario}`, async () => {
+                (kubectlutility as any).getStableKubectlVersion = async () => value;
+                await assert.rejects(utils.getKubectlVersion(versionSpec, checkLatest), { message: tl.loc('InvalidStableKubectlVersion') });
+            });
+        });
+    });
+
+    it('downloadKubectl validates the version before calling the download library', async () => {
+        const requested: string[] = [];
+        (kubectlutility as any).downloadKubectl = async (version: string) => { requested.push(version); return 'kubectl'; };
+
+        await assert.rejects(
+            utils.downloadKubectl('1.31.0##vso[task.setvariable variable=BASH_ENV]payload'),
+            (err: Error) => err.message === tl.loc('InvalidKubectlVersion'),
+            'an invalid version must be rejected before the download library is called');
+        assert.strictEqual(requested.length, 0, 'the download library must not be called for an invalid version');
+
+        await utils.downloadKubectl('1.31.0');
+        assert.deepStrictEqual(requested, ['v1.31.0']);
+    });
+});

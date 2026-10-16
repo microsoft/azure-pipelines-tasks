@@ -36,30 +36,34 @@ function ensureDirExists(dirPath : string) : void
     }
 }
 
+// The kubectl version is embedded in the download URL, which azure-pipelines-tool-lib writes to the task log.
+// Only a semantic version is accepted so the value can never carry URL delimiters or logging-command markers.
+export function validateKubectlVersion(version: string, invalidMessageKey: "InvalidKubectlVersion" | "InvalidStableKubectlVersion" = "InvalidKubectlVersion"): string {
+    const cleanVersion = version ? toolLib.cleanVersion(version) : null;
+    if (!cleanVersion) {
+        throw new Error(tl.loc(invalidMessageKey));
+    }
+
+    return "v".concat(cleanVersion);
+}
+
 export async function getKubectlVersion(versionSpec: string, checkLatest: boolean) : Promise<string> {
     
     if(checkLatest) {
-        return await kubectlutility.getStableKubectlVersion();
+        return validateKubectlVersion(await kubectlutility.getStableKubectlVersion(), "InvalidStableKubectlVersion");
     }
     else if (versionSpec) {
         if(versionSpec === "1.7") {
             // Backward compat handle
             tl.warning(tl.loc("UsingLatestStableVersion"));
-            return kubectlutility.getStableKubectlVersion();
+            return validateKubectlVersion(await kubectlutility.getStableKubectlVersion(), "InvalidStableKubectlVersion");
         } 
         else if ("v".concat(versionSpec) === kubectlutility.stableKubectlVersion) {
             tl.debug(util.format("Using default versionSpec:%s.", versionSpec));
             return kubectlutility.stableKubectlVersion;
         }
         else {
-            // Do not check for validity of the version here,
-            // We'll return proper error message when the download fails
-            if(!versionSpec.startsWith("v")) {
-                return "v".concat(versionSpec);
-            }
-            else{
-                return versionSpec;
-            }
+            return validateKubectlVersion(versionSpec);
         } 
      }
  
@@ -67,7 +71,7 @@ export async function getKubectlVersion(versionSpec: string, checkLatest: boolea
  }
 
 export async function downloadKubectl(version: string): Promise<string> {
-    return await kubectlutility.downloadKubectl(version);
+    return await kubectlutility.downloadKubectl(validateKubectlVersion(version));
 }
 
 export function sanitizeVersionString(versions, inputVersion: string): string {
