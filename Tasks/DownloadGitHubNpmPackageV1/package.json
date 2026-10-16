@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node ../../make.js build --task DownloadGitHubNpmPackageV1",
     "serverBuild": "node ../../make.js serverBuild --task DownloadGitHubNpmPackageV1",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ../../make.js test --task DownloadGitHubNpmPackageV1"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,8 @@
     "azure-pipelines-task-lib": "^5.281.0",
     "azure-pipelines-tasks-packaging-common": "^3.281.0",
     "azure-pipelines-tasks-utility-common": "3.281.0",
-    "ini": "^1.3.4"
+    "ini": "^1.3.4",
+    "semver": "5.7.2"
   },
   "devDependencies": {
     "typescript": "5.1.6"
