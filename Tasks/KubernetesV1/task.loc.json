@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -484,6 +484,8 @@
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidVersion": "ms-resource:loc.messages.NotAValidVersion",
+    "InvalidKubectlVersion": "ms-resource:loc.messages.InvalidKubectlVersion",
+    "InvalidStableKubectlVersion": "ms-resource:loc.messages.InvalidStableKubectlVersion",
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",
