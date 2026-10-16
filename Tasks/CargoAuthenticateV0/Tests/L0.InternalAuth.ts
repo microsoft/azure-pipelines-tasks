@@ -113,7 +113,7 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             TestHelpers.assertEnvironmentVariableSet(tr, 'CARGO_REGISTRIES_I_REGISTRY_TOKEN');
         });
 
-        it('fails when shared feed verification cannot complete', async () => {
+        it('warns and skips authentication when shared feed verification cannot complete', async () => {
             // Arrange & Act
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forInternalAuth('test-registry', {
@@ -122,9 +122,11 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             );
             
             // Assert
-            TestHelpers.assertFailure(tr, {
-                expectedError: 'Simulated feed verification failure'
-            });
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr, 'loc_mock_SkippingNonAzureDevOpsRegistry');
+            TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
+            TestHelpers.assertEnvironmentVariableNotSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_CREDENTIAL_PROVIDER');
+            TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0, ExternalFeedAuthCount: 0 });
         });
     });
 
