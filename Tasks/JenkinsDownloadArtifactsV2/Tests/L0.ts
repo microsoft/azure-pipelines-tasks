@@ -555,3 +555,44 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 });
+
+import * as tl from 'azure-pipelines-task-lib/task';
+
+describe('writeExternalOutput sanitization', function () {
+    it('should block ##vso[ commands in external output', () => {
+        const captured: string[] = [];
+        const origWrite = process.stdout.write;
+        process.stdout.write = ((chunk: any) => { captured.push(String(chunk)); return true; }) as any;
+        try {
+            tl.writeExternalOutput('artifact ##vso[task.setvariable variable=x]pwned\n', { source: 'remote' });
+        } finally {
+            process.stdout.write = origWrite;
+        }
+        const output = captured.join('');
+        assert(output.indexOf('##vso[task.setvariable') === -1, 'should not contain ##vso[task.setvariable');
+    });
+
+    it('should pass through normal text unchanged', () => {
+        const captured: string[] = [];
+        const origWrite = process.stdout.write;
+        process.stdout.write = ((chunk: any) => { captured.push(String(chunk)); return true; }) as any;
+        try {
+            tl.writeExternalOutput('normal artifact path/file.txt\n', { source: 'remote' });
+        } finally {
+            process.stdout.write = origWrite;
+        }
+        const output = captured.join('');
+        assert(output.indexOf('normal artifact path/file.txt') !== -1, 'should contain normal text');
+    });
+});
+
+describe('JenkinsDownloadArtifactsV2 task.json restrictions', function () {
+    const taskJson = require('../task.json');
+
+    it('should disallow setting pipeline variables', () => {
+        assert(taskJson.restrictions, 'task.json must have a restrictions block');
+        assert(taskJson.restrictions.settableVariables, 'restrictions must include settableVariables');
+        assert(Array.isArray(taskJson.restrictions.settableVariables.allowed), 'settableVariables.allowed must be an array');
+        assert.strictEqual(taskJson.restrictions.settableVariables.allowed.length, 0, 'no variables should be settable');
+    });
+});
