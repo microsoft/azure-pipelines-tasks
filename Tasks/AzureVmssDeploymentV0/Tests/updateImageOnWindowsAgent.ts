@@ -82,6 +82,28 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage', requir
 tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
 
+for (const flag of [
+    'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
+    'DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED',
+    'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT'
+]) {
+    process.env[flag] = 'false';
+}
+if (process.env['_dataProtocolScripts_']) {
+    tr.setInput('customScriptsDirectory', process.env['_dataProtocolScripts_']);
+    tr.setInput('customScript', 'deploy.ps1');
+    tr.setInput('customScriptArguments', process.env['_dataProtocolArgs_'] || '');
+    tr.setInput('skipArchivingCustomScripts', 'true');
+    os.tmpdir = () => process.env['AGENT_TEMPDIRECTORY'];
+    process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = process.env['_protocolOldFlag_'];
+    if (process.env['_protocolFixFlag_'] === 'missing') {
+        delete process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'];
+    } else {
+        process.env['DISTRIBUTEDTASK_TASKS_VMSSCUSTOMSCRIPTARGSVALIDATIONFIXENABLED'] = process.env['_protocolFixFlag_'];
+    }
+    process.env['AZP_75787_ENABLE_NEW_LOGIC'] = process.env['_protocolActivate_'];
+}
+
 if (process.env["_sanitizeArgsActivate_"] === "true") {
     process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = "true";
     process.env["AZP_75787_ENABLE_NEW_LOGIC"] = "true";

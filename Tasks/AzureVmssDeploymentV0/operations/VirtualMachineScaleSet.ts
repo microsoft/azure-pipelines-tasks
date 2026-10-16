@@ -1,6 +1,7 @@
 import path = require("path");
 import os = require('os');
 import util = require('util');
+import fs = require('fs');
 import tl = require("azure-pipelines-task-lib/task");
 
 import armCompute = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-compute');
@@ -9,7 +10,8 @@ import azureModel = require('azure-pipelines-tasks-azure-arm-rest/azureModels');
 import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
-import { tryValidateScriptArgs } from './argsSanitizer';
+import { getVmssCustomScriptArgsValidationFixEnabled, tryValidateScriptArgs } from './argsSanitizer';
+import { prepareWindowsInvoker } from './windowsInvoker';
 import utils = require("./Utils")
 
 
@@ -85,12 +87,18 @@ export default class VirtualMachineScaleSet {
                     typeHandlerVersion: extensionMetadata.typeHandlerVersion,
                     autoUpgradeMinorVersion: true,
                     settings: {
-                        "commandToExecute": customScriptInfo.command,
-                        "fileUris": customScriptInfo.blobUris
+                        ...(customScriptInfo.safeWindowsInvoker ? {} : {
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris
+                        })
                     },
                     protectedSettings: {
                         "storageAccountName": customScriptInfo.storageAccount.name,
-                        "storageAccountKey": customScriptInfo.storageAccount.primaryAccessKey
+                        "storageAccountKey": customScriptInfo.storageAccount.primaryAccessKey,
+                        ...(customScriptInfo.safeWindowsInvoker ? {
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris
+                        } : {})
                     }
                 }
             };
@@ -118,6 +126,10 @@ export default class VirtualMachineScaleSet {
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
+        } finally {
+            if (customScriptInfo.safeWindowsInvoker) {
+                fs.rmSync(customScriptInfo.localDirPath, { recursive: true });
+            }
         }
 
         return customScriptInfo;
@@ -135,12 +147,19 @@ export default class VirtualMachineScaleSet {
             archiveFile = archiveInfo.fileName
         }
 
-        let blobsPefixPath = this._getBlobsPrefixPath();
-
         // Validate user-provided arguments with the shared WI-75787 sanitizer for the
         // target shell (ps for Windows, bash for Linux). Fails closed on injection when
         // AZP_75787_ENABLE_NEW_LOGIC is set and the EnableVmssCustomScriptArgsValidation gate is on.
         tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+
+        if (osType === "Windows" && getVmssCustomScriptArgsValidationFixEnabled('ps')) {
+            const invoker = prepareWindowsInvoker(this.taskParameters.customScriptsDirectory,
+                this.taskParameters.customScript, this.taskParameters.customScriptArguments,
+                archiveInfo ? archiveInfo.filePath : undefined);
+            tl.debug("Invoker command: " + invoker.command);
+            return <CustomScriptsInfo>{ ...invoker, safeWindowsInvoker: true };
+        }
+        let blobsPefixPath = this._getBlobsPrefixPath();
 
         // WI-75787: our own backtick escaping doubles/backslashes the sanitizer-trusted escape and revives it at the Invoke-Expression/eval sink, so pass args verbatim when the gate is on.
         const sanitizerEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
@@ -368,6 +387,7 @@ class CustomScriptsInfo {
     public storageAccount: StorageAccountInfo;
     public blobUris: string[];
     public blobsPrefixPath: string;
+    public safeWindowsInvoker?: boolean;
 }
 
 class ArchiveInfo {

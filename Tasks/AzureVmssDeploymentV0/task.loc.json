@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -233,6 +233,8 @@
     "CouldNotFetchAccessTokenforMSIStatusCode": "ms-resource:loc.messages.CouldNotFetchAccessTokenforMSIStatusCode",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "ScriptArgsSanitized": "ms-resource:loc.messages.ScriptArgsSanitized",
-    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash"
+    "ScriptArgsSanitizedBash": "ms-resource:loc.messages.ScriptArgsSanitizedBash",
+    "InvalidWindowsCustomScript": "ms-resource:loc.messages.InvalidWindowsCustomScript",
+    "WindowsScriptPayloadTooLarge": "ms-resource:loc.messages.WindowsScriptPayloadTooLarge"
   }
 }
