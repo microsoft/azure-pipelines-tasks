@@ -19,13 +19,13 @@ export function getFullErrorMessage(httpResponse, message: string): string {
 
 export function failReturnCode(httpResponse, message: string): void {
     const fullMessage = getFullErrorMessage(httpResponse, message);
-    console.error(fullMessage);
+    tl.writeExternalOutput(fullMessage + os.EOL, { source: 'remote', destination: process.stderr });
     tl.setResult(tl.TaskResult.Failed, message);
 }
 
 export function handleConnectionResetError(err): void {
     if (err.code == 'ECONNRESET') {
-        tl.debug(err);
+        tl.debugExternalOutput(String(err), { source: 'remote' });
     } else {
         fail(err);
     }
@@ -136,12 +136,12 @@ export function pollCreateRootJob(queueUri: string, jobQueue: JobQueue, taskOpti
 
 function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOptions): Q.Promise<Job> {
     const defer: Q.Deferred<Job> = Q.defer<Job>();
-    tl.debug('createRootJob(): ' + queueUri);
+    tl.debugExternalOutput('createRootJob(): ' + queueUri, { source: 'remote' });
 
     request.get({ url: queueUri, strictSSL: taskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
         tl.debug('createRootJob().requestCallback()');
         if (err) {
-            tl.debug(err);
+            tl.debugExternalOutput(String(err), { source: 'remote' });
             if (err.code == 'ECONNRESET') {
                 defer.resolve(null);
             } else {
@@ -152,7 +152,7 @@ function createRootJob(queueUri: string, jobQueue: JobQueue, taskOptions: TaskOp
             defer.reject(new HttpError(httpResponse, 'Job progress tracking failed to read job queue'));
         } else {
             const parsedBody: any = JSON.parse(body);
-            tl.debug(`parsedBody for: ${queueUri} : ${JSON.stringify(parsedBody)}`);
+            tl.debugExternalOutput(`parsedBody for: ${queueUri} : ${JSON.stringify(parsedBody)}`, { source: 'remote' });
 
             // canceled is spelled wrong in the body with 2 Ls (checking correct spelling also in case they fix it)
             if (parsedBody.cancelled || parsedBody.canceled) {
@@ -205,7 +205,7 @@ export function pollSubmitJob(taskOptions: TaskOptions): Q.Promise<string> {
 
 function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
-    tl.debug('submitJob(): ' + JSON.stringify(taskOptions));
+    tl.debug('submitJob()');
 
     function addCrumb(json: any): any {
         if (taskOptions.crumb && taskOptions.crumb != taskOptions.NO_CRUMB) {
@@ -231,22 +231,28 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
         }
     );
 
-    tl.debug('teamBuildPostData = ' + JSON.stringify(teamBuildPostData));
+    tl.debugExternalOutput('teamBuildPostData.url = ' + teamBuildPostData.url, { source: 'remote' });
     // first try team-build plugin endpoint, if that fails, then try the default endpoint
     request.post(teamBuildPostData, function teamBuildRequestCallback(err, httpResponse, body) {
         tl.debug('submitJob().teamBuildRequestCallback(teamBuildPostData)');
         if (err) {
             if (err.code == 'ECONNRESET') {
-                tl.debug(err);
+                tl.debugExternalOutput(String(err), { source: 'remote' });
                 defer.resolve(null);
             } else {
                 defer.reject(err);
             }
         } else if (httpResponse.statusCode === 404) { // team-build plugin endpoint failed because it is not installed
-            console.log('Install the "Team Foundation Server Plug-in" for improved Jenkins integration\n' + taskOptions.teamPluginUrl);
+            tl.writeExternalOutput(
+                'Install the "Team Foundation Server Plug-in" for improved Jenkins integration\n' + taskOptions.teamPluginUrl + os.EOL,
+                { source: 'remote' }
+            );
             taskOptions.teamBuildPluginAvailable = false;
 
-            tl.debug('httpResponse: ' + JSON.stringify(httpResponse));
+            tl.debugExternalOutput(
+                'httpResponse: statusCode=' + httpResponse.statusCode + ', statusMessage=' + httpResponse.statusMessage,
+                { source: 'remote' }
+            );
             const jobQueuePostData: any = addCrumb(taskOptions.parameterizedJob ?
                 {
                     url: taskOptions.jobQueueUrl,
@@ -258,13 +264,13 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
                     strictSSL: taskOptions.strictSSL
                 }
             );
-            tl.debug('jobQueuePostData = ' + JSON.stringify(jobQueuePostData));
+            tl.debugExternalOutput('jobQueuePostData.url = ' + jobQueuePostData.url, { source: 'remote' });
 
             request.post(jobQueuePostData, function jobQueueRequestCallback(err, httpResponse, body) {
                 tl.debug('submitJob().jobQueueRequestCallback(jobQueuePostData)');
                 if (err) {
                     if (err.code == 'ECONNRESET') {
-                        tl.debug(err);
+                        tl.debugExternalOutput(String(err), { source: 'remote' });
                         defer.resolve(null);
                     } else {
                         defer.reject(err);
@@ -292,12 +298,12 @@ function submitJob(taskOptions: TaskOptions): Q.Promise<string> {
 function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
     const defer: Q.Deferred<string> = Q.defer<string>();
     const crumbRequestUrl: string = addUrlSegment(taskOptions.serverEndpointUrl, '/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)');
-    tl.debug('crumbRequestUrl: ' + crumbRequestUrl);
+    tl.debugExternalOutput('crumbRequestUrl: ' + crumbRequestUrl, { source: 'remote' });
 
     request.get({ url: crumbRequestUrl, strictSSL: taskOptions.strictSSL }, function (err, httpResponse, body) {
         if (err) {
             if (err.code == 'ECONNRESET') {
-                tl.debug(err);
+                tl.debugExternalOutput(String(err), { source: 'remote' });
                 defer.resolve(null);
             } else {
                 defer.reject(err);
@@ -310,7 +316,7 @@ function getCrumb(taskOptions: TaskOptions): Q.Promise<string> {
             defer.reject(new HttpError(httpResponse, 'Crumb request failed.'));
         } else {
             taskOptions.crumb = body;
-            tl.debug('crumb: ' + taskOptions.crumb);
+            tl.debugExternalOutput('crumb: ' + taskOptions.crumb, { source: 'remote' });
             defer.resolve(taskOptions.crumb);
         }
     }).auth(taskOptions.username, taskOptions.password, true);
@@ -326,7 +332,7 @@ export class StringWritable extends stream.Writable {
     }
 
     _write(data: any, encoding: string, callback: Function): void {
-        tl.debug(data);
+        tl.debugExternalOutput(data, { source: 'remote' });
         this.value += data;
         if (callback) {
             callback();

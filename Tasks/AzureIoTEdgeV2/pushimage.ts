@@ -90,11 +90,10 @@ export async function run() {
     let defaultPlatform = tl.getInput('defaultPlatform', true);
     await tl.exec(`${Constants.iotedgedev}`, ["push", "--no-build", "--file", templateFilePath, "--platform", defaultPlatform], execOptions);
 
-    util.createOrAppendDockerCredentials(authenticationToken);
-
     let fillRegistryCredential = tl.getBoolInput('fillRegistryCredential', true);
     tl.debug(`fillRegistryCredential: ${fillRegistryCredential}`);
     if (fillRegistryCredential) {
+      util.createOrAppendDockerCredentials(authenticationToken);
       let dockerCredentials = util.readDockerCredentials();
       tl.debug(`Number of docker cred passed: ${dockerCredentials.length}`);
 

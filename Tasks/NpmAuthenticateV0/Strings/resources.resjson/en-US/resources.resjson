@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Found build credentials",
   "loc.messages.ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
   "loc.messages.NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
+  "loc.messages.NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
+  "loc.messages.NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+  "loc.messages.UnableToWriteFileContents": "Unable to write the contents of %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
   "loc.messages.SavingFile": "Saving file %s",
   "loc.messages.RestoringFile": "Restoring file %s",
@@ -39,6 +42,8 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
   "loc.messages.Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
   "loc.messages.Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
 }

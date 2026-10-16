@@ -1,3 +1,5 @@
+. "$PSScriptRoot\Assert-ValidManifestPathSegment.ps1"
+
 function Update-DockerImageSettings
 {
     [CmdletBinding()]
@@ -81,7 +83,9 @@ function Update-DockerImageSettings
         $appManifestXml = [xml](Get-Content -LiteralPath $appManifestPath)
         foreach ($serviceManifestImport in $appManifestXml.ApplicationManifest.ServiceManifestImport)
         {
-            $serviceManifestPath = [System.IO.Path]::Combine($appPackagePath, $serviceManifestImport.ServiceManifestRef.ServiceManifestName, "ServiceManifest.xml")
+            $serviceManifestName = $serviceManifestImport.ServiceManifestRef.ServiceManifestName
+            Assert-ValidManifestPathSegment -Name $serviceManifestName -ElementDescription 'ServiceManifestRef/@ServiceManifestName'
+            $serviceManifestPath = [System.IO.Path]::Combine($appPackagePath, $serviceManifestName, "ServiceManifest.xml")
             $serviceManifestXml = [xml](Get-Content -LiteralPath $serviceManifestPath)
 
             $hasUpdates = $false

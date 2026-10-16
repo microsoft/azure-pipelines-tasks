@@ -1,4 +1,6 @@
-﻿function Update-ServiceVersions
+﻿. "$PSScriptRoot\Assert-ValidManifestPathSegment.ps1"
+
+function Update-ServiceVersions
 {
     [CmdletBinding()]
     [OutputType([string])]
@@ -42,6 +44,7 @@
 
         $serviceManifestName = "ServiceManifest.xml"
 
+        Assert-ValidManifestPathSegment -Name $ServiceName -ElementDescription 'ServiceManifestRef/@ServiceManifestName'
         $newPackagePath = Join-Path $NewPackageRoot $ServiceName
         $newManifestPath = Join-Path $newPackagePath $serviceManifestName
         $newManifest = [XML](Get-Content -LiteralPath $newManifestPath)

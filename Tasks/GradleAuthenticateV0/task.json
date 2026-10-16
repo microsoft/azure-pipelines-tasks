@@ -10,8 +10,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -85,38 +85,50 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO",
+        "ARTIFACTS_GRADLE_AUTH_CONFIG"
+      ]
+    }
+  },
   "messages": {
     "Error_CouldNotDetermineVersion": "Could not determine the credential provider plugin version. Either declare the plugin in settings.gradle and include it in buildFiles, or set the pluginToolVersion input.",
     "Error_CouldNotResolveCiJar": "Could not resolve the credential provider JAR.",
+    "Error_InvalidPluginVersion": "The plugin version is invalid. Use 1-64 letters, numbers, periods, plus signs, underscores, or hyphens.",
     "Error_NoBuildFilesOrRepoUrls": "At least one of buildFiles or repositoryUrl must be provided. buildFiles should list Gradle build files containing Azure Artifacts repository URLs. repositoryUrl should be an explicit Azure Artifacts repository URL.",
     "Error_NoCiJarFound": "No credential provider JAR found. Ensure GRADLE_CREDPROVIDER_HOME is set (provided automatically on Microsoft-hosted agents) or that the task package includes a bundled credential provider JAR.",
-    "Info_AuthConfigWritten": "Auth config written: %s",
+    "Info_AuthConfigWritten": "Auth config written.",
     "Info_AutoDiscoveredBuildFiles": "No buildFiles input provided; auto-discovered Gradle files in working directory: %s",
-    "Info_CiJarFromBundled": "Using bundled credential provider JAR: %s",
-    "Info_CiJarFromHome": "Using credential provider JAR from GRADLE_CREDPROVIDER_HOME: %s",
-    "Info_CiJarResolved": "Credential provider JAR resolved: %s",
+    "Info_CiJarFromBundled": "Using bundled credential provider JAR.",
+    "Info_CiJarFromHome": "Using credential provider JAR from GRADLE_CREDPROVIDER_HOME.",
+    "Info_CiJarResolved": "Credential provider JAR resolved.",
     "Info_DiscoveredFeed": "Discovered feed: %s (from %s)",
-    "Info_DynamicVersionDetected": "Dynamic plugin version \"%s\" detected; will resolve via maven-metadata.xml",
-    "Info_EnvVarSet": "%s = %s",
-    "Info_FeedResourceTenant": "Feed %s resource tenant: %s",
-    "Info_InitScriptWritten": "Init script written: %s",
-    "Info_MavenRepoLaidOut": "Maven repo laid out at: %s (versions: %s)",
+    "Info_DynamicVersionDetected": "Dynamic plugin version \"%s\" detected; will resolve via maven-metadata.xml.",
+    "Info_EnvVarsSet": "Gradle authentication environment variables set.",
+    "Info_FeedResourceTenant": "Feed resource tenant determined.",
+    "Info_InitScriptWritten": "Init script written.",
+    "Info_MavenRepoLaidOut": "Maven repository laid out.",
     "Info_NoFeedsNothingToConfigure": "No Azure Artifacts feeds found. Nothing to configure.",
-    "Info_PluginVersionBundled": "No plugin version in build files; using bundled JAR version: %s",
+    "Info_PluginVersionBundled": "No plugin version in build files; using bundled JAR version.",
     "Info_PluginVersionFromFile": "Plugin version from %s: %s",
     "Info_PluginVersionFromInput": "Plugin version from pluginToolVersion input: %s",
-    "Info_PostExecDeletedInitScript": "Deleted init script: %s",
-    "Info_PostExecDeletedTempDir": "Deleted temp directory: %s",
+    "Info_PostExecDeletedInitScript": "Deleted init script.",
+    "Info_PostExecDeletedTempDir": "Deleted temporary directory.",
     "Info_PostExecUnsetVars": "Unset ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO and ARTIFACTS_GRADLE_AUTH_CONFIG",
-    "Info_SuccessResult": "GradleAuthenticate configured %s feed(s) with plugin version(s) %s",
+    "Info_SuccessResult": "GradleAuthenticate configured feed authentication.",
     "Info_SynthesizedVersion": "Synthesized version \"%s\" from dynamic pattern \"%s\"",
-    "Warning_BuildFileNotFound": "Build file not found: %s",
-    "Warning_CorruptAuthConfig": "Existing auth config at %s is corrupt and will be overwritten.",
-    "Warning_CouldNotDetermineResourceTenant": "Could not determine resource tenant for %s",
+    "Warning_BuildFileNotFound": "A configured build file was not found.",
+    "Warning_CorruptAuthConfig": "The existing auth config is corrupt and will be overwritten.",
+    "Warning_CouldNotDetermineResourceTenant": "Could not determine the feed resource tenant.",
+    "Warning_InvalidRepositoryUrlSkipped": "A repository URL was skipped because it is not a valid HTTPS Azure Artifacts URL.",
     "Warning_MissingSystemVariable": "System variable %s is not set; WIF authentication may not work.",
     "Warning_NoFeedsFound": "No Azure Artifacts feed URLs (pkgs.dev.azure.com) found in the provided build files or repository URLs.",
     "Warning_NoServiceConnection": "No service connection configured. The credential provider will use the SYSTEM_ACCESSTOKEN or ARTIFACTS_GRADLE_AUTH_ACCESS_TOKEN environment variable for authentication. Set one of these variables in your pipeline or provide a service connection for Workload Identity Federation.",
-    "Warning_PostExecCleanupFailed": "Post-step cleanup failed: %s",
-    "Warning_RepositoryUrlNotAzureArtifacts": "The provided repositoryUrl (%s) does not appear to be an Azure Artifacts URL (expected pkgs.dev.azure.com). Authentication may not work correctly."
+    "Warning_PostExecCleanupFailed": "Post-step cleanup failed."
   }
 }

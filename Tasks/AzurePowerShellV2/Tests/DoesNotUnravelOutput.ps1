@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { "$PSScriptRoot/DoesNotUnravelOutput_TargetScript.p
 Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-Azure
+Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 
 # Act.

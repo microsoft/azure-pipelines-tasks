@@ -11,9 +11,15 @@ parameters:
 - name: signTasks
   type: boolean
   default: false
-- name: signNodeModules
-  type: boolean
-  default: false
+- name: nodeModulesSigningMode
+  type: string
+  default: 'Catalog signing'
+  values:
+  - 'Catalog signing'
+  - 'Individual file signing'
+- name: catalogGenerationThrottle
+  type: number
+  default: 4
 
 steps:
 
@@ -175,7 +181,8 @@ steps:
     - template: /ci/sign-task-files.yml@self
       parameters:
         tasksRoot: $(Build.SourcesDirectory)\_build\Tasks
-        signNodeModules: ${{ parameters.signNodeModules }}
+        nodeModulesSigningMode: ${{ parameters.nodeModulesSigningMode }}
+        catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
   # Stage tasks individually into the package directory
   - script: node ./ci/stage-package.js true individually

@@ -17,7 +17,7 @@
     ],
     "version": {
         "Major": 1,
-        "Minor": 279,
+        "Minor": 281,
         "Patch": 0
     },
     "demands": [
@@ -421,6 +421,7 @@
         "PublishProfileRequiredUpgrade": "Upgrade settings must be overridden or a publish profile must be specified in the Azure Pipelines task.",
         "UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
         "UnsupportedContainerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
+        "SFSDK_InvalidManifestPathSegment": "Invalid {0} value '{1}' found in the application package. This value is used as a folder name while building a file path from the application package, so it must be a simple name: it cannot be empty, contain a path separator or a relative path segment, be an absolute path, or end with a trailing '.' or ' ' character that Windows would normalize away.",
         "SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
         "SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
         "SFSDK_UnableToVerifyClusterConnection": "Unable to verify service connection to the Service Fabric cluster.",

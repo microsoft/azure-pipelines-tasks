@@ -10,8 +10,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 281,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -85,9 +85,21 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO",
+        "ARTIFACTS_GRADLE_AUTH_CONFIG"
+      ]
+    }
+  },
   "messages": {
     "Error_CouldNotDetermineVersion": "ms-resource:loc.messages.Error_CouldNotDetermineVersion",
     "Error_CouldNotResolveCiJar": "ms-resource:loc.messages.Error_CouldNotResolveCiJar",
+    "Error_InvalidPluginVersion": "ms-resource:loc.messages.Error_InvalidPluginVersion",
     "Error_NoBuildFilesOrRepoUrls": "ms-resource:loc.messages.Error_NoBuildFilesOrRepoUrls",
     "Error_NoCiJarFound": "ms-resource:loc.messages.Error_NoCiJarFound",
     "Info_AuthConfigWritten": "ms-resource:loc.messages.Info_AuthConfigWritten",
@@ -97,7 +109,7 @@
     "Info_CiJarResolved": "ms-resource:loc.messages.Info_CiJarResolved",
     "Info_DiscoveredFeed": "ms-resource:loc.messages.Info_DiscoveredFeed",
     "Info_DynamicVersionDetected": "ms-resource:loc.messages.Info_DynamicVersionDetected",
-    "Info_EnvVarSet": "ms-resource:loc.messages.Info_EnvVarSet",
+    "Info_EnvVarsSet": "ms-resource:loc.messages.Info_EnvVarsSet",
     "Info_FeedResourceTenant": "ms-resource:loc.messages.Info_FeedResourceTenant",
     "Info_InitScriptWritten": "ms-resource:loc.messages.Info_InitScriptWritten",
     "Info_MavenRepoLaidOut": "ms-resource:loc.messages.Info_MavenRepoLaidOut",
@@ -113,10 +125,10 @@
     "Warning_BuildFileNotFound": "ms-resource:loc.messages.Warning_BuildFileNotFound",
     "Warning_CorruptAuthConfig": "ms-resource:loc.messages.Warning_CorruptAuthConfig",
     "Warning_CouldNotDetermineResourceTenant": "ms-resource:loc.messages.Warning_CouldNotDetermineResourceTenant",
+    "Warning_InvalidRepositoryUrlSkipped": "ms-resource:loc.messages.Warning_InvalidRepositoryUrlSkipped",
     "Warning_MissingSystemVariable": "ms-resource:loc.messages.Warning_MissingSystemVariable",
     "Warning_NoFeedsFound": "ms-resource:loc.messages.Warning_NoFeedsFound",
     "Warning_NoServiceConnection": "ms-resource:loc.messages.Warning_NoServiceConnection",
-    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed",
-    "Warning_RepositoryUrlNotAzureArtifacts": "ms-resource:loc.messages.Warning_RepositoryUrlNotAzureArtifacts"
+    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed"
   }
 }

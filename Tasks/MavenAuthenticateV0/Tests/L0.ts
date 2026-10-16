@@ -6,7 +6,7 @@ import './L0.ServiceConnections';
 import './L0.ErrorHandling';
 import './L0.Telemetry';
 import './L0.InputValidation';
+import './L0.FilePermissions';
 #if WIF
 import './L0.WIF';
 #endif
-

@@ -3,6 +3,7 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import shell = require('shelljs');
 
@@ -48,7 +49,7 @@ export class JobQueue {
                     this.FlushJobConsolesSafely();
                 }
             } catch (err) {
-                tl.debug(err.message);
+                tl.debugExternalOutput(String(err.message), { source: 'remote' });
                 tl.setResult(tl.TaskResult.Failed, err.message);
                 this.stop(false);
             }
@@ -146,7 +147,7 @@ export class JobQueue {
             } else if (addedToConsole) {
                 for (const i in streamingJobs) {
                     const job: Job = streamingJobs[i];
-                    console.log('Jenkins job pending: ' + job.ExecutableUrl);
+                    tl.writeExternalOutput('Jenkins job pending: ' + job.ExecutableUrl + os.EOL, { source: 'remote' });
                 }
             }
         }
@@ -295,7 +296,7 @@ export class JobQueue {
         const thisQueue: JobQueue = this;
         const tempDir: string = shell.tempdir();
         const linkMarkdownFile: string = path.join(tempDir, 'JenkinsJob_' + this.RootJob.Name + '_' + this.RootJob.ExecutableNumber + '.md');
-        tl.debug('markdown location: ' + linkMarkdownFile);
+        tl.debugExternalOutput('markdown location: ' + linkMarkdownFile, { source: 'remote' });
         const tab: string = '  ';
         const paddingTab: number = 4;
         generateMarkdownContent(this.RootJob, thisQueue.TaskOptions, (markdownContents) => {
@@ -304,7 +305,7 @@ export class JobQueue {
 
                 if (err) {
                     //don't fail the build -- there just won't be a link
-                    console.log('Error creating link to Jenkins job: ' + err);
+                    tl.writeExternalOutput('Error creating link to Jenkins job: ' + String(err) + os.EOL, { source: 'remote' });
                 } else {
                     console.log('##vso[task.addattachment type=Distributedtask.Core.Summary;name=Jenkins Results;]' + linkMarkdownFile);
                 }

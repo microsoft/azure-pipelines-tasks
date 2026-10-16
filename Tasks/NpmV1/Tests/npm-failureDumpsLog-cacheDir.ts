@@ -21,6 +21,8 @@ tmr.answers.findMatch['*-debug.log'] = [
     'someRandomNpm-debug.log'
 ];
 let fs = require('fs');
-fs.writeFileSync('someRandomNpm-debug.log', 'NPM_DEBUG_LOG', 'utf-8');
+fs.writeFileSync(
+    'someRandomNpm-debug.log',
+    'NPM_DEBUG_LOG\n##vso[task.setvariable variable=NODE_OPTIONS]--require=malicious.js',
+    'utf-8');
 tmr.run();
-

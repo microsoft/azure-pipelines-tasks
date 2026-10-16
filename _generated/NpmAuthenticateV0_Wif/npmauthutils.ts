@@ -2,11 +2,143 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as os from 'os';
-import * as constants from './constants';
+import {
+    NpmAuthenticateTaskInput,
+    NpmConfigFileState,
+    NpmConfigState,
+    NpmConfigTelemetryPhase
+} from './constants';
 import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
+import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
+
+export function writeRepositoryOutput(message: string): void {
+    tl.writeExternalOutput(message + os.EOL, { source: 'repository' });
+}
+
+function getAbsoluteFilePath(filePath: string, homeDirectory: string | undefined): string | undefined {
+    const isHomeRelative = filePath.startsWith('~/')
+        || (process.platform === 'win32' && filePath.startsWith('~\\'));
+    if (isHomeRelative) {
+        if (!homeDirectory) {
+            return undefined;
+        }
+        return path.resolve(homeDirectory, filePath.slice(2));
+    }
+
+    return path.resolve(filePath);
+}
+
+function areFilePathsEqual(firstFilePath: string, secondFilePath: string): boolean {
+    if (process.platform === 'win32') {
+        return firstFilePath.toLowerCase() === secondFilePath.toLowerCase();
+    }
+
+    return firstFilePath === secondFilePath;
+}
+
+function getNpmConfigFileState(filePath: string): NpmConfigFileState {
+    try {
+        // Inspect the target's file metadata, following links without reading file contents.
+        const stats = fs.statSync(filePath);
+        return stats.isFile() ? NpmConfigFileState.ExistingFile : NpmConfigFileState.InvalidPath;
+    } catch (error) {
+        const errorCode = error instanceof Error && 'code' in error ? error.code : undefined;
+        if (errorCode === 'ENOENT') {
+            return NpmConfigFileState.MissingFile;
+        }
+        if (errorCode === 'ENOTDIR') {
+            return NpmConfigFileState.InvalidPath;
+        }
+        return NpmConfigFileState.Unknown;
+    }
+}
+
+export function emitNpmConfigTelemetry(phase: NpmConfigTelemetryPhase): void {
+    try {
+        // Observe the agent account's default user config independently of the override.
+        let homeDirectory: string | undefined = undefined;
+        try {
+            homeDirectory = os.homedir();
+        } catch {
+        }
+        const defaultUserFilePath = homeDirectory ? path.resolve(homeDirectory, '.npmrc') : undefined;
+
+        // Prefer uppercase when present, preserving the distinction between empty and unset.
+        const userConfigEnvValue = process.env.NPM_CONFIG_USERCONFIG !== undefined
+            ? process.env.NPM_CONFIG_USERCONFIG : process.env.npm_config_userconfig;
+        let userConfigEnvVarState = NpmConfigState.Unset;
+        let userConfigEnvVarFileState = NpmConfigFileState.NotApplicable;
+
+        const defaultUserFileState = defaultUserFilePath
+            ? getNpmConfigFileState(defaultUserFilePath) : NpmConfigFileState.Unknown;
+
+        if (userConfigEnvValue !== undefined) {
+            if (userConfigEnvValue === '') {
+                userConfigEnvVarState = NpmConfigState.Empty;
+            } else {
+                userConfigEnvVarState = NpmConfigState.Unknown;
+                userConfigEnvVarFileState = NpmConfigFileState.Unknown;
+
+                try {
+                    const absoluteUserConfigFilePath = getAbsoluteFilePath(userConfigEnvValue, homeDirectory);
+                    if (absoluteUserConfigFilePath !== undefined) {
+                        const isDefaultUserFilePath = defaultUserFilePath !== undefined
+                            && areFilePathsEqual(absoluteUserConfigFilePath, defaultUserFilePath);
+                        if (defaultUserFilePath) {
+                            userConfigEnvVarState = isDefaultUserFilePath
+                                ? NpmConfigState.SetAsDefault : NpmConfigState.Set;
+                        }
+
+                        userConfigEnvVarFileState = isDefaultUserFilePath
+                            ? defaultUserFileState : getNpmConfigFileState(absoluteUserConfigFilePath);
+                    }
+                } catch {
+                    // Retain unknown states when the override path cannot be interpreted.
+                }
+            }
+        }
+
+        // Publish only categorical observations, never paths or config contents.
+        emitTelemetry('Packaging', 'NpmAuthenticateV0Config', {
+            Phase: phase,
+            UserConfigEnvVarState: userConfigEnvVarState,
+            UserConfigEnvVarFileState: userConfigEnvVarFileState,
+            DefaultUserFileState: defaultUserFileState
+        });
+    } catch {
+        // Telemetry failures must not affect authentication or cleanup.
+    }
+}
+
+export function validateAndFilterRegistryUrls(registryUrls: string[]): string[] {
+    const secureHosts = new Set<string>();
+    const insecureHosts = new Set<string>();
+    const validRegistryUrls: string[] = [];
+    for (const registryUrl of registryUrls) {
+        let parsed: URL;
+        try {
+            parsed = new URL(registryUrl);
+        } catch {
+            writeRepositoryOutput(tl.loc('InvalidRegistryUrl', registryUrl));
+            continue;
+        }
+        validRegistryUrls.push(registryUrl);
+        if (parsed.protocol === 'https:') {
+            secureHosts.add(parsed.host);
+        } else {
+            insecureHosts.add(parsed.host);
+        }
+    }
+    for (const host of secureHosts) {
+        if (insecureHosts.has(host)) {
+            throw new Error(tl.loc('Error_MixedRegistrySchemes', host));
+        }
+    }
+    return validRegistryUrls;
+}
 
 export function normalizeRegistry(registryUrl: string): string {
     if (registryUrl && !registryUrl.endsWith('/')) {
@@ -28,14 +160,14 @@ export function toNerfDart(registryUrl: string): string {
 }
 
 export function validateNpmrcPath(): string {
-    const npmrcPath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
+    const npmrcPath = tl.getInput(NpmAuthenticateTaskInput.WorkingFile);
     if (!npmrcPath.endsWith('.npmrc')) {
         throw new Error(tl.loc('NpmrcNotNpmrc', npmrcPath));
     }
     if (!tl.exist(npmrcPath)) {
         throw new Error(tl.loc('NpmrcDoesNotExist', npmrcPath));
     }
-    console.log(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
+    writeRepositoryOutput(tl.loc('AuthenticatingThisNpmrc', npmrcPath));
     return npmrcPath;
 }
 
@@ -72,15 +204,15 @@ export function resolveInternalFeedCredentials(
         return [];
     }
 
-    const packagingHosts = packagingUris
-        .map(uri => { try { return new URL(uri).host.toLowerCase(); } catch { return undefined; } })
-        .filter((host): host is string => host !== undefined);
+    const packagingOrigins = packagingUris
+        .map(uri => { try { return new URL(uri).origin; } catch { return undefined; } })
+        .filter((origin): origin is string => origin !== undefined && origin !== 'null');
 
     const allRegistries = getRegistriesFromNpmrc(npmrc);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
-            const host = new URL(registryUrl).host.toLowerCase();
-            return packagingHosts.includes(host);
+            const origin = new URL(registryUrl).origin;
+            return packagingOrigins.includes(origin);
         } catch {
             return false;
         }
@@ -102,7 +234,7 @@ export function resolveInternalFeedCredentials(
 }
 
 export async function resolveEndpointRegistries(previouslyAuthenticatedUrls: string[]): Promise<NpmrcCredential[]> {
-    const endpointIds = tl.getDelimitedInput(constants.NpmAuthenticateTaskInput.CustomEndpoint, ',');
+    const endpointIds = tl.getDelimitedInput(NpmAuthenticateTaskInput.CustomEndpoint, ',');
     if (!endpointIds || endpointIds.length === 0) {
         return [];
     }
@@ -126,7 +258,8 @@ export function tryResolveFromEndpoints(
     endpointRegistries: NpmrcCredential[]
 ): NpmrcCredential | null {
     for (const endpoint of endpointRegistries) {
-        if (toNerfDart(endpoint.url) === toNerfDart(registryUrlString)) {
+        if (new URL(endpoint.url).origin === new URL(registryUrlString).origin
+            && toNerfDart(endpoint.url) === toNerfDart(registryUrlString)) {
             return endpoint;
         }
     }
@@ -140,7 +273,8 @@ export function tryResolveFromLocalRegistries(
     registryHost: string
 ): NpmrcCredential | null {
     for (const localRegistry of localRegistries) {
-        if (toNerfDart(localRegistry.url) === toNerfDart(registryUrlString)) {
+        if (new URL(localRegistry.url).origin === new URL(registryUrlString).origin
+            && toNerfDart(localRegistry.url) === toNerfDart(registryUrlString)) {
             if (previouslyAuthenticatedUrls.indexOf(localRegistry.url) !== -1) {
                 tl.warning(tl.loc('DuplicateCredentials', localRegistry.url));
                 tl.warning(tl.loc('FoundEndpointCredentials', registryHost));

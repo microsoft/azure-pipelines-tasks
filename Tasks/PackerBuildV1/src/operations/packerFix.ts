@@ -13,7 +13,11 @@ export function run(packerHost: packerHost): void {
     command.arg(packerHost.getTemplateFileProvider().getTemplateFileLocation(packerHost));
 
     console.log(tl.loc("ExecutingPackerFix"));
-    var result = command.execSync();
+    var result = command.execSync({
+        externalOutput: {
+            source: "childProcess"
+        }
+    });
 
     if(result.code != 0) {
         throw tl.loc("PackerFixFailed", result.error ? result.error.message : result.stderr);

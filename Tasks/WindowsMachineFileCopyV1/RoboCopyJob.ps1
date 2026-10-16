@@ -53,7 +53,7 @@ param (
     # VstsTaskSdk (-Force) after the legacy module so its functions win the name collision.
     if ($enableWindowsMachineFileCopyArgumentsHardening)
     {
-        Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -Force
+        Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -Force -ArgumentList @{ NonInteractive = $true }
     }
 
     function ThrowError

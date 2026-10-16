@@ -53,17 +53,26 @@ async function main(): Promise<void> {
         const feedUrl = tl.getInput("feedUrl");
 
         if (entraWifServiceConnectionName && feedUrl) {
-            const urlPieces = feedUrl.split('/');
+            let parsedFeedUrl: URL;
+            try {
+                parsedFeedUrl = new URL(feedUrl);
+            } catch {
+                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
+            }
+            if (parsedFeedUrl.protocol !== 'https:') {
+                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
+            }
+            const urlPieces = parsedFeedUrl.pathname.split('/');
             let feedName = '';
             urlPieces[urlPieces.length - 1] === '' ? feedName = urlPieces[urlPieces.length - 4] : feedName = urlPieces[urlPieces.length - 3];
 
-            const feedTenant = await getFeedTenantId(feedUrl);
+            const feedTenant = await getFeedTenantId(parsedFeedUrl.href);
             const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
 
             if (token) {
                 tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName));
                 const header = `[distutils]${os.EOL}index-servers=${feedName}`;
-                const wifRepo = new Repository(feedName, feedUrl, entraWifServiceConnectionName, token);
+                const wifRepo = new Repository(feedName, parsedFeedUrl.href, entraWifServiceConnectionName, token);
                 fs.writeFileSync(pypircPath, header + os.EOL + os.EOL + wifRepo.toString());
                 federatedFeedSuccessCount++;
                 setPypircEnvVar(pypircPath);

@@ -10,6 +10,7 @@ Register-Mock Get-VstsInput { "$PSScriptRoot/RedirectsErrors_TargetScript.ps1" }
 Register-Mock Get-VstsInput { $targetAzurePs } -- -Name TargetAzurePs
 Register-Mock Update-PSModulePathForHostedAgent
 Register-Mock Initialize-Azure
+Register-Mock Remove-EndpointSecrets
 Register-Mock Disconnect-AzureAndClearContext
 
 # Act.

@@ -47,6 +47,7 @@ Assert-AreEqual $true ($scriptContent -like '*CoreAz.ps1*') "Script should refer
 Assert-AreEqual $true ($scriptContent -like '*$env:__VSTS_ACCESS_TOKEN*') "Script should use env var for token"
 Assert-AreEqual $false ($scriptContent -like '*eyJfakeTokenForTesting123456789*') "Script must not contain literal token value"
 Assert-AreEqual $true ($scriptContent -like '*$env:__VSTS_ACCESS_TOKEN = $null*') "Script should clear env var before user code"
+Assert-AreEqual $true ($scriptContent -match '(?s)try\s*\{.*CoreAz\.ps1.*finally\s*\{.*Remove-EndpointSecrets') "Script should clean endpoint secrets in a finalizer surrounding CoreAz and user code"
 
 # Cleanup.
 $env:Agent_TempDirectory = $null
