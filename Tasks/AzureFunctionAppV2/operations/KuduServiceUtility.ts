@@ -412,7 +412,24 @@ export class KuduServiceUtility {
                 let deploymentId: string = response.body;
                 if(!!deploymentId) {
                     tl.debug(`Polling for deployment ID: ${deploymentId}`);
-                    return await this._getDeploymentDetailsFromDeploymentID(deploymentId);
+                    let deploymentDetails;
+
+                    do {
+                        deploymentDetails = await this._getDeploymentDetailsFromDeploymentID(deploymentId);
+
+                        tl.debug(`Deployment details: ${JSON.stringify(deploymentDetails)}`);
+
+                        if (deploymentDetails.status === KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+                        throw new Error(`Deployment failed: ${JSON.stringify(deploymentDetails)}`);
+                        }
+
+                        if (deploymentDetails.status !== KUDU_DEPLOYMENT_CONSTANTS.SUCCESS) {
+                            await webClient.sleepFor(10);
+                    }
+
+                    } while (deploymentDetails.status !== KUDU_DEPLOYMENT_CONSTANTS.SUCCESS);
+
+                        return deploymentDetails;
                 }
                 else {
                     tl.debug('one deploy returned 202 without deployment ID.');
