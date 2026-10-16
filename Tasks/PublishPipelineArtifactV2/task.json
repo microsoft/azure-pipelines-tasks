@@ -1,0 +1,125 @@
+{
+    "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+    "name": "PublishPipelineArtifact",
+    "friendlyName": "Publish Pipeline Artifacts",
+    "description": "Publish (upload) a file or directory as a named artifact for the current run",
+    "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+    "helpMarkDown": "Publish (upload) a file or directory as a named artifact for the current run. Published artifacts can be downloaded in other jobs, stages, or pipelines using the \"Download pipeline artifact\" task.",
+    "releaseNotes": "What's new in Version 2.0:\n- The task runs on the Node task runner instead of the agent's .NET plugin host, so it works in job containers and does not need .NET.\n- Requires an agent that supports the Node 20 or Node 24 task runner.",
+    "category": "Utility",
+    "author": "Microsoft Corporation",
+    "version": {
+        "Major": 2,
+        "Minor": 282,
+        "Patch": 0
+    },
+    "groups": [],
+    "demands": [],
+    "preview": false,
+    "minimumAgentVersion": "4.248.0",
+    "inputs": [
+        {
+            "name": "path",
+            "aliases": [
+                "targetPath"
+            ],
+            "type": "filePath",
+            "label": "File or directory path",
+            "defaultValue": "$(Pipeline.Workspace)",
+            "required": true,
+            "helpMarkDown": "The path of the file or directory to publish. Can be absolute or relative to the default working directory. Can include [variables](https://go.microsoft.com/fwlink/?LinkID=550988), but wildcards are not supported."
+        },
+        {
+            "name": "artifactName",
+            "aliases": [
+                "artifact"
+            ],
+            "type": "string",
+            "label": "Artifact name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job."
+        },
+        {
+            "name": "artifactType",
+            "aliases": [
+                "publishLocation"
+            ],
+            "type": "pickList",
+            "label": "Artifact publish location",
+            "defaultValue": "pipeline",
+            "required": true,
+            "helpMarkDown": "Choose whether to store the artifact in Azure Pipelines, or to copy it to a file share that must be accessible from the pipeline agent.",
+            "options": {
+                "pipeline": "Azure Pipelines",
+                "filepath": "A file share"
+            }
+        },
+        {
+            "name": "fileSharePath",
+            "type": "string",
+            "label": "File share path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The file share to which the artifact files will be copied. This can include variables. Example: \\\\\\\\my\\\\share\\\\$(Build.DefinitionName)\\\\$(Build.BuildNumber). Publishing artifacts from a Linux or macOS agent to a file share is not supported.",
+            "visibleRule": "artifactType = filepath"
+        },
+        {
+            "name": "parallel",
+            "type": "boolean",
+            "label": "Parallel copy",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Select whether to copy files in parallel using multiple threads for greater potential throughput. If this setting is not enabled, one thread will be used.",
+            "visibleRule": "artifactType = filepath"
+        },
+        {
+            "name": "parallelCount",
+            "type": "int",
+            "label": "Parallel count",
+            "defaultValue": 8,
+            "required": false,
+            "helpMarkDown": "Enter the degree of parallelism, or number of threads used, to perform the copy. The value must be at least 1 and not greater than 128.",
+            "visibleRule": "artifactType = filepath && parallel = true"
+        },
+        {
+            "name": "properties",
+            "type": "string",
+            "label": "Custom properties",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+        }
+    ],
+    "instanceNameFormat": "Publish Pipeline Artifact",
+    "execution": {
+        "Node20_1": {
+            "target": "main.js",
+            "argumentFormat": ""
+        },
+        "Node24": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "OnPremIsNotSupported": "Pipeline Artifact Task is not supported in on-premises. Please use Build Artifact Task instead.",
+        "ArtifactNameIsNotValid": "Artifact name is not valid: %s. It cannot contain '\\', /', \"', ':', '<', '>', '|', '*', and '?'",
+        "PathDoesNotExist": "Path does not exist: %s",
+        "UploadingPipelineArtifact": "Uploading pipeline artifact from %s for build #%s",
+        "UploadArtifactFinished": "Uploading pipeline artifact finished.",
+        "CannotUploadFromCurrentEnvironment": "Cannot upload to a pipeline artifact from %s environment.",
+        "BuildIdIsNotValid": "Build Id is not valid: %s",
+        "CannotBeNullOrEmpty": "%s cannot be null or empty.",
+        "ArtifactCustomPropertyInvalid": "Artifact custom properties must be prefixed with 'user-'. Invalid property: '%s'",
+        "ArtifactCustomPropertiesNotJson": "Artifact custom properties is not valid JSON: '%s'",
+        "FileShareOperatingSystemNotSupported": "Publishing artifacts from a Linux or macOS agent to a file share is not supported. Change the artifact type to `Azure Pipelines` or use a Windows agent.",
+        "UnexpectedParallelCount": "Unsupported parallel count '%s'. Enter a number between 1 and 128.",
+        "ParallelCountNotANumber": "Parallel count is not a number.",
+        "CopyFileComplete": "Successfully published artifacts to %s",
+        "AssociateArtifactWithBuild": "Associated artifact %s with build %s",
+        "PublishingArtifactUsingRobocopy": "Uploading artifacts using robocopy.",
+        "RobocopyBasedPublishArtifactTaskExitCode": "Robocopy exit code: %s",
+        "RobocopyBasedPublishArtifactTaskFailed": "Robocopy based publish failed with exit code: %s"
+    }
+}
