@@ -11,7 +11,6 @@ tr.setInput('XmlTransformation', 'true');
 process.env['TASK_TEST_TRACE'] = "1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 process.env['SYSTEM_DEBUG'] = "false";
-process.env['DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED'] = "true";
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
