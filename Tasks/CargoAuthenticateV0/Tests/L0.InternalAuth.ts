@@ -1,9 +1,16 @@
+import * as path from 'path';
+import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as testConstants from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 import { TestDataBuilder } from './TestConstants';
 
 describe('CargoAuthenticate L0 Suite - Internal Authentication (System.AccessToken)', function () {
     this.timeout(10000);
+    before('prepares the mock runner Node runtime', async function () {
+        this.timeout(60000);
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        await runner.LoadAsync();
+    });
     beforeEach(() => TestHelpers.beforeEach());
     afterEach(() => TestHelpers.afterEach());
 
