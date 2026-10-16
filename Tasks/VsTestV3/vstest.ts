@@ -167,7 +167,7 @@ function getVstestArguments(settingsFile: string, addTestCaseFilter: boolean): s
             || utils.Helper.isToolsInstallerFlow(vstestConfig))) {
             argsArray.push('/diag:' + vstestConfig.vstestDiagFile);
         } else {
-            tl.warning(utils.Helper.locVsTestConsole('VstestDiagNotSupported'));
+            tl.warning(tl.loc('VstestDiagNotSupported'));
         }
     }
 
