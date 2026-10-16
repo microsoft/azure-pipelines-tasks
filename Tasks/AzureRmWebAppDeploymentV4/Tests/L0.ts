@@ -315,7 +315,9 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
-    it('Fails XDT transformation when compatibility feature is unset', async () => {
+    const windowsIt = tl.osType().match(/^Win/) ? it : it.skip;
+
+    windowsIt('Fails XDT transformation when compatibility feature is unset', async () => {
         const runner = await runXdtTransformation();
 
         assert(runner.failed, 'task should have failed');
@@ -323,7 +325,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             'should report that the XDT compatibility feature is disabled');
     });
 
-    it('Fails XDT transformation when compatibility feature is false', async () => {
+    windowsIt('Fails XDT transformation when compatibility feature is false', async () => {
         const runner = await runXdtTransformation('false');
 
         assert(runner.failed, 'task should have failed');
@@ -331,7 +333,7 @@ describe('AzureRmWebAppDeployment Suite', function() {
             'should report that the XDT compatibility feature is disabled');
     });
 
-    it('Applies XDT transformation when compatibility feature is true', async () => {
+    windowsIt('Applies XDT transformation when compatibility feature is true', async () => {
         const runner = await runXdtTransformation('true');
 
         assert(runner.succeeded, 'task should have succeeded');
