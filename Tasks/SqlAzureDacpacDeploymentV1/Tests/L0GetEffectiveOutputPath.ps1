@@ -8,6 +8,7 @@ $ENV:SYSTEM_DEFAULTWORKINGDIRECTORY = "C:\DefaultWorkingDirectory"
 
 Register-Mock Get-VstsPipelineFeature { return $true }
 . $PSScriptRoot\..\SqlAzureActions.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 $defaultPath = "C:\DefaultWorkingDirectory\GeneratedOutputFiles\TestDatabase_DriftReport.xml"
 
