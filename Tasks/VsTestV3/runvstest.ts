@@ -54,7 +54,6 @@ async function execute() {
 
         } else {
             ci.publishEvent({ runmode: 'nondistributed' });
-            console.log(tl.loc('nonDistributedTestWorkflow'));
             console.log('======================================================');
             const inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
             const enableHydra = isHydraFlowToBeEnabled(inputDataContract);

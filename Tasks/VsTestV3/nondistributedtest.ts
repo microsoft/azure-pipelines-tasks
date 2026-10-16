@@ -22,7 +22,6 @@ export class NonDistributedTest {
 
     private async invokeDtaExecutionHost() {
         try {
-            console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
             console.log('========================================================');
             const exitCode = await this.startDtaExecutionHost();
             tl.debug('DtaExecutionHost finished');

@@ -27,7 +27,6 @@ let resultsDirectory = null;
 
 export function startTest() {
     try {
-        //console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
         console.log('========================================================');
         try {
             vstestConfig = taskInputParser.getvsTestConfigurations();
