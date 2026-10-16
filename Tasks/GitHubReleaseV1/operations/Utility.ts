@@ -5,6 +5,15 @@ import fs = require('fs');
 
 export class Utility {
 
+    public static logRepositoryMessage(message: string): void {
+        tl.writeExternalOutput(message + "\n", {
+            source: 'repository',
+            vsoCommandMode: tl.getPipelineFeature('GitHubReleaseEnableVsoCommandBlocking')
+                ? 'blockAndTelemetry'
+                : 'telemetryOnly'
+        });
+    }
+
     public static getGithubEndPointToken(githubEndpoint: string): string {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
@@ -81,7 +90,7 @@ export class Utility {
         if (releaseNotesSource === ReleaseNotesSelectionMode.filePath) {
 
             if (fs.lstatSync(path.resolve(releaseNotesFile)).isDirectory()) {
-                console.log(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
+                Utility.logRepositoryMessage(tl.loc("ReleaseNotesFileIsDirectoryError", releaseNotesFile));
             }
             else {
                 releaseNote = fs.readFileSync(releaseNotesFile).toString();
