@@ -17,6 +17,7 @@ export class MysqlClientFileExecTests {
         tr.setInput('SqlPassword', 'DEMO_SQL_PASSWORD');
         tr.setInput('TaskNameSelector', 'SqlFile');
         tr.setInput('SqlFile', sqlFilePath);
+        tr.setInput('SqlAdditionalArguments', '--skip-binary-mode');
         tr.setInput('IpDetectionMethod', 'IPAddressRange');
         tr.setInput('StartIpAddress', '0.0.0.0');
         tr.setInput('EndIpAddress', '255.255.255.255');
