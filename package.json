@@ -16,7 +16,8 @@
     "auth": "artifacts-npm-credprovider",
     "installCredProvider": "npm install --global @microsoft/artifacts-npm-credprovider --registry https://pkgs.dev.azure.com/artifacts-public/23934c1b-a3b5-4b70-9dd3-d1bef4cc72a0/_packaging/AzureArtifacts/npm/registry/",
     "build:parallel": "node build-parallel.js build",
-    "serverBuild:parallel": "node build-parallel.js serverBuild"
+    "serverBuild:parallel": "node build-parallel.js serverBuild",
+    "report:dependencies": "node build-scripts/list-task-dependencies.js"
   },
   "repository": {
     "type": "git",
