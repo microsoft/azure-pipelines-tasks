@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'cmaketask.js');
 let tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tmr.setInput('cmakeArgs', '.. -DFOO=bar\\\\');
+tmr.setInput('cmakeArgs', '.. -DFOO=bar\\\\ -DBAR=\'p\\$HOME\'');
 tmr.setInput('cwd', 'fake/wd');
 tmr.setInput('runInsideShell', 'true');
 
@@ -19,7 +19,7 @@ let answers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
         "/usr/local/bin/node": true
     },
     "exec": {
-        "/usr/local/bin/cmake .. -DFOO=bar\\\\": {
+        "/usr/local/bin/cmake .. -DFOO=bar\\\\ -DBAR=p\\$HOME": {
             "code": 0,
             "stdout": "cmake output here"
         }

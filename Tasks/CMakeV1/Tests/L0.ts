@@ -51,7 +51,7 @@ describe('CMake Suite', function () {
         const runner: MockTestRunner = new MockTestRunner(testPath);
 
         return runner.runAsync().then(() => {
-            assert(runner.ran('/usr/local/bin/cmake .. -DFOO=bar\\\\'), 'it should have escaped the trailing backslash');
+            assert(runner.ran('/usr/local/bin/cmake .. -DFOO=bar\\\\ -DBAR=p\\$HOME'), 'it should have escaped the trailing backslash and preserved the escaped dollar sign');
             assert(runner.invokedToolCount == 1, 'should have only run cmake');
             assert(runner.succeeded, 'task should have succeeded');
         });
