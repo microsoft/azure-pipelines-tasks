@@ -121,6 +121,7 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
         });
 
         it('warns and skips authentication when shared feed verification cannot complete', async () => {
+            process.env['SYSTEM_DEBUG'] = 'true';
             // Arrange & Act
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.forInternalAuth('test-registry', {
@@ -130,6 +131,8 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             
             // Assert
             TestHelpers.assertSuccess(tr);
+            TestHelpers.assertStdoutContains(tr,
+                '##vso[task.debug]loc_mock_RegistryFeedVerificationFailed');
             TestHelpers.assertStdoutContains(tr, 'loc_mock_SkippingNonAzureDevOpsRegistry');
             TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
             TestHelpers.assertEnvironmentVariableNotSet(tr, 'CARGO_REGISTRIES_TEST_REGISTRY_CREDENTIAL_PROVIDER');

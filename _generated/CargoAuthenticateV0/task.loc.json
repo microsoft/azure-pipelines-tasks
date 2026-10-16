@@ -68,7 +68,8 @@
     "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
     "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound",
     "RegistryEnvKeyCollision": "ms-resource:loc.messages.RegistryEnvKeyCollision",
-    "SkippingNonAzureDevOpsRegistry": "ms-resource:loc.messages.SkippingNonAzureDevOpsRegistry"
+    "SkippingNonAzureDevOpsRegistry": "ms-resource:loc.messages.SkippingNonAzureDevOpsRegistry",
+    "RegistryFeedVerificationFailed": "ms-resource:loc.messages.RegistryFeedVerificationFailed"
   },
   "_buildConfigMapping": {
     "Default": "0.282.0",

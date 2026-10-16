@@ -222,6 +222,7 @@ async function tryVerifyRegistryUrl(registryUrl: string): Promise<URL | undefine
     try {
         return await verifyAzureArtifactsFeedUrl(registryUrl, ProtocolType.Cargo);
     } catch {
+        tl.debug(tl.loc('RegistryFeedVerificationFailed'));
         return undefined;
     }
 }

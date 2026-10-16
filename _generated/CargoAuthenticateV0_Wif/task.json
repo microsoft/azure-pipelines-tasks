@@ -90,7 +90,8 @@
     "MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
     "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml",
     "RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-    "SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps."
+    "SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
+    "RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
   },
   "_buildConfigMapping": {
     "Default": "0.282.0",
