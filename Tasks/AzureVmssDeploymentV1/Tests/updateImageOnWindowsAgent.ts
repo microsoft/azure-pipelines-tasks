@@ -5,7 +5,7 @@ import path = require('path');
 let taskPath = path.join(__dirname, '..', 'main.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
-tr.setInput("action", "Update image");
+tr.setInput("action", process.env['_protocolAction_'] || "Update image");
 tr.setInput("ConnectedServiceName", "AzureRM");
 tr.setInput("vmssName", process.env["noMatchingVmss"] === "true" ? "random-vmss" : (process.env["_vmssOsType_"] === "Linux" ? "testvmss2" : "testvmss1"));
 tr.setInput("vmssOsType", process.env["_vmssOsType_"] === "Linux" ? "Linux" : "Windows");
@@ -81,6 +81,28 @@ tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-compute', requir
 tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-storage', require('./mock_node_modules/azure-arm-storage'));
 tr.registerMock('azp-tasks-az-blobstorage-provider/blobservice', require('./mock_node_modules/blobservice'));
 tr.registerMock('azure-pipelines-tasks-utility-common/compressutility', require('./mock_node_modules/compressutility'));
+
+for (const flag of [
+    'DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION',
+    'DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED',
+    'AZP_75787_ENABLE_NEW_LOGIC', 'AZP_75787_ENABLE_NEW_LOGIC_LOG', 'AZP_75787_ENABLE_COLLECT'
+]) {
+    process.env[flag] = 'false';
+}
+if (process.env['_dataProtocolScripts_']) {
+    tr.setInput('customScriptsDirectory', process.env['_dataProtocolScripts_']);
+    tr.setInput('customScript', 'deploy.ps1');
+    tr.setInput('customScriptArguments', process.env['_dataProtocolArgs_'] || '');
+    tr.setInput('skipArchivingCustomScripts', 'true');
+    os.tmpdir = () => process.env['AGENT_TEMPDIRECTORY'];
+    process.env['DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION'] = process.env['_protocolOldFlag_'];
+    if (process.env['_protocolFixFlag_'] === 'missing') {
+        delete process.env['DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED'];
+    } else {
+        process.env['DISTRIBUTEDTASK_TASKS_VMSSWINDOWSARGUMENTDATATRANSPORTFIXENABLED'] = process.env['_protocolFixFlag_'];
+    }
+    process.env['AZP_75787_ENABLE_NEW_LOGIC'] = process.env['_protocolActivate_'];
+}
 
 if (process.env["_sanitizeArgsActivate_"] === "true") {
     process.env["DISTRIBUTEDTASK_TASKS_ENABLEVMSSCUSTOMSCRIPTARGSVALIDATION"] = "true";
