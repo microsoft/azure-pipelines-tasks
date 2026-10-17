@@ -21,7 +21,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.281.0",
+    "azure-pipelines-task-lib": "^5.281.2",
     "azure-pipelines-tasks-packaging-common": "^3.281.0",
     "azure-pipelines-tasks-utility-common": "^3.281.0",
     "xmlreader": "^0.2.3"
