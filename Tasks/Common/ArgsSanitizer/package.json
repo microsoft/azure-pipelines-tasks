@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "azure-pipelines-task-lib": "^5.281.1",
+    "azure-pipelines-task-lib": "^5.281.2",
     "azure-pipelines-tasks-utility-common": "3.281.0",
     "@types/node": "^24.10.0"
   },
