@@ -97,14 +97,13 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             fs.symlinkSync(target, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
         }
 
-        it('allows the selected destination root to be a link', async () => {
+        it('rejects a linked direct-download destination root', () => {
             const linkedDestination = path.join(testRoot, 'linked-destination');
             createDirectoryLink(destination, linkedDestination);
-            fs.mkdirSync(path.join(destination, 'lib'));
 
-            const pf = new PackageFile(false, linkedDestination, 'lib/package.jar');
+            const pf = new PackageFile(false, linkedDestination, 'package.jar');
 
-            await assert.doesNotReject(() => pf.writeContent('package content'));
+            assert.throws(() => pf.removeExisting());
         });
 
         it('rejects a linked parent beneath the destination', () => {
@@ -128,6 +127,34 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             };
             createDirectoryLink(outside, path.join(destination, 'package.nupkg'));
             const pf = new PackageFile(true, '/dest/output', 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+        });
+
+        it('rejects a linked extraction destination root', async () => {
+            (tl as any).getVariable = (name: string) => {
+                if (name === 'Agent.TempDirectory') return destination;
+                return undefined;
+            };
+            const archivePath = path.join(destination, 'package.nupkg');
+            fs.writeFileSync(archivePath, 'archive content');
+            const linkedDestination = path.join(testRoot, 'linked-destination');
+            createDirectoryLink(outside, linkedDestination);
+            const pf = new PackageFile(true, linkedDestination, 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+        });
+
+        it('rejects a link in an intermediate extraction destination component', async () => {
+            (tl as any).getVariable = (name: string) => {
+                if (name === 'Agent.TempDirectory') return destination;
+                return undefined;
+            };
+            fs.writeFileSync(path.join(destination, 'package.nupkg'), 'archive content');
+            fs.mkdirSync(path.join(outside, 'output'));
+            const linkedParent = path.join(testRoot, 'linked-parent');
+            createDirectoryLink(outside, linkedParent);
+            const pf = new PackageFile(true, path.join(linkedParent, 'output'), 'package.nupkg');
 
             await assert.rejects(() => pf.process());
         });

@@ -20,7 +20,7 @@ export class PackageFile {
     private extractFile: boolean;
 
     constructor(extract: boolean, destination: string, filename: string) {
-        this.finalLocation = destination;
+        this.finalLocation = path.resolve(destination);
         this.extractFile = extract;
         this.filename = filename;
 
@@ -36,6 +36,7 @@ export class PackageFile {
     public async process(): Promise<void> {
         if (this.extractFile) {
             this.validateNoLinks();
+            this.validateExtractionDestination();
             return this.extract();
         }
     }
@@ -69,23 +70,57 @@ export class PackageFile {
     }
 
     private validateNoLinks(): void {
-        const relativePath = path.relative(this.rootLocation, this.initialLocation);
-        let currentPath = this.rootLocation;
+        this.validatePathComponentsNoLinks(
+            this.initialLocation,
+            "InvalidPackageFileLink",
+            this.filename
+        );
+    }
 
-        for (const segment of relativePath.split(path.sep)) {
+    private validateExtractionDestination(): void {
+        this.validatePathComponentsNoLinks(
+            this.finalLocation,
+            "InvalidPackageDestinationLink",
+            this.finalLocation
+        );
+    }
+
+    private validatePathComponentsNoLinks(
+        pathToValidate: string,
+        errorKey: string,
+        errorValue: string
+    ): void {
+        const resolvedPath = path.resolve(pathToValidate);
+        const pathRoot = path.parse(resolvedPath).root;
+        const relativePath = path.relative(pathRoot, resolvedPath);
+        let currentPath = pathRoot;
+
+        for (const segment of relativePath.split(path.sep).filter(Boolean)) {
             currentPath = path.join(currentPath, segment);
 
-            try {
-                if (fs.lstatSync(currentPath).isSymbolicLink()) {
-                    throw new Error(tl.loc("InvalidPackageFileLink", this.filename));
-                }
-            } catch (error) {
-                if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-                    return;
-                }
-
-                throw error;
+            if (!this.validatePathIsNotLink(currentPath, errorKey, errorValue)) {
+                return;
             }
+        }
+    }
+
+    private validatePathIsNotLink(
+        pathToValidate: string,
+        errorKey: string,
+        errorValue: string
+    ): boolean {
+        try {
+            if (fs.lstatSync(pathToValidate).isSymbolicLink()) {
+                throw new Error(tl.loc(errorKey, errorValue));
+            }
+
+            return true;
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                return false;
+            }
+
+            throw error;
         }
     }
 
