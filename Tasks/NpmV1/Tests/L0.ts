@@ -3,7 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmToolRunnerModule from '../npmtoolrunner';
+import { validatePackagingCollectionUrl } from '../collectionurl';
 
 class MockedTask {
     private _proxyUrl: string;
@@ -375,5 +377,62 @@ describe('Npm Task', function () {
         assert.equal(tr.invokedToolCount, 2, 'task should have run npm');
         assert(tr.stdOutContained('npm publish successful'), 'npm should have published the package');
         assert(tr.succeeded, 'task should have succeeded');
+    });
+});
+
+describe('Npm.PackagingCollectionUrl validation', function () {
+    const locKeys = [
+        'PackagingCollectionUrlInvalid',
+        'PackagingCollectionUrlUnsupportedScheme',
+        'PackagingCollectionUrlHasCredentials',
+        'PackagingCollectionUrlMismatch'
+    ];
+    const onPremCollection = ['http://tfs.contoso.com:8080/tfs/DefaultCollection/'];
+
+    before(function () {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
+    const accept = async (u: URL | string) => new URL(u as string);
+    const reject = async (u: string): Promise<URL> => { throw new Error('untrusted'); };
+
+    it('hosted: delegates to the shared verifier and returns its result', async function () {
+        let seen: string;
+        const result = await validatePackagingCollectionUrl('https://pkgs.dev.azure.com/org/', 'Hosted', [],
+            async (u) => { seen = u; return new URL(u); });
+        assert.equal(seen, 'https://pkgs.dev.azure.com/org/');
+        assert.equal(result, 'https://pkgs.dev.azure.com/org/');
+    });
+
+    it('hosted: rejects when the shared verifier rejects', async function () {
+        await assert.rejects(validatePackagingCollectionUrl('https://attacker.example/', 'Hosted', [], reject), /untrusted/);
+    });
+
+    it('on-prem: accepts same-origin http override', async function () {
+        const url = 'http://tfs.contoso.com:8080/tfs/DefaultCollection/_packaging/f/npm/registry/';
+        assert.equal(await validatePackagingCollectionUrl(url, 'OnPremises', onPremCollection, reject), url);
+    });
+
+    it('on-prem: missing server type is treated as non-hosted', async function () {
+        const url = 'http://tfs.contoso.com:8080/other/';
+        assert.equal(await validatePackagingCollectionUrl(url, undefined, onPremCollection, reject), url);
+    });
+
+    [
+        'http://attacker.example/',
+        'http://tfs.contoso.com.attacker.example:8080/',
+        'http://tfs.contoso.com:8080@attacker.example/',
+        'http://user:pass@tfs.contoso.com:8080/',
+        'https://tfs.contoso.com:8080/',
+        'http://tfs.contoso.com:9090/',
+        'ftp://tfs.contoso.com:8080/',
+        'not a url',
+        ''
+    ].forEach(function (bad) {
+        it(`on-prem: rejects '${bad}'`, async function () {
+            await assert.rejects(validatePackagingCollectionUrl(bad, 'OnPremises', onPremCollection, accept), (e: Error) => {
+                return locKeys.map(k => tl.loc(k)).includes(e.message);
+            });
+        });
     });
 });
