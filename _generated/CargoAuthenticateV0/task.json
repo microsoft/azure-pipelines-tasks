@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -66,11 +66,13 @@
     "AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
     "FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
-    "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
+    "RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml",
+    "RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
+    "SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
+    "RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
   },
   "_buildConfigMapping": {
-    "Default": "0.270.2",
-    "LocalPackages": "0.249.4",
-    "wif_242": "0.270.3"
+    "Default": "0.282.0",
+    "wif_242": "0.282.1"
   }
 }

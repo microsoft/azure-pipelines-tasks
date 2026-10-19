@@ -19,5 +19,10 @@
   "dependencies": {
     "mocha": "^11.7.5",
     "nock": "^10.0.6"
+  },
+  "overrides": {
+    "serialize-javascript": "7.0.5",
+    "brace-expansion": "2.1.7",
+    "js-yaml": "4.3.2"
   }
 }

@@ -50,5 +50,9 @@ describe('SqlDacpacDeploymentOnMachineGroupV0 - Security Functions Suite', funct
         it('Validate security functions (helpers, FF logic, CLI splitter, injection prevention)', (done) => {
             psr.run(path.join(__dirname, 'L0SecurityFunctions.ps1'), done);
         });
+
+        it('Displays a single task error for one caught exception', (done) => {
+            psr.run(path.join(__dirname, 'L0TaskErrorOutput.ps1'), done);
+        });
     }
 });

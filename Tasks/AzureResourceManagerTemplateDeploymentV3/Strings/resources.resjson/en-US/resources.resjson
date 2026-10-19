@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Parameters file pattern matches a directory instead of a file.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Template file pattern matches a directory instead of a file: %s",
   "loc.messages.AddedOutputVariable": "Updated output variable '%s', which contains the outputs section of the current deployment object in string format.",
+  "loc.messages.OutputVariableNameChanged": "The output variable name '%s' was previously decoded or truncated to a different name when the variable was published. The declared name is now used literally. If your pipeline referenced the previous name, update it to the declared name.",
   "loc.messages.UnableToReadResponseBody": "Unable to read response body. Error: %s",
   "loc.messages.MoreInformationOnAzurePortal": "More information on Azure Portal",
   "loc.messages.LogDeploymentName": "Deployment name is %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "Error in setting up subscription: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" failed. Error: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI version should be >= 2.47.0 to use .bicepparam file",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "The provided metadata file '%s'  is missing metadata of parameter '%s'",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }

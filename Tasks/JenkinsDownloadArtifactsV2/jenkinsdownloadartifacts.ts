@@ -21,7 +21,9 @@ import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsR
 // #endif
 let extractZip: any;
 
-if (process.versions.node.startsWith('20')) {
+const isCurrentNodeVersionAtLeast20 = parseInt(process.versions.node.split('.')[0], 10) >= 20;
+
+if (isCurrentNodeVersionAtLeast20) {
     // Node.js 20 or later
     import('extract-zip').then((module) => {
         extractZip = module;
@@ -112,27 +114,26 @@ function publishEvent(feature, properties: any): void {
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
     await new Promise<void>(function (resolve, reject) {
         tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
-        if (process.versions.node.startsWith('20')) {
-        tl.debug(`Using extract-zip package for extracting archive`);
-        extractZip(zipLocation, { dir: unzipLocation }).then(() => {
-            resolve();
-        }).catch((error) => {
-            reject(error);
-        });
-    }
-else{
-        var unzipper = new extractZip(zipLocation);
-        unzipper.on('error', err => {
-            return reject(tl.loc("ExtractionFailed", err))
-        });
-        unzipper.on('extract', log => {
-            tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-            return resolve();
-        });
-        unzipper.extract({
-            path: unzipLocation
-        });
-    }
+        if (isCurrentNodeVersionAtLeast20) {
+            tl.debug(`Using extract-zip package for extracting archive`);
+            extractZip(zipLocation, { dir: unzipLocation }).then(() => {
+               resolve();
+            }).catch((error) => {
+                reject(error);
+            });
+        } else {
+            var unzipper = new extractZip(zipLocation);
+            unzipper.on('error', err => {
+                return reject(tl.loc("ExtractionFailed", err))
+            });
+            unzipper.on('extract', log => {
+                tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
+                return resolve();
+            });
+            unzipper.extract({
+                path: unzipLocation
+            });
+        }
     });
 }
 

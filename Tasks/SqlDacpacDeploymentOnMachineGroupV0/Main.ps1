@@ -4,30 +4,26 @@ Import-VstsLocStrings "$PSScriptRoot\Task.json"
 function Write-Exception
 {
     param (
-        $exception
+        $exception,
+        $errorRecord
     )
 
-    $errorRecord = $PSItem
-    try
+    if ($null -ne $errorRecord)
     {
-        if($exception.Message) 
-        {
-            Write-Error ($exception.Message)
-        }
-        else 
-        {
-            Write-Error ($exception)
-        }
-    }
-    catch
-    {
-        if ($_ -ne $null) {
-            Write-Verbose "Write-Exception error:"
-            Write-Verbose $_.ToString()
-        }
+        throw $errorRecord
     }
 
-    throw $errorRecord
+    if ($null -ne $exception)
+    {
+        $currentException = $exception
+        while ($null -ne $currentException)
+        {
+            Write-Error $currentException -ErrorAction Continue
+            $currentException = $currentException.InnerException
+        }
+
+        throw $exception
+    }
 }
 
 function Get-SingleFile
@@ -94,6 +90,18 @@ $additionalArgumentsSql = Get-VstsInput -Name "additionalArgumentsSql"
 
 Import-Module $PSScriptRoot\ps_modules\TaskModuleSqlUtility
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# Dot-source TaskModuleSqlUtility's helper scripts: the module only exports
+# Invoke-DacpacDeployment / Invoke-SqlQueryDeployment, so V2 functions in Utility.ps1 need these in task scope.
+$sqlPackageHelpersPath = "$PSScriptRoot\ps_modules\TaskModuleSqlUtility\SqlPackageOnTargetMachines.ps1"
+$sqlQueryHelpersPath = "$PSScriptRoot\ps_modules\TaskModuleSqlUtility\SqlQueryOnTargetMachines.ps1"
+if (Test-Path $sqlPackageHelpersPath) {
+    . $sqlPackageHelpersPath
+}
+if (Test-Path $sqlQueryHelpersPath) {
+    . $sqlQueryHelpersPath
+}
+
 . "$PSScriptRoot\Utility.ps1"
 . "$PSScriptRoot\GenerateSqlBatchFiles.ps1"
 
@@ -212,9 +220,9 @@ Catch [System.Management.Automation.CommandNotFoundException]
         Write-Error (Get-VstsLocString -Key "RunImportModuleSQLPSonyouragentPowershellprompt")
     }
 
-    Write-Exception($_.Exception)
+    Write-Exception -exception $_.Exception -errorRecord $_
 }
 Catch [Exception]
 {
-    Write-Exception($_.Exception)
+    Write-Exception -exception $_.Exception -errorRecord $_
 }

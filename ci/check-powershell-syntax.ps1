@@ -1,6 +1,51 @@
 # Description: Checks the PowerShell syntax of the script using PSScriptAnalyzer.
 param([String]$pathToBuiltTasks)
 
+# Install helper modules from the public Azure DevOps Artifacts feed using
+# PSResourceGet. The feed proxies PowerShell Gallery packages and only exposes versions
+# already saved to the feed, so an unpinned install resolves to the latest saved version.
+$AdoFeedName = "PipelineTools_PublicPackages"
+$AdoFeedSource = "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/nuget/v3/index.json"
+$AdoFeedRegistered = $false
+
+function Register-AdoFeed() {
+  if (-not $script:AdoFeedRegistered) {
+    Write-Host "Registering PSResourceRepository '$AdoFeedName'..."
+    $null = Register-PSResourceRepository -Name $AdoFeedName -Uri $AdoFeedSource -Trusted -Force
+    $script:AdoFeedRegistered = $true
+  }
+}
+
+function Import-AdoModule() {
+  param (
+    [Parameter(Mandatory = $true)]
+    [String]$name
+  )
+
+  if (Get-Module -Name $name) {
+    return
+  }
+
+  $module = Get-Module -Name $name -ListAvailable |
+    Sort-Object Version -Descending |
+    Select-Object -First 1
+
+  if ($null -eq $module) {
+    Write-Host "Installing $name module from $AdoFeedName..."
+    Register-AdoFeed
+    $null = Install-PSResource -Name $name -Repository $AdoFeedName -Scope CurrentUser -TrustRepository -Quiet
+    $module = Get-Module -Name $name -ListAvailable |
+      Sort-Object Version -Descending |
+      Select-Object -First 1
+  }
+
+  if ($null -eq $module) {
+    throw "Module '$name' was not available after installation from '$AdoFeedName'."
+  }
+
+  Import-Module -Name $module.Path -Force
+}
+
 function Get-AnalyzerSettings() {
   return @{
     Severity=@('Error', 'Warning', 'Information', 'ParseError', 'ParseWarning')
@@ -34,11 +79,7 @@ function Invoke-AnalyzerToTask() {
     exit 1
   }
 
-  $module = Get-Module -Name "PSScriptAnalyzer";
-  if ($module -eq $null) {
-    Write-Host "Installing PSScriptAnalyzer module..."
-    Install-Module -Name "PSScriptAnalyzer" -Scope CurrentUser -Force
-  }
+  Import-AdoModule -Name "PSScriptAnalyzer"
   
   Write-Host "Running PSScriptAnalyzer for $taskPath."
   $settings = Get-AnalyzerSettings;
@@ -103,11 +144,7 @@ function main() {
 
   # Install newtonsoft json to handler json object which has empty keys.
   # https://github.com/PowerShell/PowerShell/issues/1755
-  $module = Get-Module -Name "Newtonsoft.Json";
-  if ($module -eq $null) {
-    Write-Host "Installing Newtonsoft.Json module..."
-    Install-Module -Scope CurrentUser -Name "Newtonsoft.Json" -Force
-  }
+  Import-AdoModule -Name "Newtonsoft.Json"
 
   # Get the tasks which have a PowerShell handler.
   $tasks = Get-ChildItem $pathToBuiltTasks |
@@ -127,6 +164,11 @@ function main() {
 
 
 $diagnostics = main $pathToBuiltTasks;
+
+# Keep only genuine analyzer results. Module setup can emit stray objects onto the
+# success stream which would otherwise be counted as phantom "diagnostics".
+# A real PSScriptAnalyzer result is a DiagnosticRecord, which always exposes a RuleName.
+$diagnostics = @($diagnostics | Where-Object { $null -ne $_ -and $null -ne $_.PSObject.Properties['RuleName'] });
 
 if ($diagnostics.Count -gt 0) {
   Write-Host "Found $($diagnostics.Count) diagnostic(s) error in the script."

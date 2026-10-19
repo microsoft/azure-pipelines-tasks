@@ -11,7 +11,31 @@ var ResourcesTests = require("../node_modules/azure-pipelines-tasks-azure-arm-re
 const tmpDir = path.join(__dirname, 'temp');
 
 describe('AzureRmWebAppDeployment Suite', function() {
+    const compatibilityFeatureVariable = 'DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED';
+
     this.timeout(60000);
+
+    async function runXdtTransformation(featureValue?: string): Promise<ttm.MockTestRunner> {
+        const originalFeatureValue = process.env[compatibilityFeatureVariable];
+        if (featureValue === undefined) {
+            delete process.env[compatibilityFeatureVariable];
+        } else {
+            process.env[compatibilityFeatureVariable] = featureValue;
+        }
+
+        try {
+            const runner = new ttm.MockTestRunner(path.join(__dirname, 'L0WindowsXdtTransformation.js'));
+            await runner.runAsync();
+            return runner;
+        } finally {
+            if (originalFeatureValue === undefined) {
+                delete process.env[compatibilityFeatureVariable];
+            } else {
+                process.env[compatibilityFeatureVariable] = originalFeatureValue;
+            }
+        }
+    }
+
     this.beforeAll(done => {
         tl.mkdirP(tmpDir);
         done();
@@ -208,6 +232,74 @@ describe('AzureRmWebAppDeployment Suite', function() {
         }
     });
 
+    it('AzureRmWebAppDeploymentV5 PublishProfile validation is gated by the EnablePublishProfileValidation feature flag', async () => {
+        const { PublishProfileUtility } = require('../operations/PublishProfileUtility');
+        const taskParams: any = { PublishProfilePassword: 'p@ss w0rd!&|<>' };
+        // tl.getPipelineFeature('EnablePublishProfileValidation') reads this env var (uppercased).
+        const FF = 'DISTRIBUTEDTASK_TASKS_ENABLEPUBLISHPROFILEVALIDATION';
+
+        // Payloads with characters that could alter the msdeploy command line (CWE-77/78).
+        const maliciousProfiles: any[] = [
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin" x'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443 x'], UserName: ['admin'] },
+            { DeployIisAppPath: ['site x&y'], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin%VAR%'] },
+            // trailing backslash + space (the character combination a metacharacter denylist misses)
+            { DeployIisAppPath: ['w\\'], MSDeployServiceURL: ['host:443'], UserName: ['admin extra'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ["admin' x"] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:443'], UserName: ['admin,extra=1'] },
+            { DeployIisAppPath: ['Default Web Site/My App'], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+            // non-string (object-shaped xml2js value)
+            { DeployIisAppPath: [{}], MSDeployServiceURL: ['host:443'], UserName: ['admin'] },
+        ];
+        const legitProfiles: any[] = [
+            { DeployIisAppPath: ['mysite/sub'], MSDeployServiceURL: ['mysite.scm.azurewebsites.net:443'], UserName: ['$mysite'] },
+            { DeployIisAppPath: ['contoso__staging'], MSDeployServiceURL: ['waws-prod-abc-001.publish.azurewebsites.windows.net:443'], UserName: ['contoso\\$contoso'] },
+            { DeployIisAppPath: ['site'], MSDeployServiceURL: ['host:8172'], UserName: ['user@contoso.com'] },
+        ];
+        const runProfile = async (js: any) => {
+            const util: any = new PublishProfileUtility('dummy.pubxml');
+            util._publishProfileJs = js;
+            return util.GetTaskParametersFromPublishProfileFile(taskParams);
+        };
+
+        try {
+            // Feature ENABLED -> injection payloads are blocked.
+            process.env[FF] = 'true';
+            for (const js of maliciousProfiles) {
+                let threw = false;
+                try { await runProfile(js); } catch (e) { threw = true; }
+                assert(threw, 'FF on: expected rejection for ' + JSON.stringify(js));
+            }
+            // Feature ENABLED -> legitimate Azure values are preserved unchanged.
+            for (const js of legitProfiles) {
+                const profile = await runProfile(js);
+                assert.strictEqual(profile.WebAppName, js.DeployIisAppPath[0], 'legit DeployIisAppPath preserved');
+                assert.strictEqual(profile.PublishUrl, js.MSDeployServiceURL[0], 'legit MSDeployServiceURL preserved');
+                assert.strictEqual(profile.UserName, js.UserName[0], 'legit UserName preserved');
+                assert.strictEqual(profile.UserPWD, 'p@ss w0rd!&|<>', 'password preserved');
+            }
+            // Feature DISABLED (default) -> nothing is blocked; a rejected value only emits telemetry.
+            delete process.env[FF];
+            let telemetry = '';
+            const origWrite = process.stdout.write.bind(process.stdout);
+            (process.stdout.write as any) = (chunk: any, ...args: any[]) => { telemetry += chunk.toString(); return origWrite(chunk, ...args); };
+            try {
+                for (const js of maliciousProfiles) {
+                    let threw = false;
+                    try { await runProfile(js); } catch (e) { threw = true; }
+                    assert(!threw, 'FF off: value must NOT be blocked (telemetry only): ' + JSON.stringify(js));
+                }
+            } finally {
+                process.stdout.write = origWrite;
+            }
+            assert(telemetry.indexOf('##vso[telemetry.publish') >= 0 && telemetry.indexOf('PublishProfileValueRejected') >= 0,
+                'FF off: a rejected value should still publish telemetry');
+        } finally {
+            delete process.env[FF];
+        }
+    });
+
     it('AzureRmWebAppDeploymentV5 Validate TaskParameters', async () => {
         let tp = path.join(__dirname,'TaskParametersTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -221,6 +313,32 @@ describe('AzureRmWebAppDeployment Suite', function() {
             console.log(tr.stderr);
             throw error;
         }
+    });
+
+    const windowsIt = tl.osType().match(/^Win/) ? it : it.skip;
+
+    windowsIt('Fails XDT transformation when compatibility feature is unset', async () => {
+        const runner = await runXdtTransformation();
+
+        assert(runner.failed, 'task should have failed');
+        assert(runner.stdOutContained('loc_mock_XdtTransformationFeatureDisabled'),
+            'should report that the XDT compatibility feature is disabled');
+    });
+
+    windowsIt('Fails XDT transformation when compatibility feature is false', async () => {
+        const runner = await runXdtTransformation('false');
+
+        assert(runner.failed, 'task should have failed');
+        assert(runner.stdOutContained('loc_mock_XdtTransformationFeatureDisabled'),
+            'should report that the XDT compatibility feature is disabled');
+    });
+
+    windowsIt('Applies XDT transformation when compatibility feature is true', async () => {
+        const runner = await runXdtTransformation('true');
+
+        assert(runner.succeeded, 'task should have succeeded');
+        assert(runner.stdOutContained('loc_mock_XDTTransformationsappliedsuccessfully'),
+            'should report that XDT transformations were applied');
     });
 
 });

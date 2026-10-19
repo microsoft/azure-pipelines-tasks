@@ -7,6 +7,7 @@ import { ToError } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient
 import { uploadFileToSasUrl } from './azure-storage';
 import https = require('https');
 import { parse } from 'azure-pipelines-tasks-webdeployment-common/ParameterParserUtility';
+import { sanitizeForLoggingCommand } from '../sanitize';
 
 export const SourceType = {
     JAR: "Jar",
@@ -599,7 +600,7 @@ export class AzureSpringApps {
                 console.log('========================================================');
                 console.log('            ' + tl.loc('DeploymentLog'));
                 console.log('========================================================');
-                console.log(downloadedLog);
+                console.log(sanitizeForLoggingCommand(downloadedLog));
             });
         }).end();
     }
@@ -727,7 +728,7 @@ export class AzureSpringApps {
             "Authorization" : `Basic ${credentials}` 
         };
         await this.sendRequestV2('GET', streamingUrl, null, headers).then(response => {
-            console.info(response.body);
+            console.info(sanitizeForLoggingCommand(String(response.body ?? '')));
         });
     }
 

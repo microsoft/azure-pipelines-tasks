@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "PowerShell 已結束，代碼為 '%s'。",
   "loc.messages.JS_Stderr": "PowerShell 已將一或多行寫入標準錯誤資料流。",
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
-  "loc.messages.PS_ExitCode": "PowerShell 已結束，代碼為 '{0}'。"
+  "loc.messages.PS_ExitCode": "PowerShell 已結束，代碼為 '{0}'。",
+  "loc.messages.Az_LowerVersionWarning": "指定的 {0} 版本 {1} 已過時，最新版本為 {2}"
 }

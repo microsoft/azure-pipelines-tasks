@@ -71,9 +71,9 @@ let mockAnswers: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             "code": 1,
             "stdout": "Failed to install extension: permission denied"
         },
-        "az extension add --source \"/mock/path/azure_devops-1.0.2-py2.py3-none-any.whl\" -y": {
+        "az extension add --name azure-devops -y": {
             "code": 0,
-            "stdout": "Extension installed from wheel"
+            "stdout": "Extension installed with no-deps"
         },
         "az login --service-principal -u \"test-sp-id\" --tenant \"test-tenant-id\" --allow-no-subscriptions --federated-token \"mock-token\" --output none": {
             "code": 0,
@@ -129,13 +129,6 @@ tmr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azCliUtility', {
     validateAzModuleVersion: function() {
         return Promise.resolve();
-    }
-});
-
-tmr.registerMock('azure-pipelines-tool-lib', {
-    downloadToolWithRetries: function(url: string, fileName: string) {
-        console.log('Mock downloadToolWithRetries called');
-        return Promise.resolve('/mock/path/' + fileName);
     }
 });
 

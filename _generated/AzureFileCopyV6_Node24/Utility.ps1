@@ -187,7 +187,8 @@ function Upload-FilesToAzureContainer
           [string][Parameter(Mandatory=$true)]$destinationType,
           [bool]$useDefaultArguments,
           [bool]$cleanTargetBeforeCopy,
-          [bool]$useSanitizerActivate = $false
+          [bool]$useSanitizerActivate = $false,
+          [bool]$useSourcePathHardening = $false
     )
 
     try
@@ -236,19 +237,27 @@ function Upload-FilesToAzureContainer
         $blobPrefix = $blobPrefix -replace $trailingChars, "/"
         $containerURL = [string]::Format("{0}/{1}/{2}", $blobStorageEndpoint.Trim("/"), $containerName, $blobPrefix.TrimStart("/"))
 
+        $rawContainerURL = $containerURL
         $containerURL = $containerURL.Replace('$','`$')
         $azCopyExeLocation = Join-Path -Path $azCopyLocation -ChildPath "AzCopy.exe"
         if($cleanTargetBeforeCopy)
         {
 
-            Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
-            $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-
-            Invoke-Expression $cleanToBlobCommand
+            if ($useSourcePathHardening) {
+                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"
+                & $azCopyExeLocation rm $rawContainerURL --recursive=true
+            } else {
+                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                Invoke-Expression $cleanToBlobCommand
+            }
 
         }
-        if ($useSanitizerActivate) {
+        if ($useSourcePathHardening) {
+            $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
+            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
+            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+        } elseif ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
@@ -990,7 +999,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         [string]$azCopyToolLocation,
         [scriptblock]$fileCopyJobScript,
         [bool]$enableDetailedLogging,
-        [bool]$useSanitizerActivate = $false
+        [bool]$useSanitizerActivate = $false,
+        [bool]$useSourcePathHardening = $false
     )
 
     # Generate storage container URL
@@ -1006,6 +1016,8 @@ function Copy-FilesToAzureVMsFromStorageContainer
         $azCopyToolFileContents += [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($file))
     }
 
+    $inlineScriptText = $fileCopyJobScript.ToString()
+
     # script block arguments
     $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments'"
     if($cleanTargetBeforeCopy)
@@ -1020,10 +1032,20 @@ function Copy-FilesToAzureVMsFromStorageContainer
     {
         $scriptBlockArgs += " -useSanitizerActivate"
     }
-
+    if($useSourcePathHardening)
+    {
+        $scriptBlockArgs += " -useSourcePathHardening"
+        $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+        if(!$splitAdditionalArgumentsFunctionInfo)
+        {
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+        }
+        $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
+    }
+    
     $remoteScriptJobArguments = @{
         inline = $true;
-        inlineScript = $fileCopyJobScript.ToString();
+        inlineScript = $inlineScriptText;
         scriptArguments = $scriptBlockArgs;
         errorActionPreference = "Stop";
         failOnStdErr = $true;

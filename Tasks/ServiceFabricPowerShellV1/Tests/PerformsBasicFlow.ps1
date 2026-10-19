@@ -3,6 +3,7 @@ param()
 
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Invoke-ScriptArgumentSanitization
 . $PSScriptRoot\SetupMocks.ps1
 Register-Mock Get-VstsInput { "FilePath" } -- -Name ScriptType -Require
 Register-Mock Get-VstsInput { "$PSScriptRoot/PerformsBasicFlow_TargetScript.ps1" } -- -Name ScriptPath

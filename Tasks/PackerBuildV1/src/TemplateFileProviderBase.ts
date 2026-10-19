@@ -1,6 +1,7 @@
 "use strict";
 
 import * as path from "path";
+import * as os from "os";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as constants from "./constants";
@@ -10,10 +11,10 @@ import * as utils from "./utilities"
 export default class TemplateFileProviderBase {
 
     public moveTemplateFile(initialTemplateFileLocation: string, dest: string): void {
-        console.log(tl.loc("OriginalTemplateLocation", initialTemplateFileLocation));
-        console.log(tl.loc("CopyingTemplate", initialTemplateFileLocation, dest));
+        tl.writeExternalOutput(tl.loc("OriginalTemplateLocation", initialTemplateFileLocation) + os.EOL, { source: "repository" });
+        tl.writeExternalOutput(tl.loc("CopyingTemplate", initialTemplateFileLocation, dest) + os.EOL, { source: "repository" });
         utils.copyFile(initialTemplateFileLocation, dest);
-        console.log(tl.loc("TempTemplateLocation", dest));
+        tl.writeExternalOutput(tl.loc("TempTemplateLocation", dest) + os.EOL, { source: "repository" });
 
         // construct new full path for template file
         var templateFileName = path.basename(initialTemplateFileLocation);

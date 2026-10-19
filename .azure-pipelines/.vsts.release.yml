@@ -28,6 +28,13 @@ parameters:
   displayName: Enable CodeQL for run
   type: boolean
   default: false
+- name: nodeModulesSigningMode
+  displayName: Choose node_modules signing option
+  type: string
+  default: 'Catalog signing'
+  values:
+  - 'Catalog signing'
+  - 'Individual file signing'
 - name: includeLocalPackagesBuildConfig
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
@@ -44,6 +51,19 @@ parameters:
   displayName: Use Semver Build Config to support canary rollout
   type: boolean
   default: false
+- name: catalogGenerationThrottle
+  displayName: Maximum parallel catalog generation workers (Catalog signing only)
+  type: number
+  default: 4
+  values:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
 
 variables:
 - name: currentDate
@@ -89,6 +109,7 @@ extends:
   parameters:
     settings:
       skipBuildTagsForGitHubPullRequests: true
+      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,NuGet
     featureFlags:
       autoBaseline: false
     sdl:
@@ -139,6 +160,9 @@ extends:
           parameters:
             os: Windows_NT
             useSemverBuildConfig: ${{ parameters.useSemverBuildConfig }}
+            signTasks: true
+            nodeModulesSigningMode: ${{ parameters.nodeModulesSigningMode }}
+            catalogGenerationThrottle: ${{ parameters.catalogGenerationThrottle }}
 
       # Courtesy Push
       - job: courtesy_push
@@ -167,7 +191,7 @@ extends:
             condition: succeeded()
           - output: nuget
             packagesToPush: '$(Build.SourcesDirectory)/_package/nuget-packages/*/*.nupkg'
-            packageParentPath: '$(Build.SourcesDirectory)'
+            packageParentPath: '$(Build.SourcesDirectory)/_package/nuget-packages'
             condition: and(succeeded(), eq(variables['tasksSkipPublish'], 'false'))
             ${{ if eq(parameters.dryRun, true) }}:
               publishVstsFeed: 'c86767d8-af79-4303-a7e6-21da0ba435e2/9d34d871-8032-4e10-a34a-c7a01e125865'

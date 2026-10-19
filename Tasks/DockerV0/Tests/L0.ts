@@ -275,6 +275,25 @@ describe('Docker Suite', function() {
         console.log(tr.stderr);
     });
 
+    it('Runs successfully for docker build and neutralizes ##vso[ commands in output', async () => {
+        let tp = path.join(__dirname, 'TestSetup.js');
+        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        process.env[shared.TestEnvVars.imageName] = "testuser/vsoinjection:1";
+        process.env[shared.TestEnvVars.action] = shared.ActionTypes.buildImage;
+        process.env[shared.TestEnvVars.addBaseImageData] = "false";
+        await tr.runAsync();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        // Verifies createSanitizedExecOptions() is really wired into the live docker build
+        // exec call: the console-visible build output (as the agent's log parser would see
+        // it) must have the ##vso[ marker neutralized to a single #.
+        assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
+            "##vso[ markers from attacker-controlled build output must be neutralized before reaching the log");
+        assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nSuccessfully built abc123") != -1,
+            "sanitized marker (single #) should still be present so the output stays readable");
+        console.log(tr.stderr);
+    });
+
     it('Docker build should add labels with base image info', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         process.env[shared.TestEnvVars.imageName] = "testuser/imagewithannotations:11";

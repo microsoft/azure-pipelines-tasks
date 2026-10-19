@@ -3,6 +3,8 @@ import * as path from 'path';
 
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 
+const GRAPHQL_ERROR_TYPE_ENV_VAR: string = "TEST_GRAPHQL_ERROR_TYPE";
+
 export class ChangeLogTests {
 
     public static startTest() {
@@ -169,12 +171,23 @@ export class ChangeLogTests {
                         };
                     },
                     getIssuesList: function (githubEndpointToken: string, repositoryName: string, issues: number[], includeLabels: boolean) {
+                        const graphQLErrorType = process.env[GRAPHQL_ERROR_TYPE_ENV_VAR] || "NOT_FOUND";
+                        const graphQLErrorMessage = graphQLErrorType === "NOT_FOUND"
+                            ? "Could not resolve to an issue or pull request with the number of 123."
+                            : "Issue query failed with " + graphQLErrorType + ".";
                         if (includeLabels) {
                             return {
                                 statusCode: 200,
                                 body: {
+                                    "errors": [
+                                        {
+                                            "type": graphQLErrorType,
+                                            "message": graphQLErrorMessage
+                                        }
+                                    ],
                                     "data": {
                                         "repository": {
+                                            "_123": null,
                                             "_1": {
                                                 "title": "Incorrect color contrast in control panel",
                                                 "state": "CLOSED",
@@ -239,8 +252,15 @@ export class ChangeLogTests {
                             return {
                                 statusCode: 200,
                                 body: {
+                                    "errors": [
+                                        {
+                                            "type": graphQLErrorType,
+                                            "message": graphQLErrorMessage
+                                        }
+                                    ],
                                     "data": {
                                         "repository": {
+                                            "_123": null,
                                             "_1": {
                                                 "title": "Incorrect color contrast in control panel",
                                                 "state": "CLOSED",

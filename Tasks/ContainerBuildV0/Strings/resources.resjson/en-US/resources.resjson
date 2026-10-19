@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "Buildctl executable not found in path %s",
   "loc.messages.FileContentSynced": "Synced the file content to the disk. The content is %s.",
   "loc.messages.VerifyBuildctlInstallation": "Verifying Buildctl installation...",
-  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Writing Docker config to temp file. File path: %s, Docker config: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "Not adding any tags to the built image as no repository is specified."
 }

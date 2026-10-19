@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Déployer Azure Functions",
-  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/azurefunctiondeployreadme)",
+  "loc.helpMarkDown": "[En savoir plus sur cette tâche](https://aka.ms/azurefunction2deployreadme)",
   "loc.description": "Mettre à jour une application de fonction avec des applications web .NET, Python, JavaScript, PowerShell, Java",
   "loc.instanceNameFormat": "Déploiement d'application de fonction Azure : $(appName)",
   "loc.releaseNotes": "Nouveautés de la version 2.* <br /> prise en charge du déploiement WAR supprimé, définition des options de Web.Config et option de la commande Startup pour Azure Function Apps Linux.",

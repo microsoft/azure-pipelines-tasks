@@ -114,4 +114,69 @@ describe('NodeTool Suite', function () {
         assert(tr.stdout.indexOf('DOWNLOAD https://mymirror.example.com/node/v10.15.1/') > -1, 'Should download from the custom mirror base');
       }, tr);
     });
+
+    it('Reads and trims the version from a file when the version input has its default value', async () => {
+      let tp: string = path.join(__dirname, 'L0VersionFromFile.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.succeeded, 'NodeTool should have succeeded.');
+        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+        assert(tr.stdOutContained('VERSION_FROM_FILE 20.11.1'), 'NodeTool should use the trimmed version from the file');
+      }, tr);
+    });
+
+    it('Succeeds without installing Node when no version is supplied', async () => {
+      let tp: string = path.join(__dirname, 'L0NoVersion.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.succeeded, 'NodeTool should have succeeded.');
+        assert(tr.stderr.length === 0, 'NodeTool should not have written to stderr');
+      }, tr);
+    });
+
+    it('Fails when specified version is invalid', async () => {
+      let tp: string = path.join(__dirname, 'L0InvalidVersionSpec.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.failed, 'NodeTool should have failed.');
+        assert(tr.stdOutContained('loc_mock_InvalidVersionSpecification InvalidFromVersion'), "Descriptive message should be output");
+      }, tr);
+    });
+
+    it('Fails when version in specified versionSpecFile is invalid', async () => {
+      let tp: string = path.join(__dirname, 'L0InvalidVersionSpecInFile.js');
+      let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+      await tr.runAsync();
+
+      runValidations(() => {
+        assert(tr.failed, 'NodeTool should have failed.');
+        assert(tr.stdOutContained('loc_mock_InvalidVersionSpecification InvalidFromFile'), "Descriptive message should be output");
+      }, tr);
+    });
+
+    for (const fileContents of ['empty', 'whitespace']) {
+      it(`Fails when the specified version file is ${fileContents}`, async () => {
+        process.env['__versionFileContents__'] = fileContents;
+        let tp: string = path.join(__dirname, 'L0EmptyVersionSpecInFile.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+        delete process.env['__versionFileContents__'];
+
+        runValidations(() => {
+          assert(tr.failed, 'NodeTool should have failed.');
+          assert(tr.stdOutContained('loc_mock_VersionFileIsEmpty .node-version'), 'Descriptive message should be output');
+        }, tr);
+      });
+    }
 });

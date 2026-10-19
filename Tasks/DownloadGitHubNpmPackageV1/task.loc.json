@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 273,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -102,6 +102,8 @@
     "UseNpmrc": "ms-resource:loc.messages.UseNpmrc",
     "PublishRegistry": "ms-resource:loc.messages.PublishRegistry",
     "UsingRegistry": "ms-resource:loc.messages.UsingRegistry",
+    "Error_InvalidNpmPackageName": "ms-resource:loc.messages.Error_InvalidNpmPackageName",
+    "Error_InvalidNpmPackageVersion": "ms-resource:loc.messages.Error_InvalidNpmPackageVersion",
     "AddingAuthRegistry": "ms-resource:loc.messages.AddingAuthRegistry",
     "FoundLocalRegistries": "ms-resource:loc.messages.FoundLocalRegistries",
     "ForcePackagingUrl": "ms-resource:loc.messages.ForcePackagingUrl",

@@ -368,8 +368,8 @@ function ConvertTo-Pfx {
         $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
     }
     else{
-        $openSSLExePath = "$PSScriptRoot\opensslv3.5.6\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.6\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\opensslv3.5.8\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.8\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version
@@ -481,20 +481,20 @@ function Get-AzureStackEnvironment {
 
 function Remove-EndpointSecrets {
     # remove any certificate files
-    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem") {
-        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
-        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pem"
+    $certificateDirectories = @($ENV:Agent_TempDirectory, $ENV:System_DefaultWorkingDirectory) | Where-Object { $_ } | Select-Object -Unique
+    $certificateFileNames = @("clientcertificate.pem", "clientcertificate.pfx", "clientcertificatepassword.txt")
+
+    foreach ($certificateDirectory in $certificateDirectories) {
+        foreach ($certificateFileName in $certificateFileNames) {
+            $certificateFilePath = Join-Path -Path $certificateDirectory -ChildPath $certificateFileName
+            if (Test-Path -Path $certificateFilePath) {
+                Write-Verbose "Removing file $certificateFilePath"
+                Remove-Item -Path $certificateFilePath -Force
+            }
+        }
     }
 
-    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx") {
-        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
-        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificate.pfx"
-    }
-
-    if (Test-Path -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt") {
-        Write-Verbose "Removing file $ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
-        Remove-Item -Path "$ENV:System_DefaultWorkingDirectory\clientcertificatepassword.txt"
-    }
+    $env:AZCOPY_SPA_CERT_PASSWORD = $null
 
     if ($script:Endpoint_Authentication_Certificate) {
         # remove the certificate from certificate store
@@ -742,4 +742,3 @@ function Disconnect-UsingARMModule {
         $null = Clear-AzureRmContext -Scope Process -ErrorAction Stop
     }
 }
-

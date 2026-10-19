@@ -24,7 +24,7 @@ export function unzip(file: string, destinationFolder: string): void {
 }
 
 function unzipExtract(file: string, destinationFolder: string): void {
-    tl.debug('Extracting file: ' + file);
+    tl.debugExternalOutput('Extracting file: ' + file, { source: 'remote' });
     if (typeof xpUnzipLocation == 'undefined') {
         xpUnzipLocation = tl.which('unzip', true);
     }
@@ -37,7 +37,7 @@ function unzipExtract(file: string, destinationFolder: string): void {
 }
 
 function sevenZipExtract(file: string, destinationFolder: string): void {
-    tl.debug('Extracting file: ' + file);
+    tl.debugExternalOutput('Extracting file: ' + file, { source: 'remote' });
     const sevenZip: tr.ToolRunner  = tl.tool(winSevenZipLocation);
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
@@ -47,7 +47,7 @@ function sevenZipExtract(file: string, destinationFolder: string): void {
 
 function handleExecResult(execResult: tr.IExecSyncResult, file: string): void {
     if (execResult.code != tl.TaskResult.Succeeded) {
-        tl.debug('execResult: ' + JSON.stringify(execResult));
+        tl.debugExternalOutput('execResult: ' + JSON.stringify(execResult), { source: 'childProcess' });
         const message: string = 'Extraction failed for file: ' + file +
             '\ncode: ' + execResult.code +
             '\nstdout: ' + execResult.stdout +

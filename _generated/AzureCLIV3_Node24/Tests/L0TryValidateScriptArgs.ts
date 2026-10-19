@@ -1,8 +1,9 @@
 import assert = require('assert');
-import { tryValidateScriptArgs, ArgsSanitizingError } from '../src/argsSanitizer';
+import { tryValidateScriptArgs, ArgsSanitizingError } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 const FEATURE_ENV = 'DISTRIBUTEDTASK_TASKS_ENABLEAZURECLIARGSVALIDATION';
 const AGENT_VERSION_ENV = 'AGENT_VERSION';
+const OPTS = { taskName: 'AzureCLIV3', pipelineFeatureFlag: 'EnableAzureCliArgsValidation' };
 
 export const runTryValidateScriptArgsTests = () => {
     let originalWrite: typeof process.stdout.write;
@@ -33,7 +34,7 @@ export const runTryValidateScriptArgsTests = () => {
 
     it('Flag OFF: does not call validator', () => {
         let called = false;
-        tryValidateScriptArgs('anything', 'bash', () => { called = true; });
+        tryValidateScriptArgs('anything', 'bash', OPTS, () => { called = true; });
         assert.strictEqual(called, false);
     });
 
@@ -41,7 +42,7 @@ export const runTryValidateScriptArgsTests = () => {
         process.env[FEATURE_ENV] = 'true';
         const seen: Array<[string, string]> = [];
         assert.doesNotThrow(() => {
-            tryValidateScriptArgs('arg1 arg2', 'pscore', (a, t) => { seen.push([a, t]); });
+            tryValidateScriptArgs('arg1 arg2', 'pscore', OPTS, (a, t) => { seen.push([a, t]); });
         });
         assert.deepStrictEqual(seen, [['arg1 arg2', 'pscore']]);
     });
@@ -51,7 +52,7 @@ export const runTryValidateScriptArgsTests = () => {
         startCapture();
         try {
             assert.throws(
-                () => tryValidateScriptArgs('test; whoami', 'bash', () => {
+                () => tryValidateScriptArgs('test; whoami', 'bash', OPTS, () => {
                     throw new ArgsSanitizingError('blocked-msg');
                 }),
                 ArgsSanitizingError
@@ -64,7 +65,7 @@ export const runTryValidateScriptArgsTests = () => {
         const line = captured.substring(idx);
         assert.ok(line.indexOf('feature=AzureCLIV3') >= 0, 'feature should be AzureCLIV3');
         assert.ok(line.indexOf('"event":"ArgsValidationFailure"') >= 0);
-        assert.ok(line.indexOf('"errorName":"Error"') >= 0);
+        assert.ok(line.indexOf('"errorName":"ArgsSanitizingError"') >= 0);
         assert.ok(line.indexOf('"errorMessage":"blocked-msg"') >= 0);
     });
 
@@ -73,7 +74,7 @@ export const runTryValidateScriptArgsTests = () => {
         startCapture();
         try {
             assert.throws(
-                () => tryValidateScriptArgs('args', 'bash', () => {
+                () => tryValidateScriptArgs('args', 'bash', OPTS, () => {
                     const err = new Error('boom');
                     err.name = 'CustomError';
                     throw err;
@@ -98,7 +99,7 @@ export const runTryValidateScriptArgsTests = () => {
         startCapture();
         try {
             assert.throws(
-                () => tryValidateScriptArgs('args', 'bash', () => {
+                () => tryValidateScriptArgs('args', 'bash', OPTS, () => {
                     throw new Error('inner');
                 }),
                 /inner/

@@ -5,13 +5,15 @@ import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager } from './npmrcBackupManager';
+import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { NpmConfigTelemetryPhase } from './constants';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
 let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
+    npmauthutils.emitNpmConfigTelemetry(NpmConfigTelemetryPhase.Main);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     // Path to user provided npmrc
     const npmrc = npmauthutils.validateNpmrcPath();
@@ -20,7 +22,9 @@ async function main(): Promise<void> {
     // Preserve the original user provided .npmrc on first task execution, so the post-job cleanup can restore it. 
     const backupDirectory = npmauthutils.initializeBackupDirectory();
     const backupManager = new NpmrcBackupManager(backupDirectory);
-    backupManager.ensureBackedUp(npmrc);
+    const fileIdentity = backupManager.ensureBackedUp(npmrc);
+    tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
+    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
     
     let packagingLocation;
     try {
@@ -38,7 +42,6 @@ async function main(): Promise<void> {
     const npmrcFile = fs.readFileSync(npmrc, 'utf8').split(os.EOL);
 
     const addedRegistries: URL[] = [];
-    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
 
 
     for (const registryUrlString of npmrcRegistries) {
@@ -56,7 +59,7 @@ async function main(): Promise<void> {
         if (endpointRegistries.length > 0) {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
                 continue;
@@ -70,13 +73,13 @@ async function main(): Promise<void> {
             registryURL.host
         );
         if (npmrcEntry) {
-            console.log(tl.loc("AddingLocalCredentials"));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
             internalFeedSuccessCount++;
             continue;
         }
 
-        console.log(tl.loc("IgnoringRegistry", registryURL.host));
+        npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
     }
 }
 

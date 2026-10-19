@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Security test asset: ApplicationTypeName is a relative path traversal. This value is used as
+     the application package path inside the cluster image store, so before the fix it pointed the
+     copy, register and remove image store operations outside the intended folder. -->
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="..\..\..\Evil" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters />
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="Stateless1Pkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <DefaultServices />
+</ApplicationManifest>

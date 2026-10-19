@@ -43,12 +43,12 @@ export class JobSearch {
         const thisSearch: JobSearch = this;
         if (!thisSearch.Initialized) { //only initialize once
             const apiTaskUrl: string = util.addUrlSegment(thisSearch.taskUrl, '/api/json?tree=downstreamProjects[name,url,color],lastBuild[number]');
-            tl.debug('getting job task URL:' + apiTaskUrl);
+            tl.debugExternalOutput('getting job task URL:' + apiTaskUrl, { source: 'remote' });
             request.get({ url: apiTaskUrl, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallBack(err, httpResponse, body) {
                 if (!thisSearch.Initialized) { // only initialize once
                     if (err) {
                         if (err.code == 'ECONNRESET') {
-                            tl.debug(err);
+                            tl.debugExternalOutput(String(err), { source: 'remote' });
                             // resolve but do not initialize -- a job will trigger this again
                             defer.resolve(null);
                         } else {
@@ -58,7 +58,7 @@ export class JobSearch {
                         defer.reject(util.getFullErrorMessage(httpResponse, 'Unable to retrieve job: ' + thisSearch.identifier));
                     } else {
                         const parsedBody: any = JSON.parse(body);
-                        tl.debug(`parsedBody for: ${apiTaskUrl} : ${JSON.stringify(parsedBody)}`);
+                        tl.debugExternalOutput(`parsedBody for: ${apiTaskUrl} : ${JSON.stringify(parsedBody)}`, { source: 'remote' });
                         thisSearch.Initialized = true;
                         thisSearch.ParsedTaskBody = parsedBody;
                         // if this is the first time this job is triggered, there will be no lastBuild information, and we assume the
@@ -240,7 +240,7 @@ export class JobSearch {
             return;
         } else {
             const url: string  = util.addUrlSegment(thisSearch.taskUrl, thisSearch.nextSearchBuildNumber + '/api/json?tree=actions[causes[shortDescription,upstreamBuild,upstreamProject,upstreamUrl]],timestamp');
-            tl.debug('pipeline, locating child execution URL:' + url);
+            tl.debugExternalOutput('pipeline, locating child execution URL:' + url, { source: 'remote' });
             request.get({ url: url, strictSSL: thisSearch.queue.TaskOptions.strictSSL }, function requestCallback(err, httpResponse, body) {
                 tl.debug('locateExecution().requestCallback()');
                 if (err) {
@@ -254,7 +254,7 @@ export class JobSearch {
                     util.failReturnCode(httpResponse, 'Job pipeline tracking failed to read downstream project');
                 } else {
                     const parsedBody: any = JSON.parse(body);
-                    tl.debug(`parsedBody for: ${url} : ${JSON.stringify(parsedBody)}`);
+                    tl.debugExternalOutput(`parsedBody for: ${url} : ${JSON.stringify(parsedBody)}`, { source: 'remote' });
 
                     /**
                      * This is the list of all reasons for this job execution to be running.

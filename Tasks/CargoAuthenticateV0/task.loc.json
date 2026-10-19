@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 270,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -66,6 +66,9 @@
     "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
-    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound",
+    "RegistryEnvKeyCollision": "ms-resource:loc.messages.RegistryEnvKeyCollision",
+    "SkippingNonAzureDevOpsRegistry": "ms-resource:loc.messages.SkippingNonAzureDevOpsRegistry",
+    "RegistryFeedVerificationFailed": "ms-resource:loc.messages.RegistryFeedVerificationFailed"
   }
 }

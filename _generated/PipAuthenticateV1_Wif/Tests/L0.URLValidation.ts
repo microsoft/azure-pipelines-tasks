@@ -10,6 +10,41 @@ describe('PipAuthenticate L0 Suite - Feed URL Handling', function () {
     afterEach(() => TestHelpers.afterEach());
 
     describe('WIF Feed URL Usage', function() {
+        for (const feedUrl of [
+            'http://pkgs.dev.azure.com/testorg/_packaging/TestFeed/pypi/simple/',
+            'ftp://pkgs.dev.azure.com/testorg/_packaging/TestFeed/pypi/simple/',
+            '//pkgs.dev.azure.com/testorg/_packaging/TestFeed/pypi/simple/',
+            'not-a-url',
+            'https://pkgs.dev.azure.com.attacker.example/TestFeed/pypi/simple/'
+        ]) {
+            it(`rejects an insecure or invalid WIF URL: ${feedUrl}`, async () => {
+                const tr = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+                process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
+                process.env[testConstants.TestEnvVars.feedUrl] = feedUrl;
+                process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
+
+                await tr.runAsync();
+
+                assert(tr.failed);
+                assert(tr.errorIssues.length > 0);
+                assert(!TestHelpers.extractEnvironmentVariable(tr.stdout, testConstants.TestData.pipIndexUrlVar));
+            });
+        }
+
+        it('accepts uppercase HTTPS and normalizes it before adding credentials', async () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
+            process.env[testConstants.TestEnvVars.feedUrl] = 'HTTPS://pkgs.dev.azure.com/testorg/_packaging/TestFeed/pypi/simple/';
+            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
+
+            await tr.runAsync();
+
+            TestHelpers.assertSuccess(tr);
+            const indexUrl = TestHelpers.extractEnvironmentVariable(tr.stdout, testConstants.TestData.pipIndexUrlVar);
+            assert(indexUrl && new URL(indexUrl).protocol === 'https:');
+            assert(!indexUrl.includes('HTTPS://'));
+        });
+
         it('authenticates with valid Azure DevOps feed URL', async () => {
             const tp = path.join(__dirname, 'TestSetup.js');
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
