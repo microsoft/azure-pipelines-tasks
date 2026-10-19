@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "preview": "false",
@@ -371,6 +371,8 @@
     "DownloadingKubeCtlFromUrl": "ms-resource:loc.messages.DownloadingKubeCtlFromUrl",
     "DownloadPathForStableTxt": "ms-resource:loc.messages.DownloadPathForStableTxt",
     "DownloadKubeCtlFailed": "ms-resource:loc.messages.DownloadKubeCtlFailed",
+    "InvalidKubectlVersion": "ms-resource:loc.messages.InvalidKubectlVersion",
+    "InvalidStableKubectlVersion": "ms-resource:loc.messages.InvalidStableKubectlVersion",
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "ReturningToolRunnerExecPromise": "ms-resource:loc.messages.ReturningToolRunnerExecPromise",
     "ToolRunnerExecCallFailed": "ms-resource:loc.messages.ToolRunnerExecCallFailed",

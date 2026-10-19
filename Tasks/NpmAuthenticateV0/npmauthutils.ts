@@ -183,10 +183,29 @@ export function initializeBackupDirectory(): string {
     if (tl.getVariable('SAVE_NPMRC_PATH')) {
         return tl.getVariable('SAVE_NPMRC_PATH');
     }
-    let tempPath = tl.getVariable('Agent.BuildDirectory') || tl.getVariable('Agent.TempDirectory');
-    tempPath = path.join(tempPath, 'npmAuthenticate');
-    tl.mkdirP(tempPath);
-    const backupDirectory = fs.mkdtempSync(tempPath + path.sep);
+    const candidateDirectories = [tl.getVariable('Agent.HomeDirectory'), tl.getVariable('Agent.TempDirectory')]
+        .filter((candidate) => !!candidate);
+
+    let tempPath: string;
+    let backupDirectory: string;
+    let lastError: Error;
+    for (let i = 0; i < candidateDirectories.length; i++) {
+        try {
+            tempPath = path.join(candidateDirectories[i], 'npmAuthenticateBackup');
+            tl.mkdirP(tempPath);
+            backupDirectory = fs.mkdtempSync(tempPath + path.sep);
+            if (i > 0) {
+                tl.warning(tl.loc('Warning_HomeDirectoryNotWritable', lastError.message));
+            }
+            break;
+        } catch (err) {
+            lastError = err;
+        }
+    }
+    if (!backupDirectory) {
+        throw lastError || new Error(tl.loc('Error_NoWritableBackupDirectory'));
+    }
+
     tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
     tl.setVariable('NPM_AUTHENTICATE_TEMP_DIRECTORY', tempPath, false);
     return backupDirectory;

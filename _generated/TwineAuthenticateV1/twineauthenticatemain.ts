@@ -85,7 +85,7 @@ function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string {
     }
 
     feedNames.forEach(feedName =>
-        console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
+        tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName)))
     let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
 
     let repositories = authInfo.map(entry =>
