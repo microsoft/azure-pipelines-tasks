@@ -563,20 +563,23 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
 
             assert(tr.succeeded, tr.stdout);
             assert(tr.stdout.indexOf('##vso[task.setvariable') === -1, tr.stdout);
-            assert(tr.stdout.indexOf('x##_vso[task.setvariable variable=BASH_ENV]') !== -1, tr.stdout);
+            assert(tr.stdout.indexOf('x##_vso[task.setvariable variable=injected]') !== -1, tr.stdout);
             assert(tr.stdout.indexOf('##vso[telemetry.publish area=artifact-engine;feature=performance]') !== -1, tr.stdout);
             assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":true') !== -1, tr.stdout);
+            assert(tr.stdout.indexOf('"vsoCommandMode":"blockAndTelemetry"') !== -1, tr.stdout);
         } finally {
             delete process.env['DISTRIBUTEDTASK_TASKS_SANITIZEJENKINSARTIFACTPATHSFIXENABLED'];
         }
     });
 
     it('Should only report logging commands in artifact-engine output when SanitizeJenkinsArtifactPathsFixEnabled is disabled', async () => {
+        delete process.env['DISTRIBUTEDTASK_TASKS_SANITIZEJENKINSARTIFACTPATHSFIXENABLED'];
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(path.join(__dirname, 'L0FiltersArtifactEngineOutput.js'));
         await tr.runAsync();
 
         assert(tr.succeeded, tr.stdout);
-        assert(tr.stdout.indexOf('x##vso[task.setvariable variable=BASH_ENV]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('x##vso[task.setvariable variable=injected]') !== -1, tr.stdout);
         assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":false') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('"vsoCommandMode":"telemetryOnly"') !== -1, tr.stdout);
     });
 });

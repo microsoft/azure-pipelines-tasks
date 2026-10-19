@@ -15,12 +15,13 @@ tr.setInput('downloadCommitsAndWorkItems', 'false');
 
 process.env['ENDPOINT_URL_ID1'] = 'http://url';
 process.env['ENDPOINT_DATA_ID1_acceptUntrustedCerts'] = 'true';
+process.env['AGENT_VERSION'] = '4.264.0';
 
 tr.registerMock('artifact-engine/Engine', {
     ArtifactEngine: function () {
         return {
             processItems: function () {
-                console.log('Downloading drop/x##vso[task.setvariable variable=BASH_ENV]/tmp/payload to jenkinsArtifacts/x');
+                console.log('Downloading drop/x##vso[task.setvariable variable=injected]value to jenkinsArtifacts/x');
                 console.log('##vso[telemetry.publish area=artifact-engine;feature=performance]{"files":1}');
                 return Promise.resolve();
             }

@@ -14,7 +14,7 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-import { withRemoteConsole, writeRemoteOutput } from "./remoteOutput"
+import { vsoCommandMode, withRemoteConsole, writeRemoteOutput } from "./remoteOutput"
 // #if NODE20
 // import * as extract from 'extract-zip'
 // #else
@@ -141,6 +141,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 async function doWork() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        publishEvent('remoteOutputFiltering', { vsoCommandMode });
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);
