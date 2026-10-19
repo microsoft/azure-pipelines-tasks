@@ -54,9 +54,9 @@ export function isAtLeastVersion(actual: string | null | undefined, minimum: str
 }
 
 // Mirrors StringUtil.ConvertToBoolean in the agent, which treats any value it does not recognise
-// as false. A variable set to something like "yes" therefore disables decoding.
+// as false, without trimming whitespace.
 function convertToBoolean(value: string): boolean {
-    switch (value.trim().toLowerCase()) {
+    switch (value.toLowerCase()) {
         case "1":
         case "true":
         case "$true":
@@ -67,10 +67,11 @@ function convertToBoolean(value: string): boolean {
 }
 
 export function isPercentDecodingDisabled(): boolean {
-    // The agent resolves this knob from the job variables first and the environment second.
+    // These are task-visible values, not an independent view of the agent worker's environment.
+    // An explicit nonempty job variable avoids ambiguity when worker and task environments differ.
     const configuredValues = [tl.getVariable(decodePercentsVariableName), process.env[decodePercentsVariableName]];
     for (const configured of configuredValues) {
-        if (configured !== undefined && configured !== null && configured.trim() !== "") {
+        if (configured !== undefined && configured !== null && configured !== "") {
             return !convertToBoolean(configured);
         }
     }
