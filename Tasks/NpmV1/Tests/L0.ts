@@ -6,6 +6,8 @@ import * as tr from 'azure-pipelines-task-lib/toolrunner';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmToolRunnerModule from '../npmtoolrunner';
 import { validatePackagingCollectionUrl } from '../collectionurl';
+import { NpmCommand } from '../constants';
+import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
 
 class MockedTask {
     private _proxyUrl: string;
@@ -434,5 +436,89 @@ describe('Npm.PackagingCollectionUrl validation', function () {
                 return locKeys.map(k => tl.loc(k)).includes(e.message);
             });
         });
+    });
+});
+
+describe('Npm.PackagingCollectionUrl task scenarios', function () {
+    this.timeout(10000);
+
+    const scenarioEnv = ['NPM_PACKAGINGCOLLECTIONURL', 'SYSTEM_SERVERTYPE', 'TEST_COLLECTION_URI',
+        'TEST_NPM_COMMAND', 'TEST_VERIFIER_REJECTS'];
+
+    before(function () {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
+    afterEach(function () {
+        scenarioEnv.forEach(name => delete process.env[name]);
+    });
+
+    async function runScenario(env: { [name: string]: string }): Promise<ttm.MockTestRunner> {
+        Object.keys(env).forEach(name => process.env[name] = env[name]);
+        const runner = createMockTestRunner(path.join(__dirname, 'collectionurl-override.js'));
+        await runner.runAsync();
+        return runner;
+    }
+
+    function assertRejectedBeforeHandler(runner: ttm.MockTestRunner, expectedMessage: string) {
+        assert(runner.failed, 'task should have failed');
+        assert(runner.stdOutContained(expectedMessage), `output should contain: ${expectedMessage}`);
+        assert(!runner.stdOutContained('HANDLER_INVOKED'), 'npm command handler must not run');
+        assert.strictEqual(runner.invokedToolCount, 0, 'no tools should be invoked');
+    }
+
+    [NpmCommand.Install, NpmCommand.Custom, NpmCommand.Publish].forEach(function (command) {
+        it(`hosted: accepted override is verified with the Npm protocol and used for both packaging URI fields (${command})`, async function () {
+            const runner = await runScenario({
+                TEST_NPM_COMMAND: command,
+                SYSTEM_SERVERTYPE: 'Hosted',
+                NPM_PACKAGINGCOLLECTIONURL: 'https://pkgs.dev.azure.com'
+            });
+
+            const validated = 'https://pkgs.dev.azure.com/';
+            assert(runner.succeeded, 'task should have succeeded');
+            assert(runner.stdOutContained(`VERIFIER_CALLED url=https://pkgs.dev.azure.com protocol=${ProtocolType.Npm}`),
+                'shared verifier should receive the override and ProtocolType.Npm');
+            assert(runner.stdOutContained(`HANDLER_INVOKED default=${validated}`), 'DefaultPackagingUri should be the validated URL');
+            assert(runner.stdOutContained(`"${validated}"]`), 'PackagingUris should end with the validated URL');
+        });
+    });
+
+    it('hosted: rejected override fails before the npm command handler runs', async function () {
+        const runner = await runScenario({
+            SYSTEM_SERVERTYPE: 'Hosted',
+            NPM_PACKAGINGCOLLECTIONURL: 'https://attacker.example/',
+            TEST_VERIFIER_REJECTS: 'true'
+        });
+
+        assert(runner.stdOutContained(`VERIFIER_CALLED url=https://attacker.example/ protocol=${ProtocolType.Npm}`),
+            'shared verifier should receive the override and ProtocolType.Npm');
+        assertRejectedBeforeHandler(runner, 'VERIFIER_REJECTED');
+    });
+
+    it('on-prem: same-origin override is accepted without the shared verifier and used for both packaging URI fields', async function () {
+        const runner = await runScenario({
+            SYSTEM_SERVERTYPE: 'OnPremises',
+            TEST_COLLECTION_URI: 'http://tfs.contoso.com:8080/tfs/DefaultCollection/',
+            NPM_PACKAGINGCOLLECTIONURL: 'HTTP://TFS.contoso.com:8080'
+        });
+
+        const validated = 'http://tfs.contoso.com:8080/';
+        assert(runner.succeeded, 'task should have succeeded');
+        assert(!runner.stdOutContained('VERIFIER_CALLED'), 'shared verifier must not be used on-prem');
+        assert(runner.stdOutContained(`HANDLER_INVOKED default=${validated}`), 'DefaultPackagingUri should be the validated URL');
+        assert(runner.stdOutContained(`"${validated}"]`), 'PackagingUris should end with the validated URL');
+    });
+
+    it('on-prem: override with a different origin fails before the npm command handler runs', async function () {
+        const runner = await runScenario({
+            SYSTEM_SERVERTYPE: 'OnPremises',
+            TEST_COLLECTION_URI: 'http://tfs.contoso.com:8080/tfs/DefaultCollection/',
+            NPM_PACKAGINGCOLLECTIONURL: 'http://attacker.example/'
+        });
+
+        assert(!runner.stdOutContained('VERIFIER_CALLED'), 'shared verifier must not be used on-prem');
+        // The mock runner replaces tl.loc with a stub that returns loc_mock_<key>.
+        assertRejectedBeforeHandler(runner, 'loc_mock_PackagingCollectionUrlMismatch');
     });
 });
