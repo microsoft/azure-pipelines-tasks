@@ -1,0 +1,24 @@
+{
+  "name": "azure-pipelines-tasks-external-output",
+  "version": "1.0.0",
+  "description": "Shared helper for writing untrusted output (for example text returned by a remote server) through azure-pipelines-task-lib's external-output filter, with ##vso command blocking gated by a pipeline feature.",
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "main": "externalOutput.js",
+  "types": "externalOutput.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "azure-pipelines-task-lib": "^5.281.2",
+    "@types/node": "^24.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme"
+}

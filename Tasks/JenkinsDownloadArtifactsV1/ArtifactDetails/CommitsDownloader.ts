@@ -6,8 +6,7 @@ import * as  tl from 'azure-pipelines-task-lib/task';
 import url = require('url');
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
-import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
-import {writeRemoteOutput} from "../remoteOutput"
+import {JenkinsRestClient, JenkinsJobDetails, jenkinsOutput} from "./JenkinsRestClient"
 
 var handlebars = require('handlebars');
 
@@ -60,7 +59,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            writeRemoteOutput(tl.loc("GetCommitMessagesFailed", error, commits));
+            jenkinsOutput.writeLine(tl.loc("GetCommitMessagesFailed", error, commits));
             throw error;
         }
 
@@ -183,7 +182,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                writeRemoteOutput(tl.loc("CannotParseCommits", commits, error));
+                jenkinsOutput.writeLine(tl.loc("CannotParseCommits", commits, error));
                 throw error;
             }
         }
