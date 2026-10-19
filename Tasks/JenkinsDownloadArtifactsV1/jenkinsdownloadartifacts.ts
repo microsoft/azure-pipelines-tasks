@@ -107,7 +107,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 
 async function doWork() {
     // Jenkins-provided names and paths reach the log through console.log (also from artifact-engine), so filter all of it.
-    const outputOptions = filterConsoleLog('remote', ['telemetry.publish', 'task.logissue']);
+    const outputOptions = filterConsoleLog('remote', ['telemetry.publish']);
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
         publishEvent('remoteOutputFiltering', { vsoCommandMode: outputOptions.vsoCommandMode });

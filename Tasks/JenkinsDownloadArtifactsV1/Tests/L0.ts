@@ -517,6 +517,7 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":true') !== -1, tr.stdout);
         assert(tr.stdout.indexOf('"commandName":"task.complete","blocked":true') !== -1, tr.stdout);
         assert(tr.stdout.indexOf('"vsoCommandMode":"blockAndTelemetry"') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=remoteOutputFiltering]') !== -1, tr.stdout);
         assert(tr.stdout.indexOf('##vso[task.uploadfile]') !== -1, tr.stdout);
     });
 });
