@@ -243,6 +243,10 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
+    # Validated here rather than where the image store path is built, so that a crafted manifest is
+    # rejected before the upgrade touches the cluster.
+    Assert-ValidImageStorePathSegment -Name $names.ApplicationTypeName
+
     # If ApplicationName is not specified on command line get application name from Application parameter file.
     if (!$ApplicationName)
     {
@@ -399,22 +403,14 @@ function Publish-UpgradedServiceFabricApplication
             $serviceTypeHealthPolicyMap = $UpgradeParameters["ServiceTypeHealthPolicyMap"]
             if ($serviceTypeHealthPolicyMap -and $serviceTypeHealthPolicyMap -is [string])
             {
-                $useSafeParser = Get-VstsPipelineFeature -FeatureName 'SfSafeParser'
-                if (-not $useSafeParser)
+                try
                 {
-                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = Invoke-Expression $serviceTypeHealthPolicyMap
+                    $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
                 }
-                else
+                catch
                 {
-                    try
-                    {
-                        $UpgradeParameters["ServiceTypeHealthPolicyMap"] = ConvertTo-ServiceTypeHealthPolicyMap -PolicyMapString $serviceTypeHealthPolicyMap
-                    }
-                    catch
-                    {
-                        Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorData $_
-                        throw
-                    }
+                    Publish-Telemetry -TaskName "ServiceFabricDeploy" -OperationId "SfSafeParserFailure" -ErrorData $_
+                    throw
                 }
             }
 

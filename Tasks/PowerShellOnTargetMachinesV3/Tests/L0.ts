@@ -38,5 +38,8 @@ describe('PowerShellOnTargetMachineV3 Suite', function () {
         it('Skips sanitization for inline scripts', (done) => {
             psr.run(path.join(__dirname, 'L0SanitizerSkippedForInline.ps1'), done);
         });
+        it('Wires Invoke-ScriptArgumentSanitization onto NewPsSessionOptionArguments (MSRC 115118 Bug 1)', (done) => {
+            psr.run(path.join(__dirname, 'L0NewPsSessionOptionArgumentsSanitizerWiring.ps1'), done);
+        });
     }
 });

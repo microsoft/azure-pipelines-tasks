@@ -14,11 +14,11 @@ steps:
 - powershell: ./ci/start-collect-diagnostics.ps1
   displayName: Start collect diagnostics
 
-# Use .NET SDK 8
+# Use .NET SDK 10
 - task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 8.x'
+  displayName: 'Install .NET Core SDK 10.x'
   inputs:
-    version: 8.x
+    version: 10.x
 
 # Use node 20, npm 9
 - task: NodeTool@0
@@ -35,13 +35,17 @@ steps:
   displayName: npm ci
 
 # Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm ci
-  displayName: npm ci min agent demands
-
-- script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
-  displayName: Verify min agent demands
+# TEMPORARILY DISABLED: This check calls the GitHub API to fetch the latest agent
+# release, which requires a GitHub PAT. The classic PAT is blocked by the
+# 'Microsoft Open Source' enterprise policy (token lifetime > 8 days). Re-enable
+# once proper auth (e.g. a GitHub App installation token) is set up.
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm ci
+#   displayName: npm ci min agent demands
+#
+# - script: node ./ci/verifyMinAgentDemands/index.js --pat $(GitHubPAT)
+#   displayName: Verify min agent demands
 
 - powershell: |
     $tasks = "${{ parameters.task }}"

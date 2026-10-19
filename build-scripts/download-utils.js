@@ -8,7 +8,7 @@ const crypto = require('crypto');
 var repoPath = path.join(__dirname, '..');
 var downloadPath = path.join(repoPath, '_download');
 
-var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck) {
+var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck, options) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -48,7 +48,7 @@ var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck) {
     
     try {
         // download the archive
-        var archivePath = await downloadFileAsync(url);
+        var archivePath = await downloadFileAsync(url, options);
         console.log('Extracting archive: ' + url);
 
         // Clean up any previous temp attempt
@@ -106,7 +106,7 @@ var downloadArchiveConcurrentAsync = async function (url, omitExtensionCheck) {
 }
 exports.downloadArchiveConcurrentAsync = downloadArchiveConcurrentAsync;
 
-var downloadFileAsync = async function (url) {
+var downloadFileAsync = async function (url, options) {
     // validate parameters
     if (!url) {
         throw new Error('Parameter "url" must be set.');
@@ -129,7 +129,7 @@ var downloadFileAsync = async function (url) {
 
     // download the file
     mkdir('-p', path.join(downloadPath, 'file'));
-    const downloader = new Downloader({
+    var downloaderConfig = {
         url: url,
         directory: path.join(downloadPath, 'file'),
         fileName: scrubbedUrl,
@@ -141,7 +141,13 @@ var downloadFileAsync = async function (url) {
                 console.log(`##vso[task.setprogress value=${percentage};]Downloading file: ${scrubbedUrl}`)
             }
         },
-    });
+    };
+
+    if (options && options.headers) {
+        downloaderConfig.headers = options.headers;
+    }
+
+    const downloader = new Downloader(downloaderConfig);
 
     const { filePath } = await downloader.download(); // Downloader.download() resolves with some useful properties.
     fs.writeFileSync(marker, '');

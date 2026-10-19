@@ -110,7 +110,10 @@ async function runNuGet(executionOptions: NuGetExecutionOptions): Promise<number
         stdErrText += data.toString('utf-8');
     });
 
-    const execResult = await nugetTool.exec({ ignoreReturnCode: true } as IExecOptions);
+    const execResult = await nugetTool.exec({
+        ignoreReturnCode: true,
+        externalOutput: { source: "childProcess" }
+    } as IExecOptions);
 
     if (execResult !== 0) {
         telemetry.logResult("Packaging", "NuGetCommand", execResult);

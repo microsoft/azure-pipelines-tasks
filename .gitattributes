@@ -88,3 +88,5 @@
 *.RTF   diff=astextplain
 
 *.lcl text=auto
+
+.github/workflows/*.lock.yml linguist-generated=true merge=ours

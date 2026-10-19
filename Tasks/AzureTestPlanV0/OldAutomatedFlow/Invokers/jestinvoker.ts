@@ -1,11 +1,14 @@
 import tl = require('azure-pipelines-task-lib/task');
 import utils = require('../../Common/utils');
 import constants = require('../../Common/constants');
-import { executeJestCommand } from '../testLibExecutor';
+import { executeJestCommand, executeJestTest } from '../testLibExecutor';
 
 //Jest command like: >set JEST_JUNIT_OUTPUT_NAME=TEST-Jest0-junit.xml
 //>npx jest --ci --reporters=default --reporters=jest-junit -t "JestTestName"
-export async function executeJestTests(testsToBeExecuted: string[]): Promise<number> {
+export async function executeJestTests(
+    testsToBeExecuted: string[],
+    isFeatureFlagEnabled: (featureFlag: string) => boolean | Promise<boolean> = tl.getPipelineFeature
+): Promise<number> {
 
     //Jest-Junit Link:https://github.com/jest-community/jest-junit
     let finalStatus = 0;
@@ -19,6 +22,7 @@ export async function executeJestTests(testsToBeExecuted: string[]): Promise<num
     //testToBeExecuted: <TestSuiteName1> <TestCase1>. <TestSuiteName1> <TestCase1>,<TestSuiteName2> <TestCase3>. <TestSuiteName2> <TestCase3>
     let npxPath = tl.which("npx", true);
     let i = 0;
+    const useStructuredJestArguments = await isFeatureFlagEnabled(constants.STRUCTURED_JEST_ARGUMENTS_FIX_FEATURE);
     for (let tests of testsToBeExecuted) {
         const JestTestName = utils.separateJestTestName(tests);
         try {
@@ -36,8 +40,7 @@ export async function executeJestTests(testsToBeExecuted: string[]): Promise<num
                 continue;
             }
 
-            const jestCommand = `jest --ci --reporters=default --reporters=jest-junit -t "${JestTestName}"`;
-            const status = await executeJestCommand(npxPath, jestCommand);
+            const status = await executeJestTest(npxPath, JestTestName, useStructuredJestArguments);
             if (status != 0) {
                 finalStatus = 1;
             }

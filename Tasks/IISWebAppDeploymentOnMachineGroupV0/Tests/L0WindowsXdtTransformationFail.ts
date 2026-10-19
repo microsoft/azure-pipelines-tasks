@@ -11,6 +11,7 @@ tr.setInput('XmlTransformation', 'true');
 process.env['TASK_TEST_TRACE'] = "1";
 process.env["SYSTEM_DEFAULTWORKINGDIRECTORY"] =  "DefaultWorkingDirectory";
 process.env['SYSTEM_DEBUG'] = "true";
+process.env['DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED'] = "true";
 
 // provide answers for task mock
 let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -125,6 +126,12 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
 var fs = require('fs');
 tr.registerMock('fs', {
     ...fs,
+    readFileSync: function (filePath) {
+        if (filePath === "C:\\tempFolder\\web.Release.config") {
+            return Buffer.from('<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"><appSettings xdt:Transform="SetAttributes" /></configuration>');
+        }
+        return fs.readFileSync(filePath);
+    },
     createWriteStream: function (filePath, options) {
         return { "isWriteStreamObj": true };
     },

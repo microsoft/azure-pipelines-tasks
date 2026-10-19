@@ -138,7 +138,7 @@ function analyzePowershellTasks() {
 
     try {
         const pwshScriptPath = path.join(__dirname, 'check-powershell-syntax.ps1');
-        output = util.run(`powershell -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted ${pwshScriptPath} ${buildTasksPath}`, true);
+        output = util.run(`pwsh -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -File "${pwshScriptPath}" "${buildTasksPath}"`, true);
     } catch (e) {
         logToPipeline('error', 'Please check the tasks, seems like they have invalid PowerShell syntax.');
         process.exit(1);

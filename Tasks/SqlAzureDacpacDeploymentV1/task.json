@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 1,
-        "Minor": 274,
+        "Minor": 282,
         "Patch": 0
     },
     "demands": [
@@ -335,6 +335,13 @@
             "description": "Generated output file path when deployment package action is either of Extract, Export, Script, Drift Report, Deploy Report."
         }
     ],
+    "restrictions": {
+        "settableVariables": {
+            "allowed": [
+                "SqlDeploymentOutputFile"
+            ]
+        }
+    },
     "instanceNameFormat": "Azure SQL $(TaskNameSelector)",
     "execution": {
         "PowerShell3": {

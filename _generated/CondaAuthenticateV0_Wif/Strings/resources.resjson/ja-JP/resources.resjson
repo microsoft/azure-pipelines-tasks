@@ -3,6 +3,8 @@
   "loc.helpMarkDown": "",
   "loc.description": "Conda クライアントの認証タスク",
   "loc.instanceNameFormat": "Conda 認証",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
+  "loc.input.help.workloadIdentityServiceConnection": "これを設定すると、ビルド パイプライン ID ではなくサービス接続を使用して資格情報が生成されます。",
   "loc.messages.FailedToAddAuthentication": "認証を追加できませんでした。",
   "loc.messages.AddingAuthChannel": "トークン %s の認証を追加しています",
   "loc.messages.Info_AddingFederatedFeedAuth": "サービス接続 %s から認証情報を追加しています",

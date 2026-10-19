@@ -38,5 +38,6 @@
   "loc.messages.JS_ExitCode": "Завершение работы PowerShell с кодом \"%s\".",
   "loc.messages.JS_Stderr": "Оболочка PowerShell записала одну или несколько строк в стандартный поток ошибок.",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
-  "loc.messages.PS_ExitCode": "Завершение работы PowerShell с кодом \"{0}\"."
+  "loc.messages.PS_ExitCode": "Завершение работы PowerShell с кодом \"{0}\".",
+  "loc.messages.Az_LowerVersionWarning": "Указанная версия {0} {1} устарела, последняя версия: {2}"
 }

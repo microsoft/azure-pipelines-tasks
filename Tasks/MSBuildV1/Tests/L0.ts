@@ -91,4 +91,134 @@ describe('MSBuild Suite', function () {
         assert(tr.stderr.length === 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
     });
+
+    it('Xplat MSBuild: Defaults (slnx)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildSlnxDefaults.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.slnx /p:Platform=$(Platform) /p:Configuration=$(Configuration)'),
+            'xbuild should have been run for building the slnx solution.');
+
+        assert(tr.invokedToolCount === 1, 'should have run xbuild for slnx solution.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Xplat MSBuild: Clean and Build (slnx)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildSlnxClean.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //clean
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.slnx /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the slnx solution.');
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.slnx /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the slnx solution.');
+
+        assert(tr.invokedToolCount === 2, 'should have run xbuild for slnx solution.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Xplat MSBuild: Multiple solutions (slnx)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildMultipleSlnxSolutions.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //clean
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.slnx /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the slnx solution.');
+
+        assert(tr.ran('/home/bin/xbuild /user/build/test/fun.slnx /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the slnx solution.');
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.slnx /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the slnx solution.');
+
+        assert(tr.ran('/home/bin/xbuild /user/build/test/fun.slnx /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the slnx solution.');
+
+        assert(tr.invokedToolCount === 4, 'should have run xbuild for slnx solution.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Xplat MSBuild: Defaults (csproj)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildCsprojDefaults.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.csproj /p:Platform=$(Platform) /p:Configuration=$(Configuration)'),
+            'xbuild should have been run for building the project.');
+
+        assert(tr.invokedToolCount === 1, 'should have run xbuild for project.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Xplat MSBuild: Clean and Build (csproj)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildCsprojClean.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //clean
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.csproj /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the project.');
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.csproj /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the project.');
+
+        assert(tr.invokedToolCount === 2, 'should have run xbuild for project.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Xplat MSBuild: Multiple projects (csproj)', async () => {
+        this.timeout(1000);
+
+        let tp: string = path.join(__dirname, 'L0MSBuildMultipleCsprojProjects.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        //clean
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.csproj /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the project.');
+
+        assert(tr.ran('/home/bin/xbuild /user/build/test/fun.csproj /t:Clean /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild clean should have been run on the project.');
+
+        //build
+        assert(tr.ran('/home/bin/xbuild /user/build/fun.csproj /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the project.');
+
+        assert(tr.ran('/home/bin/xbuild /user/build/test/fun.csproj /p:Platform=$(Platform) /p:Configuration=$(Configuration) ' +
+            '/p:TestProp=TestValue /p:TestProp1=TestValue'), 'xbuild should have been run for building the project.');
+
+        assert(tr.invokedToolCount === 4, 'should have run xbuild for project.');
+        assert(tr.stderr.length === 0, 'should not have written to stderr');
+        assert(tr.succeeded, 'task should have succeeded');
+    });
 });

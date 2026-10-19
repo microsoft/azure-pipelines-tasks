@@ -23,7 +23,7 @@
     "string": "3.3.1",
     "uuid": "3.1.0",
     "vso-node-api": "6.0.4-preview",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.278.0",
     "xml2js": "0.4.16",
     "@types/node": "^24.10.0",
     "@types/mocha": "^5.2.7",
@@ -37,6 +37,6 @@
   },
   "overrides": {
     "qs": "^6.14.0",
-    "form-data": "^2.5.4"
+    "form-data": "^2.5.6"
   }
 }

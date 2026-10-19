@@ -135,6 +135,11 @@ interface RepositoryInfo {
     id:string;
 }
 
+interface ParsedUrl {
+    host:string;
+    path:string;
+}
+
 export async function collectFeedRepositories(pomContents:string): Promise<any> {
     return convertXmlStringToJson(pomContents).then(async function (pomJson) {
         let repos:RepositoryInfo[] = [];
@@ -155,21 +160,32 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
         let packageUrl = packagingLocation.DefaultPackagingUri;
         tl.debug('collectionUrl=' + collectionUrl);
         tl.debug('packageUrl=' + packageUrl);
-        const collectionUrlParsed = new URL(collectionUrl);
-        let collectionName: string = collectionUrlParsed.hostname.toLowerCase();
-        const collectionPathName = collectionUrlParsed.pathname;
-        
-        if(collectionPathName && collectionPathName.length > 1) {
-            collectionName = collectionName + collectionPathName.toLowerCase();
-            tl.debug('collectionName=' + collectionName);
-        }
-        
-        if (packageUrl) {
-            const packageUrlParsed = new URL(packageUrl);
-            packageUrlParsed.hostname.toLowerCase();
-        } else {
-            packageUrl = collectionName;
-        }
+        const parseUrl = (url: string): ParsedUrl | undefined => {
+            try {
+                const uri = new URL(url);
+                const host = uri.hostname.toLowerCase();
+                let path = uri.pathname.toLowerCase();
+                if (path.length <= 1) {
+                    path = '';
+                } else if (!path.endsWith('/')) {
+                    path += '/';
+                }
+                return { host, path };
+            } catch {
+                return undefined;
+            }
+        };
+        const isTrusted = (trusted: ParsedUrl | undefined, repo: ParsedUrl): boolean => {
+            if (!trusted) return false;
+            const hostMatches = repo.host === trusted.host ||
+                                repo.host.endsWith('.' + trusted.host);
+            const pathMatches = trusted.path === '' ||
+                                repo.path === trusted.path ||
+                                repo.path.startsWith(trusted.path);
+            return hostMatches && pathMatches;
+        };
+        const collectionUrlParsed = parseUrl(collectionUrl);
+        const packageUrlParsed = packageUrl ? parseUrl(packageUrl) : undefined;
         let parseRepos:(project) => void = function(project) {
             if (project && project.repositories) {
                 for (let r of project.repositories) {
@@ -177,11 +193,13 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
                     if (r.repository) {
                         for (let repo of r.repository) {
                             repo = repo instanceof Array ? repo[0] : repo;
-                            let url:string = repo.url instanceof Array ? repo.url[0] : repo.url;
-                            if (url && (url.toLowerCase().includes(collectionName) ||
-                                        url.toLowerCase().includes(packageUrl) ||
-                                        packagingLocation.PackagingUris.some(uri => url.toLowerCase().startsWith(uri.toLowerCase())))) {
-                            tl.debug('using credentials for url: ' + url);
+                            let repoUrl: string = repo.url instanceof Array ? repo.url[0] : repo.url;
+                            const repoUrlParsed = parseUrl(repoUrl);
+                            if (repoUrlParsed &&
+                                (isTrusted(collectionUrlParsed, repoUrlParsed) ||
+                                isTrusted(packageUrlParsed, repoUrlParsed) ||
+                                packagingLocation.PackagingUris.some(uri => isTrusted(parseUrl(uri), repoUrlParsed)))) {
+                            tl.debug('using credentials for url: ' + repoUrl);
                             repos.push({
                                 id: (repo.id && repo.id instanceof Array)
                                     ? repo.id[0]

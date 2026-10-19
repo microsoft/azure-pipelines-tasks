@@ -38,7 +38,7 @@ function Extract-Dacpac {
         [string] $token
     )
 
-    $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.dacpac"
+    $targetDacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_$([System.Guid]::NewGuid().ToString()).dacpac"
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Extract" -targetFile $targetDacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -token $token
 
@@ -64,7 +64,7 @@ function Export-Bacpac {
         [string] $token
     )
 
-    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\$databaseName.bacpac"
+    $targetBacpacFilePath = "$ENV:SYSTEM_DEFAULTWORKINGDIRECTORY\GeneratedOutputFiles\${databaseName}_$([System.Guid]::NewGuid().ToString()).bacpac"
 
     $sqlpackageArguments = Get-SqlPackageCommandArguments -authenticationType $authenticationType -sqlpackageAction "Export" -targetFile $targetBacpacFilePath -sourceServerName $serverName -sourceDatabaseName $databaseName -sourceUser $sqlUsername -sourcePassword $sqlPassword -sourceConnectionString $connectionString -additionalArguments $sqlpackageAdditionalArguments -token $token
 
@@ -357,7 +357,7 @@ function Run-SqlCmd {
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
 
-        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String | foreach-object { $_ }
+        (Invoke-Expression $commandToRun -ErrorVariable errors 4>&1) | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | foreach-object { $_ }
 
         if ($errors.Count -gt 0) {
             throw $errMsg
@@ -366,7 +366,7 @@ function Run-SqlCmd {
         $ErrorActionPreference = 'Stop'
     }
     else {
-        Invoke-Expression $commandToRun
+        Invoke-Expression $commandToRun | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | foreach-object { $_ }
     }
 }
 
@@ -437,13 +437,13 @@ function Run-SqlCmdV2 {
     # Execute
     if ($sqlcmdAdditionalArguments.ToLower().Contains("-verbose")) {
         $ErrorActionPreference = 'Continue'
-        (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String | ForEach-Object { $_ }
+        (Invoke-SqlCmd @splatArgs -ErrorVariable errors 4>&1) | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | ForEach-Object { $_ }
         if ($errors.Count -gt 0) {
             throw "SQL command execution failed with errors."
         }
         $ErrorActionPreference = 'Stop'
     } else {
-        Invoke-SqlCmd @splatArgs
+        Invoke-SqlCmd @splatArgs | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | ForEach-Object { $_ }
     }
 }
 

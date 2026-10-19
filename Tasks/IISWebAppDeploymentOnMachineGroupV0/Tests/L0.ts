@@ -8,11 +8,67 @@ var fileEncoding = require("../node_modules/azure-pipelines-tasks-webdeployment-
 
 describe('IISWebsiteDeploymentOnMachineGroup test suite', function () {
     var taskSrcPath = path.join(__dirname, '..', 'deployiiswebapp.js');
+    const compatibilityFeatureVariable = 'DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED';
+    const secureMSDeployFeatureVariable = 'DISTRIBUTEDTASK_TASKS_SECUREMSDEPLOYCOMMANDEXECUTION';
+    const originalCompatibilityFeature = process.env[compatibilityFeatureVariable];
+    const originalSecureMSDeployFeature = process.env[secureMSDeployFeatureVariable];
     this.timeout(60000);
+
+    async function runWithFeatures(
+        testFile: string,
+        compatibilityFeatureValue?: string,
+        secureMSDeployFeatureValue?: string): Promise<ttm.MockTestRunner> {
+        const previousCompatibilityFeature = process.env[compatibilityFeatureVariable];
+        const previousSecureMSDeployFeature = process.env[secureMSDeployFeatureVariable];
+
+        if (compatibilityFeatureValue === undefined) {
+            delete process.env[compatibilityFeatureVariable];
+        } else {
+            process.env[compatibilityFeatureVariable] = compatibilityFeatureValue;
+        }
+
+        if (secureMSDeployFeatureValue === undefined) {
+            delete process.env[secureMSDeployFeatureVariable];
+        } else {
+            process.env[secureMSDeployFeatureVariable] = secureMSDeployFeatureValue;
+        }
+
+        try {
+            const runner = new ttm.MockTestRunner(path.join(__dirname, testFile));
+            await runner.runAsync();
+            return runner;
+        } finally {
+            if (previousCompatibilityFeature === undefined) {
+                delete process.env[compatibilityFeatureVariable];
+            } else {
+                process.env[compatibilityFeatureVariable] = previousCompatibilityFeature;
+            }
+
+            if (previousSecureMSDeployFeature === undefined) {
+                delete process.env[secureMSDeployFeatureVariable];
+            } else {
+                process.env[secureMSDeployFeatureVariable] = previousSecureMSDeployFeature;
+            }
+        }
+    }
+
     before((done) => {
+        process.env[compatibilityFeatureVariable] = 'false';
+        process.env[secureMSDeployFeatureVariable] = 'false';
         done();
     });
     after(function () {
+        if (originalCompatibilityFeature === undefined) {
+            delete process.env[compatibilityFeatureVariable];
+        } else {
+            process.env[compatibilityFeatureVariable] = originalCompatibilityFeature;
+        }
+
+        if (originalSecureMSDeployFeature === undefined) {
+            delete process.env[secureMSDeployFeatureVariable];
+        } else {
+            process.env[secureMSDeployFeatureVariable] = originalSecureMSDeployFeature;
+        }
     });
 
     if (!tl.osType().match(/^Win/)) {
@@ -106,15 +162,38 @@ describe('IISWebsiteDeploymentOnMachineGroup test suite', function () {
 
     it('Runs Successfully with XDT Transformation (Mock)', async () => {
         this.timeout(1000);
-        let tp = path.join(__dirname, 'L0WindowsXdtTransformation.js');
-        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
+        const tr = await runWithFeatures('L0WindowsXdtTransformation.js', 'true', 'false');
 
         assert(tr.invokedToolCount == 2, 'should have invoked tool twice');
         let expectedErr = "loc_mock_XDTTransformationsappliedsuccessfully";
         assert(tr.stdout.search(expectedErr) >= 0);
         assert(tr.stderr.length == 0 && tr.errorIssues.length == 0, 'should not have written to stderr');
         assert(tr.succeeded, 'task should have succeeded');
+    });
+
+    it('Fails XDT transformation when compatibility feature is unset', async () => {
+        const tr = await runWithFeatures('L0WindowsXdtTransformation.js', undefined, 'false');
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('loc_mock_XdtTransformationFeatureDisabled'),
+            'should report that the XDT compatibility feature is disabled');
+    });
+
+    it('Fails XDT transformation when compatibility feature is false', async () => {
+        const tr = await runWithFeatures('L0WindowsXdtTransformation.js', 'false', 'false');
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained('loc_mock_XdtTransformationFeatureDisabled'),
+            'should report that the XDT compatibility feature is disabled');
+    });
+
+    it('Runs secure MSDeploy without requiring an 8.3 path', async () => {
+        const tr = await runWithFeatures('L0WindowsDefault.js', 'true', 'true');
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(tr.stdOutContained('secure-msdeploy-spawn:C:\\Program Files\\IIS\\Microsoft Web Deploy V3\\msdeploy.exe'),
+            'should spawn the full MSDeploy path containing spaces');
+        assert(!tr.stdOutContained('8.3 fallback invoked'), 'should not invoke the 8.3 path fallback');
     });
 
     it('Fails if XDT Transformation throws error (Mock)', async () => {

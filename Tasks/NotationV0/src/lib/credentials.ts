@@ -1,25 +1,32 @@
 import * as taskLib from 'azure-pipelines-task-lib/task';
-import * as fs from 'fs';
-import * as path from 'path';
 import { getSystemAccessToken } from 'azure-pipelines-tasks-artifacts-common/webapi';
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
+import { CredentialFile, writeCredentialFile } from './credentialFile';
 
-export async function getVaultCredentials(): Promise<[{ [key: string]: string }, String]> {
+export interface VaultCredentials {
+    env: { [key: string]: string };
+    credentialType: string;
+    // Must be removed with removeCredentialFile once the Notation operation completes.
+    credentialFile?: CredentialFile;
+}
+
+export async function getVaultCredentials(): Promise<VaultCredentials> {
     let connectedService = taskLib.getInput("azurekvServiceConection", true);
     if (!connectedService) {
         console.log(taskLib.loc('NoServiceConnection'));
-        return [{}, ""];
+        return { env: {}, credentialType: "" };
     }
 
     var authScheme = taskLib.getEndpointAuthorizationScheme(connectedService, true);
     if (!authScheme) {
         console.log(taskLib.loc('NoAuthScheme'));
-        return [{}, ""];
+        return { env: {}, credentialType: "" };
     }
 
     let envVariables = {};
     let credentialType = "";
+    let credentialFile: CredentialFile | undefined;
     switch (authScheme.toLocaleLowerCase()) {
         case "managedserviceidentity":
             // azure key vault plugin will automatially try managed idenitty
@@ -39,12 +46,11 @@ export async function getVaultCredentials(): Promise<[{ [key: string]: string },
                 if (!tempDir) {
                     throw new Error(taskLib.loc('TempDirectoryOrWorkingDirectoryNotSet'));
                 }
-                cliPassword = path.join(tempDir, 'spnCert.pem');
-                fs.writeFileSync(cliPassword, certificateContent);
+                credentialFile = writeCredentialFile(tempDir, 'spnCert.pem', certificateContent);
                 envVariables = {
                     "AZURE_TENANT_ID": tenantId,
                     "AZURE_CLIENT_ID": servicePrincipalId,
-                    "AZURE_CLIENT_CERTIFICATE_PATH": cliPassword,
+                    "AZURE_CLIENT_CERTIFICATE_PATH": credentialFile.filePath,
                 }
             }
             else {
@@ -63,17 +69,17 @@ export async function getVaultCredentials(): Promise<[{ [key: string]: string },
             var servicePrincipalId = taskLib.getEndpointAuthorizationParameter(connectedService, "serviceprincipalid", false);
             var tenantId = taskLib.getEndpointAuthorizationParameter(connectedService, "tenantid", false);
             const federatedToken = await getWorkloadIdToken(connectedService);
+            taskLib.setSecret(federatedToken);
             const extractPath = taskLib.getVariable('Agent.TempDirectory');
             if (!extractPath) {
                 throw new Error(taskLib.loc('TempDirectoryNotSet'));
             }
 
-            const tokenFile = path.join(extractPath, 'oidcToken');
-            fs.writeFileSync(tokenFile, federatedToken);
+            credentialFile = writeCredentialFile(extractPath, 'oidcToken', federatedToken);
             envVariables = {
                 "AZURE_TENANT_ID": tenantId,
                 "AZURE_CLIENT_ID": servicePrincipalId,
-                "AZURE_FEDERATED_TOKEN_FILE": tokenFile,
+                "AZURE_FEDERATED_TOKEN_FILE": credentialFile.filePath,
             }
             credentialType = "workloadid"
             break;
@@ -81,7 +87,7 @@ export async function getVaultCredentials(): Promise<[{ [key: string]: string },
             throw new Error(taskLib.loc('UnsupportedAuthScheme', authScheme));
     }
 
-    return [envVariables, credentialType];
+    return { env: envVariables, credentialType, credentialFile };
 }
 
 async function getWorkloadIdToken(connectedService: string): Promise<string> {

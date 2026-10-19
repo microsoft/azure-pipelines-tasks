@@ -1,10 +1,23 @@
 {
   "loc.friendlyName": "NuGet 認証",
-  "loc.helpMarkDown": "[このタスクの詳細を表示](https://aka.ms/NuGetAuthenticateTask)",
-  "loc.description": "Azure Artifacts とその他の NuGet リポジトリで認証するように NuGet ツールを構成します。NuGet 4.8.5385 以上、dotnet 2.1.400 以上、MSBuild 15.8.166.59604 以上が必要です",
+  "loc.helpMarkDown": "[このタスクの詳細](https://aka.ms/NuGetAuthenticateTask)",
+  "loc.description": "Azure Artifacts およびその他の NuGet リポジトリで認証するように NuGet ツールを構成します。NuGet 4.8.5385 以降、dotnet 6 以降、または MSBuild 15.8.166.59604 以降が必要です",
   "loc.instanceNameFormat": "NuGet 認証",
   "loc.input.label.nuGetServiceConnections": "この組織外のフィードへのサービス接続の資格情報",
   "loc.input.help.nuGetServiceConnections": "この組織またはコレクション外のフィードへの NuGet サービス接続名のコンマ区切りリストです。この組織またはコレクション内のフィードの場合は空白のままにします。ビルドの資格情報が自動的に使用されます。",
   "loc.input.label.forceReinstallCredentialProvider": "資格情報プロバイダーが既にインストールされている場合でも再インストールする",
-  "loc.input.help.forceReinstallCredentialProvider": "資格情報プロバイダーがユーザー プロファイルに既にインストールされている場合に、タスクで指定された資格情報プロバイダーでそれを上書きするかどうかを決定します。これにより、資格情報プロバイダーがアップグレード (場合によってはダウングレード) されることがあります。"
+  "loc.input.help.forceReinstallCredentialProvider": "資格情報プロバイダーがユーザー プロファイルに既にインストールされている場合に、タスクで指定された資格情報プロバイダーでそれを上書きするかどうかを決定します。これにより、資格情報プロバイダーがアップグレード (場合によってはダウングレード) されることがあります。",
+  "loc.input.help.feedUrl": "これを設定する場合は azureDevOpsServiceConnection が必須です。他のすべての入力は無視されます。nuGetServiceConnections と互換性がありません。フィード URL は NuGet サービス インデックス形式である必要があります (例: https://pkgs.dev.azure.com/{ORG_NAME}/{PROJECT}/_packaging/{FEED_NAME}/nuget/v3/index.json)",
+  "loc.input.label.feedUrl": "Azure Artifacts URL",
+  "loc.input.help.workloadIdentityServiceConnection": "これを設定した場合、feedUrl が必要です。他のすべての入力は無視されます。",
+  "loc.input.label.workloadIdentityServiceConnection": "'Azure DevOps' サービス接続",
+  "loc.messages.Error_ServiceConnectionExists": "エンドポイントには、すでに既存のサービス接続が存在します",
+  "loc.messages.Error_InvalidFeedUrl": "指定されたフィード URL '%s' は有効な Azure DevOps フィード URL ではありません。",
+  "loc.messages.Error_MissingFeedUrlOrServiceConnection": "feedUrl と azureDevOpsServiceConnection の両方を一緒に設定する必要があります。",
+  "loc.messages.Error_NuGetWithFeedUrlNotSupported": "入力パラメーターの nuGetServiceConnections と feedUrl を両方とも指定することはできません。",
+  "loc.messages.Error_NuGetWithWIFNotSupported": "入力パラメーターの nuGetServiceConnections と azureDevOpsServiceConnection(workloadIdentityServiceConnection) を両方とも指定することはできません。",
+  "loc.messages.Info_AddingFederatedFeedAuth": "サービス接続からフェデレーション資格情報を取得できません",
+  "loc.messages.Info_SuccessAddingFederatedFeedAuth": "フィード %s のサービス接続 %s から認証情報を追加しています",
+  "loc.messages.FailedToGetServiceConnectionAuth": "フィード %s の認証が正常に追加されました。",
+  "loc.messages.Warn_IgnoringFeedUrl": "feedUrl を無視します"
 }

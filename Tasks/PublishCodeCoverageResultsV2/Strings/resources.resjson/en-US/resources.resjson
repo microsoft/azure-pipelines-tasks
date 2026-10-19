@@ -9,6 +9,8 @@
   "loc.input.help.pathToSources": "Path to source files is required when coverage XML reports do not contain absolute path to source files. For e.g., JaCoCo reports do not use absolute paths and when publishing JaCoCo coverage for Java apps, the pattern would be similar to `$(System.DefaultWorkingDirectory)/MyApp/src/main/java/`.<br />This input is also needed if tests are run in a docker container. This input should point to absolute path to source files on the host. For e.g., `$(System.DefaultWorkingDirectory)/MyApp/`",
   "loc.input.label.failIfCoverageEmpty": "Fail if code coverage results are missing",
   "loc.input.help.failIfCoverageEmpty": "Fail the task if code coverage did not produce any results to publish.",
+  "loc.input.label.publishHtmlReport": "Publish HTML report",
+  "loc.input.help.publishHtmlReport": "Publish an HTML code coverage report. Disable this option to skip generating and publishing the HTML report.",
   "loc.messages.FoundNMatchesForPattern": "Found %s result(s) matching pattern: %s",
   "loc.messages.NoCodeCoverage": "No code coverage results were found to publish."
 }

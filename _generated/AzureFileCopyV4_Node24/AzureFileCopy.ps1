@@ -64,6 +64,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
@@ -105,6 +106,7 @@ Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
+$useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
 
 if ($useSanitizerCall) {
     $sanitizedArgumentsForBlobCopy = Protect-ScriptArguments -InputArgs $additionalArgumentsForBlobCopy -TaskName "AzureFileCopyV4"
@@ -112,12 +114,17 @@ if ($useSanitizerCall) {
 }
 
 if ($useSanitizerActivate) {
-    $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
-    $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    if ($useSourcePathHardening) {
+        $additionalArgumentsForBlobCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForBlobCopy
+        $additionalArgumentsForVMCopy = Join-SanitizedArguments -arguments $sanitizedArgumentsForVMCopy
+    }
+    else {
+        $additionalArgumentsForBlobCopy = $sanitizedArgumentsForBlobCopy -join " "
+        $additionalArgumentsForVMCopy = $sanitizedArgumentsForVMCopy -join " "
+    }
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try
     {
         # Importing required version of azure cmdlets according to azureps installed on machine
@@ -225,7 +232,8 @@ try {
                                 -destinationType $destination `
                                 -useDefaultArguments $useDefaultArgumentsForBlobCopy `
                                 -containerSasToken $containerSasToken `
-                                -useSanitizerActivate $useSanitizerActivate
+                                -useSanitizerActivate $useSanitizerActivate `
+                                -useSourcePathHardening $useSourcePathHardening
 
     # Complete the task if destination is azure blob
     if ($destination -eq "AzureBlob")
@@ -282,7 +290,8 @@ try {
                                                 -azCopyToolLocation $azCopyLocation `
                                                 -fileCopyJobScript $AzureFileCopyRemoteJob `
                                                 -enableDetailedLogging $enableDetailedLogging `
-                                                -useSanitizerActivate $useSanitizerActivate
+                                                -useSanitizerActivate $useSanitizerActivate `
+                                                -useSourcePathHardening $useSourcePathHardening
 
         Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
     }
@@ -302,5 +311,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $endpoint.Auth.Scheme -ErrorAction SilentlyContinue
 }

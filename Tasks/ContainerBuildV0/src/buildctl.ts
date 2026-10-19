@@ -51,70 +51,77 @@ export async function buildctlBuildAndPush() {
     // Connect to any specified container registry
     var isPoolProviderContext = process.env["RUNNING_ON"] == "KUBERNETES";
     let connection = new ContainerConnection(!isPoolProviderContext);
-    connection.open(null, registryAuthenticationToken, true, false);
-    let repositoryName = tl.getInput("repository");
-    if (!repositoryName) {
-        tl.warning("No repository is specified. Nothing will be pushed.");
-    }
 
-    let imageNames: string[] = [];
-    if (tl.getInput("dockerRegistryServiceConnection")) {
-        let imageName = connection.getQualifiedImageName(repositoryName, true);
-        if (imageName) {
-            imageNames.push(imageName);
+    try {
+        connection.open(null, registryAuthenticationToken, true, false);
+
+        let repositoryName = tl.getInput("repository");
+        if (!repositoryName) {
+            tl.warning("No repository is specified. Nothing will be pushed.");
         }
-    }
 
-    var dockerfilefolder = tl.getInput("Dockerfile", true);
-    if (dockerfilefolder == "Dockerfile") {
-        dockerfilefolder = ".";
-    }
-    else {
-        var index = dockerfilefolder.lastIndexOf("Dockerfile");
-        dockerfilefolder = dockerfilefolder.substring(0, index);
-        tl.debug("Dockerfilefolder path: " + dockerfilefolder);
+        let imageNames: string[] = [];
+        if (tl.getInput("dockerRegistryServiceConnection")) {
+            let imageName = connection.getQualifiedImageName(repositoryName, true);
+            if (imageName) {
+                imageNames.push(imageName);
+            }
+        }
 
-    }
-    var contextarg = "--local=context=" + tl.getInput("buildContext", true);
-    var dockerfilearg = "--local=dockerfile=" + dockerfilefolder;
-    var buildctlToolPath = tl.which("buildctl", true);
-    var buildctlTool = tl.tool(buildctlToolPath);
+        var dockerfilefolder = tl.getInput("Dockerfile", true);
+        if (dockerfilefolder == "Dockerfile") {
+            dockerfilefolder = ".";
+        }
+        else {
+            var index = dockerfilefolder.lastIndexOf("Dockerfile");
+            dockerfilefolder = dockerfilefolder.substring(0, index);
+            tl.debug("Dockerfilefolder path: " + dockerfilefolder);
 
-    buildctlTool.arg("build");
-    buildctlTool.arg('--frontend=dockerfile.v0');
-    buildctlTool.arg(contextarg);
-    buildctlTool.arg(dockerfilearg);
-    var imageNameandTag = ""
-    if (imageNames && imageNames.length > 0) {
-        imageNames.forEach(imageName => {
-            if (tags && tags.length > 0) {
-                tags.forEach(async tag => {
+        }
+        var contextarg = "--local=context=" + tl.getInput("buildContext", true);
+        var dockerfilearg = "--local=dockerfile=" + dockerfilefolder;
+        var buildctlToolPath = tl.which("buildctl", true);
+        var buildctlTool = tl.tool(buildctlToolPath);
+
+        buildctlTool.arg("build");
+        buildctlTool.arg('--frontend=dockerfile.v0');
+        buildctlTool.arg(contextarg);
+        buildctlTool.arg(dockerfilearg);
+        var imageNameandTag = ""
+        if (imageNames && imageNames.length > 0) {
+            imageNames.forEach(imageName => {
+                if (tags && tags.length > 0) {
+                    tags.forEach(async tag => {
+                        if (imageNameandTag)
+                        {
+                            imageNameandTag += ",";
+                        }
+                        imageNameandTag += imageName+":"+tag;
+                    })
+                }
+                else {
                     if (imageNameandTag)
                     {
                         imageNameandTag += ",";
                     }
-                    imageNameandTag += imageName+":"+tag;
-                })
-            }
-            else {
-                if (imageNameandTag)
-                {
-                    imageNameandTag += ",";
+                    imageNameandTag += imageName;
                 }
-                imageNameandTag += imageName;
-            }
-        })
-        buildctlTool.arg('--exporter=image');
-        buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
-        buildctlTool.arg('--exporter-opt=push=true');
-        buildctlTool.exec().then(() => {}).catch((error) => {
-            throw new Error(error.message);
-        });
+            })
+            buildctlTool.arg('--exporter=image');
+            buildctlTool.arg(`--exporter-opt=name=${imageNameandTag}`);
+            buildctlTool.arg('--exporter-opt=push=true');
+            await buildctlTool.exec().then(() => {}).catch((error) => {
+                throw new Error(error.message);
+            });
+        }
+        else {
+            // only build the image
+            await buildctlTool.exec().then(() => {}).catch((error) => {
+                throw new Error(error.message);
+            });
+        }
     }
-    else {
-        // only build the image
-        await buildctlTool.exec().then(() => {}).catch((error) => {
-            throw new Error(error.message);
-        });
+    finally {
+        try { connection.close(true); } catch (e) { tl.debug(`connection cleanup failed: ${e}`); }
     }
 }

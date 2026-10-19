@@ -77,7 +77,6 @@ class azureclitask {
       let outputStream: EchoStream = new EchoStream();
       let execOptions: IExecOptions = {
         errStream: outputStream as stream.Writable,
-        shell: true,
       } as IExecOptions;
 
       let result1 = tl.execSync('az', ["iot", "edge", "deployment", "delete", "--hub-name", iothub, "--deployment-id", configId], Constants.execSyncSilentOption);
@@ -188,8 +187,8 @@ class imagevalidationtask {
       if (credentials) {
         Object.keys(credentials).forEach((key: string) => {
           let credential = credentials[key];
-          let loginResult = tl.execSync("docker", ["login", credential.address, "-u", credential.username, "-p", credential.password], Constants.execSyncSilentOption);
-          tl.debug(JSON.stringify(loginResult));
+          let loginResult = util.dockerLogin(credential.address, credential.username, credential.password);
+          tl.debug(JSON.stringify({ code: loginResult.code }));
           if (loginResult.code != 0) {
             tl.warning(tl.loc("InvalidRegistryCredentialWarning", credential.address, loginResult.stderr));
           } else {
@@ -247,12 +246,12 @@ export async function run(telemetryEvent: TelemetryEvent): Promise<void> {
   }
 
   for (let path of findPaths) {
-    console.log(path);
+    tl.debug(path);
   }
 
   let deploymentJson: any = null;
   for (let path of findPaths) {
-    console.log(tl.loc('CheckValidJson', path));
+    tl.debug(tl.loc('CheckValidJson', path));
     try {
       deploymentJson = JSON.parse(fs.readFileSync(path, Constants.UTF8 as BufferEncoding));
     } catch (e) {

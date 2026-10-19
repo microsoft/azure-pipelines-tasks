@@ -8,7 +8,7 @@ When modifying any file under a task directory (`Tasks/<TaskName>/`), the task v
 
 ## Minor / Patch bumps
 
-1. Fetch the current sprint from https://whatsprintis.it/?json
+1. Calculate the current sprint and week by running `node ci/sprint.js`.
 2. If the sprint week is past Tuesday of week 3 (i.e., week > 3, or week == 3 and today is after Tuesday), target `Minor = sprint + 1`. Otherwise target `Minor = sprint`.
 3. If the task's current `Minor` already equals the target, increment `Patch` by 1.
 4. If the task's current `Minor` differs from the target, set `Minor` to the target and reset `Patch` to 0.

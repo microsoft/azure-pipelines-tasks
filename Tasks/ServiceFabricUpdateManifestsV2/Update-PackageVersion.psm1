@@ -1,4 +1,6 @@
-﻿function Update-PackageVersion
+﻿. "$PSScriptRoot\Assert-ValidManifestPathSegment.ps1"
+
+function Update-PackageVersion
 {
     [CmdletBinding()]
     [OutputType([string])]
@@ -75,6 +77,7 @@
                 if ($LogAllChanges -or !$updatePackageVersion)
                 {
                     # Search the package files for differences (Unless the user doesn't want to log all changes and we already know the package xml changed)
+                    Assert-ValidManifestPathSegment -Name $packageName -ElementDescription "$($NewPackageXml.LocalName)/@Name"
                     $newPackagePath = Join-Path $NewPackageRoot $packageName
                     $oldPackagePath = Join-Path $OldPackageRoot $packageName
 
