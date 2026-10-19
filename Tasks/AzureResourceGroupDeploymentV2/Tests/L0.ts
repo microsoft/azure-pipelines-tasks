@@ -19,6 +19,87 @@ describe('Azure Resource Group Deployment', function () {
     describe('Logging command sanitization', runSanitizeTests);
     describe('Agent compatibility', runAgentCompatibilityTests);
 
+    describe('Percent decoding output compatibility', () => {
+        const cases = [
+            { value: undefined, decodes: true },
+            { value: '', decodes: true },
+            { value: 'true', decodes: true },
+            { value: '1', decodes: true },
+            { value: '$true', decodes: true },
+            { value: 'false', decodes: false },
+            { value: ' true ', decodes: false },
+            { value: '   ', decodes: false }
+        ];
+        for (const flagEnabled of [false, true]) {
+            for (const testCase of cases) {
+                it(`Preserves percent outputs with FF=${flagEnabled} and DECODE_PERCENTS=${JSON.stringify(testCase.value)}`, async () => {
+                    const settings: { [name: string]: string | undefined } = {
+                        csmFile: 'CSM.json',
+                        csmParametersFile: 'CSM.json',
+                        deploymentOutputs: 'someVar',
+                        percentDeploymentOutputs: 'true',
+                        useWithoutJSON: 'false',
+                        agentVersion: '3.245.0',
+                        DISTRIBUTEDTASK_TASKS_ENABLESAFEARMDEPLOYMENTOUTPUTVARIABLES: String(flagEnabled),
+                        DECODE_PERCENTS: testCase.value
+                    };
+                    const originalValues = Object.keys(settings).map(name => [name, process.env[name]]);
+                    let tr;
+                    try {
+                        for (const name of Object.keys(settings)) {
+                            if (settings[name] === undefined) {
+                                delete process.env[name];
+                            } else {
+                                process.env[name] = settings[name];
+                            }
+                        }
+                        tr = new ttm.MockTestRunner(path.join(__dirname, 'createOrUpdate.js'));
+                        await tr.runAsync();
+                        assert(tr.succeeded, "Should have succeeded");
+                        const commands = tr.stdout.split(/\r?\n/)
+                            .map(line => tryParseAgentCommand(line, testCase.decodes))
+                            .filter(command => command && command.area === 'task' && command.event === 'setvariable');
+                        const individual = commands.find(command => command.properties.variable === 'someVar.percent%name.value');
+                        assert(individual, 'the declared percent-containing variable name should be preserved');
+                        assert.strictEqual(individual.data, '"https://host/a%20b"', 'the percent in the value should round-trip');
+                        const aggregate = commands.find(command => command.properties.variable === 'someVar');
+                        assert(aggregate, 'the aggregate output should be published');
+                        assert.deepStrictEqual(JSON.parse(aggregate.data), {
+                            'percent%name': { type: 'string', value: 'https://host/a%20b' }
+                        }, 'the aggregate output should preserve the percent characters');
+                        const warned = parseAgentCommands(tr.stdout)
+                            .filter(cmd => cmd.area + '.' + cmd.event === "task.issue" && cmd.properties.type === "warning");
+                        assert.strictEqual(
+                            warned.some(cmd => cmd.data.indexOf("loc_mock_SafeOutputVariablesPercentDecodingDisabled") >= 0),
+                            flagEnabled && !testCase.decodes,
+                            'only enabled, incompatible configurations should emit a fallback warning');
+                        assert(
+                            !warned.some(cmd => cmd.data.indexOf("loc_mock_OutputVariableNameChanged") >= 0),
+                            'an ordinary percent should not trigger a rename warning');
+                        assert.strictEqual(
+                            tr.stdout.includes('variable=someVar.percent%AZP25name.value;]'),
+                            flagEnabled && testCase.decodes,
+                            'compatible flag-on runs should retain the safe command writer');
+                    } catch (error) {
+                        if (tr) {
+                            console.log("STDERR", tr.stderr);
+                            console.log("STDOUT", tr.stdout);
+                        }
+                        throw error;
+                    } finally {
+                        for (const [name, value] of originalValues) {
+                            if (value === undefined) {
+                                delete process.env[name];
+                            } else {
+                                process.env[name] = value;
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    });
+
     before(async () => {
         // Create required temp directories for tests
         const tempDir = "C:\\temp\\agent\\home\\temp";

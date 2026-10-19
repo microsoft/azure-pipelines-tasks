@@ -67,7 +67,7 @@ export function runAgentCompatibilityTests() {
         });
 
         it('Should treat the values the agent accepts as decoding enabled', () => {
-            for (const value of ['true', 'TRUE', '1', '$true', ' true ']) {
+            for (const value of ['true', 'TRUE', '1', '$true', '$TRUE']) {
                 process.env["DECODE_PERCENTS"] = value;
                 assert.strictEqual(isPercentDecodingDisabled(), false, `'${value}' should enable decoding`);
             }
@@ -90,8 +90,15 @@ export function runAgentCompatibilityTests() {
         });
 
         it('Should ignore an empty knob and use the default', () => {
-            process.env["DECODE_PERCENTS"] = "   ";
+            process.env["DECODE_PERCENTS"] = "";
             assert.strictEqual(isPercentDecodingDisabled(), false);
+        });
+
+        it('Should not trim whitespace from a configured knob', () => {
+            for (const value of [' true ', 'true ', ' true', ' 1 ', ' $true ', ' ', '   ', '\t', '\ttrue\t', '\r\n']) {
+                process.env["DECODE_PERCENTS"] = value;
+                assert.strictEqual(isPercentDecodingDisabled(), true, `${JSON.stringify(value)} should disable decoding`);
+            }
         });
     });
 }
