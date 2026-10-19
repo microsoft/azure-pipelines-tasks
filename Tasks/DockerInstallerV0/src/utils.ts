@@ -9,10 +9,17 @@ import * as util from "util";
 
 const uuidV4 = require('uuid/v4');
 const dockerToolName = "docker";
+const allowedReleaseTypes: ReadonlyArray<string> = ["stable", "edge", "test", "nightly"];
 const isWindows = os.type().match(/^Win/);
 const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
 
 export async function downloadDocker(version: string, releaseType: string): Promise<string> {
+    if (allowedReleaseTypes.indexOf(releaseType) === -1) {
+        throw new Error(tl.loc("InvalidReleaseType", allowedReleaseTypes.join(", ")));
+    }
+    if (isWindows && releaseType === "nightly") {
+        throw new Error(tl.loc("NightlyNotSupportedOnWindows"));
+    }
 
     //docker does not follow strict semversion and has leading zeros in versions <10
     var cleanVersion = version.replace(/(0+)([1-9]+)/, "$2");
