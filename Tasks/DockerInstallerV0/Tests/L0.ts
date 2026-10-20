@@ -30,9 +30,9 @@ describe('DockerInstallerV0 Suite', function () {
         }
     });
 
-    async function runReleaseType(releaseType: string, cached: boolean, platform: string = 'Linux'): Promise<ttm.MockTestRunner> {
+    async function runReleaseType(releaseType: string, cached: boolean, platform: string = 'Linux', featureValue?: string): Promise<ttm.MockTestRunner> {
         const previousTestCase = process.env['DOCKER_INSTALLER_TEST_CASE'];
-        process.env['DOCKER_INSTALLER_TEST_CASE'] = JSON.stringify({ releaseType, cached, platform });
+        process.env['DOCKER_INSTALLER_TEST_CASE'] = JSON.stringify({ releaseType, cached, platform, featureValue });
         try {
             const tr = new ttm.MockTestRunner(path.join(__dirname, 'L0ReleaseType.js'));
             await tr.runAsync();
@@ -53,6 +53,20 @@ describe('DockerInstallerV0 Suite', function () {
         assert.strictEqual(tr.invokedToolCount, 0, tr.stdout);
     }
 
+    function assertInstallOperations(tr: ttm.MockTestRunner, releaseType: string, cached: boolean): void {
+        assert(tr.succeeded, tr.stdout + tr.stderr);
+        assert(tr.stdOutContained(`findLocalTool: docker-${releaseType}, 28.5.2`), tr.stdout);
+        assert.strictEqual(tr.stdOutContained('downloadTool:'), !cached, tr.stdout);
+        assert.strictEqual(tr.stdOutContained('cacheFile:'), !cached, tr.stdout);
+        if (!cached) {
+            assert(tr.stdOutContained(`/static/${releaseType}/`), tr.stdout);
+            assert(tr.stdOutContained(`cacheFile: docker-${releaseType}, 28.5.2`), tr.stdout);
+        }
+        assert(tr.stdOutContained('chmodSync:'), tr.stdout);
+        assert(tr.stdOutContained('prependPath:'), tr.stdout);
+        assert.strictEqual(tr.invokedToolCount, 1, tr.stdout);
+    }
+
     for (const platform of ['Linux', 'Darwin', 'Windows_NT']) {
         for (const releaseType of allowedReleaseTypes) {
             for (const cached of [true, false]) {
@@ -65,13 +79,7 @@ describe('DockerInstallerV0 Suite', function () {
                         assert(tr.stdOutContained('NightlyNotSupportedOnWindows'), tr.stdout);
                         assertNoInstallOperations(tr);
                     } else {
-                        assert(tr.succeeded, tr.stdout + tr.stderr);
-                        assert(tr.stdOutContained(`findLocalTool: docker-${releaseType}, 28.5.2`), tr.stdout);
-                        assert.strictEqual(tr.stdOutContained('downloadTool:'), !cached, tr.stdout);
-                        assert.strictEqual(tr.stdOutContained('cacheFile:'), !cached, tr.stdout);
-                        assert(tr.stdOutContained('chmodSync:'), tr.stdout);
-                        assert(tr.stdOutContained('prependPath:'), tr.stdout);
-                        assert.strictEqual(tr.invokedToolCount, 1, tr.stdout);
+                        assertInstallOperations(tr, releaseType, cached);
                     }
                 });
             }
@@ -100,5 +108,36 @@ describe('DockerInstallerV0 Suite', function () {
             assert(tr.stdOutContained(allowedReleaseTypes.join(', ')), tr.stdout);
             assertNoInstallOperations(tr);
         });
+    }
+
+    for (const featureValue of [undefined, '', 'true', 'TrUe', '0', ' false ']) {
+        for (const testCase of [
+            { releaseType: '../../../repo-tools', platform: 'Linux', error: 'InvalidReleaseType' },
+            { releaseType: 'nightly', platform: 'Windows_NT', error: 'NightlyNotSupportedOnWindows' }
+        ]) {
+            it(`Keeps validation enabled for ${testCase.releaseType} with flag ${JSON.stringify(featureValue)}`, async () => {
+                const tr = await runReleaseType(testCase.releaseType, true, testCase.platform, featureValue);
+
+                assert(tr.failed, tr.stdout + tr.stderr);
+                assert(tr.stdOutContained(testCase.error), tr.stdout);
+                assertNoInstallOperations(tr);
+            });
+        }
+    }
+
+    for (const featureValue of ['false', 'False', 'FALSE', 'fAlSe']) {
+        for (const testCase of [
+            { releaseType: '../../../repo-tools', platform: 'Linux' },
+            { releaseType: 'Stable', platform: 'Linux' },
+            { releaseType: 'nightly', platform: 'Windows_NT' }
+        ]) {
+            for (const cached of [true, false]) {
+                it(`Restores legacy ${testCase.releaseType} on ${testCase.platform} with flag "${featureValue}" and a cache ${cached ? 'hit' : 'miss'}`, async () => {
+                    const tr = await runReleaseType(testCase.releaseType, cached, testCase.platform, featureValue);
+
+                    assertInstallOperations(tr, testCase.releaseType, cached);
+                });
+            }
+        }
     }
 });

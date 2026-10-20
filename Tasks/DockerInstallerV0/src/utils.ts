@@ -14,11 +14,15 @@ const isWindows = os.type().match(/^Win/);
 const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
 
 export async function downloadDocker(version: string, releaseType: string): Promise<string> {
-    if (allowedReleaseTypes.indexOf(releaseType) === -1) {
-        throw new Error(tl.loc("InvalidReleaseType", allowedReleaseTypes.join(", ")));
-    }
-    if (isWindows && releaseType === "nightly") {
-        throw new Error(tl.loc("NightlyNotSupportedOnWindows"));
+    const isDockerInstallerV0ReleaseTypeValidationFixEnabled =
+        (tl.getVariable('DistributedTask.Tasks.DockerInstallerV0ReleaseTypeValidationFixEnabled') || '').toLowerCase() !== 'false';
+    if (isDockerInstallerV0ReleaseTypeValidationFixEnabled) {
+        if (allowedReleaseTypes.indexOf(releaseType) === -1) {
+            throw new Error(tl.loc("InvalidReleaseType", allowedReleaseTypes.join(", ")));
+        }
+        if (isWindows && releaseType === "nightly") {
+            throw new Error(tl.loc("NightlyNotSupportedOnWindows"));
+        }
     }
 
     //docker does not follow strict semversion and has leading zeros in versions <10
