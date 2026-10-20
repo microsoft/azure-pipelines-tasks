@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
-    "Patch": 1
+    "Minor": 282,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -63,6 +63,8 @@
     }
   },
   "messages": {
+    "InvalidReleaseType": "ms-resource:loc.messages.InvalidReleaseType",
+    "NightlyNotSupportedOnWindows": "ms-resource:loc.messages.NightlyNotSupportedOnWindows",
     "DownloadDockerFailedFromLocation": "ms-resource:loc.messages.DownloadDockerFailedFromLocation",
     "DockerNotFoundInFolder": "ms-resource:loc.messages.DockerNotFoundInFolder",
     "DockerDownloadFailed": "ms-resource:loc.messages.DockerDownloadFailed",
