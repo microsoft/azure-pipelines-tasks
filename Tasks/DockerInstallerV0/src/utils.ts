@@ -15,7 +15,7 @@ const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
 
 export async function downloadDocker(version: string, releaseType: string): Promise<string> {
     const isDockerInstallerV0ReleaseTypeValidationFixEnabled =
-        (tl.getVariable('DistributedTask.Tasks.DockerInstallerV0ReleaseTypeValidationFixEnabled') || '').toLowerCase() !== 'false';
+        tl.getPipelineFeature('DockerInstallerV0ReleaseTypeValidationFixEnabled');
     if (isDockerInstallerV0ReleaseTypeValidationFixEnabled) {
         if (allowedReleaseTypes.indexOf(releaseType) === -1) {
             throw new Error(tl.loc("InvalidReleaseType", allowedReleaseTypes.join(", ")));

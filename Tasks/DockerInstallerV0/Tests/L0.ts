@@ -72,7 +72,7 @@ describe('DockerInstallerV0 Suite', function () {
             for (const cached of [true, false]) {
                 const shouldReject = platform === 'Windows_NT' && releaseType === 'nightly';
                 it(`${shouldReject ? 'Rejects' : 'Installs'} ${releaseType} on ${platform} with a cache ${cached ? 'hit' : 'miss'}`, async () => {
-                    const tr = await runReleaseType(releaseType, cached, platform);
+                    const tr = await runReleaseType(releaseType, cached, platform, 'true');
 
                     if (shouldReject) {
                         assert(tr.failed, tr.stdout + tr.stderr);
@@ -101,7 +101,7 @@ describe('DockerInstallerV0 Suite', function () {
         '$(releaseType)'
     ]) {
         it(`Rejects invalid release type ${JSON.stringify(releaseType)} before using the cache`, async () => {
-            const tr = await runReleaseType(releaseType, true);
+            const tr = await runReleaseType(releaseType, true, 'Linux', 'true');
 
             assert(tr.failed, tr.stdout + tr.stderr);
             assert(tr.stdOutContained('InvalidReleaseType'), tr.stdout);
@@ -110,29 +110,31 @@ describe('DockerInstallerV0 Suite', function () {
         });
     }
 
-    for (const featureValue of [undefined, '', 'true', 'TrUe', '0', ' false ']) {
+    for (const featureValue of ['true', 'True', 'TRUE', 'tRuE']) {
         for (const testCase of [
             { releaseType: '../../../repo-tools', platform: 'Linux', error: 'InvalidReleaseType' },
             { releaseType: 'nightly', platform: 'Windows_NT', error: 'NightlyNotSupportedOnWindows' }
         ]) {
-            it(`Keeps validation enabled for ${testCase.releaseType} with flag ${JSON.stringify(featureValue)}`, async () => {
-                const tr = await runReleaseType(testCase.releaseType, true, testCase.platform, featureValue);
+            for (const cached of [true, false]) {
+                it(`Enables validation for ${testCase.releaseType} with flag ${JSON.stringify(featureValue)} and a cache ${cached ? 'hit' : 'miss'}`, async () => {
+                    const tr = await runReleaseType(testCase.releaseType, cached, testCase.platform, featureValue);
 
-                assert(tr.failed, tr.stdout + tr.stderr);
-                assert(tr.stdOutContained(testCase.error), tr.stdout);
-                assertNoInstallOperations(tr);
-            });
+                    assert(tr.failed, tr.stdout + tr.stderr);
+                    assert(tr.stdOutContained(testCase.error), tr.stdout);
+                    assertNoInstallOperations(tr);
+                });
+            }
         }
     }
 
-    for (const featureValue of ['false', 'False', 'FALSE', 'fAlSe']) {
+    for (const featureValue of [undefined, '', 'false', 'False', 'FALSE', 'fAlSe', '0', ' false ', ' true ']) {
         for (const testCase of [
             { releaseType: '../../../repo-tools', platform: 'Linux' },
             { releaseType: 'Stable', platform: 'Linux' },
             { releaseType: 'nightly', platform: 'Windows_NT' }
         ]) {
             for (const cached of [true, false]) {
-                it(`Restores legacy ${testCase.releaseType} on ${testCase.platform} with flag "${featureValue}" and a cache ${cached ? 'hit' : 'miss'}`, async () => {
+                it(`Keeps legacy ${testCase.releaseType} on ${testCase.platform} with flag ${JSON.stringify(featureValue)} and a cache ${cached ? 'hit' : 'miss'}`, async () => {
                     const tr = await runReleaseType(testCase.releaseType, cached, testCase.platform, featureValue);
 
                     assertInstallOperations(tr, testCase.releaseType, cached);

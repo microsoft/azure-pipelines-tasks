@@ -8,10 +8,12 @@ const testCase: { releaseType: string; cached: boolean; platform: string; featur
 const tr = new tmrm.TaskMockRunner(path.join(__dirname, '..', 'src', 'dockertoolinstaller.js'));
 tr.setInput('dockerVersion', '28.5.2');
 tr.setInput('releaseType', testCase.releaseType);
-tr.registerMockExport('getVariable', (name: string) =>
-    name === 'DistributedTask.Tasks.DockerInstallerV0ReleaseTypeValidationFixEnabled'
-        ? testCase.featureValue
-        : process.env[name.replace(/[.\s]/g, '_').toUpperCase()]);
+const featureVariable = 'DISTRIBUTEDTASK_TASKS_DOCKERINSTALLERV0RELEASETYPEVALIDATIONFIXENABLED';
+if (testCase.featureValue === undefined) {
+    delete process.env[featureVariable];
+} else {
+    process.env[featureVariable] = testCase.featureValue;
+}
 
 const dockerExecutable = testCase.platform === 'Windows_NT' ? 'docker.exe' : 'docker';
 const cachedToolPath = path.join(__dirname, 'tool-cache');
