@@ -21,7 +21,7 @@ export abstract class ArtifactDetailsDownloaderBase {
             }
 
             console.log(tl.loc("UploadingAttachment", filePath));
-            console.log(`##vso[task.uploadfile]${filePath}`);
+            tl.uploadFile(filePath);
             defer.resolve(null);
         });
 

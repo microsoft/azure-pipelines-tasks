@@ -1,10 +1,18 @@
 {
+    "common": [
+        {
+            "module": "../Common/ExternalOutput",
+            "type": "node",
+            "compile": true
+        }
+    ],
     "rm": [
         {
             "items": [                
                 "node_modules/azure-pipelines-tasks-azure-arm-rest-v2/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/azure-pipelines-task-lib",
                 "node_modules/artifact-engine/node_modules/azure-pipelines-task-lib",
+                "node_modules/azure-pipelines-tasks-external-output/node_modules/azure-pipelines-task-lib",
                 "node_modules/azure-pipelines-tasks-azure-arm-rest/node_modules/agent-base",
                 "node_modules/https-proxy-agent/node_modules/agent-base"
             ],

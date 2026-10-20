@@ -14,6 +14,7 @@ import * as engine from "artifact-engine/Engine"
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
+import { filterConsoleLog } from "azure-pipelines-tasks-external-output";
 import * as extract from 'extract-zip'
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
@@ -105,8 +106,11 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 }
 
 async function doWork() {
+    // Jenkins-provided names and paths reach the log through console.log (also from artifact-engine), so filter all of it.
+    const outputOptions = filterConsoleLog('remote', ['telemetry.publish']);
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        publishEvent('remoteOutputFiltering', { vsoCommandMode: outputOptions.vsoCommandMode });
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);

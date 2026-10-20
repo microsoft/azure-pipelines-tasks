@@ -504,5 +504,21 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
             throw err;
         }
     });
+
+    it('Should neutralize logging commands in Jenkins-provided output', async () => {
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(path.join(__dirname, 'L0FiltersArtifactEngineOutput.js'));
+        await tr.runAsync();
+
+        assert(tr.succeeded, tr.stdout);
+        assert(tr.stdout.indexOf('##vso[task.setvariable') === -1, tr.stdout);
+        assert(tr.stdout.indexOf('x##_vso[task.setvariable variable=injected]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('myfreestyleproject##_vso[task.complete result=Failed]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('##vso[telemetry.publish area=artifact-engine;feature=performance]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('"commandName":"task.setvariable","blocked":true') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('"commandName":"task.complete","blocked":true') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('"vsoCommandMode":"blockAndTelemetry"') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=remoteOutputFiltering]') !== -1, tr.stdout);
+        assert(tr.stdout.indexOf('##vso[task.uploadfile]') !== -1, tr.stdout);
+    });
 });
 
