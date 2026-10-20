@@ -14,7 +14,7 @@ function Add-DbghelpLibrary {
                 $isExpectedLibraryLoaded = $true
                 Write-Verbose "Module dbghelp.dll is already loaded from the expected file path: $dbghelpPath"
             } else {
-                Write-Verbose "Module dbghelp.dll is already loaded from a different file path and will not be used: $($module.FileName)"
+                Write-Verbose (Get-VstsLocString -Key UnexpectedDbghelpdllExpected0Actual1 -ArgumentList $dbghelpPath, $module.FileName)
             }
 
             # Don't short-circuit the loop. The module could be loaded more
@@ -200,7 +200,7 @@ function Initialize-DbghelpNativeMethods {
     }
 
     Write-Verbose "Adding dbghelp native wrappers for: $DbghelpPath"
-    $dbghelpLiteralPath = $DbghelpPath.Replace('\', '\\')
+    $dbghelpLiteralPath = $DbghelpPath.Replace('"', '""')
     $typeDefinition = @'
 namespace IndexHelpers.Dbghelp
 {
@@ -216,10 +216,10 @@ namespace IndexHelpers.Dbghelp
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr LoadLibrary(string dllToLoad);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool SymCleanup(IntPtr hProcess);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymEnumSourceFilesW")]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymEnumSourceFilesW")]
         public static extern bool SymEnumSourceFiles(
             IntPtr hProcess,
             ulong ModeBase,
@@ -246,16 +246,16 @@ namespace IndexHelpers.Dbghelp
             return SymEnumSourceFiles(hProcess, ModeBase, null, enumSourceFilesCallBack, IntPtr.Zero);
         }
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymGetModuleInfoW64")]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymGetModuleInfoW64")]
         public static extern bool SymGetModuleInfo64(
             IntPtr hProcess,
             ulong dwAddr,
             ref IMAGEHLP_MODULE64 ModuleInfo);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymInitializeW")]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymInitializeW")]
         public static extern bool SymInitialize(IntPtr hProcess, string UserSearchPath, bool fInvadeProcess);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymLoadModuleExW")]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymLoadModuleExW")]
         public static extern ulong SymLoadModuleEx(
             IntPtr hProcess,
             SafeFileHandle hFile,
@@ -266,10 +266,10 @@ namespace IndexHelpers.Dbghelp
             IntPtr Data,
             uint Flags);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern SymOptions SymSetOptions(SymOptions SymOptions);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymSrvGetFileIndexesW")]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymSrvGetFileIndexesW")]
         public static extern bool SymSrvGetFileIndexes(
             string file,
             ref Guid Id,
@@ -277,7 +277,7 @@ namespace IndexHelpers.Dbghelp
             ref uint Val2,
             uint Flags);
 
-        [DllImport("__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool SymUnloadModule64(
             IntPtr hProcess,
             ulong BaseOfDll);
