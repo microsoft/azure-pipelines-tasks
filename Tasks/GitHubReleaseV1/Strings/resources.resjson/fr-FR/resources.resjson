@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "Impossible de charger '%s', car il s'agit d'un répertoire. Spécifiez un fichier.",
   "loc.messages.SearchingFileMatchingPattern": "Recherche de fichier(s) correspondant à '%s'.",
   "loc.messages.IssuesFetchError": "Erreur durant la récupération (fetch) des problèmes. Impossible de générer le journal des modifications.",
+  "loc.messages.NonBlockingIssuesFetchError": "Erreurs GraphQL d’extraction de problèmes non bloquantes rencontrées : %s",
   "loc.messages.NoIssuesLinkedError": "Aucun problème n'est lié aux commits dans la comparaison des différences de commit spécifiée.",
   "loc.messages.LabelsSyntaxError": "Une erreur s'est produite durant l'analyse des étiquettes. Pour la syntaxe YAML, consultez : https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "Attribut ChangeLogType non valide : %s. Seules les options 'commitBased' ou 'issueBased' sont autorisées. Pour la syntaxe YAML, consultez : https://aka.ms/AA3m1bq",

@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "タスク終了後、ルールを削除します",
   "loc.input.help.DeleteFirewallRule": "選択されている場合、追加された自動化エージェントの IP アドレスの例外は、対応する Azure Database for MySQL に対して除外されます。",
   "loc.messages.ARGD_ConstructorFailed": "初期化中にタスクが失敗しました。エラー: %s",
+  "loc.messages.InvalidDatabaseName": "データベース名 '%s' は無効です。使用できるのは、英数字、アンダースコア、ハイフン、ドル記号のみです。",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "ファイアウォール規則名を null 値にすることはできません。",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "ファイアウォール アドレスを null 値にすることはできません。",
   "loc.messages.StartIpAddressCannotBeEmpty": "ファイアウォール規則の開始 IP アドレスを null 値にすることはできません。",

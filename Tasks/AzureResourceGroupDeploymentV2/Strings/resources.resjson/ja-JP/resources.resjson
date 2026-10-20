@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "VM '%s' の拡張機能の一覧を取得できませんでした。エラー: '%s'",
   "loc.messages.ExtensionNotFound": "VM %s に拡張機能が見つかりません",
   "loc.messages.AddedOutputVariable": "出力変数 '%s' が更新されました。この変数には、現在の配置オブジェクトの出力セクションが文字列形式で格納されています。",
+  "loc.messages.OutputVariableNameChanged": "出力変数名 '%s' は、変数の発行時に以前は別の名前にデコードまたは切り詰められていました。宣言された名前が文字どおり使用されるようになりました。パイプラインで以前の名前を参照していた場合は、宣言された名前に更新してください。",
   "loc.messages.UnableToFetchAuthorityURL": "機関の URL をフェッチできません。",
   "loc.messages.UnableToFetchActiveDirectory": "Active Directory リソース ID をフェッチできません。",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定された AzureRm サービス接続の URL: '{0}' が無効です。",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "Azure Resource Manager テンプレートで検証エラーが見つかりました。これにより、テンプレートのデプロイが失敗する可能性があります。%s。https://docs.microsoft.com/ja-jp/azure/azure-resource-manager/templates/template-syntax の内容に従ってください",
   "loc.messages.ManagedServiceIdentityDetails": "デプロイに使用するマネージド サービス ID に、リソース グループ %s に対する適切なロールが割り当てられていることを確認してください。詳細については次のリンクをご覧ください: https://docs.microsoft.com/ja-jp/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "仮想マシン '%s' でエラーが発生しました。%s",
-  "loc.messages.TroubleshootingGuide": "トラブルシューティング ガイドを参照して、自分の問題が取り上げられていないかご確認ください。https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "トラブルシューティング ガイドを参照して、自分の問題が取り上げられていないかご確認ください。https://docs.microsoft.com/ja-jp/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }
