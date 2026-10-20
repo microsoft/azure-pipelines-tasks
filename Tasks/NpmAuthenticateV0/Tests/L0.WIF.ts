@@ -117,7 +117,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
     });
 
-    it('skips an HTTP registry even when selected by feedUrl', async () => {
+    it('fails when feedUrl is an HTTP registry', async () => {
         const httpRegistry = 'http://pkgs.dev.azure.com/testorg/_packaging/HttpFeed/npm/registry/';
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${httpRegistry}`);
 
@@ -128,9 +128,8 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             [TestEnvVars.wifToken]: TestData.wifToken
         });
 
-        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertFailure(tr);
         assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
-        TestHelpers.assertOutputContains(tr, 'Info_SkippingNonHttpsWifRegistry');
         TestHelpers.assertOutputNotContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
 
@@ -201,6 +200,72 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
         // Assert
         TestHelpers.assertFailure(tr, 'Task should fail when federated token acquisition throws');
+    });
+
+    describe('registry host verification', function () {
+        const untrustedRegistry = 'https://registry.example.com/npm/registry/';
+
+        it('fails and writes no credentials when feedUrl is not an Azure Artifacts feed', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${untrustedRegistry}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifRegistryUrl]: untrustedRegistry,
+                [TestEnvVars.wifToken]: TestData.wifToken
+            });
+
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+            TestHelpers.assertOutputNotContains(tr, TestData.wifToken);
+        });
+
+        it('does not write the WIF token for a non-Azure Artifacts registry when no feedUrl is given', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc('registry=https://user:s3cret@registry.example.com/npm/registry/?token=abc');
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifToken]: TestData.wifToken
+            });
+
+            TestHelpers.assertSuccess(tr);
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+            TestHelpers.assertOutputContains(tr, 'Info_SkippingUnverifiedWifRegistry registry.example.com');
+            TestHelpers.assertOutputNotContains(tr, 's3cret');
+        });
+
+        it('authenticates only the Azure Artifacts registry in a mixed .npmrc', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc(
+                `registry=${untrustedRegistry}\n@scope:registry=${TestData.wifRegistryUrl}`
+            );
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifToken]: TestData.wifToken
+            });
+
+            TestHelpers.assertSuccess(tr);
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), [
+                `//pkgs.dev.azure.com/testorg/_packaging/WifFeed/npm/registry/:_authToken=${TestData.wifToken}`
+            ]);
+        });
+
+        it('rejects an encoded-dot host that resolves to a different domain', async () => {
+            const encodedHostRegistry = 'https://pkgs.dev.azure.com%2eevil.example/npm/registry/';
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${encodedHostRegistry}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifToken]: TestData.wifToken
+            });
+
+            TestHelpers.assertSuccess(tr);
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        });
     });
 
     describe('feedUrl matching normalization', function () {

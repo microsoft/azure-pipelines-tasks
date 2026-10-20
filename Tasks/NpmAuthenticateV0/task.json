@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 4
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
@@ -117,6 +117,8 @@
     "Warning_HomeDirectoryNotWritable": "Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.",
     "Error_NoWritableBackupDirectory": "Unable to determine a writable npmAuthenticate backup directory.",
     "Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
+    "Info_SkippingUnverifiedWifRegistry": "Skipping WIF authentication for registry %s because it is not an Azure Artifacts feed.",
+    "Error_WifFeedUrlNotVerified": "The feedUrl input cannot be used with the workload identity service connection: %s",
     "Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
     "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
