@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "Die ausführbare Buildctl-Datei wurde nicht im Pfad \"%s\" gefunden.",
   "loc.messages.FileContentSynced": "Der Inhalt der Datei wurde auf dem Datenträger synchronisiert. Der Inhalt ist \"%s\".",
   "loc.messages.VerifyBuildctlInstallation": "Die Buildctl-Installation wird überprüft...",
-  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Die Docker-Konfiguration wird in eine temporäre Datei geschrieben. Dateipfad: %s, Docker-Konfiguration: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "Dem erstellten Image werden keine Tags hinzugefügt, weil kein Repository angegeben wurde."
 }

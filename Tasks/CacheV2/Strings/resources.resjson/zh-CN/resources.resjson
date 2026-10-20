@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "缓存命中变量",
   "loc.input.help.cacheHitVar": "要在还原缓存(即缓存命中)时设置为 \"true\"、在其他情况下设置为 \"false\" 的变量。",
   "loc.input.label.restoreKeys": "其他还原键前缀",
-  "loc.input.help.restoreKeys": "主键缺失时使用的其他还原键前缀。这可以是以换行符分隔的键前缀列表。"
+  "loc.input.help.restoreKeys": "主键缺失时使用的其他还原键前缀。这可以是以换行符分隔的键前缀列表。",
+  "loc.input.label.saveOnPartialSuccess": "部分成功时保存缓存",
+  "loc.input.help.saveOnPartialSuccess": "设置为 true 时，除“已成功”外，即使作业状态为 ‌\"SucceededWithIssues‌\" (部分成功)，也会保存缓存条目。默认情况下，仅当作业成功时才保存缓存。"
 }

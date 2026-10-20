@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "Variable de aciertos de caché",
   "loc.input.help.cacheHitVar": "Variable que se establece en \"true\" cuando se restaura la memoria caché (es decir, un acierto de caché); de lo contrario, se establece en \"false\".",
   "loc.input.label.restoreKeys": "Prefijos de claves de restauración adicionales",
-  "loc.input.help.restoreKeys": "Prefijos de claves de restauración adicionales que se usan si falta la clave principal. Puede ser una lista de prefijos de clave delimitados por línea nueva."
+  "loc.input.help.restoreKeys": "Prefijos de claves de restauración adicionales que se usan si falta la clave principal. Puede ser una lista de prefijos de clave delimitados por línea nueva.",
+  "loc.input.label.saveOnPartialSuccess": "Guardar caché si se realiza correctamente parcialmente",
+  "loc.input.help.saveOnPartialSuccess": "Cuando se establece en true, la entrada de caché se guarda incluso cuando el estado del trabajo es \"SucceededWithIssues\" (parcialmente correcto), además de \"Succeeded\". De forma predeterminada, la memoria caché solo se guarda cuando el trabajo se realiza correctamente."
 }
