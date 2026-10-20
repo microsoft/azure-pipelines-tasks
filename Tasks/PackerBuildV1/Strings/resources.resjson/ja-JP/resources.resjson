@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "パス: %s で Packer が正常に抽出されました。",
   "loc.messages.CreatedStagingDirectory": "Packer バイナリとテンプレートを保持するステージング ディレクトリが作成されました: %s。",
   "loc.messages.CouldNotDeleteStagingDirectory": "ステージング ディレクトリ %s を削除できませんでした。手動で削除してください。",
+  "loc.messages.CouldNotDeleteTempFile": "一時変数ファイル %s を削除できませんでした。手動で削除してください。",
   "loc.messages.InstalledPackerVersion": "現在インストールされている packer のバージョンは %s です。",
   "loc.messages.PackerToolBusy": "Packer ツールがビジー状態のようです。1 秒後にもう一度試します...",
   "loc.messages.ResolvingDeployPackageInput": "配置パッケージ パスを解決しています。",

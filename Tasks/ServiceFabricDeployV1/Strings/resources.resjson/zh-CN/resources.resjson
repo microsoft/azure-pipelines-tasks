@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "必须替代升级设置，或在 Azure Pipelines 任务中指定发布配置文件。",
   "loc.messages.UnsupportedARMAuthScheme": "ARM 终结点不支持身份验证方案 \"{0}\"。",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Azure 容器注册表不支持授权方案“{0}”。",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "在应用程序包中发现无效的 {0} 值“{1}”。从应用程序包构建文件路径时，此值用作文件夹名称，因此它必须是简单名称: 不能为空、不能包含路径分隔符或相对路径段、不能是绝对路径，也不能以 Windows 会规范化移除的尾随 ‌\".‌\" 或 ‌\" ‌\" 字符结尾。",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} 不是有效 Service Fabric 应用程序包。",
   "loc.messages.SFSDK_PackageValidationFailed": "以下程序包验证失败: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "无法验证与 Service Fabric 群集的服务连接。",

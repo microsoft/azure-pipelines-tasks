@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer 已成功提取到路径: %s.",
   "loc.messages.CreatedStagingDirectory": "已创建分段目录用于保留 packer 二进制和模板: %s。",
   "loc.messages.CouldNotDeleteStagingDirectory": "无法删除分段目录 %s。请手动删除。",
+  "loc.messages.CouldNotDeleteTempFile": "无法删除临时变量文件 %s。请手动删除。",
   "loc.messages.InstalledPackerVersion": "当前安装的 packer 版本是 %s。",
   "loc.messages.PackerToolBusy": "Packer 工具似乎处于忙碌状态。请在 1 秒后重试...",
   "loc.messages.ResolvingDeployPackageInput": "正在解析部署包路径。",
