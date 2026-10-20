@@ -217,6 +217,7 @@
   "loc.messages.InvalidConnectionType": "잘못된 서비스 연결 형식",
   "loc.messages.InvalidImageSourceType": "잘못된 이미지 소스 유형",
   "loc.messages.InvalidPublishProfile": "게시 프로필 파일이 잘못되었습니다.",
+  "loc.messages.InvalidPublishProfileValue": "게시 프로필의 '%s' 값에 허용되지 않는 문자가 포함되어 있습니다.",
   "loc.messages.ASE_SSLIssueRecommendation": "App Service에서 인증서를 사용하려면 신뢰할 수 있는 인증 기관에서 인증서에 서명해야 합니다. 웹앱에서 인증서 유효성 검사 오류가 발생하는 경우, 자체 서명된 인증서를 사용하는 중일 수 있으며 오류를 해결하려면 이름이 VSTS_ARM_REST_IGNORE_SSL_ERRORS인 변수를 빌드 또는 릴리스 파이프라인에서 true 값으로 설정해야 합니다.",
   "loc.messages.ZipDeployLogsURL": "zip 배포 로그는 %s에서 볼 수 있습니다.",
   "loc.messages.DeployLogsURL": "배포 로그는 %s에서 볼 수 있습니다.",
