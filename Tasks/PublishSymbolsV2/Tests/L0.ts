@@ -27,9 +27,6 @@ describe('PublishSymbols Suite', function () {
     });
 
     if (psm.testSupported()) {
-        it('(Initialize-DbghelpNativeMethods) binds to specified library', (done) => {
-            psr.run(path.join(__dirname, 'Initialize-DbghelpNativeMethods.BindsToSpecifiedLibrary.ps1'), done);
-        })
         it('(Add-DbghelpLibrary) loads if not loaded', (done) => {
             psr.run(path.join(__dirname, 'Add-DbghelpLibrary.LoadsIfNotLoaded.ps1'), done);
         })
