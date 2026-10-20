@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "Исполняемый файл Buildctl не найден по пути %s",
   "loc.messages.FileContentSynced": "Содержимое файла синхронизировано с диском. Содержимое: %s.",
   "loc.messages.VerifyBuildctlInstallation": "Идет проверка установки Buildctl...",
-  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Запись конфигурации Docker во временный файл. Путь к файлу: %s, конфигурация Docker: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "К созданному образу не добавляются теги, так как не указан репозиторий."
 }

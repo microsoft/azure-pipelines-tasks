@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "'%s'은(는) 디렉터리이므로 업로드할 수 없습니다. 파일을 지정하세요.",
   "loc.messages.SearchingFileMatchingPattern": "'%s'과(와) 일치하는 파일을 검색 중입니다.",
   "loc.messages.IssuesFetchError": "문제를 가져오는 동안 오류가 발생했습니다. 변경 로그를 생성할 수 없습니다.",
+  "loc.messages.NonBlockingIssuesFetchError": "차단되지 않는 issue-fetch GraphQL 오류가 발생했습니다: %s",
   "loc.messages.NoIssuesLinkedError": "지정된 커밋 Diff에서 커밋에 연결된 문제가 없습니다.",
   "loc.messages.LabelsSyntaxError": "레이블의 구문을 분석하는 동안 오류가 발생했습니다. Yaml 구문에 대해서는 https://aka.ms/AA3m1bq를 참조하세요.",
   "loc.messages.InvalidChangeLogTypeAttribute": "ChangeLogType 특성 %s이(가) 잘못되었습니다. 'commitBased' 또는 'issueBased' 옵션만 허용됩니다. YAML 구문에 대한 자세한 내용은 https://aka.ms/AA3m1bq를 참조하세요.",

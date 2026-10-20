@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "Fehler bei Vorgang. Es wird in %s ms ein neuer Versuch durchgeführt. Verbleibende Wiederholungsversuche: %s",
   "loc.messages.RedirectUrlError": "Die Umleitungs-URL kann nicht abgerufen werden. Fehler: %.",
   "loc.messages.UnsupportedArchiveType": "Nicht unterstützter Archivtyp: %s",
+  "loc.messages.InvalidPackageFilePath": "Der Paketdateipfad „%s“ muss relativ zum Zielverzeichnis sein und innerhalb dieses Verzeichnisses bleiben.",
+  "loc.messages.InvalidPackageFileLink": "Der Paketdateipfad „%s“ darf keine symbolische Verknüpfung oder Junction unterhalb des Zielverzeichnisses enthalten.",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Unerwarteter Fehler beim Versuch, das Paket herunterzuladen. Exitcode (%s) und Fehler (%s).",
   "loc.messages.Info_ResolvedToolFromCache": "Aus Toolcache aufgelöst: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Das Artefakttool wird von %s heruntergeladen.",
