@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "SSH 핸드셰이크가 완료될 때까지 대기하는 시간(밀리초)입니다.",
   "loc.input.label.interactiveKeyboardAuthentication": "대화형 키보드 인증 사용",
   "loc.input.help.interactiveKeyboardAuthentication": "대상 시스템에서 PasswordAuthentication이 비활성화된 경우 이 값을 사용하세요.",
+  "loc.input.label.enableRemoteVsoCommands": "원격 출력의 명령 로깅 허용",
+  "loc.input.help.enableRemoteVsoCommands": "false(기본값)이면 원격 출력의 ##vso[...] 줄이 중화됩니다. 즉, 실행되지 않고 텍스트로만 표시됩니다. 원격 출력을 신뢰하고, 그 출력에서 로깅 명령을 내보내는 데 의존할 때만 true로 설정하세요.",
   "loc.messages.ConnectionFailed": "원격 머신에 연결하지 못했습니다. SSH 서비스 연결 정보를 확인하세요. 오류: %s.",
   "loc.messages.FailedToWriteScript": "%s 디스크에 스크립트를 쓰지 못했습니다.",
   "loc.messages.RemoteCmdExecutionErr": "원격 컴퓨터에서 오류가 발생하여 명령이 실패했습니다.",
