@@ -1,16 +1,14 @@
 import * as assert from "assert";
 import * as path from "path";
+import { Writable } from "stream";
 import {
-    OutputSink,
+    AllowedToolCommands,
+    ResumeTokenVariable,
     TaskInputs,
     ToolResolverDeps,
     TokenVariable,
     downloadUrl,
-    neutralizeLoggingCommands,
-    parseResult,
-    parseToolLine,
     publishArguments,
-    relayToolLine,
     resolveArtifactTool,
     runArtifactTool,
     toolPlatform
@@ -187,111 +185,57 @@ describe("PublishPipelineArtifact L0 Suite", function () {
         });
     });
 
-    describe("parseResult", () => {
-        it("keeps only declared string outputs", () => {
-            const result = parseResult(JSON.stringify({
-                status: "Succeeded", exitCode: 0,
-                outputs: { BuildNumber: "42", "System.AccessToken": "x", Other: 1 }
-            }), ["BuildNumber"]);
-
-            assert.strictEqual(result.status, "Succeeded");
-            assert.deepStrictEqual(result.outputs, { BuildNumber: "42" });
-        });
-
-        it("reports failure messages", () => {
-            const result = parseResult(JSON.stringify({ status: "Failed", exitCode: 21, message: "Artifact x was not found for build 1." }), []);
-
-            assert.strictEqual(result.message, "Artifact x was not found for build 1.");
-            assert.strictEqual(result.exitCode, 21);
-        });
-
-        it("rejects malformed result files", () => {
-            assert.throws(() => parseResult("[]", []), /not a JSON object/);
-            assert.throws(() => parseResult(JSON.stringify({ status: "Maybe" }), []), /unknown status/);
-        });
-    });
-
-    describe("tool output relay", () => {
-        function recordingSink(): OutputSink & { events: string[] } {
-            const events: string[] = [];
-            return {
-                events,
-                info: line => events.push(`info:${line}`),
-                warning: message => events.push(`warning:${message}`),
-                debug: message => events.push(`debug:${message}`)
-            };
+    describe("runArtifactTool", () => {
+        function capture(): { stream: Writable; lines: () => string[] } {
+            let text = "";
+            const stream = new Writable({ write(chunk, _encoding, callback) { text += chunk.toString(); callback(); } });
+            return { stream, lines: () => text.split(/\r?\n/).filter(line => line.length > 0) };
         }
 
-        it("neutralizes logging commands anywhere in a line", () => {
-            assert.strictEqual(neutralizeLoggingCommands("x ##vso[task.setvariable variable=a]b ##VSO[task.complete]"),
-                "x ##_vso[task.setvariable variable=a]b ##_vso[task.complete]");
-        });
-
-        it("renders structured events by level", () => {
-            assert.deepStrictEqual(parseToolLine("{\"@m\":\"hello\",\"@i\":\"1\"}"), { level: "info", text: "hello" });
-            assert.deepStrictEqual(parseToolLine("{\"@m\":\"careful\",\"@l\":\"Warning\"}"), { level: "warning", text: "careful" });
-            assert.deepStrictEqual(parseToolLine("{\"@m\":\"failed\",\"@l\":\"Error\",\"@x\":\"stack\"}"), { level: "error", text: "failed\nstack" });
-            assert.deepStrictEqual(parseToolLine("plain text"), { level: "info", text: "plain text" });
-            assert.deepStrictEqual(parseToolLine("{not json"), { level: "info", text: "{not json" });
-        });
-
-        it("sends warnings to the warning sink and splits multi-line messages", () => {
-            const sink = recordingSink();
-
-            relayToolLine("{\"@m\":\"use the other task\",\"@l\":\"Warning\"}", sink);
-            relayToolLine("{\"@m\":\"line1\\r\\nline2\"}", sink);
-            relayToolLine("{\"@m\":\"detail\",\"@l\":\"Debug\"}", sink);
-            relayToolLine("{\"@m\":\"boom\",\"@l\":\"Error\"}", sink);
-
-            assert.deepStrictEqual(sink.events, ["warning:use the other task", "info:line1", "info:line2", "debug:detail", "info:boom"]);
-        });
-
-        it("neutralizes logging commands inside structured messages", () => {
-            const sink = recordingSink();
-
-            relayToolLine("{\"@m\":\"name ##vso[task.setvariable variable=x]y\",\"@l\":\"Warning\"}", sink);
-
-            assert.deepStrictEqual(sink.events, ["warning:name ##_vso[task.setvariable variable=x]y"]);
-        });
-    });
-
-    describe("runArtifactTool", () => {
-        it("passes the token only through the environment and relays neutralized output", async () => {
-            const lines: string[] = [];
+        it("pauses commands, passes both tokens only through the environment, and always resumes", async () => {
+            const output = capture();
             const script = [
-                `console.log(JSON.stringify({ "@m": "token:" + (process.env.${TokenVariable} === "secret") + " args:" + process.argv.slice(1).join(",") }));`,
-                "console.error('##vso[task.setvariable variable=x]y');",
+                `console.log("token:" + (process.env.${TokenVariable} === process.argv[1]) + " length:" + process.env.${TokenVariable}.length);`,
+                `console.log("resume:" + process.env.${ResumeTokenVariable});`,
                 "process.exit(3);"
             ].join("\n");
 
             const exitCode = await runArtifactTool({
                 executable: process.execPath,
                 args: ["-e", script, "plain-arg"],
-                token: "secret",
+                token: "access-token-value",
                 cwd: process.cwd(),
-                signal: new AbortController().signal,
-                sink: { info: line => lines.push(line), warning: line => lines.push(line), debug: () => undefined }
+                outStream: output.stream
             });
 
+            const lines = output.lines();
+            const pause = /^##vso\[agent\.pausecommands\]([0-9a-f]{64})$/.exec(lines[0]);
+            assert.ok(pause, lines.join("\n"));
+            const token = pause![1];
             assert.strictEqual(exitCode, 3);
-            assert.ok(lines.includes("token:true args:plain-arg"), lines.join("\n"));
-            assert.ok(lines.includes("##_vso[task.setvariable variable=x]y"), lines.join("\n"));
-            assert.ok(!lines.some(line => line.includes("secret")));
+            assert.ok(lines.includes("token:false length:18"), lines.join("\n"));
+            assert.ok(lines.includes(`resume:${token}`), lines.join("\n"));
+            assert.strictEqual(lines[lines.length - 1], `##vso[agent.resumecommands]${token}`);
+            assert.ok(!lines.some(line => line.includes("access-token-value")), lines.join("\n"));
         });
 
-        it("reports cancellation", async () => {
-            const controller = new AbortController();
-            const run = runArtifactTool({
-                executable: process.execPath,
-                args: ["-e", "setTimeout(() => undefined, 30000);"],
-                token: "secret",
-                cwd: process.cwd(),
-                signal: controller.signal,
-                sink: { info: () => undefined, warning: () => undefined, debug: () => undefined }
-            });
-            setTimeout(() => controller.abort(), 200);
+        it("lets only resume, set-variable, and issue commands through from ArtifactTool output", async () => {
+            const output = capture();
+            const script = [
+                "console.log('##vso[task.setvariable variable=BuildNumber;]42');",
+                "console.log('##vso[task.logissue type=warning]careful');",
+                "console.log('##vso[task.complete result=Succeeded;]done');",
+                "console.error('##vso[task.prependpath]C:\\\\evil');"
+            ].join("\n");
 
-            await assert.rejects(run, /cancelled|abort/i);
+            await runArtifactTool({ executable: process.execPath, args: ["-e", script], token: "t", cwd: process.cwd(), outStream: output.stream });
+
+            const lines = output.lines();
+            assert.deepStrictEqual([...AllowedToolCommands], ["agent.resumecommands", "task.setvariable", "task.logissue"]);
+            assert.ok(lines.includes("##vso[task.setvariable variable=BuildNumber;]42"), lines.join("\n"));
+            assert.ok(lines.includes("##vso[task.logissue type=warning]careful"), lines.join("\n"));
+            assert.ok(lines.includes("##_vso[task.complete result=Succeeded;]done"), lines.join("\n"));
+            assert.ok(lines.includes("##_vso[task.prependpath]C:\\evil"), lines.join("\n"));
         });
     });
 });

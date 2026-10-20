@@ -1,3 +1,3 @@
 import { downloadArguments, runTask } from "pipeline-artifact-common";
 
-void runTask(downloadArguments, ["BuildNumber", "DownloadPipelineArtifactResourceTypes"]);
+void runTask(downloadArguments);

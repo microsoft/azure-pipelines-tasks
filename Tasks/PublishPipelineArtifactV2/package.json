@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/mocha": "^5.2.7",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.2.10",
+    "azure-pipelines-task-lib": "^5.281.2",
     "pipeline-artifact-common": "file:../../_build/Tasks/Common/pipeline-artifact-common-0.0.1.tgz"
   },
   "devDependencies": {

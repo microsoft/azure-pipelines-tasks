@@ -1,11 +1,9 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
-import * as path from "node:path";
 import { randomUUID } from "node:crypto";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as toolLib from "azure-pipelines-tool-lib/tool";
 import { TaskInputs } from "./arguments";
-import { parseResult } from "./result";
 import { TokenVariable, runArtifactTool } from "./toolRunner";
 import { ToolResolverDeps, resolveArtifactTool } from "./toolResolver";
 
@@ -42,15 +40,10 @@ export function createResolverDeps(): ToolResolverDeps {
 }
 
 /**
- * Runs a pipeline artifact task: acquires ArtifactTool, invokes it with the mapped arguments, and
- * publishes declared outputs from the tool's result file.
+ * Runs a pipeline artifact task: acquires ArtifactTool and runs it with the mapped arguments. ArtifactTool
+ * reports output variables, warnings, and errors itself; the task only reports success or failure.
  */
-export async function runTask(buildArguments: (task: TaskInputs) => string[], outputs: readonly string[]): Promise<void> {
-    const controller = new AbortController();
-    const cancel = () => controller.abort();
-    process.once("SIGINT", cancel);
-    process.once("SIGTERM", cancel);
-    let resultFile: string | undefined;
+export async function runTask(buildArguments: (task: TaskInputs) => string[]): Promise<void> {
     try {
         const serviceUrl = tl.getEndpointUrlRequired("SYSTEMVSSCONNECTION");
         const token = tl.getEndpointAuthorizationParameterRequired("SYSTEMVSSCONNECTION", "AccessToken");
@@ -58,9 +51,7 @@ export async function runTask(buildArguments: (task: TaskInputs) => string[], ou
 
         const args = buildArguments(taskInputs);
         const executable = await resolveArtifactTool(createResolverDeps(), serviceUrl);
-        const tempDirectory = tl.getVariable("Agent.TempDirectory") ?? path.dirname(executable);
-        resultFile = path.join(tempDirectory, `pipeline-artifact-result-${randomUUID()}.json`);
-        args.push("--service", serviceUrl, "--patvar", TokenVariable, "--result-file", resultFile);
+        args.push("--service", serviceUrl, "--patvar", TokenVariable);
         if (tl.getVariable("System.Debug")?.toLowerCase() === "true") {
             args.push("--verbosity", "Debug");
         }
@@ -69,35 +60,12 @@ export async function runTask(buildArguments: (task: TaskInputs) => string[], ou
             executable,
             args,
             token,
-            cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd(),
-            signal: controller.signal,
-            sink: {
-                info: line => console.log(line),
-                warning: message => tl.warning(message),
-                debug: message => tl.debug(message)
-            }
+            cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd()
         });
 
-        const result = fs.existsSync(resultFile) ? parseResult(fs.readFileSync(resultFile, "utf8"), outputs) : undefined;
-        for (const [name, value] of Object.entries(result?.outputs ?? {})) {
-            tl.setVariable(name, value);
-        }
-
-        if (exitCode === 0 && result?.status === "Succeeded") {
-            tl.setResult(tl.TaskResult.Succeeded, "");
-        } else if (result?.status === "Cancelled") {
-            tl.setResult(tl.TaskResult.Cancelled, result.message ?? "ArtifactTool was cancelled.");
-        } else {
-            tl.setResult(tl.TaskResult.Failed, result?.message ?? `ArtifactTool failed with exit code ${exitCode}.`);
-        }
+        // ArtifactTool has already logged the error; an empty message avoids reporting it twice.
+        tl.setResult(exitCode === 0 ? tl.TaskResult.Succeeded : tl.TaskResult.Failed, "");
     } catch (error) {
-        tl.setResult(controller.signal.aborted ? tl.TaskResult.Cancelled : tl.TaskResult.Failed,
-            error instanceof Error ? error.message : String(error));
-    } finally {
-        process.removeListener("SIGINT", cancel);
-        process.removeListener("SIGTERM", cancel);
-        if (resultFile && fs.existsSync(resultFile)) {
-            fs.rmSync(resultFile, { force: true });
-        }
+        tl.setResult(tl.TaskResult.Failed, error instanceof Error ? error.message : String(error));
     }
 }
