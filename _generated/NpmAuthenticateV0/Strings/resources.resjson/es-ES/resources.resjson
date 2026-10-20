@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Credenciales de compilación encontradas",
   "loc.messages.ServiceEndpointNotDefined": "No se encontró la conexión de servicio. Asegúrese de que la conexión de servicio seleccionada aún existe.",
   "loc.messages.NpmrcNotNpmrc": "El archivo que ha seleccionado para autenticar (%s) no es un archivo .npmrc válido.",
+  "loc.messages.NpmrcMustBeRegularFile": "El archivo .npmrc en %s debe ser un archivo normal y no puede ser un vínculo simbólico.",
+  "loc.messages.NpmrcChangedSinceBackup": "El archivo .npmrc en %s ya no es el mismo archivo normal del que se hizo una copia de seguridad. Se niega a restaurarlo.",
+  "loc.messages.UnableToWriteFileContents": "No se puede escribir el contenido de %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "No se encontró la dirección URL para la conexión de servicio. Asegúrese de que la conexión de servicio está configurada correctamente.",
   "loc.messages.SavingFile": "Guardando el archivo %s",
   "loc.messages.RestoringFile": "Restaurando el archivo %s",
@@ -39,6 +42,10 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "No se especificó feedUrl. Aplicando credenciales de WIF a todos los %d registros de .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Esquema de autenticación \"%s\" no admitido para la conexión de servicio. Los esquemas admitidos son \"Token\" y \"UsernamePassword\".",
   "loc.messages.Warning_NpmrcFileNotFound": "No se encontró el archivo npmrc: %s",
+  "loc.messages.Warning_HomeDirectoryNotWritable": "Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.",
+  "loc.messages.Error_NoWritableBackupDirectory": "Unable to determine a writable npmAuthenticate backup directory.",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Omitiendo la autenticación WIF para el registro que no es HTTPS: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "No se pueden autenticar registros en “%s” que mezclan direcciones URL HTTPS y no HTTPS. El ámbito de las credenciales npm no se delimitan por esquema. Use HTTPS para todos los registros de este host y puerto.",
   "loc.messages.Debug_EndpointProbeTimedOut": "se agotó el tiempo de espera de isEndpointInternal después de %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Error en la comprobación de isEndpointInternal: %s"
 }

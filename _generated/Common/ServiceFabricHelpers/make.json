@@ -1,0 +1,38 @@
+{
+    "externals": {
+        "nugetv2": [
+            {
+                "name": "Microsoft.IdentityModel.Clients.ActiveDirectory",
+                "version": "2.23.302261847",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
+                "cp": [
+                    {
+                        "source": "lib/net45/Microsoft.IdentityModel.Clients.ActiveDirectory.dll"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.Identity.Client",
+                "version": "4.48.0",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
+                "cp": [
+                    {
+                        "source": "lib/net45/Microsoft.Identity.Client.dll",
+                        "dest": "msal"
+                    }
+                ]
+            },
+            {
+                "name": "Microsoft.IdentityModel.Abstractions",
+                "version": "6.22.0",
+                "repository": "https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/nugetvssprivate/nuget/v2",
+                "cp": [
+                    {
+                        "source": "lib/net45/Microsoft.IdentityModel.Abstractions.dll",
+                        "dest": "msal"
+                    }
+                ]
+            }
+        ]
+    }
+}

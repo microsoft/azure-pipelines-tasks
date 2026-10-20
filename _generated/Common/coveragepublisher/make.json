@@ -1,0 +1,10 @@
+{
+    "externals": {
+        "archivePackages": [
+          {
+            "url": "https://testmanagementstore.z13.web.core.windows.net/testmanagementcoverage/32101924/CoveragePublisher.zip",
+            "dest": "./"
+          }
+        ]
+    }
+}

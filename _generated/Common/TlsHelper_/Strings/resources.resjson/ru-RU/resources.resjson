@@ -1,0 +1,5 @@
+{
+  "loc.messages.UnsupportedTLSError": "Компьютер должен использовать протокол TLS 1.2 или более поздней версии. Дополнительные сведения о том, как включить TLS на вашем компьютере: https://aka.ms/enableTlsv2.",
+  "loc.messages.TLS12AddedInSession": "TLS 1.2 добавлен в сеансе.",
+  "loc.messages.UnableToAddTls12InSession": "Не удалось добавить TLS 1.2 в текущем сеансе. Ошибка: \"{0}\"."
+}

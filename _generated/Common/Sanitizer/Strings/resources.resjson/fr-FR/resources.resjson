@@ -1,0 +1,3 @@
+{
+  "loc.messages.PS_ScriptArgsSanitized": "Caractères détectés dans les arguments qui peuvent ne pas être exécutés correctement par le shell. Les caractères spéciaux doivent être échappés à l’aide d’une coche (`). Plus d’informations sont disponibles ici : https://aka.ms/ado/75787"
+}

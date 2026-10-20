@@ -1,0 +1,247 @@
+function Get-TargetMachines {
+    [CmdletBinding()]
+    Param (
+        [string[]] $targetMachineNames,
+        [pscredential] $credential,
+        [string] $authentication,
+        [string] $sessionConfigurationName,
+        [switch] $useSsl
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        Write-Verbose "Target Machines: $($targetMachineNames -join ',')"
+        $targetMachines = @();
+        foreach($targetMachineName in $targetMachineNames) {
+            $targetMachine = @{
+                ComputerName = "";
+                WSManPort = "";
+                Credential = $credential;
+                Authentication = $authentication;
+                SessionConfigurationName = $sessionConfigurationName;
+                UseSsl = $useSsl
+            }
+        
+            # if port if provided with machine name, use it, else default it based on protocol
+            $computerName, $port = $targetMachineName.Split(':');
+            if([string]::IsNullOrEmpty($port)) {
+                if($useSsl) {
+                    $port = "5986"
+                } else {
+                    $port = "5985"
+                }
+            }
+            $targetMachine.ComputerName = $computerName.Trim()
+            $targetMachine.WSManPort = $port.Trim()
+
+            Write-Verbose "ComputerName = $($targetMachine.ComputerName)"
+            Write-Verbose "WSManPort = $($targetMachine.WSManPort)"
+            Write-Verbose "Authentication = $($targetMachine.Authentication)"
+            Write-Verbose "SessionConfigurationName = $($targetMachine.SessionConfigurationName)"
+            Write-Verbose "UseSSL = $($targetMachine.UseSsl)"
+            $targetMachines += $targetMachine
+        }
+        Write-Verbose "Total target machines are: $($targetMachines.Length)"
+        return $targetMachines
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Publish-Telemetry {
+    Param([hashtable[]] $jobResults)
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ''
+    try {
+        $buildOrReleaseJobId = Get-VstsTaskVariable -Name 'System.JobId'
+        foreach($jobResult in $jobResults) {
+            $telemetryData = @{
+                "IsAzureVm" = $jobResult.IsAzureVM;
+                "VmUuidHash" = $jobResult.MachineGuidHash;
+                # field name 'TelemetryError' is misleading here. TelemetryError is only the type of the Telemetry exception.
+                "TelemetryError" = $jobResult.TelemetryError;
+                "AzureSubscriptionId" = $jobResult.AzureSubscriptionId;
+                "JobId" = $buildOrReleaseJobId;
+            }
+            $telemetryDataJson = ConvertTo-Json $telemetryData
+            $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+            Write-Verbose "Telemetry Data is: $telemetryDataJson"
+            # featurename 'PowerShellOnTargetMachines' is not correct as AzureFileCopy also uses this. Ideally
+            # this should be 'VstsRemoteDeployer'. But the exact name of the feature really doesn't matter, so
+            # we are keeping this name in order to maintain compat with earlier behavior.
+            $telemetry = "##vso[telemetry.publish area=TaskHub;feature=PowerShellOnTargetMachines]$telemetryDataJson"
+            Write-Host $telemetry
+        }
+    } catch {
+        Write-Verbose "Unable to publish telemetry data. Error: $($_.Exception.Message)"
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Get-TemporaryLogsFolder {
+    Trace-VstsEnteringInvocation $MyInvocation
+    try {
+        $agentTempDirectory = Get-VstsTaskVariable -Name 'Agent.TempDirectory'
+        $tempFolderName = [Guid]::NewGuid().ToString()
+        $tempLogsFolder = [System.IO.Path]::Combine($agentTempDirectory, $tempFolderName)
+        if((Test-Path -LiteralPath $tempLogsFolder -PathType 'Container') -eq $true) {
+            Remove-Item -LiteralPath $tempLogsFolder -Recurse -Force
+        }
+        $tempLogsFolder = (New-Item -Path $agentTempDirectory -Name $tempFolderName -ItemType 'Container').FullName
+        Write-Verbose "Created temporary logs folder: $tempLogsFolder"
+        return $tempLogsFolder
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+function Upload-TargetMachineLogs {
+    Param( [string] $logsFolder )
+    
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation
+    if((Test-Path -LiteralPath $logsFolder -PathType 'Container') -eq $true) {
+        try {
+            $logFiles = Get-ChildItem -LiteralPath $logsFolder -Filter "*.log"
+            foreach($logFile in $logFiles) {
+                Write-Host "##vso[task.uploadfile]$($logFile.FullName)"
+            }
+        } catch {
+            Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnableToUploadTargetMachineLogs" -ArgumentList $logsFolder, $_.Exception.Message)
+        }
+    }
+    Trace-VstsLeavingInvocation $MyInvocation
+}
+
+function Set-TaskResult {
+    [CmdletBinding()]
+    param (
+        [hashtable[]] $jobResults,
+        [int] $machinesCount
+    )
+    Trace-VstsEnteringInvocation -InvocationInfo $MyInvocation -Parameter ""
+    try {
+        $errCodes = @()
+        $failed = $false
+        if(($jobResults -eq $null) -or ($jobResults.Length -ne $machinesCount)) {
+            $failed = $true
+            Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnableToGetRemoteJobResults")
+            $errCodes += "RemoteDeployer_UnableToGetRemoteJobResults"
+        }
+        ForEach($jobResult in $jobResults) {
+            if ($jobResult.Status -eq "Failed") {
+                $failed = $true
+                Write-Error (Get-VstsLocString -Key "RemoteDeployer_ScriptJobFailed" -ArgumentList $jobResult.ComputerName, $jobResult.Message)
+                $errCodes += "RemoteDeployer_ScriptJobFailed"
+            } elseif ($jobResult.Status -eq "Passed") {
+                Write-Verbose "Remote script execution completed for machine: $($jobResult.ComputerName)"
+                if($jobResult.ExitCode -ne 0) {
+                    $failed = $true
+                    Write-Error (Get-VstsLocString -Key "RemoteDeployer_NonZeroExitCode" -ArgumentList $jobResult.ComputerName, $jobResult.ExitCode)
+                    $errCodes += "RemoteDeployer_NonZeroExitCode"
+                } else {
+                    Write-Host $(Get-VstsLocString -Key "RemoteDeployer_ScriptExecutionSucceeded" -ArgumentList $($jobResult.ComputerName))
+                }
+            } else {
+                $failed = $true
+                Write-Error (Get-VstsLocString -Key "RemoteDeployer_UnknownStatus" -ArgumentList $jobResult.Status)
+                $errCodes += "RemoteDeployer_UnknownStatus"
+            }
+        }
+        if(!$failed) {
+            Write-VstsSetResult -Result 'Succeeded'
+        } else {
+            $errMessage = $errCodes -join ','
+            throw (Get-VstsLocString -Key "RemoteDeployer_JobResultEvaluationFailure" -ArgumentList $errMessage)
+        }
+    } finally {
+        Trace-VstsLeavingInvocation $MyInvocation
+    }
+}
+
+# DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
+# Instead of sanitizing ##vso[ commands coming from remote machine output, this only publishes
+# telemetry describing which ##vso[ commands WOULD have been blocked. The remote output is still
+# written unchanged so that customers who intentionally rely on ##vso[ commands from remote
+# machines are not broken while we analyze real-world usage.
+function Publish-VsoCommandInjectionDryRunTelemetry {
+    Param(
+        [string] $source,
+        [string] $text
+    )
+    try {
+        if ([string]::IsNullOrEmpty($text)) { return }
+        # Count every ##vso[ occurrence that would have been neutralized by the fix.
+        $occurrences = [regex]::Matches($text, '##vso\[')
+        if ($occurrences.Count -eq 0) { return }
+        # Capture only the command name (e.g. task.setvariable) using a restricted character set so
+        # the telemetry payload can never itself contain a ##vso[ sequence or leak command values.
+        $commandCounts = @{}
+        foreach ($match in [regex]::Matches($text, '##vso\[([\w.]+)')) {
+            $command = $match.Groups[1].Value
+            if ($commandCounts.ContainsKey($command)) {
+                $commandCounts[$command] = $commandCounts[$command] + 1
+            } else {
+                $commandCounts[$command] = 1
+            }
+        }
+        $telemetryData = @{
+            "Source" = $source;
+            "TotalCount" = $occurrences.Count;
+            "Commands" = $commandCounts;
+        }
+        $telemetryDataJson = ConvertTo-Json $telemetryData -Compress -Depth 5
+        $telemetryDataJson = $telemetryDataJson.Replace([environment]::NewLine, '').Trim()
+        Write-Verbose "VSO command injection dry-run telemetry: $telemetryDataJson"
+        Write-Host "##vso[telemetry.publish area=TaskHub;feature=RemoteVsoCommandInjectionDryRun]$telemetryDataJson"
+    } catch {
+        Write-Verbose "Unable to publish VSO command injection dry-run telemetry. Error: $($_.Exception.Message)"
+    }
+}
+
+# Whitelist-aware neutralization of ##vso[ logging commands from remote machine output
+# (ICM 31000000640794 / MSRC 122214). The allowed commands are delivered by the server as the
+# read-only pipeline variable 'agent.allowedLoggingCommands' (ConfigFramework), surfaced on the agent
+# as the environment variable AGENT_ALLOWEDLOGGINGCOMMANDS (comma-separated, case-insensitive).
+#   - whitelist empty/unset   -> nothing is changed (feature-off).
+#   - command NOT whitelisted -> its "##vso[" prefix is escaped to "##_vso[" so the agent does not
+#     execute it (the line is still printed as text).
+#   - command whitelisted     -> left unchanged so legitimate usage keeps working.
+function Get-AllowedLoggingCommands {
+    $set = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
+    $raw = $env:AGENT_ALLOWEDLOGGINGCOMMANDS
+    if ([string]::IsNullOrWhiteSpace($raw)) { return ,$set }
+    foreach ($command in $raw.Split(',')) {
+        $trimmed = $command.Trim()
+        if (-not [string]::IsNullOrEmpty($trimmed)) { [void]$set.Add($trimmed) }
+    }
+    return ,$set
+}
+
+function ConvertTo-SanitizedRemoteOutput {
+    param(
+        [string] $text,
+        [System.Collections.Generic.HashSet[string]] $allowedCommands
+    )
+    if ([string]::IsNullOrEmpty($text)) { return $text }
+    # Feature-off when no whitelist is configured: never modify customer output.
+    if (($null -eq $allowedCommands) -or ($allowedCommands.Count -eq 0)) { return $text }
+    $evaluator = {
+        param($match)
+        $command = $match.Groups['cmd'].Value
+        if ($allowedCommands.Contains($command)) { return $match.Value }
+        return '##_vso[' + $command
+    }
+    return [regex]::Replace($text, '##vso\[(?<cmd>[\w.]+)', $evaluator, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+}
+$defaultErrorHandler = {
+    Param($object, $computerName)
+    $text = $object | Out-String
+    Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:ErrorHandler" -text $text
+    Write-Host (ConvertTo-SanitizedRemoteOutput -text $text -allowedCommands (Get-AllowedLoggingCommands))
+}
+
+$defaultOutputHandler = {
+    Param($object, $computerName)
+    $text = $object | Out-String
+    Publish-VsoCommandInjectionDryRunTelemetry -source "RemoteDeployer:OutputHandler" -text $text
+    Write-Host (ConvertTo-SanitizedRemoteOutput -text $text -allowedCommands (Get-AllowedLoggingCommands))
+}

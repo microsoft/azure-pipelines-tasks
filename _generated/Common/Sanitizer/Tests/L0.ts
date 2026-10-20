@@ -1,0 +1,112 @@
+/// <reference path="../../../../definitions/mocha.d.ts"/>
+/// <reference path="../../../../definitions/node.d.ts"/>
+
+import path = require('path');
+
+var psm = require('../../../../Tests/lib/psRunner');
+var psr = null;
+
+describe('Security Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+        done();
+    });
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
+    });
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should replace forbidden characters', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.ReplacesForbiddenCharacters.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing Cmd argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingCmdFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing PowerShell argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingPowerShellFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Sanitize-Arguments should not break existing Bash argument formats', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArgumentsArray.DoesNotBreakExistingBashFormats.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments should pass correctly', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Passes.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments should throw', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.Throws.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('L0Expand-EnvVariables tests', (done) => {
+            psr.run(path.join(__dirname, 'L0Expand-EnvVariables.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Invoke-ScriptArgumentSanitization dispatcher (FF gates, error handling, telemetry)', (done) => {
+            psr.run(path.join(__dirname, 'L0Invoke-ScriptArgumentSanitization.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Test-SanitizerArgumentAst classifies data literals vs. executable expressions', (done) => {
+            psr.run(path.join(__dirname, 'L0Test-SanitizerArgumentAst.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments allows legitimate data constructors on the relaxed path', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.AllowsDataConstructors.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Protect-ScriptArguments blocks data-constructor injection via the AST backstop', (done) => {
+            psr.run(path.join(__dirname, 'L0Protect-ScriptArguments.BlocksDataConstructorInjection.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Get-SanitizedArguments keeps the strict path unchanged for legacy callers', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SanitizedArguments.GroupBIsolation.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Split-AdditionalArguments tokenizes single-quoted, double-quoted, and mid-token quoted arguments', (done) => {
+            psr.run(path.join(__dirname, 'L0Split-AdditionalArguments.ps1'), done);
+        });
+        it('Join-SanitizedArguments quotes tokens with embedded spaces so Split-AdditionalArguments round-trips them', (done) => {
+            psr.run(path.join(__dirname, 'L0Join-SanitizedArguments.ps1'), done);
+        });
+    }
+
+    if (psm.testSupported()) {
+        it('Get-SourcePathHardeningFeatureFlag falls back to disabled when Get-VstsPipelineFeature is unavailable or throws', (done) => {
+            psr.run(path.join(__dirname, 'L0Get-SourcePathHardeningFeatureFlag.ps1'), done);
+        });
+    }
+});

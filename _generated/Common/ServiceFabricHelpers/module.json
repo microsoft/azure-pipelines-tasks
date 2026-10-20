@@ -1,0 +1,22 @@
+{
+    "messages": {
+        "AadAuthority": "AAD Authority: {0}",
+        "CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
+        "ClientAppId": "Client Application ID: {0}",
+        "ClusterAppId": "Cluster Application ID: {0}",
+        "ConnectedToCluster": "Successfully connected to cluster.",
+        "DefaultPortWarning": "The port '{0}' specified on your connection endpoint does not match the default ClientConnectionEndpoint of '19000'. This might have caused cluster communication failure.",
+        "ErrorOnAcquireToken": "An error occurred attempting to acquire an Azure Active Directory token. Ensure that your service endpoint is configured properly with valid credentials. Error message: {0}",
+        "ErrorOnCertificateImport": "An error occurred attempting to import the certificate. Ensure that your service endpoint is configured properly with a correct certificate value and, if the certificate is password-protected, a valid password. Error message: {0}",
+        "ImportedCertificate": "Imported cluster client certificate with thumbprint '{0}'.",
+        "MultipleCertPresentInLocalStoreWarningMsg": "Multiple certificates with common name {0} are present in the local certificate store. Please re-try after providing server certificate thumbprint value when setting up service endpoint.",
+        "ServiceFabricSDKNotInstalled": "Service Fabric SDK is not installed on the build agent.  Go to https://aka.ms/servicefabric to download and install it.",
+        "Unsecured": "Unsecured option is not specified. -WindowsCredential switch will be used while connecting.",
+        "ServerCertificateNotFoundForTextEncrypt": "The cluster's server certificate with thumbprint '{0}' is required in order to encrypt text but the certificate could not be found on the agent machine in the 'CurrentUser\\My' certificate store location.",
+        "RetryingClusterConnection": "Retrying to connect to cluster..",
+        "WarningOnRemoveCertificate": "An error occurred attempting to remove the client certificate. Error message: {0}",
+        "TelemetryWarning": "Unable to push telemetry data. Error: {0}.",
+        "SfSdkVersion": "Service fabric SDK version: {0}.",
+        "TaskNotRunningOnx64Agent": "The agent is not a x64 agent. This task is supported only on a x64 agent."
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "loc.messages.AadAuthority": "AAD 授權單位: {0}",
+  "loc.messages.CertNotPresentInLocalStoreWarningMsg": "指紋為 {0} 的憑證不在本機憑證存放區中。這可能會造成錯誤。如果發行/建置失敗，請予以重試，或確保多個代理程式不會在相同的電腦上，同時使用相同的服務端點執行發行/建置。",
+  "loc.messages.ClientAppId": "用戶端應用程式識別碼: {0}",
+  "loc.messages.ClusterAppId": "叢集應用程式識別碼: {0}",
+  "loc.messages.ConnectedToCluster": "已成功連線到叢集。",
+  "loc.messages.DefaultPortWarning": "在連接端點上指定的連接埠 '{0}' 不符合預設的 ClientConnectionEndpoint '19000'。這可能會造成叢集通訊失敗。",
+  "loc.messages.ErrorOnAcquireToken": "嘗試取得 Azure Active Directory 權杖時發生錯誤。請確定您的服務端點已正確設定有效的認證。錯誤訊息: {0}",
+  "loc.messages.ErrorOnCertificateImport": "嘗試匯入憑證時發生錯誤。請確定您的服務端點已正確設定正確的憑證值，如果憑證受密碼保護，則確定密碼有效。錯誤訊息: {0}",
+  "loc.messages.ImportedCertificate": "已匯入指紋為 '{0}' 的叢集用戶端憑證。",
+  "loc.messages.MultipleCertPresentInLocalStoreWarningMsg": "本機憑證存放區中有多個憑證使用通用名稱 {0}。請在於設定服務端點時，提供伺服器憑證指紋值後重試。",
+  "loc.messages.ServiceFabricSDKNotInstalled": "組建代理程式上未安裝 Service Fabric SDK。請前往 https://aka.ms/servicefabric 加以下載並安裝。",
+  "loc.messages.Unsecured": "未指定不受保護的選項。連線時會使用 -WindowsCredential 參數。",
+  "loc.messages.ServerCertificateNotFoundForTextEncrypt": "需要具有指紋 '{0}' 的叢集伺服器憑證才能加密文字，但在代理程式機器中的 'CurrentUser\\My' 憑證存放區位置找不到所需的憑證。",
+  "loc.messages.RetryingClusterConnection": "正在重試連線到叢集...",
+  "loc.messages.WarningOnRemoveCertificate": "嘗試移除用戶端憑證時發生錯誤。錯誤訊息: {0}",
+  "loc.messages.TelemetryWarning": "無法推送遙測資料。錯誤: {0}。",
+  "loc.messages.SfSdkVersion": "Service Fabric SDK 版本: {0}。",
+  "loc.messages.TaskNotRunningOnx64Agent": "代理程式不是 x64 代理程式。僅於 x64 代理程式上支援此工作。"
+}

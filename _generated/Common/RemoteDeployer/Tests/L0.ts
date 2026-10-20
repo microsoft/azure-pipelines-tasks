@@ -1,0 +1,77 @@
+/// <reference path="../../../../definitions/mocha.d.ts"/>
+/// <reference path="../../../../definitions/node.d.ts"/>
+/// <reference path="../../../../definitions/Q.d.ts"/>
+
+import Q = require('q');
+import assert = require('assert');
+import path = require('path');
+var psm = require('../../../../Tests/lib/psRunner');
+var psr = null;
+
+describe('Remote Deployer Test Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+    before((done) => {
+        if (psm.testSupported()) {
+            psr = new psm.PSRunner();
+            psr.start();
+        }
+
+        done();
+    });
+
+    after(function () {
+        if (psr) {
+            psr.kill();
+        }
+    });
+    
+    if (psm.testSupported()) {
+        it('(Get-TargetMachines) uses correct port and machine name', (done) => {
+            psr.run(path.join(__dirname, 'Get-TargetMachines.UsesCorrectPortForTargetMachine.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) throws if unable to create session', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.ThrowsIfUnableToCreateSession.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) uses splat into New-PSSession (no Invoke-Expression)', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.UsesSplatNoIex.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) returns the session on success without retrying', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.ReturnsSessionOnSuccess.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) passes every parameter to New-PSSession as data', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.PassesParametersBySplat.ps1'), done);
+        });
+
+        it('(Get-WinRmConnectionToTargetMachine) omits Credential and UseSSL when not provided', (done) => {
+            psr.run(path.join(__dirname, 'Get-WinRmConnectionToTargetMachine.OmitsCredentialAndSslWhenNotSet.ps1'), done);
+        });
+        
+        it('(Retry-Connection) does not throw if cannot get pssession', (done) => {
+            psr.run(path.join(__dirname, 'Retry-Connection.DoesNotThrowIfCannotGetSession.ps1'), done);
+        });
+        
+        it('(Retry-Connection) does not throw if receive pssession throws', (done) => {
+            psr.run(path.join(__dirname, 'Retry-Connection.DoesNotThrowIfReceiveSessionThrows.ps1'), done);
+        });
+        
+        it('(Retry-Connection) does not attempt remote connection if session state is not disconnected and availability is not none', (done) => {
+            psr.run(path.join(__dirname, 'Retry-Connection.AttemptsConnectionOnSpecificCondition.ps1'), done);
+        });
+        
+        it('(Retry-Connection) attempts remote connection only if session state is disconnected and availability is none', (done) => {
+            psr.run(path.join(__dirname, 'Retry-Connection.AttemptsConnectionStateDisconnectedAvailabilityNone.ps1'), done);
+        });
+
+        it('(defaultOutputHandler) publishes dry-run telemetry for ##vso[ commands without sanitizing', (done) => {
+            psr.run(path.join(__dirname, 'DefaultOutputHandler.VsoCommandInjectionDryRun.ps1'), done);
+        });
+        it('(defaultOutputHandler) escapes non-whitelisted ##vso[ commands and preserves whitelisted ones', (done) => {
+            psr.run(path.join(__dirname, 'DefaultOutputHandler.VsoCommandInjectionWhitelist.ps1'), done);
+        });
+    }
+});

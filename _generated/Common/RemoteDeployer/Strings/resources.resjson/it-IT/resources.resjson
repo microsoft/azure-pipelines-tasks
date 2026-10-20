@@ -1,0 +1,12 @@
+{
+  "loc.messages.RemoteDeployer_ConnectedMachines": "Oggetto PSSession creato per i computer: '{0}'",
+  "loc.messages.RemoteDeployer_NotConnectedMachines": "Non è stato possibile creare l'oggetto PSSession per il computer: '{0}:{1}'",
+  "loc.messages.RemoteDeployer_ScriptJobFailed": "L'esecuzione del processo script remoto non è riuscita. Nome computer: '{0}'. Messaggio: '{1}'",
+  "loc.messages.RemoteDeployer_NonZeroExitCode": "Codice di uscita '{1}' diverso da zero per il nome computer '{0}'",
+  "loc.messages.RemoteDeployer_ScriptExecutionSucceeded": "L'esecuzione dello script è riuscita per il nome computer: '{0}'",
+  "loc.messages.RemoteDeployer_UnknownStatus": "Lo stato di esecuzione del processo script remoto è sconosciuto: '{0}'",
+  "loc.messages.RemoteDeployer_UnableToGetRemoteJobResults": "Non è possibile ottenere i risultati del processo script remoto",
+  "loc.messages.PS_TM_UnableToCreatePSSession": "Non è possibile creare l'oggetto PSSession. Errore: '{0}'",
+  "loc.messages.RemoteDeployer_JobResultEvaluationFailure": "Almeno un processo remoto non è riuscito. Per maggiori dettagli, vedere i log. Codice/i errore: '{0}'",
+  "loc.messages.RemoteDeployer_UnableToUploadTargetMachineLogs": "Non è possibile caricare i file di log dei computer di destinazione. Cartella di origine: '{0}'. Errore: '{1}'"
+}

@@ -1,0 +1,5 @@
+{
+  "loc.messages.ActionTimedOut": "超过最大重试次数。超时。",
+  "loc.messages.RetryAfterMessage": "{0} 秒后重试...",
+  "loc.messages.ActionException": "发生异常: {0}"
+}

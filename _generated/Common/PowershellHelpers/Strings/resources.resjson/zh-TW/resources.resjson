@@ -1,0 +1,5 @@
+{
+  "loc.messages.ActionTimedOut": "超過重試次數上限。即將逾時。",
+  "loc.messages.RetryAfterMessage": "即將在 {0} 後重試...",
+  "loc.messages.ActionException": "發生例外狀況: {0}"
+}

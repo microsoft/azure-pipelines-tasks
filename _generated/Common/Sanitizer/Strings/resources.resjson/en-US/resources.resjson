@@ -1,0 +1,3 @@
+{
+  "loc.messages.PS_ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787"
+}
