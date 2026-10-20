@@ -3,8 +3,11 @@
   "loc.helpMarkDown": "",
   "loc.description": "Настройте среду Node.js и добавьте ее в PATH, дополнительно предоставив поддержку прокси",
   "loc.instanceNameFormat": "Использовать Node $(versionSpec)",
+  "loc.input.label.versionSource": "Источник версии",
   "loc.input.label.version": "Версия",
   "loc.input.help.version": "Спецификация версии для используемой версии. Примеры: 10.x, 10.15.1, >=10.15.0",
+  "loc.input.label.versionFilePath": "Путь к файлу версии",
+  "loc.input.help.versionFilePath": "Путь к файлу для получения версии.  Пример: src/.nvmrc",
   "loc.input.label.checkLatest": "Проверить наличие последней версии",
   "loc.input.help.checkLatest": "Всегда проверяет наличие в Интернете актуальной версии, соответствующей спецификатору версии. Обычно задано значение \"false\", кроме случаев, когда имеется определенный сценарий всегда получать актуальную версию. Когда практическая необходимость в этом отсутствует, особенно в случае размещенного пула сборок, может взиматься дополнительная плата за загрузку.",
   "loc.input.label.force32bit": "Использовать 32-разрядную версию на 64-разрядных агентах",
@@ -20,5 +23,7 @@
   "loc.messages.NodeVersionNotFound": "Не удалось найти версию Node %s для платформы %s и архитектуры %s.",
   "loc.messages.UnexpectedOS": "Непредвиденная ОС %s",
   "loc.messages.AgentTempDirNotSet": "Переменная Agent.TempDirectory должна быть задана.",
-  "loc.messages.InvalidNodejsMirror": "Указанный URL-адрес зеркала Node.js недействителен: \"%s\""
+  "loc.messages.InvalidNodejsMirror": "Указанный URL-адрес зеркала Node.js недействителен: \"%s\"",
+  "loc.messages.VersionFileIsEmpty": "Файл версии \"%s\" пуст.",
+  "loc.messages.InvalidVersionSpecification": "Спецификация версии \"%s\" недействительна."
 }

@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer è stato estratto nel percorso: %s.",
   "loc.messages.CreatedStagingDirectory": "La directory di gestione temporanea in cui archiviare file binari e modelli Packer è stata creata: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Non è stato possibile eliminare la directory di gestione temporanea %s. Eliminarla manualmente.",
+  "loc.messages.CouldNotDeleteTempFile": "Non è possibile eliminare il file delle variabili temporanee %s. Eliminarla manualmente.",
   "loc.messages.InstalledPackerVersion": "La versione attualmente installata di Packer è la %s.",
   "loc.messages.PackerToolBusy": "Packer sembra essere occupato. Verrà effettuato un nuovo tentativo tra 1 secondo...",
   "loc.messages.ResolvingDeployPackageInput": "Risoluzione del percorso del pacchetto di distribuzione.",

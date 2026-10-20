@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "Сбой операции, ожидание %s мс перед повторной попыткой, осталось повторных попыток: %s",
   "loc.messages.RedirectUrlError": "Не удалось получить URL-адрес перенаправления с ошибкой %.",
   "loc.messages.UnsupportedArchiveType": "Неподдерживаемый тип архива: %s",
+  "loc.messages.InvalidPackageFilePath": "Путь к файлу пакета \"%s\" должен быть относительным к целевому каталогу и оставаться в его пределах.",
+  "loc.messages.InvalidPackageFileLink": "Путь к файлу пакета \"%s\" не может содержать символическую ссылку или точку соединения под целевым каталогом.",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Непредвиденная ошибка при попытке скачать пакет. Код завершения (%s) и ошибка (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "Разрешено из кэша инструментов: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Скачивается инструмент артефакта из %s",

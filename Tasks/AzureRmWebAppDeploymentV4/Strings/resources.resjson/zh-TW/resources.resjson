@@ -217,6 +217,7 @@
   "loc.messages.InvalidConnectionType": "服務連線類型無效",
   "loc.messages.InvalidImageSourceType": "映像來源類型無效",
   "loc.messages.InvalidPublishProfile": "發佈設定檔的檔案無效。",
+  "loc.messages.InvalidPublishProfileValue": "發佈設定檔中 '%s' 的值包含不允許的字元。",
   "loc.messages.ASE_SSLIssueRecommendation": "若要在 App Service 中使用憑證，該憑證必須經過信任的憑證授權單位所簽署。若您的 Web 應用程式顯示憑證驗證錯誤，可能是您使用了自我簽署憑證。若要解決這些錯誤，您必須在建置或發行管線中將名為 VSTS_ARM_REST_IGNORE_SSL_ERRORS 的變數設為 true 值",
   "loc.messages.ZipDeployLogsURL": "可於 %s 檢視 Zip 部署記錄",
   "loc.messages.DeployLogsURL": "在 %s 可檢視部署記錄檔",

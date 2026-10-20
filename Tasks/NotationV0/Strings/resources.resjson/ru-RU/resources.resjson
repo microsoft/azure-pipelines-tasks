@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "Не удалось добавить сертификат в хранилище доверия: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "Не удалось получить токен удостоверения рабочей нагрузки: %s.",
   "loc.messages.FailedToImportTrustPolicy": "Не удалось импортировать политику доверия: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "Не удалось перечислить хранилище доверия.",
   "loc.messages.FailedToShowTrustPolicy": "Не удалось отобразить политику доверия.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Попробуйте получить ссылки на артефакты из задачи Docker.",

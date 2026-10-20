@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "No se ha podido agregar un certificado al almacén de confianza: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "No se ha podido obtener el token de identidad de carga de trabajo: %s.",
   "loc.messages.FailedToImportTrustPolicy": "No se ha podido importar la directiva de confianza: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "No se ha podido enumerar el almacén de confianza.",
   "loc.messages.FailedToShowTrustPolicy": "No se ha podido mostrar la directiva de confianza.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Intente obtener referencias de artefacto de la tarea de Docker.",

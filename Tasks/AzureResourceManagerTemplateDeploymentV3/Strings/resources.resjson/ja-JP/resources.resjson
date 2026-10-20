@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "パラメーター ファイル パターンがファイルではなくディレクトリと一致しました。",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "テンプレート ファイル パターンがファイルではなくディレクトリと一致しました: %s",
   "loc.messages.AddedOutputVariable": "出力変数 '%s' が更新されました。この変数には、現在の配置オブジェクトの出力セクションが文字列形式で格納されています。",
+  "loc.messages.OutputVariableNameChanged": "出力変数名 '%s' は、変数の発行時に以前は別の名前にデコードまたは切り詰められていました。宣言された名前が文字どおり使用されるようになりました。パイプラインで以前の名前を参照していた場合は、宣言された名前に更新してください。",
   "loc.messages.UnableToReadResponseBody": "応答本文を読み取ることができません。エラー: %s",
   "loc.messages.MoreInformationOnAzurePortal": "詳細は Azure portal にあります",
   "loc.messages.LogDeploymentName": "配置名は %s です",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "サブスクリプションの設定中にエラーが発生しました: %s",
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" が失敗しました。エラー: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }

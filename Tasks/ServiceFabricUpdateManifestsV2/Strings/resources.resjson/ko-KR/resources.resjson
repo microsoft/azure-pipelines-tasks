@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "이미지 이름 목록 및 다이제스트 목록의 길이가 같아야 합니다. 이미지 이름 수: '{0}', 이미지 다이제스트 수: '{1}'.",
   "loc.messages.AmbiguousImages": "'{0}' 리포지토리에 다이제스트가 두 개 이상 있습니다. 구분하려면 \"이미지 이름 경로\" 입력에 원래 이미지 이름 목록의 경로를 제공해야 합니다.",
   "loc.messages.ImageDigestNameMismatch": "'{0}' 다이제스트는 '{1}' 이미지와 일치하지 않습니다.",
-  "loc.messages.NoDigestForImage": "'{0}' 이미지에 대한 다이제스트를 찾을 수 없습니다."
+  "loc.messages.NoDigestForImage": "'{0}' 이미지에 대한 다이제스트를 찾을 수 없습니다.",
+  "loc.messages.InvalidManifestPathSegment": "{0} 값 '{1}'이(가) 잘못되었습니다. 매니페스트 경로 세그먼트 이름은 비어 있지 않은 단일 이름이어야 합니다. '.' 또는 '..'이어서는 안 됩니다. 경로 구분자나 파일 이름에 사용할 수 없는 문자를 포함해서도 안 되며, 마침표나 공백으로 끝나서도 안 됩니다."
 }

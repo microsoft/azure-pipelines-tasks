@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "Impossibile aggiungere il certificato all'archivio attendibilità: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "Impossibile ottenere il token di identità del carico di lavoro: %s.",
   "loc.messages.FailedToImportTrustPolicy": "Impossibile importare il criterio di attendibilità: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "Impossibile elencare l'archivio attendibilità.",
   "loc.messages.FailedToShowTrustPolicy": "Impossibile visualizzare il criterio di attendibilità.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Provare a ottenere i riferimenti ad artefatto dall'attività Docker.",
