@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 8
+    "Patch": 10
   },
   "runsOn": [
     "Agent",
@@ -117,6 +117,8 @@
     "Warning_HomeDirectoryNotWritable": "ms-resource:loc.messages.Warning_HomeDirectoryNotWritable",
     "Error_NoWritableBackupDirectory": "ms-resource:loc.messages.Error_NoWritableBackupDirectory",
     "Info_SkippingNonHttpsWifRegistry": "ms-resource:loc.messages.Info_SkippingNonHttpsWifRegistry",
+    "Info_SkippingUnverifiedWifRegistry": "ms-resource:loc.messages.Info_SkippingUnverifiedWifRegistry",
+    "Error_WifFeedUrlNotVerified": "ms-resource:loc.messages.Error_WifFeedUrlNotVerified",
     "Error_MixedRegistrySchemes": "ms-resource:loc.messages.Error_MixedRegistrySchemes",
     "Debug_EndpointProbeTimedOut": "ms-resource:loc.messages.Debug_EndpointProbeTimedOut",
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"

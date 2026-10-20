@@ -3,6 +3,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
+#if WIF
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
+#endif
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
 import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
@@ -62,6 +66,14 @@ async function main(): Promise<void> {
         } else {
             tl.debug(tl.loc('Info_ApplyingWifToAllRegistries', npmrcRegistries.length));
         }
+        // An explicitly requested feed must be an Azure Artifacts feed; never send the WIF token elsewhere.
+        if (feedUrl) {
+            try {
+                await verifyAzureArtifactsFeedUrl(feedUrl, ProtocolType.Npm);
+            } catch (error) {
+                throw new Error(tl.loc('Error_WifFeedUrlNotVerified', error instanceof Error ? error.message : String(error)));
+            }
+        }
     } else if (feedUrl) {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
@@ -82,6 +94,13 @@ async function main(): Promise<void> {
         if (entraWifServiceConnectionName) {
             if (registryURL.protocol !== 'https:') {
                 npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
+                continue;
+            }
+
+            try {
+                await verifyAzureArtifactsFeedUrl(registryUrlString, ProtocolType.Npm);
+            } catch {
+                npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingUnverifiedWifRegistry', registryURL.host));
                 continue;
             }
 

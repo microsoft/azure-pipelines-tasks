@@ -76,6 +76,17 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConne
     getFeedTenantId: async function () { return 'mock-tenant-id'; }
 });
 
+tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async function (feedUrl: string | URL) {
+        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        if (parsedFeedUrl.protocol !== 'https:' ||
+            (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com'))) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
+        return parsedFeedUrl;
+    }
+});
+
 // Mock http/https for isEndpointInternal probe (returns non-Azure DevOps response)
 const mockHttpModule = {
     get: function (_url: any, _options: any, callback: Function) {
