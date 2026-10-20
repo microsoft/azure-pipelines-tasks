@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "Fehler beim Hinzufügen eines Zertifikats zum Vertrauensspeicher: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "Fehler beim Abrufen des Workloadidentitätstokens: %s.",
   "loc.messages.FailedToImportTrustPolicy": "Fehler beim Importieren der Vertrauensstellungsrichtlinie: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "Fehler beim Auflisten des Vertrauensspeichers.",
   "loc.messages.FailedToShowTrustPolicy": "Fehler beim Anzeigen der Vertrauensstellungsrichtlinie.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Versuchen Sie, Artefaktverweise aus dem Docker-Task abzurufen.",

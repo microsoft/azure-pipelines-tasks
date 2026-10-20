@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "Échec de l’ajout d’un certificat au magasin d’approbation : %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "Échec de l’obtention du jeton d’identité de charge de travail : %s.",
   "loc.messages.FailedToImportTrustPolicy": "Échec de l’importation de la stratégie d’approbation : %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "Échec de la liste du magasin d’approbations.",
   "loc.messages.FailedToShowTrustPolicy": "Échec de l’affichage de la stratégie d’approbation.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Essayez d’obtenir des références d’artefact à partir de la tâche Docker.",
