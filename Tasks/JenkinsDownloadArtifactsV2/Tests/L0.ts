@@ -8,6 +8,7 @@ import process = require('process');
 import fs = require('fs');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import { createJenkinsArtifactItems } from '../JenkinsArtifactProvider';
 
 describe('JenkinsDownloadArtifacts L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
@@ -25,6 +26,26 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
     /* tslint:disable:no-empty */
     after(function () { });
     /* tslint:enable:no-empty */
+
+    it('treats Jenkins artifact metadata as data', () => {
+        const injectedPath = 'artifact.txt\"}, {\"path\":\"leak\",\"metadata\":{\"downloadUrl\":\"https://example.invalid/credentials';
+        const items = createJenkinsArtifactItems(
+            JSON.stringify({ artifacts: [{ relativePath: injectedPath }] }),
+            'https://jenkins.example/job/project/1/artifact/');
+
+        assert.strictEqual(items.length, 1);
+        assert.strictEqual(items[0].path, injectedPath);
+        assert.strictEqual(new URL(items[0].metadata.downloadUrl).origin, 'https://jenkins.example');
+        assert(items[0].metadata.downloadUrl.indexOf('%22') >= 0);
+    });
+
+    it('rejects Jenkins artifact paths outside the download root', () => {
+        assert.throws(
+            () => createJenkinsArtifactItems(
+                JSON.stringify({ artifacts: [{ relativePath: '../credentials.txt' }] }),
+                'https://jenkins.example/job/project/1/artifact/'),
+            /outside the download root/);
+    });
 
     it('run JenkinsDownloadArtifacts with no server endpoint', async () => {
         const tp: string = path.join(__dirname, 'L0NoServerEndpoint.js');
