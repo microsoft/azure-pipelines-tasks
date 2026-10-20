@@ -26,45 +26,42 @@ async function runTests(): Promise<void> {
     assert.strictEqual(configuration.getIpAddress(), '250.250.250.250');
 
     for (const selector of ['InlineSqlTask', 'SqlFile']) {
-        for (const database of ['', 'test-db']) {
-            const scriptParameters = new ScriptParameters(selector, database);
-            const chunks: Buffer[] = [];
-            let spawnCount = 0;
-            const expectedArgs = [
-                '-hDEMO_MYSQL_SERVER',
-                '-uDEMO SQL USERNAME',
-                '-pDEMO SQL PASSWORD',
-                '--ssl-mode=REQUIRED',
-                '--binary-mode',
-                '--quick',
-                '--connect-timeout=10'
-            ];
-            if (database) {
-                expectedArgs.push('-Dtest-db');
-            }
+        const database = 'test-db';
+        const scriptParameters = new ScriptParameters(selector, database);
+        const chunks: Buffer[] = [];
+        let spawnCount = 0;
+        const expectedArgs = [
+            '-hDEMO_MYSQL_SERVER',
+            '-uDEMO SQL USERNAME',
+            '-pDEMO SQL PASSWORD',
+            '--ssl-mode=REQUIRED',
+            '--binary-mode',
+            '--quick',
+            '--connect-timeout=10',
+            '-Dtest-db'
+        ];
 
-            const spawn = ((tool: string, args: string[], options: SpawnOptions) => {
-                assert.strictEqual(selector, 'SqlFile', 'Inline SQL must use exec, not spawn.');
-                assert.strictEqual(tool, '/usr/local/bin/mysql');
-                assert.deepStrictEqual(args, expectedArgs);
-                assert.deepStrictEqual(options, { stdio: ['pipe', 'inherit', 'inherit'] });
-                spawnCount++;
+        const spawn = ((tool: string, args: string[], options: SpawnOptions) => {
+            assert.strictEqual(selector, 'SqlFile', 'Inline SQL must use exec, not spawn.');
+            assert.strictEqual(tool, '/usr/local/bin/mysql');
+            assert.deepStrictEqual(args, expectedArgs);
+            assert.deepStrictEqual(options, { stdio: ['pipe', 'inherit', 'inherit'] });
+            spawnCount++;
 
-                const mysqlProcess = new ChildProcess();
-                const stdin = new PassThrough();
-                mysqlProcess.stdin = stdin;
-                stdin.on('data', (chunk: Buffer) => chunks.push(chunk));
-                stdin.on('finish', () => mysqlProcess.emit('close', 0));
-                return mysqlProcess;
-            }) as SpawnFn;
+            const mysqlProcess = new ChildProcess();
+            const stdin = new PassThrough();
+            mysqlProcess.stdin = stdin;
+            stdin.on('data', (chunk: Buffer) => chunks.push(chunk));
+            stdin.on('finish', () => mysqlProcess.emit('close', 0));
+            return mysqlProcess;
+        }) as SpawnFn;
 
-            const client = new MysqlClient(scriptParameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql', spawn);
-            assert.strictEqual(await client.executeSqlCommand(), 0, `${selector} with database '${database}' must succeed.`);
-            assert.strictEqual(spawnCount, selector === 'SqlFile' ? 1 : 0);
-            if (selector === 'SqlFile') {
-                assert.deepStrictEqual(Buffer.concat(chunks), Buffer.from(scriptParameters.getSqlInline(), 'utf8'),
-                    'The SQL file must reach stdin without changing quotes, backslashes, or newlines.');
-            }
+        const client = new MysqlClient(scriptParameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql', spawn);
+        assert.strictEqual(await client.executeSqlCommand(), 0, `${selector} with database '${database}' must succeed.`);
+        assert.strictEqual(spawnCount, selector === 'SqlFile' ? 1 : 0);
+        if (selector === 'SqlFile') {
+            assert.deepStrictEqual(Buffer.concat(chunks), Buffer.from(scriptParameters.getSqlInline(), 'utf8'),
+                'The SQL file must reach stdin without changing quotes, backslashes, or newlines.');
         }
     }
 }

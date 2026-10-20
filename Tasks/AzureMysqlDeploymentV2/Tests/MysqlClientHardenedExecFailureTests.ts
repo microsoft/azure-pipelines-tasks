@@ -8,7 +8,7 @@ import * as path from 'path';
 export class MysqlClientHardenedExecFailureTests {
 
     public static async startTests(): Promise<void> {
-        const tr = new TaskMockRunner(path.join(__dirname, 'MysqlClientHardenedExecFailureL0Tests.js'));
+        const tr = new TaskMockRunner(path.join(__dirname, 'MysqlClientExecFailureL0Tests.js'));
 
         tr.setInput('ConnectedServiceName', 'DEMO_CONNECTED_SERVICE_NAME');
         tr.setInput('ServerName', 'MOCK_SERVER_NAME');

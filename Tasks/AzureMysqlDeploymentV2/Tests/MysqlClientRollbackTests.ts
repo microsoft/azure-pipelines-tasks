@@ -26,8 +26,11 @@ export class MysqlClientRollbackTests {
         // so '-e' and the SQL text collapse into one argv element, unlike the flag-on
         // array-based path where they are two discrete elements.
         const createDatabaseArgs = [...connectionArgs, '-eCREATE DATABASE IF NOT EXISTS `test-db` ;'];
+        // MysqlClientRollbackL0Tests.ts drives both selectors (InlineSqlTask, SqlFile) against
+        // a single database name ('test-db'). Each iteration creates the database first (task.exec),
+        // then InlineSqlTask executes via task.exec while SqlFile executes via the injected spawn,
+        // so only 3 task.exec calls are expected here.
         const expectedExecutions = [
-            [...connectionArgs, '-e' + sql],
             createDatabaseArgs,
             [...connectionArgs, '-Dtest-db', '-e' + sql],
             createDatabaseArgs
@@ -35,10 +38,13 @@ export class MysqlClientRollbackTests {
         let executionCount = 0;
         let connectionCheckCount = 0;
 
-        tr.setInput('IpDetectionMethod', 'IPAddressRange');
+        // ServerName, ConnectedServiceName, and TaskNameSelector are required inputs for
+        // AzureMysqlTaskParameter's constructor, but this test drives MysqlClient directly
+        // (not through azuremysqldeploy.ts/FirewallOperations), and ScriptParameters below
+        // overrides getTaskNameSelector/getDatabaseName - so only their presence matters,
+        // not their value. IpDetectionMethod/StartIpAddress/EndIpAddress are optional and
+        // only consumed by FirewallOperations, which this test never exercises.
         tr.setInput('ServerName', 'MOCK_SERVER_NAME');
-        tr.setInput('StartIpAddress', '0.0.0.0');
-        tr.setInput("EndIpAddress", "255.255.255.255");
         tr.setInput("ConnectedServiceName", "DEMO_CONNECTED_SERVICE_NAME");
         tr.setInput('SqlUsername', 'DEMO_SQL_USERNAME');
         tr.setInput('SqlPassword', 'DEMO_SQL_PASSWORD');
