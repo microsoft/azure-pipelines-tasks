@@ -1,3 +1,3 @@
-import { downloadArguments, runTask } from "pipeline-artifact-common";
+import { prepareDownload, runTask } from "pipeline-artifact-common";
 
-void runTask(downloadArguments);
+void runTask(context => prepareDownload(context.task, context.buildService(), context.log));

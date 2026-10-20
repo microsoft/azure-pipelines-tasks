@@ -3,9 +3,18 @@ import * as os from "node:os";
 import { randomUUID } from "node:crypto";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as toolLib from "azure-pipelines-tool-lib/tool";
-import { TaskInputs } from "./arguments";
+import { PipelineBuildService, createBuildService } from "./buildService";
+import { TaskInputs, ToolPlan } from "./inputs";
 import { TokenVariable, runArtifactTool } from "./toolRunner";
 import { ToolResolverDeps, resolveArtifactTool } from "./toolResolver";
+
+/** What a task's input processing can use. */
+export interface TaskContext {
+    task: TaskInputs;
+    buildService(): PipelineBuildService;
+    /** Logs a message that may contain service-provided text, with logging commands neutralized. */
+    log(message: string): void;
+}
 
 export const taskInputs: TaskInputs = {
     input: (name, required) => tl.getInput(name, required) ?? "",
@@ -41,18 +50,31 @@ export function createResolverDeps(): ToolResolverDeps {
 }
 
 /**
- * Runs a pipeline artifact task: acquires ArtifactTool and runs it with the mapped arguments. ArtifactTool
- * reports output variables, warnings, and errors itself; the task only reports success or failure.
+ * Runs a pipeline artifact task: processes the inputs into a plan, acquires ArtifactTool, reports the plan's
+ * warnings and variables, and runs ArtifactTool for the transfer. ArtifactTool reports nothing to the agent;
+ * the task sets the result from its exit code.
  */
-export async function runTask(buildArguments: (task: TaskInputs) => string[]): Promise<void> {
+export async function runTask(prepare: (context: TaskContext) => Promise<ToolPlan>): Promise<void> {
     try {
         const serviceUrl = tl.getEndpointUrlRequired("SYSTEMVSSCONNECTION");
         const token = tl.getEndpointAuthorizationParameterRequired("SYSTEMVSSCONNECTION", "AccessToken");
         tl.setSecret(token);
 
-        const args = buildArguments(taskInputs);
+        const plan = await prepare({
+            task: taskInputs,
+            buildService: () => createBuildService(tl.getVariable("System.TeamFoundationCollectionUri") || serviceUrl, token),
+            log: message => tl.writeExternalOutput(message + os.EOL, { source: "remote" })
+        });
         const executable = await resolveArtifactTool(createResolverDeps(), serviceUrl);
-        args.push("--service", serviceUrl, "--patvar", TokenVariable);
+
+        for (const warning of plan.warnings) {
+            tl.warning(warning);
+        }
+        for (const [name, value] of Object.entries(plan.variables)) {
+            tl.setVariable(name, value);
+        }
+
+        const args = [...plan.args, "--service", serviceUrl, "--patvar", TokenVariable, "--stdout-logging", "--unstructured-logging"];
         if (tl.getVariable("System.Debug")?.toLowerCase() === "true") {
             args.push("--verbosity", "Debug");
         }
@@ -63,9 +85,15 @@ export async function runTask(buildArguments: (task: TaskInputs) => string[]): P
             token,
             cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd()
         });
+        if (exitCode !== 0) {
+            tl.setResult(tl.TaskResult.Failed, `ArtifactTool failed with exit code ${exitCode}. See the log above for details.`);
+            return;
+        }
 
-        // ArtifactTool has already logged the error; an empty message avoids reporting it twice.
-        tl.setResult(exitCode === 0 ? tl.TaskResult.Succeeded : tl.TaskResult.Failed, "");
+        for (const [name, value] of Object.entries(plan.variablesOnSuccess)) {
+            tl.setVariable(name, value);
+        }
+        tl.setResult(tl.TaskResult.Succeeded, "");
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error instanceof Error ? error.message : String(error));
     }

@@ -1,0 +1,21 @@
+/** Reads task inputs and pipeline variables. Implemented with task-lib at run time and by fakes in tests. */
+export interface TaskInputs {
+    input(name: string, required?: boolean): string;
+    boolInput(name: string): boolean;
+    variable(name: string): string | undefined;
+}
+
+/**
+ * What the task does once its inputs are processed: the ArtifactTool arguments for the transfer, warnings to
+ * report, variables to set before the transfer, and variables to set only when it succeeds.
+ */
+export interface ToolPlan {
+    args: string[];
+    warnings: string[];
+    variables: Record<string, string>;
+    variablesOnSuccess: Record<string, string>;
+}
+
+export function emptyPlan(args: string[]): ToolPlan {
+    return { args, warnings: [], variables: {}, variablesOnSuccess: {} };
+}

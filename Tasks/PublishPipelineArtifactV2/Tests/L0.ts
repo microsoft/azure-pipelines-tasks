@@ -2,17 +2,19 @@ import * as assert from "assert";
 import * as path from "path";
 import { Writable } from "stream";
 import {
-    AllowedToolCommands,
-    ResumeTokenVariable,
+    PublishEnvironment,
     TaskInputs,
     ToolResolverDeps,
     TokenVariable,
     downloadUrl,
-    publishArguments,
+    normalizeJobIdentifier,
+    parseParallelCount,
+    preparePublish,
     resolveArtifactTool,
     runArtifactTool,
     toolDirectory,
-    toolPlatform
+    toolPlatform,
+    validateArtifactName
 } from "pipeline-artifact-common";
 
 function inputs(values: Record<string, string>, variables: Record<string, string> = {}): TaskInputs {
@@ -37,50 +39,77 @@ function optionValue(args: string[], option: string): string | undefined {
 describe("PublishPipelineArtifact L0 Suite", function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT || "20000"));
 
-    describe("publishArguments", () => {
-        const variables = {
-            "System.TeamProjectId": "project-id",
-            "Build.BuildId": "42",
-            "System.JobIdentifier": "Build.Job",
-            "System.JobId": "job-id",
-            "System.HostType": "build"
-        };
-
-        it("maps pipeline publish inputs and job variables", () => {
-            const args = publishArguments(inputs({ path: "out", artifactName: "drop", properties: "{\"user-a\":\"1\"}" }, variables));
-
-            assert.deepStrictEqual(args.slice(0, 2), ["pipelineartifact", "publish"]);
-            assert.strictEqual(optionValue(args, "--project"), "project-id");
-            assert.strictEqual(optionValue(args, "--pipeline-id"), "42");
-            assert.strictEqual(optionValue(args, "--path"), "out");
-            assert.strictEqual(optionValue(args, "--artifact-name"), "drop");
-            assert.strictEqual(optionValue(args, "--job-identifier"), "Build.Job");
-            assert.strictEqual(optionValue(args, "--properties"), "{\"user-a\":\"1\"}");
-            assert.strictEqual(optionValue(args, "--artifact-type"), "pipeline");
-            assert.strictEqual(args.indexOf("--file-share-path"), -1);
+    describe("artifact names", () => {
+        it("derives the default name from the job identifier like the previous major", () => {
+            assert.strictEqual(normalizeJobIdentifier("Build_Job.default"), "BuildJob");
+            assert.strictEqual(normalizeJobIdentifier("Stage 1.Job-A.default"), "Stage 1.JobA");
         });
 
-        it("omits the artifact name so ArtifactTool applies the job default", () => {
-            const args = publishArguments(inputs({ path: "out" }, variables));
-
-            assert.strictEqual(args.indexOf("--artifact-name"), -1);
-        });
-
-        it("passes file share options only for file share publishes", () => {
-            const args = publishArguments(inputs({ path: "out", artifactType: "filepath", fileSharePath: "\\\\share\\drop", parallel: "true", parallelCount: "16" }, variables));
-
-            assert.strictEqual(optionValue(args, "--artifact-type"), "filepath");
-            assert.strictEqual(optionValue(args, "--file-share-path"), "\\\\share\\drop");
-            assert.strictEqual(optionValue(args, "--parallel-count"), "16");
-        });
-
-        it("does not pass a parallel count when parallel copy is off", () => {
-            const args = publishArguments(inputs({ path: "out", artifactType: "filepath", fileSharePath: "\\\\share\\drop", parallelCount: "16" }, variables));
-
-            assert.strictEqual(args.indexOf("--parallel-count"), -1);
+        it("rejects invalid names with the previous major's message", () => {
+            assert.throws(() => validateArtifactName("a/b"), /^Error: Artifact name is not valid: a\/b\. It cannot contain '\\', '\/', '"', ':', '<', '>', '\|', '\*', '\?', or control characters\. It cannot be empty or consist entirely of dots or spaces\.$/);
+            assert.throws(() => validateArtifactName(" . "), /Artifact name is not valid/);
+            assert.throws(() => validateArtifactName("tab\there"), /Artifact name is not valid/);
+            validateArtifactName("##vso[task.setvariable variable=x]y");
         });
     });
 
+    describe("preparePublish", () => {
+        const variables = {
+            "System.TeamProjectId": "project-id",
+            "Build.BuildId": "42",
+            "System.JobIdentifier": "Build.Job.__default",
+            "System.JobId": "job-id",
+            "System.HostType": "build",
+            "System.DefaultWorkingDirectory": path.resolve("work")
+        };
+        const windows: PublishEnvironment = { platform: "win32", exists: () => true };
+
+        it("resolves the path, maps the inputs, and leaves properties to ArtifactTool", () => {
+            const plan = preparePublish(inputs({ path: "out", artifactName: "drop", properties: "{\"user-a\":1}" }, variables), windows);
+
+            assert.deepStrictEqual(plan.args, [
+                "pipelineartifact", "publish", "--project", "project-id", "--pipeline-id", "42",
+                "--path", path.resolve("work", "out"), "--artifact-name", "drop", "--artifact-type", "pipeline",
+                "--properties", "{\"user-a\":1}", "--job-id", "job-id"
+            ]);
+            assert.deepStrictEqual(plan.warnings, []);
+        });
+
+        it("defaults the artifact name to the normalized job identifier", () => {
+            const plan = preparePublish(inputs({ path: "out" }, variables), windows);
+
+            assert.strictEqual(optionValue(plan.args, "--artifact-name"), "Build.Job");
+        });
+
+        it("validates the name, host type, run ID, and path before ArtifactTool runs", () => {
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "a:b" }, variables), windows), /Artifact name is not valid: a:b/);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "System.HostType": "release" }), windows),
+                /published only from build jobs, not 'release' jobs/);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "Build.BuildId": "" }), windows), /Build\.BuildId/);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, variables), { platform: "win32", exists: () => false }),
+                new RegExp(`^Error: Path does not exist: ${path.resolve("work", "out").replace(/\\/g, "\\\\")}$`));
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactType: "zip" }, variables), windows), /Artifact type 'zip' is not recognized/);
+        });
+
+        it("passes file share options and clamps the parallel count with a warning", () => {
+            const plan = preparePublish(inputs({ path: "out", artifactType: "FilePath", fileSharePath: "\\\\share\\drop", parallel: "true", parallelCount: "500" },
+                { ...variables, "System.HostType": "release" }), windows);
+
+            assert.strictEqual(optionValue(plan.args, "--artifact-type"), "filepath");
+            assert.strictEqual(optionValue(plan.args, "--file-share-path"), "\\\\share\\drop");
+            assert.strictEqual(optionValue(plan.args, "--parallel-count"), "128");
+            assert.deepStrictEqual(plan.warnings, ["The parallel count must be at least 1 and not greater than 128; using the nearest allowed value."]);
+        });
+
+        it("omits the parallel count when parallel copy is off and rejects file shares off Windows", () => {
+            const plan = preparePublish(inputs({ path: "out", artifactType: "filepath", fileSharePath: "\\\\share\\drop", parallelCount: "16" }, variables), windows);
+
+            assert.strictEqual(plan.args.indexOf("--parallel-count"), -1);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactType: "filepath", fileSharePath: "/mnt/share" }, variables),
+                { platform: "linux", exists: () => true }), /supported only on Windows/);
+            assert.throws(() => parseParallelCount("many", []), /must be a number/);
+        });
+    });
     describe("toolPlatform", () => {
         it("maps Windows, macOS and glibc Linux", () => {
             assert.deepStrictEqual(toolPlatform("win32", "x64", undefined), { osName: "Windows", arch: "amd64" });
@@ -214,11 +243,10 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             return { stream, lines: () => text.split(/\r?\n/).filter(line => line.length > 0) };
         }
 
-        it("pauses commands, passes both tokens only through the environment, and always resumes", async () => {
+        it("passes the token only through the environment and returns the exit code", async () => {
             const output = capture();
             const script = [
-                `console.log("token:" + (process.env.${TokenVariable} === process.argv[1]) + " length:" + process.env.${TokenVariable}.length);`,
-                `console.log("resume:" + process.env.${ResumeTokenVariable});`,
+                `console.log("length:" + process.env.${TokenVariable}.length + " args:" + process.argv.slice(1).join(","));`,
                 "process.exit(3);"
             ].join("\n");
 
@@ -231,33 +259,25 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             });
 
             const lines = output.lines();
-            const pause = /^##vso\[agent\.pausecommands\]([0-9a-f]{64})$/.exec(lines[0]);
-            assert.ok(pause, lines.join("\n"));
-            const token = pause![1];
             assert.strictEqual(exitCode, 3);
-            assert.ok(lines.includes("token:false length:18"), lines.join("\n"));
-            assert.ok(lines.includes(`resume:${token}`), lines.join("\n"));
-            assert.strictEqual(lines[lines.length - 1], `##vso[agent.resumecommands]${token}`);
+            assert.ok(lines.includes("length:18 args:plain-arg"), lines.join("\n"));
             assert.ok(!lines.some(line => line.includes("access-token-value")), lines.join("\n"));
         });
 
-        it("lets only resume, set-variable, and issue commands through from ArtifactTool output", async () => {
+        it("neutralizes every logging command in ArtifactTool output", async () => {
             const output = capture();
             const script = [
                 "console.log('##vso[task.setvariable variable=BuildNumber;]42');",
-                "console.log('##vso[task.logissue type=warning]careful');",
-                "console.log('##vso[task.complete result=Succeeded;]done');",
+                "console.log('name ##vso[task.complete result=Succeeded;]done');",
                 "console.error('##vso[task.prependpath]C:\\\\evil');"
             ].join("\n");
 
             await runArtifactTool({ executable: process.execPath, args: ["-e", script], token: "t", cwd: process.cwd(), outStream: output.stream });
 
-            const lines = output.lines();
-            assert.deepStrictEqual([...AllowedToolCommands], ["agent.resumecommands", "task.setvariable", "task.logissue"]);
-            assert.ok(lines.includes("##vso[task.setvariable variable=BuildNumber;]42"), lines.join("\n"));
-            assert.ok(lines.includes("##vso[task.logissue type=warning]careful"), lines.join("\n"));
-            assert.ok(lines.includes("##_vso[task.complete result=Succeeded;]done"), lines.join("\n"));
-            assert.ok(lines.includes("##_vso[task.prependpath]C:\\evil"), lines.join("\n"));
+            const text = output.lines().join("\n");
+            assert.ok(text.includes("##_vso[task.setvariable variable=BuildNumber;]42"), text);
+            assert.ok(text.includes("name ##_vso[task.complete result=Succeeded;]done"), text);
+            assert.ok(text.includes("##_vso[task.prependpath]C:\\evil"), text);
+            assert.ok(!/(^|[^_])##vso\[/.test(text.split("\n").filter(line => !line.startsWith("[command]")).join("\n")), text);
         });
-    });
-});
+    });});

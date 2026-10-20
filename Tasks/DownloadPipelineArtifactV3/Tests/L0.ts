@@ -1,5 +1,16 @@
 import * as assert from "assert";
-import { TaskInputs, downloadArguments } from "pipeline-artifact-common";
+import * as path from "path";
+import {
+    BuildArtifact,
+    BuildResult,
+    FileShareDownloadWarning,
+    PipelineBuildService,
+    TaskInputs,
+    prepareDownload,
+    resolveRun
+} from "pipeline-artifact-common";
+
+const ProjectId = "6f3b2b8e-3f43-4e4c-9c1e-0c1b6f8f2a11";
 
 function inputs(values: Record<string, string>, variables: Record<string, string> = {}): TaskInputs {
     return {
@@ -24,80 +35,156 @@ function optionValues(args: string[], option: string): string[] {
     return args.flatMap((arg, index) => arg === option ? [args[index + 1]] : []);
 }
 
+function artifact(name: string, type = "PipelineArtifact"): BuildArtifact {
+    return { name, resource: { type } } as BuildArtifact;
+}
+
+function fakeService(artifacts: BuildArtifact[] = [artifact("drop")]): PipelineBuildService & { calls: string[] } {
+    const calls: string[] = [];
+    return {
+        calls,
+        getProjectId: async project => { calls.push(`project ${project}`); return project === "Other" ? ProjectId : undefined; },
+        getDefinitionId: async (projectId, name) => { calls.push(`definition ${projectId} ${name}`); return name === "Build CI" ? 7 : undefined; },
+        getLatestRunId: async (projectId, definitionId, branch, tags, resultFilter) => {
+            calls.push(`latest ${projectId} ${definitionId} ${branch ?? "-"} [${tags.join("|")}] ${resultFilter}`);
+            return 99;
+        },
+        getArtifact: async (projectId, runId, name) => { calls.push(`artifact ${projectId} ${runId} ${name}`); return artifacts.find(a => a.name === name); },
+        getArtifacts: async (projectId, runId) => { calls.push(`artifacts ${projectId} ${runId}`); return artifacts; }
+    };
+}
+
 describe("DownloadPipelineArtifact L0 Suite", function () {
-    const buildVariables = { "System.TeamProjectId": "project-id", "Build.BuildId": "42", "System.HostType": "build" };
+    const buildVariables = {
+        "System.TeamProjectId": ProjectId, "Build.BuildId": "42", "System.HostType": "build",
+        "System.DefaultWorkingDirectory": path.resolve("work")
+    };
+    const noLog = () => undefined;
 
-    it("downloads from the current run using job variables", () => {
-        const args = downloadArguments(inputs({ source: "current", artifact: "drop", patterns: "**", path: "out" }, buildVariables));
+    describe("resolveRun", () => {
+        it("uses the current run from job variables", async () => {
+            assert.deepStrictEqual(await resolveRun(inputs({ source: "current" }, buildVariables), fakeService(), noLog), { projectId: ProjectId, runId: 42 });
+        });
 
-        assert.deepStrictEqual(args.slice(0, 2), ["pipelineartifact", "download"]);
-        assert.strictEqual(optionValue(args, "--source"), "current");
-        assert.strictEqual(optionValue(args, "--project"), "project-id");
-        assert.strictEqual(optionValue(args, "--pipeline-id"), "42");
-        assert.strictEqual(optionValue(args, "--artifact-name"), "drop");
-        assert.strictEqual(optionValue(args, "--path"), "out");
-        assert.strictEqual(args.indexOf("--run-version"), -1);
+        it("explains why the current run is unavailable in release jobs", async () => {
+            await assert.rejects(resolveRun(inputs({ source: "current" }, { ...buildVariables, "Build.BuildId": "", "System.HostType": "Release" }), fakeService(), noLog),
+                /build ID is not available in a Release job/);
+        });
+
+        it("resolves a project name and a specific run", async () => {
+            const service = fakeService();
+
+            const run = await resolveRun(inputs({ source: "specific", project: "Other", runVersion: "specific", runId: "123" }, buildVariables), service, noLog);
+
+            assert.deepStrictEqual(run, { projectId: ProjectId, runId: 123 });
+            assert.deepStrictEqual(service.calls, ["project Other"]);
+        });
+
+        it("rejects unknown projects and invalid run IDs", async () => {
+            await assert.rejects(resolveRun(inputs({ source: "specific", project: "Missing", runVersion: "specific", runId: "1" }), fakeService(), noLog),
+                /Get project failed for project: Missing/);
+            await assert.rejects(resolveRun(inputs({ source: "specific", project: ProjectId, runVersion: "specific", runId: "x" }), fakeService(), noLog),
+                /Run ID 'x' is not valid/);
+        });
+
+        it("selects the latest run from a branch with the definition name, tags, and result filters", async () => {
+            const service = fakeService();
+
+            const run = await resolveRun(inputs({
+                source: "specific", project: ProjectId, pipeline: "Build CI", runVersion: "latestFromBranch", runBranch: "refs/heads/main",
+                tags: "a, ,b", allowPartiallySucceededBuilds: "true", allowFailedBuilds: "true"
+            }), service, noLog);
+
+            assert.deepStrictEqual(run, { projectId: ProjectId, runId: 99 });
+            assert.deepStrictEqual(service.calls, [
+                `definition ${ProjectId} Build CI`,
+                `latest ${ProjectId} 7 refs/heads/main [a|b] ${BuildResult.Succeeded | BuildResult.PartiallySucceeded | BuildResult.Failed}`
+            ]);
+        });
+
+        it("requires a definition and a branch for latest selections", async () => {
+            await assert.rejects(resolveRun(inputs({ source: "specific", project: ProjectId, runVersion: "latest" }), fakeService(), noLog), /pipeline definition is required/);
+            await assert.rejects(resolveRun(inputs({ source: "specific", project: ProjectId, pipeline: "7", runVersion: "latestFromBranch" }), fakeService(), noLog),
+                /branch is required/);
+            await assert.rejects(resolveRun(inputs({ source: "specific", project: ProjectId, pipeline: "Nope", runVersion: "latest" }), fakeService(), noLog),
+                /Pipeline 'Nope' does not exist/);
+        });
+
+        it("prefers the triggering build in build jobs", async () => {
+            const logs: string[] = [];
+            const service = fakeService();
+
+            const run = await resolveRun(inputs({ source: "specific", project: ProjectId, pipeline: "7", runVersion: "latest", preferTriggeringPipeline: "true" },
+                { ...buildVariables, "Build.TriggeredBy.DefinitionId": "7", "Build.TriggeredBy.BuildId": "55" }), service, message => logs.push(message));
+
+            assert.deepStrictEqual(run, { projectId: ProjectId, runId: 55 });
+            assert.deepStrictEqual(logs, ["Using triggering run 55."]);
+            assert.deepStrictEqual(service.calls, []);
+        });
+
+        it("prefers the triggering artifact in release jobs", async () => {
+            const run = await resolveRun(inputs({ source: "specific", project: ProjectId, pipeline: "7", runVersion: "latest", preferTriggeringPipeline: "true" }, {
+                "System.HostType": "release", "Release.TriggeringArtifact.Alias": "ci",
+                "Release.Artifacts.ci.DefinitionId": "7", "Release.Artifacts.ci.BuildId": "77"
+            }), fakeService(), noLog);
+
+            assert.deepStrictEqual(run, { projectId: ProjectId, runId: 77 });
+        });
+
+        it("ignores a triggering build of another definition", async () => {
+            const run = await resolveRun(inputs({ source: "specific", project: ProjectId, pipeline: "7", runVersion: "latest", preferTriggeringPipeline: "true" },
+                { ...buildVariables, "Build.TriggeredBy.DefinitionId": "8", "Build.TriggeredBy.BuildId": "55" }), fakeService(), noLog);
+
+            assert.deepStrictEqual(run, { projectId: ProjectId, runId: 99 });
+        });
     });
 
-    it("omits the artifact name for multi-artifact downloads", () => {
-        const args = downloadArguments(inputs({ source: "current", path: "out" }, buildVariables));
+    describe("prepareDownload", () => {
+        it("downloads one artifact from the current run and reports its run and type", async () => {
+            const plan = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl", patterns: "**/*.dll\n\n!**/tests/**" }, buildVariables), fakeService(), noLog);
 
-        assert.strictEqual(args.indexOf("--artifact-name"), -1);
-    });
+            assert.deepStrictEqual(plan.args, [
+                "pipelineartifact", "download", "--project", ProjectId, "--pipeline-id", "42", "--path", path.resolve("work", "dl"),
+                "--artifact-name", "drop", "--pattern", "**/*.dll", "--pattern", "!**/tests/**"
+            ]);
+            assert.deepStrictEqual(plan.variables, { BuildNumber: "42" });
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "PipelineArtifact" });
+            assert.deepStrictEqual(plan.warnings, []);
+        });
 
-    it("passes each non-empty pattern line in order", () => {
-        const args = downloadArguments(inputs({ source: "current", patterns: "**\r\n\n!sub/**\n  ", path: "out" }, buildVariables));
+        it("reports known types of all valid artifacts in plug-in order and warns about file shares", async () => {
+            const service = fakeService([artifact("share", "FilePath"), artifact("drop"), artifact("bad:name"), artifact("other", "Unknown"), artifact("old", "Container")]);
 
-        assert.deepStrictEqual(optionValues(args, "--pattern"), ["**", "!sub/**"]);
-    });
+            const plan = await prepareDownload(inputs({ source: "current", path: "dl" }, buildVariables), service, noLog);
 
-    it("maps a specific run", () => {
-        const args = downloadArguments(inputs({ source: "specific", project: "Other", pipeline: "12", runVersion: "specific", runId: "99", path: "out" }, buildVariables));
+            assert.strictEqual(plan.args.indexOf("--artifact-name"), -1);
+            assert.deepStrictEqual(optionValues(plan.args, "--pattern"), []);
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "Container,PipelineArtifact,filepath" });
+            assert.deepStrictEqual(plan.warnings, [FileShareDownloadWarning]);
+        });
 
-        assert.strictEqual(optionValue(args, "--project"), "Other");
-        assert.strictEqual(optionValue(args, "--pipeline-definition"), "12");
-        assert.strictEqual(optionValue(args, "--run-version"), "specific");
-        assert.strictEqual(optionValue(args, "--pipeline-id"), "99");
-        assert.strictEqual(args.indexOf("--branch"), -1);
-    });
+        it("reports a single artifact's own resource type", async () => {
+            const plan = await prepareDownload(inputs({ source: "current", artifact: "share", path: "dl" }, buildVariables), fakeService([artifact("share", "FilePath")]), noLog);
 
-    it("maps latest from branch with tags and result filters", () => {
-        const args = downloadArguments(inputs({
-            source: "specific", project: "Other", pipeline: "Build CI", runVersion: "latestFromBranch", runBranch: "refs/heads/main",
-            tags: "a,b", allowPartiallySucceededBuilds: "true", allowFailedBuilds: "true", path: "out"
-        }, buildVariables));
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "FilePath" });
+        });
 
-        assert.strictEqual(optionValue(args, "--branch"), "refs/heads/main");
-        assert.strictEqual(optionValue(args, "--tags"), "a,b");
-        assert.ok(args.includes("--allow-partially-succeeded"));
-        assert.ok(args.includes("--allow-failed"));
-        assert.ok(!args.includes("--allow-canceled"));
-        assert.strictEqual(args.indexOf("--pipeline-id"), -1);
-    });
+        it("fails before any transfer for missing, invalid, or unsupported artifacts", async () => {
+            await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "nope", path: "dl" }, buildVariables), fakeService(), noLog),
+                /^Error: Artifact nope was not found for build 42\.$/);
+            await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "../x", path: "dl" }, buildVariables), fakeService(), noLog),
+                /Artifact name is not valid: \.\.\/x/);
+            await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "other", path: "dl" }, buildVariables), fakeService([artifact("other", "Unknown")]), noLog),
+                /unsupported resource type 'Unknown'/);
+        });
 
-    it("passes the triggering build for build jobs", () => {
-        const args = downloadArguments(inputs({ source: "specific", project: "Other", pipeline: "12", runVersion: "latest", preferTriggeringPipeline: "true", path: "out" },
-            { ...buildVariables, "Build.TriggeredBy.DefinitionId": "12", "Build.TriggeredBy.BuildId": "77" }));
+        it("selects a specific run in another project", async () => {
+            const plan = await prepareDownload(inputs({ source: "specific", project: "Other", runVersion: "specific", runId: "123", artifact: "drop", path: "dl" }, buildVariables),
+                fakeService(), noLog);
 
-        assert.ok(args.includes("--prefer-triggering-pipeline"));
-        assert.strictEqual(optionValue(args, "--triggering-definition-id"), "12");
-        assert.strictEqual(optionValue(args, "--triggering-run-id"), "77");
-    });
-
-    it("passes the triggering artifact for release jobs", () => {
-        const args = downloadArguments(inputs({ source: "specific", project: "Other", pipeline: "12", runVersion: "latest", preferTriggeringPipeline: "true", path: "out" }, {
-            "System.HostType": "release",
-            "Release.TriggeringArtifact.Alias": "_ci",
-            "Release.Artifacts._ci.DefinitionId": "12",
-            "Release.Artifacts._ci.BuildId": "88"
-        }));
-
-        assert.strictEqual(optionValue(args, "--host-type"), "release");
-        assert.strictEqual(optionValue(args, "--triggering-definition-id"), "12");
-        assert.strictEqual(optionValue(args, "--triggering-run-id"), "88");
-    });
-
-    it("requires the run ID for a specific version", () => {
-        assert.throws(() => downloadArguments(inputs({ source: "specific", project: "Other", pipeline: "12", runVersion: "specific", path: "out" }, buildVariables)), /runId/);
+            assert.strictEqual(optionValue(plan.args, "--project"), ProjectId);
+            assert.strictEqual(optionValue(plan.args, "--pipeline-id"), "123");
+            assert.deepStrictEqual(plan.variables, { BuildNumber: "123" });
+        });
     });
 });

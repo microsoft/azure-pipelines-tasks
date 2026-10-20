@@ -1,3 +1,4 @@
-import { publishArguments, runTask } from "pipeline-artifact-common";
+import * as fs from "fs";
+import { preparePublish, runTask } from "pipeline-artifact-common";
 
-void runTask(publishArguments);
+void runTask(async context => preparePublish(context.task, { platform: process.platform, exists: file => fs.existsSync(file) }));
