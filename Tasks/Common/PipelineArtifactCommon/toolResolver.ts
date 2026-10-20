@@ -3,9 +3,6 @@ import * as path from "node:path";
 /** Pipeline variable naming a directory that contains a locally built ArtifactTool executable. */
 export const OverrideVariable = "PipelineArtifact.OverrideArtifactToolPath";
 
-/** Job variable prefix used to reuse a downloaded ArtifactTool across artifact steps in the same job. */
-export const CacheVariablePrefix = "PIPELINEARTIFACT_ARTIFACTTOOL_PATH";
-
 /** BlobStore resource area that hosts the client tool download API. */
 export const BlobStoreAreaId = "5294ef93-12a1-4d13-8671-9d9d014072c8";
 
@@ -17,7 +14,6 @@ export interface ToolPlatform {
 
 export interface ToolResolverDeps {
     variable(name: string): string | undefined;
-    setVariable(name: string, value: string): void;
     platform: NodeJS.Platform;
     arch: string;
     exists(file: string): boolean;
@@ -26,6 +22,8 @@ export interface ToolResolverDeps {
     downloadFile(url: string): Promise<string>;
     extractZip(file: string, destination: string): Promise<void>;
     makeExecutable(file: string): void;
+    rename(from: string, to: string): void;
+    removeDirectory(directory: string): void;
     tempDirectory(): string;
     uniqueName(): string;
     debug(message: string): void;
@@ -76,9 +74,19 @@ export function resourceAreaUrl(collectionUrl: string): string {
 }
 
 /**
- * Resolves the ArtifactTool executable: a local override directory, a tool already downloaded by an
- * earlier step in this job, or an anonymous download from the client tool API. No credential is sent
- * when locating or downloading the tool.
+ * The fixed directory ArtifactTool is cached in for the job, for example
+ * <Agent.TempDirectory>/ArtifactTool/Windows-amd64. The agent empties Agent.TempDirectory before every job,
+ * so the tool is downloaded once per job and always current. The path does not depend on any pipeline
+ * variable other than the agent's own temp directory, so policies can rely on it.
+ */
+export function toolDirectory(tempDirectory: string, target: ToolPlatform): string {
+    return path.join(tempDirectory, "ArtifactTool", [target.osName, target.arch, target.distroName].filter(Boolean).join("-"));
+}
+
+/**
+ * Resolves the ArtifactTool executable: a local override directory, the job cache directory, or an
+ * anonymous download from the client tool API into the job cache directory. No credential is sent when
+ * locating or downloading the tool.
  */
 export async function resolveArtifactTool(deps: ToolResolverDeps, collectionUrl: string): Promise<string> {
     const executable = executableName(deps.platform);
@@ -94,9 +102,9 @@ export async function resolveArtifactTool(deps: ToolResolverDeps, collectionUrl:
     }
 
     const target = toolPlatform(deps.platform, deps.arch, deps.platform === "linux" ? deps.readOsRelease() : undefined);
-    const cacheVariable = `${CacheVariablePrefix}_${target.osName}_${target.arch}${target.distroName ? `_${target.distroName}` : ""}`.toUpperCase();
-    const cached = deps.variable(cacheVariable);
-    if (cached && deps.exists(cached)) {
+    const directory = toolDirectory(deps.tempDirectory(), target);
+    const cached = path.join(directory, executable);
+    if (deps.exists(cached)) {
         deps.debug(`Reusing ArtifactTool downloaded earlier in this job: ${cached}`);
         return cached;
     }
@@ -109,17 +117,22 @@ export async function resolveArtifactTool(deps: ToolResolverDeps, collectionUrl:
     const url = downloadUrl(area.locationUrl, target);
     deps.debug(`Downloading ArtifactTool from ${url}`);
     const archive = await deps.downloadFile(url);
-    const destination = path.join(deps.tempDirectory(), "ArtifactTool", deps.uniqueName());
-    await deps.extractZip(archive, destination);
-    const downloaded = path.join(destination, executable);
-    if (!deps.exists(downloaded)) {
+
+    // Extract beside the cache directory and move it into place only when complete, so a partial
+    // extraction is never reused.
+    const staging = `${directory}.${deps.uniqueName()}`;
+    await deps.extractZip(archive, staging);
+    const staged = path.join(staging, executable);
+    if (!deps.exists(staged)) {
+        deps.removeDirectory(staging);
         throw new Error(`The downloaded ArtifactTool package does not contain ${executable}.`);
     }
 
     if (deps.platform !== "win32") {
-        deps.makeExecutable(downloaded);
+        deps.makeExecutable(staged);
     }
 
-    deps.setVariable(cacheVariable, downloaded);
-    return downloaded;
+    deps.removeDirectory(directory);
+    deps.rename(staging, directory);
+    return cached;
 }

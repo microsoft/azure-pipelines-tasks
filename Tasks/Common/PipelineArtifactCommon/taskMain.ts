@@ -16,7 +16,6 @@ export const taskInputs: TaskInputs = {
 export function createResolverDeps(): ToolResolverDeps {
     return {
         variable: name => tl.getVariable(name),
-        setVariable: (name, value) => tl.setVariable(name, value),
         platform: process.platform,
         arch: process.arch,
         exists: file => fs.existsSync(file),
@@ -33,6 +32,8 @@ export function createResolverDeps(): ToolResolverDeps {
             await toolLib.extractZip(file, destination);
         },
         makeExecutable: file => fs.chmodSync(file, 0o755),
+        rename: (from, to) => fs.renameSync(from, to),
+        removeDirectory: directory => fs.rmSync(directory, { recursive: true, force: true }),
         tempDirectory: () => tl.getVariable("Agent.TempDirectory") ?? os.tmpdir(),
         uniqueName: () => randomUUID(),
         debug: message => tl.debug(message)

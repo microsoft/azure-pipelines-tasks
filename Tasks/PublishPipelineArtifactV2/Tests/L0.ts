@@ -11,6 +11,7 @@ import {
     publishArguments,
     resolveArtifactTool,
     runArtifactTool,
+    toolDirectory,
     toolPlatform
 } from "pipeline-artifact-common";
 
@@ -105,23 +106,25 @@ describe("PublishPipelineArtifact L0 Suite", function () {
     });
 
     describe("resolveArtifactTool", () => {
-        function fakeDeps(overrides: Partial<ToolResolverDeps> = {}): ToolResolverDeps & { calls: string[]; variables: Record<string, string> } {
+        function fakeDeps(overrides: Partial<ToolResolverDeps> = {}): ToolResolverDeps & { calls: string[]; variables: Record<string, string>; existing: Set<string> } {
             const variables: Record<string, string> = {};
             const existing = new Set<string>();
             const calls: string[] = [];
-            const deps: ToolResolverDeps & { calls: string[]; variables: Record<string, string> } = {
+            const deps: ToolResolverDeps & { calls: string[]; variables: Record<string, string>; existing: Set<string> } = {
                 calls,
                 variables,
+                existing,
                 variable: name => variables[name],
-                setVariable: (name, value) => { variables[name] = value; },
                 platform: "linux",
                 arch: "x64",
                 exists: file => existing.has(file),
                 readOsRelease: () => "ID=ubuntu",
                 fetchJson: async url => { calls.push(`fetch ${url}`); return { locationUrl: "https://vsblob.example/org" }; },
                 downloadFile: async url => { calls.push(`download ${url}`); return "/tmp/tool.zip"; },
-                extractZip: async (file, destination) => { calls.push(`extract ${file}`); existing.add(path.join(destination, "artifacttool")); },
+                extractZip: async (file, destination) => { calls.push(`extract ${file} to ${destination}`); existing.add(path.join(destination, "artifacttool")); },
                 makeExecutable: file => { calls.push(`chmod ${file}`); },
+                rename: (from, to) => { calls.push(`rename ${from} to ${to}`); existing.add(path.join(to, "artifacttool")); },
+                removeDirectory: directory => { calls.push(`remove ${directory}`); },
                 tempDirectory: () => "/agent/_temp",
                 uniqueName: () => "unique",
                 debug: () => undefined,
@@ -129,6 +132,8 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             };
             return deps;
         }
+
+        const cacheDirectory = path.join("/agent/_temp", "ArtifactTool", "Linux-amd64");
 
         it("uses the override directory without any network access", async () => {
             const overrideDir = path.resolve("override");
@@ -148,28 +153,44 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             await assert.rejects(resolveArtifactTool(deps, "https://dev.azure.com/org/"), /must be an absolute directory/);
         });
 
-        it("downloads anonymously, extracts, and caches the tool for the job", async () => {
+        it("uses a fixed per-platform directory under the agent temp directory", () => {
+            assert.strictEqual(toolDirectory("/agent/_temp", { osName: "Windows", arch: "amd64" }), path.join("/agent/_temp", "ArtifactTool", "Windows-amd64"));
+            assert.strictEqual(toolDirectory("/agent/_temp", { osName: "Linux", arch: "amd64", distroName: "Alpine" }), path.join("/agent/_temp", "ArtifactTool", "Linux-amd64-Alpine"));
+        });
+
+        it("downloads anonymously into a staging directory and moves it into the fixed job cache", async () => {
             const deps = fakeDeps();
 
             const tool = await resolveArtifactTool(deps, "https://dev.azure.com/org/");
 
-            const expected = path.join("/agent/_temp", "ArtifactTool", "unique", "artifacttool");
-            assert.strictEqual(tool, expected);
+            const staging = `${cacheDirectory}.unique`;
+            assert.strictEqual(tool, path.join(cacheDirectory, "artifacttool"));
             assert.deepStrictEqual(deps.calls, [
                 "fetch https://dev.azure.com/org/_apis/resourceAreas/5294ef93-12a1-4d13-8671-9d9d014072c8?api-version=5.0-preview.1",
                 "download https://vsblob.example/org/_apis/clienttools/artifacttool/download?api-version=5.0-preview.1&osName=Linux&arch=amd64",
-                "extract /tmp/tool.zip",
-                `chmod ${expected}`
+                `extract /tmp/tool.zip to ${staging}`,
+                `chmod ${path.join(staging, "artifacttool")}`,
+                `remove ${cacheDirectory}`,
+                `rename ${staging} to ${cacheDirectory}`
             ]);
-            assert.strictEqual(deps.variables["PIPELINEARTIFACT_ARTIFACTTOOL_PATH_LINUX_AMD64"], expected);
         });
 
-        it("reuses a tool downloaded earlier in the job", async () => {
-            const deps = fakeDeps({ exists: file => file === "/cached/artifacttool" });
-            deps.variables["PIPELINEARTIFACT_ARTIFACTTOOL_PATH_LINUX_AMD64"] = "/cached/artifacttool";
+        it("reuses the tool from the fixed job cache without any network access", async () => {
+            const deps = fakeDeps();
+            deps.existing.add(path.join(cacheDirectory, "artifacttool"));
 
-            assert.strictEqual(await resolveArtifactTool(deps, "https://dev.azure.com/org/"), "/cached/artifacttool");
+            assert.strictEqual(await resolveArtifactTool(deps, "https://dev.azure.com/org/"), path.join(cacheDirectory, "artifacttool"));
             assert.deepStrictEqual(deps.calls, []);
+        });
+
+        it("ignores pipeline variables when locating the cached tool", async () => {
+            const deps = fakeDeps();
+            deps.variables["PIPELINEARTIFACT_ARTIFACTTOOL_PATH_LINUX_AMD64"] = "/attacker/artifacttool";
+            deps.existing.add("/attacker/artifacttool");
+
+            const tool = await resolveArtifactTool(deps, "https://dev.azure.com/org/");
+
+            assert.strictEqual(tool, path.join(cacheDirectory, "artifacttool"));
         });
 
         it("fails when the service does not report a client tool location", async () => {
@@ -178,10 +199,11 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             await assert.rejects(resolveArtifactTool(deps, "https://dev.azure.com/org/"), /Unable to locate/);
         });
 
-        it("fails when the downloaded package has no executable", async () => {
+        it("fails and cleans up when the downloaded package has no executable", async () => {
             const deps = fakeDeps({ extractZip: async () => undefined });
 
             await assert.rejects(resolveArtifactTool(deps, "https://dev.azure.com/org/"), /does not contain artifacttool/);
+            assert.deepStrictEqual(deps.calls.slice(-1), [`remove ${cacheDirectory}.unique`]);
         });
     });
 
