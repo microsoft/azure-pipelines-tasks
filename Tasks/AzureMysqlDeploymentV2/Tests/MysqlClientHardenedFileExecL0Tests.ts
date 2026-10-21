@@ -8,7 +8,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 const SQL_FILE_PATH = path.join(os.tmpdir(), 'test_azure_mysql_deploy_hardened.sql');
-const HARDENING_FEATURE_ENV_VAR = 'DISTRIBUTEDTASK_TASKS_ENABLEAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
+const HARDENING_FEATURE_ENV_VAR = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
 
 /**
  * Same mock-spawn shape as MysqlClientFileExecL0Tests.ts's createMockSpawnFn: drains
@@ -48,7 +48,7 @@ export class MysqlClientHardenedFileExecL0Tests {
 
     public static async startL0Tests() {
         const originalFeatureValue = process.env[HARDENING_FEATURE_ENV_VAR];
-        process.env[HARDENING_FEATURE_ENV_VAR] = 'true';
+        process.env[HARDENING_FEATURE_ENV_VAR] = 'false';
         try {
             await MysqlClientHardenedFileExecL0Tests.hardenedFileExecNonZeroExit();
             await MysqlClientHardenedFileExecL0Tests.hardenedFileExecFileNotFound();
@@ -65,7 +65,7 @@ export class MysqlClientHardenedFileExecL0Tests {
 
     /**
      * Spawn exits with a non-zero code on the hardened (argv-array) file-exec path
-     * -> promise rejects with SqlExecutionException, same as the FF-off helper.
+     * -> promise rejects with SqlExecutionException, same as the legacy (FF-on rollback) helper.
      */
     public static async hardenedFileExecNonZeroExit() {
         try {
@@ -131,7 +131,7 @@ export class MysqlClientHardenedFileExecL0Tests {
      * The SQL file's read stream emits 'error' mid-read (e.g. an I/O failure after the
      * existsSync check passed but before the file finished streaming) -> the pending
      * promise must still settle, rejecting with SqlExecutionException, on both the
-     * hardened and FF-off helpers (neither suite previously covered this path).
+     * hardened and legacy (FF-on rollback) helpers (neither suite previously covered this path).
      */
     public static async hardenedFileExecStreamError() {
         const originalCreateReadStream = fs.createReadStream;

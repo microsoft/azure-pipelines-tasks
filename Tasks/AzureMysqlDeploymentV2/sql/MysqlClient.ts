@@ -13,7 +13,10 @@ export type SpawnFn = typeof child_process.spawn;
 
 export class MysqlClient implements ISqlClient {
 
-    private static readonly HARDENING_FEATURE_FLAG = 'EnableAzureMysqlDeploymentV2BinaryModeHardening';
+    // Hardening is on by default. This flag is a rollback switch: setting it true falls
+    // back to the pre-hardening legacy behavior, so a regression can be mitigated by
+    // flipping the flag instead of waiting on a new rollout.
+    private static readonly ROLLBACK_FEATURE_FLAG = 'RollbackAzureMysqlDeploymentV2BinaryModeHardening';
 
     /**
      * Matches any spelling/casing variant of the binary-mode option that mysql accepts.
@@ -29,6 +32,17 @@ export class MysqlClient implements ISqlClient {
      * Matches the defaults-group-suffix option family.
      */
     private static readonly DEFAULTS_GROUP_SUFFIX_PATTERN = /^--defaults(-extra)?-group-suffix$/;
+
+    private static readonly VALUE_CONSUMING_OPTIONS = new Set([
+        '--bind-address', '--character-sets-dir', '--connect-timeout', '--database',
+        '--default-auth', '--default-character-set', '--defaults-extra-file', '--defaults-file',
+        '--defaults-group-suffix', '--delimiter', '--execute', '--histignore', '--host',
+        '--init-command', '--login-path', '--max-allowed-packet', '--max-join-size',
+        '--net-buffer-length', '--plugin-dir', '--port', '--prompt', '--protocol',
+        '--select-limit', '--server-public-key-path', '--shared-memory-base-name', '--socket',
+        '--ssl-ca', '--ssl-capath', '--ssl-cert', '--ssl-cipher', '--ssl-crl', '--ssl-crlpath',
+        '--ssl-key', '--ssl-mode', '--ssl-fips-mode', '--tls-version', '--user'
+    ]);
 
     /**
      * Option-file sections relevant to the mysql client.
@@ -46,9 +60,9 @@ export class MysqlClient implements ISqlClient {
     private _hostName: string;
     private _toolPath: string;
     private _spawn: SpawnFn;
-    // Only populated when hardening is enabled (see constructor) - ff-off never tokenizes
-    // SqlAdditionalArguments during construction.
+    // Only populated when hardening is enabled 
     private _additionalArgumentTokens: string[] = [];
+    private _optionNameTokenIndices: Set<number> = new Set();
     private _hardeningEnabled: boolean;
 
     constructor(azureMysqlTaskParameter: AzureMysqlTaskParameter, serverName: string, toolPath: string, spawnFn?: SpawnFn) {
@@ -74,21 +88,34 @@ export class MysqlClient implements ISqlClient {
             task.setSecret(password);
         }
 
-        this._hardeningEnabled = task.getPipelineFeature(MysqlClient.HARDENING_FEATURE_FLAG);
+        this._hardeningEnabled = !task.getPipelineFeature(MysqlClient.ROLLBACK_FEATURE_FLAG);
         if (this._hardeningEnabled) {
             this._additionalArgumentTokens = Utility.argStringToArray(azureMysqlTaskParameter.getSqlAdditionalArguments() || '');
+            // A required value can look like an option; mark it so it is never
+            // independently interpreted as one
+            let skipNext = false;
+            this._additionalArgumentTokens.forEach((token, index) => {
+                if (skipNext) {
+                    skipNext = false;
+                    return;
+                }
+                this._optionNameTokenIndices.add(index);
+                if (token.indexOf('=') === -1 && MysqlClient.VALUE_CONSUMING_OPTIONS.has(token.replace(/_/g, '-').toLowerCase())) {
+                    skipNext = true;
+                }
+            });
             this._rejectBinaryModeArguments();
         }
     }
 
     /**
-     * Reject any SqlAdditionalArguments token that configures --binary-mode, either
-     * directly (--binary-mode / --skip-binary-mode / etc.) or indirectly through an
-     * option (.cnf) file referenced via --defaults-file / --defaults-extra-file.
-     * Only called when hardening is enabled.
+     * Reject any SqlAdditionalArguments token that configures --binary-mode
      */
     private _rejectBinaryModeArguments(): void {
-        const disallowedToken = this._additionalArgumentTokens.find(token => {
+        const disallowedToken = this._additionalArgumentTokens.find((token, index) => {
+            if (!this._optionNameTokenIndices.has(index)) {
+                return false;
+            }
             const optionName = token.split('=', 1)[0].replace(/_/g, '-').toLowerCase();
             return MysqlClient.BINARY_MODE_OPTION_PATTERN.test(optionName);
         });
@@ -107,7 +134,8 @@ export class MysqlClient implements ISqlClient {
      * in that case.
      */
     private _rejectBinaryModeInDefaultsFiles(): void {
-        const hasNoDefaults = this._additionalArgumentTokens.some(token =>
+        const hasNoDefaults = this._additionalArgumentTokens.some((token, index) =>
+            this._optionNameTokenIndices.has(index) &&
             token.split('=', 1)[0].replace(/_/g, '-').toLowerCase() === '--no-defaults');
 
         if (hasNoDefaults) {
@@ -115,11 +143,15 @@ export class MysqlClient implements ISqlClient {
         }
 
         const groupSuffixes = this._additionalArgumentTokens
-            .filter(token => MysqlClient.DEFAULTS_GROUP_SUFFIX_PATTERN.test(
+            .filter((token, index) => this._optionNameTokenIndices.has(index) && MysqlClient.DEFAULTS_GROUP_SUFFIX_PATTERN.test(
                 token.split('=', 1)[0].replace(/_/g, '-').toLowerCase()))
             .map(token => token.slice(token.indexOf('=') + 1));
 
-        for (const token of this._additionalArgumentTokens) {
+        for (let i = 0; i < this._additionalArgumentTokens.length; i++) {
+            if (!this._optionNameTokenIndices.has(i)) {
+                continue;
+            }
+            const token = this._additionalArgumentTokens[i];
             const separatorIndex = token.indexOf('=');
             const optionName = (separatorIndex === -1 ? token : token.slice(0, separatorIndex))
                 .replace(/_/g, '-').toLowerCase();
@@ -136,8 +168,7 @@ export class MysqlClient implements ISqlClient {
 
     /**
      * Scans a single mysql option (.cnf) file - and anything it !include(dir)s - for a key
-     * that would reconfigure --binary-mode within a section the mysql client reads
-     * ([client], [client-server], [mysql], and their --defaults-group-suffix variants).
+     * that would reconfigure --binary-mode within a section the mysql client reads.
      */
     private _rejectBinaryModeInOptionFile(
         filePath: string,
@@ -226,10 +257,7 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Build the hardened mysql connection argv shared by every flag-on invocation
-     * (firewall check, database creation, and script execution). Only called when
-     * hardening is enabled.
-     * Note: Flexible Server uses username without @servername suffix.
+     * Build the hardened mysql connection argv string array.
      *
      * --binary-mode is always placed immediately after the connection credentials and
      * before any user-supplied SqlAdditionalArguments tokens.
@@ -273,7 +301,8 @@ export class MysqlClient implements ISqlClient {
      * Execute Mysql script
      */
     public async executeSqlCommand() : Promise<number> {
-        this._emitExecutionTelemetry();
+        let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
+        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry);
 
         if (this._hardeningEnabled) {
             let args = this._buildConnectionArgs();
@@ -297,18 +326,6 @@ export class MysqlClient implements ISqlClient {
         }else{
             return this._runUserScript(argument);
         }
-    }
-
-    /**
-     * Emit a single telemetry event for this execution, derived directly from
-     * _hardeningEnabled so the hardened/legacy label can never drift from the flag
-     * state that actually decided the execution path below.
-     */
-    private _emitExecutionTelemetry(): void {
-        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', {
-            additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument()),
-            executionPath: this._hardeningEnabled ? 'hardened' : 'legacy'
-        });
     }
 
     private _createDatabaseScriptIfItDoesnotExist() : string {
@@ -343,7 +360,7 @@ export class MysqlClient implements ISqlClient {
         }
         throw new Error(task.loc("SqlExecutionException", resultCode));
     }
-
+    
     /**
      * Execute SQL script from file by piping file content via stdin.
      * Uses this._spawn (injectable for testing).
@@ -407,7 +424,7 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Flag-on-only sibling of _executeSqlScriptFromFile: takes discrete argv elements
+     * Flag-off-only sibling of _executeSqlScriptFromFile: takes discrete argv elements
      * directly, with no tokenization. Never called from the ff-off path.
      */
     private _executeSqlScriptFromFileArgs(args: string[]): Promise<number> {
@@ -459,7 +476,7 @@ export class MysqlClient implements ISqlClient {
         return this._azureMysqlTaskParameter.getSqlAdditionalArguments() ? this._azureMysqlTaskParameter.getSqlAdditionalArguments() : "";
     }
 
-     /**
+    /**
      * Get connection argument for inline SQL execution
      */
     private _getFileSourceArgument() : string {

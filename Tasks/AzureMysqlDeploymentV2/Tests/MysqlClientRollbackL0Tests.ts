@@ -19,10 +19,11 @@ class ScriptParameters extends AzureMysqlTaskParameter {
     }
 }
 
-// FF-off (rollback) equivalent of MysqlClientHardenedL0Tests.ts: the hardening feature
-// flag is not mocked here, so MysqlClient falls back to its pre-hardening, string-tokenized
-// construction (_getArgumentString/_getAdditionalArgument -> Utility.argStringToArray),
-// with no --binary-mode anywhere in the resulting argv.
+// FF-on (rollback) equivalent of MysqlClientHardenedL0Tests.ts: the rollback feature
+// flag is mocked true by the caller (MysqlClientRollbackTests.ts), so MysqlClient falls
+// back to its pre-hardening, string-tokenized construction (_getArgumentString/
+// _getAdditionalArgument -> Utility.argStringToArray), with no --binary-mode anywhere
+// in the resulting argv.
 async function runTests(): Promise<void> {
     const parameters = new AzureMysqlTaskParameter();
     const configuration = new MysqlClient(parameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql').getFirewallConfiguration();
@@ -62,7 +63,7 @@ async function runTests(): Promise<void> {
         const client = new MysqlClient(scriptParameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql', spawn);
         assert.strictEqual(await client.executeSqlCommand(), 0, `${selector} with database '${database}' must succeed.`);
         assert.strictEqual(spawnCount, selector === 'SqlFile' ? 1 : 0);
-        assert.ok(!expectedArgs.includes('--binary-mode'), 'FF-off argv must never contain --binary-mode.');
+        assert.ok(!expectedArgs.includes('--binary-mode'), 'FF-on (rollback) argv must never contain --binary-mode.');
         if (selector === 'SqlFile') {
             assert.deepStrictEqual(Buffer.concat(chunks), Buffer.from(scriptParameters.getSqlInline(), 'utf8'),
                 'The SQL file must reach stdin without changing quotes, backslashes, or newlines, same as pre-hardening.');
@@ -71,5 +72,5 @@ async function runTests(): Promise<void> {
 }
 
 runTests()
-    .then(() => tl.setResult(tl.TaskResult.Succeeded, 'Rollback (FF-off) SQL execution scenarios passed.'))
+    .then(() => tl.setResult(tl.TaskResult.Succeeded, 'Rollback (FF-on) SQL execution scenarios passed.'))
     .catch((error: Error) => tl.setResult(tl.TaskResult.Failed, error.stack || error.message));

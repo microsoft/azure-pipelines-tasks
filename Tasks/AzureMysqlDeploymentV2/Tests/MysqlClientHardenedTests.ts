@@ -49,8 +49,8 @@ export class MysqlClientHardenedTests {
 
         // Task-lib captures inputs in its vault when first loaded.
         const tl = await import('azure-pipelines-task-lib/task');
-        tr.registerMockExport('getPipelineFeature', (featureName: string) =>
-            featureName === 'EnableAzureMysqlDeploymentV2BinaryModeHardening');
+        // Hardening is on by default, so the rollback flag only needs to stay false here.
+        tr.registerMockExport('getPipelineFeature', (_featureName: string) => false);
         tr.registerMockExport('execSync', (tool: string, args: string[]) => {
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, connectionArgs);

@@ -18,8 +18,8 @@ export class MysqlClientHardenedExecFailureTests {
         tr.setInput('SqlInline', 'SELECT 1;');
 
         const tl = await import('azure-pipelines-task-lib/task');
-        tr.registerMockExport('getPipelineFeature', (featureName: string) =>
-            featureName === 'EnableAzureMysqlDeploymentV2BinaryModeHardening');
+        // Hardening is on by default, so the rollback flag only needs to stay false here.
+        tr.registerMockExport('getPipelineFeature', (_featureName: string) => false);
         tr.registerMockExport('exec', async () => 2);
         tr.registerMockExport('setResult', (result: TaskResult, message: string) => {
             tl.setResult(result, message);

@@ -6,7 +6,7 @@ import * as os from 'os';
 // FF-on counterpart of MysqlClientFileExecTests.ts: drives the same failure scenarios
 // (non-zero exit, spawn error, missing file) plus a stream-read failure against the
 // hardened, argv-array sibling helper (_executeSqlScriptFromFileArgs), which the
-// existing FF-off suite does not exercise.
+// existing legacy suite does not exercise.
 export class MysqlClientHardenedFileExecTests {
 
     public static startTests() {

@@ -4,8 +4,8 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 import { Readable } from 'stream';
 
-// FF-off (rollback) counterpart of MysqlClientHardenedTests.ts: verifies that when
-// the feature flag is absent/false, MysqlClient continues to produce the same argv
+// FF-on (rollback) counterpart of MysqlClientHardenedTests.ts: verifies that when
+// the rollback feature flag is true, MysqlClient continues to produce the same argv
 // construction, CREATE DATABASE and inline-SQL/file-SQL execution sequence, and the
 // same stdin/error behavior as before this PR.
 export class MysqlClientRollbackTests {
@@ -22,8 +22,8 @@ export class MysqlClientRollbackTests {
             '--quick',
             '--connect-timeout=10'
         ];
-        // The ff-off path re-tokenizes a single built-up string (Utility.argStringToArray),
-        // so '-e' and the SQL text collapse into one argv element, unlike the flag-on
+        // The ff-on (rollback) path re-tokenizes a single built-up string (Utility.argStringToArray),
+        // so '-e' and the SQL text collapse into one argv element, unlike the hardened
         // array-based path where they are two discrete elements.
         const createDatabaseArgs = [...connectionArgs, '-eCREATE DATABASE IF NOT EXISTS `test-db` ;'];
         // MysqlClientRollbackL0Tests.ts drives both selectors (InlineSqlTask, SqlFile) against
@@ -55,10 +55,11 @@ export class MysqlClientRollbackTests {
 
         // Task-lib captures inputs in its vault when first loaded.
         const tl = await import('azure-pipelines-task-lib/task');
-        // Explicitly mock the flag false (rather than leaving it unset) so this test
-        // demonstrates the FF-off path even if the environment happens to define the
-        // feature-flag variable, and so a future accidental default flip is caught here.
-        tr.registerMockExport('getPipelineFeature', (_featureName: string) => false);
+        // Explicitly mock the rollback flag true (rather than leaving it unset) so this
+        // test demonstrates the FF-on rollback path even if the environment happens to
+        // define the feature-flag variable, and so a future accidental default flip is
+        // caught here.
+        tr.registerMockExport('getPipelineFeature', (_featureName: string) => true);
         tr.registerMockExport('execSync', (tool: string, args: string[]) => {
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, connectionArgs);

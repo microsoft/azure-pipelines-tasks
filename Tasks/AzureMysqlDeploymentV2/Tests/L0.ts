@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 import { MysqlClient } from '../sql/MysqlClient';
+import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 
 describe('AzureMySqlDeployment V2 Suite', function() {
@@ -54,13 +55,13 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('Hardened SQL execution scenarios passed.'), 'All hardened execution scenarios must complete.');
     });
 
-    it('AzureMySqlDeployment FF-off (rollback) SQL execution preserves pre-hardening argv, stdin, and error behavior', async () => {
+    it('AzureMySqlDeployment FF-on (rollback) SQL execution preserves pre-hardening argv, stdin, and error behavior', async () => {
         let tp = path.join(__dirname, 'MysqlClientRollbackTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
         assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
         assert.deepStrictEqual(tr.errorIssues, [], tr.stdout + tr.stderr);
-        assert(tr.stdOutContained('Rollback (FF-off) SQL execution scenarios passed.'), 'All FF-off execution scenarios must complete.');
+        assert(tr.stdOutContained('Rollback (FF-on) SQL execution scenarios passed.'), 'All FF-on (rollback) execution scenarios must complete.');
     });
 
     it('AzureMySqlDeployment hardened exec-based SQL execution surfaces a non-zero mysql exit code as a failure', async () => {
@@ -70,7 +71,7 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('execNonZeroExit passed.'), 'Should have printed: execNonZeroExit passed.');
     });
 
-    it('AzureMySqlDeployment FF-off (rollback) exec-based SQL execution surfaces a non-zero mysql exit code as a failure', async () => {
+    it('AzureMySqlDeployment FF-on (rollback) exec-based SQL execution surfaces a non-zero mysql exit code as a failure', async () => {
         let tp = path.join(__dirname, 'MysqlClientRollbackExecFailureTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         await tr.runAsync();
@@ -78,7 +79,9 @@ describe('AzureMySqlDeployment V2 Suite', function() {
     });
 
     describe('MysqlClient binary-mode option ownership', () => {
-        const hardeningFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ENABLEAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
+        // Hardening is on by default, so these tests explicitly mock the rollback flag
+        // false (rather than leaving it unset) to make that default unambiguous.
+        const rollbackFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
         // Representative cases covering each dimension of BINARY_MODE_OPTION_PATTERN
         // (plain form, a value suffix, underscore/case normalization, a negating
         // prefix, and stacked prefixes) rather than exhaustively enumerating every
@@ -103,16 +106,16 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         }
 
         beforeEach(() => {
-            originalFeatureValue = process.env[hardeningFeatureEnvVar];
-            process.env[hardeningFeatureEnvVar] = 'true';
+            originalFeatureValue = process.env[rollbackFeatureEnvVar];
+            process.env[rollbackFeatureEnvVar] = 'false';
             tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
         });
 
         afterEach(() => {
             if (originalFeatureValue === undefined) {
-                delete process.env[hardeningFeatureEnvVar];
+                delete process.env[rollbackFeatureEnvVar];
             } else {
-                process.env[hardeningFeatureEnvVar] = originalFeatureValue;
+                process.env[rollbackFeatureEnvVar] = originalFeatureValue;
             }
         });
 
@@ -137,24 +140,34 @@ describe('AzureMySqlDeployment V2 Suite', function() {
             }
         });
 
-        it('preserves acceptance of all binary-mode forms when hardening is absent or false', () => {
-            for (const featureValue of [undefined, 'false']) {
-                if (featureValue === undefined) {
-                    delete process.env[hardeningFeatureEnvVar];
-                } else {
-                    process.env[hardeningFeatureEnvVar] = featureValue;
-                }
-                for (const additionalArguments of reservedArguments) {
-                    assert.doesNotThrow(
-                        () => createClient(additionalArguments),
-                        `FF-off must continue accepting ${additionalArguments}.`);
-                }
+        it('accepts a value-consuming option whose separate-token value merely looks like --binary-mode', () => {
+            for (const additionalArguments of [
+                '--prompt --binary-mode',
+                '--prompt "--skip-binary-mode"'
+            ]) {
+                assert.doesNotThrow(() => createClient(additionalArguments));
+            }
+        });
+
+        it('still rejects a real --binary-mode token following an unrelated option', () => {
+            assert.throws(
+                () => createClient('--quick --binary-mode'),
+                /not allowed.*--binary-mode/);
+        });
+
+        it('preserves acceptance of all binary-mode forms when the rollback flag is true', () => {
+            process.env[rollbackFeatureEnvVar] = 'true';
+            for (const additionalArguments of reservedArguments) {
+                assert.doesNotThrow(
+                    () => createClient(additionalArguments),
+                    `Rollback (FF-on) must continue accepting ${additionalArguments}.`);
             }
         });
     });
 
     describe('MysqlClient defaults-file/option-file binary-mode scanning', () => {
-        const hardeningFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ENABLEAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
+        // Hardening is on by default; explicitly mock the rollback flag false here too.
+        const rollbackFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
         let originalFeatureValue: string | undefined;
         let tmpDir: string;
 
@@ -173,17 +186,17 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         }
 
         beforeEach(() => {
-            originalFeatureValue = process.env[hardeningFeatureEnvVar];
-            process.env[hardeningFeatureEnvVar] = 'true';
+            originalFeatureValue = process.env[rollbackFeatureEnvVar];
+            process.env[rollbackFeatureEnvVar] = 'false';
             tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
             tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mysql-defaults-'));
         });
 
         afterEach(() => {
             if (originalFeatureValue === undefined) {
-                delete process.env[hardeningFeatureEnvVar];
+                delete process.env[rollbackFeatureEnvVar];
             } else {
-                process.env[hardeningFeatureEnvVar] = originalFeatureValue;
+                process.env[rollbackFeatureEnvVar] = originalFeatureValue;
             }
             fs.rmSync(tmpDir, { recursive: true, force: true });
         });

@@ -2,7 +2,7 @@ import type { TaskResult } from 'azure-pipelines-task-lib/task';
 import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 
-// FF-off counterpart of MysqlClientHardenedExecFailureTests.ts: proves the legacy,
+// FF-on (rollback) counterpart of MysqlClientHardenedExecFailureTests.ts: proves the legacy,
 // string-tokenized exec helper (_executeSqlScript) also surfaces a non-zero mysql exit
 // code as a failure - the rollback suite otherwise only demonstrates success.
 export class MysqlClientRollbackExecFailureTests {
@@ -18,9 +18,9 @@ export class MysqlClientRollbackExecFailureTests {
         tr.setInput('SqlInline', 'SELECT 1;');
 
         const tl = await import('azure-pipelines-task-lib/task');
-        // Explicitly mock the flag false (rather than leaving it unset), consistent
+        // Explicitly mock the rollback flag true to force the legacy path, consistent
         // with the rest of the rollback suite.
-        tr.registerMockExport('getPipelineFeature', (_featureName: string) => false);
+        tr.registerMockExport('getPipelineFeature', (_featureName: string) => true);
         tr.registerMockExport('exec', async () => 2);
         tr.registerMockExport('setResult', (result: TaskResult, message: string) => {
             tl.setResult(result, message);
