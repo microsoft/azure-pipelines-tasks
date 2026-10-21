@@ -78,5 +78,8 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Не удалось получить маркер доступа для управляемого субъекта-службы. Код состояния: %s, сообщение о состоянии: %s.",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
   "loc.messages.ScriptArgsSanitized": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратного апострофа (`). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787",
-  "loc.messages.ScriptArgsSanitizedBash": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitizedBash": "Обнаружены символы в аргументах, которые могут быть неправильно интерпретированы оболочкой. Экранируйте специальные символы с помощью обратной косой черты (\\). Дополнительные сведения см. на следующей странице: https://aka.ms/ado/75787",
+  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
+  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
 }
