@@ -1043,14 +1043,17 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
-        $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
-        if(!$splitAdditionalArgumentsFunctionInfo)
-        {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
-        }
-        $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
-    
+
+    # The remote job splits the additional arguments with this function in the legacy and the
+    # hardened branches, so it is always copied into the inline script.
+    $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+    if(!$splitAdditionalArgumentsFunctionInfo)
+    {
+        throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
+    }
+    $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
+
     $remoteScriptJobArguments = @{
         inline = $true;
         inlineScript = $inlineScriptText;

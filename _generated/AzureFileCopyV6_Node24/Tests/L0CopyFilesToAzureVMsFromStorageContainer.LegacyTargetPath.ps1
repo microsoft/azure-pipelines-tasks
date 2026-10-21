@@ -4,24 +4,27 @@ param()
 # Regression test for the legacy (feature flags off) branch of AzureFileCopyRemoteJob.ps1,
 # the one that runs when neither -useSourcePathHardening nor -useSanitizerActivate is set.
 #
-# That branch used to build a command string with TargetPath and ContainerURL pasted inside
-# double quotes and then run it with Invoke-Expression. Even though the values reach the remote
-# job safely as data (single-quoted, escaped in Copy-FilesToAzureVMsFromStorageContainer), that
-# second evaluation re-parsed them as PowerShell, so a TargetPath such as C:\x$(...)y executed
-# the sub-expression on the target VM. Now the command text only references the variables by
-# name, so their values are handed to azcopy as data.
+# That branch used to build a command string with TargetPath, ContainerURL and the additional
+# arguments pasted into it and then run it with Invoke-Expression. Even though the values reach the
+# remote job safely as data (single-quoted, escaped in Copy-FilesToAzureVMsFromStorageContainer),
+# that second evaluation re-parsed them as PowerShell, so a TargetPath such as C:\x$(...)y, or an
+# additional argument such as --x $(...), executed the sub-expression on the target VM. Now the
+# additional arguments are split by Split-AdditionalArguments (a parser that evaluates nothing) and
+# azcopy is called with the resulting list, so every value is handed to azcopy as data.
 #
 # The documented behavior has to keep working: the TargetPath help says "Environment variable
-# can be used like $env:windir\BudgetIT\Web". Only $env:NAME and ${env:NAME} are expanded, and
-# nothing else in the path is evaluated. Other variables (for example $HOME or $PWD) used to be
-# expanded as a side effect of Invoke-Expression; they are not documented and are now kept as
-# literal text, which one group of scenarios pins down on purpose.
+# can be used like $env:windir\BudgetIT\Web". Only $env:NAME and ${env:NAME} are expanded, in the
+# path and in each additional argument, and nothing else is evaluated. Other variables (for example
+# $HOME or $PWD) used to be expanded as a side effect of Invoke-Expression; they are not documented
+# and are now kept as literal text, which some scenarios pin down on purpose. The same goes for
+# PowerShell syntax inside the additional arguments (;, |, #, backtick escapes), which is plain text.
 #
-# Two groups of scenarios are driven end to end (the generated scriptArguments text is executed
+# Three groups of scenarios are driven end to end (the generated scriptArguments text is executed
 # exactly as RunPowerShellScriptJob.ps1 does on the target VM, with a fake azcopy capturing argv):
-#   - behavior that must not change: a plain path, $env: expansion, quoted additional arguments;
+#   - behavior that must not change: a plain path, $env: expansion, quoted option values;
 #   - hardening: a TargetPath or container name that carries $(...), a double quote, a backtick or
-#     a typographic quote must reach azcopy as literal text, and must not run anything.
+#     a typographic quote must reach azcopy as literal text, and must not run anything;
+#   - additional arguments: quoted values stay one argument, and PowerShell syntax in them is not run.
 #
 # Typographic quotes are built from their code point on purpose: the repository files are BOM-less,
 # and Windows PowerShell 5.1 would read a literal non-ASCII character using the ANSI code page.
@@ -126,6 +129,7 @@ $quote = [string][char]0x2019
 
 # Environment variables used by the $env: scenarios. The second one is guaranteed to be unset.
 $env:AFC_LEGACY_TEST_SET = 'Value With Space'
+$env:AFC_LEGACY_TEST_EVIL = '$($global:injectionOccurred = $true)'
 Remove-Item -Path Env:\AFC_LEGACY_TEST_UNSET -ErrorAction SilentlyContinue
 
 $scenarios = @(
@@ -180,7 +184,76 @@ $scenarios = @(
     @{ Name = 'sub-expression in the container name is not evaluated'
        TargetPath = 'C:\Temp\files'
        ExpectedTargetPath = 'C:\Temp\files'
-       ContainerName = 'c$($global:injectionOccurred = $true)' }
+       ContainerName = 'c$($global:injectionOccurred = $true)' },
+
+    # ---- additional arguments: AzCopy options keep working, PowerShell syntax in them does not ----
+    # The value is split into arguments by a parser that does not evaluate anything (quotes group
+    # words, nothing else has a meaning); the resulting list is handed to azcopy as data.
+    @{ Name = 'double-quoted option value with a space stays one argument'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--include-pattern "My Files\*.txt"'
+       TrailingArguments = @('--include-pattern', 'My Files\*.txt') },
+    @{ Name = 'semicolon inside a quoted pattern stays inside the argument'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--include-pattern "*.txt;*.js" --recursive'
+       TrailingArguments = @('--include-pattern', '*.txt;*.js', '--recursive') },
+    @{ Name = 'single-quoted option value with a space stays one argument'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = "--exclude-pattern 'a b'"
+       TrailingArguments = @('--exclude-pattern', 'a b') },
+    @{ Name = 'option with an equals sign and a quoted value'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--metadata="k=v w" --recursive'
+       TrailingArguments = @('--metadata=k=v w', '--recursive') },
+    @{ Name = '$env:NAME in additional arguments is expanded and stays one argument'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--include-path $env:AFC_LEGACY_TEST_SET --recursive'
+       TrailingArguments = @('--include-path', 'Value With Space', '--recursive') },
+    @{ Name = '${env:NAME} and $env:NAME inside double quotes are expanded'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--a ${env:AFC_LEGACY_TEST_SET} --b "$env:AFC_LEGACY_TEST_SET\sub"'
+       TrailingArguments = @('--a', 'Value With Space', '--b', 'Value With Space\sub') },
+    @{ Name = 'the value of an environment variable is not evaluated again'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--x $env:AFC_LEGACY_TEST_EVIL'
+       TrailingArguments = @('--x', '$($global:injectionOccurred = $true)') },
+    @{ Name = 'non-env variable $HOME in additional arguments is not expanded'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--x $HOME'
+       TrailingArguments = @('--x', '$HOME') },
+    @{ Name = 'sub-expression in additional arguments is not evaluated'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--x $($global:injectionOccurred=$true)'
+       TrailingArguments = @('--x', '$($global:injectionOccurred=$true)') },
+    @{ Name = 'sub-expression inside double quotes in additional arguments is not evaluated'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--x "$($global:injectionOccurred = $true)"'
+       TrailingArguments = @('--x', '$($global:injectionOccurred = $true)') },
+    @{ Name = 'statement separator in additional arguments does not start a new statement'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--x; $global:injectionOccurred=$true'
+       TrailingArguments = @('--x;', '$global:injectionOccurred=$true') },
+    @{ Name = 'pipe and comment characters in additional arguments are plain text'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = '--a | --b # --c'
+       TrailingArguments = @('--a', '|', '--b', '#', '--c') },
+    @{ Name = 'typographic quote in additional arguments is plain text'
+       TargetPath = 'C:\Temp\files'
+       ExpectedTargetPath = 'C:\Temp\files'
+       AdditionalArguments = ('--exclude-pattern Bob' + $quote + 's')
+       TrailingArguments = @('--exclude-pattern', ('Bob' + $quote + 's')) }
 )
 
 try
@@ -194,4 +267,5 @@ finally
 {
     Remove-Item -Path function:global:azcopy -ErrorAction SilentlyContinue
     Remove-Item -Path Env:\AFC_LEGACY_TEST_SET -ErrorAction SilentlyContinue
+    Remove-Item -Path Env:\AFC_LEGACY_TEST_EVIL -ErrorAction SilentlyContinue
 }
