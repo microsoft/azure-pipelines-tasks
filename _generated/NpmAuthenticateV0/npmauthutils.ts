@@ -359,4 +359,3 @@ export function removeExistingCredentialEntries(
     fs.writeFileSync(npmrcPath, lines.join(os.EOL));
     return lines;
 }
-

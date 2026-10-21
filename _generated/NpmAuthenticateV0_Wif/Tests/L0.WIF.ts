@@ -129,11 +129,12 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         });
 
         TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'Error_UrlHttpsRequired');
         assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         TestHelpers.assertOutputNotContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
 
-    it('reports the verification error for a malformed feedUrl', async () => {
+    it('reports the invalid URL error for a malformed feedUrl', async () => {
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
 
         const tr = await TestHelpers.runTestWithEnv({
@@ -144,12 +145,12 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         });
 
         TestHelpers.assertFailure(tr);
-        TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+        TestHelpers.assertOutputContains(tr, 'Error_UrlInvalid');
         TestHelpers.assertOutputNotContains(tr, 'IgnoringRegistry');
         assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
     });
 
-    it('reports the verification error for an unmatched untrusted feedUrl', async () => {
+    it('fails without credentials when an untrusted feedUrl matches nothing in the .npmrc', async () => {
         const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
 
         const tr = await TestHelpers.runTestWithEnv({
@@ -160,10 +161,27 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         });
 
         TestHelpers.assertFailure(tr);
-        TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
-        TestHelpers.assertOutputNotContains(tr, 'IgnoringRegistry');
+        TestHelpers.assertOutputContains(tr, 'IgnoringRegistry');
         assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        TestHelpers.assertOutputNotContains(tr, TestData.wifToken);
     });
+
+    it('requests a token only once when the same registry is listed twice', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc(
+            `registry=${TestData.wifRegistryUrl}\n@scope:registry=${TestData.wifRegistryUrl}`
+        );
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+            [TestEnvVars.wifToken]: TestData.wifToken
+        });
+
+        TestHelpers.assertSuccess(tr);
+        const calls = tr.stdout.split('Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called').length - 1;
+        assert.strictEqual(calls, 1, 'a duplicate registry should not mint a second token');
+    });
+
 
     it('logs and skips malformed registries before feedUrl matching', async () => {
         const npmrcPath = TestHelpers.createTempNpmrc(
@@ -236,6 +254,54 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
     describe('registry host verification', function () {
         const untrustedRegistry = 'https://registry.example.com/npm/registry/';
+
+        it('does not log embedded credentials from an unmatched feedUrl', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifRegistryUrl]: 'https://user:s3cretpw@pkgs.dev.azure.com/testorg/_packaging/OtherFeed/npm/registry/',
+                [TestEnvVars.wifToken]: TestData.wifToken
+            });
+
+            TestHelpers.assertFailure(tr);
+            const ignoringLines = tr.stdout.split(/\r?\n/).filter(l => l.includes('IgnoringRegistry'));
+            assert.ok(ignoringLines.length > 0, 'IgnoringRegistry should be reported');
+            assert.ok(ignoringLines.every(l => !l.includes('s3cretpw')), 'IgnoringRegistry must not include embedded credentials');
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        });
+
+        it('skips a registry whose token request fails when no feedUrl is given', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifToken]: TestData.wifToken,
+                [TestEnvVars.wifShouldFail]: 'true'
+            });
+
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputContains(tr, 'Info_SkippingUnverifiedWifRegistry pkgs.dev.azure.com');
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        });
+
+        it('fails with the verification error when the token request fails for feedUrl', async () => {
+            const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifRegistryUrl]: TestData.wifRegistryUrl,
+                [TestEnvVars.wifToken]: TestData.wifToken,
+                [TestEnvVars.wifShouldFail]: 'true'
+            });
+
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        });
 
         it('fails and writes no credentials when feedUrl is not an Azure Artifacts feed', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${untrustedRegistry}`);

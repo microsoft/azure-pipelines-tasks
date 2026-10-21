@@ -4,7 +4,8 @@ import * as fs from 'fs';
 import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 #if WIF
-import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
+import { requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 #endif
 import * as npmauthutils from './npmauthutils';
@@ -49,31 +50,30 @@ async function main(): Promise<void> {
 
 #if WIF
     const entraWifServiceConnectionName = tl.getInput("workloadIdentityServiceConnection");
-    const feedUrl = tl.getInput("feedUrl");
-    let federatedAuthToken: string | undefined;
+    const feedUrlInput = tl.getInput("feedUrl");
 
     if (entraWifServiceConnectionName) {
         npmrcRegistries = npmauthutils.validateAndFilterRegistryUrls(npmrcRegistries);
-        federatedAuthToken = await npmauthutils.getAzureDevOpsServiceConnectionCredentials(entraWifServiceConnectionName);
 
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
         // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
-        if (feedUrl) {
-            // An explicitly requested feed must be an Azure Artifacts feed; never send the WIF token elsewhere.
-            try {
-                await verifyAzureArtifactsFeedUrl(feedUrl, ProtocolType.Npm);
-            } catch (error) {
-                throw new Error(tl.loc('Error_WifFeedUrlNotVerified', error instanceof Error ? error.message : String(error)));
-            }
+        if (feedUrlInput) {
+            const feedUrl = requireHttpsUrl(feedUrlInput);
+            const feedNerfDart = npmauthutils.toNerfDart(feedUrl.href);
 
-            npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === npmauthutils.toNerfDart(feedUrl));
+            npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === feedNerfDart);
             if (npmrcRegistries.length === 0) {
-                throw new Error(tl.loc("IgnoringRegistry", feedUrl));
+                // origin and pathname never include embedded credentials.
+                throw new Error(tl.loc("IgnoringRegistry", `${feedUrl.origin}${feedUrl.pathname}`));
             }
         } else {
             tl.debug(tl.loc('Info_ApplyingWifToAllRegistries', npmrcRegistries.length));
         }
-    } else if (feedUrl) {
+
+        // Each registry mints its own token, so avoid minting twice for the same feed.
+        npmrcRegistries = npmrcRegistries.filter((x, i, all) =>
+            all.findIndex(y => npmauthutils.toNerfDart(y) === npmauthutils.toNerfDart(x)) === i);
+    } else if (feedUrlInput) {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));
     }
 #endif
@@ -91,21 +91,29 @@ async function main(): Promise<void> {
         // First match wins; subsequent sources are skipped for this registry.
 #if WIF
         if (entraWifServiceConnectionName) {
-            if (registryURL.protocol !== 'https:') {
-                npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
-                continue;
-            }
-
+            let federatedCredentials;
             try {
-                await verifyAzureArtifactsFeedUrl(registryUrlString, ProtocolType.Npm);
-            } catch {
+                federatedCredentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                    entraWifServiceConnectionName,
+                    registryUrlString,
+                    ProtocolType.Npm);
+            } catch (error) {
+                const reason = error instanceof Error ? error.message : String(error);
+                if (feedUrlInput) {
+                    throw new Error(tl.loc('Error_WifFeedUrlNotVerified', reason));
+                }
+                tl.debug(reason);
                 npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingUnverifiedWifRegistry', registryURL.host));
                 continue;
             }
 
+            if (!federatedCredentials) {
+                throw new Error(tl.loc('FailedToGetServiceConnectionAuth', entraWifServiceConnectionName));
+            }
+
             npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
-            const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
+            const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedCredentials.accessToken}` };
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
             npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
