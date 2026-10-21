@@ -115,8 +115,15 @@ $AzureFileCopyRemoteJob = {
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $sanitizedArguments"
             & azcopy copy "$containerURL/*" "$targetPath" $sanitizedArguments
         } else {
-            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $additionalArguments"
-            $azCopyCommand = "& azcopy copy `"$containerURL/*`" `"$targetPath`" $additionalArguments"
+            # Legacy path (both feature flags off). The target path and container URL reach azcopy as data:
+            # the command text below only references the variables by name, so Invoke-Expression does not
+            # re-parse their values as PowerShell. Only $env:NAME and ${env:NAME} in the target path are
+            # expanded (documented behavior); nothing else in it is evaluated.
+            $expandedTargetPath = [regex]::Replace($targetPath,
+                '\$(?:env:(?<n>[A-Za-z_][A-Za-z0-9_]*)|\{env:(?<n>[^}]+)\})',
+                { param($m) [string][Environment]::GetEnvironmentVariable($m.Groups['n'].Value) })
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$expandedTargetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"`$containerURL/*`" `"`$expandedTargetPath`" $additionalArguments"
             Invoke-Expression $azCopyCommand
         }
     }

@@ -1019,11 +1019,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $inlineScriptText = $fileCopyJobScript.ToString()
 
     # script block arguments
-    # Escape embedded single-quotes so $containerURL/$targetPath cannot break out of the
-    # single-quoted literals below and inject additional PowerShell statements.
-    $escapedContainerURL = $containerURL.Replace("'", "''")
-    $escapedTargetPath = $targetPath.Replace("'", "''")
-    $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$additionalArguments'"
+    # Escape embedded single-quotes so $containerURL/$targetPath/$additionalArguments cannot break out of the
+    # single-quoted literals below and inject additional PowerShell statements. PowerShell
+    # also treats the typographic quotes U+2018, U+2019, U+201A and U+201B as single-quote
+    # delimiters, so .Replace("'", "''") alone is not enough; EscapeSingleQuotedStringContent
+    # doubles every one of them.
+    $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+    $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+    $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+    $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$escapedAdditionalArguments'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
