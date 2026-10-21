@@ -29,13 +29,14 @@ $AzureFileCopyRemoteJob = {
 
     # Replaces only $env:NAME and ${env:NAME} with the value of that environment variable (an unset
     # variable becomes an empty string). It is a single pass: the value is never expanded again, and
-    # nothing else in the text is evaluated.
+    # nothing else in the text is evaluated. The "env:" keyword is matched case-insensitively
+    # (e.g. $env:NAME, $Env:NAME, $ENV:NAME, ${ENV:NAME}) to match PowerShell's native behavior.
     function Expand-EnvironmentReferences
     {
         param([string]$text)
 
         return [regex]::Replace($text,
-            '\$(?:env:(?<n>[A-Za-z_][A-Za-z0-9_]*)|\{env:(?<n>[^}]+)\})',
+            '(?i)\$(?:env:(?<n>[A-Za-z_][A-Za-z0-9_]*)|\{env:(?<n>[^}]+)\})',
             { param($m) [string][Environment]::GetEnvironmentVariable($m.Groups['n'].Value) })
     }
 
