@@ -142,7 +142,9 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             createDirectoryLink(outside, linkedDestination);
             const pf = new PackageFile(true, linkedDestination, 'package.nupkg');
 
-            await assert.rejects(() => pf.process());
+            await assert.rejects(() => pf.process(), {
+                message: tl.loc('InvalidPackageDestinationLink', path.resolve(linkedDestination))
+            });
         });
 
         it('allows a link above a direct-download destination', () => {
