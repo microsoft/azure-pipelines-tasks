@@ -59,20 +59,19 @@ async function main(): Promise<void> {
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
         // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
         if (feedUrl) {
+            // An explicitly requested feed must be an Azure Artifacts feed; never send the WIF token elsewhere.
+            try {
+                await verifyAzureArtifactsFeedUrl(feedUrl, ProtocolType.Npm);
+            } catch (error) {
+                throw new Error(tl.loc('Error_WifFeedUrlNotVerified', error instanceof Error ? error.message : String(error)));
+            }
+
             npmrcRegistries = npmrcRegistries.filter(x => npmauthutils.toNerfDart(x) === npmauthutils.toNerfDart(feedUrl));
             if (npmrcRegistries.length === 0) {
                 throw new Error(tl.loc("IgnoringRegistry", feedUrl));
             }
         } else {
             tl.debug(tl.loc('Info_ApplyingWifToAllRegistries', npmrcRegistries.length));
-        }
-        // An explicitly requested feed must be an Azure Artifacts feed; never send the WIF token elsewhere.
-        if (feedUrl) {
-            try {
-                await verifyAzureArtifactsFeedUrl(feedUrl, ProtocolType.Npm);
-            } catch (error) {
-                throw new Error(tl.loc('Error_WifFeedUrlNotVerified', error instanceof Error ? error.message : String(error)));
-            }
         }
     } else if (feedUrl) {
         throw new Error(tl.loc("MissingFeedUrlOrServiceConnection"));

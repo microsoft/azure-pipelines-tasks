@@ -133,6 +133,38 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         TestHelpers.assertOutputNotContains(tr, 'Info_SuccessAddingFederatedFeedAuth');
     });
 
+    it('reports the verification error for a malformed feedUrl', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+            [TestEnvVars.wifRegistryUrl]: 'not-a-url',
+            [TestEnvVars.wifToken]: TestData.wifToken
+        });
+
+        TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+        TestHelpers.assertOutputNotContains(tr, 'IgnoringRegistry');
+        assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+    });
+
+    it('reports the verification error for an unmatched untrusted feedUrl', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+            [TestEnvVars.wifRegistryUrl]: 'https://registry.example.com/npm/registry/',
+            [TestEnvVars.wifToken]: TestData.wifToken
+        });
+
+        TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+        TestHelpers.assertOutputNotContains(tr, 'IgnoringRegistry');
+        assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+    });
+
     it('logs and skips malformed registries before feedUrl matching', async () => {
         const npmrcPath = TestHelpers.createTempNpmrc(
             `@invalid:registry=not-a-url\n@valid:registry=${TestData.wifRegistryUrl}`
