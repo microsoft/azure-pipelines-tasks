@@ -12,7 +12,8 @@ export async function PublishCodeCoverage(
     sourceDirectory?: string,
     publishHtmlReport: boolean = true,
     trustedSourceDirectories?: string[],
-    enableTrustedSourcePathFiltering: boolean = false) {
+    enableTrustedSourcePathFiltering: boolean = false,
+    enableLoggingCommandFiltering: boolean = false) {
     var reportDirectory = path.join(getTempFolder(), UUID());
     fs.mkdirSync(reportDirectory);
     const publishing = publishCoverage(
@@ -21,7 +22,8 @@ export async function PublishCodeCoverage(
         sourceDirectory,
         publishHtmlReport,
         trustedSourceDirectories,
-        enableTrustedSourcePathFiltering);
+        enableTrustedSourcePathFiltering,
+        enableLoggingCommandFiltering);
     if (enableTrustedSourcePathFiltering) {
         await publishing;
     }
@@ -33,7 +35,8 @@ async function publishCoverage(
     pathToSources?: string,
     publishHtmlReport: boolean = true,
     trustedSourceDirectories?: string[],
-    enableTrustedSourcePathFiltering: boolean = false) {
+    enableTrustedSourcePathFiltering: boolean = false,
+    enableLoggingCommandFiltering: boolean = false) {
 
     if(!inputFiles || inputFiles.length == 0) {
         taskLib.setResult(taskLib.TaskResult.Failed, taskLib.loc("NoInputFiles"));
@@ -124,6 +127,14 @@ async function publishCoverage(
     try {
         // Get comprehensive proxy configuration to fix .NET HttpClient proxy issues
         const proxyConfig = getProxyEnvironmentVariables();
+        const filteredStdout = enableLoggingCommandFiltering ? taskLib.createExternalOutputStream({
+            source: 'repository',
+            destination: process.stdout
+        }) : undefined;
+        const filteredStderr = enableLoggingCommandFiltering ? taskLib.createExternalOutputStream({
+            source: 'repository',
+            destination: process.stderr
+        }) : undefined;
         
         const env = {
             "SYSTEM_ACCESSTOKEN": taskLib.getEndpointAuthorizationParameter('SystemVssConnection', 'AccessToken', false),
@@ -141,19 +152,33 @@ async function publishCoverage(
             ...proxyConfig
         };
 
-        await dotnet.exec({
-            env,
-            cwd: publisherWorkingDirectory,
-            ignoreReturnCode: false,
-            failOnStdErr: true,
-            windowsVerbatimArguments: !enableTrustedSourcePathFiltering,
-            errStream: {
-                write: (data: Buffer) => {
-                    console.error(data.toString());
-                    taskLib.setResult(taskLib.TaskResult.Failed, undefined);
-                }
-            },
-        } as any);
+        try {
+            await dotnet.exec({
+                env,
+                cwd: publisherWorkingDirectory,
+                ignoreReturnCode: false,
+                failOnStdErr: true,
+                windowsVerbatimArguments: !enableTrustedSourcePathFiltering,
+                outStream: filteredStdout || process.stdout,
+                errStream: {
+                    write: (data: Buffer) => {
+                        if (filteredStderr) {
+                            filteredStderr.write(data);
+                        } else {
+                            console.error(data.toString());
+                        }
+                        taskLib.setResult(taskLib.TaskResult.Failed, undefined);
+                    }
+                },
+            } as any);
+        } finally {
+            if (filteredStdout) {
+                filteredStdout.end();
+            }
+            if (filteredStderr) {
+                filteredStderr.end();
+            }
+        }
 
     } catch (err) {
         if (enableTrustedSourcePathFiltering) {

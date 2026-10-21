@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
-    "Patch": 1
+    "Minor": 282,
+    "Patch": 0
   },
   "demands": [],
   "satisfies": [
@@ -42,7 +42,7 @@
         "test": "test",
         "nightly": "nightly"
       },
-      "helpMarkDown": "Pick the release type to install. Nightly is not supported on Windows"
+      "helpMarkDown": "Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows"
     }
   ],
   "instanceNameFormat": "Install Docker $(dockerVersion)",
@@ -63,6 +63,8 @@
     }
   },
   "messages": {
+    "InvalidReleaseType": "Invalid release type. Supported values are %s.",
+    "NightlyNotSupportedOnWindows": "The value nightly is not supported on Windows.",
     "DownloadDockerFailedFromLocation": "Failed to download docker from location %s. Error %s",
     "DockerNotFoundInFolder": "Docker executable not found in path %s",
     "DockerDownloadFailed": "Failed to download Docker from location %s. Error %s",
