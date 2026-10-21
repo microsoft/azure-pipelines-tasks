@@ -145,7 +145,16 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             await assert.rejects(() => pf.process());
         });
 
-        it('rejects a link in an intermediate extraction destination component', async () => {
+        it('allows a link above a direct-download destination', () => {
+            const linkedParent = path.join(testRoot, 'linked-parent');
+            createDirectoryLink(outside, linkedParent);
+            fs.mkdirSync(path.join(outside, 'output'));
+            const pf = new PackageFile(false, path.join(linkedParent, 'output'), 'package.jar');
+
+            assert.doesNotThrow(() => pf.removeExisting());
+        });
+
+        it('allows a link above an extraction destination', async () => {
             (tl as any).getVariable = (name: string) => {
                 if (name === 'Agent.TempDirectory') return destination;
                 return undefined;
@@ -156,7 +165,8 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             createDirectoryLink(outside, linkedParent);
             const pf = new PackageFile(true, path.join(linkedParent, 'output'), 'package.nupkg');
 
-            await assert.rejects(() => pf.process());
+            // The invalid archive fails extraction, but not with the linked-destination error.
+            await assert.rejects(() => pf.process(), (error: any) => !String(error.message ?? error).includes('InvalidPackageDestinationLink'));
         });
     });
 });
