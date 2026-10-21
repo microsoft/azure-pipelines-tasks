@@ -7,7 +7,7 @@ import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
 
-import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import * as handlers from "typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
 

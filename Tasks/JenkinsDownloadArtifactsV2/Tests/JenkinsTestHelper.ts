@@ -10,7 +10,7 @@ export function RegisterHttpClientMock(tr: tmrm.TaskMockRunner, getResultCallbac
     // setting retry value to zero as we don't want the test to hang up
     process.env['VSTS_HTTP_RETRY'] = "0"
 
-    tr.registerMock("artifact-engine/Providers/typed-rest-client/HttpClient", {
+    tr.registerMock("typed-rest-client/HttpClient", {
         HttpClient: function(name, handlers, options) {
             return {
                 get: function(url) {
