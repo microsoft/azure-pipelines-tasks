@@ -58,7 +58,7 @@ describe('PublishTestResults Suite', function() {
     after(function () {
     });
 
-    it('TestResultsPublisher.exe is called on Windows OS', (done: Mocha.Done) => {
+    it('TestResultsPublisher.exe is called on Windows OS', async () => {
         console.log('TestCaseName: TestResultsPublisher.exe is called on Windows OS');
 
         // Setup the mock runner
@@ -85,17 +85,16 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.failTaskOnFailureToPublishResults] = 'false';
         
         // Start the run
-        tr.run();
+        await tr.runAsync();
         
         // Asserts
         assert(tr.stdOutContained(`TestResultsPublisher.exe`),
             `TestResultsPublisher.exe should have been called on Windows OS`);
         assert.equal(tr.invokedToolCount, 1, `invoked tool count should be 1`);
 
-        done();
     });
 
-    it('TestResultsPublisher.exe is not called on non-Windows OS', (done: Mocha.Done) => {
+    it('TestResultsPublisher.exe is not called on non-Windows OS', async () => {
         console.log('TestCaseName: TestResultsPublisher.exe is not called on non-Windows OS');
 
         // Setup the mock runner
@@ -122,17 +121,16 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.failTaskOnFailureToPublishResults] = 'false';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stdout.indexOf(`TestResultsPublisher.exe`) < 0,
             `TestResultsPublisher.exe should not have been called on non-windows OS`);
         assert.equal(tr.invokedToolCount, 0, `invoked tool count should be 0`);
 
-        done();
     });
 
-    it('Command should be called when exe returns with exit code for feature flag off', (done: Mocha.Done) => {
+    it('Command should be called when exe returns with exit code for feature flag off', async () => {
         console.log('TestCaseName: Command should be called when exe returns with exit code for feature flag off');
 
         // Setup the mock runner
@@ -159,7 +157,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.failTaskOnFailureToPublishResults] = 'false';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
         
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -170,10 +168,9 @@ describe('PublishTestResults Suite', function() {
         assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;failTaskOnFailureToPublishResults=false;testRunSystem=VSTS - PTR;]`),
             `Should have published results through Command when feature flag is off`);
 
-        done();
     });
 
-    it('Command should not be called when exe returns with exit code for feature flag on', (done: Mocha.Done) => {
+    it('Command should not be called when exe returns with exit code for feature flag on', async () => {
         console.log('TestCaseName: Command should not be called when exe returns with exit code for feature flag on');
 
         // Setup the mock runner
@@ -200,7 +197,7 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.failTaskOnFailureToPublishResults] = 'false';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -211,10 +208,9 @@ describe('PublishTestResults Suite', function() {
         assert(tr.stdout.indexOf(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;failTaskOnFailureToPublishResults=false;testRunSystem=VSTS - PTR;]`) < 0,
             `Command should not have been called when exe returns with exit code suggesting feature flag is on`);
 
-        done();
     });
 
-    it('Command should include retry-detection property when allowPtrToDetectTestRunRetryFiles is true', (done: Mocha.Done) => {
+    it('Command should include retry-detection property when allowPtrToDetectTestRunRetryFiles is true', async () => {
         console.log('TestCaseName: Command should include retry-detection property when allowPtrToDetectTestRunRetryFiles is true');
 
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -223,15 +219,14 @@ describe('PublishTestResults Suite', function() {
         setCommonRetryDetectionInputs();
         process.env[constants.allowPtrToDetectTestRunRetryFiles] = 'true';
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.succeeded, 'Task should have succeeded');
         assert(tr.stdOutContained('isDetectTestRunRetry=true;'), 'Publish command should include retry-detection property when variable is true');
 
-        done();
     });
 
-    it('Command should not include retry-detection property when allowPtrToDetectTestRunRetryFiles is false', (done: Mocha.Done) => {
+    it('Command should not include retry-detection property when allowPtrToDetectTestRunRetryFiles is false', async () => {
         console.log('TestCaseName: Command should not include retry-detection property when allowPtrToDetectTestRunRetryFiles is false');
 
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -240,11 +235,10 @@ describe('PublishTestResults Suite', function() {
         setCommonRetryDetectionInputs();
         process.env[constants.allowPtrToDetectTestRunRetryFiles] = 'false';
 
-        tr.run();
+        await tr.runAsync();
 
         assert(tr.succeeded, 'Task should have succeeded');
         assert(tr.stdout.indexOf('isDetectTestRunRetry=true;') < 0, 'Publish command should not include retry-detection property when variable is false');
 
-        done();
     });
 });
