@@ -128,7 +128,7 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             createDirectoryLink(outside, path.join(destination, 'package.nupkg'));
             const pf = new PackageFile(true, '/dest/output', 'package.nupkg');
 
-            await assert.rejects(() => pf.process());
+            await assert.rejects(() => pf.process(), /InvalidPackageFileLink/);
         });
 
         it('rejects a linked extraction destination root', async () => {
@@ -161,14 +161,15 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
                 if (name === 'Agent.TempDirectory') return destination;
                 return undefined;
             };
-            fs.writeFileSync(path.join(destination, 'package.nupkg'), 'archive content');
+            // An empty zip is just the end-of-central-directory record.
+            const emptyZip = Buffer.concat([Buffer.from([0x50, 0x4b, 0x05, 0x06]), Buffer.alloc(18)]);
+            fs.writeFileSync(path.join(destination, 'package.nupkg'), emptyZip);
             fs.mkdirSync(path.join(outside, 'output'));
             const linkedParent = path.join(testRoot, 'linked-parent');
             createDirectoryLink(outside, linkedParent);
             const pf = new PackageFile(true, path.join(linkedParent, 'output'), 'package.nupkg');
 
-            // The invalid archive fails extraction, but not with the linked-destination error.
-            await assert.rejects(() => pf.process(), (error: any) => !String(error.message ?? error).includes('InvalidPackageDestinationLink'));
+            await pf.process();
         });
     });
 });
