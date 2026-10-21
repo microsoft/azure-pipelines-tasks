@@ -78,5 +78,8 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "无法提取托管服务主体的访问令牌。状态代码: %s，状态消息: %s",
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
   "loc.messages.ScriptArgsSanitized": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反引号斜杠 (`) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787",
-  "loc.messages.ScriptArgsSanitizedBash": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反斜杠 (\\) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitizedBash": "在参数中检测到可能无法由 shell 正确执行的字符。请使用反斜杠 (\\) 转义特殊字符。有关详细信息，请访问此处: https://aka.ms/ado/75787",
+  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
+  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
 }

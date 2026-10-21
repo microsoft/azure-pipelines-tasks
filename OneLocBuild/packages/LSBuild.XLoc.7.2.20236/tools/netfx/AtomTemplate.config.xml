@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?><config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Config.xsd">
+ <html>
+  <localizable>
+   <tags>
+    <tag name="%"/>
+    <tag name="A"/>
+    <tag name="B"/>
+    <tag name="BIG"/>
+    <tag name="BLINK"/>
+    <tag name="BR"/>
+    <tag name="CITE"/>
+    <tag name="CODE"/>
+    <tag name="DFN"/>
+    <tag name="EM"/>
+    <tag name="FONT"/>
+    <tag name="I"/>
+    <tag name="IFRAME"/>
+    <tag name="IMG"/>
+    <tag name="KBD"/>
+    <tag name="NOBR"/>
+    <tag name="RT"/>
+    <tag name="RUBY"/>
+    <tag name="S"/>
+    <tag name="SAMP"/>
+    <tag name="SMALL"/>
+    <tag name="SPAN"/>
+    <tag name="STRIKE"/>
+    <tag name="STRONG"/>
+    <tag name="SUB"/>
+    <tag name="SUP"/>
+    <tag name="TT"/>
+    <tag name="U"/>
+    <tag name="VAR"/>
+    <tag name="WBR"/>
+   </tags>
+   <attributes>
+    <tag name="%@">
+     <attribute name="Title" category="Text" lock="false"/>
+    </tag>
+    <tag name="(DEFAULT)">
+     <attribute name="accessKey" category="Accelerator" lock="false"/>
+     <attribute name="align" category="Property" lock="false"/>
+     <attribute name="alt" category="Alternative Text" lock="false"/>
+     <attribute name="Title" category="Text" lock="false"/>
+    </tag>
+    <tag name="A">
+     <attribute name="href" category="Address" lock="false"/>
+     <attribute name="URN" category="Text" lock="false"/>
+    </tag>
+    <tag name="APPLET">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="AREA">
+     <attribute name="href" category="Address" lock="false"/>
+    </tag>
+    <tag name="ASP:BOUNDCOLUMN">
+     <attribute name="FooterText" category="Text" lock="false"/>
+     <attribute name="HeaderText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:BUTTON">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:BUTTONCOLUMN">
+     <attribute name="FooterText" category="Text" lock="false"/>
+     <attribute name="HeaderText" category="Text" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:CALENDAR">
+     <attribute name="NextMonthText" category="Text" lock="false"/>
+     <attribute name="PrevMonthText" category="Text" lock="false"/>
+     <attribute name="SelectMonthText" category="Text" lock="false"/>
+     <attribute name="SelectWeekText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:CHECKBOX">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:COMPAREVALIDATOR">
+     <attribute name="ErrorMessage" category="Error Message" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:CREATEUSERWIZARD">
+     <attribute name="EmailRegularExpressionErrorMessage" category="Error Message" lock="false"/>
+    </tag>
+    <tag name="ASP:CUSTOMVALIDATOR">
+     <attribute name="ErrorMessage" category="Error Message" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:DATAGRID">
+     <attribute name="PageStyle-NextPageText" category="Text" lock="false"/>
+     <attribute name="PageStyle-PrevPageText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:DYNAMICHYPERLINK">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:EDITCOMMANDCOLUMN">
+     <attribute name="CancelText" category="Text" lock="false"/>
+     <attribute name="EditText" category="Text" lock="false"/>
+     <attribute name="FooterText" category="Text" lock="false"/>
+     <attribute name="HeaderText" category="Text" lock="false"/>
+     <attribute name="UpdateText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:HYPERLINK">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:HYPERLINKCOLUMN">
+     <attribute name="FooterText" category="Text" lock="false"/>
+     <attribute name="HeaderText" category="Text" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:IMAGE">
+     <attribute name="AlternateText" category="Alternative Text" lock="false"/>
+    </tag>
+    <tag name="ASP:IMAGEBUTTON">
+     <attribute name="AlternateText" category="Alternative Text" lock="false"/>
+    </tag>
+    <tag name="ASP:LABEL">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:LINKBUTTON">
+     <attribute name="OnClientClick" category="Text" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:LISTITEM">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:LOGINNAME">
+     <attribute name="formatstring" category="Message" lock="false"/>
+    </tag>
+    <tag name="ASP:LOGINSTATUS">
+     <attribute name="LogoutText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:MENU">
+     <attribute name="LogoutText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:MENUITEM">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:RADIOBUTTON">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:RANGEVALIDATOR">
+     <attribute name="ErrorMessage" category="Error Message" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:REGULAREXPRESSIONVALIDATOR">
+     <attribute name="ErrorMessage" category="Error Message" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:REQUIREDFIELDVALIDATOR">
+     <attribute name="ErrorMessage" category="Error Message" lock="false"/>
+     <attribute name="Text" category="Text" lock="false"/>
+     <attribute name="tooltip" category="Tool Tip" lock="false"/>
+    </tag>
+    <tag name="ASP:TEMPLATEFIELD">
+     <attribute name="HeaderText" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:TEXTBOX">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="ASP:VALIDATIONSUMMARY">
+     <attribute name="HeaderText" category="Text" lock="false"/>
+    </tag>
+    <tag name="BASE">
+     <attribute name="href" category="Address" lock="false"/>
+    </tag>
+    <tag name="BASEFONT">
+     <attribute name="face" category="Font Name" lock="false"/>
+     <attribute name="size" category="Number" lock="false"/>
+    </tag>
+    <tag name="BGSOUND">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="BODY">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="BUTTON">
+     <attribute name="Content" category="Text" lock="false"/>
+    </tag>
+    <tag name="CAPTION">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="CLUB:ROLLOVERBUTTON">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="EMBED">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="EVENT">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="FONT">
+     <attribute name="face" category="Font Name" lock="false"/>
+     <attribute name="size" category="Text" lock="false"/>
+    </tag>
+    <tag name="FRAME">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="HR">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="HYPERLINKBUTTON">
+     <attribute name="Content" category="Text" lock="false"/>
+    </tag>
+    <tag name="IFRAME">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="IMG">
+     <attribute name="dynSrc" category="File Name" lock="false"/>
+     <attribute name="lowsrc" category="File Name" lock="false"/>
+     <attribute name="src" category="Text" lock="false"/>
+     <attribute name="useMap" category="Text" lock="false"/>
+     <attribute name="vrml" category="Text" lock="false"/>
+    </tag>
+    <tag name="INPUT">
+     <attribute name="defaultValue" category="Static Text" lock="false"/>
+     <attribute name="size" category="Text" lock="false"/>
+     <attribute name="src" category="Text" lock="false"/>
+     <attribute name="Value" category="Text" lock="false"/>
+    </tag>
+    <tag name="LINK">
+     <attribute name="href" category="Address" lock="false"/>
+     <attribute name="URN" category="Text" lock="false"/>
+    </tag>
+    <tag name="META">
+     <attribute name="URL" category="Text" lock="false"/>
+    </tag>
+    <tag name="OBJECT">
+     <attribute name="Standby" category="Text" lock="false"/>
+    </tag>
+    <tag name="OPTION">
+     <attribute name="Value" category="Text" lock="false"/>
+    </tag>
+    <tag name="PARAM">
+     <attribute name="Value" category="Text" lock="false"/>
+    </tag>
+    <tag name="script">
+     <attribute name="(ScriptComments)" category="Comment" lock="false"/>
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+    <tag name="TD">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="TEMPLATECOLUMN">
+     <attribute name="FooterText" category="Text" lock="false"/>
+     <attribute name="HeaderText" category="Text" lock="false"/>
+    </tag>
+    <tag name="TEXTAREA">
+     <attribute name="defaultValue" category="Static Text" lock="false"/>
+    </tag>
+    <tag name="TEXTBLOCK">
+     <attribute name="Text" category="Text" lock="false"/>
+    </tag>
+    <tag name="TH">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="UL">
+     <attribute name="src" category="Text" lock="false"/>
+    </tag>
+   </attributes>
+   <properties>
+    <property name="font-family" category="Text" lock="false"/>
+    <property name="font-size" category="Text" lock="false"/>
+    <property name="height" category="Text" lock="false"/>
+    <property name="left" category="Text" lock="false"/>
+    <property name="line-height" category="Text" lock="false"/>
+    <property name="text-align" category="Property" lock="false"/>
+    <property name="top" category="Text" lock="false"/>
+    <property name="width" category="Text" lock="false"/>
+   </properties>
+  </localizable>
+  <known>
+   <tags>
+    <tag name="AUTHOR"/>
+    <tag name="ENTRY"/>
+    <tag name="FEED"/>
+    <tag name="ID"/>
+    <tag name="NAME"/>
+    <tag name="PUBLISHED"/>
+    <tag name="SUMMARY"/>
+    <tag name="TITLE"/>
+    <tag name="UPDATED"/>
+    <tag name="Version" />
+   </tags>
+  </known>
+  <locked>
+   <tags>
+    <tag name="ID"/>
+    <tag name="PUBLISHED"/>
+    <tag name="UPDATED"/>
+    <tag name="Version" />
+   </tags>
+  </locked>
+ </html>
+ <xml>
+  <localizable>
+   <tags>
+    <tag name="TextBlock"/>
+   </tags>
+   <attributes>
+    <tag name="!--">
+     <attribute name="(XMLComments)" category="Text" lock="false" type="string"/>
+    </tag>
+    <tag name="globalization">
+     <attribute name="requestEncoding" category="Text" lock="false" type="string"/>
+     <attribute name="responseEncoding" category="Text" lock="false" type="string"/>
+    </tag>
+   </attributes>
+  </localizable>
+  <known>
+   <tags>
+    <tag name="![CDATA" canBeEmpty="false" tagType="Optional">
+     <contents>
+      <content name="ANY"/>
+     </contents>
+    </tag>
+    <tag name="globalization" canBeEmpty="true" tagType="Optional">
+     <contents>
+      <content name="ANY"/>
+     </contents>
+    </tag>
+    <tag name="xsl:apply-imports" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:apply-templates" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:attribute" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:attribute-set" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:call-template" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:choose" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:comment" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:copy" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:copy-of" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:decimal-format" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:element" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:eval" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:exclude-result-prefixes" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:extension-element-prefixes" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:fallback" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:for-each" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:if" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:import" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:include" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:key" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:message" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:namespace-alias" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:number" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:otherwise" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:output" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:param" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:preserve-space" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:processing-instruction" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:sort" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:strip-space" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:stylesheet" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:template" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:text" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:transform" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:use-attribute-sets" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:value-of" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:variable" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:vendor" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:vendor-url" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:version" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:when" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:with-param" canBeEmpty="true" tagType="Optional"/>
+   </tags>
+   <attributes>
+    <tag name="globalization">
+     <attribute name="requestEncoding" type="string"/>
+     <attribute name="responseEncoding" type="string"/>
+    </tag>
+   </attributes>
+   <entities/>
+  </known>
+  <locked>
+   <tags/>
+  </locked>
+ </xml>
+ <options>
+   <general>
+    <option AllowUnderscoresInCSSIdentifiers="false"/>
+    <option AttributeExtractionLevel="ExtractLocalizableItems"/>
+    <option ContentLocking="false"/>
+    <option CustomValidationDLLs=""/>
+    <option DisableMessagesForNonLocCSSProperties="true"/>
+    <option DisableXMLValidation="true"/>
+    <option ExtractOnlyTermsWithRealResIds="false"/>
+    <option ExtractScripting="true"/>
+    <option IncludeHiddenAttrValues="false"/>
+    <option LOOMConfigLastModifiedDateTime="2012-06-07T16:13:43"/>
+    <option PropertyExtractionLevel="ExtractLocalizableItems"/>
+    <option ReverseLocking="false"/>
+    <option ScriptingResourceModel="false"/>
+    <option ServerSideScripting="true"/>
+   </general>
+   <disabledMessages>
+    <disabledMessage id="1043" type="Information">
+     <description><![CDATA[Term does not have a real Resource Identifier.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3002" type="Warning">
+     <description><![CDATA[Style Sheet Syntax Error. Illegal semicolon ';' found.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3010" type="Warning">
+     <description><![CDATA[Style Sheet Syntax. Quotes used around non-String Value %s of "%s" Property.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3011" type="Warning">
+     <description><![CDATA[Non-terminated Comment in Style Sheet. Skipping rest of Style Sheet.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3013" type="Warning">
+     <description><![CDATA[Style Sheet Property Name is an extension to CSS1: "%s"]]></description>
+    </disabledMessage>
+    <disabledMessage id="3017" type="Warning">
+     <description><![CDATA[Unexpected "@import" in the middle of Style Sheet.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3019" type="Warning">
+     <description><![CDATA[CSS1 Style Sheet Syntax. '=' used instead of ':']]></description>
+    </disabledMessage>
+    <disabledMessage id="3021" type="Warning">
+     <description><![CDATA[Style Sheet Property Value "%s" for "%s" Property is an extension to CSS1.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3025" type="Warning">
+     <description><![CDATA[Non-standard (CSS1) Character '%c' (Unicode 0x%X) in Style Sheet Value.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3026" type="Warning">
+     <description><![CDATA[Style Sheet: Non-standard HTML comment used: "%s". Expected "<!--" or "-->" for CSS1.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3029" type="Warning">
+     <description><![CDATA[Negative Margin Value "%s" used for "%s" Property. This may result in illegible output in CSS compliant browsers.]]></description>
+    </disabledMessage>
+    <disabledMessage id="4015" type="Information">
+     <description><![CDATA[Unassigned Quoted String found in Script: "%s" ]]></description>
+    </disabledMessage>
+    <disabledMessage id="9017" type="Information">
+     <description><![CDATA[Resource Identifier: "res_id"  Instruction: "instr".]]></description>
+    </disabledMessage>
+   </disabledMessages>
+   <fileExtensions>
+    <fileExtension name="HTML Files" extensions="HTM ALX ASA ASP ASPX ASPX1 AST DLG HFM HTML HTP HTR HTS HTT HTX PGI PPG SHTML SMP STM STML XWT HTA HTC MASTER SITEMAP ATOM XAML"/>
+    <fileExtension name="CSS Style Sheet Files" extensions="STY CSS1"/>
+    <fileExtension name="JavaScript Files" extensions="JS JSL JSL1 CS CS1 CPP H CSS MOF JSL IDL RC RC2 SRF c ASAX ASHX ASMX ASCX FS FSX CSS"/>
+    <fileExtension name="Visual Basic Script Files" extensions="VBS FRM BAS INC VB VB1 TT"/>
+    <fileExtension name="HTML Help Table of Contents Files" extensions="HHC"/>
+    <fileExtension name="HTML Help Index Files" extensions="HHK"/>
+    <fileExtension name="Java Files" extensions="JAVA JAV CSS"/>
+    <fileExtension name="XML Files" extensions="XML XQL CML ENT MATH MTX RDF SMIL SVG UI WML XDR XHTML DVT XSF XSD XFP CONFIG RESX MANIFEST csproj vbproj"/>
+    <fileExtension name="XML Stylesheet Files" extensions="XSL XSLT"/>
+    <fileExtension name="RAW Files" extensions="GIF JPG"/>
+    <fileExtension name="CeX Files" extensions="CEX CIX"/>
+    <fileExtension name="REG or DEF Files" extensions="REG DEF"/>
+   </fileExtensions>
+   <update>
+    <option AdditionCost="0"/>
+    <option DeletionCost="0"/>
+    <option MoveCost="0"/>
+    <option MaxFormattingWeight="0"/>
+    <option MinSimilarity="0"/>
+   </update>
+ </options>
+</config>

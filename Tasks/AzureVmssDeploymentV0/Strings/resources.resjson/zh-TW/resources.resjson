@@ -78,5 +78,8 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "無法擷取受控服務主體的存取權杖。狀態碼: %s，狀態訊息: %s",
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
   "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787",
-  "loc.messages.ScriptArgsSanitizedBash": "偵測到引數中可能無法由殼層正確執行的字元。請使用反斜線 (\\) 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitizedBash": "偵測到引數中可能無法由殼層正確執行的字元。請使用反斜線 (\\) 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787",
+  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
+  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
 }
