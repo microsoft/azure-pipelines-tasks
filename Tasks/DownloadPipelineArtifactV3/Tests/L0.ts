@@ -152,6 +152,16 @@ describe("DownloadPipelineArtifact L0 Suite", function () {
             assert.deepStrictEqual(plan.warnings, []);
         });
 
+        it("passes the agent's DISABLE_BUILD_ARTIFACTS_TO_BLOB setting to ArtifactTool", async () => {
+            const flag = "--disable-build-artifacts-to-blob";
+            for (const [value, expected] of [["$True", true], ["1", true], ["false", false], ["", false]] as [string, boolean][]) {
+                const plan = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl" },
+                    { ...buildVariables, DISABLE_BUILD_ARTIFACTS_TO_BLOB: value }), fakeService(), noLog);
+
+                assert.strictEqual(plan.args.includes(flag), expected, `value '${value}'`);
+            }
+        });
+
         it("reports known types of all valid artifacts in plug-in order and warns about file shares", async () => {
             const service = fakeService([artifact("share", "FilePath"), artifact("drop"), artifact("bad:name"), artifact("other", "Unknown"), artifact("old", "Container")]);
 

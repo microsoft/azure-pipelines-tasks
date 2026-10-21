@@ -151,6 +151,18 @@ export async function selectArtifacts(
 }
 
 /**
+ * The agent setting that makes build container downloads use the file container service instead of BlobStore.
+ */
+export const DisableBuildArtifactsToBlobVariable = "DISABLE_BUILD_ARTIFACTS_TO_BLOB";
+
+/**
+ * Reads a boolean agent setting the way the agent does: "1", "true", and "$true" (any case) are true.
+ */
+export function isAgentKnobTrue(value: string | undefined): boolean {
+    return ["1", "true", "$true"].includes((value ?? "").toLowerCase());
+}
+
+/**
  * Processes DownloadPipelineArtifact inputs: selects the run and artifacts and computes the outputs.
  * ArtifactTool then transfers the selected run's artifacts.
  */
@@ -178,6 +190,9 @@ export async function prepareDownload(task: TaskInputs, service: PipelineBuildSe
         if (pattern.trim()) {
             plan.args.push("--pattern", pattern);
         }
+    }
+    if (isAgentKnobTrue(task.variable(DisableBuildArtifactsToBlobVariable))) {
+        plan.args.push("--disable-build-artifacts-to-blob");
     }
     if (selection.hasFileShares) {
         plan.warnings.push(FileShareDownloadWarning);
