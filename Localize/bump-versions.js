@@ -109,13 +109,14 @@ function bumpPackageVersion(packPath, minor) {
 }
 
 /**
- * After bumping Tasks/<X>/task.json, run `node make.js build --task <list>`
+ * After bumping Tasks/<X>/task.json, run `node make.js build --task <list> --BypassNpmAudit`
  * for tasks with _generated/ mirrors. This invokes BuildConfigGen
  * (--write-updates) and regenerates en-US resjson, keeping _generated/ and
  * Strings/ in sync with the bumped task.json.
  *
  * TF_BUILD is unset because CLI.build refuses to run in CI; the pipeline's
- * build job still runs serverBuild with full validation.
+ * build job still runs serverBuild with full validation. Bypass npm audit
+ * explicitly to preserve the normal CI behavior after clearing TF_BUILD.
  */
 function syncGeneratedTasks(tasksPaths) {
     const generatedDir = path.join(repoRoot, '_generated');
@@ -142,7 +143,7 @@ function syncGeneratedTasks(tasksPaths) {
     const taskPattern = taskNames.length === 1
         ? taskNames[0]
         : `{${taskNames.join(',')}}`;
-    console.log(`Running 'node make.js build --task ${taskPattern}' to sync _generated/ and en-US resjson.`);
+    console.log(`Running 'node make.js build --task ${taskPattern} --BypassNpmAudit' to sync _generated/ and en-US resjson.`);
 
     const childEnv = { ...process.env };
     delete childEnv.TF_BUILD;
@@ -152,7 +153,7 @@ function syncGeneratedTasks(tasksPaths) {
     // uses minimatch, which understands brace expansion natively.
     const result = spawnSync(
         process.execPath,
-        ['make.js', 'build', '--task', taskPattern],
+        ['make.js', 'build', '--task', taskPattern, '--BypassNpmAudit'],
         {
             cwd: repoRoot,
             stdio: 'inherit',
