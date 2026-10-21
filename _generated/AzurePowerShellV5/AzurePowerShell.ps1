@@ -120,6 +120,7 @@ try
     $contents += "try {"
     $contents += "    . '$PSScriptRoot\CoreAz.ps1' $CoreAzArgument"
     $contents += "    `$env:__VSTS_ACCESS_TOKEN = `$null"
+    $contents += "    Remove-Variable -Name endpoint, endpointObject, connectedServiceNameARM, vstsAccessToken, encryptedToken -ErrorAction SilentlyContinue"
 
     if ($scriptType -eq "InlineScript") {
         $contents += "$scriptInline".Replace("`r`n", "`n").Replace("`n", "`r`n")

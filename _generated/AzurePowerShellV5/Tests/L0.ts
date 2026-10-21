@@ -66,6 +66,9 @@ describe('AzurePowerShell Suite', function () {
         it('does not leak access token into generated script', (done) => {
             psr.run(path.join(__dirname, 'TokenNotLeakedToScript.ps1'), done);
         })
+        it('does not expose credential variables to the customer script', (done) => {
+            psr.run(path.join(__dirname, 'CredentialVariablesNotLeakedToScript.ps1'), done);
+        })
         it('removes child-process certificate when customer script fails', (done) => {
             psr.run(path.join(__dirname, 'RemovesChildProcessCertificate.ps1'), done);
         })
