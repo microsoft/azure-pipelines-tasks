@@ -178,6 +178,7 @@
   "loc.messages.ListingOfExtensionsFailed": "無法列出 VM 的延伸模組: '%s'。錯誤 '%s'",
   "loc.messages.ExtensionNotFound": "在 VM 上找不到延伸模組: %s",
   "loc.messages.AddedOutputVariable": "已更新輸出變數 '%s'，其包含格式為字串之目前部署物件的輸出區段。",
+  "loc.messages.OutputVariableNameChanged": "輸出變數名稱 '%s' 在變數發佈時先前曾被解碼或截斷成不同的名稱。現在會原樣使用宣告的名稱。如果您的管線參考了先前的名稱，請將其更新為宣告的名稱。",
   "loc.messages.UnableToFetchAuthorityURL": "無法擷取授權單位 URL。",
   "loc.messages.UnableToFetchActiveDirectory": "無法擷取 Active Directory 資源識別碼。",
   "loc.messages.SpecifiedAzureRmEndpointIsInvalid": "指定的 AzureRm 服務連線 URL: '{0}' 無效。",
@@ -199,5 +200,7 @@
   "loc.messages.TemplateValidationFailure": "在 Azure Resource Manager 範本中發現驗證錯誤。此情況可能會造成範本部署失敗。%s。請前往 https://docs.microsoft.com/zh-tw/azure/azure-resource-manager/templates/template-syntax (機器翻譯)",
   "loc.messages.ManagedServiceIdentityDetails": "請確定已將資源群組 %s 的適當角色指派給用於部署的受控服務識別。如需詳細資料，請參閱此連結: https://docs.microsoft.com/zh-tw/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal (機器翻譯)",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "虛擬機器 '%s' 失敗: %s",
-  "loc.messages.TroubleshootingGuide": "請參閱疑難排解手冊，查看問題是否已解決: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting"
+  "loc.messages.TroubleshootingGuide": "請參閱疑難排解手冊，查看問題是否已解決: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }

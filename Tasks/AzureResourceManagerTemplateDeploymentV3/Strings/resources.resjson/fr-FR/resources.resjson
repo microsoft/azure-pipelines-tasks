@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "Le modèle du fichier de paramètres correspond à un répertoire au lieu d'un fichier.",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "Le modèle du fichier de modèle correspond à un répertoire au lieu d'un fichier : %s",
   "loc.messages.AddedOutputVariable": "Mise à jour effectuée de la variable de sortie '%s', qui contient la section outputs de l'objet de déploiement actuel au format chaîne.",
+  "loc.messages.OutputVariableNameChanged": "Le nom de la variable de sortie « %s » a déjà été décodé ou tronqué en un nom différent lors de la publication de la variable. Le nom déclaré est maintenant utilisé tel quel. Si votre pipeline faisait référence à l’ancien nom, mettez-le à jour pour utiliser le nom déclaré.",
   "loc.messages.UnableToReadResponseBody": "Impossible de lire le corps de la réponse. Erreur : %s",
   "loc.messages.MoreInformationOnAzurePortal": "Plus d'informations sur le Portail Azure",
   "loc.messages.LogDeploymentName": "Le nom du déploiement est %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "Erreur lors de la configuration de l’abonnement : %s",
   "loc.messages.BicepParamBuildFailed": "Échec de « az bicep build-param ». Erreur : %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "La version d’Azure CLI doit être supérieure ou égale à 2.47.0 pour utiliser le fichier .bicepparam",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "Le fichier de métadonnées fourni '%s' est dépourvu des métadonnées du paramètre '%s'"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "Le fichier de métadonnées fourni '%s' est dépourvu des métadonnées du paramètre '%s'",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }
