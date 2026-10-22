@@ -5,8 +5,13 @@ import fs = require('fs');
 
 export class Utility {
 
-    public static sanitizeFilePath(filePath: string): string {
-        return filePath.replace(/##vso\[/gi, '##_vso[').replace(/##\[/g, '##_[');
+    public static logRepositoryMessage(message: string): void {
+        tl.writeExternalOutput(message + "\n", {
+            source: 'repository',
+            vsoCommandMode: tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks')
+                ? 'blockAndTelemetry'
+                : 'telemetryOnly'
+        });
     }
 
     public static getGithubEndPointToken(githubEndpoint: string): string {

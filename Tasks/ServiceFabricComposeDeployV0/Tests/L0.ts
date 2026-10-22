@@ -4,12 +4,20 @@
 
 import Q = require('q');
 import assert = require('assert');
+import fs = require('fs');
 var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
 var psr = null;
 
 describe('ServiceFabricComposeDeploy Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+    it('packages the shared output modes without changing the default', () => {
+        const packaged = fs.readFileSync(path.join(__dirname, '../ps_modules/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+        const shared = fs.readFileSync(path.join(__dirname, '../../Common/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+        assert.strictEqual(packaged, shared);
+        assert(packaged.includes("[string] $VsoCommandMode = 'blockOnly'"));
+    });
 
     before((done) => {
         if (psm.testSupported()) {
