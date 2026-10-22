@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "パス %s に Buildctl の実行可能ファイルが見つかりませんでした",
   "loc.messages.FileContentSynced": "ファイルの内容がディスクに同期されました。内容は %s です。",
   "loc.messages.VerifyBuildctlInstallation": "Buildctl のインストールを確認しています...",
-  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Docker 構成を一時ファイルに書き込んでいます。ファイル パス: %s、Docker 構成: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "リポジトリが指定されていないため、ビルドされたイメージにタグは追加されていません。"
 }
