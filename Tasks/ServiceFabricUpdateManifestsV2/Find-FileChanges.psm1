@@ -1,4 +1,6 @@
-﻿function Get-PackageFiles ($Path)
+﻿. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
+function Get-PackageFiles ($Path)
 {
     Find-VstsFiles -LiteralDirectory $Path -LegacyPattern "**" -Force |
         ForEach-Object { $_.ToLower() } |
@@ -54,13 +56,13 @@ function Find-FileChanges
 
             if ($oldRelativePath -lt $newRelativePath)
             {
-                Write-Host "$LogIndent$(Get-VstsLocString -Key FileRemoved -ArgumentList $oldRelativePath)"
+                Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key FileRemoved -ArgumentList $oldRelativePath)" -Source 'repository')
                 $result = $true
                 $oldFilesQueue.Dequeue() | Out-Null
             }
             elseif ($oldRelativePath -gt $newRelativePath)
             {
-                Write-Host "$LogIndent$(Get-VstsLocString -Key FileAdded -ArgumentList $newRelativePath)"
+                Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key FileAdded -ArgumentList $newRelativePath)" -Source 'repository')
                 $result = $true
                 $newFilesQueue.Dequeue() | Out-Null
             }
@@ -68,7 +70,7 @@ function Find-FileChanges
             {
                 if (!(Test-FileEqual $newFile $oldFile))
                 {
-                    Write-Host "$LogIndent$(Get-VstsLocString -Key FileChanged -ArgumentList $newRelativePath)"
+                    Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key FileChanged -ArgumentList $newRelativePath)" -Source 'repository')
                     $result = $true
                 }
 
@@ -88,7 +90,7 @@ function Find-FileChanges
         while ($oldFilesQueue.Count -gt 0)
         {
             $oldRelativePath = $oldFilesQueue.Dequeue().Substring($OldPackageRoot.Length + 1)
-            Write-Host "$LogIndent$(Get-VstsLocString -Key FileRemoved -ArgumentList $oldRelativePath)"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key FileRemoved -ArgumentList $oldRelativePath)" -Source 'repository')
             $result = $true
 
             if (!$LogAllChanges)
@@ -100,7 +102,7 @@ function Find-FileChanges
         while ($newFilesQueue.Count -gt 0)
         {
             $newRelativePath = $newFilesQueue.Dequeue().Substring($NewPackageRoot.Length + 1)
-            Write-Host "$LogIndent$(Get-VstsLocString -Key FileAdded -ArgumentList $newRelativePath)"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key FileAdded -ArgumentList $newRelativePath)" -Source 'repository')
             $result = $true
 
             if (!$LogAllChanges)

@@ -1,4 +1,5 @@
 ﻿. "$PSScriptRoot\Assert-ValidManifestPathSegment.ps1"
+. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
 
 function Update-ServiceVersions
 {
@@ -61,7 +62,7 @@ function Update-ServiceVersions
         if (!$UpdateAllVersions)
         {
             # Check the previous build for a matching service and gather its info
-            Write-Host "$LogIndent$(Get-VstsLocString -Key SearchingService -ArgumentList $ServiceName)"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key SearchingService -ArgumentList $ServiceName)" -Source 'repository')
             $LogIndent += "".PadLeft(2)
 
             $oldPackagePath = Join-Path $OldPackageRoot $ServiceName
@@ -83,7 +84,7 @@ function Update-ServiceVersions
             else
             {
                 # Failed to find service in previous build. Fall back to updating all verisons.
-                Write-Host "$LogIndent$(Get-VstsLocString -Key NewService)"
+                Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key NewService)" -Source 'repository')
                 $UpdateAllVersions = $true
             }
         }
@@ -98,16 +99,16 @@ function Update-ServiceVersions
         {
             # Force update service version
             $newManifest.ServiceManifest.Version = $newVersion
-            Write-Host "$LogIndent$(Get-VstsLocString -Key UpdatedServiceVerison -ArgumentList @($ServiceName,$newVersion))"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key UpdatedServiceVerison -ArgumentList @($ServiceName,$newVersion))" -Source 'repository')
         }
         elseif ((!$ReplaceVersion -and !$oldManifest.ServiceManifest.Version.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldManifest $newManifest))
         {
             # Update the service version if the service manifest has changed for any of the following reasons:
             # 1. The user edited the manifest itself (including changes to the version prefix)
             # 2. At least one of the child package versions was updated in the manifest
-            Write-Host "$LogIndent$(Get-VstsLocString -Key ServiceManifestChanged -ArgumentList $ServiceName)"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key ServiceManifestChanged -ArgumentList $ServiceName)" -Source 'repository')
             $newManifest.ServiceManifest.Version = $newVersion
-            Write-Host "$LogIndent$(Get-VstsLocString -Key UpdatedServiceVerisonFromPrevious -ArgumentList @($ServiceName,$oldManifest.ServiceManifest.Version,$newVersion))"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key UpdatedServiceVerisonFromPrevious -ArgumentList @($ServiceName,$oldManifest.ServiceManifest.Version,$newVersion))" -Source 'repository')
         }
 
         $newManifest.Save($newManifestPath)
