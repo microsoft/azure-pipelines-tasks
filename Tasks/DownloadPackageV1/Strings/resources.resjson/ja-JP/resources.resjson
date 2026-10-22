@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "操作に失敗しました。再試行する前に %s ミリ秒待機します。残り試行回数: %s",
   "loc.messages.RedirectUrlError": "エラー % により、リダイレクト URL を取得できません。",
   "loc.messages.UnsupportedArchiveType": "サポートされていないアーカイブの種類: %s",
+  "loc.messages.InvalidPackageFilePath": "パッケージ ファイル パス '%s' は、宛先ディレクトリを基準とする相対パスであり、そのディレクトリ内に収まっている必要があります。",
+  "loc.messages.InvalidPackageFileLink": "パッケージ ファイル パス '%s' には、宛先ディレクトリ配下のシンボリック リンクまたはジャンクションを含めることはできません。",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "パッケージをダウンロードしようとして予期しないエラーが発生しました。終了コード (%s) とエラー (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "ツール キャッシュから解決: %s",
   "loc.messages.Info_DownloadingArtifactTool": "%s から成果物ツールをダウンロードしています ",

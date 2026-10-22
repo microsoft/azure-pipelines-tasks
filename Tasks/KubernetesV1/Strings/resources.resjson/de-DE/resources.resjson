@@ -91,6 +91,8 @@
   "loc.messages.DownloadStableVersionFailed": "Die stabile Kubernetes-Version kann nicht aus \"%s\" heruntergeladen werden. Es wird ein Fallback auf \"%s\" durchgeführt.",
   "loc.messages.UsingLatestStableVersion": "Ungültige Version 1.7 in der Eingabe für den Versionsbezeichner angegeben. Verwenden Sie stattdessen die letzte stabile Version. Informationen zu korrekten Versionen finden Sie unter https://github.com/kubernetes/kubernetes/releases.",
   "loc.messages.NotAValidVersion": "Keine gültige Version. Verfügbaren Versionen: %s",
+  "loc.messages.InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+  "loc.messages.InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
   "loc.messages.ConfigurationFileNotFound": "Es wurde keine Konfigurationsdatei gefunden, die \"%s\" entspricht.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Die Details zur Kubernetes-Dienstverbindung wurden nicht gefunden.",
   "loc.messages.OutputVariableDataSizeExceeded": "Die Ausgabevariable wurde nicht festgelegt, weil die kubectl-Befehlsausgabe die maximal unterstützte Länge überschritten hat. Ausgabelänge: %s, maximal unterstützte Länge: %s",

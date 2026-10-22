@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "必須覆寫升級設定，或 Azure Pipelines 工作中必須指定發佈設定檔。",
   "loc.messages.UnsupportedARMAuthScheme": "ARM 端點不支援驗證配置 '{0}'。",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Azure Container Registry 不支援的驗證配置 '{0}'。",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "在應用程式套件中找到無效的 {0} 值 '{1}'。從應用程式套件建立檔案路徑時，此值會用作資料夾名稱，因此必須是簡單名稱：不可為空白、包含路徑分隔符號或相對路徑區段、為絕對路徑，或以 Windows 會自動正規化移除的 '.' 或 ' ' 字元結尾。",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} 不是有效的 Service Fabric 應用程式套件。",
   "loc.messages.SFSDK_PackageValidationFailed": "套件的驗證失敗: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "無法對 Service Fabric 叢集驗證服務連線。",

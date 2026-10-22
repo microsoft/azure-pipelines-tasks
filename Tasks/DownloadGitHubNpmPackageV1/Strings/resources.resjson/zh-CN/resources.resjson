@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": "正在使用 .npmrc 中的注册表",
   "loc.messages.PublishRegistry": "正在发布到注册表: %s",
   "loc.messages.UsingRegistry": "正在使用注册表: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "为注册表 %s 添加身份验证",
   "loc.messages.FoundLocalRegistries": "在此组织/集合中找到 %d 个注册表",
   "loc.messages.ForcePackagingUrl": "正在打包强制执行到后列对象的集合 URL: %s",

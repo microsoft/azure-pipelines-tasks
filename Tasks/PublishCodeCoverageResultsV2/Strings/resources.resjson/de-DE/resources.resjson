@@ -9,6 +9,8 @@
   "loc.input.help.pathToSources": "Der Pfad zu den Quelldateien ist erforderlich, wenn Coverage-XML-Berichte keinen absoluten Pfad zu den Quelldateien enthalten. Beispielsweise verwenden JaCoCo-Berichte keine absoluten Pfade, und beim Veröffentlichen der JaCoCo-Coveragedaten für Java-Apps würde das Muster in etwa folgendermaßen lauten: \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\". <br />diese Eingabe ist auch erforderlich, wenn Tests in einem Docker-Container ausgeführt werden. Diese Eingabe muss auf den absoluten Pfad zu den Quelldateien auf dem Host zeigen. Beispiel: \"$(System.DefaultWorkingDirectory)/MyApp/\"",
   "loc.input.label.failIfCoverageEmpty": "Fehler, wenn die Code Coverage-Ergebnisse fehlen",
   "loc.input.help.failIfCoverageEmpty": "Fehlschlagen der Aufgabe festlegen, wenn die Code Coverage keine Ergebnisse zum Veröffentlichen ergeben hat.",
+  "loc.input.label.publishHtmlReport": "HTML-Bericht veröffentlichen",
+  "loc.input.help.publishHtmlReport": "Veröffentlichen Sie einen HTML Code Coverage-Bericht Deaktivieren Sie diese Option, wenn kein HTML-Bericht generiert und veröffentlicht werden soll.",
   "loc.messages.FoundNMatchesForPattern": "%s Ergebnis(se) gefunden, die dem Muster: %s entsprechen",
   "loc.messages.NoCodeCoverage": "Keine Code Coverage-Ergebnisse zum Veröffentlichen gefunden."
 }
