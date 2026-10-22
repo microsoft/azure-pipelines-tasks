@@ -4,7 +4,7 @@ import process = require('process');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import './L0ArtifactEngineCompatibility';
-import './L0VsoCommandBlocking';
+import './L0CommandBlocking';
 
 describe('JenkinsDownloadArtifacts L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
