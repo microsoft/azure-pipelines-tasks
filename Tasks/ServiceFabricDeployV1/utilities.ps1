@@ -49,7 +49,12 @@ function Get-SinglePathOfType
     else
     {
         Assert-VstsPath -LiteralPath $path -PathType $PathType
-        Write-Host (Get-VstsLocString -Key FoundPath -ArgumentList (Protect-ExternalOutput -InputObject $path -Source repository))
+        $vsoCommandMode = if (Get-VstsPipelineFeature -FeatureName 'EnableVsoCommandBlockingRMTasks') {
+            'blockAndTelemetry'
+        } else {
+            'telemetryOnly'
+        }
+        Write-Host (Get-VstsLocString -Key FoundPath -ArgumentList (Protect-ExternalOutput -InputObject $path -Source repository -VsoCommandMode $vsoCommandMode))
     }
 
     return $path
