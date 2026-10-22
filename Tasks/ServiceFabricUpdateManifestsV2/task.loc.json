@@ -144,6 +144,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.imageDigestsPath"
     }
   ],
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "Update-Manifests.ps1"
