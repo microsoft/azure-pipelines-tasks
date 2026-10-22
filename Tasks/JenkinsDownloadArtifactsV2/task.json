@@ -19,7 +19,7 @@
   "version": {
     "Major": 2,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 2
   },
   "groups": [
     {
@@ -111,7 +111,7 @@
       "defaultValue": "**",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p>",
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p><p>For artifacts downloaded directly from Jenkins, patterns are case-insensitive on Windows, follow the destination filesystem's case sensitivity on macOS, and are case-sensitive on Linux.</p>",
       "properties": {
         "rows": "3",
         "resizable": "true"

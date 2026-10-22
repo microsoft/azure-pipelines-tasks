@@ -20,7 +20,7 @@
   "version": {
     "Major": 3,
     "Minor": 282,
-    "Patch": 1
+    "Patch": 3
   },
   "minimumAgentVersion": "2.0.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -280,7 +280,7 @@
     "BatchPercentSignNotAllowed": "ms-resource:loc.messages.BatchPercentSignNotAllowed"
   },
   "_buildConfigMapping": {
-    "Default": "3.282.0",
-    "Node24_1": "3.282.1"
+    "Default": "3.282.2",
+    "Node24_1": "3.282.3"
   }
 }

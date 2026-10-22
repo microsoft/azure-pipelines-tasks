@@ -7,7 +7,7 @@ import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
 
-import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import * as handlers from "typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
 
@@ -69,6 +69,8 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 4;
     var debugMode = tl.getVariable('System.Debug');
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+    // Requires EnableArtifactEngineExternalOutput in the artifact engine.
+    downloaderOptions.vsoCommandMode = tl.getPipelineFeature('JenkinsDownloadArtifactsVsoCommandBlockingFixEnabled') ? 'blockAndTelemetry' : 'telemetryOnly';
 
     return downloaderOptions;
 }

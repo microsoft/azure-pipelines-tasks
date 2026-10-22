@@ -1,13 +1,13 @@
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import * as handlers from "typed-rest-client/Handlers"
 
 import { 
     HttpClient, 
     HttpClientResponse,
-} from "artifact-engine/Providers/typed-rest-client/HttpClient";
+} from "typed-rest-client/HttpClient";
 
-import { IRequestOptions as IHttpRequestOptions } from "artifact-engine/Providers/typed-rest-client/Interfaces";
+import { IRequestOptions as IHttpRequestOptions } from "typed-rest-client/Interfaces";
 
 var handlebars = require('handlebars');
 

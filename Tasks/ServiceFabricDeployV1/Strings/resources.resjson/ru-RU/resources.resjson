@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Параметры обновления должны быть переопределены, или профиль публикации должен быть указан в задаче Azure Pipelines.",
   "loc.messages.UnsupportedARMAuthScheme": "Схема проверки подлинности \"{0}\" не поддерживается для конечной точки ARM.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Схема проверки подлинности \"{0}\" не поддерживается для реестра контейнеров Azure.",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "В пакете приложения '{1}' обнаружено недопустимое значение {0}. Это значение используется в качестве имени папки при построении пути к файлу из пакета приложения, поэтому оно должно быть простым именем: оно не может быть пустым, содержать разделитель пути или относительный сегмент пути, быть абсолютным путем или заканчиваться символом \".\" или \" \", который Windows нормализует и удалит.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} не является допустимым пакетом приложения Service Fabric.",
   "loc.messages.SFSDK_PackageValidationFailed": "Сбой проверки для пакета: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Не удается проверить подключение службы к кластеру Service Fabric.",
