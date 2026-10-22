@@ -1,0 +1,16 @@
+[
+{{#value}}
+{  
+  "path": "{{{this.path}}}",  
+  "lastModified": "{{{this.dateLastModified}}}",  
+  {{#if fileLength}}  
+  "fileLength" : "{{{this.fileLength}}}",  
+  {{/if}}  
+  "itemType": "{{{this.itemType}}}",  
+  "metadata": 
+    {   
+      "downloadUrl" : "{{{this.contentLocation}}}&isShallow=true&api-version=4.1-preview.4"
+    }
+}{{#unless @last}},{{/unless}}
+{{/value}}
+]

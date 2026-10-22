@@ -13,7 +13,6 @@ var childProcess = require('child_process');
 var semver = require('semver');
 var util = require('./make-util');
 var minifyUtil = require('./minify-util');
-var admzip = require('adm-zip');
 
 // util functions
 var cd = util.cd;
@@ -1483,9 +1482,14 @@ CLI.gensprintlyzip = function(/** @type {{ sprint: string; outputdir: string; de
 
     var sprintlyZipPath = `${outputDirectory}azure-pipelines.firstpartytasks.${sprint}.zip`;
 
-    var zip = new admzip();
-    zip.addLocalFolder(sprintlyZipContentsPath);
-    zip.writeZip(sprintlyZipPath);
+    //var zip = new admzip();
+    //zip.addLocalFolder(sprintlyZipContentsPath);
+    //zip.writeZip(sprintlyZipPath);
+    var secureZip = require(path.join(taskLibPath, 'secureZipArchive'));
+    var zip =  secureZip.createZipSecure(
+            sprintlyZipContentsPath,
+            sprintlyZipPath
+        );
 
     console.log('Creating sprintly zip file from folder complete.');
     console.log('\n# Cleaning up folders');

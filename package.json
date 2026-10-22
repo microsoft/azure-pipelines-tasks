@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks",
   "devDependencies": {
-    "adm-zip": "0.4.13",
+     "azure-pipelines-task-lib": "file:./azure-pipelines-task-lib-5.281.4.tgz",
     "agent-base": "^6.0.2",
     "azure-devops-node-api": "^12.2.0",
     "esbuild": "^0.28.1",
