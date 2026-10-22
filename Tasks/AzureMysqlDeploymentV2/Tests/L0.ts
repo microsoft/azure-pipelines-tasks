@@ -46,46 +46,70 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should have passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should have passed.');
     });
 
+    // MysqlClientExecTests.js and MysqlClientExecFailureTests.js are shared wrappers
+    // driven under both feature-flag states; the state is communicated via this env
+    // var, which each spawned wrapper process inherits from this one.
+    const hardeningFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
+
+    async function runWithHardeningFlag(rollback: boolean, run: () => Promise<void>): Promise<void> {
+        const originalFeatureValue = process.env[hardeningFeatureEnvVar];
+        process.env[hardeningFeatureEnvVar] = rollback ? 'true' : 'false';
+        try {
+            await run();
+        } finally {
+            if (originalFeatureValue === undefined) {
+                delete process.env[hardeningFeatureEnvVar];
+            } else {
+                process.env[hardeningFeatureEnvVar] = originalFeatureValue;
+            }
+        }
+    }
+
     it('AzureMySqlDeployment hardened SQL execution preserves argv and file content', async () => {
-        let tp = path.join(__dirname, 'MysqlClientHardenedTests.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
-        assert.deepStrictEqual(tr.errorIssues, [], tr.stdout + tr.stderr);
-        assert(tr.stdOutContained('Hardened SQL execution scenarios passed.'), 'All hardened execution scenarios must complete.');
+        await runWithHardeningFlag(false, async () => {
+            let tp = path.join(__dirname, 'MysqlClientExecTests.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+            assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
+            assert.deepStrictEqual(tr.errorIssues, [], tr.stdout + tr.stderr);
+            assert(tr.stdOutContained('Hardened SQL execution scenarios passed.'), 'All hardened execution scenarios must complete.');
+        });
     });
 
     it('AzureMySqlDeployment FF-on (rollback) SQL execution preserves pre-hardening argv, stdin, and error behavior', async () => {
-        let tp = path.join(__dirname, 'MysqlClientRollbackTests.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
-        assert.deepStrictEqual(tr.errorIssues, [], tr.stdout + tr.stderr);
-        assert(tr.stdOutContained('Rollback (FF-on) SQL execution scenarios passed.'), 'All FF-on (rollback) execution scenarios must complete.');
+        await runWithHardeningFlag(true, async () => {
+            let tp = path.join(__dirname, 'MysqlClientExecTests.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+            assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
+            assert.deepStrictEqual(tr.errorIssues, [], tr.stdout + tr.stderr);
+            assert(tr.stdOutContained('Rollback (FF-on) SQL execution scenarios passed.'), 'All FF-on (rollback) execution scenarios must complete.');
+        });
     });
 
     it('AzureMySqlDeployment hardened exec-based SQL execution surfaces a non-zero mysql exit code as a failure', async () => {
-        let tp = path.join(__dirname, 'MysqlClientHardenedExecFailureTests.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert(tr.stdOutContained('execNonZeroExit passed.'), 'Should have printed: execNonZeroExit passed.');
+        await runWithHardeningFlag(false, async () => {
+            let tp = path.join(__dirname, 'MysqlClientExecFailureTests.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+            assert(tr.stdOutContained('execNonZeroExit passed.'), 'Should have printed: execNonZeroExit passed.');
+        });
     });
 
     it('AzureMySqlDeployment FF-on (rollback) exec-based SQL execution surfaces a non-zero mysql exit code as a failure', async () => {
-        let tp = path.join(__dirname, 'MysqlClientRollbackExecFailureTests.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert(tr.stdOutContained('execNonZeroExit passed.'), 'Should have printed: execNonZeroExit passed.');
+        await runWithHardeningFlag(true, async () => {
+            let tp = path.join(__dirname, 'MysqlClientExecFailureTests.js');
+            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+            assert(tr.stdOutContained('execNonZeroExit passed.'), 'Should have printed: execNonZeroExit passed.');
+        });
     });
 
     describe('MysqlClient binary-mode option ownership', () => {
         // Hardening is on by default, so these tests explicitly mock the rollback flag
         // false (rather than leaving it unset) to make that default unambiguous.
         const rollbackFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
-        // Representative cases covering each dimension of BINARY_MODE_OPTION_PATTERN
-        // (plain form, a value suffix, underscore/case normalization, a negating
-        // prefix, and stacked prefixes) rather than exhaustively enumerating every
-        // spelling/casing permutation the regex accepts.
+        
         const reservedArguments = [
             '--binary-mode',
             '--binary-mode=0',
@@ -225,16 +249,7 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('fileExecNonZeroExit passed.'), 'Should have printed: fileExecNonZeroExit passed.');
         assert(tr.stdOutContained('fileExecFileNotFound passed.'), 'Should have printed: fileExecFileNotFound passed.');
         assert(tr.stdOutContained('fileExecSpawnError passed.'), 'Should have printed: fileExecSpawnError passed.');
-    });
-
-    it('AzureMySqlDeployment hardened MysqlClientFileExec failure scenarios (nonzero exit, spawn error, missing file, stream error)', async () => {
-        let tp = path.join(__dirname, 'MysqlClientHardenedFileExecTests.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        await tr.runAsync();
-        assert(tr.stdOutContained('hardenedFileExecNonZeroExit passed.'), 'Should have printed: hardenedFileExecNonZeroExit passed.');
-        assert(tr.stdOutContained('hardenedFileExecFileNotFound passed.'), 'Should have printed: hardenedFileExecFileNotFound passed.');
-        assert(tr.stdOutContained('hardenedFileExecSpawnError passed.'), 'Should have printed: hardenedFileExecSpawnError passed.');
-        assert(tr.stdOutContained('hardenedFileExecStreamError passed.'), 'Should have printed: hardenedFileExecStreamError passed.');
+        assert(tr.stdOutContained('fileExecStreamError passed.'), 'Should have printed: fileExecStreamError passed.');
     });
 
 });

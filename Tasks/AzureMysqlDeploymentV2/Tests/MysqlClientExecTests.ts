@@ -4,44 +4,58 @@ import { TaskMockRunner } from 'azure-pipelines-task-lib/mock-run';
 import * as path from 'path';
 import { Readable } from 'stream';
 
-export class MysqlClientHardenedTests {
+export class MysqlClientExecTests {
 
-    public static async startMysqlClientHardenedL0Tests(): Promise<void> {
-        const tr = new TaskMockRunner(path.join(__dirname, 'MysqlClientHardenedL0Tests.js'));
-        const sqlFilePath = path.join(__dirname, 'hardened script.sql');
+    public static async startTests(): Promise<void> {
+        const HARDENING_FEATURE_ENV_VAR = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
+        const isRollback = process.env[HARDENING_FEATURE_ENV_VAR] === 'true';
+
+        const tr = new TaskMockRunner(path.join(__dirname, 'MysqlClientExecL0Tests.js'));
+        const sqlFilePath = path.join(__dirname, isRollback ? 'rollback script.sql' : 'hardened script.sql');
         const sql = 'SELECT "quoted", \'single\', \'C:\\data\\file\';\nSELECT 2;';
-        const connectionArgs = [
-            '-hDEMO_MYSQL_SERVER',
-            '-uDEMO SQL USERNAME',
-            '-pDEMO SQL PASSWORD',
-            '--ssl-mode=REQUIRED',
-            '--binary-mode',
-            '--quick',
-            '--connect-timeout=10'
-        ];
-        const createDatabaseArgs = [...connectionArgs, '-e', 'CREATE DATABASE IF NOT EXISTS `test-db`;'];
-        // MysqlClientHardenedL0Tests.ts drives both selectors (InlineSqlTask, SqlFile) against
-        // a single database name ('test-db'). Each iteration creates the database first (task.exec),
-        // then InlineSqlTask executes via task.exec while SqlFile executes via the injected spawn,
-        // so only 3 task.exec calls are expected here.
+        // The legacy (FF-on rollback) path re-tokenizes a single built-up string
+        // (Utility.argStringToArray), so the username must not contain spaces - unlike
+        // the hardened array-based path, which preserves spaces in any argv element.
+        const username = isRollback ? 'DEMO_SQL_USERNAME' : 'DEMO SQL USERNAME';
+        const password = isRollback ? 'DEMO_SQL_PASSWORD' : 'DEMO SQL PASSWORD';
+        const connectionArgs = isRollback
+            ? [
+                '-hDEMO_MYSQL_SERVER',
+                `-u${username}`,
+                `-p${password}`,
+                '--ssl-mode=REQUIRED',
+                '--quick',
+                '--connect-timeout=10'
+            ]
+            : [
+                '-hDEMO_MYSQL_SERVER',
+                `-u${username}`,
+                `-p${password}`,
+                '--ssl-mode=REQUIRED',
+                '--binary-mode',
+                '--quick',
+                '--connect-timeout=10'
+            ];
+            
+        const createDatabaseArgs = isRollback
+            ? [...connectionArgs, '-eCREATE DATABASE IF NOT EXISTS `test-db` ;']
+            : [...connectionArgs, '-e', 'CREATE DATABASE IF NOT EXISTS `test-db`;'];
+        
         const expectedExecutions = [
             createDatabaseArgs,
-            [...connectionArgs, '-Dtest-db', '-e', sql],
+            isRollback
+                ? [...connectionArgs, '-Dtest-db', '-e' + sql]
+                : [...connectionArgs, '-Dtest-db', '-e', sql],
             createDatabaseArgs
         ];
         let executionCount = 0;
         let connectionCheckCount = 0;
 
-        // ServerName, ConnectedServiceName, and TaskNameSelector are required inputs for
-        // AzureMysqlTaskParameter's constructor, but this test drives MysqlClient directly
-        // (not through azuremysqldeploy.ts/FirewallOperations), and ScriptParameters below
-        // overrides getTaskNameSelector/getDatabaseName - so only their presence matters,
-        // not their value. IpDetectionMethod/StartIpAddress/EndIpAddress are optional and
-        // only consumed by FirewallOperations, which this test never exercises.
+        
         tr.setInput('ServerName', 'MOCK_SERVER_NAME');
         tr.setInput("ConnectedServiceName", "DEMO_CONNECTED_SERVICE_NAME");
-        tr.setInput('SqlUsername', 'DEMO SQL USERNAME');
-        tr.setInput('SqlPassword', 'DEMO SQL PASSWORD');
+        tr.setInput('SqlUsername', username);
+        tr.setInput('SqlPassword', password);
         tr.setInput('TaskNameSelector', 'InlineSqlTask');
         tr.setInput('SqlInline', sql);
         tr.setInput('SqlFile', sqlFilePath);
@@ -49,8 +63,10 @@ export class MysqlClientHardenedTests {
 
         // Task-lib captures inputs in its vault when first loaded.
         const tl = await import('azure-pipelines-task-lib/task');
-        // Hardening is on by default, so the rollback flag only needs to stay false here.
-        tr.registerMockExport('getPipelineFeature', (_featureName: string) => false);
+        // Explicitly mock the rollback flag (rather than leaving it unset) so each run
+        // demonstrates its intended path even if the environment happens to define the
+        // feature-flag variable, and so a future accidental default flip is caught here.
+        tr.registerMockExport('getPipelineFeature', (_featureName: string) => isRollback);
         tr.registerMockExport('execSync', (tool: string, args: string[]) => {
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, connectionArgs);
@@ -90,7 +106,7 @@ export class MysqlClientHardenedTests {
     }
 }
 
-MysqlClientHardenedTests.startMysqlClientHardenedL0Tests().catch((error: Error) => {
+MysqlClientExecTests.startTests().catch((error: Error) => {
     console.error(error.stack || error.message);
     process.exitCode = 1;
 });
