@@ -44,6 +44,8 @@ export class MysqlClient implements ISqlClient {
         '--ssl-key', '--ssl-mode', '--ssl-fips-mode', '--tls-version', '--user'
     ]);
 
+    private static readonly SHORT_VALUE_CONSUMING_OPTIONS = new Set(['D', 'e', 'h', 'P', 'S', 'u']);
+
     /**
      * Option-file sections relevant to the mysql client.
      */
@@ -100,12 +102,46 @@ export class MysqlClient implements ISqlClient {
                     return;
                 }
                 this._optionNameTokenIndices.add(index);
-                if (token.indexOf('=') === -1 && MysqlClient.VALUE_CONSUMING_OPTIONS.has(token.replace(/_/g, '-').toLowerCase())) {
+                if (MysqlClient._consumesNextArgument(token)) {
                     skipNext = true;
                 }
             });
             this._rejectBinaryModeArguments();
         }
+    }
+
+    private static _consumesNextArgument(token: string): boolean {
+        if (token.startsWith('--')) {
+            if (token.includes('=')) {
+                return false;
+            }
+            let optionName = token.replace(/_/g, '-').toLowerCase();
+            let modifier = '';
+            while (!MysqlClient.VALUE_CONSUMING_OPTIONS.has(optionName)) {
+                const match = optionName.match(/^--(skip|disable|enable|maximum|loose)-(.+)$/);
+                if (!match) {
+                    return false;
+                }
+                modifier = match[1];
+                optionName = '--' + match[2];
+            }
+            // The innermost modifier controls whether mysql supplies an implicit value.
+            return modifier !== 'skip' && modifier !== 'disable' && modifier !== 'enable';
+        }
+
+        if (token.startsWith('-')) {
+            for (let index = 1; index < token.length; index++) {
+                const option = token[index];
+                if (MysqlClient.SHORT_VALUE_CONSUMING_OPTIONS.has(option)) {
+                    return index === token.length - 1;
+                }
+                // Optional short-option values must be attached, consuming the rest of the token.
+                if (option === 'p' || option === '#' || option === ',') {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -334,8 +370,8 @@ export class MysqlClient implements ISqlClient {
 
     /**
      * Build the CREATE DATABASE IF NOT EXISTS statement for the configured database name.
-     * Flag-on only: a ['-e', <raw SQL>] pair of discrete argv elements - no quoting/escaping
-     * needed since the flag-on path bypasses re-tokenization entirely.
+     * Hardening-enabled (default) only: a ['-e', <raw SQL>] pair of discrete argv elements -
+     * no quoting/escaping needed since the hardened path bypasses re-tokenization entirely.
      */
     private _createDatabaseScriptArgsIfItDoesnotExist() : string[] {
         return ['-e', "CREATE DATABASE IF NOT EXISTS `" + this._azureMysqlTaskParameter.getDatabaseName() + "`;"];
@@ -409,8 +445,8 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Flag-on-only sibling of _executeSqlScript: takes discrete argv elements directly,
-     * with no tokenization, so SQL text with quotes/backslashes/spaces cannot be
+     * Hardening-enabled (default) sibling of _executeSqlScript: takes discrete argv elements
+     * directly, with no tokenization, so SQL text with quotes/backslashes/spaces cannot be
      * misinterpreted as extra CLI arguments.
      */
     private async _executeSqlScriptArgs(args: string[]): Promise<number> {
@@ -424,8 +460,9 @@ export class MysqlClient implements ISqlClient {
     }
 
     /**
-     * Flag-off-only sibling of _executeSqlScriptFromFile: takes discrete argv elements
-     * directly, with no tokenization. Never called from the ff-off path.
+     * Hardening-enabled (default) sibling of _executeSqlScriptFromFile: takes discrete argv
+     * elements directly, with no tokenization. Never called when the rollback flag is on
+     * (legacy path).
      */
     private _executeSqlScriptFromFileArgs(args: string[]): Promise<number> {
         return new Promise<number>((resolve, reject) => {

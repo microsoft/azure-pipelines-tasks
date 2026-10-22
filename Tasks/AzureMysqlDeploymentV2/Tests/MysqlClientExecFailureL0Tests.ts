@@ -2,10 +2,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { MysqlClient } from '../sql/MysqlClient';
 import { AzureMysqlTaskParameter } from '../models/AzureMysqlTaskParameter';
 
-// Shared by MysqlClientHardenedExecFailureTests.ts and MysqlClientRollbackExecFailureTests.ts:
-// the exec-based execution path behaves identically on both the hardened and legacy
-// (FF-on rollback) helpers when mysql exits non-zero, so a single run function covers both, with the
-// caller's registered 'getPipelineFeature' mock selecting which code path runs.
+// The exec-based execution path behaves identically on both the hardened (default) and
+// legacy (FF-on rollback) code paths when mysql exits non-zero, so a single run function
+// covers both, with the caller's registered 'getPipelineFeature' mock selecting which
+// code path runs.
 async function run(): Promise<void> {
     const parameters = new AzureMysqlTaskParameter();
     const client = new MysqlClient(parameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql');
