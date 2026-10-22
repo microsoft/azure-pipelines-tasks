@@ -4,6 +4,14 @@
 
 The [GitHub Release task](https://aka.ms/AA3m1bq) can be used to create/edit/delete a GitHub release directly from your CI/CD pipeline. This task works on cross platform Azure Pipeline agents running Windows, Linux or Mac and uses GitHub APIs to manage GitHub releases.
 
+## Repository filename output
+
+Repository diagnostics use task-lib external-output logging with source `repository`.
+The existing pipeline feature `GitHubReleaseEnableVsoCommandBlocking` selects
+`blockAndTelemetry` when true; false or unset selects `telemetryOnly` (the default).
+Upload paths and newline framing are unchanged. Telemetry contains command names and
+blocking status, not payloads.
+
 ## Contact Information
 
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. You can also share feedback about the task, like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.

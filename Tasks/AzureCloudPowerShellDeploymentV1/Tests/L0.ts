@@ -11,6 +11,13 @@ let psr = null;
 describe('AzureCloudPowerShellDeploymentV1 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
+    it('packages the shared output modes without changing the default', () => {
+        const packaged = fs.readFileSync(path.join(__dirname, '../ps_modules/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+        const shared = fs.readFileSync(path.join(__dirname, '../../Common/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+        assert.strictEqual(packaged, shared);
+        assert(packaged.includes("[string] $VsoCommandMode = 'blockOnly'"));
+    });
+
     before((done) => {
         if (psm.testSupported()) {
             psr = new psm.PSRunner();

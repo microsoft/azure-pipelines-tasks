@@ -8,6 +8,12 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 
 try{
 
+    $vsoCommandMode = if (Get-VstsPipelineFeature -FeatureName 'EnableVsoCommandBlockingRMTasks') {
+        'blockAndTelemetry'
+    } else {
+        'telemetryOnly'
+    }
+
     $ServiceName = Get-VstsInput -Name ServiceName -Require
     $ServiceLocation = Get-VstsInput -Name ServiceLocation
     $StorageAccount = Get-VstsInput -Name StorageAccount
@@ -47,16 +53,16 @@ try{
 
     Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
-    Write-Host "serviceConfigFile= $($serviceConfigFile | Protect-ExternalOutput -Source repository)"
+    Write-Host "serviceConfigFile= $($serviceConfigFile | Protect-ExternalOutput -Source repository -VsoCommandMode $vsoCommandMode)"
     $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
     Write-Host "Find-VstsFiles -LegacyPattern $CsPkg"
     $servicePackageFile = Find-VstsFiles -LegacyPattern "$CsPkg"
-    Write-Host "servicePackageFile= $($servicePackageFile | Protect-ExternalOutput -Source repository)"
+    Write-Host "servicePackageFile= $($servicePackageFile | Protect-ExternalOutput -Source repository -VsoCommandMode $vsoCommandMode)"
     $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
-    $displayServiceConfigFile = Protect-ExternalOutput -InputObject $serviceConfigFile -Source repository
-    $displayServicePackageFile = Protect-ExternalOutput -InputObject $servicePackageFile -Source repository
+    $displayServiceConfigFile = Protect-ExternalOutput -InputObject $serviceConfigFile -Source repository -VsoCommandMode $vsoCommandMode
+    $displayServicePackageFile = Protect-ExternalOutput -InputObject $servicePackageFile -Source repository -VsoCommandMode $vsoCommandMode
 
     Write-Host "##[command]Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError"
     $azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError
