@@ -1,6 +1,11 @@
 # Neutralizes "##vso[...]" and "##[...]" logging-command markers in untrusted
 # external output (e.g. SQL query results) so they can't be executed as agent
 # commands. Shared so other tasks printing untrusted external output can reuse it.
+#
+# The agent parses the bytes the host writes to stdout, not this string. Windows PowerShell encodes redirected
+# console output with the console output encoding (typically a single-byte OEM code page such as 437) and best-fit maps
+# look-alike characters such as U+FF03 FULLWIDTH NUMBER SIGN to ASCII, which could create a marker after the text was
+# sanitized. The text is therefore normalized through that encoding before it is checked.
 function Protect-ExternalOutput {
     [CmdletBinding()]
     [OutputType([string])]
@@ -13,14 +18,38 @@ function Protect-ExternalOutput {
         # Documentation/telemetry only; does not affect filtering.
         [Parameter(Mandatory = $true)]
         [ValidateSet('remote', 'childProcess', 'repository')]
-        [string] $Source
+        [string] $Source,
+
+        # Encoding the host uses to write the text. Defaults to the console output encoding
+        [System.Text.Encoding] $Encoding
     )
+
+    begin {
+        if ($null -eq $Encoding) {
+            try {
+                $Encoding = [Console]::OutputEncoding
+            }
+            catch {
+                $Encoding = $null
+            }
+        }
+    }
 
     process {
         if ($null -eq $InputObject) {
             return
         }
 
-        ($InputObject -replace '##vso\[', '##_vso[') -replace '##\[', '##_['
+        $text = $InputObject
+        if ($null -ne $Encoding) {
+            try {
+                $text = $Encoding.GetString($Encoding.GetBytes($InputObject))
+            }
+            catch {
+                $text = $InputObject
+            }
+        }
+
+        ($text -replace '##vso\[', '##_vso[') -replace '##\[', '##_['
     }
 }
