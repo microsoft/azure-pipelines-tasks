@@ -9,6 +9,8 @@ const psm = require('../../../Tests/lib/psRunner');
 let psr = null;
 
 describe('AzureCloudPowerShellDeploymentV2 Suite', function () {
+    this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
     before((done) => {
         if (psm.testSupported()) {
             psr = new psm.PSRunner();
@@ -27,4 +29,9 @@ describe('AzureCloudPowerShellDeploymentV2 Suite', function () {
         // TODO - add real tests
         done();
     });
+    if (psm.testSupported()) {
+        it('formats filename diagnostics without changing paths', done => {
+            psr.run(path.join(__dirname, 'FilenameDiagnostics.ps1'), done);
+        });
+    }
 });
