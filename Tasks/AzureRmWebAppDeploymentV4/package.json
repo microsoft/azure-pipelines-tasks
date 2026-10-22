@@ -25,6 +25,7 @@
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^5.281.0",
     "azure-pipelines-tasks-azure-arm-rest": "^3.281.0",
+    "azure-pipelines-tasks-logging-command-sanitizer": "file:../../_build/Tasks/Common/azure-pipelines-tasks-logging-command-sanitizer-1.0.0.tgz",
     "azure-pipelines-tasks-webdeployment-common": "^4.282.0",
     "moment": "^2.29.4",
     "q": "1.4.1",

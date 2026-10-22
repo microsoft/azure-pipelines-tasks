@@ -3,7 +3,7 @@ import Q = require('q');
 import path = require('path');
 
 import { DeploymentType, TaskParameters } from './TaskParameters';
-import { sanitizeForLoggingCommand } from './sanitize';
+import { sanitizeForLoggingCommand } from 'azure-pipelines-tasks-logging-command-sanitizer/sanitize';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';

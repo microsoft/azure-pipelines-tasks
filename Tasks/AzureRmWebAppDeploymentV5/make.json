@@ -1,4 +1,11 @@
 {
+    "common": [
+        {
+            "module": "../Common/LoggingCommandSanitizer",
+            "type": "node",
+            "compile": true
+        }
+    ],
     "externals": {
         "archivePackages": [
             {
