@@ -7,6 +7,7 @@ param()
 # joining and re-splitting them.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 $previousRetrySetting = [Environment]::GetEnvironmentVariable('MODIFY_NUMBER_OF_RETRIES_IN_ROBOCOPY', 'Process')
 $previousSanitizerSetting = [Environment]::GetEnvironmentVariable('AZP_75787_ENABLE_NEW_LOGIC', 'Process')

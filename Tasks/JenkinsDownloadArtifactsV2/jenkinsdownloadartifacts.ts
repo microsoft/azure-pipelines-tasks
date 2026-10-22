@@ -2,23 +2,17 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 import tl = require('azure-pipelines-task-lib/task');
-import fs = require('fs');
 import path = require('path');
-import shell = require('shelljs');
-import Q = require('q');
 
-import * as handlers from "typed-rest-client/Handlers"
 import * as providers from "artifact-engine/Providers"
 import * as engine from "artifact-engine/Engine"
+import * as handlers from "typed-rest-client/Handlers"
 
 import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureStorageArtifactDownloader";
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
-// #if NODE20
-// import * as extract from 'extract-zip'
-// #else
-// var DecompressZip = require('decompress-zip');
-// #endif
+import { JenkinsOutput } from './JenkinsOutput';
+
 let extractZip: any;
 
 const isCurrentNodeVersionAtLeast20 = parseInt(process.versions.node.split('.')[0], 10) >= 20;
@@ -36,12 +30,12 @@ if (isCurrentNodeVersionAtLeast20) {
 
 var fsExtra = require('fs-extra');
 var taskJson = require('./task.json');
-var {v4: uuidv4} = require('uuid');
+var { v4: uuidv4 } = require('uuid');
 
 const area: string = 'JenkinsDownloadArtifacts';
 
 async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean, localPathRoot: string, itemPattern: string, handler: handlers.BasicCredentialHandler, variables: { [key: string]: any }) {
-    console.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
+    JenkinsOutput.log(tl.loc('ArtifactDownloadUrl', artifactQueryUrl));
 
     var templatePath = path.join(__dirname, 'jenkins.handlebars.txt');
     var webProvider = new providers.WebProvider(artifactQueryUrl, templatePath, variables, handler, { ignoreSslError: !strictSSL });
@@ -53,7 +47,7 @@ async function getArtifactsFromUrl(artifactQueryUrl: string, strictSSL: boolean,
 }
 
 async function getZipFromUrl(artifactArchiveUrl: string, strictSSL: boolean, localPathRoot: string, handler: handlers.BasicCredentialHandler) {
-    console.log(tl.loc('ArtifactDownloadUrl', artifactArchiveUrl));
+    JenkinsOutput.log(tl.loc('ArtifactDownloadUrl', artifactArchiveUrl));
 
     var downloaderOptions = configureDownloaderOptions();
     var downloader = new engine.ArtifactEngine();
@@ -119,7 +113,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
         if (isCurrentNodeVersionAtLeast20) {
             tl.debug(`Using extract-zip package for extracting archive`);
             extractZip(zipLocation, { dir: unzipLocation }).then(() => {
-               resolve();
+                resolve();
             }).catch((error) => {
                 reject(error);
             });
@@ -172,7 +166,7 @@ async function doWork() {
         }
         else {
             jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-            console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+            JenkinsOutput.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
 
             const artifactQueryUrl: string = `${serverEndpointUrl}/${jenkinsJobDetails.jobUrlInfix}/${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=artifacts[*]`;
             var variables = {
@@ -227,7 +221,7 @@ async function doWork() {
                 }
             }
             else {
-               console.log(tl.loc('NoAssociatedArtifacts'));
+                console.log(tl.loc('NoAssociatedArtifacts'));
             }
         }
 
@@ -238,7 +232,7 @@ async function doWork() {
             if (tl.getBoolInput('propagatedArtifacts') == true) {
                 try {
                     jenkinsJobDetails = await jenkinsClient.GetJobDetails();
-                    console.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
+                    JenkinsOutput.log(tl.loc("FoundJenkinsJobDetails", jenkinsJobDetails.jobName, jenkinsJobDetails.jobType, jenkinsJobDetails.buildId, jenkinsJobDetails.multiBranchPipelineName));
                 }
                 catch (error) {
                     tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error));
@@ -248,7 +242,7 @@ async function doWork() {
             new ArtifactDetailsDownloader()
                 .DownloadCommitsAndWorkItems(jenkinsJobDetails)
                 .then(() => console.log(tl.loc("SuccessfullyDownloadedCommitsAndWorkItems")),
-                (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
+                    (error) => tl.warning(tl.loc("CommitsAndWorkItemsDownloadFailed", error)));
         }
 
     } catch (err) {
