@@ -1,3 +1,4 @@
+import { chunkHashTypeArgs, dedupParallelismEnvironment } from "./agentKnobs";
 import { isValidArtifactName, validateArtifactName } from "./artifactName";
 import { BuildArtifact, BuildResult, PipelineBuildService } from "./buildService";
 import { TaskInputs, ToolPlan, emptyPlan } from "./inputs";
@@ -5,13 +6,11 @@ import { resolveTaskPath } from "./publishPlan";
 
 export const BuildNumberVariable = "BuildNumber";
 export const ResourceTypesVariable = "DownloadPipelineArtifactResourceTypes";
-export const FileShareDownloadWarning =
-    "Please use Download Build Artifact task for downloading UNC type artifact. https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/download-build-artifacts?view=azure-devops";
+export const BuildArtifactsTaskHint = "Use the Download build artifacts task (DownloadBuildArtifacts@1) for build container and file share artifacts.";
 
-const ContainerType = "Container";
 const PipelineArtifactType = "PipelineArtifact";
-const FileShareType = "filepath";
-const KnownTypes = [ContainerType, PipelineArtifactType, FileShareType];
+/** Artifact types the previous major downloaded and this one does not. */
+const BuildArtifactTypes = ["Container", "filepath"];
 const GuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export interface SelectedRun {
@@ -30,9 +29,8 @@ function parseRunId(value: string | undefined, describe: (value: string) => stri
     return parseInt(value.trim(), 10);
 }
 
-/** The known resource type of an artifact, or undefined for types the task cannot download. */
-export function knownType(artifact: BuildArtifact): string | undefined {
-    return KnownTypes.find(type => equalsIgnoreCase(type, artifact.resource?.type));
+function isPipelineArtifact(artifact: BuildArtifact): boolean {
+    return equalsIgnoreCase(artifact.resource?.type, PipelineArtifactType);
 }
 
 /** Selects the project and run to download from, matching DownloadPipelineArtifact@2. */
@@ -122,46 +120,37 @@ export async function resolveRun(task: TaskInputs, service: PipelineBuildService
     return { projectId, runId };
 }
 
+export interface ArtifactSelection {
+    /** The DownloadPipelineArtifactResourceTypes output. */
+    resourceTypes: string;
+    hasPipelineArtifacts: boolean;
+    /** Build container and file share artifacts a multi-artifact download skips. */
+    skipped: BuildArtifact[];
+}
+
 /**
- * Lists the artifacts the download covers and derives the resource types output, as the agent plug-in did:
- * known types in Container, PipelineArtifact, file share order; all artifacts use the type name, a single
- * artifact reports its own resource type.
+ * Lists the pipeline artifacts the download covers and derives the resource types output, as the agent plug-in did
+ * for pipeline artifacts: a single artifact reports its own resource type. Other artifact types are not downloaded.
  */
-export async function selectArtifacts(
-    service: PipelineBuildService, run: SelectedRun, artifactName: string): Promise<{ resourceTypes: string; hasFileShares: boolean }> {
-    let artifacts: BuildArtifact[];
+export async function selectArtifacts(service: PipelineBuildService, run: SelectedRun, artifactName: string): Promise<ArtifactSelection> {
     if (artifactName) {
         const artifact = await service.getArtifact(run.projectId, run.runId, artifactName);
         if (!artifact) {
             throw new Error(`Artifact ${artifactName} was not found for build ${run.runId}.`);
         }
         validateArtifactName(artifact.name ?? "");
-        if (!knownType(artifact)) {
-            throw new Error(`Artifact '${artifactName}' has unsupported resource type '${artifact.resource?.type ?? ""}'. No transfer was started.`);
+        if (!isPipelineArtifact(artifact)) {
+            throw new Error(`Artifact '${artifactName}' has resource type '${artifact.resource?.type ?? ""}', and only pipeline artifacts can be downloaded. ` +
+                `No transfer was started. ${BuildArtifactsTaskHint}`);
         }
-        artifacts = [artifact];
-    } else {
-        artifacts = (await service.getArtifacts(run.projectId, run.runId)).filter(artifact => isValidArtifactName(artifact.name) && knownType(artifact));
+        return { resourceTypes: artifact.resource?.type ?? PipelineArtifactType, hasPipelineArtifacts: true, skipped: [] };
     }
 
-    const resourceTypes = KnownTypes
-        .filter(type => artifacts.some(artifact => knownType(artifact) === type))
-        .map(type => artifactName ? artifacts[0].resource?.type ?? type : type);
-    return { resourceTypes: resourceTypes.join(","), hasFileShares: artifacts.some(artifact => knownType(artifact) === FileShareType) };
+    const all = (await service.getArtifacts(run.projectId, run.runId)).filter(artifact => isValidArtifactName(artifact.name));
+    const artifacts = all.filter(isPipelineArtifact);
+    const skipped = all.filter(artifact => BuildArtifactTypes.some(type => equalsIgnoreCase(type, artifact.resource?.type)));
+    return { resourceTypes: artifacts.length > 0 ? PipelineArtifactType : "", hasPipelineArtifacts: artifacts.length > 0, skipped };
 }
-
-/**
- * The agent setting that makes build container downloads use the file container service instead of BlobStore.
- */
-export const DisableBuildArtifactsToBlobVariable = "DISABLE_BUILD_ARTIFACTS_TO_BLOB";
-
-/**
- * Reads a boolean agent setting the way the agent does: "1", "true", and "$true" (any case) are true.
- */
-export function isAgentKnobTrue(value: string | undefined): boolean {
-    return ["1", "true", "$true"].includes((value ?? "").toLowerCase());
-}
-
 /**
  * Processes DownloadPipelineArtifact inputs: selects the run and artifacts and computes the outputs.
  * ArtifactTool then transfers the selected run's artifacts.
@@ -191,11 +180,13 @@ export async function prepareDownload(task: TaskInputs, service: PipelineBuildSe
             plan.args.push("--pattern", pattern);
         }
     }
-    if (isAgentKnobTrue(task.variable(DisableBuildArtifactsToBlobVariable))) {
-        plan.args.push("--disable-build-artifacts-to-blob");
+    if (selection.hasPipelineArtifacts) {
+        plan.args.push(...chunkHashTypeArgs(task, log));
     }
-    if (selection.hasFileShares) {
-        plan.warnings.push(FileShareDownloadWarning);
+    plan.environment = dedupParallelismEnvironment(task);
+    if (selection.skipped.length > 0) {
+        const names = selection.skipped.map(artifact => `'${artifact.name}' (${artifact.resource?.type})`).join(", ");
+        plan.warnings.push(`Skipped artifacts that are not pipeline artifacts: ${names}. ${BuildArtifactsTaskHint}`);
     }
     plan.variablesOnSuccess[ResourceTypesVariable] = selection.resourceTypes;
     return plan;

@@ -83,7 +83,8 @@ export async function runTask(prepare: (context: TaskContext) => Promise<ToolPla
             executable,
             args,
             token,
-            cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd()
+            cwd: tl.getVariable("System.DefaultWorkingDirectory") ?? process.cwd(),
+            environment: plan.environment
         });
         if (exitCode !== 0) {
             tl.setResult(tl.TaskResult.Failed, `ArtifactTool failed with exit code ${exitCode}. See the log above for details.`);

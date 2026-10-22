@@ -9,6 +9,8 @@ export interface RunOptions {
     args: string[];
     token: string;
     cwd: string;
+    /** Additional environment variables for ArtifactTool. */
+    environment?: Record<string, string>;
     /** Receives ArtifactTool's output. Defaults to stdout. */
     outStream?: Writable;
 }
@@ -22,7 +24,7 @@ export function runArtifactTool(options: RunOptions): Promise<number> {
     const out = options.outStream ?? process.stdout;
     return tl.tool(options.executable).arg(options.args).exec({
         cwd: options.cwd,
-        env: { ...process.env, [TokenVariable]: options.token },
+        env: { ...process.env, ...options.environment, [TokenVariable]: options.token },
         silent: false,
         failOnStdErr: false,
         ignoreReturnCode: true,

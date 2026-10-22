@@ -1,7 +1,7 @@
 {
   "loc.friendlyName": "Download Pipeline Artifacts",
-  "loc.helpMarkDown": "Download one or more published build or pipeline artifacts.",
-  "loc.description": "Download build and pipeline artifacts",
+  "loc.helpMarkDown": "Download one or more published pipeline artifacts. To download build container or file share artifacts, use the Download build artifacts task.",
+  "loc.description": "Download pipeline artifacts",
   "loc.instanceNameFormat": "Download Pipeline Artifact",
   "loc.input.label.source": "Download artifacts produced by",
   "loc.input.help.source": "Download artifacts produced by the current pipeline run, or from a specific pipeline run.",

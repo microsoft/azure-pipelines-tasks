@@ -3,7 +3,7 @@ import * as path from "path";
 import {
     BuildArtifact,
     BuildResult,
-    FileShareDownloadWarning,
+    BuildArtifactsTaskHint,
     PipelineBuildService,
     TaskInputs,
     prepareDownload,
@@ -145,47 +145,65 @@ describe("DownloadPipelineArtifact L0 Suite", function () {
 
             assert.deepStrictEqual(plan.args, [
                 "pipelineartifact", "download", "--project", ProjectId, "--pipeline-id", "42", "--path", path.resolve("work", "dl"),
-                "--artifact-name", "drop", "--pattern", "**/*.dll", "--pattern", "!**/tests/**"
+                "--artifact-name", "drop", "--pattern", "**/*.dll", "--pattern", "!**/tests/**", "--hash-type", "DEDUPNODEORCHUNK"
             ]);
+            assert.deepStrictEqual(plan.environment, {});
             assert.deepStrictEqual(plan.variables, { BuildNumber: "42" });
             assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "PipelineArtifact" });
             assert.deepStrictEqual(plan.warnings, []);
         });
 
-        it("passes the agent's DISABLE_BUILD_ARTIFACTS_TO_BLOB setting to ArtifactTool", async () => {
-            const flag = "--disable-build-artifacts-to-blob";
-            for (const [value, expected] of [["$True", true], ["1", true], ["false", false], ["", false]] as [string, boolean][]) {
-                const plan = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl" },
-                    { ...buildVariables, DISABLE_BUILD_ARTIFACTS_TO_BLOB: value }), fakeService(), noLog);
+        it("passes the agent's chunk size and dedup parallelism settings for pipeline artifacts", async () => {
+            const logs: string[] = [];
+            const largeChunks = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl" },
+                { ...buildVariables, AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "true", OVERRIDE_PIPELINE_ARTIFACT_CHUNKSIZE: "DEDUP1024K",
+                    AZURE_PIPELINES_DEDUP_PARALLELISM: "-1" }), fakeService(), message => logs.push(message));
 
-                assert.strictEqual(plan.args.includes(flag), expected, `value '${value}'`);
-            }
+            assert.strictEqual(optionValue(largeChunks.args, "--hash-type"), "DEDUP1024K");
+            assert.deepStrictEqual(largeChunks.environment, { VSO_ARTIFACT_TOOL_HTTP_CLIENT_MAX_PARALLELISM: "-1" });
+            assert.deepStrictEqual(logs, ["Overriding chunk size to 'DEDUP1024K'."]);
+
+            const serviceChunks = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl" },
+                { ...buildVariables, AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "true" }), fakeService(), noLog);
+            assert.strictEqual(serviceChunks.args.indexOf("--hash-type"), -1);
+
         });
 
-        it("reports known types of all valid artifacts in plug-in order and warns about file shares", async () => {
+        it("downloads only pipeline artifacts and warns about the build artifacts it skips", async () => {
             const service = fakeService([artifact("share", "FilePath"), artifact("drop"), artifact("bad:name"), artifact("other", "Unknown"), artifact("old", "Container")]);
 
             const plan = await prepareDownload(inputs({ source: "current", path: "dl" }, buildVariables), service, noLog);
 
             assert.strictEqual(plan.args.indexOf("--artifact-name"), -1);
             assert.deepStrictEqual(optionValues(plan.args, "--pattern"), []);
-            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "Container,PipelineArtifact,filepath" });
-            assert.deepStrictEqual(plan.warnings, [FileShareDownloadWarning]);
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "PipelineArtifact" });
+            assert.deepStrictEqual(plan.warnings, [
+                `Skipped artifacts that are not pipeline artifacts: 'share' (FilePath), 'old' (Container). ${BuildArtifactsTaskHint}`
+            ]);
+        });
+
+        it("reports no resource types and passes no chunk size when the run has no pipeline artifacts", async () => {
+            const plan = await prepareDownload(inputs({ source: "current", path: "dl" }, buildVariables), fakeService([artifact("old", "Container")]), noLog);
+
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "" });
+            assert.strictEqual(plan.args.indexOf("--hash-type"), -1);
         });
 
         it("reports a single artifact's own resource type", async () => {
-            const plan = await prepareDownload(inputs({ source: "current", artifact: "share", path: "dl" }, buildVariables), fakeService([artifact("share", "FilePath")]), noLog);
+            const plan = await prepareDownload(inputs({ source: "current", artifact: "drop", path: "dl" }, buildVariables),
+                fakeService([artifact("drop", "pipelineartifact")]), noLog);
 
-            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "FilePath" });
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "pipelineartifact" });
         });
-
         it("fails before any transfer for missing, invalid, or unsupported artifacts", async () => {
             await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "nope", path: "dl" }, buildVariables), fakeService(), noLog),
                 /^Error: Artifact nope was not found for build 42\.$/);
             await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "../x", path: "dl" }, buildVariables), fakeService(), noLog),
                 /Artifact name is not valid: \.\.\/x/);
-            await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "other", path: "dl" }, buildVariables), fakeService([artifact("other", "Unknown")]), noLog),
-                /unsupported resource type 'Unknown'/);
+            for (const type of ["Container", "FilePath", "Unknown"]) {
+                await assert.rejects(prepareDownload(inputs({ source: "current", artifact: "other", path: "dl" }, buildVariables), fakeService([artifact("other", type)]), noLog),
+                    new RegExp(`^Error: Artifact 'other' has resource type '${type}', and only pipeline artifacts can be downloaded\\. No transfer was started\\. Use the Download build artifacts task`));
+            }
         });
 
         it("selects a specific run in another project", async () => {

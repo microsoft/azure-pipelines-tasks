@@ -8,7 +8,6 @@ import {
     TokenVariable,
     downloadUrl,
     normalizeJobIdentifier,
-    parseParallelCount,
     preparePublish,
     resolveArtifactTool,
     runArtifactTool,
@@ -62,52 +61,75 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             "System.HostType": "build",
             "System.DefaultWorkingDirectory": path.resolve("work")
         };
-        const windows: PublishEnvironment = { platform: "win32", exists: () => true };
+        const environment: PublishEnvironment = { exists: () => true };
 
         it("resolves the path, maps the inputs, and leaves properties to ArtifactTool", () => {
-            const plan = preparePublish(inputs({ path: "out", artifactName: "drop", properties: "{\"user-a\":1}" }, variables), windows);
+            const plan = preparePublish(inputs({ path: "out", artifactName: "drop", properties: "{\"user-a\":1}" }, variables), environment);
 
             assert.deepStrictEqual(plan.args, [
                 "pipelineartifact", "publish", "--project", "project-id", "--pipeline-id", "42",
-                "--path", path.resolve("work", "out"), "--artifact-name", "drop", "--artifact-type", "pipeline",
-                "--properties", "{\"user-a\":1}", "--job-id", "job-id"
+                "--path", path.resolve("work", "out"), "--artifact-name", "drop",
+                "--properties", "{\"user-a\":1}", "--job-id", "job-id", "--hash-type", "DEDUPNODEORCHUNK"
             ]);
+            assert.deepStrictEqual(plan.environment, {});
             assert.deepStrictEqual(plan.warnings, []);
         });
 
+        it("uses the default chunk size unless the agent's large chunk size setting is on", () => {
+            const cases: [Record<string, string>, string | undefined, string[]][] = [
+                [{}, "DEDUPNODEORCHUNK", []],
+                [{ OVERRIDE_PIPELINE_ARTIFACT_CHUNKSIZE: "DEDUP1024K" }, "DEDUPNODEORCHUNK", []],
+                [{ AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "false" }, "DEDUPNODEORCHUNK", []],
+                [{ AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "$True" }, undefined, []],
+                [{ AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "1", OVERRIDE_PIPELINE_ARTIFACT_CHUNKSIZE: "dedup1024k" }, "dedup1024k",
+                    ["Overriding chunk size to 'dedup1024k'."]],
+                [{ AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "true", OVERRIDE_PIPELINE_ARTIFACT_CHUNKSIZE: "Dedup64K" }, undefined,
+                    ["Override chunk size 'Dedup64K' is not a valid chunk type. Falling back to client settings."]],
+                [{ AGENT_ENABLE_PIPELINEARTIFACT_LARGE_CHUNK_SIZE: "true", OVERRIDE_PIPELINE_ARTIFACT_CHUNKSIZE: "SHA256" }, undefined,
+                    ["Override chunk size 'SHA256' is not a valid chunk type. Falling back to client settings."]]
+            ];
+            for (const [knobs, expected, expectedLogs] of cases) {
+                const logs: string[] = [];
+                const plan = preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, ...knobs }), { ...environment, log: message => logs.push(message) });
+
+                assert.strictEqual(optionValue(plan.args, "--hash-type"), expected, JSON.stringify(knobs));
+                assert.strictEqual(plan.args.filter(arg => arg === "--hash-type").length, expected ? 1 : 0);
+                assert.deepStrictEqual(logs, expectedLogs);
+            }
+        });
+
+        it("passes the agent's publish domain and dedup parallelism settings", () => {
+            const plan = preparePublish(inputs({ path: "out", artifactName: "drop" },
+                { ...variables, SEND_PIPELINE_ARTIFACTS_TO_BLOBSTORE_DOMAIN: "01", AZURE_PIPELINES_DEDUP_PARALLELISM: " 16 " }), environment);
+
+            assert.strictEqual(optionValue(plan.args, "--domain-id"), "01");
+            assert.deepStrictEqual(plan.environment, { VSO_ARTIFACT_TOOL_HTTP_CLIENT_MAX_PARALLELISM: "16" });
+
+            const environmentDomain = preparePublish(inputs({ path: "out", artifactName: "drop" },
+                { ...variables, SEND_PIPELINE_ARTIFACT_ARTIFACTS_TO_BLOBSTORE_DOMAIN: "02" }), environment);
+            assert.strictEqual(optionValue(environmentDomain.args, "--domain-id"), "02");
+
+            // As in the agent, the first non-empty setting wins, and a blank one means the service default.
+            const blankDomain = preparePublish(inputs({ path: "out", artifactName: "drop" },
+                { ...variables, SEND_PIPELINE_ARTIFACTS_TO_BLOBSTORE_DOMAIN: " ", SEND_PIPELINE_ARTIFACT_ARTIFACTS_TO_BLOBSTORE_DOMAIN: "02",
+                    AZURE_PIPELINES_DEDUP_PARALLELISM: "many" }), environment);
+            assert.strictEqual(blankDomain.args.indexOf("--domain-id"), -1);
+            assert.deepStrictEqual(blankDomain.environment, {});
+        });
+
         it("defaults the artifact name to the normalized job identifier", () => {
-            const plan = preparePublish(inputs({ path: "out" }, variables), windows);
+            const plan = preparePublish(inputs({ path: "out" }, variables), environment);
 
             assert.strictEqual(optionValue(plan.args, "--artifact-name"), "Build.Job");
         });
 
         it("validates the name, host type, run ID, and path before ArtifactTool runs", () => {
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "a:b" }, variables), windows), /Artifact name is not valid: a:b/);
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "System.HostType": "release" }), windows),
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "a:b" }, variables), environment), /Artifact name is not valid: a:b/);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "System.HostType": "release" }), environment),
                 /published only from build jobs, not 'release' jobs/);
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "Build.BuildId": "" }), windows), /Build\.BuildId/);
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, variables), { platform: "win32", exists: () => false }),
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "Build.BuildId": "" }), environment), /Build\.BuildId/);
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, variables), { exists: () => false }),
                 new RegExp(`^Error: Path does not exist: ${path.resolve("work", "out").replace(/\\/g, "\\\\")}$`));
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactType: "zip" }, variables), windows), /Artifact type 'zip' is not recognized/);
-        });
-
-        it("passes file share options and clamps the parallel count with a warning", () => {
-            const plan = preparePublish(inputs({ path: "out", artifactType: "FilePath", fileSharePath: "\\\\share\\drop", parallel: "true", parallelCount: "500" },
-                { ...variables, "System.HostType": "release" }), windows);
-
-            assert.strictEqual(optionValue(plan.args, "--artifact-type"), "filepath");
-            assert.strictEqual(optionValue(plan.args, "--file-share-path"), "\\\\share\\drop");
-            assert.strictEqual(optionValue(plan.args, "--parallel-count"), "128");
-            assert.deepStrictEqual(plan.warnings, ["The parallel count must be at least 1 and not greater than 128; using the nearest allowed value."]);
-        });
-
-        it("omits the parallel count when parallel copy is off and rejects file shares off Windows", () => {
-            const plan = preparePublish(inputs({ path: "out", artifactType: "filepath", fileSharePath: "\\\\share\\drop", parallelCount: "16" }, variables), windows);
-
-            assert.strictEqual(plan.args.indexOf("--parallel-count"), -1);
-            assert.throws(() => preparePublish(inputs({ path: "out", artifactType: "filepath", fileSharePath: "/mnt/share" }, variables),
-                { platform: "linux", exists: () => true }), /supported only on Windows/);
-            assert.throws(() => parseParallelCount("many", []), /must be a number/);
         });
     });
     describe("toolPlatform", () => {
@@ -246,7 +268,7 @@ describe("PublishPipelineArtifact L0 Suite", function () {
         it("passes the token only through the environment and returns the exit code", async () => {
             const output = capture();
             const script = [
-                `console.log("length:" + process.env.${TokenVariable}.length + " args:" + process.argv.slice(1).join(","));`,
+                `console.log("length:" + process.env.${TokenVariable}.length + " args:" + process.argv.slice(1).join(",") + " parallelism:" + process.env.VSO_ARTIFACT_TOOL_HTTP_CLIENT_MAX_PARALLELISM);`,
                 "process.exit(3);"
             ].join("\n");
 
@@ -255,12 +277,13 @@ describe("PublishPipelineArtifact L0 Suite", function () {
                 args: ["-e", script, "plain-arg"],
                 token: "access-token-value",
                 cwd: process.cwd(),
+                environment: { VSO_ARTIFACT_TOOL_HTTP_CLIENT_MAX_PARALLELISM: "16" },
                 outStream: output.stream
             });
 
             const lines = output.lines();
             assert.strictEqual(exitCode, 3);
-            assert.ok(lines.includes("length:18 args:plain-arg"), lines.join("\n"));
+            assert.ok(lines.includes("length:18 args:plain-arg parallelism:16"), lines.join("\n"));
             assert.ok(!lines.some(line => line.includes("access-token-value")), lines.join("\n"));
         });
 

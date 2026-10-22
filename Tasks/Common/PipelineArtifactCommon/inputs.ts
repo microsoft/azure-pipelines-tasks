@@ -6,16 +6,17 @@ export interface TaskInputs {
 }
 
 /**
- * What the task does once its inputs are processed: the ArtifactTool arguments for the transfer, warnings to
- * report, variables to set before the transfer, and variables to set only when it succeeds.
+ * What the task does once its inputs are processed: the ArtifactTool arguments and environment for the transfer,
+ * warnings to report, variables to set before the transfer, and variables to set only when it succeeds.
  */
 export interface ToolPlan {
     args: string[];
+    environment: Record<string, string>;
     warnings: string[];
     variables: Record<string, string>;
     variablesOnSuccess: Record<string, string>;
 }
 
 export function emptyPlan(args: string[]): ToolPlan {
-    return { args, warnings: [], variables: {}, variablesOnSuccess: {} };
+    return { args, environment: {}, warnings: [], variables: {}, variablesOnSuccess: {} };
 }
