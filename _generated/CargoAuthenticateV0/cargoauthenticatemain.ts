@@ -3,7 +3,6 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as toml from 'toml';
 import * as fs from 'fs';
 import * as constants from './constants';
-import * as url from 'url';
 import * as base64 from 'base-64';
 import * as utf8 from 'utf8';
 import { ServiceConnection, getPackagingServiceConnections, ServiceConnectionAuthType, UsernamePasswordServiceConnection, TokenServiceConnection } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
@@ -62,7 +61,8 @@ async function main(): Promise<void> {
                     break;
                 case (ServiceConnectionAuthType.Token):
                     // We only support crates.io
-                    if (url.parse(serviceConnection.packageSource.uri).host !== "crates.io") throw Error(tl.loc('Error_InvalidServiceConnection', serviceConnection.packageSource.uri));
+                    if (!isCratesIoUri(serviceConnection.packageSource.uri)) 
+                        throw Error(tl.loc('Error_InvalidServiceConnection', serviceConnection.packageSource.uri));
 
                     const tokenAuthInfo = serviceConnection as TokenServiceConnection;
                     tl.debug(`Detected token credentials for '${serviceConnection.packageSource.uri}'`);
@@ -83,7 +83,7 @@ async function main(): Promise<void> {
 
             let authenticatedExternally = false;
             for (const serviceConnection of externalServiceConnections) {
-                if (url.parse(serviceConnection.packageSource.uri).href !== verifiedRegistryUrl.href) {
+                if (normalizeRegistryIndex(serviceConnection.packageSource.uri) !== verifiedRegistryUrl.href) {
                     continue;
                 }
 
@@ -155,9 +155,27 @@ function setRegistryVars(registryName: string): readonly [string, string, string
     return [tokenName, credProviderName, connectionType] as const;
 }
 
+// Cargo resolves hosts with WHATWG rules.
+function normalizeRegistryIndex(index: string): string {
+    const raw = index.replace(/^sparse\+/, "");
+    try {
+        return new URL(raw).href;
+    } catch {
+        return raw;
+    }
+}
+
+function isCratesIoUri(uri: string): boolean {
+    try {
+        return new URL(uri).host === "crates.io";
+    } catch {
+        return false;
+    }
+}
+
 function getRegistriesInfo(registries: { [name: string]: { index: string } }): RegistryInfo[] {
     return Object.keys(registries).map(name => {
-        const urlString = url.parse(registries[name].index.replace("sparse+", "")).href;
+        const urlString = normalizeRegistryIndex(registries[name].index);
         const [tokenName, credProviderName, connectionType] = setRegistryVars(name);
         return { name, urlString, tokenName, credProviderName, connectionType };
     });
