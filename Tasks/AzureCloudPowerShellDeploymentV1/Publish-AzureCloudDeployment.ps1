@@ -1,4 +1,5 @@
 $env:RETIRE_AZURERM_POWERSHELL_MODULE = $false
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
@@ -46,13 +47,16 @@ try{
 
     Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
-    Write-Host "serviceConfigFile= $serviceConfigFile"
+    Write-Host "serviceConfigFile= $($serviceConfigFile | Protect-ExternalOutput -Source repository)"
     $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
     Write-Host "Find-VstsFiles -LegacyPattern $CsPkg"
     $servicePackageFile = Find-VstsFiles -LegacyPattern "$CsPkg"
-    Write-Host "servicePackageFile= $servicePackageFile"
+    Write-Host "servicePackageFile= $($servicePackageFile | Protect-ExternalOutput -Source repository)"
     $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
+
+    $displayServiceConfigFile = Protect-ExternalOutput -InputObject $serviceConfigFile -Source repository
+    $displayServicePackageFile = Protect-ExternalOutput -InputObject $servicePackageFile -Source repository
 
     Write-Host "##[command]Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError"
     $azureService = Get-AzureService -ServiceName $ServiceName -ErrorAction SilentlyContinue  -ErrorVariable azureServiceError
@@ -147,12 +151,12 @@ try{
     {
         if ($label)
         {
-            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
         }
         else
         {
-            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }
@@ -161,12 +165,12 @@ try{
         #Use -Upgrade -Mode Simultaneous -Force
         if ($label)
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions> -Force"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions> -Force"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration $diagnosticExtensions -Force
         }
         else
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions> -Force"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions> -Force"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration $diagnosticExtensions -Force
         }
     }
@@ -175,12 +179,12 @@ try{
         #Use -Upgrade -Mode Simultaneous
         if ($label)
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration <extensions>"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -Label $label -ExtensionConfiguration $diagnosticExtensions
         }
         else
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration <extensions>"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Mode Simultaneous -ExtensionConfiguration $diagnosticExtensions
         }
     }
@@ -189,12 +193,12 @@ try{
         #Use -Upgrade
         if ($label)
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions> -Force"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions> -Force"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions -Force
         }
         else
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions> -Force"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -ExtensionConfiguration <extensions> -Force"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions -Force
         }
     }
@@ -203,12 +207,12 @@ try{
         #Use -Upgrade
         if ($label)
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
         }
         else
         {
-            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
             $azureDeployment = Set-AzureDeployment -Upgrade -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }
@@ -219,12 +223,12 @@ try{
         $azureOperationContext = Remove-AzureDeployment -ServiceName $ServiceName -Slot $Slot -Force
         if ($label)
         {
-            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration <extensions>"
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -Label $label -ExtensionConfiguration $diagnosticExtensions
         }
         else
         {
-            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
+            Write-Host "##[command]New-AzureDeployment -ServiceName $ServiceName -Package $displayServicePackageFile -Configuration $displayServiceConfigFile -Slot $Slot -ExtensionConfiguration <extensions>"
             $azureDeployment = New-AzureDeployment -ServiceName $ServiceName -Package $servicePackageFile -Configuration $serviceConfigFile -Slot $Slot -ExtensionConfiguration $diagnosticExtensions
         }
     }

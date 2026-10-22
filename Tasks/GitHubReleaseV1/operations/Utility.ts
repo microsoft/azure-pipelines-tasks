@@ -8,9 +8,7 @@ export class Utility {
     public static logRepositoryMessage(message: string): void {
         tl.writeExternalOutput(message + "\n", {
             source: 'repository',
-            vsoCommandMode: tl.getPipelineFeature('GitHubReleaseEnableVsoCommandBlocking')
-                ? 'blockAndTelemetry'
-                : 'telemetryOnly'
+            vsoCommandMode: 'blockAndTelemetry'
         });
     }
 

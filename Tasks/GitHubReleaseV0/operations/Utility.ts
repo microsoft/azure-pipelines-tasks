@@ -5,6 +5,10 @@ import fs = require('fs');
 
 export class Utility {
 
+    public static sanitizeFilePath(filePath: string): string {
+        return filePath.replace(/##vso\[/gi, '##_vso[').replace(/##\[/g, '##_[');
+    }
+
     public static getGithubEndPointToken(githubEndpoint: string): string {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;

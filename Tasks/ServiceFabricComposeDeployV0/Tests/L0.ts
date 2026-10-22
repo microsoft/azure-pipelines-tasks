@@ -27,6 +27,9 @@ describe('ServiceFabricComposeDeploy Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('formats filename diagnostics without changing paths', done => {
+            psr.run(path.join(__dirname, 'FilenameDiagnostics.ps1'), done);
+        });
         it('Deploy 2.7', (done) => {
             psr.run(path.join(__dirname, 'Deploy.2.7.ps1'), done);
         })

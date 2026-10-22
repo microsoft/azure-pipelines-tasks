@@ -27,6 +27,9 @@ describe('ServiceFabricDeploy Suite', function () {
   });
 
   if (psm.testSupported()) {
+    it('formats filename diagnostics without changing paths', done => {
+        psr.run(path.join(__dirname, 'FilenameDiagnostics.ps1'), done);
+    });
     it('AAD deploy', done => {
         psr.run(path.join(__dirname, 'AadDeploy.ps1'), done);
     });
