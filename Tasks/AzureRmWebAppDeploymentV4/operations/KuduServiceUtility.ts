@@ -3,7 +3,6 @@ import Q = require('q');
 import path = require('path');
 
 import { DeploymentType, TaskParameters } from './TaskParameters';
-import { sanitizeForLoggingCommand } from 'azure-pipelines-tasks-logging-command-sanitizer/sanitize';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
@@ -151,8 +150,12 @@ export class KuduServiceUtility {
                 await this._appOfflineKuduService(physicalPath, false);
             }
 
-            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat",
-                sanitizeForLoggingCommand(packagePath), sanitizeForLoggingCommand(physicalPath)));
+            tl.writeExternalOutput(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath) + '\n', {
+                source: 'repository',
+                vsoCommandMode: tl.getPipelineFeature('DisableWebAppPackageDiagnosticVsoCommandBlocking')
+                    ? 'telemetryOnly'
+                    : 'blockAndTelemetry'
+            });
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));

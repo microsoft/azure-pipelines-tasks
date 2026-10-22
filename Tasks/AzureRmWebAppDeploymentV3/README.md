@@ -10,6 +10,14 @@ The task can be used to deploy different Azure App Services like Function App, W
 
 The task is **under development and is available to a limited set of Azure DevOps organizations**. The [video](https://www.youtube.com/watch?v=uQ2qCmaZ_Ag&feature=youtu.be) describes the features that are available in the task currently.
 
+## Package diagnostic output
+
+Package deployment diagnostics use task-lib external-output handling with
+`blockAndTelemetry` by default. The independent pipeline feature
+`DisableWebAppPackageDiagnosticVsoCommandBlocking` switches this diagnostic to
+`telemetryOnly` when true. An unset or false feature keeps blocking enabled.
+Only diagnostic text is filtered; file selection and deployment paths are unchanged.
+
 ## Contact Information
 
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work. Also, share feedback about the task, and the new features that you would like to see in it.

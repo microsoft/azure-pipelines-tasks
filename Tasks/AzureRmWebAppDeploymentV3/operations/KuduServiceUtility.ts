@@ -5,7 +5,6 @@ import { Kudu, sanitizeKuduLogForConsole } from 'azure-pipelines-tasks-azure-arm
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
 import { TaskParameters } from './TaskParameters';
-import { sanitizeForLoggingCommand } from 'azure-pipelines-tasks-logging-command-sanitizer/sanitize';
 
 import { generateTemporaryFolderOrZipPath } from 'azure-pipelines-tasks-webdeployment-common/utility';
 import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
@@ -127,8 +126,12 @@ export class KuduServiceUtility {
                 await this._appOfflineKuduService(physicalPath, false);
             }
 
-            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat",
-                sanitizeForLoggingCommand(packagePath), sanitizeForLoggingCommand(physicalPath)));
+            tl.writeExternalOutput(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath) + '\n', {
+                source: 'repository',
+                vsoCommandMode: tl.getPipelineFeature('DisableWebAppPackageDiagnosticVsoCommandBlocking')
+                    ? 'telemetryOnly'
+                    : 'blockAndTelemetry'
+            });
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
