@@ -3,6 +3,7 @@ import Q = require('q');
 import path = require('path');
 
 import { DeploymentType, TaskParameters } from './TaskParameters';
+import { sanitizeForLoggingCommand } from './sanitize';
 
 import { AzureDeployPackageArtifactAlias } from './Constants';
 import { KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
@@ -152,7 +153,8 @@ export class KuduServiceUtility {
                 await this._appOfflineKuduService(physicalPath, false);
             }
 
-            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath));
+            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat",
+                sanitizeForLoggingCommand(packagePath), sanitizeForLoggingCommand(physicalPath)));
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
