@@ -48,7 +48,7 @@ tmr.registerMock('azure-pipelines-tasks-utility-common/telemetry', {
     }
 });
 
-tmr.registerMock('uuid/v4', () => 'test-uuid');
+tmr.registerMock('uuid', { v4: () => 'test-uuid' });
 
 const fs = require('fs');
 const fsClone = Object.assign({}, fs);
