@@ -1,0 +1,21 @@
+{
+  "name": "publish-pipeline-artifact-dev",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Test-only pipeline artifact publishing using a local ArtifactTool build.",
+  "main": "publish.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../make.js build --task PublishPipelineArtifactDevV1",
+    "test": "node ../../make.js test --task PublishPipelineArtifactDevV1 --suite L0"
+  },
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.281.1",
+    "pipeline-artifact-dev-common": "file:../../_build/Tasks/Common/pipeline-artifact-dev-common-0.0.1.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
