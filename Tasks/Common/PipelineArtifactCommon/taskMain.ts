@@ -51,7 +51,7 @@ export function createResolverDeps(): ToolResolverDeps {
 
 /**
  * Runs a pipeline artifact task: processes the inputs into a plan, acquires ArtifactTool, reports the plan's
- * warnings and variables, and runs ArtifactTool for the transfer. ArtifactTool reports nothing to the agent;
+ * errors, warnings and variables, and runs ArtifactTool for the transfer. ArtifactTool reports nothing to the agent;
  * the task sets the result from its exit code.
  */
 export async function runTask(prepare: (context: TaskContext) => Promise<ToolPlan>): Promise<void> {
@@ -67,6 +67,9 @@ export async function runTask(prepare: (context: TaskContext) => Promise<ToolPla
         });
         const executable = await resolveArtifactTool(createResolverDeps(), serviceUrl);
 
+        for (const error of plan.errors) {
+            tl.error(error);
+        }
         for (const warning of plan.warnings) {
             tl.warning(warning);
         }
@@ -94,7 +97,8 @@ export async function runTask(prepare: (context: TaskContext) => Promise<ToolPla
         for (const [name, value] of Object.entries(plan.variablesOnSuccess)) {
             tl.setVariable(name, value);
         }
-        tl.setResult(tl.TaskResult.Succeeded, "");
+        // As in the agent plug-in, reported errors (artifacts skipped for invalid names) leave the step succeeded with issues.
+        tl.setResult(plan.errors.length > 0 ? tl.TaskResult.SucceededWithIssues : tl.TaskResult.Succeeded, "");
     } catch (error) {
         tl.setResult(tl.TaskResult.Failed, error instanceof Error ? error.message : String(error));
     }

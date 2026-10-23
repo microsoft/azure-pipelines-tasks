@@ -127,6 +127,10 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "a:b" }, variables), environment), /Artifact name is not valid: a:b/);
             assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "System.HostType": "release" }), environment),
                 /published only from build jobs, not 'release' jobs/);
+            const noHostType: Record<string, string> = { ...variables };
+            delete noHostType["System.HostType"];
+            assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, noHostType), environment),
+                /published only from build jobs, not '' jobs/);
             assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, { ...variables, "Build.BuildId": "" }), environment), /Build\.BuildId/);
             assert.throws(() => preparePublish(inputs({ path: "out", artifactName: "drop" }, variables), { exists: () => false }),
                 new RegExp(`^Error: Path does not exist: ${path.resolve("work", "out").replace(/\\/g, "\\\\")}$`));

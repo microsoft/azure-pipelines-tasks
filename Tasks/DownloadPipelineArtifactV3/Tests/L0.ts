@@ -180,6 +180,19 @@ describe("DownloadPipelineArtifact L0 Suite", function () {
             assert.deepStrictEqual(plan.warnings, [
                 `Skipped artifacts that are not pipeline artifacts: 'share' (FilePath), 'old' (Container). ${BuildArtifactsTaskHint}`
             ]);
+            assert.strictEqual(plan.errors.length, 1);
+            assert.match(plan.errors[0], /^Artifact name is not valid: bad:name\. /);
+        });
+
+        it("reports an error for each artifact name that is not valid and downloads the rest", async () => {
+            const service = fakeService([artifact(".."), artifact("drop"), artifact("a\u007fb"), artifact(" . ")]);
+
+            const plan = await prepareDownload(inputs({ source: "current", path: "dl" }, buildVariables), service, noLog);
+
+            assert.deepStrictEqual(plan.errors.map(error => error.split(". It cannot")[0]),
+                ["Artifact name is not valid: ..", "Artifact name is not valid: a\u007fb", "Artifact name is not valid:  . "]);
+            assert.deepStrictEqual(plan.warnings, []);
+            assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "PipelineArtifact" });
         });
 
         it("reports no resource types and passes no chunk size when the run has no pipeline artifacts", async () => {

@@ -1,5 +1,5 @@
 import { chunkHashTypeArgs, dedupParallelismEnvironment } from "./agentKnobs";
-import { isValidArtifactName, validateArtifactName } from "./artifactName";
+import { invalidArtifactNameMessage, isValidArtifactName, validateArtifactName } from "./artifactName";
 import { BuildArtifact, BuildResult, PipelineBuildService } from "./buildService";
 import { TaskInputs, ToolPlan, emptyPlan } from "./inputs";
 import { resolveTaskPath } from "./publishPlan";
@@ -126,6 +126,8 @@ export interface ArtifactSelection {
     hasPipelineArtifacts: boolean;
     /** Build container and file share artifacts a multi-artifact download skips. */
     skipped: BuildArtifact[];
+    /** Names of artifacts a multi-artifact download skips because the names are not valid. */
+    invalidNames: string[];
 }
 
 /**
@@ -143,13 +145,16 @@ export async function selectArtifacts(service: PipelineBuildService, run: Select
             throw new Error(`Artifact '${artifactName}' has resource type '${artifact.resource?.type ?? ""}', and only pipeline artifacts can be downloaded. ` +
                 `No transfer was started. ${BuildArtifactsTaskHint}`);
         }
-        return { resourceTypes: artifact.resource?.type ?? PipelineArtifactType, hasPipelineArtifacts: true, skipped: [] };
+        return { resourceTypes: artifact.resource?.type ?? PipelineArtifactType, hasPipelineArtifacts: true, skipped: [], invalidNames: [] };
     }
 
-    const all = (await service.getArtifacts(run.projectId, run.runId)).filter(artifact => isValidArtifactName(artifact.name));
+    // As the agent plug-in did with strict name validation, artifacts with names that are not valid are skipped with an error.
+    const listed = await service.getArtifacts(run.projectId, run.runId);
+    const invalidNames = listed.filter(artifact => !isValidArtifactName(artifact.name)).map(artifact => artifact.name ?? "");
+    const all = listed.filter(artifact => isValidArtifactName(artifact.name));
     const artifacts = all.filter(isPipelineArtifact);
     const skipped = all.filter(artifact => BuildArtifactTypes.some(type => equalsIgnoreCase(type, artifact.resource?.type)));
-    return { resourceTypes: artifacts.length > 0 ? PipelineArtifactType : "", hasPipelineArtifacts: artifacts.length > 0, skipped };
+    return { resourceTypes: artifacts.length > 0 ? PipelineArtifactType : "", hasPipelineArtifacts: artifacts.length > 0, skipped, invalidNames };
 }
 /**
  * Processes DownloadPipelineArtifact inputs: selects the run and artifacts and computes the outputs.
@@ -184,6 +189,7 @@ export async function prepareDownload(task: TaskInputs, service: PipelineBuildSe
         plan.args.push(...chunkHashTypeArgs(task, log));
     }
     plan.environment = dedupParallelismEnvironment(task);
+    plan.errors.push(...selection.invalidNames.map(invalidArtifactNameMessage));
     if (selection.skipped.length > 0) {
         const names = selection.skipped.map(artifact => `'${artifact.name}' (${artifact.resource?.type})`).join(", ");
         plan.warnings.push(`Skipped artifacts that are not pipeline artifacts: ${names}. ${BuildArtifactsTaskHint}`);

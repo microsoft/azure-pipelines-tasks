@@ -23,8 +23,8 @@ export function preparePublish(task: TaskInputs, environment: PublishEnvironment
     validateArtifactName(artifactName);
 
     const hostType = task.variable("System.HostType");
-    if (hostType && hostType.toLowerCase() !== "build") {
-        throw new Error(`Pipeline artifacts can be published only from build jobs, not '${hostType}' jobs.`);
+    if (hostType?.toLowerCase() !== "build") {
+        throw new Error(`Pipeline artifacts can be published only from build jobs, not '${hostType ?? ""}' jobs.`);
     }
 
     const runId = task.variable("Build.BuildId");
