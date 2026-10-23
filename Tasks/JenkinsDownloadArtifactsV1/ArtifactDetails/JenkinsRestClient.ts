@@ -1,6 +1,7 @@
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import { JenkinsOutput } from '../JenkinsOutput';
 
 import { 
     HttpClient, 
@@ -121,7 +122,7 @@ export class JenkinsRestClient {
         handlebars.registerHelper('containsInArray', function(array, value, options) {
             if (!!array) {
                 for(let i = 0, len = array.length; i < len; i++) {
-                    tl.debug(`checking ${array[i]} ${value}`);
+                    JenkinsOutput.debug(`checking ${array[i]} ${value}`);
                     if (!!array[i] && array[i].indexOf(value) > -1) {
                         return options.fn(this);
                     }
@@ -216,7 +217,7 @@ export class JenkinsRestClient {
         tl.debug(`RetryLimit set to ${retryLimit}`);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
-        console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
+        JenkinsOutput.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
         let httpClient: HttpClient = this.GetClient();
         this.ExecuteWithRetries("DownloadJsonContent", () => this.DownloadJsonContentWithRetries(httpClient, requestUrl, handlebarSource, additionalHandlebarContext), retryLimit).then((result) => {
@@ -234,7 +235,7 @@ export class JenkinsRestClient {
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
             response.readBody().then((body: string) => {
                 if (!!body && response.message.statusCode === 200)  {
-                    tl.debug(`Content received from server ${body}`);
+                    JenkinsOutput.debug(`Content received from server ${body}`);
                     let jsonResult;
 
                     try {
@@ -254,7 +255,7 @@ export class JenkinsRestClient {
                                 let template = handlebars.compile(handlebarSource);
                                 if (additionalHandlebarContext) {
                                     for (let key in additionalHandlebarContext) {
-                                        tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                        JenkinsOutput.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
                                             jsonResult[key] = additionalHandlebarContext[key];
                                         };
                                 }
@@ -278,7 +279,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        JenkinsOutput.debug(body);
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));
@@ -300,7 +301,7 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            console.log(tl.loc("FoundJobType", result));
+            JenkinsOutput.log(tl.loc("FoundJobType", result));
             defer.resolve(result.trim());
         }, (error) => {
             console.log(tl.loc("CannotFindJobType"));
@@ -327,7 +328,7 @@ export class JenkinsRestClient {
 
                 let isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
-                tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+                JenkinsOutput.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
                 // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
                 if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator) != -1) {
                     tl.debug(`Extracting branchName and buildId from selected version`);
@@ -342,7 +343,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
+                    JenkinsOutput.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
             });
@@ -364,7 +365,7 @@ export class JenkinsRestClient {
             let handlerbarSource = "{{lastSuccessfulBuild.id}}";
             const isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
-            tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+            JenkinsOutput.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
             if (isMultibranchPipeline) {
                 jenkinsTreeParameter = "jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]"
                 handlerbarSource = "{{#with (selectMaxOf jobs 'lastSuccessfulBuild.timestamp') as |job|}}{ \"branchName\": \"{{job.name}}\", \"buildId\": \"{{job.lastSuccessfulBuild.id}}\" }{{/with}}"
@@ -381,7 +382,7 @@ export class JenkinsRestClient {
                         let jsonResult = JSON.parse(result);
                         branchName = jsonResult["branchName"];
                         buildId = parseInt(jsonResult["buildId"]);
-                        tl.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
+                        JenkinsOutput.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
                     } catch(error) {
                         defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
                     }
@@ -395,7 +396,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
+                    JenkinsOutput.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
 
@@ -405,7 +406,7 @@ export class JenkinsRestClient {
 
         });
 
-        console.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
+        JenkinsOutput.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
 
         return defer.promise;
     }
@@ -435,7 +436,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        JenkinsOutput.debug(body);
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));

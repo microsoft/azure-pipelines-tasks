@@ -21,7 +21,10 @@ function Protect-ExternalOutput {
         [string] $Source,
 
         # Encoding the host uses to write the text. Defaults to the console output encoding
-        [System.Text.Encoding] $Encoding
+        [System.Text.Encoding] $Encoding,
+
+        [ValidateSet('disabled', 'telemetryOnly', 'blockOnly', 'blockAndTelemetry')]
+        [string] $VsoCommandMode = 'blockOnly'
     )
 
     begin {
@@ -50,6 +53,24 @@ function Protect-ExternalOutput {
             }
         }
 
-        ($text -replace '##vso\[', '##_vso[') -replace '##\[', '##_['
+        $block = $VsoCommandMode -in @('blockOnly', 'blockAndTelemetry')
+        if ($VsoCommandMode -in @('telemetryOnly', 'blockAndTelemetry')) {
+            foreach ($match in [regex]::Matches($text, '##vso\[([\w]+\.[\w]+)(?=[ ;\]])', 'IgnoreCase')) {
+                $event = @{
+                    source = $Source
+                    commandName = $match.Groups[1].Value.ToLowerInvariant()
+                    blocked = $block
+                }
+                $eventJson = ConvertTo-Json $event -Compress
+                Write-Host "##vso[telemetry.publish area=TaskHub;feature=ExternalOutputVsoCommand]$eventJson"
+            }
+        }
+
+        if ($block) {
+            ($text -replace '##vso\[', '##_vso[') -replace '##\[', '##_['
+        }
+        else {
+            $InputObject
+        }
     }
 }

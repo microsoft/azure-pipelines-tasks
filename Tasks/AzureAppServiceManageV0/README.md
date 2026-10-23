@@ -4,6 +4,14 @@
 
 The Azure App Service Management task is used to Start/Stop/Restart App Service, Swap Slot, Install Extentions, Enable [Continuous Monitoring](https://go.microsoft.com/fwlink/?linkid=859946) or Start/Stop all continuous WebJobs on an [Azure App Service](https://azure.microsoft.com/en-in/documentation/articles/app-service-web-overview/). The task works with the [Azure Resource Manager APIs](https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx) only.
 
+## External output
+
+Messages containing Kudu WebJob names and installed extension IDs use external-output
+filtering. The shared `EnableVsoCommandBlockingRMTasks` pipeline feature
+enables blocking of VSO command markers. When disabled or unset, messages remain
+unchanged and command-name-only telemetry is emitted. WebJob names passed to Kudu
+and extension output variables are not modified.
+
 ## Contact Information
 
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.

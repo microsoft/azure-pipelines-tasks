@@ -157,3 +157,41 @@ finally {
         [Console]::OutputEncoding = $originalOutputEncoding
     }
 }
+
+foreach ($mode in @('disabled', 'telemetryOnly', 'blockOnly', 'blockAndTelemetry')) {
+    $inputText = 'prefix ##VsO[task.setvariable variable=PATH]untrusted'
+    $output = @($inputText | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $mode 6>&1)
+    $events = @($output | Where-Object { $_ -is [System.Management.Automation.InformationRecord] })
+    $text = @($output | Where-Object { $_ -is [string] })
+    $blocked = $mode -in @('blockOnly', 'blockAndTelemetry')
+    $expected = if ($blocked) { $inputText -replace '##vso\[', '##_vso[' } else { $inputText }
+    Assert-AreEqual $expected $text[0]
+    $expectedEvents = if ($mode -in @('telemetryOnly', 'blockAndTelemetry')) { 1 } else { 0 }
+    Assert-AreEqual $expectedEvents $events.Count
+    foreach ($event in $events) {
+        $eventText = "$event"
+        Assert-AreEqual $true ($eventText.Contains('"commandName":"task.setvariable"'))
+        Assert-AreEqual $true ($eventText.Contains('"blocked":' + "$blocked".ToLowerInvariant()))
+        Assert-AreEqual $false ($eventText.Contains('untrusted'))
+    }
+}
+
+foreach ($test in $encodingSuites) {
+    foreach ($mode in @('disabled', 'telemetryOnly', 'blockOnly', 'blockAndTelemetry')) {
+        $output = @(Protect-ExternalOutput -InputObject $test.Input -Source 'repository' -Encoding $test.Encoding -VsoCommandMode $mode 6>&1)
+        $events = @($output | Where-Object { $_ -is [System.Management.Automation.InformationRecord] })
+        $text = @($output | Where-Object { $_ -is [string] })
+        $blocked = $mode -in @('blockOnly', 'blockAndTelemetry')
+        $expected = if ($blocked) { $test.Expected } else { $test.Input }
+        Assert-AreEqual $expected $text[0] "$($test.Name), mode=$mode"
+        $normalized = $test.Encoding.GetString($test.Encoding.GetBytes($test.Input))
+        $expectedEvents = if ($mode -in @('telemetryOnly', 'blockAndTelemetry')) {
+            [regex]::Matches($normalized, '##vso\[([\w]+\.[\w]+)(?=[ ;\]])', 'IgnoreCase').Count
+        } else { 0 }
+        Assert-AreEqual $expectedEvents $events.Count "$($test.Name), mode=$mode telemetry"
+        foreach ($event in $events) {
+            Assert-AreEqual $true ("$event".Contains('"blocked":' + "$blocked".ToLowerInvariant()))
+            Assert-AreEqual $false ("$event".Contains('/tmp/payload'))
+        }
+    }
+}
