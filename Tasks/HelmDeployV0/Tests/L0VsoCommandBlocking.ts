@@ -93,6 +93,30 @@ describe('Helm external output filtering', function () {
         }
     }
 
+    it('reads the feature only once per command instance', () => {
+        const originalGetPipelineFeature = tl.getPipelineFeature;
+        let featureReads = 0;
+        Object.assign(tl, {
+            getPipelineFeature: (name: string) => {
+                if (name === 'EnableVsoCommandBlockingRMTasks') {
+                    featureReads++;
+                }
+                return originalGetPipelineFeature(name);
+            }
+        });
+        try {
+            process.env[feature] = 'true';
+            const command = new TestCommand(true);
+            for (let i = 0; i < 2; i++) {
+                const result = command.execCommandSync(command.createCommand().arg(['-e', '']), { silent: true });
+                assert.strictEqual(result.code, 0);
+            }
+            assert.strictEqual(featureReads, 1);
+        } finally {
+            Object.assign(tl, { getPipelineFeature: originalGetPipelineFeature });
+        }
+    });
+
     it('preserves silent output and raw results', () => {
         process.env[feature] = 'true';
         const command = new TestCommand(true);

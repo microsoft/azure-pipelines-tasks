@@ -64,7 +64,7 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     var debugMode = tl.getVariable('System.Debug');
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
     // Requires EnableArtifactEngineExternalOutput in the artifact engine.
-    downloaderOptions.vsoCommandMode = tl.getPipelineFeature('JenkinsDownloadArtifactsVsoCommandBlockingFixEnabled') ? 'blockAndTelemetry' : 'telemetryOnly';
+    downloaderOptions.vsoCommandMode = JenkinsOutput.options.vsoCommandMode;
 
     return downloaderOptions;
 }
@@ -136,6 +136,7 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
 async function doWork() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+        JenkinsOutput.initialize();
 
         const serverEndpoint: string = tl.getInput('serverEndpoint', true);
         const serverEndpointUrl: string = tl.getEndpointUrl(serverEndpoint, false);

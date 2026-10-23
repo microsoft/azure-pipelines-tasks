@@ -3,12 +3,19 @@ import tr = require('azure-pipelines-task-lib/toolrunner');
 
 abstract class basecommand {
     private toolPath: string;
+    private readonly externalOutputOptions: tl.ExternalOutputOptions;
     abstract getTool(): string;
     abstract login(): void;
     abstract logout(): void;
 
     constructor(required: boolean) {
         this.toolPath = tl.which(this.getTool(), required);
+        this.externalOutputOptions = {
+            source: 'childProcess',
+            vsoCommandMode: tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks')
+                ? 'blockAndTelemetry'
+                : 'telemetryOnly'
+        };
     }
 
     public getToolPath(): string {
@@ -30,23 +37,14 @@ abstract class basecommand {
             errlines.push(line);
         });
 
-        return command.exec({ ...options, externalOutput: this.getExternalOutputOptions() }).fail(error => {
-            errlines.forEach(line => tl.errorExternalOutput(line, this.getExternalOutputOptions()));
+        return command.exec({ ...options, externalOutput: this.externalOutputOptions }).fail(error => {
+            errlines.forEach(line => tl.errorExternalOutput(line, this.externalOutputOptions));
             throw error;
         });
     }
 
     public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
-        return command.execSync({ ...options, externalOutput: this.getExternalOutputOptions() });
-    }
-
-    private getExternalOutputOptions(): tl.ExternalOutputOptions {
-        return {
-            source: 'childProcess',
-            vsoCommandMode: tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks')
-                ? 'blockAndTelemetry'
-                : 'telemetryOnly'
-        };
+        return command.execSync({ ...options, externalOutput: this.externalOutputOptions });
     }
 
     public IsInstalled(): boolean {

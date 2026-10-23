@@ -20,7 +20,9 @@ export async function getDownloaderOptions(pattern: string, flag?: string, paral
     const environment = {
         // ARM import requires this; task-lib's vault key must be private to each child.
         AGENT_TEMPDIRECTORY: temporaryDirectory,
-        DISTRIBUTEDTASK_TASKS_JENKINSDOWNLOADARTIFACTSVSOCOMMANDBLOCKINGFIXENABLED: flag,
+        DISTRIBUTEDTASK_TASKS_ENABLEVSOCOMMANDBLOCKINGRMTASKS: flag,
+        // Oppose the RM flag to verify that the retired flag no longer controls blocking.
+        DISTRIBUTEDTASK_TASKS_JENKINSDOWNLOADARTIFACTSVSOCOMMANDBLOCKINGFIXENABLED: flag === 'true' ? 'false' : 'true',
         JENKINS_TEST_PATTERN: pattern,
         JENKINS_TEST_PARALLEL: parallel,
         JENKINS_TEST_DEBUG: debug
@@ -124,6 +126,7 @@ describe('Jenkins external output filtering', function () {
             } else {
                 process.env[feature] = featureValue;
             }
+            JenkinsOutput.initialize();
             const client = new JenkinsRestClient();
             client.DownloadJsonContent = () => Q.resolve(message);
             assert.strictEqual(await client.GetJobType(), message);
@@ -142,6 +145,7 @@ describe('Jenkins external output filtering', function () {
                 } else {
                     process.env[feature] = featureValue;
                 }
+                JenkinsOutput.initialize();
                 const responseBody = status === 200 ? JSON.stringify({ name: message }) : message;
                 const server = http.createServer((request, response) => {
                     response.writeHead(status, { Connection: 'close' });
@@ -170,6 +174,7 @@ describe('Jenkins external output filtering', function () {
 
     it('filters commit parsing failures while preserving the failure', () => {
         process.env[feature] = 'true';
+        JenkinsOutput.initialize();
         assert.throws(() => CommitsDownloader.GetCommitMessagesFromCommits(message));
         assert(output.includes('##_vso[task.setvariable'));
         assert(!output.includes('##vso['));
@@ -177,8 +182,34 @@ describe('Jenkins external output filtering', function () {
 
     it('preserves ordinary messages without emitting command telemetry', () => {
         process.env[feature] = 'true';
+        JenkinsOutput.initialize();
         JenkinsOutput.log('Downloaded artifacts');
         assert.strictEqual(output, 'Downloaded artifacts\n');
         assert(!taskOutput.includes('telemetry.publish'));
+    });
+
+    it('reads the feature once and reuses options for logging and downloader configuration', () => {
+        const originalGetPipelineFeature = tl.getPipelineFeature;
+        let featureReads = 0;
+        Object.assign(tl, {
+            getPipelineFeature: (name: string) => {
+                if (name === 'EnableVsoCommandBlockingRMTasks') {
+                    featureReads++;
+                }
+                return originalGetPipelineFeature(name);
+            }
+        });
+        try {
+            process.env[feature] = 'true';
+            JenkinsOutput.initialize();
+            const options = JenkinsOutput.options;
+            JenkinsOutput.log('Downloaded artifacts');
+            JenkinsOutput.debug('Download details');
+            assert.strictEqual(JenkinsOutput.options, options);
+            assert.strictEqual(options.vsoCommandMode, 'blockAndTelemetry');
+            assert.strictEqual(featureReads, 1);
+        } finally {
+            Object.assign(tl, { getPipelineFeature: originalGetPipelineFeature });
+        }
     });
 });

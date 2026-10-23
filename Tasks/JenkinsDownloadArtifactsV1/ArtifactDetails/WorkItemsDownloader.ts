@@ -5,6 +5,7 @@ import * as  tl from 'azure-pipelines-task-lib/task';
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
+import { JenkinsOutput } from '../JenkinsOutput';
 
 var handlebars = require('handlebars');
 
@@ -87,7 +88,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         const workItemsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=actions[issues[*],serverURL]`;
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemTemplate, {'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Downloaded workItems: ${workItemsResult}`);
+            JenkinsOutput.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);
@@ -104,7 +105,7 @@ export class WorkItemsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading workItems from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(workItemsUrl, WorkItemsTemplate, {'buildParameter': buildParameter, 'commits':commitMessages}).then((workItemsResult) => {
-            tl.debug(`Downloaded workItems: ${workItemsResult}`);
+            JenkinsOutput.debug(`Downloaded workItems: ${workItemsResult}`);
             defer.resolve(workItemsResult);
         }, (error) => {
             defer.reject(error);
