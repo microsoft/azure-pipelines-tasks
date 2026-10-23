@@ -69,6 +69,8 @@ function configureDownloaderOptions(): engine.ArtifactEngineOptions {
     downloaderOptions.parallelProcessingLimit = +tl.getVariable("release.artifact.download.parallellimit") || 4;
     var debugMode = tl.getVariable('System.Debug');
     downloaderOptions.verbose = debugMode ? debugMode.toLowerCase() != 'false' : false;
+    // Requires EnableArtifactEngineExternalOutput in the artifact engine.
+    downloaderOptions.vsoCommandMode = tl.getPipelineFeature('JenkinsDownloadArtifactsVsoCommandBlockingFixEnabled') ? 'blockAndTelemetry' : 'telemetryOnly';
 
     return downloaderOptions;
 }
