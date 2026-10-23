@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2020",
+        "lib": ["es2020"],
+        "declaration": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "esModuleInterop": false,
+        "sourceMap": false,
+        "types": ["node", "mocha"]
+    },
+    "exclude": [
+        "node_modules",
+        "_test"
+    ]
+}
