@@ -189,58 +189,6 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         });
     });
 
-    describe('MysqlClient defaults-file/option-file binary-mode scanning', () => {
-        // Hardening is on by default; explicitly mock the rollback flag false here too.
-        const rollbackFeatureEnvVar = 'DISTRIBUTEDTASK_TASKS_ROLLBACKAZUREMYSQLDEPLOYMENTV2BINARYMODEHARDENING';
-        let originalFeatureValue: string | undefined;
-        let tmpDir: string;
-
-        function createClient(additionalArguments: string): MysqlClient {
-            const parameters = {
-                getSqlAdditionalArguments: () => additionalArguments,
-                getSqlPassword: () => 'DEMO_SQL_PASSWORD'
-            } as AzureMysqlTaskParameter;
-            return new MysqlClient(parameters, 'DEMO_MYSQL_SERVER', '/usr/local/bin/mysql');
-        }
-
-        function writeFile(name: string, content: string): string {
-            const filePath = path.join(tmpDir, name);
-            fs.writeFileSync(filePath, content, 'utf8');
-            return filePath;
-        }
-
-        beforeEach(() => {
-            originalFeatureValue = process.env[rollbackFeatureEnvVar];
-            process.env[rollbackFeatureEnvVar] = 'false';
-            tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
-            tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mysql-defaults-'));
-        });
-
-        afterEach(() => {
-            if (originalFeatureValue === undefined) {
-                delete process.env[rollbackFeatureEnvVar];
-            } else {
-                process.env[rollbackFeatureEnvVar] = originalFeatureValue;
-            }
-            fs.rmSync(tmpDir, { recursive: true, force: true });
-        });
-
-        it('rejects a binary-mode key inside a --defaults-file [client] section', () => {
-            const cnfPath = writeFile('a.cnf', '[client]\nbinary-mode\n');
-            assert.throws(() => createClient(`--defaults-file=${cnfPath}`), /--defaults-file.*not allowed/);
-        });
-
-        it('ignores a binary-mode key in a server-only ([mysqld]) section', () => {
-            const cnfPath = writeFile('a.cnf', '[mysqld]\nbinary-mode\n');
-            assert.doesNotThrow(() => createClient(`--defaults-file=${cnfPath}`));
-        });
-
-        it('short-circuits scanning entirely when --no-defaults is present', () => {
-            const cnfPath = writeFile('a.cnf', '[client]\nbinary-mode\n');
-            assert.doesNotThrow(() => createClient(`--no-defaults --defaults-file=${cnfPath}`));
-        });
-    });
-
     it('AzureMySqlDeployment MysqlClientFileExec', async () => {
         let tp = path.join(__dirname, 'MysqlClientFileExecTests.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);

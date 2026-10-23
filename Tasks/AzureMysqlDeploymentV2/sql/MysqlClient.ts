@@ -23,16 +23,6 @@ export class MysqlClient implements ISqlClient {
      */
     private static readonly BINARY_MODE_OPTION_PATTERN = /^--(?:(?:skip|disable|enable|maximum|loose)-)*binary-mode$/;
 
-    /**
-     * Matches the defaults-file option family.
-     */
-    private static readonly DEFAULTS_FILE_OPTION_PATTERN = /^--defaults(-extra)?-file$/;
-
-    /**
-     * Matches the defaults-group-suffix option family.
-     */
-    private static readonly DEFAULTS_GROUP_SUFFIX_PATTERN = /^--defaults(-extra)?-group-suffix$/;
-
     private static readonly VALUE_CONSUMING_OPTIONS = new Set([
         '--bind-address', '--character-sets-dir', '--connect-timeout', '--database',
         '--default-auth', '--default-character-set', '--defaults-extra-file', '--defaults-file',
@@ -45,18 +35,6 @@ export class MysqlClient implements ISqlClient {
     ]);
 
     private static readonly SHORT_VALUE_CONSUMING_OPTIONS = new Set(['D', 'e', 'h', 'P', 'S', 'u']);
-
-    /**
-     * Option-file sections relevant to the mysql client.
-     */
-    private static readonly CLIENT_OPTION_GROUPS = ['client', 'client-server', 'mysql'];
-
-    private static readonly MAX_DEFAULTS_FILE_INCLUDE_DEPTH = 10;
-
-    /**
-     * File extensions mysql's !includedir loads.
-     */
-    private static readonly INCLUDEDIR_FILE_EXTENSIONS = ['.cnf', '.ini'];
 
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
     private _hostName: string;
@@ -157,117 +135,6 @@ export class MysqlClient implements ISqlClient {
         });
         if (disallowedToken) {
             throw new Error(task.loc("SqlAdditionalArgumentNotAllowed", disallowedToken));
-        }
-
-        this._rejectBinaryModeInDefaultsFiles();
-    }
-
-    /**
-     * Scans any option files referenced via --defaults-file / --defaults-extra-file in
-     * SqlAdditionalArguments for a binary-mode key.
-     *
-     * --no-defaults disables all option-file loading, so nothing further needs checking
-     * in that case.
-     */
-    private _rejectBinaryModeInDefaultsFiles(): void {
-        const hasNoDefaults = this._additionalArgumentTokens.some((token, index) =>
-            this._optionNameTokenIndices.has(index) &&
-            token.split('=', 1)[0].replace(/_/g, '-').toLowerCase() === '--no-defaults');
-
-        if (hasNoDefaults) {
-            return;
-        }
-
-        const groupSuffixes = this._additionalArgumentTokens
-            .filter((token, index) => this._optionNameTokenIndices.has(index) && MysqlClient.DEFAULTS_GROUP_SUFFIX_PATTERN.test(
-                token.split('=', 1)[0].replace(/_/g, '-').toLowerCase()))
-            .map(token => token.slice(token.indexOf('=') + 1));
-
-        for (let i = 0; i < this._additionalArgumentTokens.length; i++) {
-            if (!this._optionNameTokenIndices.has(i)) {
-                continue;
-            }
-            const token = this._additionalArgumentTokens[i];
-            const separatorIndex = token.indexOf('=');
-            const optionName = (separatorIndex === -1 ? token : token.slice(0, separatorIndex))
-                .replace(/_/g, '-').toLowerCase();
-            if (!MysqlClient.DEFAULTS_FILE_OPTION_PATTERN.test(optionName) || separatorIndex === -1) {
-                continue;
-            }
-            const filePath = token.slice(separatorIndex + 1);
-            if (!filePath) {
-                continue; // malformed token; let mysql itself reject it
-            }
-            this._rejectBinaryModeInOptionFile(filePath, groupSuffixes, token, 0);
-        }
-    }
-
-    /**
-     * Scans a single mysql option (.cnf) file - and anything it !include(dir)s - for a key
-     * that would reconfigure --binary-mode within a section the mysql client reads.
-     */
-    private _rejectBinaryModeInOptionFile(
-        filePath: string,
-        groupSuffixes: string[],
-        originToken: string,
-        depth: number
-    ): void {
-        if (depth > MysqlClient.MAX_DEFAULTS_FILE_INCLUDE_DEPTH) {
-            // Guards against unbounded/cyclical include chains.
-            throw new Error(task.loc("SqlAdditionalArgumentNotAllowed", originToken));
-        }
-
-        const resolvedPath = path.resolve(filePath);
-        let content: string;
-        try {
-            content = fs.readFileSync(resolvedPath, 'utf8');
-        } catch {
-            // Unreadable/missing file: mysql itself will fail on this path; nothing to scan.
-            return;
-        }
-
-        const allowedGroups = new Set<string>();
-        for (const baseGroup of MysqlClient.CLIENT_OPTION_GROUPS) {
-            allowedGroups.add(baseGroup);
-            for (const suffix of groupSuffixes) {
-                allowedGroups.add(baseGroup + suffix);
-            }
-        }
-
-        let currentGroup: string | null = null;
-        for (const rawLine of content.split(/\r?\n/)) {
-            const line = rawLine.trim();
-            if (!line || line.startsWith('#') || line.startsWith(';')) {
-                continue;
-            }
-
-            const sectionMatch = line.match(/^\[([^\]]*)\]/);
-            if (sectionMatch) {
-                currentGroup = sectionMatch[1].trim().toLowerCase();
-                continue;
-            }
-
-            const includeMatch = line.match(/^!include(dir)?\s+(.+)$/i);
-            if (includeMatch) {
-                const includedPaths = includeMatch[1]
-                    ? fs.readdirSync(includeMatch[2].trim())
-                        .filter(entry => MysqlClient.INCLUDEDIR_FILE_EXTENSIONS.includes(path.extname(entry).toLowerCase()))
-                        .map(entry => path.join(includeMatch[2].trim(), entry))
-                    : [includeMatch[2].trim()];
-                for (const includedPath of includedPaths) {
-                    this._rejectBinaryModeInOptionFile(includedPath, groupSuffixes, originToken, depth + 1);
-                }
-                continue;
-            }
-
-            if (currentGroup === null || !allowedGroups.has(currentGroup)) {
-                continue;
-            }
-
-            const key = '--' + line.split('=', 1)[0].trim().replace(/_/g, '-').toLowerCase();
-            if (MysqlClient.BINARY_MODE_OPTION_PATTERN.test(key)) {
-                throw new Error(task.loc("SqlAdditionalArgumentNotAllowed", originToken));
-            }
         }
     }
 
