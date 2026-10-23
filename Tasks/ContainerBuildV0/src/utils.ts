@@ -10,9 +10,9 @@ import webclient = require("azure-pipelines-tasks-azure-arm-rest/webClient");
 import * as os from "os";
 import * as util from "util";
 import ConsistentHashing = require("consistent-hashing");
+import { v4 as uuidV4 } from 'uuid';
 
 const buildctlToolName = "buildctl"
-const uuidV4 = require('uuid/v4');
 const buildctlLatestReleaseUrl = "https://api.github.com/repos/moby/buildkit/releases/latest";
 const buildctlToolNameWithExtension = buildctlToolName + getExecutableExtension();
 const stableBuildctlVersion = "v0.5.1"
