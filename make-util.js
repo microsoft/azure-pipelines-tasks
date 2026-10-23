@@ -1949,7 +1949,7 @@ var ensureBuildConfigGeneratorPrereqs = function (baseConfigToolPath) {
         configToolBuildUtility = path.join(baseConfigToolPath, "dev.sh");
     }
 
-    const dotnetSdkVersion = "10.0.301";
+    const dotnetSdkVersion = "10.0.401";
     const dotnetInstallationDirectory = path.resolve(baseConfigToolPath, "_dotnetsdk", dotnetSdkVersion);
 
     // build configToolBuildUtility if needed.  (up-to-date check will skip build if not needed)
