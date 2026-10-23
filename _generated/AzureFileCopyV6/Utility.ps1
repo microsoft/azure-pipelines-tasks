@@ -1019,7 +1019,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
     $inlineScriptText = $fileCopyJobScript.ToString()
 
     # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments'"
+    # Escape embedded single-quotes so $containerURL/$targetPath/$additionalArguments cannot break out of the
+    # single-quoted literals below and inject additional PowerShell statements. PowerShell
+    # also treats the typographic quotes U+2018, U+2019, U+201A and U+201B as single-quote
+    # delimiters, so .Replace("'", "''") alone is not enough; EscapeSingleQuotedStringContent
+    # doubles every one of them.
+    $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+    $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+    $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+    $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$escapedAdditionalArguments'"
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1035,14 +1043,17 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
-        $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
-        if(!$splitAdditionalArgumentsFunctionInfo)
-        {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
-        }
-        $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
-    
+
+    # The remote job splits the additional arguments with this function in the legacy and the
+    # hardened branches, so it is always copied into the inline script.
+    $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+    if(!$splitAdditionalArgumentsFunctionInfo)
+    {
+        throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
+    }
+    $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
+
     $remoteScriptJobArguments = @{
         inline = $true;
         inlineScript = $inlineScriptText;
