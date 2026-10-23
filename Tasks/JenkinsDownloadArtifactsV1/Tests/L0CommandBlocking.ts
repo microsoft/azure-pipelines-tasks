@@ -21,8 +21,6 @@ export async function getDownloaderOptions(pattern: string, flag?: string, paral
         // ARM import requires this; task-lib's vault key must be private to each child.
         AGENT_TEMPDIRECTORY: temporaryDirectory,
         DISTRIBUTEDTASK_TASKS_ENABLEVSOCOMMANDBLOCKINGRMTASKS: flag,
-        // Oppose the RM flag to verify that the retired flag no longer controls blocking.
-        DISTRIBUTEDTASK_TASKS_JENKINSDOWNLOADARTIFACTSVSOCOMMANDBLOCKINGFIXENABLED: flag === 'true' ? 'false' : 'true',
         JENKINS_TEST_PATTERN: pattern,
         JENKINS_TEST_PARALLEL: parallel,
         JENKINS_TEST_DEBUG: debug
