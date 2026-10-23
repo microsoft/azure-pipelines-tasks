@@ -180,6 +180,104 @@ export class JenkinsRestClient {
 
             return result;
         });
+
+        const artifactPathEncodingFeature = JenkinsRestClient.ArtifactPathEncodingFeature;
+        const artifactPathAuditFeature = JenkinsRestClient.ArtifactPathAuditFeature;
+        let auditStats = {
+            totalArtifacts: 0,
+            jsonSpecialCount: 0,
+            urlEncodedCount: 0,
+            hasQuote: false,
+            hasBackslash: false,
+            hasControlChar: false,
+            hasUrlSpecialChar: false
+        };
+
+        function resetAuditStats(): void {
+            auditStats = {
+                totalArtifacts: 0,
+                jsonSpecialCount: 0,
+                urlEncodedCount: 0,
+                hasQuote: false,
+                hasBackslash: false,
+                hasControlChar: false,
+                hasUrlSpecialChar: false
+            };
+        }
+
+        handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
+            const encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
+            const auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
+            if (!encodingEnabled && !auditEnabled) {
+                return value;
+            }
+            if (typeof value !== 'string') {
+                return value;
+            }
+
+            const jsonEscaped = JSON.stringify(value).slice(1, -1);
+            if (auditEnabled) {
+                try {
+                    if (options && options.data && options.data.first) {
+                        resetAuditStats();
+                    }
+                    auditStats.totalArtifacts++;
+                    if (jsonEscaped !== value) {
+                        auditStats.jsonSpecialCount++;
+                    }
+                    if (value.indexOf('"') !== -1) {
+                        auditStats.hasQuote = true;
+                    }
+                    if (value.indexOf('\\') !== -1) {
+                        auditStats.hasBackslash = true;
+                    }
+                    if (/[\u0000-\u001f]/.test(value)) {
+                        auditStats.hasControlChar = true;
+                    }
+                } catch {
+                    // Telemetry collection must never interrupt artifact resolution.
+                }
+            }
+
+            return encodingEnabled ? jsonEscaped : value;
+        });
+
+        handlebars.registerHelper('encodeArtifactPath', function (value: any, options: any) {
+            const encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
+            const auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
+            if (!encodingEnabled && !auditEnabled) {
+                return value;
+            }
+            if (typeof value !== 'string') {
+                return value;
+            }
+
+            const urlEncoded = value.split('/').map(segment => encodeURIComponent(segment)).join('/');
+            const escapedUrlPath = JSON.stringify(urlEncoded).slice(1, -1);
+            if (auditEnabled) {
+                try {
+                    if (urlEncoded !== value) {
+                        auditStats.urlEncodedCount++;
+                        auditStats.hasUrlSpecialChar = true;
+                    }
+                    if (options && options.data && options.data.last) {
+                        const modified = auditStats.jsonSpecialCount > 0 || auditStats.urlEncodedCount > 0;
+                        const decision = !modified
+                            ? 'unchanged'
+                            : (encodingEnabled ? 'encoded' : 'wouldEncode');
+                        const payload = Object.assign({
+                            encodingEnabled,
+                            decision
+                        }, auditStats);
+                        console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
+                    }
+                } catch {
+                    // Telemetry emission must never interrupt artifact resolution.
+                }
+            }
+
+            return encodingEnabled ? escapedUrlPath : value;
+        });
     }
 
     private GetClient(): HttpClient {
@@ -493,4 +591,6 @@ export class JenkinsRestClient {
     }
 
     public static JenkinsBranchPathSeparator: string = "/";
+    public static ArtifactPathEncodingFeature: string = "EnableJenkinsArtifactPathEncoding";
+    public static ArtifactPathAuditFeature: string = "EnableJenkinsArtifactPathAudit";
 }

@@ -1,10 +1,10 @@
 [
 {{#artifacts}}
   {
-    "path" : "{{{this.relativePath}}}",
+    "path" : "{{{jsonEscape this.relativePath}}}",
     "itemType": "file",
     "metadata" : {
-      "downloadUrl": "{{{../endpoint.url}}}{{{../jobUrlInfix}}}/{{{../multibranchPipelineUrlInfix}}}/{{{../version}}}/artifact/{{{this.relativePath}}}"
+      "downloadUrl": "{{{../endpoint.url}}}{{{../jobUrlInfix}}}/{{{../multibranchPipelineUrlInfix}}}/{{{../version}}}/artifact/{{{encodeArtifactPath this.relativePath}}}"
     }
   }{{#unless @last}},{{/unless}}
 {{/artifacts}}
