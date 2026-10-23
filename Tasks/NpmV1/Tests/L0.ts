@@ -171,10 +171,24 @@ describe('Npm Task', function () {
     });
 
     // npm failure dumps log
-    it('npm failure dumps debug log from npm cache', async () => {
+    it('npm failure dumps numbered debug log from npm cache', async () => {
         const debugLog = 'NPM_DEBUG_LOG';
 
         let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir.js');
+        let tr = createMockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.failed, 'task should have failed');
+        assert(tr.stdOutContained(debugLog));
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=NODE_OPTIONS]'), 'debug log command should not be executable');
+    });
+
+    it('npm failure dumps legacy debug log from npm cache', async () => {
+        const debugLog = 'NPM_DEBUG_LOG';
+
+        let tp = path.join(__dirname, 'npm-failureDumpsLog-cacheDir-legacy.js');
         let tr = createMockTestRunner(tp);
 
         await tr.runAsync();
