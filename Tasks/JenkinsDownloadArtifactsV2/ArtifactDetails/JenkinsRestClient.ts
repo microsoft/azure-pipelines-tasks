@@ -220,18 +220,6 @@ export class JenkinsRestClient {
             return major > 2 || (major === 2 && minor >= 120);
         }
 
-        function encodePathSegment(segment: string, onFallback?: () => void): string {
-            try {
-                return encodeURIComponent(segment);
-            } catch {
-                if (onFallback) {
-                    onFallback();
-                }
-                return encodeURIComponent(
-                    segment.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '\uFFFD'));
-            }
-        }
-
         handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
             const encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
             const auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
@@ -273,22 +261,23 @@ export class JenkinsRestClient {
             }
 
             const text = value == null ? '' : String(value);
-            let segmentErrors = 0;
-            const onFallback = () => { segmentErrors++; };
-            let urlEncoded: string;
-            if (encodingEnabled) {
-                urlEncoded = text.split('/').map(seg => encodePathSegment(seg, onFallback)).join('/');
-            }
+            const urlEncoded = encodingEnabled
+                ? text.split('/').map(encodeURIComponent).join('/')
+                : undefined;
 
             try {
                 if (!auditStats) {
                     resetAuditStats();
                 }
-                const candidateEncoded = urlEncoded !== undefined
-                    ? urlEncoded
-                    : text.split('/').map(seg => encodePathSegment(seg, onFallback)).join('/');
-                auditStats.encodingErrorCount += segmentErrors;
-                if (candidateEncoded !== text) {
+                let candidateEncoded = urlEncoded;
+                if (candidateEncoded === undefined) {
+                    try {
+                        candidateEncoded = text.split('/').map(encodeURIComponent).join('/');
+                    } catch {
+                        auditStats.encodingErrorCount++;
+                    }
+                }
+                if (candidateEncoded === undefined || candidateEncoded !== text) {
                     auditStats.urlEncodedCount++;
                     auditStats.hasUrlSpecialChar = true;
                 }

@@ -568,5 +568,17 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
             assert(auditLines[0].indexOf('"encodingErrorCount":1') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"decision":"wouldEncode"') !== -1, auditLines[0]);
         });
+
+        it('explicitly rejects unpaired UTF-16 surrogates when encoding is enabled instead of substituting U+FFFD', async () => {
+            setFlags('true', 'false');
+            metadataBody = JSON.stringify({
+                artifacts: [{ relativePath: 'drop/nested/surrogate-\uD800-item.txt' }]
+            });
+            const downloadOptions = await taskOptions('drop/**', 'true');
+
+            await assert.rejects(
+                new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
+                error => error instanceof URIError);
+        });
     });
 });
