@@ -1,4 +1,6 @@
-﻿function Get-VstsBuild
+﻿. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
+function Get-VstsBuild
 {
     [CmdletBinding()]
     [OutputType([string])]
@@ -53,7 +55,7 @@
 
         if ($build)
         {
-            Write-Host (Get-VstsLocString -Key PreviousBuildNumberLabel -ArgumentList $build.buildNumber)
+            Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key PreviousBuildNumberLabel -ArgumentList $build.buildNumber) -Source 'repository')
 
             $escapedArtifactName = [System.Uri]::EscapeDataString($PkgArtifactName)
             $url = "$($vstsEndpoint.url)$projectId/_apis/build/builds/$($build.Id)/artifacts?$apiVersion&artifactName=$escapedArtifactName"
@@ -92,12 +94,12 @@
 
                 if ($downloadArtifact -eq $true)
                 {
-                    Write-Host (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName)
+                    Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key DownloadingArtifact -ArgumentList $PkgArtifactName) -Source 'repository')
 
                     # Download the artifact to the agent's temp folder and unzip it
                     Get-FileWithProgress $artifact.resource.downloadUrl $artifactZipFile $authHeader["Authorization"]
 
-                    Write-Host (Get-VstsLocString -Key FinishedDownloadingArtifact -ArgumentList $PkgArtifactName)
+                    Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key FinishedDownloadingArtifact -ArgumentList $PkgArtifactName) -Source 'repository')
 
                     Add-Type -AssemblyName System.IO.Compression.FileSystem
                     [System.IO.Compression.ZipFile]::ExtractToDirectory("$artifactZipFile", "$agentTmpFolder")

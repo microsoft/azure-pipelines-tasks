@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 5
+    "Patch": 9
   },
   "runsOn": [
     "Agent",
@@ -144,7 +144,7 @@
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.4",
-    "wif_242": "0.282.5"
+    "Default": "0.282.8",
+    "wif_242": "0.282.9"
   }
 }
