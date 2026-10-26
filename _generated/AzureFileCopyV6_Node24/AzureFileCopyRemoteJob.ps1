@@ -6,7 +6,8 @@ $AzureFileCopyRemoteJob = {
         [switch]$CleanTargetBeforeCopy,
         [switch]$EnableDetailedLogging,
         [switch]$useSanitizerActivate,
-        [switch]$useSourcePathHardening
+        [switch]$useSourcePathHardening,
+        [switch]$disableTargetPathHardening
     )
 
     function Write-DetailLogs
@@ -127,8 +128,8 @@ $AzureFileCopyRemoteJob = {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $sanitizedArguments"
             & azcopy copy "$containerURL/*" "$targetPath" $sanitizedArguments
-        } else {
-            # Legacy path (both feature flags off). TargetPath, ContainerURL and the additional arguments
+        } elseif (-not $disableTargetPathHardening) {
+            # New secure default (rollback not engaged). TargetPath, ContainerURL and the additional arguments
             # reach azcopy as data: the arguments are split into a list by a parser that evaluates nothing,
             # and the call below is constant text that only references that list by name, so no value is
             # ever re-parsed as PowerShell. Only $env:NAME and ${env:NAME} are expanded (in the target path
@@ -139,6 +140,10 @@ $AzureFileCopyRemoteJob = {
             [string[]]$azCopyArguments = @('copy', "$containerURL/*", $expandedTargetPath) + $argumentTokens
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$expandedTargetPath`" $argumentTokens"
             & azcopy @azCopyArguments
+        } else {
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $additionalArguments"
+            $azCopyCommand = "& azcopy copy `"$containerURL/*`" `"$targetPath`" $additionalArguments"
+            Invoke-Expression $azCopyCommand
         }
     }
     catch

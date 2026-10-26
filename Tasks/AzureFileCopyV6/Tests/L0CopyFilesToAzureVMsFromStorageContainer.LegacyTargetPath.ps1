@@ -46,6 +46,9 @@ Register-Mock ConvertTo-SecureString { return $securedMockPassword }
 # $remoteScriptJobArguments hashtable can be inspected and then actually executed below.
 Register-Mock Copy-FilesSequentiallyToAzureVMs { $global:capturedRemoteScriptJobArgs = $args }
 Register-Mock Copy-FilesParallellyToAzureVMs { }
+Register-Mock Get-VstsPipelineFeature { return $global:targetPathHardeningRollback } -ParametersEvaluator {
+    $FeatureName -eq 'AzureFileCopyV6.DisableTargetPathHardening'
+}
 
 $invokeRemoteScriptParams = Get-InvokeRemoteScriptParameters -azureVMResourcesProperties $azureVMsProperties -networkCredentials $azureVMCredntials
 
@@ -67,7 +70,7 @@ function Format-Argv
     return ((@($Argv) | ForEach-Object { "[$_]" }) -join ' ')
 }
 
-# Runs one scenario with both hardening flags off and asserts that azcopy received the expected arguments.
+# Runs a scenario through generated script arguments and captures the actual AzCopy invocation.
 function Assert-LegacyScenario
 {
     param(
@@ -106,13 +109,19 @@ function Assert-LegacyScenario
                                              -azCopyToolLocation "AzCopy" `
                                              -fileCopyJobScript $AzureFileCopyRemoteJob `
                                              -enableDetailedLogging $false `
-                                             -useSanitizerActivate $false `
-                                             -useSourcePathHardening $false
+                                             -useSanitizerActivate ([bool]$Scenario.UseSanitizerActivate) `
+                                             -useSourcePathHardening ([bool]$Scenario.UseSourcePathHardening)
 
     Assert-IsNotNullOrEmpty $global:capturedRemoteScriptJobArgs "[$($Scenario.Name)] Expected Copy-FilesSequentiallyToAzureVMs to have been called."
     $remoteScriptJobArgumentsIndex = [array]::IndexOf($global:capturedRemoteScriptJobArgs, '-remoteScriptJobArguments')
     Assert-AreNotEqual -1 $remoteScriptJobArgumentsIndex "[$($Scenario.Name)] Expected -remoteScriptJobArguments to have been passed to Copy-FilesSequentiallyToAzureVMs."
     $remoteScriptJobArguments = $global:capturedRemoteScriptJobArgs[$remoteScriptJobArgumentsIndex + 1]
+
+    if ($Scenario.ContainsKey('ExpectedScriptArguments'))
+    {
+        Assert-AreEqual $Scenario.ExpectedScriptArguments $remoteScriptJobArguments.scriptArguments "[$($Scenario.Name)] Rollback must restore the original unescaped script arguments."
+        return
+    }
 
     # Exactly how RunPowerShellScriptJob.ps1 invokes the inline script on the target VM.
     $remoteJobScriptBlock = [scriptblock]::Create($remoteScriptJobArguments.inlineScript)
@@ -282,13 +291,60 @@ $scenarios = @(
 
 try
 {
-    foreach ($scenario in $scenarios)
+    foreach ($flagValue in @($null, $false))
     {
-        Assert-LegacyScenario -Scenario $scenario
+        $global:targetPathHardeningRollback = $flagValue
+        foreach ($scenario in $scenarios)
+        {
+            Assert-LegacyScenario -Scenario $scenario
+        }
+    }
+
+    $global:targetPathHardeningRollback = $true
+    foreach ($sourcePathHardening in @($false, $true))
+    {
+        foreach ($sanitizerActivate in @($false, $true))
+        {
+            $expectedTargetPath = '$HOME\deploy'
+            if (!$sourcePathHardening -and !$sanitizerActivate)
+            {
+                $expectedTargetPath = "$HOME\deploy"
+            }
+            Assert-LegacyScenario -Scenario @{
+                Name = "rollback with SourcePath hardening=$sourcePathHardening and sanitizer=$sanitizerActivate"
+                TargetPath = '$HOME\deploy'
+                ExpectedTargetPath = $expectedTargetPath
+                AdditionalArguments = '--recursive'
+                TrailingArguments = @('--recursive')
+                UseSourcePathHardening = $sourcePathHardening
+                UseSanitizerActivate = $sanitizerActivate
+            }
+        }
+    }
+
+    # Inspect unsafe rollback serialization without executing the unescaped text.
+    $rollbackTargetPath = "C:\Bob's" + $quote
+    $rollbackContainerName = "container'quote"
+    $rollbackArguments = "--include-pattern 'My Files'"
+    Assert-LegacyScenario -Scenario @{
+        Name = 'rollback preserves unescaped values'
+        TargetPath = $rollbackTargetPath
+        ContainerName = $rollbackContainerName
+        AdditionalArguments = $rollbackArguments
+        ExpectedScriptArguments = " -containerURL '$validBlobStorageEndpoint/$rollbackContainerName' -targetPath '$rollbackTargetPath' -additionalArguments '$rollbackArguments' -disableTargetPathHardening"
+    }
+
+    Remove-Item -Path function:Split-AdditionalArguments
+    Assert-LegacyScenario -Scenario @{
+        Name = 'rollback without SourcePath hardening does not require the new parser'
+        TargetPath = '$HOME\deploy'
+        ExpectedTargetPath = "$HOME\deploy"
     }
 }
 finally
 {
+    Unregister-Mock Get-VstsPipelineFeature
+    Remove-Variable -Name targetPathHardeningRollback -Scope Global -ErrorAction SilentlyContinue
     Remove-Item -Path function:global:azcopy -ErrorAction SilentlyContinue
     Remove-Item -Path Env:\AFC_LEGACY_TEST_SET -ErrorAction SilentlyContinue
     Remove-Item -Path Env:\AFC_LEGACY_TEST_EVIL -ErrorAction SilentlyContinue

@@ -1018,16 +1018,19 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    # script block arguments
-    # Escape embedded single-quotes so $containerURL/$targetPath/$additionalArguments cannot break out of the
-    # single-quoted literals below and inject additional PowerShell statements. PowerShell
-    # also treats the typographic quotes U+2018, U+2019, U+201A and U+201B as single-quote
-    # delimiters, so .Replace("'", "''") alone is not enough; EscapeSingleQuotedStringContent
-    # doubles every one of them.
-    $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
-    $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
-    $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
-    $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$escapedAdditionalArguments'"
+    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening'
+    if (-not $disableTargetPathHardening)
+    {
+        # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
+        $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+        $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+        $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+        $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$escapedAdditionalArguments'"
+    }
+    else
+    {
+        $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments' -disableTargetPathHardening"
+    }
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1045,14 +1048,16 @@ function Copy-FilesToAzureVMsFromStorageContainer
         $scriptBlockArgs += " -useSourcePathHardening"
     }
 
-    # The remote job splits the additional arguments with this function in the legacy and the
-    # hardened branches, so it is always copied into the inline script.
-    $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
-    if(!$splitAdditionalArgumentsFunctionInfo)
+    # Rollback preserves the original parser dependency: only SourcePath hardening needs it.
+    if (!$disableTargetPathHardening -or $useSourcePathHardening)
     {
-        throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
+        $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
+        if(!$splitAdditionalArgumentsFunctionInfo)
+        {
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
+        }
+        $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
-    $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
 
     $remoteScriptJobArguments = @{
         inline = $true;
