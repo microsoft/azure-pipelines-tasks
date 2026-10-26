@@ -1,4 +1,6 @@
-﻿function Update-ApplicationVersions
+﻿. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
+function Update-ApplicationVersions
 {
     [CmdletBinding()]
     Param()
@@ -8,11 +10,11 @@
     {
         #region Collect and parse input values
         $appPackagePathSearchPattern = (Get-VstsInput -Name applicationPackagePath -Require)
-        Write-Host (Get-VstsLocString -Key SearchingForApplicationPackage -ArgumentList $appPackagePathSearchPattern)
+        Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key SearchingForApplicationPackage -ArgumentList $appPackagePathSearchPattern) -Source 'repository')
         $newAppPackagePath = Find-VstsFiles -LegacyPattern $appPackagePathSearchPattern -IncludeDirectories
         Assert-SingleItem $newAppPackagePath $appPackagePathSearchPattern
         Assert-VstsPath -LiteralPath $newAppPackagePath -PathType Container
-        Write-Host (Get-VstsLocString -Key FoundApplicationPackage -ArgumentList $newAppPackagePath)
+        Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key FoundApplicationPackage -ArgumentList $newAppPackagePath) -Source 'repository')
 
         $appManifestName = "ApplicationManifest.xml"
         $newAppManifestPath = Join-Path $newAppPackagePath $appManifestName
@@ -26,7 +28,7 @@
         $replaceVersion = ((Get-VstsInput -Name versionBehavior) -eq "Replace")
 
         $versionValue = Get-VstsInput -Name versionSuffix -Require
-        Write-Host (Get-VstsLocString -Key VersionValueLabel -ArgumentList $versionValue)
+        Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key VersionValueLabel -ArgumentList $versionValue) -Source 'repository')
         $versionPrefix = $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion
 
         $newVersion = if ($replaceVersion) { $versionValue } else { $versionPrefix + $versionValue }
@@ -54,9 +56,9 @@
             if ($oldDropLocation -and (Test-Path -LiteralPath $oldDropLocation))
             {
                 # Gather information on the previous application type
-                Write-Host (Get-VstsLocString -Key PreviousBuildLocationLabel -ArgumentList $oldDropLocation)
+                Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key PreviousBuildLocationLabel -ArgumentList $oldDropLocation) -Source 'repository')
 
-                Write-Host (Get-VstsLocString -Key SearchingApplicationType -ArgumentList $appTypeName)
+                Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key SearchingApplicationType -ArgumentList $appTypeName) -Source 'repository')
 
                 # Try and find the old app package path by finding the largest substring of the path that exists in the artifact path
                 $relativePath = $newAppPackagePath
@@ -65,7 +67,7 @@
                 {
                     $relativePath = $relativePath.SubString($pathRoot.Length)
                 }
-                $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar)
+                $relativePath.Trim([System.IO.Path]::DirectorySeparatorChar) | Protect-ExternalOutput -Source 'repository'
                 $oldAppPackagePath = Join-Path $oldDropLocation $relativePath
                 while (!(Test-Path -LiteralPath $oldAppPackagePath))
                 {
@@ -80,7 +82,7 @@
                             break;
                         }
 
-                        Write-Warning (Get-VstsLocString -Key CouldNotFindSubPath -ArgumentList @($newAppPackagePath, $oldDropLocation))
+                        Write-Warning (Get-VstsLocString -Key CouldNotFindSubPath -ArgumentList @((Protect-ExternalOutput -InputObject $newAppPackagePath -Source 'repository'), (Protect-ExternalOutput -InputObject $oldDropLocation -Source 'repository')))
                         $updateAllVersions = $true
                         $oldAppPackagePath = $null
                         break;
@@ -91,7 +93,7 @@
 
                 if ($oldAppPackagePath)
                 {
-                    Write-Host (Get-VstsLocString -Key PreviousPackageLocation -ArgumentList $oldAppPackagePath)
+                    Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key PreviousPackageLocation -ArgumentList $oldAppPackagePath) -Source 'repository')
                     $oldAppManifestPath = Join-Path $oldAppPackagePath $appManifestName
                     if (Test-Path -LiteralPath $oldAppManifestPath)
                     {
@@ -127,7 +129,7 @@
         if ($updateAllVersions)
         {
             # Force update application type version
-            Write-Host (Get-VstsLocString -Key UpdatedApplicationTypeVersion -ArgumentList @($appTypeName, $newVersion))
+            Write-Host (Protect-ExternalOutput -InputObject (Get-VstsLocString -Key UpdatedApplicationTypeVersion -ArgumentList @($appTypeName, $newVersion)) -Source 'repository')
             $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $newVersion
         }
         elseif ((!$replaceVersion -and !$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldAppManifestXml $newAppManifestXml))
@@ -135,13 +137,13 @@
             # Update the application type version if the application manifest has changed for any of the following reasons:
             # 1. The user edited the manifest itself (including changes to the version prefix)
             # 2. At least one of the child service versions was updated in the manifest
-            Write-Host "$logIndent$(Get-VstsLocString -Key AppManifestChanged)"
+            Write-Host (Protect-ExternalOutput -InputObject "$logIndent$(Get-VstsLocString -Key AppManifestChanged)" -Source 'repository')
             $newAppManifestXml.ApplicationManifest.ApplicationTypeVersion = $newVersion
-            Write-Host "$logIndent$(Get-VstsLocString -Key UpdatedApplicationTypeVersionFromPrevious -ArgumentList @($appTypeName,$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion,$newVersion))"
+            Write-Host (Protect-ExternalOutput -InputObject "$logIndent$(Get-VstsLocString -Key UpdatedApplicationTypeVersionFromPrevious -ArgumentList @($appTypeName,$oldAppManifestXml.ApplicationManifest.ApplicationTypeVersion,$newVersion))" -Source 'repository')
         }
         else
         {
-            Write-Host "$logIndent$(Get-VstsLocString -Key NoChanges)"
+            Write-Host (Protect-ExternalOutput -InputObject "$logIndent$(Get-VstsLocString -Key NoChanges)" -Source 'repository')
         }
 
         $newAppManifestXml.Save($newAppManifestPath)
