@@ -21,7 +21,6 @@ tmr.setInput('visibleAzLogin', 'true');
 tmr.setInput('useGlobalConfig', 'true');
 
 process.env['AGENT_TEMPDIRECTORY'] = agentTemp;
-process.env['DISTRIBUTEDTASK_TASKS_AZURECLICREDENTIALFILEISOLATIONENABLED'] = 'true';
 process.env['DISTRIBUTEDTASK_TASKS_ENABLELATEBOUNDIDTOKEN'] = 'false';
 process.env['DISTRIBUTEDTASK_TASKS_USEAZVERSION'] = 'false';
 process.env['DISTRIBUTEDTASK_TASKS_AZURECLIUSEFILEINVOCATION'] = 'false';

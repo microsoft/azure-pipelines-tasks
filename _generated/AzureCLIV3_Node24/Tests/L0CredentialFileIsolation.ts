@@ -5,9 +5,6 @@ import * as vm from 'vm';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { createServicePrincipalCertificate, removeServicePrincipalCertificate } from '../src/AzureCliCredentialFile';
 
-const featureName = 'AzureCLICredentialFileIsolationEnabled';
-const featureEnvironment = 'DISTRIBUTEDTASK_TASKS_AZURECLICREDENTIALFILEISOLATIONENABLED';
-
 // Load the compiled production module with local mocks, without changing require's
 // global cache or allowing the task's automatic runMain to touch the real agent.
 function loadModule(file: string, mocks: { [name: string]: any }, platform = process.platform): any {
@@ -204,24 +201,9 @@ export function runCredentialFileIsolationTests() {
         });
     });
 
-    describe('Service-principal certificate task feature gate', () => {
-        let previousFeature: string;
-
-        beforeEach(() => {
-            previousFeature = process.env[featureEnvironment];
-        });
-
-        afterEach(() => {
-            if (previousFeature === undefined) {
-                delete process.env[featureEnvironment];
-            } else {
-                process.env[featureEnvironment] = previousFeature;
-            }
-        });
-
+    describe('Service-principal certificate task lifecycle', () => {
         const scenarios: Array<{
             failure: string;
-            flipAt?: string;
             cleanupFails?: boolean;
             missingTemp?: boolean;
             refreshLogin?: boolean;
@@ -229,48 +211,37 @@ export function runCredentialFileIsolationTests() {
             { failure: 'none' },
             { failure: 'login' },
             { failure: 'script' },
-            { failure: 'none', flipAt: 'login' },
-            { failure: 'none', flipAt: 'script' },
             { failure: 'none', cleanupFails: true },
             { failure: 'login', cleanupFails: true },
             { failure: 'script', cleanupFails: true },
             { failure: 'none', missingTemp: true },
-            { failure: 'setupAfterLegacy' },
-            { failure: 'none', flipAt: 'script', refreshLogin: true }
+            { failure: 'setupAfterPrevious' },
+            { failure: 'none', refreshLogin: true }
         ];
         for (const scenario of scenarios) {
-            const { failure, flipAt, cleanupFails, missingTemp, refreshLogin } = scenario;
-            it(`preserves positive flag creation and cleanup semantics: ${JSON.stringify(scenario)}`, async () => {
+            const { failure, cleanupFails, missingTemp, refreshLogin } = scenario;
+            it(`preserves creation and cleanup semantics without a feature flag: ${JSON.stringify(scenario)}`, async () => {
                 const agentTemp = path.join(__dirname, 'agent temp');
                 const workingDirectory = path.join(__dirname, 'working directory');
                 const isolatedDirectory = path.join(agentTemp, '.azclitask-credentials-random');
                 const isolatedPath = path.join(isolatedDirectory, 'spnCert.pem');
-                const legacyPath = path.join(missingTemp ? workingDirectory : agentTemp, 'spnCert.pem');
                 const commands: string[] = [];
                 const writes: any[] = [];
                 const creates: any[] = [];
                 const removals: any[] = [];
-                const features: string[] = [];
                 const results: number[] = [];
                 const events: string[] = [];
                 const removedPaths: string[] = [];
                 const warnings: string[] = [];
-                const debugMessages: string[] = [];
                 const cleanupError = new Error('credential cleanup failed');
-                let runFlag: string;
+                let invocation: number;
                 let task: any;
-                const flipFeature = (phase: string) => {
-                    if (flipAt === phase) {
-                        process.env[featureEnvironment] = runFlag === 'true' ? 'false' : 'true';
-                    }
-                };
                 const tool = {
                     arg: () => tool,
                     line: () => tool,
                     on: () => tool,
                     exec: async () => {
                         events.push('script');
-                        flipFeature('script');
                         if (refreshLogin) {
                             await task.loginAzureRM('AzureRM');
                         }
@@ -282,7 +253,7 @@ export function runCredentialFileIsolationTests() {
                 };
                 const scriptType = { getTool: async () => tool, cleanUp: async () => {} };
                 const taskLib = {
-                    debug: (message: string) => debugMessages.push(message),
+                    debug: () => {},
                     warning: (message: string) => warnings.push(message),
                     error: () => {},
                     setSecret: () => {},
@@ -297,12 +268,9 @@ export function runCredentialFileIsolationTests() {
                         }
                     },
                     getBoolFeatureFlag: () => false,
-                    getPipelineFeature: (name: string) => {
-                        features.push(name);
-                        return name === featureName ? tl.getPipelineFeature(name) : false;
-                    },
+                    getPipelineFeature: () => false,
                     getInput: (name: string) => {
-                        if (failure === 'setupAfterLegacy' && runFlag === 'true') {
+                        if (failure === 'setupAfterPrevious' && invocation === 1) {
                             throw new Error('setup failed before certificate creation');
                         }
                         return {
@@ -327,9 +295,6 @@ export function runCredentialFileIsolationTests() {
                     tool: () => tool,
                     execSync: (_command: string, args: string) => {
                         commands.push(args);
-                        if (args.startsWith('login ')) {
-                            flipFeature('login');
-                        }
                         if (args.trim() === 'account clear') {
                             events.push('logout');
                         }
@@ -384,17 +349,11 @@ export function runCredentialFileIsolationTests() {
                         }
                     }
                 };
-                for (const flag of [undefined, 'true', 'false']) {
-                    runFlag = flag;
-                    if (flag === undefined) {
-                        delete process.env[featureEnvironment];
-                    } else {
-                        process.env[featureEnvironment] = flag;
-                    }
-                    commands.length = writes.length = creates.length = removals.length = features.length = results.length = events.length = 0;
-                    removedPaths.length = warnings.length = debugMessages.length = 0;
-                    if (task && failure === 'setupAfterLegacy' && flag === 'true') {
-                        assert.strictEqual(task.cliPasswordPath, legacyPath);
+                for (invocation = 0; invocation < 2; invocation++) {
+                    commands.length = writes.length = creates.length = removals.length = results.length = events.length = 0;
+                    removedPaths.length = warnings.length = 0;
+                    if (task && failure === 'setupAfterPrevious') {
+                        task.cliPasswordPath = isolatedPath;
                         task.cliCredentialDirectory = path.join(agentTemp, 'stale-private-directory');
                     }
                     let completion: Promise<void>;
@@ -405,24 +364,16 @@ export function runCredentialFileIsolationTests() {
                     } else {
                         completion = task.runMain();
                     }
-                    const legacy = flag !== 'true';
-                    if (legacy && cleanupFails) {
-                        await assert.rejects(completion, (error: Error) => error === cleanupError);
-                    } else {
-                        await completion;
-                    }
-                    const expectedPath = legacy ? legacyPath : isolatedPath;
-                    const setupFailure = failure === 'setupAfterLegacy' && !legacy;
-                    const creationFailure = missingTemp && !legacy;
+                    await completion;
+                    const expectedPath = isolatedPath;
+                    const setupFailure = failure === 'setupAfterPrevious' && invocation === 1;
+                    const creationFailure = missingTemp;
                     const noCertificate = setupFailure || creationFailure;
                     const loginCount = refreshLogin ? 2 : 1;
-                    assert.strictEqual(features.filter(name => name === featureName).length, 1,
-                        'read the canonical feature exactly once per invocation, including refreshed login and cleanup');
-                    assert.deepStrictEqual(creates, legacy || setupFailure ? [] :
+                    assert.deepStrictEqual(creates, setupFailure ? [] :
                         Array.from({ length: creationFailure ? 1 : loginCount },
                             () => [missingTemp ? undefined : agentTemp, 'CERTIFICATE']));
-                    assert.deepStrictEqual(writes, legacy ?
-                        Array.from({ length: loginCount }, () => [legacyPath, 'CERTIFICATE']) : []);
+                    assert.deepStrictEqual(writes, []);
                     const passwordOption = path.basename(path.dirname(__dirname)).startsWith('AzureCLIV1')
                         ? `--password="${expectedPath}"` : `--certificate="${expectedPath}"`;
                     const logins = commands.filter(command => command.startsWith('login '));
@@ -431,23 +382,18 @@ export function runCredentialFileIsolationTests() {
                         assert(login.includes(passwordOption), `login must use the selected certificate: ${login}`);
                         assert(login.includes('-u "spId"') && login.includes('--tenant "tenantId"'));
                     }
-                    assert.deepStrictEqual(removals, legacy ? [] :
+                    assert.deepStrictEqual(removals,
                         [[noCertificate ? null : isolatedPath, noCertificate ? null : isolatedDirectory]]);
-                    assert.deepStrictEqual(removedPaths, noCertificate ? [] : [legacy ? legacyPath : isolatedDirectory]);
-                    assert.strictEqual(debugMessages.includes('Removing spn certificate file'), legacy);
-                    assert.strictEqual(task.cliPasswordPath, legacy ? legacyPath : null,
-                        'only the enabled branch may clear the original certificate field');
+                    assert.deepStrictEqual(removedPaths, noCertificate ? [] : [isolatedDirectory]);
+                    assert.strictEqual(task.cliPasswordPath, null);
                     assert.strictEqual(task.cliCredentialDirectory, null);
-                    assert.strictEqual(warnings.length, !legacy && cleanupFails ? 1 : 0);
-                    if (!legacy && cleanupFails) {
+                    assert.strictEqual(warnings.length, cleanupFails ? 1 : 0);
+                    if (cleanupFails) {
                         assert(/certificate/i.test(warnings[0]));
                     }
                     const expectedResult = noCertificate || failure === 'login' || failure === 'script' ? 1 : 0;
-                    assert.deepStrictEqual(results, legacy && cleanupFails ? [] : [expectedResult],
-                        'enabled cleanup must preserve the primary outcome; original cleanup failures still reject');
-                    if (legacy && cleanupFails) {
-                        assert(!events.includes('logout'), 'original cleanup failure interrupts the remaining finally block');
-                    } else if (!noCertificate && failure !== 'login') {
+                    assert.deepStrictEqual(results, [expectedResult], 'cleanup must preserve the primary outcome');
+                    if (!noCertificate && failure !== 'login') {
                         assert(events.includes('script'));
                         assert(events.indexOf('logout') > events.indexOf('cleanup'), 'cleanup must not prevent logout');
                     } else {
