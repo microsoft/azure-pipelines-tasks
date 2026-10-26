@@ -167,7 +167,8 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         it('accepts a value-consuming option whose separate-token value merely looks like --binary-mode', () => {
             for (const additionalArguments of [
                 '--prompt --binary-mode',
-                '--prompt "--skip-binary-mode"'
+                '--prompt "--skip-binary-mode"',
+                '--host --binary-mode=0'
             ]) {
                 assert.doesNotThrow(() => createClient(additionalArguments));
             }

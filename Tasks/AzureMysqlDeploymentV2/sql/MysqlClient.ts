@@ -25,13 +25,13 @@ export class MysqlClient implements ISqlClient {
 
     private static readonly VALUE_CONSUMING_OPTIONS = new Set([
         '--bind-address', '--character-sets-dir', '--connect-timeout', '--database',
-        '--default-auth', '--default-character-set', '--defaults-extra-file', '--defaults-file',
-        '--defaults-group-suffix', '--delimiter', '--execute', '--histignore', '--host',
-        '--init-command', '--login-path', '--max-allowed-packet', '--max-join-size',
+        '--default-auth', '--default-character-set',
+        '--delimiter', '--execute', '--histignore', '--host',
+        '--init-command', '--max-allowed-packet', '--max-join-size',
         '--net-buffer-length', '--plugin-dir', '--port', '--prompt', '--protocol',
         '--select-limit', '--server-public-key-path', '--shared-memory-base-name', '--socket',
         '--ssl-ca', '--ssl-capath', '--ssl-cert', '--ssl-cipher', '--ssl-crl', '--ssl-crlpath',
-        '--ssl-key', '--ssl-mode', '--ssl-fips-mode', '--tls-version', '--user'
+        '--ssl-key', '--ssl-mode', '--tls-version', '--user'
     ]);
 
     private static readonly SHORT_VALUE_CONSUMING_OPTIONS = new Set(['D', 'e', 'h', 'P', 'S', 'u']);
@@ -93,7 +93,7 @@ export class MysqlClient implements ISqlClient {
             if (token.includes('=')) {
                 return false;
             }
-            let optionName = token.replace(/_/g, '-').toLowerCase();
+            let optionName = token.replace(/_/g, '-');
             let modifier = '';
             while (!MysqlClient.VALUE_CONSUMING_OPTIONS.has(optionName)) {
                 const match = optionName.match(/^--(skip|disable|enable|maximum|loose)-(.+)$/);
@@ -102,6 +102,10 @@ export class MysqlClient implements ISqlClient {
                 }
                 modifier = match[1];
                 optionName = '--' + match[2];
+            }
+            // This option is absent outside Windows; an unknown loose option consumes no value.
+            if (optionName === '--shared-memory-base-name' && process.platform !== 'win32') {
+                return false;
             }
             // The innermost modifier controls whether mysql supplies an implicit value.
             return modifier !== 'skip' && modifier !== 'disable' && modifier !== 'enable';
@@ -204,10 +208,10 @@ export class MysqlClient implements ISqlClient {
      * Execute Mysql script
      */
     public async executeSqlCommand() : Promise<number> {
-        let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
-        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry);
-
         if (this._hardeningEnabled) {
+            let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
+            telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry);
+
             let args = this._buildConnectionArgs();
             if (this._azureMysqlTaskParameter.getDatabaseName()) {
                 // Creating database if it doesn't exist
@@ -221,6 +225,8 @@ export class MysqlClient implements ISqlClient {
         }
 
         let argument: string = this._getArgumentString() +" "+ this._getAdditionalArgument();
+        let additionalArgumentTelemtry = {additionalArguments: Utility.getAdditionalArgumentForTelemtry(this._getAdditionalArgument())};
+        telemetry.emitTelemetry('TaskHub', 'AzureMysqlDeployment', additionalArgumentTelemtry);
         if(this._azureMysqlTaskParameter.getDatabaseName()){
             // Creating database if it doesn't exist 
             await this._executeSqlScript(argument + this._createDatabaseScriptIfItDoesnotExist());
@@ -253,7 +259,7 @@ export class MysqlClient implements ISqlClient {
         }
         return this._executeSqlScriptFromFile(argument);
     }
-    
+
     private async _executeSqlScript(argument: string): Promise<number> {
         task.debug('Started execution of mysql script');
         const resultCode = await task.exec(this._toolPath, Utility.argStringToArray(argument));
@@ -263,7 +269,7 @@ export class MysqlClient implements ISqlClient {
         }
         throw new Error(task.loc("SqlExecutionException", resultCode));
     }
-    
+
     /**
      * Execute SQL script from file by piping file content via stdin.
      * Uses this._spawn (injectable for testing).
