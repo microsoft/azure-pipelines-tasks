@@ -1,5 +1,6 @@
 import fs = require('fs');
 import path = require('path');
+import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 import { RetryOptions, RetryHelper } from './retrylogichelper'; 
 
@@ -13,7 +14,7 @@ function displayTimestampChangeResults(
     err: NodeJS.ErrnoException
 ) {
     if (err) {
-        console.warn(`Problem applying the timestamp: ${err}`);
+        tl.writeExternalOutput(`Problem applying the timestamp: ${err}` + os.EOL, { source: 'repository', destination: process.stderr });
     } else {
         console.log(`Timestamp preserved successfully - access time: ${fileStats.atime}, modified time: ${fileStats.mtime}`)
     }
@@ -30,7 +31,7 @@ function makeDirP(targetFolder: string, ignoreErrors: boolean): void {
         tl.mkdirP(targetFolder);
     } catch (err) {
         if (ignoreErrors) {
-            console.log(`Unable to create target folder (${targetFolder}): ${err}. Ignoring this as error since 'ignoreErrors' is true.`);
+            tl.writeExternalOutput(`Unable to create target folder (${targetFolder}): ${err}. Ignoring this as error since 'ignoreErrors' is true.` + os.EOL, { source: 'repository' });
         } else {
             throw err;
         }
@@ -198,9 +199,9 @@ async function main(): Promise<void> {
 
                 if (!overWrite) {
                     if (targetStats) { // exists, skip
-                        console.log(tl.loc('FileAlreadyExistAt', file, targetPath));
+                        tl.writeExternalOutput(tl.loc('FileAlreadyExistAt', file, targetPath) + os.EOL, { source: 'repository' });
                     } else { // copy
-                        console.log(tl.loc('CopyingTo', file, targetPath));
+                        tl.writeExternalOutput(tl.loc('CopyingTo', file, targetPath) + os.EOL, { source: 'repository' });
                         await retryHelper.RunWithRetry(
                             () => tl.cp(file, targetPath),
                             `copy ${file} to ${targetPath}`
@@ -215,12 +216,12 @@ async function main(): Promise<void> {
                                     displayTimestampChangeResults(fileStats, err);
                                 });
                             } catch (err) {
-                                console.warn(`Problem preserving the timestamp: ${err}`)
+                                tl.writeExternalOutput(`Problem preserving the timestamp: ${err}` + os.EOL, { source: 'repository', destination: process.stderr });
                             }
                         }
                     }
                 } else { // copy
-                    console.log(tl.loc('CopyingTo', file, targetPath));
+                    tl.writeExternalOutput(tl.loc('CopyingTo', file, targetPath) + os.EOL, { source: 'repository' });
                     if (process.platform == 'win32' && targetStats && (targetStats.mode & 146) != 146) {
                         // The readonly attribute can be interpreted by performing a bitwise-AND operation on
                         // "fs.Stats.mode" and the integer 146. The integer 146 represents "-w--w--w-" or (128 + 16 + 2),
@@ -259,7 +260,7 @@ async function main(): Promise<void> {
                                 displayTimestampChangeResults(fileStats, err);
                             });
                         } catch (err) {
-                            console.warn(`Problem preserving the timestamp: ${err}`)
+                            tl.writeExternalOutput(`Problem preserving the timestamp: ${err}` + os.EOL, { source: 'repository', destination: process.stderr });
                         }
                     }
                 }
