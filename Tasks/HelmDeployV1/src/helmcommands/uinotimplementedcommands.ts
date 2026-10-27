@@ -10,7 +10,8 @@ export async function addArguments(helmCli: helmcli) : Promise<void> {
     var enableTls = tl.getBoolInput("enableTls", false);
 
     if(namespace) {
-        helmCli.addArgument("--namespace ".concat(namespace));
+        helmCli.addSingleArgument("--namespace");
+        helmCli.addSingleArgument(namespace);
     }
 
     if(enableTls) {

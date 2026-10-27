@@ -7,5 +7,5 @@ export async function addArguments(helmCli: helmcli) : Promise<void>  {
 
     var chartName = tl.getInput("chartName", true);
 
-    helmCli.addArgument(chartName);
+    helmCli.addSingleArgument(chartName);
 }

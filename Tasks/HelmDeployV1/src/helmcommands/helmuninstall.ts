@@ -8,10 +8,11 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     var namespace = tl.getInput("namespace" , false);
     var argumentsInput = tl.getInput("arguments", false);
 
-    helmCli.addArgument(releaseName);
+    helmCli.addSingleArgument(releaseName);
 
     if (namespace) {
-        helmCli.addArgument("--namespace ".concat(namespace));
+        helmCli.addSingleArgument("--namespace");
+        helmCli.addSingleArgument(namespace);
     }
 
     if (argumentsInput) {

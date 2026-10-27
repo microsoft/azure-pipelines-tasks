@@ -31,9 +31,9 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
  
     helmCli.addArgument("login");
-    helmCli.addArgument(acr);
+    helmCli.addSingleArgument(acr);
     helmCli.addArgument("--username");
-    helmCli.addArgument(user);
+    helmCli.addSingleArgument(user);
     helmCli.addArgument("--password")
-    helmCli.addArgument(password);
+    helmCli.addSingleArgument(password);
 }

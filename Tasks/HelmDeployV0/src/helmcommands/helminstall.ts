@@ -33,16 +33,18 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     var version = tl.getInput('version', false);
 
     if (namespace) {
-        helmCli.addArgument("--namespace ".concat(namespace));
+        helmCli.addSingleArgument("--namespace");
+        helmCli.addSingleArgument(namespace);
     }
 
     if (valueFile && valueFile != rootFolder) {
-        helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
+        helmCli.addSingleArgument("--values");
+        helmCli.addSingleArgument(helmutil.resolvePath(valueFile));
     }
 
     if (overrideValues) {
-        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
+        helmCli.addSingleArgument("--set");
+        helmCli.addSingleArgument(helmutil.replaceNewlinesWithCommas(overrideValues));
     }
 
     if (updatedependency) {
@@ -52,14 +54,15 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     //Version check for Helm, as --name flag with install is no longer supported in Helm 3
     if (helmCli.isHelmV3orHigher()) {
         if (releaseName) {
-            helmCli.addArgument(releaseName);
+            helmCli.addSingleArgument(releaseName);
         }
         else {
             helmCli.addArgument('--generate-name');
         }
     }
     else if (releaseName) {
-        helmCli.addArgument("--name ".concat(releaseName));
+        helmCli.addSingleArgument("--name");
+        helmCli.addSingleArgument(releaseName);
     }
 
     if (waitForExecution) {
@@ -76,18 +79,20 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
 
     if (chartType === "Name") {
         var chartName = tl.getInput("chartName", true);
-        helmCli.addArgument(chartName);
+        helmCli.addSingleArgument(chartName);
 
     }
     else {
         var chartPath = tl.getInput("chartPath", true);
-        helmCli.addArgument("\"" + helmutil.resolvePath(chartPath) + "\"");
+        helmCli.addSingleArgument(helmutil.resolvePath(chartPath));
     }
 
     if (version) {
-        if (semver.valid(version))
-            helmCli.addArgument("--version ".concat(version));
-        else
+        if (semver.valid(version)) {
+            helmCli.addSingleArgument("--version");
+            helmCli.addSingleArgument(version);
+        } else {
             console.log("The given version " + version + " is not valid. Running the helm install command with latest version");
+        }
     }
 }

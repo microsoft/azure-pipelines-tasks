@@ -8,7 +8,8 @@ export function addArguments(helmCli: helmcli) : void {
     var debugMode = tl.getVariable('system.debug');
 
     if(tillernamespace) {
-        helmCli.addArgument("--tiller-namespace ".concat(tillernamespace));
+        helmCli.addSingleArgument("--tiller-namespace");
+        helmCli.addSingleArgument(tillernamespace);
     }
 
     if(debugMode === 'true') {

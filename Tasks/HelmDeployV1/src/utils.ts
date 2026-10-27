@@ -69,9 +69,11 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.resetArguments();
     helmCli.setCommand('get');
     helmCli.addArgument('manifest');
-    helmCli.addArgument(releaseName);
-    if (namespace)
-        helmCli.addArgument('--namespace '.concat(namespace));
+    helmCli.addSingleArgument(releaseName);
+    if (namespace) {
+        helmCli.addSingleArgument('--namespace');
+        helmCli.addSingleArgument(namespace);
+    }
 
     const execResult = helmCli.execHelmCommand(true);
 
@@ -96,10 +98,12 @@ export function getHelmPathForACR() {
 }
 
 export function addVersion(helmCli: helmcli, version: string) {
-    if (semver.valid(version))
-        helmCli.addArgument("--version ".concat(version));
-    else
+    if (semver.valid(version)) {
+        helmCli.addSingleArgument("--version");
+        helmCli.addSingleArgument(version);
+    } else {
         console.log("The given version is not valid. Running the helm install command with latest version");
+    }
 }
 
 export function replaceNewlinesWithCommas(overrideValues: string): string {

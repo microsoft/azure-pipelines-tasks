@@ -29,7 +29,8 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (namespace) {
-        helmCli.addArgument("--namespace ".concat(namespace));
+        helmCli.addSingleArgument("--namespace");
+        helmCli.addSingleArgument(namespace);
     }
 
     if (install) {
@@ -49,12 +50,13 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (valueFile && valueFile != rootFolder) {
-        helmCli.addArgument("--values");
-        helmCli.addArgument("\"" + helmutil.resolvePath(valueFile) + "\"");
+        helmCli.addSingleArgument("--values");
+        helmCli.addSingleArgument(helmutil.resolvePath(valueFile));
     }
 
     if (overrideValues) {
-        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
+        helmCli.addSingleArgument("--set");
+        helmCli.addSingleArgument(helmutil.replaceNewlinesWithCommas(overrideValues));
     }
 
     if (waitForExecution) {
@@ -70,22 +72,24 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (releaseName) {
-        helmCli.addArgument(releaseName);
+        helmCli.addSingleArgument(releaseName);
     }
 
     if (chartType === "Name") {
         var chartName = tl.getInput("chartName", true);
-        helmCli.addArgument(chartName);
+        helmCli.addSingleArgument(chartName);
     }
     else {
         var chartPath = tl.getInput("chartPath", true);
-        helmCli.addArgument("\"" + helmutil.resolvePath(chartPath) + "\"");
+        helmCli.addSingleArgument(helmutil.resolvePath(chartPath));
     }
 
     if (version) {
-        if (semver.valid(version))
-            helmCli.addArgument("--version ".concat(version));
-        else
+        if (semver.valid(version)) {
+            helmCli.addSingleArgument("--version");
+            helmCli.addSingleArgument(version);
+        } else {
             tl.debug("The given version " + version + " is not valid. Running the helm upgrade command with latest version");
+        }
     }
 }
