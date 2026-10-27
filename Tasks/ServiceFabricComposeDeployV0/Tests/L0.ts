@@ -7,6 +7,7 @@ import assert = require('assert');
 import fs = require('fs');
 var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
+import { execFile } from 'child_process';
 var psr = null;
 
 describe('ServiceFabricComposeDeploy Suite', function () {
@@ -35,6 +36,21 @@ describe('ServiceFabricComposeDeploy Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('reads the diagnostics feature through the real packaged SDK', async () => {
+            const output = await new Promise<string>((resolve, reject) => {
+                execFile('powershell.exe', [
+                    '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass',
+                    '-File', path.join(__dirname, 'PackagedPipelineFeature.ps1')
+                ], { encoding: 'utf8', timeout: 20000 }, (error, stdout, stderr) => {
+                    if (error) {
+                        reject(new Error(`${error.message}\n${stdout}\n${stderr}`));
+                    } else {
+                        resolve(stdout.toString());
+                    }
+                });
+            });
+            assert(output.indexOf('packaged-pipeline-feature-verified') >= 0);
+        });
         it('formats filename diagnostics without changing paths', done => {
             psr.run(path.join(__dirname, 'FilenameDiagnostics.ps1'), done);
         });

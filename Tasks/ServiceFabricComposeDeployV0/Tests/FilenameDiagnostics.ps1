@@ -6,8 +6,9 @@ param()
 Register-Mock Find-VstsFiles { $filePath }
 Register-Mock Assert-VstsPath
 Register-Mock Write-Host { $script:messages += $args[0] }
-Register-Mock Get-VstsPipelineFeature {
-    Assert-AreEqual 'EnableVsoCommandBlockingRMTasks' $args[1]
+Register-Mock Get-VstsTaskVariable {
+    Assert-AreEqual 'DistributedTask.Tasks.EnableVsoCommandBlockingRMTasks' $args[1]
+    Assert-AreEqual '-AsBool' $args[2]
     $featureValue -eq 'true'
 }
 
