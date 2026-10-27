@@ -49,7 +49,8 @@ function Get-SinglePathOfType
     else
     {
         Assert-VstsPath -LiteralPath $path -PathType $PathType
-        $vsoCommandMode = if (Get-VstsPipelineFeature -FeatureName 'EnableVsoCommandBlockingRMTasks') {
+        # The packaged SDK predates Get-VstsPipelineFeature; read the same pipeline variable.
+        $vsoCommandMode = if (Get-VstsTaskVariable -Name 'DistributedTask.Tasks.EnableVsoCommandBlockingRMTasks' -AsBool) {
             'blockAndTelemetry'
         } else {
             'telemetryOnly'

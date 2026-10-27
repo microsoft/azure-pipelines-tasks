@@ -16,10 +16,11 @@ and deployment arguments and task-owned command prefixes remain unchanged.
 ServiceFabricUpdateManifestsV2 retains the always-blocking calls and command
 restrictions already on master. Its diagnostics are not gated by this feature.
 
-The shared implementation and encoding/mode tests are aligned with
-microsoft/azure-pipelines-tasks#22726 at
-`78e06234251ed636fd60aba0d8760d08fa43b7d7`. Coordinate the shared module with that
-PR before merging; preserve existing consumer protection and version updates.
+The shared implementation and encoding/mode tests preserve the upstream changes
+from microsoft/azure-pipelines-tasks#22726, including existing consumer protection
+and version updates.
 
-FileTransformV1/V2 alignment remains deferred until common-package PR683 is published;
-no unpublished package version is referenced here.
+FileTransformV1/V2 consume published `azure-pipelines-tasks-webdeployment-common`
+4.282.1 or later and explicitly pass the same feature-selected mode on folder and
+archive paths. The XDT compatibility gate remains independent and unchanged.
+Inherited XDT tool command echo is outside this filename diagnostics scope.
