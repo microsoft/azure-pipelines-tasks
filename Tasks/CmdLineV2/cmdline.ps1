@@ -51,6 +51,15 @@ PROCESS {
 
         # Prepare the external command values.
         $cmdPath = $env:ComSpec
+        
+        # Guard against empty path value.
+        if ([string]::IsNullOrWhiteSpace($cmdPath)) {
+            throw (Get-VstsLocString -Key 'PS_GuardAgainstComSpecNotSet')
+        }
+        if (!(Test-Path -LiteralPath $cmdPath -PathType Leaf)) {
+            throw (Get-VstsLocString -Key 'PS_GuardAgainstComSpecInvalidPath' -ArgumentList $cmdPath)
+        }
+
         Assert-VstsPath -LiteralPath $cmdPath -PathType Leaf
         # Command line switches:
         # /D     Disable execution of AutoRun commands from registry.
