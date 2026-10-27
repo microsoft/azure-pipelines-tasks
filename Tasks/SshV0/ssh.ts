@@ -159,8 +159,6 @@ async function run() {
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
                 if (args) {
-                    let resultArgs = args;
-
                     const featureFlags = {
                         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
                         activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
@@ -168,9 +166,14 @@ async function run() {
                     };
 
                     if (featureFlags.activate || featureFlags.audit || featureFlags.telemetry) {
+                        const targetIsPowerShell = tl.getPipelineFeature('EnablePowerShellArgQuoting')
+                            && await isTargetPowerShell(sshClientConnection);
                         const [sanitizedArgs, telemetry] = sanitizeArgs(
                             args,
-                            {
+                            targetIsPowerShell ? {
+                                argsSplitSymbols: '``',
+                                saniziteRegExp: new RegExp('(?<!`)([^a-zA-Z0-9\\\\` _\'"\\-=\\/:.])', 'g')
+                            } : {
                                 argsSplitSymbols: '\\\\',
                                 saniziteRegExp: new RegExp(`(?<!\\\\)([^a-zA-Z0-9\\\\ _'"\\-=\\/:.])`, 'g')
                             }
@@ -189,7 +192,7 @@ async function run() {
                         }
                     }
 
-                    runScriptCmd = runScriptCmd.concat(' ' + resultArgs);
+                    runScriptCmd = runScriptCmd.concat(' ' + args);
                 }
 
                 //setup command to clean up script file
@@ -263,4 +266,33 @@ function getServerPort(sshEndpoint: string): number {
     }
 
     return port;
+}
+
+/**
+ * Checks if the remote shell is PowerShell by running Get-Host, a PowerShell-only cmdlet.
+ */
+async function isTargetPowerShell(sshClient: any): Promise<boolean> {
+    let exitCode: number = null;
+    try {
+        await new Promise<void>((resolve, reject) => {
+            sshClient.exec('Get-Host | Out-Null', (err, stream) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                stream.resume();
+                stream.stderr.resume();
+                stream.on('close', (code) => {
+                    tl.debug(`PowerShell detection probe: stream closed with code ${code}.`);
+                    exitCode = code;
+                    resolve();
+                });
+            });
+        });
+    } catch (err) {
+        tl.debug(`PowerShell detection probe failed: ${err}`);
+        return false;
+    }
+
+    return exitCode === 0;
 }
