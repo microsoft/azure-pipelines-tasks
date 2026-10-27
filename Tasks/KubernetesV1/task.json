@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 2
   },
   "demands": [],
   "releaseNotes": "What's new in Version 1.0:<br/>&nbsp;Added new service connection type input for easy selection of Azure AKS cluster.<br/>&nbsp;Replaced output variable input with output variables section that we had added in all tasks.",
@@ -484,6 +484,8 @@
     "DownloadStableVersionFailed": "Can not download kubernetes stable version file from %s. Falling back to %s",
     "UsingLatestStableVersion": "Invalid version 1.7 specified in Version Spec input. Using latest stable version instead. Check for correct versions https://github.com/kubernetes/kubernetes/releases",
     "NotAValidVersion": "Not a valid version, the available versions are: %s",
+    "InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+    "InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
     "ConfigurationFileNotFound": "No configuration file matching %s was found.",
     "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
     "OutputVariableDataSizeExceeded": "Output variable not set as kubectl command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s",

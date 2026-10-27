@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
-    "Patch": 1
+    "Minor": 282,
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -88,10 +88,13 @@
     "AuthTelemetry": "ms-resource:loc.messages.AuthTelemetry",
     "FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.FailedToGetServiceConnectionAuth",
     "MissingRegistryNameOrServiceConnection": "ms-resource:loc.messages.MissingRegistryNameOrServiceConnection",
-    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound"
+    "RegistryNotFound": "ms-resource:loc.messages.RegistryNotFound",
+    "RegistryEnvKeyCollision": "ms-resource:loc.messages.RegistryEnvKeyCollision",
+    "SkippingNonAzureDevOpsRegistry": "ms-resource:loc.messages.SkippingNonAzureDevOpsRegistry",
+    "RegistryFeedVerificationFailed": "ms-resource:loc.messages.RegistryFeedVerificationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.280.0",
-    "wif_242": "0.280.1"
+    "Default": "0.282.4",
+    "wif_242": "0.282.5"
   }
 }

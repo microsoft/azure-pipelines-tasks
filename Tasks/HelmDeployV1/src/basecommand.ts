@@ -1,18 +1,21 @@
-import path = require("path");
 import tl = require("azure-pipelines-task-lib/task");
-import fs = require("fs");
-import util = require("util");
-import os = require("os");
 import tr = require('azure-pipelines-task-lib/toolrunner');
 
 abstract class basecommand {
     private toolPath: string;
+    private readonly externalOutputOptions: tl.ExternalOutputOptions;
     abstract getTool(): string;
     abstract login(): void;
     abstract logout(): void;
 
     constructor(required: boolean) {
         this.toolPath = tl.which(this.getTool(), required);
+        this.externalOutputOptions = {
+            source: 'childProcess',
+            vsoCommandMode: tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks')
+                ? 'blockAndTelemetry'
+                : 'telemetryOnly'
+        };
     }
 
     public getToolPath(): string {
@@ -34,14 +37,14 @@ abstract class basecommand {
             errlines.push(line);
         });
 
-        return command.exec(options).fail(error => {
-            errlines.forEach(line => tl.error(line));
+        return command.exec({ ...options, externalOutput: this.externalOutputOptions }).fail(error => {
+            errlines.forEach(line => tl.errorExternalOutput(line, this.externalOutputOptions));
             throw error;
         });
     }
 
     public execCommandSync(command: tr.ToolRunner, options?: tr.IExecOptions): tr.IExecSyncResult {
-        return command.execSync(options);
+        return command.execSync({ ...options, externalOutput: this.externalOutputOptions });
     }
 
     public IsInstalled(): boolean {
@@ -52,11 +55,10 @@ abstract class basecommand {
         if (execResult.code != tl.TaskResult.Succeeded) {
 
             tl.debug('execResult: ' + JSON.stringify(execResult));
-            if(!!execResult.error || !!execResult.stderr) {
+            if (!!execResult.error || !!execResult.stderr) {
                 tl.setResult(tl.TaskResult.Failed, execResult.stderr);
             }
-            else
-            {
+            else {
                 tl.setResult(tl.TaskResult.Failed, "");
             }
         }

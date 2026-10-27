@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as npmutil from 'azure-pipelines-tasks-packaging-common/npm/npmutil';
 import * as httpClient from 'typed-rest-client/HttpClient';
+import { getValidatedNpmPackageSpec } from './npmarguments';
 
 import { NpmToolRunner } from './npmtoolrunner';
 
@@ -23,6 +24,9 @@ export async function run(): Promise<void> {
 
         let packageNameInput = tl.getInputRequired("packageName");
         let packageVersion = tl.getInputRequired("version");
+        // Enabled by default; the feature flag acts only as a kill switch when explicitly set to false.
+        const isArgumentIsolationFixEnabled
+            = (tl.getVariable('DistributedTask.Tasks.DownloadGithubNpmPackageV1ArgumentIsolationFixEnabled') || '').toLowerCase() !== 'false';
 
         if (!packageNameInput || packageNameInput.indexOf("/") < 0) {
             throw Error(tl.loc('Error_InvalidPackageName'));
@@ -37,6 +41,12 @@ export async function run(): Promise<void> {
             tl.setSecret(token);
         }
 
+        let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
+        let packageSpec: string | undefined;
+        if (isArgumentIsolationFixEnabled) {
+            packageSpec = getValidatedNpmPackageSpec(packageName, packageVersion);
+        }
+
         const url = "https://npm.pkg.github.com/" + owner;
         let authDetails = "//npm.pkg.github.com/:_authToken=" + token;
         tl.debug(tl.loc('UsingRegistry', url));
@@ -46,18 +56,14 @@ export async function run(): Promise<void> {
         npmutil.appendToNpmrc(npmrc, `${authDetails}\n`);
 
         const packageDownloadPath = getProjectPath(packageNameInput);
-
         const npm = new NpmToolRunner(path.dirname(npmrc), npmrc, false);
-        let packageName = owner.toLowerCase() + "/" + packageNameInput.toLowerCase();
-        let command = "";
-
-        if (packageVersion == "" || packageVersion == undefined) {
-            command = "install --prefix " + packageDownloadPath + " @" + packageName;
+        if (packageSpec !== undefined) {
+            npm.arg(['install', '--prefix', packageDownloadPath, packageSpec]);
         } else {
-            command = "install --prefix " + packageDownloadPath + " @" + packageName + "@" + packageVersion;
+            const legacyPackageSpec = `@${packageName}${packageVersion ? `@${packageVersion}` : ''}`;
+            npm.line(`install --prefix ${packageDownloadPath} ${legacyPackageSpec}`);
         }
 
-        npm.line(command);
         npm.execSync();
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, "Some error occurred:" + err);

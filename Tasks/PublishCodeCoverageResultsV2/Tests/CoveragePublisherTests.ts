@@ -1,7 +1,10 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import * as mocker from 'azure-pipelines-task-lib/lib-mocker';
+import { ExternalOutputOptions } from 'azure-pipelines-task-lib/externaloutput';
+import { createExternalOutputStream } from 'azure-pipelines-task-lib/task';
 import { IExecOptions, ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { Writable } from 'stream';
 
 describe('Coverage publisher containment launch', function () {
     let publisher: typeof import('coveragepublisher/coveragepublisher');
@@ -15,6 +18,15 @@ describe('Coverage publisher containment launch', function () {
     let execError: Error;
     let finishExecution: () => void;
     let execution: Promise<number>;
+    let stdoutChunks: Buffer[];
+    let stderrChunks: Buffer[];
+    let externalOutputStreams: {
+        source: string;
+        destination: NodeJS.WritableStream;
+        output: Buffer[];
+        ended: boolean;
+        stream: NodeJS.WritableStream;
+    }[];
     const workspace = path.join(process.cwd(), 'workspace with spaces') + path.sep;
     const sources = path.join(process.cwd(), 'external sources');
 
@@ -27,6 +39,9 @@ describe('Coverage publisher containment launch', function () {
         directoryExists = true;
         isDirectory = true;
         execError = undefined;
+        stdoutChunks = undefined;
+        stderrChunks = undefined;
+        externalOutputStreams = [];
         execution = new Promise<number>(resolve => {
             finishExecution = () => resolve(0);
         });
@@ -39,6 +54,34 @@ describe('Coverage publisher containment launch', function () {
             which: () => 'dotnet',
             debug: () => {},
             setResourcePath: (resourcePath: string) => resourcePaths.push(resourcePath),
+            createExternalOutputStream: (externalOutputOptions: ExternalOutputOptions & {
+                destination: NodeJS.WritableStream;
+            }) => {
+                const externalOutputStream = {
+                    ...externalOutputOptions,
+                    output: [] as Buffer[],
+                    ended: false,
+                    stream: undefined as NodeJS.WritableStream
+                };
+                const filteredStream = createExternalOutputStream({
+                    source: externalOutputOptions.source,
+                    destination: new Writable({
+                        write: (data: Buffer, encoding: string, callback: () => void) => {
+                            externalOutputStream.output.push(data);
+                            callback();
+                        }
+                    })
+                });
+                externalOutputStream.stream = {
+                    write: (data: Buffer) => filteredStream.write(data),
+                    end: () => {
+                        externalOutputStream.ended = true;
+                        filteredStream.end();
+                    }
+                } as NodeJS.WritableStream;
+                externalOutputStreams.push(externalOutputStream);
+                return externalOutputStream.stream;
+            },
             loc: (key: string, ...values: string[]) => {
                 assert.strictEqual(path.basename(resourcePaths[0]), 'module.json');
                 return [key, ...values].join(': ');
@@ -49,6 +92,12 @@ describe('Coverage publisher containment launch', function () {
                 arg: (value: string) => args.push(value),
                 exec: (value: IExecOptions) => {
                     options = value;
+                    for (const data of stdoutChunks || []) {
+                        options.outStream.write(data);
+                    }
+                    for (const data of stderrChunks || []) {
+                        options.errStream.write(data);
+                    }
                     return execError ? Promise.reject(execError) : execution;
                 }
             })
@@ -96,6 +145,78 @@ describe('Coverage publisher containment launch', function () {
         await runner.exec({ silent: true, windowsVerbatimArguments: options.windowsVerbatimArguments });
 
         assert.deepStrictEqual(JSON.parse(output), args);
+    });
+
+    for (const containmentEnabled of [false, true]) {
+        it(`blocks split logging commands with containment ${containmentEnabled ? 'on' : 'off'}`, async function () {
+            stdoutChunks = [
+                Buffer.from('coverage ##v'),
+                Buffer.from('so[task.setvariable variable=PATH]untrusted\n##'),
+                Buffer.from('vso[task.prependpath]untrusted\nfinished ##')
+            ];
+            stderrChunks = [
+                Buffer.from('error #'),
+                Buffer.from('#vso[task.setvariable variable=NODE_OPTIONS]untrusted\n')
+            ];
+            finishExecution();
+            await publisher.PublishCodeCoverage(['coverage.xml'], sources, true, [workspace], containmentEnabled, true);
+            await new Promise<void>(resolve => setImmediate(resolve));
+
+            assert.strictEqual(externalOutputStreams.length, 2);
+            assert.strictEqual(externalOutputStreams[0].source, 'repository');
+            assert.strictEqual(externalOutputStreams[0].destination, process.stdout);
+            assert.strictEqual(options.outStream, externalOutputStreams[0].stream);
+            assert.strictEqual(externalOutputStreams[1].source, 'repository');
+            assert.strictEqual(externalOutputStreams[1].destination, process.stderr);
+            assert.strictEqual(
+                Buffer.concat(externalOutputStreams[0].output).toString(),
+                'coverage ##_vso[task.setvariable variable=PATH]untrusted\n##_vso[task.prependpath]untrusted\nfinished ##');
+            assert.strictEqual(
+                Buffer.concat(externalOutputStreams[1].output).toString(),
+                'error ##_vso[task.setvariable variable=NODE_OPTIONS]untrusted\n');
+            assert(externalOutputStreams.every(stream => stream.ended), 'filters must flush trailing bytes');
+            assert(failures.length > 0, 'stderr must still fail the task');
+        });
+    }
+
+    for (const { filteringEnabled, containmentEnabled } of [
+        { filteringEnabled: undefined, containmentEnabled: false },
+        { filteringEnabled: false, containmentEnabled: true }
+    ]) {
+        it(`preserves legacy output with filtering ${filteringEnabled === undefined ? 'unset' : 'off'} and containment ${containmentEnabled}`, async function () {
+            const stderrMessages: string[] = [];
+            const originalConsoleError = console.error;
+            console.error = (message: string) => { stderrMessages.push(message); };
+            try {
+                stderrChunks = [Buffer.from('publisher diagnostic')];
+                finishExecution();
+                await publisher.PublishCodeCoverage(['coverage.xml'], sources, true, [workspace], containmentEnabled, filteringEnabled);
+
+                assert.strictEqual(externalOutputStreams.length, 0, 'disabled filtering must not create filter streams');
+                assert.strictEqual(options.outStream, process.stdout, 'stdout should use the legacy destination');
+                assert.deepStrictEqual(stderrMessages, ['publisher diagnostic']);
+                assert.deepStrictEqual(failures, [undefined], 'stderr must still fail the task');
+                assert.strictEqual(options.ignoreReturnCode, false);
+                assert.strictEqual(options.failOnStdErr, true);
+            } finally {
+                console.error = originalConsoleError;
+            }
+        });
+    }
+
+    it('preserves execution failure and flushes active filters', async function () {
+        stdoutChunks = [Buffer.from('publisher trailing ##')];
+        execError = new Error('publisher exited with code 1');
+        await publisher.PublishCodeCoverage(['coverage.xml'], sources, true, [workspace], true, true);
+        await new Promise<void>(resolve => setImmediate(resolve));
+
+        assert.deepStrictEqual(failures, ['CoveragePublisherExecutionFailed: publisher exited with code 1']);
+        assert.strictEqual(externalOutputStreams.length, 2);
+        assert(externalOutputStreams.every(stream => stream.ended), 'failure must still close the filters');
+        assert.strictEqual(
+            Buffer.concat(externalOutputStreams[0].output).toString(),
+            'publisher trailing ##',
+            'failure must not lose buffered trailing text');
     });
 
     for (const missing of [true, false]) {

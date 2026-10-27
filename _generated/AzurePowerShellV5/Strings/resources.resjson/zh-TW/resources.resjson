@@ -33,6 +33,7 @@
   "loc.messages.GeneratingScript": "正在產生指令碼。",
   "loc.messages.JS_FormattedCommand": "經過格式化的命令: %s",
   "loc.messages.InvalidScriptArguments0": "指令碼引數 '{0}' 無效。不允許分行符號。",
+  "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反斜線 (\\) 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "指令碼路徑 '{0}' 無效。指定的路徑字元無效。",
   "loc.messages.InvalidAzurePsVersion": "指定的 Azure PowerShell 版本 '{0}' 格式不正確。請檢查格式。正確格式的範例為 1.0.1",
   "loc.messages.JS_ExitCode": "PowerShell 已結束，代碼為 '%s'。",

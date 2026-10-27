@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 2
+    "Patch": 8
   },
   "runsOn": [
     "Agent",
@@ -114,13 +114,15 @@
     "Info_ApplyingWifToAllRegistries": "ms-resource:loc.messages.Info_ApplyingWifToAllRegistries",
     "Error_UnsupportedAuthScheme": "ms-resource:loc.messages.Error_UnsupportedAuthScheme",
     "Warning_NpmrcFileNotFound": "ms-resource:loc.messages.Warning_NpmrcFileNotFound",
+    "Warning_HomeDirectoryNotWritable": "ms-resource:loc.messages.Warning_HomeDirectoryNotWritable",
+    "Error_NoWritableBackupDirectory": "ms-resource:loc.messages.Error_NoWritableBackupDirectory",
     "Info_SkippingNonHttpsWifRegistry": "ms-resource:loc.messages.Info_SkippingNonHttpsWifRegistry",
     "Error_MixedRegistrySchemes": "ms-resource:loc.messages.Error_MixedRegistrySchemes",
     "Debug_EndpointProbeTimedOut": "ms-resource:loc.messages.Debug_EndpointProbeTimedOut",
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.282.8",
+    "wif_242": "0.282.9"
   }
 }

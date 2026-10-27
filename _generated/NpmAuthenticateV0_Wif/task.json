@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 3
+    "Patch": 9
   },
   "runsOn": [
     "Agent",
@@ -136,13 +136,15 @@
     "Info_ApplyingWifToAllRegistries": "No feedUrl specified. Applying WIF credentials to all %d registries in .npmrc.",
     "Error_UnsupportedAuthScheme": "Unsupported auth scheme '%s' for the service connection. Supported schemes are 'Token' and 'UsernamePassword'.",
     "Warning_NpmrcFileNotFound": "npmrc file not found: %s",
+    "Warning_HomeDirectoryNotWritable": "Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.",
+    "Error_NoWritableBackupDirectory": "Unable to determine a writable npmAuthenticate backup directory.",
     "Info_SkippingNonHttpsWifRegistry": "Skipping WIF authentication for non-HTTPS registry: %s",
     "Error_MixedRegistrySchemes": "Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.",
     "Debug_EndpointProbeTimedOut": "isEndpointInternal timed out after %dms.",
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.282.8",
+    "wif_242": "0.282.9"
   }
 }

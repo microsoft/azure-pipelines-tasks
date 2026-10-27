@@ -3,7 +3,78 @@ import fs = require('fs');
 import os = require('os');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { validateSymbolicLinks, extractTarsIfPresent } from '../file_helper';
+import { ArtifactEngineOptions } from 'artifact-engine/Engine';
+import { TicketState } from 'artifact-engine/Models';
+import { DownloadHandlerFilePath } from '../DownloadHandlers/DownloadHandlerFilePath';
+
+describe('DownloadBuildArtifactsV0 flag-free artifact matching', function () {
+    const matchingFlag = 'DISTRIBUTEDTASK_TASKS_CASEINSENSITIVEARTIFACTMATCHINGFIXENABLED';
+    let originalFlag: string | undefined;
+    let root: string;
+    let source: string;
+    let destination: string;
+
+    before(() => tl.setResourcePath(path.join(__dirname, '..', 'task.json')));
+
+    beforeEach(() => {
+        originalFlag = process.env[matchingFlag];
+        root = fs.mkdtempSync(path.join(os.tmpdir(), 'dba-matching-'));
+        source = path.join(root, 'source');
+        destination = path.join(root, 'destination');
+        fs.mkdirSync(path.join(source, 'drop'), { recursive: true });
+        fs.mkdirSync(destination);
+        fs.writeFileSync(path.join(source, 'drop', 'Report.txt'), 'artifact contents');
+        fs.writeFileSync(path.join(destination, 'CaseProbe'), '');
+    });
+
+    afterEach(() => {
+        if (originalFlag === undefined) {
+            delete process.env[matchingFlag];
+        } else {
+            process.env[matchingFlag] = originalFlag;
+        }
+        fs.rmSync(root, { recursive: true, force: true });
+    });
+
+    for (const flag of [undefined, 'false']) {
+        for (const pattern of ['drop/Report.txt', 'DROP/REPORT.TXT']) {
+            it(`applies filesystem-aware matching to ${pattern} with the flag ${flag === undefined ? 'absent' : 'disabled'}`, async function () {
+                this.timeout(10000);
+                if (flag === undefined) {
+                    delete process.env[matchingFlag];
+                } else {
+                    process.env[matchingFlag] = flag;
+                }
+
+                const options = new ArtifactEngineOptions();
+                options.itemPattern = pattern;
+                options.parallelProcessingLimit = 1;
+                options.retryLimit = 1;
+                const handler = new DownloadHandlerFilePath({
+                    artifactInfo: { name: 'drop', resource: { type: 'FilePath', data: source } },
+                    downloadPath: destination,
+                    downloaderOptions: options,
+                    checkDownloadedFiles: true
+                });
+
+                const tickets = await handler.downloadResources();
+                const caseInsensitive = process.platform === 'win32'
+                    || (process.platform === 'darwin' && fs.existsSync(path.join(destination, 'caseprobe')));
+                const shouldDownload = pattern === 'drop/Report.txt' || caseInsensitive;
+                const fileTicket = tickets.find(ticket => ticket.artifactItem.path === path.join('drop', 'Report.txt'));
+                assert.ok(fileTicket, 'the source file should have a download ticket');
+                assert.strictEqual(fileTicket.state, shouldDownload ? TicketState.Processed : TicketState.Skipped);
+                const downloadedFile = path.join(destination, 'drop', 'Report.txt');
+                assert.strictEqual(fs.existsSync(downloadedFile), shouldDownload);
+                if (shouldDownload) {
+                    assert.strictEqual(fs.readFileSync(downloadedFile, 'utf8'), 'artifact contents');
+                }
+            });
+        }
+    }
+});
 
 describe('DownloadBuildArtifactsV0 Suite', function () {
     let nodePath: string;

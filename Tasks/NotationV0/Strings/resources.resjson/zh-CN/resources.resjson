@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "未能将证书添加到信任存储: %s。",
   "loc.messages.FailedToGetWorkloadIdToken": "未能获取工作负载标识令牌: %s。",
   "loc.messages.FailedToImportTrustPolicy": "未能导入信任策略: %s。",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "未能列出信任存储。",
   "loc.messages.FailedToShowTrustPolicy": "未能显示信任策略。",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "尝试从 Docker 任务获取工件引用。",

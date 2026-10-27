@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "작업이 실패했습니다. 다시 시도하기 전에 %sms 동안 대기합니다. 남은 다시 시도 횟수: %s회",
   "loc.messages.RedirectUrlError": "리디렉션 URL을 가져올 수 없습니다. 오류: %",
   "loc.messages.UnsupportedArchiveType": "지원되지 않는 보관 형식: %s",
+  "loc.messages.InvalidPackageFilePath": "패키지 파일 경로 '%s'은(는) 대상 디렉터리를 기준으로 하는 상대 경로여야 하며 대상 디렉터리 내에 있어야 합니다.",
+  "loc.messages.InvalidPackageFileLink": "패키지 파일 경로 '%s'에는 대상 디렉터리 내의 심볼릭 링크나 정션이 포함될 수 없습니다.",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "패키지를 다운로드하는 중 예기치 않은 오류가 발생했습니다. 종료 코드(%s) 및 오류(%s)",
   "loc.messages.Info_ResolvedToolFromCache": "도구 캐시 %s에서 확인됨",
   "loc.messages.Info_DownloadingArtifactTool": "%s에서 아티팩트 도구를 다운로드하는 중",
