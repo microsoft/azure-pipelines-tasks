@@ -580,5 +580,32 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
                 new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
                 error => error instanceof URIError);
         });
+
+        it('keeps unicode-escaped newline and hash sequences as literal text and rejects raw control characters when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const unicodeEscapedCommandPath = 'drop/leaf.txt","path":"nomatch\\u000a\\u0023\\u0023vso[task.setvariable variable=NODE_OPTIONS]--require=./drop/bootstrap.cjs\\u000atail';
+            metadataBody = JSON.stringify({
+                artifacts: [{ relativePath: unicodeEscapedCommandPath }]
+            });
+            const downloadOptions = await taskOptions('drop/*.txt', 'false');
+
+            const output = await captureEngineOutput(false, async () => {
+                const tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+                assert.strictEqual(fileTickets.length, 1);
+                assert.strictEqual(fileTickets[0].artifactItem.path, unicodeEscapedCommandPath);
+                assert.strictEqual(fileTickets[0].artifactItem.path.indexOf('\n'), -1, 'parsed path must not contain a decoded newline');
+                assert.strictEqual(fileTickets[0].artifactItem.path.indexOf('##vso['), -1, 'parsed path must not contain a decoded ##vso[ prefix');
+            });
+
+            assert.strictEqual(output.ordinary.some(line => line.indexOf('##vso[task.setvariable') !== -1), false);
+
+            metadataBody = JSON.stringify({
+                artifacts: [{ relativePath: 'drop/newline-\n-##vso[task.setvariable variable=NODE_OPTIONS]bad.txt' }]
+            });
+            await assert.rejects(
+                new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
+                error => error instanceof SyntaxError);
+        });
     });
 });

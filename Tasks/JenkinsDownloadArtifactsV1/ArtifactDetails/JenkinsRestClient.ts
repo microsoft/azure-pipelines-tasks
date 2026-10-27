@@ -227,6 +227,7 @@ export class JenkinsRestClient {
             }
 
             const text = value == null ? '' : String(value);
+            const hasControlChar = /[\u0000-\u001f]/.test(text);
             const jsonEscaped = JSON.stringify(text).slice(1, -1);
             try {
                 if (!auditStats || (options && options.data && options.data.first)) {
@@ -242,11 +243,16 @@ export class JenkinsRestClient {
                 if (text.indexOf('\\') !== -1) {
                     auditStats.hasBackslash = true;
                 }
-                if (/[\u0000-\u001f]/.test(text)) {
+                if (hasControlChar) {
                     auditStats.hasControlChar = true;
+                    auditStats.encodingErrorCount++;
                 }
             } catch {
                 // Telemetry collection must never interrupt artifact resolution.
+            }
+
+            if (encodingEnabled && hasControlChar) {
+                throw new SyntaxError('Control characters are not supported in Jenkins artifact paths.');
             }
 
             return encodingEnabled ? jsonEscaped : value;
