@@ -8,6 +8,8 @@ import process = require('process');
 import fs = require('fs');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
+import './L0CommandBlocking';
+import './L0ArtifactEngineCompatibility';
 
 describe('JenkinsDownloadArtifacts L0 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 30000);
@@ -505,4 +507,3 @@ describe('JenkinsDownloadArtifacts L0 Suite', function () {
         }
     });
 });
-

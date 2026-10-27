@@ -14,7 +14,6 @@ import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-res
 
 async function run() {
     let azureMysqlTaskParameter: AzureMysqlTaskParameter;
-    let firewallAdded: boolean;
     let firewallOperations: FirewallOperations;
     let mysqlServer: MysqlServer;
     try {
@@ -43,7 +42,7 @@ async function run() {
             const sqlClient: ISqlClient = new  MysqlClient(azureMysqlTaskParameter, mysqlServer.getFullyQualifiedName(), mysqlClientPath);
             firewallOperations = new FirewallOperations(endpoint.applicationTokenCredentials, endpoint.subscriptionID);
             //Invoke firewall operation to validate user has permission for server or not. If not whitelist the IP
-            firewallAdded = await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
+            await firewallOperations.invokeFirewallOperations(azureMysqlTaskParameter, sqlClient, mysqlServer);
             //Execute sql script entered by user
             await sqlClient.executeSqlCommand();
         }
@@ -57,9 +56,11 @@ async function run() {
     }
     finally{
         // Delete firewall rule in case of automatic added rule or either user wants to delete it
-        if(firewallAdded && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()) {
+        // isFirewallRuleAdded() reflects whether a rule was actually created, even if a
+        // later step (e.g. agent IP validation) threw afterwards.
+        if(firewallOperations && firewallOperations.isFirewallRuleAdded() && azureMysqlTaskParameter && azureMysqlTaskParameter.getDeleteFirewallRule()) {
             task.debug('Deleting firewall rule.');
-            if(firewallOperations && mysqlServer) {
+            if(mysqlServer) {
                 await firewallOperations.deleteFirewallRule(mysqlServer.getName(), mysqlServer.getResourceGroupName());
             }
             task.debug('Successfully deleted firewall rule.');

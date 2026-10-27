@@ -91,6 +91,8 @@
   "loc.messages.DownloadStableVersionFailed": "%s から安定バージョンの Kubernetes ファイルをダウンロードすることができません。%s にフォールバックしています",
   "loc.messages.UsingLatestStableVersion": "バージョンの仕様の入力に無効なバージョン 1.7 が指定されました。代わりに最新の安定したバージョンが使用されます。正しいバージョンを https://github.com/kubernetes/kubernetes/releases でご確認ください",
   "loc.messages.NotAValidVersion": "有効なバージョンではありません。利用できるバージョン: %s",
+  "loc.messages.InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+  "loc.messages.InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
   "loc.messages.ConfigurationFileNotFound": "%s に一致する構成ファイルは見つかりませんでした。",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes サービス接続の詳細が見つかりませんでした。",
   "loc.messages.OutputVariableDataSizeExceeded": "kubectl コマンドの出力がサポートされている最大長を超えたため、出力変数が設定されませんでした。出力の長さ: %s、サポートされている最大長: %s",

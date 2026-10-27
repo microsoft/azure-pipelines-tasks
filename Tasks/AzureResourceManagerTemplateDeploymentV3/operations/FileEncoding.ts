@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 import tl = require('azure-pipelines-task-lib');
+import { sanitizeForLoggingCommand } from './sanitize';
 
 export class FileEncoding {
     public type: string;
@@ -86,7 +87,7 @@ export function detectFileEncoding(fileName: string, buffer: Buffer): FileEncodi
     if (fileEncoding == null) {
         throw new Error(tl.loc("CouldNotDetectEncoding", fileName));
     }
-    console.log(tl.loc("DetectedFileEncoding", fileName, fileEncoding.type));
+    console.log(tl.loc("DetectedFileEncoding", sanitizeForLoggingCommand(fileName), fileEncoding.type));
     return fileEncoding;
 }
 

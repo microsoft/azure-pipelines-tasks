@@ -217,6 +217,7 @@
   "loc.messages.InvalidConnectionType": "Ungültiger Dienstverbindungstyp",
   "loc.messages.InvalidImageSourceType": "Ungültiger Imagequelltyp",
   "loc.messages.InvalidPublishProfile": "Die Veröffentlichungsprofildatei ist ungültig.",
+  "loc.messages.InvalidPublishProfileValue": "Der Wert für „%s“ im Veröffentlichungsprofil enthält ungültige Zeichen.",
   "loc.messages.ASE_SSLIssueRecommendation": "Um ein Zertifikat in App Service zu verwenden, muss das Zertifikat von einer vertrauenswürdigen Zertifizierungsstelle signiert sein. Werden von Ihrer Web-App Zertifikatüberprüfungsfehler zurückgegeben, verwenden Sie wahrscheinlich ein selbstsigniertes Zertifikat. Um den Fehler zu beheben, müssen Sie in der Build- oder Releasepipeline eine Variable mit dem Namen VSTS_ARM_REST_IGNORE_SSL_ERRORS auf den Wert TRUE festlegen.",
   "loc.messages.ZipDeployLogsURL": "ZIP Deploy-Protokolle können unter %s angezeigt werden.",
   "loc.messages.DeployLogsURL": "Bereitstellungsprotokolle können unter %s angezeigt werden.",

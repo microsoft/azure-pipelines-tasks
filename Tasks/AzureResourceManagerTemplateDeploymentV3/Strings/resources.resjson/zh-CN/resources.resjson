@@ -78,6 +78,7 @@
   "loc.messages.ParametersPatternMatchesADirectoryInsteadOfAFile": "参数文件模式匹配目录，而不是文件。",
   "loc.messages.CsmFilePatternMatchesADirectoryInsteadOfAFile": "模板文件模式匹配目录，而不是文件: %s",
   "loc.messages.AddedOutputVariable": "已更新的输出变量“%s”，该变量包含字符串格式的当前部署对象的输出部分。",
+  "loc.messages.OutputVariableNameChanged": "输出变量名称 '%s' 之前在发布变量时已解码或截断为其他名称。现在按字面使用声明的名称。如果管道引用了以前的名称，请将其更新为声明的名称。",
   "loc.messages.UnableToReadResponseBody": "无法读取响应正文。错误: %s",
   "loc.messages.MoreInformationOnAzurePortal": "Azure 门户的详细信息",
   "loc.messages.LogDeploymentName": "部署名称为 %s",
@@ -102,5 +103,7 @@
   "loc.messages.ErrorInSettingUpSubscription": "设置订阅时出错: %s",
   "loc.messages.BicepParamBuildFailed": "“az bicep build-param”失败。错误: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": "Azure CLI 版本应 >= 2.47.0 以使用 .bicepparam 文件",
-  "loc.messages.ErrorWhileOverrideParameterUndefined": "提供的元数据文件 \"%s\" 缺少参数 \"%s\" 的元数据"
+  "loc.messages.ErrorWhileOverrideParameterUndefined": "提供的元数据文件 \"%s\" 缺少参数 \"%s\" 的元数据",
+  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
 }

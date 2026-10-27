@@ -217,6 +217,7 @@
   "loc.messages.InvalidConnectionType": "Il tipo di connessione al servizio non è valido",
   "loc.messages.InvalidImageSourceType": "Il tipo di origine immagini non è valido",
   "loc.messages.InvalidPublishProfile": "Il file del profilo di pubblicazione non è valido.",
+  "loc.messages.InvalidPublishProfileValue": "Il valore di %s\" nel profilo di pubblicazione contiene caratteri non consentiti.",
   "loc.messages.ASE_SSLIssueRecommendation": "Per usare un certificato nel servizio app, il certificato deve essere firmato da un'autorità di certificazione attendibile. Se l'app Web restituisce errori di convalida del certificato, è possibile che si stia usando un certificato autofirmato. Per risolvere gli errori, è necessario impostare su true una variabile denominata VSTS_ARM_ARM_REST_IGNORE_SSL_ERRORS nella pipeline di compilazione o versione",
   "loc.messages.ZipDeployLogsURL": "I log di zipdeploy possono essere visualizzati in %s",
   "loc.messages.DeployLogsURL": "I log di distribuzione possono essere visualizzati in %s",
