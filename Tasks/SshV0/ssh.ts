@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as fs from 'fs';
 import * as sshHelper from './ssh2helpers';
 import { v4 as generateRandomUUID } from 'uuid';
-import { ConnectConfig } from 'ssh2';
+import { ClientChannel, ConnectConfig } from 'ssh2';
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from "azure-pipelines-tasks-utility-common/telemetry";
 import { shellQuote } from 'azure-pipelines-tasks-utility-common/shellEscaping';
@@ -159,6 +159,8 @@ async function run() {
                 //run remote script file with args on the remote machine
                 let runScriptCmd = remoteScriptPath;
                 if (args) {
+                    let resultArgs = args;
+
                     const featureFlags = {
                         audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
                         activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
@@ -192,7 +194,7 @@ async function run() {
                         }
                     }
 
-                    runScriptCmd = runScriptCmd.concat(' ' + args);
+                    runScriptCmd = runScriptCmd.concat(' ' + resultArgs);
                 }
 
                 //setup command to clean up script file
@@ -273,11 +275,28 @@ function getServerPort(sshEndpoint: string): number {
  */
 async function isTargetPowerShell(sshClient: any): Promise<boolean> {
     let exitCode: number = null;
+    let timeout: ReturnType<typeof setTimeout>;
+    let probeStream: ClientChannel;
+    let timedOut = false;
     try {
         await new Promise<void>((resolve, reject) => {
+            timeout = setTimeout(() => {
+                timedOut = true;
+                reject(new Error('PowerShell detection probe timed out.'));
+                if (probeStream) {
+                    probeStream.close();
+                }
+            }, 10000);
             sshClient.exec('Get-Host | Out-Null', (err, stream) => {
                 if (err) {
                     reject(err);
+                    return;
+                }
+                probeStream = stream;
+                stream.on('error', reject);
+                stream.stderr.on('error', reject);
+                if (timedOut) {
+                    stream.close();
                     return;
                 }
                 stream.resume();
@@ -292,6 +311,8 @@ async function isTargetPowerShell(sshClient: any): Promise<boolean> {
     } catch (err) {
         tl.debug(`PowerShell detection probe failed: ${err}`);
         return false;
+    } finally {
+        clearTimeout(timeout);
     }
 
     return exitCode === 0;
