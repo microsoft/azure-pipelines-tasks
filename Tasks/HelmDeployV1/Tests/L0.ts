@@ -1,9 +1,11 @@
-import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
+
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
-import * as shared from './TestShared';
 import * as tl from 'azure-pipelines-task-lib';
+
+import * as shared from './TestShared';
+import './L0VsoCommandBlocking';
 
 describe("HelmDeployV1 Suite", function () {
     this.timeout(30000);
@@ -283,10 +285,10 @@ describe("HelmDeployV1 Suite", function () {
     it("Run with feature flag OFF - uses legacy helm version command (--client --short)", async function () {
         const tp = path.join(__dirname, "TestSetup.js");
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         // Set feature flag to FALSE before running the test
         process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'false';
-        
+
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
@@ -305,10 +307,10 @@ describe("HelmDeployV1 Suite", function () {
     it("Run with feature flag ON - uses new helm version command (--short only)", async function () {
         const tp = path.join(__dirname, "TestSetup.js");  // SAME setup file!
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        
+
         // Set feature flag to TRUE before running the test
         process.env['DISTRIBUTEDTASK_TASKS_USEHELMVERSIONV3ORHIGHER'] = 'true';
-        
+
         process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;

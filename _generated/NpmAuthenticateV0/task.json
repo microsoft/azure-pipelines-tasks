@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 4
+    "Patch": 8
   },
   "runsOn": [
     "Agent",
@@ -122,7 +122,7 @@
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.4",
-    "wif_242": "0.282.5"
+    "Default": "0.282.8",
+    "wif_242": "0.282.9"
   }
 }

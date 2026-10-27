@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 3
+    "Patch": 7
   },
   "runsOn": [
     "Agent",
@@ -94,7 +94,7 @@
     "RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.282.6",
+    "wif_242": "0.282.7"
   }
 }

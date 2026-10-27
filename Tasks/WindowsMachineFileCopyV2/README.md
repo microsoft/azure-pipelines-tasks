@@ -2,6 +2,14 @@
 ### Overview
 The task is used to copy application files and other artifacts that are required to install the application on Windows Machines like PowerShell scripts, PowerShell-DSC modules etc. The task provides the ability to copy files to Windows Machines. The tasks uses RoboCopy, the command-line utility built for fast copying of data.
 
+### External output
+
+Robocopy output, including cleanup output, is filtered before it is logged in both
+sequential and parallel copies. The shared `EnableVsoCommandBlockingRMTasks`
+pipeline feature enables blocking of logging-command markers from filenames.
+When the feature is disabled or unset, output is unchanged and command-name-only
+telemetry is emitted. Robocopy arguments and exit-code handling are unchanged.
+
 ### The different parameters of the task are explained below:
 
 *	**Source**: The source of the files. As described above using pre-defined system variables like $(Build.Repository.LocalPath) make it easy to specify the location of the build on the Build Automation Agent machine. The variables resolve to the working folder on the agent machine, when the task is run on it. Wild cards like **\*.zip are not supported.

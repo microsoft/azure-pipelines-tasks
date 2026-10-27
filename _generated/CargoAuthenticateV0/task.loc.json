@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 2
+    "Patch": 6
   },
   "runsOn": [
     "Agent",
@@ -72,7 +72,7 @@
     "RegistryFeedVerificationFailed": "ms-resource:loc.messages.RegistryFeedVerificationFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.282.6",
+    "wif_242": "0.282.7"
   }
 }
