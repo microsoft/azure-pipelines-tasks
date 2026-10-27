@@ -1,0 +1,27 @@
+{
+  "native_download": "verified",
+  "metadata": {
+    "version": "0.0.2-feasibility.20000101",
+    "manifest_id": "8BA506E103A2189A1F1457AEC2D6F23F6B9996E16BB7BDB2ED0264FADB2E319201",
+    "super_root_id": "BE747EB62DFEC6E50E4B854A70D30F3E8381379A4EBA51661D3E1CB3547D295E02",
+    "package_size": 104989099
+  },
+  "downloaded_bytes": 104988672,
+  "files": [
+    {
+      "path": "payload.bin",
+      "size": 104857600,
+      "sha256": "40492eefa76821a14b8044f9e34f71559710bbb1647ab9eb388fe065fd778d7d"
+    },
+    {
+      "path": "empty.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "nested/repeated.bin",
+      "size": 131072,
+      "sha256": "fa43239bcee7b97ca62f007cc68487560a39e19f74f3dde7486db3f98df8e471"
+    }
+  ]
+}
