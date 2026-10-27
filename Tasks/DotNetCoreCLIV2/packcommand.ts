@@ -143,7 +143,6 @@ export async function run(): Promise<void> {
             await dotnetPackAsync(dotnetPath, file, outputDir, nobuild, includeSymbols, includeSource, version, props, verbosity);
         }
     } catch (err) {
-        tl.warning(tl.loc('Net5NugetVersionCompat'));
         tl.error(err);
         tl.setResult(tl.TaskResult.Failed, tl.loc("Error_PackageFailure"));
     }
