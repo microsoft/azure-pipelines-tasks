@@ -182,7 +182,7 @@ export async function prepareDownload(task: TaskInputs, service: PipelineBuildSe
     }
     for (const pattern of task.input("patterns").split(/\r?\n/)) {
         if (pattern.trim()) {
-            plan.args.push("--pattern", pattern);
+            plan.args.push("--minimatch-patterns", pattern);
         }
     }
     if (selection.hasPipelineArtifacts) {

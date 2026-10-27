@@ -69,7 +69,7 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             assert.deepStrictEqual(plan.args, [
                 "pipelineartifact", "publish", "--project", "project-id", "--pipeline-id", "42",
                 "--path", path.resolve("work", "out"), "--artifact-name", "drop",
-                "--properties", "{\"user-a\":1}", "--job-id", "job-id", "--hash-type", "DEDUPNODEORCHUNK"
+                "--properties", "{\"user-a\":1}", "--source", "job-id", "--hash-type", "DEDUPNODEORCHUNK"
             ]);
             assert.deepStrictEqual(plan.environment, {});
             assert.deepStrictEqual(plan.warnings, []);

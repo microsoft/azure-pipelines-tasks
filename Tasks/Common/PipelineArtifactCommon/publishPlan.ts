@@ -52,7 +52,7 @@ export function preparePublish(task: TaskInputs, environment: PublishEnvironment
 
     const jobId = task.variable("System.JobId");
     if (jobId) {
-        plan.args.push("--job-id", jobId);
+        plan.args.push("--source", jobId);
     }
 
     plan.args.push(...publishDomainArgs(task), ...chunkHashTypeArgs(task, message => environment.log?.(message)));

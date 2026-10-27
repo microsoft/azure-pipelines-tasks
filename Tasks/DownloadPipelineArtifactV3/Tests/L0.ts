@@ -145,7 +145,7 @@ describe("DownloadPipelineArtifact L0 Suite", function () {
 
             assert.deepStrictEqual(plan.args, [
                 "pipelineartifact", "download", "--project", ProjectId, "--pipeline-id", "42", "--path", path.resolve("work", "dl"),
-                "--artifact-name", "drop", "--pattern", "**/*.dll", "--pattern", "!**/tests/**", "--hash-type", "DEDUPNODEORCHUNK"
+                "--artifact-name", "drop", "--minimatch-patterns", "**/*.dll", "--minimatch-patterns", "!**/tests/**", "--hash-type", "DEDUPNODEORCHUNK"
             ]);
             assert.deepStrictEqual(plan.environment, {});
             assert.deepStrictEqual(plan.variables, { BuildNumber: "42" });
@@ -175,7 +175,7 @@ describe("DownloadPipelineArtifact L0 Suite", function () {
             const plan = await prepareDownload(inputs({ source: "current", path: "dl" }, buildVariables), service, noLog);
 
             assert.strictEqual(plan.args.indexOf("--artifact-name"), -1);
-            assert.deepStrictEqual(optionValues(plan.args, "--pattern"), []);
+            assert.deepStrictEqual(optionValues(plan.args, "--minimatch-patterns"), []);
             assert.deepStrictEqual(plan.variablesOnSuccess, { DownloadPipelineArtifactResourceTypes: "PipelineArtifact" });
             assert.deepStrictEqual(plan.warnings, [
                 `Skipped artifacts that are not pipeline artifacts: 'share' (FilePath), 'old' (Container). ${BuildArtifactsTaskHint}`
