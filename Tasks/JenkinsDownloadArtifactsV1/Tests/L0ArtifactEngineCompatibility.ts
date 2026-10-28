@@ -6,8 +6,12 @@ import path = require('path');
 import { AddressInfo } from 'net';
 import { FilesystemProvider, WebProvider, ZipProvider } from 'artifact-engine/Providers';
 import { BasicCredentialHandler } from 'artifact-engine/Providers/typed-rest-client/Handlers';
+import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 import { getDownloaderOptions } from './L0CommandBlocking';
 import { assertDetection, captureEngineOutput, loadArtifactEngine } from './ArtifactEngineOutputTestHelper';
+
+// Reuse the Node runtime already installed by make.js to avoid flaky nodejs.org downloads under CI network isolation.
+(MockTestRunner.prototype as any).getNodePath = async () => process.execPath;
 
 describe('Jenkins artifact-engine v1 external output compatibility', function () {
     this.timeout(30000);
@@ -85,8 +89,15 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
             { ignoreSslError: false });
     }
 
+    const optionsCache = new Map<string, any>();
     async function taskOptions(pattern: string, flag: string) {
-        const result = await getDownloaderOptions(pattern, flag, '1', 'false');
+        const cacheKey = `${pattern}\0${flag}`;
+        let base = optionsCache.get(cacheKey);
+        if (!base) {
+            base = await getDownloaderOptions(pattern, flag, '1', 'false');
+            optionsCache.set(cacheKey, base);
+        }
+        const result = Object.assign(Object.create(Object.getPrototypeOf(base)), base);
         // Exercise failures without leaving production retry or worker timers beyond the test lifetime.
         result.parallelProcessingLimit = 1;
         result.retryLimit = 1;
@@ -375,11 +386,12 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
             assert(auditLines[0].indexOf('"encodingEnabled":false') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"auditEnabled":true') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"decision":"wouldEncode"') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf(`"version":${expectedVersion}`) !== -1, auditLines[0]);
-            assert(auditLines[0].indexOf('"totalArtifacts":2') !== -1, auditLines[0]);
-            assert(auditLines[0].indexOf('"jsonSpecialCount":1') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"hasQuote":true') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"hasBackslash":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasEncodingError":false') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"totalArtifacts"') === -1, 'per-item counters must not be emitted');
             assert(auditLines[0].indexOf('file"quote') === -1, 'audit event must never contain raw filenames');
         });
 
@@ -405,9 +417,12 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
                 assert(auditLines[0].indexOf('"encodingEnabled":true') !== -1, auditLines[0]);
                 assert(auditLines[0].indexOf(`"auditEnabled":${auditFlag}`) !== -1, auditLines[0]);
                 assert(auditLines[0].indexOf('"decision":"encoded"') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
                 assert(auditLines[0].indexOf(`"version":${expectedVersion}`) !== -1, auditLines[0]);
-                assert(auditLines[0].indexOf('"totalArtifacts":2') !== -1, auditLines[0]);
-                assert(auditLines[0].indexOf('"jsonSpecialCount":1') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasQuote":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasBackslash":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasEncodingError":false') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"totalArtifacts"') === -1, 'per-item counters must not be emitted');
                 assert(auditLines[0].indexOf('file"quote') === -1, 'audit event must never contain raw filenames');
             }
         });
@@ -480,8 +495,8 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
             });
 
             assert.strictEqual(auditLines.length, 1, 'must emit audit summary even when first/last items are null/undefined or contain lone surrogates');
-            assert(auditLines[0].indexOf('"totalArtifacts":3') !== -1, auditLines[0]);
-            assert(auditLines[0].indexOf('"encodingErrorCount":1') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
             assert(auditLines[0].indexOf('"decision":"wouldEncode"') !== -1, auditLines[0]);
         });
 
@@ -499,8 +514,9 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
             });
 
             assert.strictEqual(auditLines.length, 1, 'must emit audit telemetry when encoding rejects a lone surrogate');
-            assert(auditLines[0].indexOf('"encodingErrorCount":1') !== -1, auditLines[0]);
-            assert(auditLines[0].indexOf('"decision":"encoded"') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":false') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"decision":"rejected"') !== -1, auditLines[0]);
         });
 
         it('keeps unicode-escaped newline and hash sequences as literal text and rejects raw control characters when encoding is enabled', async () => {
@@ -533,7 +549,9 @@ describe('Jenkins artifact-engine v1 external output compatibility', function ()
                 });
                 assert.strictEqual(auditLines.length, 1, 'must emit audit telemetry when encoding rejects a control character');
                 assert(auditLines[0].indexOf('"hasControlChar":true') !== -1, auditLines[0]);
-                assert(auditLines[0].indexOf('"encodingErrorCount":1') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"inspectionComplete":false') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"decision":"rejected"') !== -1, auditLines[0]);
             }
         });
     });

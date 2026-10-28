@@ -13,6 +13,18 @@ import { IRequestOptions as IHttpRequestOptions } from "artifact-engine/Provider
 var handlebars = require('handlebars');
 var taskJson = require('../task.json');
 
+function hasUnsupportedControlChars(text: string): boolean {
+    return /[\u0000-\u001f]/.test(text);
+}
+
+function escapeJsonStringContent(text: string): string {
+    return JSON.stringify(text).slice(1, -1);
+}
+
+function encodeUrlPathSegments(text: string): string {
+    return text.split('/').map(encodeURIComponent).join('/');
+}
+
 export class JenkinsJobDetails {
     jobName: string;
     buildId: number;
@@ -186,84 +198,75 @@ export class JenkinsRestClient {
         let auditEmitted = false;
         let encodingEnabled = false;
         let auditEnabled = false;
-        let currentItemHasError = false;
-        let auditStats: {
-            totalArtifacts: number;
-            jsonSpecialCount: number;
-            urlEncodedCount: number;
-            encodingErrorCount: number;
+        let auditState: {
             hasQuote: boolean;
             hasBackslash: boolean;
             hasControlChar: boolean;
             hasUrlSpecialChar: boolean;
+            hasEncodingError: boolean;
         };
 
-        function resetAuditStats(): void {
+        function resetAuditState(): void {
             encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
             auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
-            currentItemHasError = false;
-            auditStats = {
-                totalArtifacts: 0,
-                jsonSpecialCount: 0,
-                urlEncodedCount: 0,
-                encodingErrorCount: 0,
+            auditState = {
                 hasQuote: false,
                 hasBackslash: false,
                 hasControlChar: false,
-                hasUrlSpecialChar: false
+                hasUrlSpecialChar: false,
+                hasEncodingError: false
             };
         }
 
-        function publishAuditSummary(): void {
-            if (auditEmitted || !auditStats) {
+        function publishAuditSummary(inspectionComplete: boolean): void {
+            if (auditEmitted || !auditState) {
                 return;
             }
             auditEmitted = true;
-            const modified = auditStats.jsonSpecialCount > 0 || auditStats.urlEncodedCount > 0 || auditStats.encodingErrorCount > 0;
-            const decision = !modified
-                ? 'unchanged'
-                : (encodingEnabled ? 'encoded' : 'wouldEncode');
+            const modified = auditState.hasQuote
+                || auditState.hasBackslash
+                || auditState.hasControlChar
+                || auditState.hasUrlSpecialChar
+                || auditState.hasEncodingError;
+            const decision = (encodingEnabled && auditState.hasEncodingError)
+                ? 'rejected'
+                : (!modified ? 'unchanged' : (encodingEnabled ? 'encoded' : 'wouldEncode'));
             const payload = Object.assign({
                 hostType: (tl.getVariable('SYSTEM.HOSTTYPE') || '').toLowerCase(),
                 jobid: tl.getVariable('SYSTEM.JOBID'),
                 version: taskJson.version,
                 encodingEnabled,
                 auditEnabled,
-                decision
-            }, auditStats);
+                decision,
+                inspectionComplete
+            }, auditState);
             console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
         }
 
         handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
-            if (!auditStats || (options && options.data && options.data.first)) {
-                resetAuditStats();
+            if (!auditState || (options && options.data && options.data.first)) {
+                resetAuditState();
             }
-            currentItemHasError = false;
             if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
                 return value;
             }
 
             const text = value == null ? '' : String(value);
-            const hasControlChar = /[\u0000-\u001f]/.test(text);
-            const jsonEscaped = JSON.stringify(text).slice(1, -1);
+            const hasControlChar = hasUnsupportedControlChars(text);
+            const jsonEscaped = escapeJsonStringContent(text);
             try {
-                auditStats.totalArtifacts++;
-                if (jsonEscaped !== text) {
-                    auditStats.jsonSpecialCount++;
-                }
                 if (text.indexOf('"') !== -1) {
-                    auditStats.hasQuote = true;
+                    auditState.hasQuote = true;
                 }
                 if (text.indexOf('\\') !== -1) {
-                    auditStats.hasBackslash = true;
+                    auditState.hasBackslash = true;
                 }
                 if (hasControlChar) {
-                    auditStats.hasControlChar = true;
-                    auditStats.encodingErrorCount++;
-                    currentItemHasError = true;
+                    auditState.hasControlChar = true;
+                    auditState.hasEncodingError = true;
                 }
                 if (encodingEnabled && hasControlChar) {
-                    publishAuditSummary();
+                    publishAuditSummary(false);
                 }
             } catch {
                 // Telemetry collection must never interrupt artifact resolution.
@@ -277,8 +280,8 @@ export class JenkinsRestClient {
         });
 
         handlebars.registerHelper('encodeArtifactPath', function (value: any, options: any) {
-            if (!auditStats) {
-                resetAuditStats();
+            if (!auditState) {
+                resetAuditState();
             }
             if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
                 return value;
@@ -288,22 +291,22 @@ export class JenkinsRestClient {
             let urlEncoded: string | undefined;
             let encodeError: Error | undefined;
             try {
-                urlEncoded = text.split('/').map(encodeURIComponent).join('/');
+                urlEncoded = encodeUrlPathSegments(text);
             } catch (err) {
                 encodeError = err as Error;
             }
 
             try {
-                if (encodeError && !currentItemHasError) {
-                    auditStats.encodingErrorCount++;
-                    currentItemHasError = true;
+                if (encodeError) {
+                    auditState.hasEncodingError = true;
                 }
                 if (encodeError || urlEncoded !== text) {
-                    auditStats.urlEncodedCount++;
-                    auditStats.hasUrlSpecialChar = true;
+                    auditState.hasUrlSpecialChar = true;
                 }
-                if ((encodingEnabled && encodeError) || (options && options.data && options.data.last)) {
-                    publishAuditSummary();
+                if (encodingEnabled && encodeError) {
+                    publishAuditSummary(false);
+                } else if (options && options.data && options.data.last) {
+                    publishAuditSummary(true);
                 }
             } catch {
                 // Telemetry emission must never interrupt artifact resolution.
@@ -313,7 +316,7 @@ export class JenkinsRestClient {
                 throw encodeError;
             }
 
-            return encodingEnabled ? JSON.stringify(urlEncoded).slice(1, -1) : value;
+            return encodingEnabled ? escapeJsonStringContent(urlEncoded!) : value;
         });
     }
 
