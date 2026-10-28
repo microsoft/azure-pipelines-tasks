@@ -184,6 +184,9 @@ export class JenkinsRestClient {
         const artifactPathEncodingFeature = JenkinsRestClient.ArtifactPathEncodingFeature;
         const artifactPathAuditFeature = JenkinsRestClient.ArtifactPathAuditFeature;
         let auditEmitted = false;
+        let encodingEnabled = false;
+        let auditEnabled = false;
+        let currentItemHasError = false;
         let auditStats: {
             totalArtifacts: number;
             jsonSpecialCount: number;
@@ -196,6 +199,9 @@ export class JenkinsRestClient {
         };
 
         function resetAuditStats(): void {
+            encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
+            auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
+            currentItemHasError = false;
             auditStats = {
                 totalArtifacts: 0,
                 jsonSpecialCount: 0,
@@ -219,10 +225,34 @@ export class JenkinsRestClient {
             return major > 2 || (major === 2 && minor >= 120);
         }
 
+        function publishAuditSummary(): void {
+            if (auditEmitted || !auditStats) {
+                return;
+            }
+            auditEmitted = true;
+            const modified = auditStats.jsonSpecialCount > 0 || auditStats.urlEncodedCount > 0 || auditStats.encodingErrorCount > 0;
+            const decision = !modified
+                ? 'unchanged'
+                : (encodingEnabled ? 'encoded' : 'wouldEncode');
+            const payload = Object.assign({
+                hostType: (tl.getVariable('SYSTEM.HOSTTYPE') || '').toLowerCase(),
+                jobid: tl.getVariable('SYSTEM.JOBID'),
+                version: taskJson.version,
+                encodingEnabled,
+                auditEnabled,
+                decision
+            }, auditStats);
+            if (canPublishTelemetry()) {
+                console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
+            }
+        }
+
         handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
-            const encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
-            const auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
-            if (!encodingEnabled && !auditEnabled) {
+            if (!auditStats || (options && options.data && options.data.first)) {
+                resetAuditStats();
+            }
+            currentItemHasError = false;
+            if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
                 return value;
             }
 
@@ -230,9 +260,6 @@ export class JenkinsRestClient {
             const hasControlChar = /[\u0000-\u001f]/.test(text);
             const jsonEscaped = JSON.stringify(text).slice(1, -1);
             try {
-                if (!auditStats || (options && options.data && options.data.first)) {
-                    resetAuditStats();
-                }
                 auditStats.totalArtifacts++;
                 if (jsonEscaped !== text) {
                     auditStats.jsonSpecialCount++;
@@ -246,6 +273,10 @@ export class JenkinsRestClient {
                 if (hasControlChar) {
                     auditStats.hasControlChar = true;
                     auditStats.encodingErrorCount++;
+                    currentItemHasError = true;
+                }
+                if (encodingEnabled && hasControlChar) {
+                    publishAuditSummary();
                 }
             } catch {
                 // Telemetry collection must never interrupt artifact resolution.
@@ -259,54 +290,40 @@ export class JenkinsRestClient {
         });
 
         handlebars.registerHelper('encodeArtifactPath', function (value: any, options: any) {
-            const encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
-            const auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
-            if (!encodingEnabled && !auditEnabled) {
+            if (!auditStats) {
+                resetAuditStats();
+            }
+            if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
                 return value;
             }
 
             const text = value == null ? '' : String(value);
-            const urlEncoded = encodingEnabled
-                ? text.split('/').map(encodeURIComponent).join('/')
-                : undefined;
+            let urlEncoded: string | undefined;
+            let encodeError: Error | undefined;
+            try {
+                urlEncoded = text.split('/').map(encodeURIComponent).join('/');
+            } catch (err) {
+                encodeError = err as Error;
+            }
 
             try {
-                if (!auditStats) {
-                    resetAuditStats();
+                if (encodeError && !currentItemHasError) {
+                    auditStats.encodingErrorCount++;
+                    currentItemHasError = true;
                 }
-                let candidateEncoded = urlEncoded;
-                if (candidateEncoded === undefined) {
-                    try {
-                        candidateEncoded = text.split('/').map(encodeURIComponent).join('/');
-                    } catch {
-                        auditStats.encodingErrorCount++;
-                    }
-                }
-                if (candidateEncoded === undefined || candidateEncoded !== text) {
+                if (encodeError || urlEncoded !== text) {
                     auditStats.urlEncodedCount++;
                     auditStats.hasUrlSpecialChar = true;
                 }
-                if (!auditEmitted && options && options.data && options.data.last) {
-                    auditEmitted = true;
-                    const modified = auditStats.jsonSpecialCount > 0 || auditStats.urlEncodedCount > 0;
-                    const decision = !modified
-                        ? 'unchanged'
-                        : (encodingEnabled ? 'encoded' : 'wouldEncode');
-                    const payload = Object.assign({
-                        hostType: (tl.getVariable('SYSTEM.HOSTTYPE') || '').toLowerCase(),
-                        jobid: tl.getVariable('SYSTEM.JOBID'),
-                        version: taskJson.version,
-                        encodingEnabled,
-                        auditEnabled,
-                        decision
-                    }, auditStats);
-                    resetAuditStats();
-                    if (canPublishTelemetry()) {
-                        console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
-                    }
+                if ((encodingEnabled && encodeError) || (options && options.data && options.data.last)) {
+                    publishAuditSummary();
                 }
             } catch {
                 // Telemetry emission must never interrupt artifact resolution.
+            }
+
+            if (encodingEnabled && encodeError) {
+                throw encodeError;
             }
 
             return encodingEnabled ? JSON.stringify(urlEncoded).slice(1, -1) : value;
