@@ -106,6 +106,20 @@
       "helpMarkDown": "Arguments to pass to the shell script."
     },
     {
+      "name": "targetShellType",
+      "type": "pickList",
+      "label": "Target shell",
+      "defaultValue": "bash",
+      "required": false,
+      "visibleRule": "runOptions = script",
+      "helpMarkDown": "The login shell configured for the SSH account on the remote machine. Used to validate 'Arguments' against that shell's own escaping rules. Choose 'PowerShell' if the remote login shell is PowerShell or PowerShell Core, 'Cmd' if it's Windows cmd.exe, or leave the default for bash/sh and similar Unix shells.",
+      "options": {
+        "bash": "bash/sh and similar Unix shells (zsh, ksh, csh, fish, etc. - default)",
+        "powershell": "PowerShell or PowerShell Core",
+        "cmd": "Windows cmd.exe"
+      }
+    },
+    {
       "name": "failOnStdErr",
       "type": "boolean",
       "label": "Fail on STDERR",
@@ -179,6 +193,8 @@
     "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
     "SshConnectionSuccessful": "Successfully connected.",
     "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+    "ScriptArgsSanitizedPowerShell": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787",
+    "ScriptArgsSanitizedCmd": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using caret (^). More information is available here: https://aka.ms/ado/75787"
   }
 }
