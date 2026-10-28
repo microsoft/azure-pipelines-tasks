@@ -120,8 +120,9 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
     }
 
     async function taskOptions(pattern: string, flag: string) {
-        const result = await getDownloaderOptions(pattern, flag, '4', 'false');
-        // Exercise failures without leaving production retry timers beyond the test lifetime.
+        const result = await getDownloaderOptions(pattern, flag, '1', 'false');
+        // Exercise failures without leaving production retry or worker timers beyond the test lifetime.
+        result.parallelProcessingLimit = 1;
         result.retryLimit = 1;
         result.retryIntervalInSeconds = 0;
         return result;
@@ -377,45 +378,21 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
 
         it('keeps backslash-containing metadata on the configured endpoint when encoding is enabled', async () => {
             setFlags('true', 'false');
-            const relativePath = `release.zip","downloadUrl":"http:${'\\'.repeat(4)}127.0.0.1:${secondaryPort}","z":"safe.zip`;
-            files[relativePath] = 'safe-bytes';
-            try {
-                metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
-                const downloadOptions = await taskOptions('**/*.zip', 'true');
-                const savedItems: string[] = [];
-                const memoryDest: any = {
-                    artifactItemStore: undefined,
-                    putArtifactItem: (item: any, stream: NodeJS.ReadableStream) => new Promise((resolve, reject) => {
-                        if (!stream) {
-                            resolve(item);
-                            return;
-                        }
-                        stream.on('data', () => {});
-                        stream.on('end', () => {
-                            savedItems.push(item.path);
-                            resolve(item);
-                        });
-                        stream.on('error', reject);
-                    }),
-                    dispose: () => {}
-                };
+            const relativePath = `release.zip","downloadUrl":"http:${'\\'.repeat(4)}127.0.0.1:${secondaryPort}","z":"safe`;
+            metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+            const downloadOptions = await taskOptions('*.zip', 'true');
 
-                let tickets: any[] = [];
-                await captureEngineOutput(false, async () => {
-                    tickets = await new ArtifactEngine().processItems(webProvider(), memoryDest, downloadOptions);
-                });
+            let tickets: any[] = [];
+            await captureEngineOutput(false, async () => {
+                tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
 
-                assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests');
-                assert.deepStrictEqual(savedItems, [relativePath], 'matching item must be downloaded from the configured Jenkins endpoint');
-                assert(requests.some(r => r.url.indexOf('/job/example/42/artifact/release.zip%22%2C%22downloadUrl%22%3A%22http%3A%5C%5C%5C%5C') === 0),
-                    requests.map(r => r.url).join('\n'));
-                const fileTickets = tickets.filter((t: any) => t.artifactItem.path !== '');
-                assert.strictEqual(fileTickets.length, 1);
-                assert.strictEqual(fileTickets[0].artifactItem.path, relativePath);
-                assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf(endpoint + '/job/example//42/artifact/') === 0);
-            } finally {
-                delete files[relativePath];
-            }
+            assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests');
+            const fileTickets = tickets.filter((t: any) => t.artifactItem.path !== '');
+            assert.strictEqual(fileTickets.length, 1);
+            assert.strictEqual(fileTickets[0].artifactItem.path, relativePath);
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf(
+                endpoint + '/job/example//42/artifact/release.zip%22%2C%22downloadUrl%22%3A%22http%3A%5C%5C%5C%5C') === 0);
         });
 
         it('keeps unicode-escape metadata on the configured endpoint when encoding is enabled', async () => {

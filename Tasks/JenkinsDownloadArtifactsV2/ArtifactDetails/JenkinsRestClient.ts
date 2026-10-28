@@ -215,17 +215,6 @@ export class JenkinsRestClient {
             };
         }
 
-        function canPublishTelemetry(): boolean {
-            const agentVersion = process.env.AGENT_VERSION || '';
-            if (!agentVersion) {
-                return true;
-            }
-            const splitVersion = agentVersion.split('.');
-            const major = parseInt(splitVersion[0] || '0', 10);
-            const minor = parseInt(splitVersion[1] || '0', 10);
-            return major > 2 || (major === 2 && minor >= 120);
-        }
-
         function publishAuditSummary(): void {
             if (auditEmitted || !auditStats) {
                 return;
@@ -243,9 +232,7 @@ export class JenkinsRestClient {
                 auditEnabled,
                 decision
             }, auditStats);
-            if (canPublishTelemetry()) {
-                console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
-            }
+            console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
         }
 
         handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
