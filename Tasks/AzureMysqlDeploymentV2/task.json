@@ -18,7 +18,7 @@
   "version": {
     "Major": 2,
     "Minor": 282,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -234,6 +234,7 @@
     "Nopackagefoundwithspecifiedpattern": "No package found with specified pattern",
     "FirewallRuleNameCannotBeNull": "The firewall rule name cannot be null.",
     "SqlFileNotFound": "SQL file not found at path: %s",
-    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed."
+    "InvalidDatabaseName": "Invalid database name '%s'. Only alphanumeric characters, underscores, hyphens, and dollar signs are allowed.",
+    "SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
   }
 }

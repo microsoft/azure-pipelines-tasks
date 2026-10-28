@@ -120,5 +120,17 @@ describe('AzureFileCopy Suite', function () {
         it('Validate Copy-FilesToAzureVMsFromStorageContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
         });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer TargetPath escaping neutralizes ASCII and typographic single quotes', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.TargetPathEscaping.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer legacy path (feature flags off) passes TargetPath as data and keeps $env: expansion', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.LegacyTargetPath.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer additionalArguments escaping neutralizes ASCII and typographic single quotes', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.AdditionalArgumentsEscaping.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer generated arguments survive the real remote runner', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.RemoteRunner.ps1'), done);
+        });
     }   
 });
