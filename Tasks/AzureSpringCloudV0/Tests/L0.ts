@@ -1,4 +1,5 @@
 import fs = require('fs');
+import assert = require('assert');
 import { AzureSpringAppsUnitTests } from './AzureSpringAppsUnitTests';
 import { nock } from './mock_utils';
 import { CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist } from './CreateNamedDeploymentFailsDeploymentDoesNotAlreadyExist';
@@ -13,6 +14,7 @@ import { DeleteStagingDeploymentTest } from './DeleteStagingDeploymentTest';
 import { DeploymentToStagingSucceedsWithBuildService } from './DeploymentToStagingSucceedsWithBuildService';
 import { DeploymentFailsWhenBuilderNotExist } from './DeploymentFailsWhenBuilderNotExist';
 import { DeploymentCustomImageToStagingSucceeds } from './DeploymentCustomImageToStagingSucceeds'
+import { sanitizeForLoggingCommand } from '../sanitize';
 
 describe('Azure Spring Apps deployment Suite', function () {
     afterEach(() => {
@@ -50,4 +52,42 @@ describe('Azure Spring Apps deployment Suite', function () {
     it('Correctly deletes the staging deployment', DeleteStagingDeploymentTest.mochaTest);
 });
 
+describe('Azure Spring Apps log output security', function () {
+    it('neutralizes agent commands while preserving diagnostic text', function () {
+        const commandPrefix = '##' + 'vso[';
+        const input = `first line\n${commandPrefix}task.setvariable variable=NODE_OPTIONS]payload\nlast line`;
+        const sanitized = sanitizeForLoggingCommand(input);
+
+        assert.strictEqual(
+            sanitized,
+            `first line\n##_vso[task.setvariable variable=NODE_OPTIONS]payload\nlast line`
+        );
+        assert.strictEqual(sanitized.includes(commandPrefix), false);
+    });
+
+    it('neutralizes agent commands case-insensitively and globally', function () {
+        const lowerCasePrefix = '##' + 'vso[';
+        const upperCasePrefix = '##' + 'VSO[';
+        const sanitized = sanitizeForLoggingCommand(`${lowerCasePrefix}first]x ${upperCasePrefix}second]y`);
+
+        assert.strictEqual(sanitized, '##_vso[first]x ##_vso[second]y');
+        assert.strictEqual(sanitized.toLowerCase().includes(lowerCasePrefix), false);
+    });
+
+    it('restricts commands and settable variables in task metadata', function () {
+        const taskJson = require('../task.json');
+        const localizedTaskJson = require('../task.loc.json');
+        const expectedRestrictions = {
+            commands: {
+                mode: 'restricted'
+            },
+            settableVariables: {
+                allowed: ['testEndpoint']
+            }
+        };
+
+        assert.deepStrictEqual(taskJson.restrictions, expectedRestrictions);
+        assert.deepStrictEqual(localizedTaskJson.restrictions, expectedRestrictions);
+    });
+});
 

@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "Échec de l'opération. Attente de %sms avant une nouvelle tentative. Nouvelles tentatives restantes : %s",
   "loc.messages.RedirectUrlError": "Impossible d'obtenir l'URL de redirection. Erreur : %.",
   "loc.messages.UnsupportedArchiveType": "Type d'archive non pris en charge : %s",
+  "loc.messages.InvalidPackageFilePath": "Le chemin d’accès au fichier de package '%s' doit être relatif au répertoire de destination et rester dans ce dernier.",
+  "loc.messages.InvalidPackageFileLink": "Le chemin d’accès du fichier de package '%s' ne peut pas contenir de lien ou de jonction symbolique sous le répertoire de destination.",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Une erreur inattendue s'est produite durant le téléchargement du package. Code de sortie (%s) et erreur (%s)",
   "loc.messages.Info_ResolvedToolFromCache": "Résolu à partir du cache d'outils : %s",
   "loc.messages.Info_DownloadingArtifactTool": "Téléchargement de l'outil d'artefact à partir de %s",

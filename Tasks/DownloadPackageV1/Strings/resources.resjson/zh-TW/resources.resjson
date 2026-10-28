@@ -31,6 +31,8 @@
   "loc.messages.RetryingOperation": "作業失敗，請等候 %sms 後再重試，重試機會剩餘 %s 次",
   "loc.messages.RedirectUrlError": "無法取得重新導向 URL。錯誤: %。",
   "loc.messages.UnsupportedArchiveType": "不支援的封存類型: %s",
+  "loc.messages.InvalidPackageFilePath": "套件檔案路徑 '%s' 必須是相對路徑，且不得超出目的地目錄。",
+  "loc.messages.InvalidPackageFileLink": "套件檔案路徑 '%s' 不能包含目的地目錄下的符號連結或接合。",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "嘗試下載套件時發生未預期的錯誤。結束代碼(%s) 與錯誤(%s)",
   "loc.messages.Info_ResolvedToolFromCache": "已從工具快取中解析: %s",
   "loc.messages.Info_DownloadingArtifactTool": "正在從 %s 下載成品工具",

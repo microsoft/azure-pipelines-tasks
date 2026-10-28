@@ -2,6 +2,7 @@ import { DownloadHandler } from './DownloadHandler';
 import { IContainerHandlerZipConfig } from './HandlerConfigs';
 import { FilesystemProvider, ZipProvider } from 'artifact-engine/Providers';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as os from 'os';
 import * as path from 'path';
 import * as DecompressZip from 'decompress-zip';
 import * as extract from 'extract-zip'
@@ -58,7 +59,7 @@ export class DownloadHandlerContainerZip extends DownloadHandler {
      * @returns {ZipProvider} Configured Zip Provider
     */
     protected getSourceProvider(): ZipProvider {
-        console.log(tl.loc('DownloadArtifacts', this.config.artifactInfo.name, this.archiveUrl));
+        tl.writeExternalOutput(tl.loc('DownloadArtifacts', this.config.artifactInfo.name, this.archiveUrl) + os.EOL, { source: 'remote' });
         const provider: ZipProvider = new ZipProvider(this.archiveUrl, this.config.handler);
         return provider;
     }

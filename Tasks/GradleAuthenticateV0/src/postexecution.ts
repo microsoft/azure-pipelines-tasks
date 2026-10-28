@@ -4,6 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
+import { IssueSource } from 'azure-pipelines-task-lib/internal';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -21,29 +22,26 @@ tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 function postExecution(): void {
     try {
         // Delete init script
-        const initScriptPath = tl.getVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH');
+        const initScriptPath = tl.getTaskVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH');
         if (initScriptPath && fs.existsSync(initScriptPath)) {
             fs.unlinkSync(initScriptPath);
-            console.log(tl.loc('Info_PostExecDeletedInitScript', initScriptPath));
+            tl.debug(tl.loc('Info_PostExecDeletedInitScript'));
         }
 
         // Delete temp directory (CI JAR layout + auth config)
-        const tempDir = tl.getVariable('ARTIFACTS_GRADLE_AUTH_TEMP_DIR');
+        const tempDir = tl.getTaskVariable('ARTIFACTS_GRADLE_AUTH_TEMP_DIR');
         if (tempDir && fs.existsSync(tempDir)) {
             fs.rmSync(tempDir, { recursive: true, force: true });
-            console.log(tl.loc('Info_PostExecDeletedTempDir', tempDir));
+            tl.debug(tl.loc('Info_PostExecDeletedTempDir'));
         }
 
         // Unset environment variables
         tl.setVariable('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO', '');
         tl.setVariable('ARTIFACTS_GRADLE_AUTH_CONFIG', '');
-        tl.setVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH', '');
-        tl.setVariable('ARTIFACTS_GRADLE_AUTH_TEMP_DIR', '');
         console.log(tl.loc('Info_PostExecUnsetVars'));
 
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err);
-        tl.warning(tl.loc('Warning_PostExecCleanupFailed', message));
+    } catch {
+        tl.warning(tl.loc('Warning_PostExecCleanupFailed'), IssueSource.TaskInternal);
     }
 }
 

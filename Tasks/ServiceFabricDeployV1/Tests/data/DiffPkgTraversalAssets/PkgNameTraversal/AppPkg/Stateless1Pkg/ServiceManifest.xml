@@ -1,0 +1,11 @@
+<ServiceManifest Name="Stateless1Pkg" Version="2.0.0">
+  <ServiceTypes>
+    <StatelessServiceType ServiceTypeName="Stateless1Type" />
+  </ServiceTypes>
+  <!-- Security test asset: the CodePackage name is a relative path traversal. Before the fix this
+       name was joined onto both the application package path and the diff package path and handed
+       to Copy-Item, which wrote outside the diff package. -->
+  <CodePackage Name="..\..\..\Evil" Version="2.0.0">
+  </CodePackage>
+  <ConfigPackage Name="Config" Version="1.0.0" />
+</ServiceManifest>

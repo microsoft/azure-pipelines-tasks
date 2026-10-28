@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "快取命中變數",
   "loc.input.help.cacheHitVar": "還原快取時 (即快取命中)，要將變數設為 'true'，否則設為 'false'。",
   "loc.input.label.restoreKeys": "其他還原索引鍵前置詞",
-  "loc.input.help.restoreKeys": "缺少主要索引鍵時所使用的其他還原索引鍵前置詞。這可以是以換行分隔的索引鍵前置詞清單。"
+  "loc.input.help.restoreKeys": "缺少主要索引鍵時所使用的其他還原索引鍵前置詞。這可以是以換行分隔的索引鍵前置詞清單。",
+  "loc.input.label.saveOnPartialSuccess": "部分成功時儲存快取",
+  "loc.input.help.saveOnPartialSuccess": "設為 true 時，即使作業狀態為 'SucceededWithIssues' (部分成功)，系統也會儲存快取項目，狀態為 'Succeeded' 時同樣會儲存。根據預設，只有作業成功時，系統才會儲存快取。"
 }

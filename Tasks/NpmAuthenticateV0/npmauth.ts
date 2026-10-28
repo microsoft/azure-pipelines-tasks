@@ -5,13 +5,15 @@ import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager } from './npmrcBackupManager';
+import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { NpmConfigTelemetryPhase } from './constants';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
 let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
+    npmauthutils.emitNpmConfigTelemetry(NpmConfigTelemetryPhase.Main);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     // Path to user provided npmrc
     const npmrc = npmauthutils.validateNpmrcPath();
@@ -20,7 +22,8 @@ async function main(): Promise<void> {
     // Preserve the original user provided .npmrc on first task execution, so the post-job cleanup can restore it. 
     const backupDirectory = npmauthutils.initializeBackupDirectory();
     const backupManager = new NpmrcBackupManager(backupDirectory);
-    backupManager.ensureBackedUp(npmrc);
+    const fileIdentity = backupManager.ensureBackedUp(npmrc);
+    tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
     
     let packagingLocation;
@@ -78,16 +81,16 @@ async function main(): Promise<void> {
 #if WIF
         if (entraWifServiceConnectionName) {
             if (registryURL.protocol !== 'https:') {
-                console.log(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
+                npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingNonHttpsWifRegistry', registryUrlString));
                 continue;
             }
 
-            console.log(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
-            console.log(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
             federatedFeedAuthSuccessCount++;
-            console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
+            npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;
         }
 #endif
@@ -95,7 +98,7 @@ async function main(): Promise<void> {
         if (endpointRegistries.length > 0) {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
-                console.log(tl.loc("AddingEndpointCredentials", registryURL.host));
+                npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
                 writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
                 externalFeedSuccessCount++;
                 continue;
@@ -109,13 +112,13 @@ async function main(): Promise<void> {
             registryURL.host
         );
         if (npmrcEntry) {
-            console.log(tl.loc("AddingLocalCredentials"));
+            npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
             writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
             internalFeedSuccessCount++;
             continue;
         }
 
-        console.log(tl.loc("IgnoringRegistry", registryURL.host));
+        npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
     }
 }
 

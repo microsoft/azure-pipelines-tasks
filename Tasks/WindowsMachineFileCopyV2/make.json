@@ -1,6 +1,10 @@
 {
     "common": [
         {
+            "module": "../Common/ExternalOutputSanitizer",
+            "type": "ps"
+        },
+        {
             "module": "../Common/Sanitizer",
             "type": "ps"
         }

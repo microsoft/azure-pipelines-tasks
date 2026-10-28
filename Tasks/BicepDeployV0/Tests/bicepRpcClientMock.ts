@@ -59,12 +59,13 @@ function resolveFileSet(filePath: string): { template: string; parameters?: stri
 }
 
 /**
- * Creates a mock for the 'bicep-node' module that avoids real Bicep WASM
+ * Creates a mock for the '@azure/bicep-rpc-client' module that avoids real Bicep
  * initialization and download. Instead, compile/compileParams return
  * pre-built JSON matching the test fixture .bicep files.
  */
-export function createBicepNodeMock() {
+export function createBicepRpcClientMock() {
   return {
+    resolveConfigChain: async (_sourceFilePath: string) => ({}),
     Bicep: {
       getDownloadUrl: async () => 'https://downloads.bicep.azure.com/v1.2.3/bicep-linux-x64',
       install: async (_dir: string, _version?: string) => '/mock/path/to/bicep',

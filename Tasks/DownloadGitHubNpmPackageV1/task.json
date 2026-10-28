@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 280,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -102,6 +102,8 @@
     "UseNpmrc": "Using registries in .npmrc",
     "PublishRegistry": "Publishing to registry: %s",
     "UsingRegistry": "Using registry: %s",
+    "Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+    "Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
     "AddingAuthRegistry": "Adding auth for registry: %s",
     "FoundLocalRegistries": "Found %d registries in this organization/collection",
     "ForcePackagingUrl": "Packaging collection URL forced to: %s",

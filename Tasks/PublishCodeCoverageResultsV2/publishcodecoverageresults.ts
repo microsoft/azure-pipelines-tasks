@@ -1,6 +1,10 @@
+import * as os from 'os';
 import * as path from 'path';
 import * as taskLib from 'azure-pipelines-task-lib/task';
 import * as coveragePublisher from 'coveragepublisher/coveragepublisher';
+
+const sourcePathContainmentFeature = 'EnablePublishCodeCoverageResultsV2SourcePathContainment';
+const loggingCommandInjectionFixEnabled = 'PublishCodeCoverageResultsV2LoggingCommandInjectionFixEnabled';
 
 // Main entry point of this task.
 async function run() {
@@ -12,10 +16,13 @@ async function run() {
         const summaryFileLocations = taskLib.getInput('summaryFileLocation', true);
         const failIfCoverageIsEmpty: boolean = taskLib.getBoolInput('failIfCoverageEmpty');
         const workingDirectory: string = taskLib.getVariable('System.DefaultWorkingDirectory');
+        const buildSourcesDirectory: string = taskLib.getVariable('Build.SourcesDirectory');
         const pathToSources: string = taskLib.getInput('pathToSources');
+        const enableTrustedSourcePathFiltering = taskLib.getPipelineFeature(sourcePathContainmentFeature);
+        const enableLoggingCommandFiltering = taskLib.getPipelineFeature(loggingCommandInjectionFixEnabled);
         const publishHtmlReport: boolean = taskLib.getBoolInput('publishHtmlReport');
 
-        var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations)
+        var resolvedSummaryFiles = resolveSummaryFiles(workingDirectory, summaryFileLocations, enableLoggingCommandFiltering)
 
         if(resolvedSummaryFiles.length === 0) {
             if(failIfCoverageIsEmpty === true) {
@@ -25,7 +32,14 @@ async function run() {
             }
         }
         else{
-            await coveragePublisher.PublishCodeCoverage(resolvedSummaryFiles, pathToSources, publishHtmlReport);
+            await coveragePublisher.PublishCodeCoverage(
+                resolvedSummaryFiles,
+                pathToSources, publishHtmlReport,
+                enableTrustedSourcePathFiltering
+                    ? [workingDirectory, buildSourcesDirectory].filter(directory => !!directory)
+                    : undefined,
+                enableTrustedSourcePathFiltering,
+                enableLoggingCommandFiltering);
         }       
 
     } catch (err) {
@@ -33,7 +47,7 @@ async function run() {
     }
 }
 
-function resolveSummaryFiles(workingDirectory: string, summaryFiles: string): string[] {
+function resolveSummaryFiles(workingDirectory: string, summaryFiles: string, enableLoggingCommandFiltering: boolean): string[] {
     if(summaryFiles) {
         const summaryFilesArray = summaryFiles.trim().split('\n').filter((pattern) => pattern.trim() != "");
         const resolvedSummaryFiles: string[] = [];
@@ -51,7 +65,11 @@ function resolveSummaryFiles(workingDirectory: string, summaryFiles: string): st
                 pathMatches.forEach(path => {
                     if(pathExistsAsFile(path)) {
                         resolvedSummaryFiles.push(path);
-                        console.log(path);
+                        if (enableLoggingCommandFiltering) {
+                            taskLib.writeExternalOutput(path + os.EOL, { source: 'repository' });
+                        } else {
+                            console.log(path);
+                        }
                     }
                 });
             });

@@ -117,5 +117,11 @@ describe('Common-VstsAzureHelpers_ Suite', function () {
         it('(Get-MsiAccessToken) tests', (done) => {
             psr.run(path.join(__dirname, 'Get-MsiAccessTokenTests.ps1'), done);
         });
+        it('(Remove-EndpointSecrets) removes certificate files', (done) => {
+            psr.run(path.join(__dirname, 'Remove-EndpointSecrets.RemovesCertificateFiles.ps1'), done);
+        });
+        it('certificate-capable task initialization guarantees endpoint cleanup', (done) => {
+            psr.run(path.join(__dirname, 'Remove-EndpointSecrets.TaskInitializationCleanup.ps1'), done);
+        });
     }
 });

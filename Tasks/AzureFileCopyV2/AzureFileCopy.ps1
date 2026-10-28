@@ -72,6 +72,7 @@ Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 . "$PSScriptRoot\Utility.ps1"
 
+try {
 if ($featureFlags.retireAzureRM)
 {
     Modify-PSModulePathForHostedAgent
@@ -116,7 +117,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try
     {
         # Importing required version of azure cmdlets according to azureps installed on machine
@@ -302,5 +302,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $connectionType -ErrorAction SilentlyContinue
 }

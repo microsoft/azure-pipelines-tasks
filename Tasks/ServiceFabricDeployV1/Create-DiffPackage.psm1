@@ -1,3 +1,50 @@
+# Load the shared manifest-path-segment validator (Assert-ValidManifestPathSegment) at module scope, so it
+# is available both here and in Copy-DiffPackage below regardless of which function is invoked first.
+. "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
+
+# Names that come out of the local ApplicationManifest.xml / ServiceManifest.xml
+# (ServiceManifestRef/@ServiceManifestName and the Name attribute of CodePackage, ConfigPackage and
+# DataPackage) are used as folder names when building the temporary diff package, and the resulting
+# paths are then handed to Copy-Item. Service Fabric only ever emits simple names here, but the
+# values themselves come from XML inside the application package, which is only as trustworthy as
+# whatever produced that package. A name such as '..\..\x', 'C:\x' or '\\server\share\x' would
+# otherwise escape both the application package folder and the diff package folder, letting the
+# copy read and overwrite arbitrary files on the agent.
+
+# Cluster-supplied names are deliberately not validated here: they are only used as hashtable keys
+# and version comparisons, never as path segments.
+function Assert-ValidDiffPackageName
+{
+    param(
+        [string] $Name,
+        [string] $ElementDescription
+    )
+
+    Assert-ValidManifestPathSegment -Name $Name -ElementDescription $ElementDescription
+}
+
+# Defense in depth for the paths derived from the names validated above: even if a future change
+# reintroduces an unvalidated join, nothing is copied to a location outside the folder it belongs to.
+function Assert-PathContainedIn
+{
+    param(
+        [string] $ParentPath,
+        [string] $ChildPath,
+        [string] $Name,
+        [string] $ElementDescription
+    )
+
+    # Both paths are resolved the same way, so a relative $ParentPath stays comparable to its child.
+    $parentFullPath = [System.IO.Path]::GetFullPath($ParentPath)
+    $childFullPath = [System.IO.Path]::GetFullPath($ChildPath)
+    $parentPrefix = $parentFullPath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
+
+    if (!$childFullPath.StartsWith($parentPrefix, [System.StringComparison]::OrdinalIgnoreCase))
+    {
+        throw (Get-VstsLocString -Key SFSDK_InvalidManifestPathSegment -ArgumentList @($ElementDescription, $Name))
+    }
+}
+
 function New-DiffPackage
 {
     [CmdletBinding()]
@@ -79,10 +126,14 @@ function New-DiffPackage
             $serviceManifestName = "ServiceManifest.xml"
             $localServiceManifestName = $serviceManifestImport.ServiceManifestRef.ServiceManifestName
             $localServiceManifestVersion = $serviceManifestImport.ServiceManifestRef.ServiceManifestVersion
+            $serviceManifestElementDescription = 'ServiceManifestRef/@ServiceManifestName'
+            Assert-ValidDiffPackageName -Name $localServiceManifestName -ElementDescription $serviceManifestElementDescription
             $localServicePkgPath = Join-Path $ApplicationPackagePath $localServiceManifestName
+            Assert-PathContainedIn -ParentPath $ApplicationPackagePath -ChildPath $localServicePkgPath -Name $localServiceManifestName -ElementDescription $serviceManifestElementDescription
             $localServiceManifestPath = [System.IO.Path]::Combine($localServicePkgPath, $serviceManifestName)
             $localServiceManifest = ([XML](Get-Content -LiteralPath $localServiceManifestPath)).ServiceManifest
             $diffServicePkgPath = [System.IO.Path]::Combine($diffPackagePath, $localServiceManifestName)
+            Assert-PathContainedIn -ParentPath $diffPackagePath -ChildPath $diffServicePkgPath -Name $localServiceManifestName -ElementDescription $serviceManifestElementDescription
             $clusterServiceManifest = $clusterServiceManifestByName[$localServiceManifestName].ServiceManifest
             $diffPkgServiceManifestPath = Join-Path $diffServicePkgPath $serviceManifestName
 
@@ -148,8 +199,16 @@ function Copy-DiffPackage
             continue
         }
 
+        # Validate before the paths are built and before they are probed with Test-Path, so a
+        # crafted name cannot be used to reach outside the package at all.
+        $packageElementDescription = 'CodePackage/ConfigPackage/DataPackage @Name'
+        Assert-ValidDiffPackageName -Name $localPackage.Name -ElementDescription $packageElementDescription
+
         $localPkgPath = Join-Path $localParentPkgPath $localPackage.Name
         $diffPkgPath = Join-Path $diffParentPkgPath $localPackage.Name
+
+        Assert-PathContainedIn -ParentPath $localParentPkgPath -ChildPath $localPkgPath -Name $localPackage.Name -ElementDescription $packageElementDescription
+        Assert-PathContainedIn -ParentPath $diffParentPkgPath -ChildPath $diffPkgPath -Name $localPackage.Name -ElementDescription $packageElementDescription
 
         if (Test-Path -LiteralPath ($localPkgPath + ".zip"))
         {

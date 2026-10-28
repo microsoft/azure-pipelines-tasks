@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "在任务结束后删除规则",
   "loc.input.help.DeleteFirewallRule": "如果选中，将为相应的 Azure Database for MySQL 删除添加的自动化代理 IP 地址例外。",
   "loc.messages.ARGD_ConstructorFailed": "初始化时任务失败。错误: %s。",
+  "loc.messages.InvalidDatabaseName": "数据库名称“%s”无效。只允许使用字母数字字符、下划线、连字符和美元符号。",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "防火墙规则名称不能为 null。",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "防火墙地址不能为 null。",
   "loc.messages.StartIpAddressCannotBeEmpty": "防火墙规则的起始 IP 地址不能为 null。",

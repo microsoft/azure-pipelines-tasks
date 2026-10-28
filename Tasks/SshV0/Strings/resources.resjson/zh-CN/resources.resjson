@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "等待 SSH 握手完成的时间(毫秒)。",
   "loc.input.label.interactiveKeyboardAuthentication": "使用交互式键盘身份验证",
   "loc.input.help.interactiveKeyboardAuthentication": "如果在目标计算机上禁用了 PasswordAuthentication，请使用此值",
+  "loc.input.label.enableRemoteVsoCommands": "允许来自远程输出的日志记录命令",
+  "loc.input.help.enableRemoteVsoCommands": "当为 false (默认)时，远程输出中的 ##vso[...] 行将被中性化(以文本形式打印，不执行)。仅当你信任远程输出并依赖它发出日志记录命令时，才设置为 true。",
   "loc.messages.ConnectionFailed": "无法连接到远程计算机。请验证 SSH 服务连接详细信息。错误: %s。",
   "loc.messages.FailedToWriteScript": "未能将脚本写入磁盘: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令因远程计算机上的错误而失败。",

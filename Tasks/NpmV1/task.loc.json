@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -187,6 +187,14 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "messages": {
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "NoBuildCredentials": "ms-resource:loc.messages.NoBuildCredentials",
@@ -213,6 +221,10 @@
     "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
     "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
     "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
-    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
+    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth",
+    "PackagingCollectionUrlInvalid": "ms-resource:loc.messages.PackagingCollectionUrlInvalid",
+    "PackagingCollectionUrlUnsupportedScheme": "ms-resource:loc.messages.PackagingCollectionUrlUnsupportedScheme",
+    "PackagingCollectionUrlHasCredentials": "ms-resource:loc.messages.PackagingCollectionUrlHasCredentials",
+    "PackagingCollectionUrlMismatch": "ms-resource:loc.messages.PackagingCollectionUrlMismatch"
   }
 }
