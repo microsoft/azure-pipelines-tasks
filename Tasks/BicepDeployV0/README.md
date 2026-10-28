@@ -21,7 +21,7 @@ The task handles:
 - **Multiple Deployment Scopes**: Supports Resource Group, Subscription, Management Group, and Tenant scopes
 - **What-If Operations**: Preview changes before applying them to your Azure environment
 - **Flexible Parameter Input**: Support for inline YAML/JSON parameters and traditional parameter files
-- **Output Masking**: Automatically mask sensitive outputs like secrets and connection strings
+- **Secret Outputs**: Create selected outputs, such as connection strings, as single-line secret output variables
 
 ## Prerequisites
 
@@ -104,7 +104,7 @@ These inputs apply when `type` is set to `deploymentStack`.
 | `description` | No | Description text for the deployment or stack | Any string |
 | `tags` | No | Tags as JSON or YAML object (Deployment Stack only) | JSON or YAML object |
 | `bicepVersion` | No | Specific Bicep CLI version to use. Uses latest stable version if empty. | Version string (e.g., `0.30.23`) |
-| `maskedOutputs` | No | Comma-separated list of output names to mask in logs for security | e.g., `connectionString,adminPassword` |
+| `maskedOutputs` | No | Comma-separated list of output names to create as secret output variables. See [Secret Outputs](#secret-outputs). | e.g., `connectionString,adminPassword` |
 | `environment` | No | Target Azure cloud environment | `azureCloud` (default)<br>`azureChinaCloud`<br>`azureGermanCloud`<br>`azureUSGovernment` |
 | `whatIfExcludeChangeTypes` | No | Comma-separated change types to exclude from What-If output (What-If operation only) | e.g., `NoChange,Ignore` |
 | `validationLevel` | No | Template validation level (Validate and What-If operations only) | `provider`<br>`template`<br>`providerNoRbac` |
@@ -220,6 +220,31 @@ After the deployment completes successfully, all outputs are set as output varia
     script: |
       echo "Storage Account Name: $(deploy.storageAccountName)"
       echo "Web App URL: $(deploy.webAppUrl)"
+```
+
+### Secret Outputs
+
+Outputs listed in `maskedOutputs` are created as single-line secret output variables. Their values are masked in logs. Like other secret variables, they are not mapped to environment variables automatically. Use the `$(stepName.outputName)` syntax, or map them explicitly with `env` in a later script step:
+
+```yaml
+- task: BicepDeploy@0
+  name: deploy
+  displayName: 'Deploy Infrastructure'
+  inputs:
+    azureResourceManagerConnection: 'Azure-Connection'
+    subscriptionId: '$(subscriptionId)'
+    resourceGroupName: 'my-resource-group'
+    templateFile: 'infra/main.bicep'
+    maskedOutputs: 'storageConnectionString'
+
+- task: Bash@3
+  displayName: 'Use Secret Output'
+  inputs:
+    targetType: 'inline'
+    script: |
+      ./configure-app.sh "$STORAGE_CONNECTION_STRING"
+  env:
+    STORAGE_CONNECTION_STRING: $(deploy.storageConnectionString)
 ```
 
 ## Feedback and Support
