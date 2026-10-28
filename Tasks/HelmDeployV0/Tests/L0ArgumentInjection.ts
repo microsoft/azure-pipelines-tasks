@@ -191,4 +191,88 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
         assert.strictEqual(argv[flagIndex + 1], 'my namespace',
             'the namespace value must be the single next argv element, not re-split on its internal space');
     });
+
+    it('does not let the generic single-token dispatch silently mutate a value, independent of any caller-level normalization', function () {
+        // This isolates execHelmCommand()'s dispatch mechanism itself: it
+        // must hand a single-token value to Helm exactly as it was added,
+        // whatever normalization (if any) the caller already chose to apply.
+        // A value that resolves a path or holds a credential can legitimately
+        // contain meaningful whitespace, so the dispatch layer must never
+        // guess and silently trim/alter it (that is a caller decision - see
+        // the namespace-trimming test below for the one place this task
+        // does choose to normalize, explicitly, before the value ever
+        // reaches this dispatch).
+        let captured: string[] = null;
+        const originalExecSync = tr.ToolRunner.prototype.execSync;
+        (tr.ToolRunner.prototype as any).execSync = function () {
+            captured = [this.toolPath].concat((this as any).args.slice());
+            return { code: 0, stdout: '', stderr: '', error: null };
+        };
+        try {
+            const helmCli = new HelmCli();
+            helmCli.setCommand('upgrade');
+            helmCli.addSingleArgument('--some-flag');
+            helmCli.addSingleArgument('  padded-value  ');
+            helmCli.execHelmCommand(true);
+        } finally {
+            tr.ToolRunner.prototype.execSync = originalExecSync;
+        }
+
+        assert.deepStrictEqual(captured.slice(1), ['upgrade', '--some-flag', '  padded-value  '],
+            'execHelmCommand() must not alter a single-token value that was already added');
+    });
+
+    it('trims accidental leading/trailing whitespace from a namespace input before it reaches Helm', async function () {
+        // Unlike the dispatch-level test above, this exercises the real
+        // production addArguments() path end to end. namespace is a strict
+        // Kubernetes identifier with no legitimate whitespace-containing
+        // form, so this task explicitly trims it right after reading the
+        // input (see utils.ts's trimIdentifierInput) - restoring the same
+        // tolerance for an accidentally padded value (stray copy-pasted
+        // space, etc.) that the old ToolRunner.line()-based code provided
+        // for free, without reintroducing any implicit trimming into the
+        // generic single-token dispatch itself.
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('namespace', '  padded-namespace  ');
+
+        const argv = await buildUpgradeArgv();
+
+        const flagIndex = argv.indexOf('--namespace');
+        assert.ok(flagIndex !== -1, '--namespace flag must be present');
+        assert.strictEqual(argv[flagIndex + 1], 'padded-namespace',
+            'a namespace value padded with stray whitespace must be trimmed before reaching Helm');
+    });
+
+    it('still lets a quoted overrideValues entry have its quotes stripped, matching Helm --set quoting conventions', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'image.tag="1.2.3"');
+
+        const argv = await buildUpgradeArgv();
+
+        const setIndex = argv.indexOf('--set');
+        assert.ok(setIndex !== -1, '--set flag must be present');
+        assert.strictEqual(argv[setIndex + 1], 'image.tag=1.2.3',
+            'quotes around an overrideValues value must still be stripped so Helm does not receive literal quote characters');
+    });
+
+    it('omits a single-token argument entirely when its value is empty, rather than adding a stray empty element', function () {
+        let captured: string[] = null;
+        const originalExecSync = tr.ToolRunner.prototype.execSync;
+        (tr.ToolRunner.prototype as any).execSync = function () {
+            captured = [this.toolPath].concat((this as any).args.slice());
+            return { code: 0, stdout: '', stderr: '', error: null };
+        };
+        try {
+            const helmCli = new HelmCli();
+            helmCli.setCommand('upgrade');
+            helmCli.addSingleArgument('--flag-with-empty-value');
+            helmCli.addSingleArgument('');
+            helmCli.addSingleArgument('next-real-value');
+            helmCli.execHelmCommand(true);
+        } finally {
+            tr.ToolRunner.prototype.execSync = originalExecSync;
+        }
+
+        assert.deepStrictEqual(captured.slice(1), ['upgrade', '--flag-with-empty-value', 'next-real-value']);
+    });
 });

@@ -10,7 +10,7 @@ import * as semver from 'semver';
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
-const namespace = tl.getInput('namespace', false);
+const namespace = trimIdentifierInput(tl.getInput('namespace', false));
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -54,10 +54,19 @@ export function resolvePath(path: string): string {
     }
 }
 
+/**
+ * Trims leading/trailing whitespace from a plain identifier-style value
+ * (a release name, namespace, chart name, or registry name) before it is
+ * added as a single Helm argument via addSingleArgument().
+ */
+export function trimIdentifierInput(value: string): string {
+    return value ? value.trim() : value;
+}
+
 export function extractReleaseNameFromHelmOutput(output: string) {
     const releaseNameMatch = output.match(matchPatternForReleaseName);
     if (releaseNameMatch && releaseNameMatch.length >= 1)
-        return releaseNameMatch[1];
+        return releaseNameMatch[1].trim();
     return '';
 }
 
@@ -92,8 +101,8 @@ function ensureDirExists(dirPath: string): void {
 }
 
 export function getHelmPathForACR() {
-    const chartName = tl.getInput("chartNameForACR", true);
-    const acr = tl.getInput("azureContainerRegistry");
+    const chartName = trimIdentifierInput(tl.getInput("chartNameForACR", true));
+    const acr = trimIdentifierInput(tl.getInput("azureContainerRegistry"));
     return acr + "/helm/" + chartName;
 }
 

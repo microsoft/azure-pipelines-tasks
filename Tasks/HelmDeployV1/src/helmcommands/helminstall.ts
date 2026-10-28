@@ -20,9 +20,9 @@ chart reference and repo url: helm install –repo https://example.com/charts/ n
 
 export async function addArguments(helmCli: helmcli): Promise<void> {
     var chartType = tl.getInput("chartType", true);
-    var releaseName = tl.getInput("releaseName", false);
+    var releaseName = helmutil.trimIdentifierInput(tl.getInput("releaseName", false));
     var overrideValues = tl.getInput("overrideValues", false);
-    var namespace = tl.getInput("namespace", false);
+    var namespace = helmutil.trimIdentifierInput(tl.getInput("namespace", false));
 
     var updatedependency = tl.getBoolInput('updatedependency', false);
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
@@ -43,8 +43,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (overrideValues) {
-        helmCli.addSingleArgument("--set");
-        helmCli.addSingleArgument(helmutil.replaceNewlinesWithCommas(overrideValues));
+        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
     }
 
     if (updatedependency) {
@@ -78,7 +77,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (chartType === "Name") {
-        var chartName = tl.getInput("chartName", true);
+        var chartName = helmutil.trimIdentifierInput(tl.getInput("chartName", true));
         helmCli.addSingleArgument(chartName);
 
     }

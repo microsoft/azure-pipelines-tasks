@@ -133,7 +133,15 @@ export default class helmcli extends basecommand {
         command.arg(this.command);
         this.arguments.forEach((entry) => {
             if (entry.isSingleToken) {
-                command.arg(entry.value);
+                // Only add a non-empty value, and pass it as a one-element
+                // ARRAY rather than a bare string. ToolRunner.arg()'s string
+                // overload calls value.trim() - which would silently alter a
+                // value containing meaningful leading/trailing whitespace
+                // (e.g. a resolved path or credential) - while the array
+                // overload performs no such transformation.
+                if (entry.value) {
+                    command.arg([entry.value]);
+                }
             } else {
                 command.line(entry.value);
             }

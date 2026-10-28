@@ -8,9 +8,9 @@ import * as semver from 'semver';
 
 export async function addArguments(helmCli: helmcli): Promise<void> {
     var chartType = tl.getInput("chartType", true);
-    var releaseName = tl.getInput("releaseName", false);
+    var releaseName = helmutil.trimIdentifierInput(tl.getInput("releaseName", false));
     var overrideValues = tl.getInput("overrideValues", false);
-    var namespace = tl.getInput("namespace", false);
+    var namespace = helmutil.trimIdentifierInput(tl.getInput("namespace", false));
 
     var waitForExecution = tl.getBoolInput('waitForExecution', false);
     var argumentsInput = tl.getInput("arguments", false);
@@ -25,7 +25,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
 
     if (!releaseName) {
         var hostType = tl.getVariable("SYSTEM_HOSTTYPE");
-        releaseName = (hostType === "build") ? tl.getVariable("BUILD_BUILDNUMBER") : tl.getVariable("RELEASE_RELEASENAME");
+        releaseName = helmutil.trimIdentifierInput((hostType === "build") ? tl.getVariable("BUILD_BUILDNUMBER") : tl.getVariable("RELEASE_RELEASENAME"));
     }
 
     if (namespace) {
@@ -55,8 +55,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (overrideValues) {
-        helmCli.addSingleArgument("--set");
-        helmCli.addSingleArgument(helmutil.replaceNewlinesWithCommas(overrideValues));
+        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
     }
 
     if (waitForExecution) {
@@ -76,7 +75,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (chartType === "Name") {
-        var chartName = tl.getInput("chartName", true);
+        var chartName = helmutil.trimIdentifierInput(tl.getInput("chartName", true));
         helmCli.addSingleArgument(chartName);
     }
     else {
