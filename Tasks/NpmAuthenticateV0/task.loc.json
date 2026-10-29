@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
-    "Patch": 10
+    "Minor": 283,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -88,6 +88,9 @@
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",
     "NpmrcMustBeRegularFile": "ms-resource:loc.messages.NpmrcMustBeRegularFile",
     "NpmrcChangedSinceBackup": "ms-resource:loc.messages.NpmrcChangedSinceBackup",
+    "Warning_NpmrcRestoreSkipped": "ms-resource:loc.messages.Warning_NpmrcRestoreSkipped",
+    "Warning_NpmrcBackupIntegrityMismatch": "ms-resource:loc.messages.Warning_NpmrcBackupIntegrityMismatch",
+    "Warning_NpmrcIdentityUnavailable": "ms-resource:loc.messages.Warning_NpmrcIdentityUnavailable",
     "UnableToWriteFileContents": "ms-resource:loc.messages.UnableToWriteFileContents",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",

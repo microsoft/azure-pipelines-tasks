@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
-    "Patch": 10
+    "Minor": 283,
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -22,7 +22,7 @@
     {
       "name": "workingFile",
       "label": ".npmrc file to authenticate",
-      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\".",
+      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.",
       "type": "filePath",
       "required": true
     },
@@ -88,6 +88,9 @@
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",
     "NpmrcMustBeRegularFile": "The .npmrc file at %s must be a regular file and cannot be a symbolic link.",
     "NpmrcChangedSinceBackup": "The .npmrc file at %s is no longer the same regular file that was backed up. Refusing to restore it.",
+    "Warning_NpmrcRestoreSkipped": "The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
+    "Warning_NpmrcBackupIntegrityMismatch": "The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
+    "Warning_NpmrcIdentityUnavailable": "The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
     "UnableToWriteFileContents": "Unable to write the contents of %s.",
     "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
     "SavingFile": "Saving file %s",
