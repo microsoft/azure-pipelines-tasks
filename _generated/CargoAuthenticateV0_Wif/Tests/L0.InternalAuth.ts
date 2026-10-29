@@ -98,6 +98,28 @@ test-registry = { index = "sparse+http://pkgs.dev.azure.com/testorg/_packaging/t
             TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
         });
 
+        // Cargo resolves the host with WHATWG rules, so these must be judged on the original index.
+        [
+            'https://pkgs.dev.azure.com%2eattacker.example/testorg/_packaging/test-feed/Cargo/index/',
+            'https://pkgs.dev.azure.com%2Eattacker.example/testorg/_packaging/test-feed/Cargo/index/'
+        ].forEach(index => {
+            it(`does not expose System.AccessToken when the host differs between parsers: ${index}`, async () => {
+                const tr = await TestHelpers.runTest(
+                    TestDataBuilder.withDefaults({
+                        '__mockConfigContent__': `
+[registries]
+test-registry = { index = "sparse+${index}" }
+`
+                    })
+                );
+
+                TestHelpers.assertSuccess(tr);
+                TestHelpers.assertEnvironmentVariableNotSet(tr, testConstants.TestData.expectedTokenVar);
+                TestHelpers.assertStdoutContains(tr, 'loc_mock_SkippingNonAzureDevOpsRegistry');
+                TestHelpers.assertTelemetryEmitted(tr, { InternalFeedAuthCount: 0 });
+            });
+        });
+
         it('fails when an ADO registry shares a Cargo environment key with another registry', async () => {
             const tr = await TestHelpers.runTest(
                 TestDataBuilder.withDefaults({
