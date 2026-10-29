@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [
@@ -38,6 +38,7 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The ServiceFabricComposeDeploy@0 task is deprecated",
   "inputs": [
     {

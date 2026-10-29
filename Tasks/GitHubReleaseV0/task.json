@@ -14,7 +14,7 @@
   "preview": true,
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [],
@@ -28,6 +28,7 @@
     }
   ],
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The GitHubRelease@0 task is deprecated, please use a newer version of the GitHubRelease task",
   "inputs": [
     {
