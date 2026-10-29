@@ -16,7 +16,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 281,
+        "Minor": 283,
         "Patch": 0
     },
     "demands": [
@@ -32,6 +32,7 @@
         }
     ],
     "deprecated": true,
+    "retiredDate": "2026-11-24",
     "deprecationMessage": "The AzureCloudPowerShellDeployment task is deprecated as Azure Cloud Services is being retired, see https://aka.ms/cloudservicesretirement",
     "inputs": [
         {
