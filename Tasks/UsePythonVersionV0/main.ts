@@ -11,7 +11,11 @@ import { usePythonVersion } from './usepythonversion';
         const disableDownloadFromRegistry = task.getBoolInput('disableDownloadFromRegistry');
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
+        const ALLOWED_ARCHITECTURES = ['x86', 'x64', 'arm64'];
         const architecture = task.getInput('architecture', true);
+        if (!ALLOWED_ARCHITECTURES.includes(architecture)) {
+            throw new Error(`Invalid architecture: ${architecture}. Allowed values are ${ALLOWED_ARCHITECTURES.join(', ')}`);
+        }
         const githubToken = task.getInput('githubToken', false);
         await usePythonVersion({
             versionSpec,
