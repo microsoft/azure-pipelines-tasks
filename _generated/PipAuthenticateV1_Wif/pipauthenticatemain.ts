@@ -1,7 +1,8 @@
 import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -23,21 +24,17 @@ async function main(): Promise<void> {
         // If using feed Url and wif service connection, set the pip index url
         if (feedUrl && entraWifServiceConnectionName)
         {
-            let parsedFeedUrl: URL;
-            try {
-                parsedFeedUrl = new URL(feedUrl);
-            } catch {
-                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
-            }
-            if (parsedFeedUrl.protocol !== 'https:') {
-                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
-            }
             tl.debug(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, feedUrl));
-            const feedTenant = await getFeedTenantId(parsedFeedUrl.href);
-            let token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-            if(token)
+            const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                entraWifServiceConnectionName,
+                feedUrl,
+                ProtocolType.PyPi);
+            if(credentials)
             {
-                var indexUrl = utils.addCredentialsToUri(entraWifServiceConnectionName, token, parsedFeedUrl.href) ;
+                var indexUrl = utils.addCredentialsToUri(
+                    entraWifServiceConnectionName,
+                    credentials.accessToken,
+                    credentials.feedUrl.href);
                 tl.setVariable("PIP_INDEX_URL", indexUrl, false);
                 federatedFeedAuthSuccessCount++;
                 console.log(tl.loc("Info_SuccessAddingFederatedFeedAuth", feedUrl));
@@ -70,7 +67,8 @@ async function main(): Promise<void> {
                     pypiSimpleApiLocationId,
                     feed.feedId,
                     feed.projectId);
-                const pipUri = utils.addCredentialsToUri("build", localAccessToken, feedUri);
+                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(feedUri, ProtocolType.PyPi);
+                const pipUri = utils.addCredentialsToUri("build", localAccessToken, verifiedFeedUri.href);
                 internalAndExternalEndpoints.push(pipUri);
             }
         }

@@ -12,8 +12,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 2
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Bicep $(operation) $(name)",
@@ -325,7 +325,7 @@
       "defaultValue": "",
       "required": false,
       "groupName": "Advanced",
-      "helpMarkDown": "Comma-separated list of output names to mask values for (e.g., secrets)."
+      "helpMarkDown": "Comma-separated list of output names to create as secret output variables. Their values are masked in logs and are not mapped to environment variables automatically; map them explicitly with `env` in later script steps."
     },
     {
       "name": "environment",
@@ -403,6 +403,8 @@
     "UsingParametersFile": "Using parameters file: %s",
     "BicepCacheHit": "Using cached Bicep version %s from %s",
     "BicepDownloading": "Downloading Bicep version %s...",
+    "BicepVersionResolvedFromConfigChain": "Resolved Bicep version %s to satisfy the \"bicep.version\" constraint \"%s\" declared in %s",
+    "BicepVersionConstraintCouldNotBeChecked": "Could not verify that the requested Bicep version \"%s\" satisfies the \"bicep.version\" constraint \"%s\" declared in %s, because the requested version is not a recognized version number.",
     "DiagnosticsReturned": "Diagnostics returned by the API",
     "FilesIgnoredForDelete": "Template and parameter files are not required for delete operations and will be ignored.",
     "OperationSucceeded": "Operation completed successfully",
@@ -418,6 +420,16 @@
     "UnsupportedParametersFile": "Unsupported parameters file type: %s",
     "FailedToDetermineScope": "Failed to determine deployment scope from Bicep file.",
     "FailedToResolveBicepVersion": "Failed to resolve Bicep version from download URL: %s",
+    "ConfigFileNotFound": "Config file not found: %s",
+    "ConfigChainCycleDetected": "Cycle detected while resolving \"extends\" chain at: %s",
+    "ConfigChainTooDeep": "The \"extends\" chain exceeds the maximum supported depth of %s.",
+    "ConfigChainAbsoluteExtendsPath": "The \"extends\" property must be a relative path, but got an absolute path: %s in %s",
+    "InvalidConfigExtendsValue": "The \"extends\" property in %s must be a string.",
+    "InvalidBicepVersionConstraintType": "The \"bicep.version\" property in %s must be a string.",
+    "UnparsableBicepVersionConstraint": "The \"bicep.version\" property \"%s\" in %s is not a valid Bicep version or version range.",
+    "UnsatisfiableBicepVersionConstraint": "The \"bicep.version\" constraint \"%s\" in %s can never be satisfied by any version.",
+    "BicepVersionConflictsWithConfigChain": "The requested Bicep version \"%s\" does not satisfy the \"bicep.version\" constraint \"%s\" declared in %s.",
+    "NoReleaseSatisfiesBicepVersionConstraint": "No published Bicep CLI release satisfies the \"bicep.version\" constraint \"%s\" declared in %s.",
     "CreateFailed": "Create failed",
     "ValidationFailed": "Validation failed",
     "WhatIfFailed": "What-if failed",

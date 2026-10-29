@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
-    "Patch": 0
+    "Minor": 282,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -179,6 +179,6 @@
     "SettingUpSshConnection": "Trying to establish an SSH connection to %s@%s:%s",
     "SshConnectionSuccessful": "Successfully connected.",
     "UseDefaultPort": "Using port 22 which is the default for SSH since no port was specified.",
-    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+    "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using the target shell's escape character: backslash (\\) for Bash or backtick (`) for PowerShell. More information is available here: https://aka.ms/ado/75787"
   }
 }

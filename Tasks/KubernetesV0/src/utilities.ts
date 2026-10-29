@@ -36,23 +36,31 @@ function ensureDirExists(dirPath : string) : void
     }
 }
 
+// The kubectl version is embedded in the download URL, which azure-pipelines-tool-lib writes to the task log.
+// Only a semantic version is accepted so the value can never carry URL delimiters or logging-command markers.
+export function validateKubectlVersion(version: string, invalidMessageKey: "InvalidKubectlVersion" | "InvalidStableKubectlVersion" = "InvalidKubectlVersion"): string {
+    const cleanVersion = version ? toolLib.cleanVersion(version) : null;
+    if (!cleanVersion) {
+        throw new Error(tl.loc(invalidMessageKey));
+    }
+
+    return "v".concat(cleanVersion);
+}
+
 export async function getKubectlVersion(versionSpec: string, checkLatest: boolean) : Promise<string> {
    let version: string = "v1.6.6";   
 
    if(checkLatest) {
-        return getStableKubectlVersion();
+        return validateKubectlVersion(await getStableKubectlVersion(), "InvalidStableKubectlVersion");
    }
    else if (versionSpec) {
        if(versionSpec === "1.7") {
            // Backward compat handle
            tl.warning(tl.loc("UsingLatestStableVersion"));
-           return getStableKubectlVersion();
+           return validateKubectlVersion(await getStableKubectlVersion(), "InvalidStableKubectlVersion");
        } 
-       else if(!versionSpec.startsWith("v")) {
-           version = "v".concat(versionSpec);
-       }
        else {
-            version = versionSpec;
+           version = validateKubectlVersion(versionSpec);
        } 
     }
 
@@ -64,6 +72,7 @@ export async function getStableKubectlVersion() : Promise<string> {
 }
 
 export async function downloadKubectl(version: string, kubectlPath: string): Promise<string> {
+    version = validateKubectlVersion(version);
     var kubectlURL = getkubectlDownloadURL(version);
     tl.debug(tl.loc('DownloadingKubeCtlFromUrl', kubectlURL));
     return toolLib.downloadTool(kubectlURL).then((downloadPath) => {

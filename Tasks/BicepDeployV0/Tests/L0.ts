@@ -5,6 +5,7 @@ import * as cp from "child_process";
 import * as ttm from "azure-pipelines-task-lib/mock-test";
 import tl = require("azure-pipelines-task-lib/task");
 import { TaskLogger } from "../logging";
+import { TaskOutputSetter } from "../taskIO";
 import { runConfigDirIsolationTests } from "./L0ConfigDirIsolation";
 
 // Uncomment to improve traces while testing
@@ -31,13 +32,23 @@ function assertSucceeded(tr: ttm.MockTestRunner, testName: string) {
 }
 
 // Helper function to validate that output variables are set via ##vso[task.setvariable]
-function assertOutputVariables(tr: ttm.MockTestRunner, expectedOutputs: { name: string, value: string }[], testName: string) {
-  expectedOutputs.forEach(({ name, value }) => {
-    const expectedCommand = `##vso[task.setvariable variable=${name};isOutput=true;issecret=false;]${value}`;
+function assertOutputVariables(tr: ttm.MockTestRunner, expectedOutputs: { name: string, value: string, isSecret: boolean }[], testName: string) {
+  expectedOutputs.forEach(({ name, value, isSecret }) => {
+    const expectedCommand = `##vso[task.setvariable variable=${name};isOutput=true;issecret=${isSecret};]${value}`;
     assert(tr.stdout.includes(expectedCommand),
       `${testName}: should set output variable '${name}' to '${value}'\nExpected: ${expectedCommand}\nStdout: ${tr.stdout}`);
+    const commandCount = tr.stdout.split(/\r?\n/).filter(line => line.startsWith(`##vso[task.setvariable variable=${name};`)).length;
+    assert.strictEqual(commandCount, 1, `${testName}: should set output variable '${name}' exactly once`);
   });
 }
+
+const expectedCreateOutputs = [
+  { name: 'stringOutput', value: 'hello world', isSecret: false },
+  { name: 'intOutput', value: '42', isSecret: false },
+  { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}', isSecret: false },
+  { name: 'secretOutput', value: 'masked-marker', isSecret: true },
+  { name: 'secretObjectOutput', value: '{"key":"masked-object-marker"}', isSecret: true },
+];
 
 describe("AZURE_CONFIG_DIR isolation", function() {
   runConfigDirIsolationTests();
@@ -153,6 +164,144 @@ describe("TaskLogger external output", function() {
   });
 });
 
+describe("TaskOutputSetter", function() {
+  const outputNames = ["storageAccountName", "connectionString", "UPPER_CASE_OUTPUT"];
+
+  function captureOutputCommands(action: () => void): string {
+    const originalWrite = process.stdout.write;
+    let output = "";
+    process.stdout.write = ((chunk: Uint8Array | string): boolean => {
+      output += chunk.toString();
+      return true;
+    }) as typeof process.stdout.write;
+
+    try {
+      action();
+    } finally {
+      process.stdout.write = originalWrite;
+    }
+
+    return output;
+  }
+
+  for (const isSecret of [false, true]) {
+    for (const name of outputNames) {
+      it(`sets ${name} as a step output variable (isSecret=${isSecret})`, function() {
+        const environmentBefore = { ...process.env };
+
+        const output = captureOutputCommands(() =>
+          new TaskOutputSetter().setOutputVariable(name, "output-marker", { isSecret }));
+
+        assert.deepStrictEqual({ ...process.env }, environmentBefore);
+        const expected = [`##vso[task.setvariable variable=${name};isOutput=true;issecret=${isSecret};]output-marker`];
+        if (isSecret) {
+          expected.unshift("##vso[task.setsecret]output-marker");
+        }
+        assert.deepStrictEqual(output.split(/\r?\n/).filter(line => line.length > 0), expected);
+      });
+    }
+  }
+
+  it("serializes object and array values as JSON", function() {
+    const output = captureOutputCommands(() => {
+      const setter = new TaskOutputSetter();
+      setter.setOutputVariable("objectOutput", { key: "value" }, { isSecret: true });
+      setter.setOutputVariable("arrayOutput", ["one", "two"], { isSecret: false });
+    });
+
+    assert(output.includes('##vso[task.setvariable variable=objectOutput;isOutput=true;issecret=true;]{"key":"value"}'));
+    assert(output.includes('##vso[task.setvariable variable=arrayOutput;isOutput=true;issecret=false;]["one","two"]'));
+  });
+
+  for (const [description, value] of [["null", null], ["undefined", undefined]] as [string, unknown][]) {
+    it(`writes an empty value for a ${description} secret output`, function() {
+      const output = captureOutputCommands(() =>
+        new TaskOutputSetter().setOutputVariable("emptyOutput", value, { isSecret: true }));
+
+      assert.deepStrictEqual(output.split(/\r?\n/).filter(line => line.length > 0),
+        ["##vso[task.setvariable variable=emptyOutput;isOutput=true;issecret=true;]"]);
+    });
+  }
+
+  it("keeps falsy number and boolean values", function() {
+    const output = captureOutputCommands(() => {
+      const setter = new TaskOutputSetter();
+      setter.setOutputVariable("zeroOutput", 0, { isSecret: false });
+      setter.setOutputVariable("falseOutput", false, { isSecret: false });
+    });
+
+    assert.deepStrictEqual(output.split(/\r?\n/).filter(line => line.length > 0), [
+      "##vso[task.setvariable variable=zeroOutput;isOutput=true;issecret=false;]0",
+      "##vso[task.setvariable variable=falseOutput;isOutput=true;issecret=false;]false",
+    ]);
+  });
+
+  it("escapes special characters in output names and values", function() {
+    const output = captureOutputCommands(() =>
+      new TaskOutputSetter().setOutputVariable("name;with]chars", "value;with]chars%\r\nsecond line", { isSecret: false }));
+
+    const lines = output.split(/\r?\n/).filter(line => line.length > 0);
+    assert.strictEqual(lines.length, 1, `should emit exactly one command: ${output}`);
+    assert(lines[0].startsWith("##vso[task.setvariable variable=name%3Bwith%5Dchars;isOutput=true;issecret=false;]"),
+      `unexpected command: ${lines[0]}`);
+    assert(lines[0].includes("%0D%0Asecond line"), `unexpected value: ${lines[0]}`);
+  });
+
+  describe("multiline secret values", function() {
+    const overrideVariable = "SYSTEM_UNSAFEALLOWMULTILINESECRET";
+    let originalOverride: string | undefined;
+
+    beforeEach(function() {
+      originalOverride = process.env[overrideVariable];
+      delete process.env[overrideVariable];
+    });
+
+    afterEach(function() {
+      if (originalOverride === undefined) {
+        delete process.env[overrideVariable];
+      } else {
+        process.env[overrideVariable] = originalOverride;
+      }
+    });
+
+    for (const [description, value] of [["LF", "first\nsecond"], ["CRLF", "first\r\nsecond"], ["CR", "first\rsecond"]]) {
+      it(`rejects a secret value containing ${description} without writing a command`, function() {
+        let error: Error | undefined;
+        const output = captureOutputCommands(() => {
+          try {
+            new TaskOutputSetter().setOutputVariable("multilineOutput", value, { isSecret: true });
+          } catch (err) {
+            error = err as Error;
+          }
+        });
+
+        assert(error, "should throw");
+        assert.strictEqual(error!.message, tl.loc("LIB_MultilineSecret"));
+        assert.strictEqual(output, "", `should not write any command: ${output}`);
+      });
+    }
+
+    it("allows a multiline secret value when the override variable is true", function() {
+      process.env[overrideVariable] = "true";
+
+      const output = captureOutputCommands(() =>
+        new TaskOutputSetter().setOutputVariable("multilineOutput", "first\nsecond", { isSecret: true }));
+
+      assert.deepStrictEqual(output.split(/\r?\n/).filter(line => line.length > 0), [
+        "##vso[task.setsecret]first%0Asecond",
+        "##vso[task.setvariable variable=multilineOutput;isOutput=true;issecret=true;]first%0Asecond",
+      ]);
+    });
+
+    it("allows a multiline value that is not secret", function() {
+      const output = captureOutputCommands(() =>
+        new TaskOutputSetter().setOutputVariable("multilineOutput", "first\nsecond", { isSecret: false }));
+
+      assert.strictEqual(output.trim(), "##vso[task.setvariable variable=multilineOutput;isOutput=true;issecret=false;]first%0Asecond");
+    });
+  });
+});
+
 describe("deployments tests", function() {
   // Bicep is mocked - no real installation needed
   this.timeout(30000);
@@ -251,11 +400,7 @@ describe("deployments tests", function() {
     await tr.runAsync();
 
     assertSucceeded(tr, this.test!.title);
-    assertOutputVariables(tr, [
-      { name: 'stringOutput', value: 'hello world' },
-      { name: 'intOutput', value: '42' },
-      { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
-    ], this.test!.title);
+    assertOutputVariables(tr, expectedCreateOutputs, this.test!.title);
   });
 
   it("runs create with no parameters file", async function() {
@@ -331,11 +476,7 @@ describe("stacks tests", function() {
     await tr.runAsync();
 
     assertSucceeded(tr, this.test!.title);
-    assertOutputVariables(tr, [
-      { name: 'stringOutput', value: 'hello world' },
-      { name: 'intOutput', value: '42' },
-      { name: 'objectOutput', value: '{"key1":"value1","key2":"value2"}' },
-    ], this.test!.title);
+    assertOutputVariables(tr, expectedCreateOutputs, this.test!.title);
   });
 });
 

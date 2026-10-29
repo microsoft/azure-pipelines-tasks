@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 2
   },
   "runsOn": [
     "Agent",
@@ -221,6 +221,10 @@
     "RestoringProjectNpmrc": "ms-resource:loc.messages.RestoringProjectNpmrc",
     "WorkingDirectoryNotDirectory": "ms-resource:loc.messages.WorkingDirectoryNotDirectory",
     "NGCommon_AreaNotFoundInSps": "ms-resource:loc.messages.NGCommon_AreaNotFoundInSps",
-    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth"
+    "UnsupportedServiceConnectionAuth": "ms-resource:loc.messages.UnsupportedServiceConnectionAuth",
+    "PackagingCollectionUrlInvalid": "ms-resource:loc.messages.PackagingCollectionUrlInvalid",
+    "PackagingCollectionUrlUnsupportedScheme": "ms-resource:loc.messages.PackagingCollectionUrlUnsupportedScheme",
+    "PackagingCollectionUrlHasCredentials": "ms-resource:loc.messages.PackagingCollectionUrlHasCredentials",
+    "PackagingCollectionUrlMismatch": "ms-resource:loc.messages.PackagingCollectionUrlMismatch"
   }
 }

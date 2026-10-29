@@ -96,6 +96,16 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/serviceConnectionUtils',
         return [];
     }
 });
+tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async function(feedUrl: string | URL) {
+        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        if (parsedFeedUrl.protocol !== 'https:' ||
+            (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com'))) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
+        return parsedFeedUrl;
+    }
+});
 
 // Mock telemetry with enhanced error simulation
 const shouldThrowTelemetryError = process.env[testConstants.TestEnvVars.throwTelemetryError] === 'true';
@@ -114,16 +124,17 @@ const wifToken = process.env[testConstants.TestEnvVars.wifToken];
 const wifShouldFail = process.env[testConstants.TestEnvVars.wifShouldFail] === 'true';
 
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
-    getFederatedWorkloadIdentityCredentials: async function(serviceConnectionName: string, tenantId?: string) {
-        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentials called with ${serviceConnectionName}`);
+    getFederatedWorkloadIdentityCredentialsForFeed: async function(serviceConnectionName: string, feedUrl: string) {
+        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called with ${serviceConnectionName}`);
         if (wifShouldFail) {
             throw new Error('Simulated WIF authentication failure');
         }
-        return wifToken;
-    },
-    getFeedTenantId: async function(feedUrl: string) {
-        console.log(`Mock WIF: getFeedTenantId called with ${feedUrl}`);
-        return 'mock-tenant-id-12345';
+        const parsedFeedUrl = new URL(feedUrl);
+        if (parsedFeedUrl.protocol !== 'https:' ||
+            (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com'))) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
+        return wifToken ? { accessToken: wifToken, feedUrl: parsedFeedUrl } : undefined;
     }
 });
 

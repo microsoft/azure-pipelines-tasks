@@ -73,6 +73,10 @@ The parameters of the task are described in details, including examples, to show
  ### Deployment Outputs:
   Outputs created by Azure Resource Manager template deployment. It can be used in the subsequent tasks (like Powershell and Azure CLI) for further processing.
 
+  With `DistributedTask.Tasks.EnableSafeArmDeploymentOutputVariables` enabled, safe output handling requires agent 2.184.0 or newer with percent decoding enabled. With no overrides, supported agents enable decoding by default. `DECODE_PERCENTS` is interpreted without trimming: `true`, `1`, and `$true` (case-insensitive) enable decoding; surrounding whitespace and whitespace-only values disable it.
+
+  Incompatible configurations retain legacy output handling with a warning. This fallback does not provide the safe format's protection. The task does not change `DECODE_PERCENTS`. If agent-worker and task environments differ, the task cannot independently inspect the worker's effective setting; use an explicit nonempty job-level `DECODE_PERCENTS` value to avoid that ambiguity.
+
  **How to use Deployment output**
   The deployment output can be parsed to JSON object using "ConvertFrom-Json" Powershell cmdlet in Powershell/Azure Powershell task and then that object can be used in same task or subsequent tasks.
 

@@ -10,7 +10,7 @@
   "version": {
     "Major": 1,
     "Minor": 282,
-    "Patch": 0
+    "Patch": 3
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -197,6 +197,7 @@
     "UnsupportedArchiveType": "ms-resource:loc.messages.UnsupportedArchiveType",
     "InvalidPackageFilePath": "ms-resource:loc.messages.InvalidPackageFilePath",
     "InvalidPackageFileLink": "ms-resource:loc.messages.InvalidPackageFileLink",
+    "InvalidPackageDestinationLink": "ms-resource:loc.messages.InvalidPackageDestinationLink",
     "Error_UnexpectedErrorArtifactToolDownload": "ms-resource:loc.messages.Error_UnexpectedErrorArtifactToolDownload",
     "Info_ResolvedToolFromCache": "ms-resource:loc.messages.Info_ResolvedToolFromCache",
     "Info_DownloadingArtifactTool": "ms-resource:loc.messages.Info_DownloadingArtifactTool",

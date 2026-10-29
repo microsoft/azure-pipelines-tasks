@@ -19,6 +19,63 @@ describe('PublishCodeCoverageResultsV2 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
+    for (const featureValue of [undefined, 'true', 'false']) {
+        for (const containmentEnabled of [false, true]) {
+            it(`Handles logging filtering ${featureValue === undefined ? 'unset' : JSON.stringify(featureValue)} with containment ${containmentEnabled}`, async function() {
+                const previousFiltering = process.env['COVERAGE_TEST_LOG_FILTERING'];
+                const previousContainment = process.env['COVERAGE_TEST_CONTAINMENT'];
+                try {
+                    if (featureValue === undefined) {
+                        delete process.env['COVERAGE_TEST_LOG_FILTERING'];
+                    } else {
+                        process.env['COVERAGE_TEST_LOG_FILTERING'] = featureValue;
+                    }
+                    process.env['COVERAGE_TEST_CONTAINMENT'] = String(containmentEnabled);
+                    const testPath = path.join(__dirname, 'L0SanitizesMatchedPaths.js');
+                    const tr: MockTestRunner = new MockTestRunner(testPath);
+                    await tr.runAsync();
+
+                    assert(tr.succeeded, 'task should have succeeded');
+                    const filteringEnabled = (featureValue || '').toLowerCase() === 'true';
+                    const marker = filteringEnabled ? '##_vso[' : '##vso[';
+                    const taskOutputLines = tr.stdout
+                        .split(/\r?\n/)
+                        .filter(line => !line.startsWith('##vso[task.debug]'));
+                    assert(
+                        taskOutputLines.includes(`/coverage/coverage-${marker}task.setvariable variable=NODE_OPTIONS]--require=payload.xml`),
+                        'embedded logging-command markers should follow the output-filtering flag');
+                    assert(
+                        taskOutputLines.includes('/coverage/coverage-line-break')
+                            && taskOutputLines.includes(`${marker}task.setvariable variable=BASH_ENV]payload.xml`),
+                        'line-separated logging-command markers should follow the output-filtering flag');
+                    assert(taskOutputLines.includes('summaryPathsPreserved=true'), 'original filenames must reach the publisher');
+                    assert(
+                        taskOutputLines.includes(`enableLoggingCommandFiltering=${filteringEnabled}`),
+                        'the same flag value must control publisher output');
+                    assert(
+                        taskOutputLines.includes(`enableTrustedSourcePathFiltering=${containmentEnabled}`),
+                        'source containment must remain independent');
+                    if (filteringEnabled) {
+                        assert(
+                            taskOutputLines.every(line => !line.includes('##vso[')),
+                            'logging commands should not reach task output');
+                    }
+                } finally {
+                    if (previousFiltering === undefined) {
+                        delete process.env['COVERAGE_TEST_LOG_FILTERING'];
+                    } else {
+                        process.env['COVERAGE_TEST_LOG_FILTERING'] = previousFiltering;
+                    }
+                    if (previousContainment === undefined) {
+                        delete process.env['COVERAGE_TEST_CONTAINMENT'];
+                    } else {
+                        process.env['COVERAGE_TEST_CONTAINMENT'] = previousContainment;
+                    }
+                }
+            });
+        }
+    }
+
     it('Publish Code coverage results should work fine with empty results', async function() {
         const testPath = path.join(__dirname, 'L0NotFailWithEmptyResults.ts')
         const tr: MockTestRunner = new MockTestRunner(testPath);

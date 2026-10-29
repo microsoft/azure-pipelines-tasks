@@ -1,3 +1,5 @@
+. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
 function Assert-ValidManifestPathSegment
 {
     param(
@@ -13,6 +15,9 @@ function Assert-ValidManifestPathSegment
         [System.IO.Path]::IsPathRooted($Name) -or
         $Name.TrimEnd('.', ' ') -ne $Name)
     {
-        throw (Get-VstsLocString -Key InvalidManifestPathSegment -ArgumentList @($ElementDescription, $Name))
+        # $Name reaches the host only through the task SDK's own Write-Warning/exception reporting,
+        # which escapes just the literal characters ';','\r','\n',']'. Sanitize it here, 
+        # at the one place the invalid value is captured, same as every other untrusted value this task logs.
+        throw (Get-VstsLocString -Key InvalidManifestPathSegment -ArgumentList @($ElementDescription, (Protect-ExternalOutput -InputObject $Name -Source 'repository')))
     }
 }

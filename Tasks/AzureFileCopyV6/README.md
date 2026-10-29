@@ -62,7 +62,7 @@ The parameters of the task are described in details, including examples, to show
 
   * **Password**: Administrator Username password for all the Azure VMs in the Resource Group.
 
-  * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. 
+  * **Destination Folder**: The folder in the Azure VMs where the files will be copied to. Environment variables are also supported like $env:windir, $env:systemroot etc. (matched case-insensitively, so $env:, $Env:, $ENV:, ${env:...} etc. all work). An example of the destination folder is $env:windir\FabrikamFibre\Web or c:\FabrikamFibre. Any single quotes in this value are automatically escaped before being embedded in the generated remote script, so values containing `'` are handled safely.
   
   * **Enable Copy Prerequisites**: Enabling this option configures Windows Remote Management (WinRM) listener over HTTPS protocol on port 5986, using a self-signed certificate. This configuration is required for performing copy operation on Azure machines. If the target Virtual Machines are backed by a Load balancer, ensure Inbound NAT rules are configured for target port (5986). If the target Virtual Machines are associated with a Network security group (NSG), configure Inbound security rules for Destination port (5986). Applicable only for ARM VMs.
 
@@ -108,6 +108,13 @@ Following the [output variables](https://docs.microsoft.com/en-us/azure/devops/p
 ### Known Limitations :
 
 * If resource group contains both [resource manager](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial/) and [classic](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-windows-tutorial-classic-portal/) VMs, then copy operation will be performed only on resource manager VMs.
+
+### Security & Compatibility Notes
+
+* **Rollback feature flag**: `AzureFileCopyV6.DisableTargetPathHardening` is a temporary compatibility switch, read through `Get-VstsPipelineFeature`. When it is off or undefined, the security protections below remain enabled. To turn it on, set the pipeline variable `DistributedTask.Tasks.AzureFileCopyV6.DisableTargetPathHardening` to `true`. Remote script arguments are then embedded without escaping and the original AzCopy invocation behavior is restored, including `Invoke-Expression` when the existing sanitizer and SourcePath-hardening flags are both off. **Enabling this flag restores the command-injection vulnerability**; use it only for a controlled rollback.
+* **TargetPath / ContainerURL escaping**: Single quotes in `Destination Folder` (TargetPath) and the Container URL are escaped before being embedded in the PowerShell script generated for the remote VM job. This closes a quote-breakout/command-injection risk while preserving the existing behavior for paths that don't contain single quotes.
+* **Environment variable expansion is case-insensitive**: `$env:`, `$Env:`, `$ENV:`, `${env:...}`, `${Env:...}` etc. are all recognized when expanding environment-variable references in `Destination Folder`, matching PowerShell's own case-insensitive variable semantics.
+* **additionalArguments handling**: Legacy `additionalArguments` are now parsed with a safe tokenizer and passed to AzCopy as data (not evaluated via `Invoke-Expression`), removing a prior script-injection vector. Cleanup (`CleanTargetBeforeCopy`) continues to run against the raw (unexpanded) `TargetPath`, matching the pre-existing behavior on `master`.
 
 ### Earlier Versions
 

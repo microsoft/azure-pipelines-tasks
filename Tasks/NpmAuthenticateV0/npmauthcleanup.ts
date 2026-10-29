@@ -2,9 +2,10 @@ import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
-import { writeRepositoryOutput } from './npmauthutils';
+import { emitNpmConfigTelemetry, writeRepositoryOutput } from './npmauthutils';
 
 async function run() {
+    emitNpmConfigTelemetry(constants.NpmConfigTelemetryPhase.PostJob);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
@@ -16,12 +17,14 @@ async function run() {
         try {
             trustedIdentity = serializedIdentity && JSON.parse(serializedIdentity);
         } catch {
-            throw new Error(tl.loc('NpmrcChangedSinceBackup', workingFilePath));
+            tl.warning(tl.loc('Warning_NpmrcIdentityUnavailable', workingFilePath));
+            return;
         }
         if (!trustedIdentity
             || typeof trustedIdentity.device !== 'string'
             || typeof trustedIdentity.inode !== 'string') {
-            throw new Error(tl.loc('NpmrcChangedSinceBackup', workingFilePath));
+            tl.warning(tl.loc('Warning_NpmrcIdentityUnavailable', workingFilePath));
+            return;
         }
         const restored = backupManager.restoreBackedUpFile(workingFilePath, trustedIdentity);
         if (restored) {

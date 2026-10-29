@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": "Registrierungen in NPMRC-Datei werden verwendet.",
   "loc.messages.PublishRegistry": "Wird in Registrierung veröffentlicht: %s",
   "loc.messages.UsingRegistry": "Registrierung wird verwendet: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "Authentifizierung für die Registrierung wird hinzugefügt: %s",
   "loc.messages.FoundLocalRegistries": "%d Registrierungen in dieser Organisation/Sammlung gefunden",
   "loc.messages.ForcePackagingUrl": "URL zur Paketierung der Sammlung wird erzwungen als: %s",

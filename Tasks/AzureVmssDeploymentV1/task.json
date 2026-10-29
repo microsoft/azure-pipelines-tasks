@@ -14,8 +14,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 280,
-    "Patch": 2
+    "Minor": 282,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "2.209.0",
@@ -232,6 +232,9 @@
     "UploadingToStorageBlobsAuthenticationFailed": "Failed to upload custom scripts to azure blob storage. Please ensure that the subscription has the 'Storage Blob Data Contributor' role assigned for storage account '%s'.",
     "SettingVMExtensionFailedwithAuthentication": "Failed to install VM custom script extension on VMSS. Error: %s. Please ensure that the subscription has the 'Contributor' role assigned for vmss '%s'. ",
     "ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787",
-    "ScriptArgsSanitizedBash": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+    "ScriptArgsSanitizedBash": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+    "InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
+    "WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
+    "WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
   }
 }

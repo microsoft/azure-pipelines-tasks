@@ -17,6 +17,12 @@ param (
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
+    Import-Module "$scriptRoot\ps_modules\ExternalOutputSanitizer"
+    $vsoCommandMode = if (Get-VstsPipelineFeature -FeatureName 'EnableVsoCommandBlockingRMTasks') {
+        'blockAndTelemetry'
+    } else {
+        'telemetryOnly'
+    }
 
     # Clean-Target uses Split-AdditionalArguments from Sanitizer. The parallel-copy
     # path runs this scriptblock through Start-Job in a separate process, where the
@@ -127,11 +133,11 @@ param (
         if ($enableWindowsMachineFileCopyArgumentsHardening)
         {
             $cleanupArguments = @($tempDirectory, $destinationNetworkPath, "*.*") + (Split-AdditionalArguments -additionalArguments $cleanupArgument.Trim())
-            & robocopy @cleanupArguments
+            & robocopy @cleanupArguments | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $vsoCommandMode
         }
         else
         {
-            Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument"
+            Invoke-Expression "robocopy `"$tempDirectory`" `"$destinationNetworkPath`" `"*.*`" $cleanupArgument" | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $vsoCommandMode
         }
         Remove-Item $tempDirectory -Recurse -ErrorAction Ignore
     }
@@ -300,17 +306,17 @@ param (
         {
             $robocopyExtraArguments = Get-RoboCopyParameters -additionalArguments $additionalArguments -fileCopy:$isFileCopy -AsArray
             $robocopyArguments = @($sourceDirectory, $destinationNetworkPath, $filesToCopy) + $robocopyExtraArguments
-            & robocopy @robocopyArguments
+            & robocopy @robocopyArguments | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $vsoCommandMode
         }
         elseif ($useSanitizerActivate -eq "true")
         {
             $sanitizedArguments = [regex]::Split($robocopyParameters, ' (?=(?:[^"]|"[^"]*")*$)')
-            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments
+            & robocopy "$sourceDirectory" "$destinationNetworkPath" "$filesToCopy" $sanitizedArguments | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $vsoCommandMode
         }
         else
         {
             $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
-            Invoke-Expression $command
+            Invoke-Expression $command | Protect-ExternalOutput -Source 'childProcess' -VsoCommandMode $vsoCommandMode
         }
 
         if ($LASTEXITCODE -ge 8)
