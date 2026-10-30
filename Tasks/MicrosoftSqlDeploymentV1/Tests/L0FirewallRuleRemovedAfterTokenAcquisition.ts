@@ -89,7 +89,7 @@ tmr.registerMock('./src/AzureSqlResourceManager', {
                 removeFirewallRule: async function(_rule: any) {
                     const token = await endpoint.applicationTokenCredentials.getToken();
                     console.log(`REMOVE_RULE_TOKEN:${token}`);
-                    if (token.indexOf(ARM_RESOURCE) < 0) {
+                    if (token !== `token-for:${ARM_RESOURCE}`) {
                         // What ARM does when handed a SQL-audience token.
                         throw new Error(`AudienceMismatch: ARM rejected ${token}`);
                     }

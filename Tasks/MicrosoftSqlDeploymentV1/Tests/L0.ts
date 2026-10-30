@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import { EventEmitter } from 'events';
+import { spawnSync } from 'child_process';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
@@ -334,6 +335,39 @@ describe('MicrosoftSqlDeployment Suite', function () {
                 assert.strictEqual(config.Server, 'test1.database.windows.net', 'server should match');
             });
         });
+    });
+
+    describe('SqlConnectionConfig - Backtracking regression', function() {
+        it('rejects repeated ambiguous pairs without stalling validation', function() {
+            const modulePath = path.join(__dirname, '..', 'src', 'SqlConnectionConfig.js');
+            const result = spawnSync(process.execPath, ['-e', `
+                const assert = require('assert');
+                const SqlConnectionConfig = require(${JSON.stringify(modulePath)}).default;
+                assert.throws(
+                    () => new SqlConnectionConfig('\\t="";' + '\\t\\t="";'.repeat(40) + '!'),
+                    /InvalidConnectionString/);
+            `], { encoding: 'utf8', timeout: 3000 });
+
+            assert.ifError(result.error);
+            assert.strictEqual(result.status, 0, result.stderr);
+        });
+
+        it('preserves quoted values after repeated empty pairs and separators', function() {
+            const config = new SqlConnectionConfig(
+                '; \t;' + '\t="";'.repeat(100) +
+                'Server=server;Database=db;User Id=user;Password="semi;and""quote"; \t;;');
+            assert.strictEqual(config.Server, 'server');
+            assert.strictEqual(config.Password, 'semi;and"quote');
+        });
+
+        for (const suffix of ['"unterminated', "'unterminated", '"closed"junk', '"closed" ;Database=other']) {
+            it(`rejects malformed quoted values: ${suffix}`, function() {
+                assert.throws(
+                    () => new SqlConnectionConfig(
+                        'Server=server;Database=db;User Id=user;Password=' + suffix),
+                    /InvalidConnectionString/);
+            });
+        }
     });
 
     describe('SqlConnectionConfig - Invalid connection strings', function() {

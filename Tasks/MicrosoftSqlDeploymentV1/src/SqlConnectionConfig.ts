@@ -1,5 +1,4 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-import Constants from './Constants';
 
 export default class SqlConnectionConfig {
     private _parsedConnectionString: Map<string, string>;
@@ -48,8 +47,6 @@ export default class SqlConnectionConfig {
     ]);
 
     constructor(connectionString: string) {
-        this._validateConnectionString(connectionString);
-
         this._rawConnectionString = connectionString;
         this._parsedConnectionString = this._parseConnectionString(connectionString);
 
@@ -245,37 +242,81 @@ export default class SqlConnectionConfig {
     }
 
     /**
-     * Parse connection string into key-value pairs.
-     * Handles quoted values and unquotes them.
+     * Validate and parse in one forward pass to avoid backtracking on malformed input.
      */
     private _parseConnectionString(connectionString: string): Map<string, string> {
         const result = new Map<string, string>();
-        
-        const matches = Array.from(connectionString.matchAll(Constants.connectionStringParserRegex));
-        for (const match of matches) {
-            if (match.groups) {
-                const key = match.groups.key.trim().toLowerCase();
-                let val = match.groups.val.trim();
+        let position = 0;
 
-                // Remove outer quotes and unescape inner quotes
-                if (val.startsWith('"') && val.endsWith('"')) {
-                    // Remove outer quotes
-                    val = val.slice(1, -1);
-                    // Unescape double quotes ("" becomes ")
-                    val = val.replace(/""/g, '"');
-                } else if (val.startsWith("'") && val.endsWith("'")) {
-                    // Remove outer quotes
-                    val = val.slice(1, -1);
-                    // Unescape single quotes ('' becomes ')
-                    val = val.replace(/''/g, "'");
+        while (position < connectionString.length) {
+            let keyStart = position;
+            while (position < connectionString.length && /[;\s]/.test(connectionString[position])) {
+                if (connectionString[position++] === ';') {
+                    keyStart = position;
                 }
-
-                // Synonymous spellings share one canonical name, so a later occurrence overwrites an
-                // earlier one exactly as SqlConnectionStringBuilder does.
-                const canonicalKey = SqlConnectionConfig.CanonicalKeys.get(key) ?? key;
-                result.set(canonicalKey, val);
-                this._originalKeyNames.push(match.groups.key.trim());
             }
+            if (position === connectionString.length) {
+                break;
+            }
+
+            while (position < connectionString.length && /[\w\s]/.test(connectionString[position])) {
+                position++;
+            }
+            if (position === keyStart || connectionString[position] !== '=') {
+                throw new Error(tl.loc('InvalidConnectionString'));
+            }
+            const originalKey = connectionString.slice(keyStart, position).trim();
+            const key = originalKey.toLowerCase();
+            const valueStart = ++position;
+            const quote = connectionString[position];
+
+            if (quote === '"' || quote === "'") {
+                position++;
+                let closed = false;
+                while (position < connectionString.length) {
+                    if (connectionString[position++] === quote) {
+                        if (connectionString[position] === quote) {
+                            position++;
+                        } else {
+                            closed = true;
+                            break;
+                        }
+                    }
+                }
+                if (!closed) {
+                    throw new Error(tl.loc('InvalidConnectionString'));
+                }
+            } else {
+                while (position < connectionString.length && connectionString[position] !== ';') {
+                    position++;
+                }
+            }
+
+            let val = connectionString.slice(valueStart, position).trim();
+            if (val.startsWith('"') && val.endsWith('"')) {
+                val = val.slice(1, -1).replace(/""/g, '"');
+            } else if (val.startsWith("'") && val.endsWith("'")) {
+                val = val.slice(1, -1).replace(/''/g, "'");
+            }
+
+            if (position < connectionString.length && connectionString[position] !== ';') {
+                // Whitespace after a quoted value is only accepted in the final separator suffix.
+                while (position < connectionString.length && /[;\s]/.test(connectionString[position])) {
+                    position++;
+                }
+                if (position !== connectionString.length) {
+                    throw new Error(tl.loc('InvalidConnectionString'));
+                }
+            }
+
+            // Synonymous spellings share one canonical name, so the last occurrence wins.
+            const canonicalKey = SqlConnectionConfig.CanonicalKeys.get(key) ?? key;
+            result.set(canonicalKey, val);
+            this._originalKeyNames.push(originalKey);
+        }
+
+        if (result.size === 0) {
+            throw new Error(tl.loc('InvalidConnectionString'));
         }
 
         return result;
@@ -294,33 +335,6 @@ export default class SqlConnectionConfig {
      */
     private _getConnectionStringValue(key: string): string | undefined {
         return this._parsedConnectionString.get(key.toLowerCase());
-    }
-
-    /**
-     * The basic format of a connection string includes a series of keyword/value pairs separated by semicolons. 
-     * The equal sign (=) connects each keyword and its value. (Ex: Key1=Val1;Key2=Val2)
-     * 
-     * Following rules are to be followed while passing special characters in values:
-            1. To include values that contain a semicolon, single-quote character, or double-quote character, the value must be enclosed in double quotation marks. 
-            2. If the value contains both a semicolon and a double-quote character, the value can be enclosed in single quotation marks. 
-            3. The single quotation mark is also useful if the value starts with a double-quote character. Conversely, the double quotation mark can be used if the value starts with a single quotation mark. 
-            4. If the value contains both single-quote and double-quote characters, the quotation mark character used to enclose the value must be doubled every time it occurs within the value.
-        
-        Regex used by the parser(connectionStringParserRegex) to parse the VALUE:
-            
-            ('[^']*(''[^']*)*') -> value enclosed with single quotes and has consecutive single quotes 
-            |("[^"]*(""[^"]*)*") -> value enclosed with double quotes and has consecutive double quotes
-            |((?!['"])[^;]*)) -> value does not start with quotes does not contain any special character. Here we do a positive lookahead to ensure that the value doesn't start with quotes which should have been handled in previous cases
-        Regex used to validate the entire connection string:
-        
-        A connection string is considered valid if it is a series of key/value pairs separated by semicolons. Each key/value pair must satisfy the connectionStringParserRegex to ensure it is a valid key/value pair.
-        ^[;\s]*{KeyValueRegex}(;[;\s]*{KeyValueRegex})*[;\s]*$
-        where KeyValueRegex = ([\w\s]+=(?:('[^']*(''[^']*)*')|("[^"]*(""[^"]*)*")|((?!['"])[^;]*))))
-    */
-    private _validateConnectionString(connectionString: string) {
-        if (!Constants.connectionStringTester.test(connectionString)) {
-            throw new Error(tl.loc('InvalidConnectionString'));
-        }
     }
 
     /**
