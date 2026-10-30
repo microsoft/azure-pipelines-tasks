@@ -63,6 +63,13 @@ export function trimIdentifierInput(value: string): string {
     return value ? value.trim() : value;
 }
 
+export function validateReleaseName(value: string): string {
+    if (!value || value.startsWith("-")) {
+        throw new Error(tl.loc("InvalidReleaseName", value));
+    }
+    return value;
+}
+
 export function extractReleaseNameFromHelmOutput(output: string) {
     const releaseNameMatch = output.match(matchPatternForReleaseName);
     if (releaseNameMatch && releaseNameMatch.length >= 1)
