@@ -1,9 +1,9 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
 import { Package } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
-var deployUtility = require('azure-pipelines-tasks-webdeployment-common/utility.js');
-var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility.js');
-var fileTransformationsUtility = require('azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility.js');
+import { generateTemporaryFolderForDeployment } from 'azure-pipelines-tasks-webdeployment-common/utility';
+import { archiveFolder } from 'azure-pipelines-tasks-webdeployment-common/ziputility';
+import { enhancedFileTransformations } from 'azure-pipelines-tasks-webdeployment-common/fileTransformationsUtility';
 
 async function main() {
     tl.setResourcePath(path.join( __dirname, 'task.json'));
@@ -17,14 +17,15 @@ async function main() {
     let jsonTargetFiles = tl.getDelimitedInput('jsonTargetFiles', '\n', false);
 
     if ( xmlTransformation || xmlTargetFiles.length != 0 || jsonTargetFiles.length != 0) {
+        const diagnosticsMode = tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks') ? 'blockAndTelemetry' : 'telemetryOnly';
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
-            var folderPath = await deployUtility.generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles);
-            await zipUtility.archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
+            const folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
+            enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, diagnosticsMode);
+            await archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            fileTransformationsUtility.enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, packagePath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles);
+            enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, packagePath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, diagnosticsMode);
         }
     }
     else {

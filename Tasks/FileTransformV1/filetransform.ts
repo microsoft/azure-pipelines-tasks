@@ -16,14 +16,15 @@ async function main() {
     let xmlTransformationRules = tl.getDelimitedInput('xmlTransformationRules', '\n', false);
     let applyFileTransformFlag = fileType || xmlTransformation;
     if (applyFileTransformFlag) {
+        const diagnosticsMode = tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks') ? 'blockAndTelemetry' : 'telemetryOnly';
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
             let folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
-            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules);
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, folderPath, xmlTransformationRules, diagnosticsMode);
             await archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }
         else {
-            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules);
+            advancedFileTransformations(isFolderBasedDeployment, targetFiles, xmlTransformation, fileType, packagePath, xmlTransformationRules, diagnosticsMode);
         }
     }
     else {
