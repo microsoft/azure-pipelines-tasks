@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "3.230.2",
@@ -165,6 +165,7 @@
     "BuildingSqlProject": "Building SQL project: %s",
     "DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
     "DacpacNotFoundAfterBuild": "Built .dacpac not found at expected path: %s",
+    "SqlProjectOutputNotResolved": "Could not resolve the built DACPAC path from MSBuild. Ensure the project uses Microsoft.Build.Sql and the agent has .NET SDK 8.0.100 or later. No DACPAC was selected for deployment.",
     "SqlProjectBuiltSuccessfully": "SQL project built successfully. DACPAC: %s",
     "SqlProjectBuildFailed": "SQL project build failed. Exit code: %s. Error: %s",
     "AccessTokenAcquired": "Access token acquired from service connection for database authentication.",

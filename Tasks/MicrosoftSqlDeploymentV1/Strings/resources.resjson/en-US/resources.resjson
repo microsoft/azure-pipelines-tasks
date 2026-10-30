@@ -73,6 +73,7 @@
   "loc.messages.BuildingSqlProject": "Building SQL project: %s",
   "loc.messages.DotnetNotFound": ".NET SDK not found. Install via UseDotNet@2 task.",
   "loc.messages.DacpacNotFoundAfterBuild": "Built .dacpac not found at expected path: %s",
+  "loc.messages.SqlProjectOutputNotResolved": "Could not resolve the built DACPAC path from MSBuild. Ensure the project uses Microsoft.Build.Sql and the agent has .NET SDK 8.0.100 or later. No DACPAC was selected for deployment.",
   "loc.messages.SqlProjectBuiltSuccessfully": "SQL project built successfully. DACPAC: %s",
   "loc.messages.SqlProjectBuildFailed": "SQL project build failed. Exit code: %s. Error: %s",
   "loc.messages.AccessTokenAcquired": "Access token acquired from service connection for database authentication.",

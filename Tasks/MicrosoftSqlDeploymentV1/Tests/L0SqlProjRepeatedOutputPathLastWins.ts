@@ -46,6 +46,12 @@ const a: ma.TaskLibAnswers = {
     code: 0,
     stdout: 'Build succeeded.'
 };
+(a.exec as any)[`/usr/bin/dotnet build ${projectPath} -p:NetCoreBuild=true -p:OutputPath=first -p:OutputPath=second -getProperty:SqlTargetPath,MSBuildProjectDirectory`] = {
+    code: 0,
+    stdout: JSON.stringify({
+        Properties: { SqlTargetPath: dacpacPath, MSBuildProjectDirectory: path.resolve(path.dirname(projectPath)) }
+    })
+};
 
 (a.exec as any)[`/usr/local/bin/sqlpackage /Action:Publish /SourceFile:${dacpacPath} /TargetConnectionString:Server=localhost;Database=testdb;User ID=sa;Password=TestPass123!;`] = {
     code: 0,
