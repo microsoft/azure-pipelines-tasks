@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as stream from 'stream';
 import * as tl from 'azure-pipelines-task-lib/task';
 import basecommand from '../src/basecommand';
+import { sanitizeLogCommands } from '../src/outputSanitizer';
 
 class TestCommand extends basecommand {
     public getTool(): string { return 'node'; }
@@ -66,8 +67,8 @@ describe('Helm external output filtering', function () {
                     } else {
                         const result = command.execCommandSync(tool, options);
                         assert.strictEqual(result.code, exitCode);
-                        assert.strictEqual(result.stdout, stdout);
-                        assert.strictEqual(result.stderr, stderr);
+                        assert.strictEqual(result.stdout, sanitizeLogCommands(stdout));
+                        assert.strictEqual(result.stderr, sanitizeLogCommands(stderr));
                     }
                     const blocked = featureValue === 'true';
                     assert(loggedStdout.includes(blocked ? stdout.replace(/##vso\[/g, '##_vso[') : stdout));
