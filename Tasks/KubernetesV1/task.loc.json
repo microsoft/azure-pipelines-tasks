@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "releaseNotes": "ms-resource:loc.releaseNotes",
@@ -452,9 +452,6 @@
   ],
   "execution": {
     "Node16": {
-      "target": "src//kubernetes.js"
-    },
-    "Node10": {
       "target": "src//kubernetes.js"
     },
     "Node20_1": {
