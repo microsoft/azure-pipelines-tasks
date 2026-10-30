@@ -13,7 +13,7 @@ The target database server must already exist. The task deploys schema changes t
 The task discovers and installs the tools it needs automatically:
 - **SqlPackage** (for DACPAC and SQL project deployments) is found via the dotnet global tool, DacFramework MSI on Windows, or PATH. If you need to install it manually: `dotnet tool install -g microsoft.sqlpackage`
 - **go-sqlcmd** (for `.sql` script execution) is found on PATH or auto-installed at runtime. No manual setup needed.
-- **.NET SDK** (only when building a `.sqlproj`) is required to compile the project. Use the `UseDotNet@2` task to install it if not already present on the agent.
+- **.NET SDK 8.0.100 or later** (only when building a `.sqlproj`) is required to compile the project and resolve its evaluated DACPAC output path. Use the `UseDotNet@2` task to install it if not already present on the agent.
 
 ---
 

@@ -1,8 +1,6 @@
 import tl = require('azure-pipelines-task-lib/task');
 import path = require('path');
-import * as os from 'os';
 import * as fs from 'fs';
-import { Writable } from 'stream';
 
 export default class SqlProjectBuilder {
     /**
@@ -21,22 +19,24 @@ export default class SqlProjectBuilder {
         }
         tl.debug(`Found dotnet at: ${dotnetPath}`);
 
-        // Get project name without extension
-        const projectName = this.getProjectName(projectPath);
-        tl.debug(`Project name: ${projectName}`);
-
-        // Where the .dacpac will land. An explicitly requested output directory is honoured;
-        // otherwise the task pins one so the location never has to be predicted.
-        const userSpecifiedOutput = this.findUserSpecifiedOutputDirectory(projectPath, buildArguments);
-        const outputDir = userSpecifiedOutput ?? this.getTaskOwnedOutputDirectory(projectPath, projectName);
-        tl.debug(`Expected output directory: ${outputDir}`);
-
-        // Build the project
         tl.debug(tl.loc('BuildingSqlProject', projectPath));
-        await this.executeBuild(projectPath, buildArguments, userSpecifiedOutput ? undefined : outputDir);
+        await this.executeBuild(dotnetPath, projectPath, buildArguments);
 
-        // Locate the built .dacpac — use fs.existsSync (not tl.exist) so mock tests can intercept this check
-        const dacpacPath = path.join(outputDir, `${projectName}.dacpac`);
+        // A property query without a target evaluates the project without building again.
+        // Keep it separate from the build because -getProperty suppresses normal build logging.
+        const output = await this.executeBuild(dotnetPath, projectPath, buildArguments, true);
+        let dacpacPath: string;
+        try {
+            const properties = JSON.parse(output).Properties;
+            if (typeof properties.SqlTargetPath !== 'string' || !properties.SqlTargetPath.trim() ||
+                typeof properties.MSBuildProjectDirectory !== 'string' || !properties.MSBuildProjectDirectory.trim()) {
+                throw new Error('Missing evaluated SQL output path');
+            }
+            dacpacPath = path.resolve(properties.MSBuildProjectDirectory, properties.SqlTargetPath);
+        } catch {
+            throw new Error(tl.loc('SqlProjectOutputNotResolved'));
+        }
+
         if (!fs.existsSync(dacpacPath)) {
             throw new Error(tl.loc('DacpacNotFoundAfterBuild', dacpacPath));
         }
@@ -46,83 +46,9 @@ export default class SqlProjectBuilder {
     }
 
     /**
-     * The project file name without its extension. The comparison is case-insensitive because
-     * Windows accepts MyDb.SQLPROJ, and MSBuild names the output after the project either way.
-     */
-    public static getProjectName(projectPath: string): string {
-        const fileName = path.basename(projectPath);
-        return fileName.replace(/\.sqlproj$/i, '');
-    }
-
-    /**
-     * The output directory the user asked for, if any.
-     *
-     * The two ways of asking resolve differently, and the difference is not cosmetic:
-     *   --output / -o        dotnet resolves a relative path against the **current directory**
-     *   -p:OutputPath=       MSBuild resolves it against the **project directory**
-     * Resolving both the same way makes a nested project build successfully and then be searched
-     * for in a directory that does not exist.
-     *
-     * Detection runs over the same tokens that are passed to dotnet, so a value can never be read
-     * differently from the way it is executed.
-     *
-     * Repeated options are resolved the way MSBuild resolves them: the last one wins. Returning the
-     * first match made the task look for the .dacpac in a directory the build had not written to,
-     * and a stale artifact left there by an earlier build would have been deployed instead.
-     */
-    public static findUserSpecifiedOutputDirectory(projectPath: string, buildArguments?: string): string | undefined {
-        if (!buildArguments) {
-            return undefined;
-        }
-
-        const tokens = this.parseArguments(buildArguments);
-        let effectiveOutput: string | undefined;
-
-        for (let i = 0; i < tokens.length; i++) {
-            const token = tokens[i];
-
-            if (/^(--output|-o)$/i.test(token)) {
-                const value = tokens[i + 1];
-                if (value) {
-                    effectiveOutput = path.resolve(process.cwd(), value);
-                    // The value is this option's argument, never an option in its own right.
-                    i++;
-                }
-                continue;
-            }
-
-            const inlineOutput = /^(?:--output|-o)[:=](.+)$/i.exec(token);
-            if (inlineOutput) {
-                effectiveOutput = path.resolve(process.cwd(), inlineOutput[1]);
-                continue;
-            }
-
-            const outputPath = /^(?:-p|--property|\/p):OutputPath=(.+)$/i.exec(token);
-            if (outputPath) {
-                effectiveOutput = path.resolve(path.dirname(projectPath), outputPath[1]);
-            }
-        }
-
-        return effectiveOutput;
-    }
-
-    /**
-     * The directory this task pins for build output when the user has not chosen one.
-     *
-     * Predicting MSBuild's default location cannot be done reliably: it depends on Configuration,
-     * which can be set through --configuration, -p:Configuration, --property:Configuration or the
-     * project file itself, and on OutputPath, which the project file may also define. Pinning the
-     * directory and passing it as the last argument removes every one of those variables.
-     */
-    public static getTaskOwnedOutputDirectory(projectPath: string, projectName: string): string {
-        const root = tl.getVariable('Agent.TempDirectory') || os.tmpdir();
-        return path.join(root, 'sqlproj-build-output', projectName);
-    }
-
-    /**
      * Executes dotnet build command
      */
-    private static async executeBuild(projectPath: string, buildArguments?: string, forcedOutputDir?: string): Promise<void> {
+    private static async executeBuild(dotnetPath: string, projectPath: string, buildArguments?: string, queryOutput = false): Promise<string> {
         const args: string[] = [
             'build',
             projectPath,
@@ -136,11 +62,8 @@ export default class SqlProjectBuilder {
             args.push(...additionalArgs);
         }
 
-        // Last one wins in MSBuild, so pinning the output directory after the user's arguments keeps
-        // it authoritative over a Configuration switch or an OutputPath set inside the project file.
-        // A trailing separator is what MSBuild expects for a directory-valued property.
-        if (forcedOutputDir) {
-            args.push(`-p:OutputPath=${forcedOutputDir}${path.sep}`);
+        if (queryOutput) {
+            args.push('-getProperty:SqlTargetPath,MSBuildProjectDirectory');
         }
 
         tl.debug(`Executing: dotnet ${args.join(' ')}`);
@@ -149,23 +72,14 @@ export default class SqlProjectBuilder {
         let buildOutput = '';
         let buildError = '';
 
-        const result = await tl.exec('dotnet', args, {
+        const tool = tl.tool(dotnetPath).arg(args);
+        tool.on('stdout', (chunk: Buffer) => { buildOutput += chunk.toString(); });
+        tool.on('stderr', (chunk: Buffer) => { buildError += chunk.toString(); });
+
+        const result = await tool.exec({
             failOnStdErr: false,
             ignoreReturnCode: true,
-            outStream: new Writable({
-                write: (chunk: Buffer, encoding: string, callback: () => void) => {
-                    buildOutput += chunk.toString();
-                    process.stdout.write(chunk);
-                    callback();
-                }
-            }),
-            errStream: new Writable({
-                write: (chunk: Buffer, encoding: string, callback: () => void) => {
-                    buildError += chunk.toString();
-                    process.stderr.write(chunk);
-                    callback();
-                }
-            })
+            silent: queryOutput
         });
 
         if (result !== 0) {
@@ -173,6 +87,8 @@ export default class SqlProjectBuilder {
             const errorMessage = buildError || buildOutput || 'Unknown build error';
             throw new Error(tl.loc('SqlProjectBuildFailed', result, errorMessage));
         }
+
+        return buildOutput;
     }
 
     /**

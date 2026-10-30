@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as path from 'path';
+import { EventEmitter } from 'events';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
@@ -86,70 +87,97 @@ describe('MicrosoftSqlDeployment Suite', function () {
     // SqlConnectionConfig Unit Tests
     // ============================================
     
-    describe('SqlProjectBuilder - Project name and output directory', function() {
-        it('strips the project extension regardless of case', function() {
-            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.sqlproj'), 'MyDb');
-            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.SQLPROJ'), 'MyDb');
-            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/MyDb.SqlProj'), 'MyDb');
-        });
+    describe('SqlProjectBuilder - Evaluated output path', function() {
+        const taskLib = require('azure-pipelines-task-lib/task');
+        const fileSystem = require('fs');
+        const projectPath = path.resolve('src', 'App', 'App.sqlproj');
+        const projectDirectory = path.dirname(projectPath);
+        const queryArgument = '-getProperty:SqlTargetPath,MSBuildProjectDirectory';
+        let originals: any;
+        let commands: string[][];
+        let queryOutput: string;
+        let buildExitCode: number;
+        let queryExitCode: number;
 
-        it('keeps a dot in the project name', function() {
-            assert.strictEqual(SqlProjectBuilder.getProjectName('/src/Contoso.Sales.sqlproj'), 'Contoso.Sales');
-        });
-
-        // dotnet resolves --output against the current directory, while MSBuild resolves the
-        // OutputPath property against the project directory. Detection has to match the tool, or a
-        // nested project builds successfully and is then searched for in a directory that does not
-        // exist. Both quote styles are covered because the tokenizer used here is the same one that
-        // builds the command line.
-        const projectFile = path.join('/src', 'App', 'MyDb.sqlproj');
-
-        const cwdRelative: [string, string][] = [
-            ['--output custom', 'recognises --output'],
-            ['-o custom', 'recognises -o'],
-            ['--output=custom', 'recognises --output='],
-            [`--output "custom"`, 'recognises a double-quoted --output value'],
-            [`--output 'custom'`, 'recognises a single-quoted --output value']
-        ];
-
-        cwdRelative.forEach(([args, description]) => {
-            it(`${description}, resolved against the current directory`, function() {
-                assert.strictEqual(
-                    SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, args),
-                    path.resolve(process.cwd(), 'custom'));
+        beforeEach(() => {
+            originals = { which: taskLib.which, tool: taskLib.tool, loc: taskLib.loc, existsSync: fileSystem.existsSync };
+            commands = [];
+            buildExitCode = 0;
+            queryExitCode = 0;
+            queryOutput = JSON.stringify({
+                Properties: { SqlTargetPath: path.join('second', 'App.dacpac'), MSBuildProjectDirectory: projectDirectory }
             });
+            taskLib.which = () => 'dotnet';
+            taskLib.loc = (key: string) => key;
+            taskLib.tool = () => {
+                const tool: any = new EventEmitter();
+                tool.arg = (args: string[]) => {
+                    tool.args = args;
+                    return tool;
+                };
+                tool.exec = async () => {
+                    commands.push(tool.args);
+                    const query = tool.args.includes(queryArgument);
+                    tool.emit('stdout', query ? queryOutput : 'Build succeeded.\n');
+                    return query ? queryExitCode : buildExitCode;
+                };
+                return tool;
+            };
+            fileSystem.existsSync = () => true;
         });
 
-        const projectRelative: [string, string][] = [
-            ['-p:OutputPath=custom', 'recognises the -p: property form'],
-            ['--property:OutputPath=custom', 'recognises the --property: form'],
-            ['/p:OutputPath=custom', 'recognises the /p: form'],
-            [`-p:OutputPath="custom"`, 'recognises a double-quoted property value'],
-            [`-p:OutputPath='custom'`, 'recognises a single-quoted property value']
-        ];
+        afterEach(() => {
+            taskLib.which = originals.which;
+            taskLib.tool = originals.tool;
+            taskLib.loc = originals.loc;
+            fileSystem.existsSync = originals.existsSync;
+        });
 
-        projectRelative.forEach(([args, description]) => {
-            it(`${description}, resolved against the project directory`, function() {
-                assert.strictEqual(
-                    SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, args),
-                    path.resolve(path.dirname(projectFile), 'custom'));
+        it('uses the evaluated output when a later property list overrides a stale DACPAC directory', async () => {
+            const result = await SqlProjectBuilder.buildProject(
+                projectPath, '-p:OutputPath=first -p:Configuration=Release;OutputPath=second');
+            assert.strictEqual(result, path.join(projectDirectory, 'second', 'App.dacpac'));
+            const build = ['build', projectPath, '-p:NetCoreBuild=true',
+                '-p:OutputPath=first', '-p:Configuration=Release;OutputPath=second'];
+            assert.deepStrictEqual(commands, [build, [...build, queryArgument]]);
+        });
+
+        it('uses the evaluated DACPAC name and absolute path instead of assuming the project file name', async () => {
+            const dacpacPath = path.resolve('artifacts with spaces', 'Renamed.Database.dacpac');
+            queryOutput = JSON.stringify({
+                Properties: { SqlTargetPath: dacpacPath, MSBuildProjectDirectory: projectDirectory }
             });
+            assert.strictEqual(await SqlProjectBuilder.buildProject(projectPath), dacpacPath);
         });
 
-        it('keeps a quoted path containing spaces in one piece', function() {
-            assert.strictEqual(
-                SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, `-p:OutputPath="out dir"`),
-                path.resolve(path.dirname(projectFile), 'out dir'));
-            assert.strictEqual(
-                SqlProjectBuilder.findUserSpecifiedOutputDirectory(projectFile, `-p:OutputPath='out dir'`),
-                path.resolve(path.dirname(projectFile), 'out dir'));
+        it('preserves quoted output arguments for both the build and evaluation', async () => {
+            await SqlProjectBuilder.buildProject(projectPath, `--output 'out dir'`);
+            assert.deepStrictEqual(commands[0].slice(3), ['--output', 'out dir']);
+            assert.deepStrictEqual(commands[1].slice(3), ['--output', 'out dir', queryArgument]);
         });
 
-        it('reports no user-specified output when only the configuration is set', function() {
-            assert.strictEqual(
-                SqlProjectBuilder.findUserSpecifiedOutputDirectory('/src/MyDb.sqlproj', '-p:Configuration=Release'),
-                undefined,
-                'Configuration selects a directory MSBuild derives, so the task must pin its own instead');
+        it('does not fall back to an existing DACPAC when MSBuild returns no usable output path', async () => {
+            for (const output of ['', 'not JSON', '{}',
+                JSON.stringify({ Properties: { SqlTargetPath: '', MSBuildProjectDirectory: projectDirectory } })]) {
+                queryOutput = output;
+                await assert.rejects(() => SqlProjectBuilder.buildProject(projectPath), /SqlProjectOutputNotResolved/);
+            }
+        });
+
+        it('fails when the evaluated DACPAC does not exist', async () => {
+            fileSystem.existsSync = () => false;
+            await assert.rejects(() => SqlProjectBuilder.buildProject(projectPath), /DacpacNotFoundAfterBuild/);
+        });
+
+        it('does not query or select an old DACPAC after a failed build', async () => {
+            buildExitCode = 1;
+            await assert.rejects(() => SqlProjectBuilder.buildProject(projectPath), /SqlProjectBuildFailed/);
+            assert.strictEqual(commands.length, 1);
+        });
+
+        it('fails when output evaluation fails even if the build succeeded', async () => {
+            queryExitCode = 1;
+            await assert.rejects(() => SqlProjectBuilder.buildProject(projectPath), /SqlProjectBuildFailed/);
         });
     });
 
@@ -1400,6 +1428,3 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
         assert.strictEqual(getSqlAudienceFromEnvironment(undefined as any), SQL, 'unknown environment falls back to public cloud');
     });
 });
-
-
-

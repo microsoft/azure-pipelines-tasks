@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "3.230.2",
@@ -165,6 +165,7 @@
     "BuildingSqlProject": "ms-resource:loc.messages.BuildingSqlProject",
     "DotnetNotFound": "ms-resource:loc.messages.DotnetNotFound",
     "DacpacNotFoundAfterBuild": "ms-resource:loc.messages.DacpacNotFoundAfterBuild",
+    "SqlProjectOutputNotResolved": "ms-resource:loc.messages.SqlProjectOutputNotResolved",
     "SqlProjectBuiltSuccessfully": "ms-resource:loc.messages.SqlProjectBuiltSuccessfully",
     "SqlProjectBuildFailed": "ms-resource:loc.messages.SqlProjectBuildFailed",
     "AccessTokenAcquired": "ms-resource:loc.messages.AccessTokenAcquired",
