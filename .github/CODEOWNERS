@@ -15,8 +15,6 @@ Tasks/AppCenterDistributeV2/   @imenkov    @lucen-ms
 
 Tasks/AppCenterDistributeV3/   @imenkov    @lucen-ms
 
-Tasks/AppCenterTestV1/   @imenkov    @lucen-ms
-
 Tasks/ArchiveFilesV2/  @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
 
 # DRI Rotation for @microsoft/release-management-task-team : DRI-ReleaseManagement
