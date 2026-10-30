@@ -14,7 +14,7 @@ import { usePythonVersion } from './usepythonversion';
         const ALLOWED_ARCHITECTURES = ['x86', 'x64', 'arm64'];
         const architecture = task.getInput('architecture', true);
         if (!ALLOWED_ARCHITECTURES.includes(architecture)) {
-            throw new Error(`Invalid architecture: ${architecture}. Allowed values are ${ALLOWED_ARCHITECTURES.join(', ')}`);
+            throw new Error(task.loc('InvalidArchitecture', architecture));
         }
         const githubToken = task.getInput('githubToken', false);
         await usePythonVersion({
