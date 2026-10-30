@@ -277,6 +277,5 @@ function getHelmChartRef(helmOutput: string): string {
     const refIndex = helmOutput.indexOf(refMarker);
     const lineEndingIndex = helmOutput.indexOf("\n", refIndex);
     let helmRef = helmOutput.substring(refIndex + refMarker.length, lineEndingIndex);
-    helmRef.trim();
-    return helmRef;
+    return helmRef.trim();
 }
