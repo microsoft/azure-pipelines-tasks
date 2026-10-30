@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 282,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "groups": [
@@ -578,6 +578,7 @@
     "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
     "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
     "FileNotFound": "File not found at %s",
+    "InvalidReleaseName": "The resolved release name '%s' is not a valid Helm release name (lowercase alphanumeric characters, '-', and '.', max 53 characters, must not start or end with '-'). Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) only contains those characters.",
     "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",

@@ -63,6 +63,25 @@ export function trimIdentifierInput(value: string): string {
     return value ? value.trim() : value;
 }
 
+// Helm's own release-name rule (reported verbatim by Helm 3.17.3 itself when it
+// rejects a name, e.g. via `helm template <name> <chart>`): lowercase
+// alphanumerics and dashes, optionally dot-separated segments, max 53 chars.
+const releaseNamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
+const releaseNameMaxLength = 53;
+
+/**
+ * Validates a resolved release name - whether it came from the task's own
+ * "releaseName" input or from the implicit BUILD_BUILDNUMBER/RELEASE_RELEASENAME
+ * fallback - before it is added to the Helm command line as a bare positional
+ * argument via addSingleArgument().
+ */
+export function validateReleaseName(value: string): string {
+    if (!value || value.length > releaseNameMaxLength || !releaseNamePattern.test(value)) {
+        throw new Error(tl.loc("InvalidReleaseName", value));
+    }
+    return value;
+}
+
 export function extractReleaseNameFromHelmOutput(output: string) {
     const releaseNameMatch = output.match(matchPatternForReleaseName);
     if (releaseNameMatch && releaseNameMatch.length >= 1)

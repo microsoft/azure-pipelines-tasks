@@ -71,7 +71,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (releaseName) {
-        helmCli.addSingleArgument(releaseName);
+        helmCli.addSingleArgument(helmutil.validateReleaseName(releaseName));
     }
 
     if (chartType === "Name") {
