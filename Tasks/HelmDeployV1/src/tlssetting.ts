@@ -43,11 +43,11 @@ function addTlsSetting(helmCli: helmcli, tlsFlag: string, tlsCaCertFlag: string,
         throw new Error(tl.loc("FileNotFound", keyFilePath));
     }
 
-    helmCli.addArgument(tlsFlag);
-    helmCli.addArgument(tlsCaCertFlag);
-    helmCli.addArgument("\""+caCertFilePath+"\"");
-    helmCli.addArgument(tlsCertFlag);
-    helmCli.addArgument("\""+certFilePath+"\"");
-    helmCli.addArgument(tlsCertKeyFlag);
-    helmCli.addArgument("\""+keyFilePath+"\"");
+    helmCli.addSingleArgument(tlsFlag);
+    helmCli.addSingleArgument(tlsCaCertFlag);
+    helmCli.addSingleArgument(caCertFilePath);
+    helmCli.addSingleArgument(tlsCertFlag);
+    helmCli.addSingleArgument(certFilePath);
+    helmCli.addSingleArgument(tlsCertKeyFlag);
+    helmCli.addSingleArgument(keyFilePath);
 }
