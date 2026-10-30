@@ -159,23 +159,40 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
         return captured;
     }
 
-    it('rejects a Build.BuildNumber that looks like it contains a --post-renderer option, instead of letting it survive as an inert single token', async function () {
+    // --- Reviewer follow-up (post-merge): validateReleaseName() only rejects
+    // empty-or-dash-leading values; it deliberately does not enforce Helm's
+    // own release-name format (charset, length), since that varies by the
+    // installed Helm version (see the "legacy-style release name" test
+    // below). A Build.BuildNumber that merely CONTAINS text that looks like
+    // a Helm option - without the release name itself starting with "-" -
+    // is still handed to Helm as a single, inert argv element: confirmed
+    // directly against real Helm binaries that Cobra/pflag only treats a
+    // token as an option when the token ITSELF starts with "-"; embedded
+    // "--post-renderer"/"--values" text inside one positional argv element
+    // is never re-split or reinterpreted as separate flags, on either Helm
+    // 3.2.4 or 3.17.3. Helm's own (version-specific) release-name validator
+    // remains free to accept or reject the resulting odd-looking name on its
+    // own terms - that is no longer this task's concern.
+    it('keeps a Build.BuildNumber containing embedded --post-renderer-looking text as a single inert token (no reinterpretation, no task-level rejection)', async function () {
         const buildNumber = 'release-2b0627 --post-renderer bash --post-renderer-args=-c --post-renderer-args=pwn';
         process.env.BUILD_BUILDNUMBER = buildNumber;
 
-        // Earlier behavior (now superseded by validateReleaseName()): the build
-        // number survived as a single, inert argv element containing a space,
-        // which Helm's own release-name parser would then reject. This task
-        // now rejects the invalid identifier itself, before ever building a
-        // Helm command line - a strictly earlier and clearer failure.
-        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|not a valid Helm release name/);
+        const argv = await buildUpgradeArgv();
+
+        assert.strictEqual(argv.filter((a) => a === buildNumber).length, 1,
+            'the entire build number must survive as exactly one inert argv element');
+        assert.ok(argv.indexOf('--post-renderer') === -1, 'the embedded text must never become a separate argv element');
     });
 
-    it('rejects a Build.BuildNumber that looks like it contains a --values option, instead of letting it survive as an inert single token', async function () {
+    it('keeps a Build.BuildNumber containing embedded --values-looking text as a single inert token (no reinterpretation, no task-level rejection)', async function () {
         const buildNumber = 'release-2b0627 --values override-values.yaml';
         process.env.BUILD_BUILDNUMBER = buildNumber;
 
-        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|not a valid Helm release name/);
+        const argv = await buildUpgradeArgv();
+
+        assert.strictEqual(argv.filter((a) => a === buildNumber).length, 1,
+            'the entire build number must survive as exactly one inert argv element');
+        assert.ok(argv.indexOf('--values') === -1, 'the embedded text must never become a separate argv element');
     });
 
     it('produces the identical single release-name token for a typical build number (no regression)', async function () {
@@ -316,13 +333,13 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
     it('rejects a dash-leading explicit releaseName on upgrade instead of letting Helm reinterpret it as an option', async function () {
         setInput('releaseName', '--post-renderer=node');
 
-        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|not a valid Helm release name/);
+        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|starts with '-'/);
     });
 
     it('rejects a dash-leading Build.BuildNumber release-name fallback on upgrade', async function () {
         process.env.BUILD_BUILDNUMBER = '--kube-apiserver=http://169.254.169.254';
 
-        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|not a valid Helm release name/);
+        await assert.rejects(() => buildUpgradeArgv(), /InvalidReleaseName|starts with '-'/);
     });
 
     it('rejects a dash-leading explicit releaseName on install (Helm v3 bare-positional path)', async function () {
@@ -330,7 +347,7 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
 
         await assert.rejects(
             () => buildArgv('install', (helmCli) => helminstall.addArguments(helmCli)),
-            /InvalidReleaseName|not a valid Helm release name/);
+            /InvalidReleaseName|starts with '-'/);
     });
 
     it('still accepts a well-formed releaseName on install (no regression)', async function () {
@@ -338,6 +355,26 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
 
         const installArgv = await buildArgv('install', (helmCli) => helminstall.addArguments(helmCli));
         assert.ok(installArgv.indexOf('my-release') !== -1, 'install must still accept a well-formed release name');
+    });
+
+    // --- Reviewer follow-up (post-merge): validateReleaseName() must not
+    // enforce Helm's current (3.17+) release-name format, only reject empty
+    // or dash-leading values. Confirmed directly: Helm 3.2.4 accepts an
+    // uppercase/underscore name such as "Legacy_Release" end-to-end for both
+    // "install" and "upgrade" (Helm 3.17.3 rejects the same name). A
+    // pre-existing release named this way on an older, still-supported Helm
+    // must keep upgrading through this task; only the installed Helm binary
+    // enforces the rest of its own version's naming rule.
+    it('still accepts a legacy-style release name with uppercase letters and underscores (older Helm versions allow this)', async function () {
+        setInput('releaseName', 'Legacy_Release');
+
+        const installArgv = await buildArgv('install', (helmCli) => helminstall.addArguments(helmCli));
+        assert.ok(installArgv.indexOf('Legacy_Release') !== -1,
+            'install must not reject a release name only because it has uppercase letters or underscores');
+
+        const upgradeArgv = await buildUpgradeArgv();
+        assert.ok(upgradeArgv.indexOf('Legacy_Release') !== -1,
+            'upgrade must not reject a release name only because it has uppercase letters or underscores');
     });
 
     // --- Reviewer follow-up (post-merge, nonblocking): helmpackage.ts had no
