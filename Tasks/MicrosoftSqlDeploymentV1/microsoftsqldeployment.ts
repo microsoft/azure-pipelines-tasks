@@ -446,6 +446,7 @@ function resolveSqlcmdCredentials(
             tl.setSecret(azureEndpoint.servicePrincipalKey);
             return {
                 tenantId: azureEndpoint.tenantID,
+                authMethodOverride: 'ActiveDirectoryEnvironment',
                 source: 'clientSecret',
                 envOverrides: Object.assign({
                     AZURE_TENANT_ID: azureEndpoint.tenantID,
@@ -463,6 +464,7 @@ function resolveSqlcmdCredentials(
         if (scheme === 'serviceprincipal' && azureEndpoint.servicePrincipalClientID && azureEndpoint.servicePrincipalCertificatePath) {
             return {
                 tenantId: azureEndpoint.tenantID,
+                authMethodOverride: 'ActiveDirectoryEnvironment',
                 source: 'clientCertificate',
                 envOverrides: Object.assign({
                     AZURE_TENANT_ID: azureEndpoint.tenantID,

@@ -23,6 +23,9 @@ tmr.setInput('connectionString', 'Server=myserver.database.usgovcloudapi.net;Dat
 tmr.setInput('azureSubscription', 'usgov-subscription');
 tmr.setInput('firewallRuleManagement', 'false');
 
+// An agent's credential-chain preference must not override the service connection.
+process.env['AZURE_TOKEN_CREDENTIALS'] = 'AzureCLICredential';
+
 const azureEndpoint: any = {
     scheme: 'ServicePrincipal',
     environment: 'AzureUSGovernment',
@@ -56,7 +59,7 @@ const a: ma.TaskLibAnswers = {
     exec: {}
 };
 
-(a.exec as any)['/usr/bin/sqlcmd -S myserver.database.usgovcloudapi.net -d db --authentication-method ActiveDirectoryDefault -l 30 -b -i script.sql'] = {
+(a.exec as any)['/usr/bin/sqlcmd -S myserver.database.usgovcloudapi.net -d db --authentication-method ActiveDirectoryEnvironment -l 30 -b -i script.sql'] = {
     code: 0,
     stdout: 'Changed database context to db.'
 };

@@ -3,6 +3,7 @@ import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest/AzureService
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase';
 import { WebRequest, WebResponse } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { prepareArmCredentials } from './SqlTokenCredentials';
 
 // API docs: https://docs.microsoft.com/rest/api/sql
 const SqlApiVersion = '2021-11-01';
@@ -33,6 +34,7 @@ export default class AzureSqlResourceManager {
     private _sqlServer?: AzureSqlServer;
 
     private constructor(azureEndpoint: AzureEndpoint) {
+        prepareArmCredentials(azureEndpoint);
         this._client = new ServiceClient(
             azureEndpoint.applicationTokenCredentials,
             azureEndpoint.subscriptionID,

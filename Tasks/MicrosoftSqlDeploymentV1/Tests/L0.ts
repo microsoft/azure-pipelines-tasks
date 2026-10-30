@@ -1305,9 +1305,8 @@ describe('MicrosoftSqlDeployment Suite', function () {
         await tr.runAsync();
         runValidations(() => {
             assert(tr.succeeded, 'task should succeed with a certificate service connection');
-            // The command line is identical either way, so assert on the resolved credential
-            // source: 'default' means it fell through to DefaultAzureCredential, which has no
-            // identity on a hosted agent.
+            assert(tr.stdout.indexOf('--authentication-method ActiveDirectoryEnvironment') >= 0,
+                'an ambient AzureCLICredential preference must not override the certificate identity');
             assert(tr.stdout.indexOf('"sqlcmdCredentialSource":"clientCertificate"') >= 0,
                 'certificate connections must resolve to AZURE_CLIENT_CERTIFICATE_PATH, not DefaultAzureCredential');
         }, tr);
@@ -1348,7 +1347,7 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
     this.timeout(10000);
 
     const { ApplicationTokenCredentials } = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-common');
-    const { createSqlScopedCredentials, getSqlAudienceFromEnvironment } = require('../src/SqlTokenCredentials');
+    const { createSqlScopedCredentials, getSqlAudienceFromEnvironment, prepareArmCredentials } = require('../src/SqlTokenCredentials');
 
     const ARM = 'https://management.azure.com/';
     const SQL = 'https://database.windows.net/';
@@ -1371,6 +1370,104 @@ describe('SqlTokenCredentials - cloning a real ApplicationTokenCredentials', fun
             undefined,                      // access_token
             useMSAL                         // useMSAL
         );
+    }
+
+    for (const [environment, armAudience, serverHost] of [
+        ['AzureCloud', ARM, 'myserver.database.windows.net'],
+        ['AzureUSGovernment', 'https://management.usgovcloudapi.net/', 'myserver.database.usgovcloudapi.net']
+    ]) {
+        it(`should select the user-assigned identity for ARM discovery and firewall cleanup in ${environment}`, async () => {
+            const webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+            const originalSendRequest = webClient.sendRequest;
+            const clientId = 'user-assigned-client-id';
+            const real: any = newRealCredential(true, 'ManagedServiceIdentity', clientId);
+            real.baseUrl = armAudience;
+            real.activeDirectoryResourceId = armAudience;
+            real.token_deferred = Promise.resolve('unintended-identity-token');
+            real.accessToken = 'unintended-identity-token';
+            real.msalInstance = { unintendedIdentity: true };
+            const sqlAudience = getSqlAudienceFromEnvironment(environment);
+            const tokenRequests: string[] = [];
+            const armMethods: string[] = [];
+            const serverId = '/subscriptions/sub/resourceGroups/rg/providers/Microsoft.Sql/servers/myserver';
+            const rule = {
+                id: `${serverId}/firewallRules/test-rule`,
+                name: 'test-rule',
+                type: 'Microsoft.Sql/servers/firewallRules',
+                properties: { startIpAddress: '203.0.113.10', endIpAddress: '203.0.113.10' }
+            };
+
+            webClient.sendRequest = async (request: any) => {
+                const uri = new URL(request.uri);
+                if (uri.hostname === '169.254.169.254') {
+                    assert.strictEqual(uri.searchParams.get('client_id'), clientId);
+                    const resource = uri.searchParams.get('resource')!;
+                    assert([armAudience, sqlAudience].includes(resource));
+                    tokenRequests.push(resource);
+                    return {
+                        statusCode: 200,
+                        headers: {},
+                        body: { access_token: resource === armAudience ? 'selected-arm-token' : 'selected-sql-token' }
+                    };
+                }
+
+                assert.strictEqual(uri.hostname, new URL(armAudience).hostname);
+                assert.strictEqual(request.headers.Authorization, 'Bearer selected-arm-token');
+                armMethods.push(request.method);
+                if (request.method === 'GET') {
+                    return {
+                        statusCode: 200, headers: {},
+                        body: { value: [{
+                            id: serverId, name: 'myserver', location: 'eastus',
+                            properties: { fullyQualifiedDomainName: serverHost, state: 'Ready', version: '12.0' }
+                        }] }
+                    };
+                }
+                if (request.method === 'PUT') {
+                    return { statusCode: 201, headers: {}, body: rule };
+                }
+                assert.strictEqual(request.method, 'DELETE');
+                return { statusCode: 204, headers: {} };
+            };
+
+            try {
+                const endpoint: any = {
+                    scheme: 'ManagedServiceIdentity', subscriptionID: 'sub',
+                    environment, applicationTokenCredentials: real
+                };
+                const manager = await AzureSqlResourceManager.getResourceManager(serverHost, endpoint);
+                const createdRule = await manager.addFirewallRule('203.0.113.10', '203.0.113.10');
+                const sqlCredentials = createSqlScopedCredentials(endpoint, sqlAudience);
+                assert.strictEqual(await sqlCredentials.getToken(), 'selected-sql-token');
+                await manager.removeFirewallRule(createdRule);
+
+                assert.deepStrictEqual(tokenRequests, [armAudience, sqlAudience],
+                    'ARM and SQL must acquire separate tokens for the same selected identity');
+                assert.deepStrictEqual(armMethods, ['GET', 'PUT', 'DELETE']);
+                assert.strictEqual(real.baseUrl, armAudience);
+                assert.strictEqual(real.activeDirectoryResourceId, armAudience);
+                assert.notStrictEqual(real.token_deferred, sqlCredentials.token_deferred);
+            } finally {
+                webClient.sendRequest = originalSendRequest;
+            }
+        });
+    }
+
+    for (const scheme of ['ServicePrincipal', 'ManagedServiceIdentity']) {
+        it(`should preserve the original ARM token path and caches for ${scheme} without a selected managed identity`, async () => {
+            const real: any = newRealCredential(true, scheme);
+            const cachedToken = Promise.resolve('existing-arm-token');
+            const msalInstance = { existingIdentity: true };
+            real.token_deferred = cachedToken;
+            real.msalInstance = msalInstance;
+            real.accessToken = 'existing-arm-token';
+            prepareArmCredentials({ scheme, applicationTokenCredentials: real });
+
+            assert.strictEqual(real.useMSAL, true);
+            assert.strictEqual(real.token_deferred, cachedToken);
+            assert.strictEqual(real.msalInstance, msalInstance);
+            assert.strictEqual(real.accessToken, 'existing-arm-token');
+        });
     }
 
     it('should retain getToken from the prototype', () => {
