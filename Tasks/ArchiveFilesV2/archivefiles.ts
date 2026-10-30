@@ -3,6 +3,7 @@ import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
 import stream = require("stream");
+import * as os from 'os';
 import utils = require('./utils.js');
 
 var repoRoot: string = tl.getVariable('System.DefaultWorkingDirectory');
@@ -92,7 +93,7 @@ function getOptions(): tr.IExecSyncOptions {
     if (includeRootFolder) {
         dirName = path.dirname(rootFolderOrFile);
         tl.debug("cwd (include root folder)= " + dirName);
-        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable, externalOutput: { source: 'childProcess' } };
     } else {
         var stats: fs.Stats = tl.stats(rootFolderOrFile);
         if (stats.isFile()) {
@@ -101,7 +102,7 @@ function getOptions(): tr.IExecSyncOptions {
             dirName = rootFolderOrFile;
         }
         tl.debug("cwd (exclude root folder)= " + dirName);
-        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable };
+        return { cwd: dirName, outStream: process.stdout as stream.Writable, errStream: process.stderr as stream.Writable, externalOutput: { source: 'childProcess' } };
     }
 }
 
@@ -167,7 +168,7 @@ function zipArchive(archive: string, files: string[]) {
     zip.arg('--');
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
-        console.log(tl.loc('Filename', files[i]));
+        tl.writeExternalOutput(tl.loc('Filename', files[i]) + os.EOL, { source: 'repository' });
     }
     return handleExecResult(zip.execSync(getOptions()), archive);
 }
@@ -347,7 +348,7 @@ function doWork() {
 
         // Find matching archive files
         var files: string[] = findFiles();
-        utils.reportArchivePlan(files).forEach(line => console.log(line));
+        utils.reportArchivePlan(files).forEach(line => tl.writeExternalOutput(line + os.EOL, { source: 'repository' }));
 
         tl.debug(`Listing all ${files.length} files to archive:`);
         files.forEach(file => tl.debug(file));

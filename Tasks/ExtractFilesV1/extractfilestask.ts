@@ -201,7 +201,7 @@ function isTar(file) {
 }
 
 function unzipExtract(file, destinationFolder) {
-    console.log(tl.loc('UnzipExtractFile', file));
+    tl.writeExternalOutput(tl.loc('UnzipExtractFile', file) + os.EOL, { source: 'repository' });
     if (typeof xpUnzipLocation == "undefined") {
         xpUnzipLocation = tl.which('unzip', true);
     }
@@ -212,11 +212,11 @@ function unzipExtract(file, destinationFolder) {
     unzip.arg(file);
     unzip.arg('-d');
     unzip.arg(destinationFolder);
-    return handleExecResult(unzip.execSync({cwd: destinationFolder}), file);
+    return handleExecResult(unzip.execSync({cwd: destinationFolder, externalOutput: { source: 'childProcess' }}), file);
 }
 
 function sevenZipExtract(file, destinationFolder) {
-    console.log(tl.loc('SevenZipExtractFile', file));
+    tl.writeExternalOutput(tl.loc('SevenZipExtractFile', file) + os.EOL, { source: 'repository' });
     var sevenZip = tl.tool(getSevenZipLocation());
     if (overwriteExistingFiles) {
         sevenZip.arg('-aoa');
@@ -224,11 +224,11 @@ function sevenZipExtract(file, destinationFolder) {
     sevenZip.arg('x');
     sevenZip.arg('-o' + destinationFolder);
     sevenZip.arg(file);
-    return handleExecResult(sevenZip.execSync({cwd: destinationFolder }), file);
+    return handleExecResult(sevenZip.execSync({cwd: destinationFolder, externalOutput: { source: 'childProcess' }}), file);
 }
 
 function tarExtract(file, destinationFolder) {
-    console.log(tl.loc('TarExtractFile', file));
+    tl.writeExternalOutput(tl.loc('TarExtractFile', file) + os.EOL, { source: 'repository' });
     if (typeof xpTarLocation == "undefined") {
         xpTarLocation = tl.which('tar', true);
     }
@@ -241,7 +241,7 @@ function tarExtract(file, destinationFolder) {
     tar.arg(file);
     tar.arg('-C');
     tar.arg(destinationFolder);
-    return handleExecResult(tar.execSync({cwd: destinationFolder}), file);
+    return handleExecResult(tar.execSync({cwd: destinationFolder, externalOutput: { source: 'childProcess' }}), file);
 }
 
 function handleExecResult(execResult: tr.IExecSyncResult, file) {
@@ -288,18 +288,18 @@ function extractFiles(files: string[]) {
                     // e.g. 'destinationFolder/_test.tar.bz2_'
                     var tempFolder = path.normalize(destinationFolder + path.sep + '_' + shortFileName + '_');
                     if (!tl.exist(tempFolder)) {
-                        console.log(tl.loc('CreateTempDir', tempFolder, file));
+                        tl.writeExternalOutput(tl.loc('CreateTempDir', tempFolder, file) + os.EOL, { source: 'repository' });
                         // 0 create temp folder
                         tl.mkdirP(tempFolder);
                         // 1 extract compressed tar
                         sevenZipExtract(file, tempFolder);
-                        console.log(tl.loc('TempDir', tempFolder));
+                        tl.writeExternalOutput(tl.loc('TempDir', tempFolder) + os.EOL, { source: 'repository' });
                         var tempTar = tempFolder + path.sep + tl.ls('-A', [tempFolder])[0]; // should be only one
-                        console.log(tl.loc('DecompressedTempTar', file, tempTar));
+                        tl.writeExternalOutput(tl.loc('DecompressedTempTar', file, tempTar) + os.EOL, { source: 'repository' });
                         // 2 expand extracted tar
                         sevenZipExtract(tempTar, destinationFolder);
                         // 3 cleanup temp folder
-                        console.log(tl.loc('RemoveTempDir', tempFolder));
+                        tl.writeExternalOutput(tl.loc('RemoveTempDir', tempFolder) + os.EOL, { source: 'repository' });
                         tl.rmRF(tempFolder);
                     } else {
                         failTask(tl.loc('ExtractFailedCannotCreate', file, tempFolder));
@@ -333,7 +333,7 @@ function doWork() {
 
         console.log(tl.loc('FoundFiles', files.length));
         for (var i = 0; i < files.length; i++) {
-            console.log(files[i]);
+            tl.writeExternalOutput(files[i] + os.EOL, { source: 'repository' });
         }
 
         // Clean the destination folder before extraction?
@@ -352,7 +352,7 @@ function doWork() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('SucceedMsg'));
     } catch (e) {
         tl.debug(e.message);
-        process.stderr.write(e + os.EOL);
+        tl.writeExternalOutput(e + os.EOL, { source: 'childProcess', destination: process.stderr });
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }

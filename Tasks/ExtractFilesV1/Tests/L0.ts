@@ -6,6 +6,30 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 describe('ExtractFile Suite', function () {
     this.timeout(60000);
 
+    for (const extension of ['zip', 'tar', '7z']) {
+        it(`neutralizes archive names and ${extension} stdout/stderr`, async () => {
+            const previous = process.env['OUTPUT_TEST_EXTENSION'];
+            process.env['OUTPUT_TEST_EXTENSION'] = extension;
+            try {
+                const runner = new ttm.MockTestRunner(path.join(__dirname, 'L0LoggingCommands.js'));
+                await runner.runAsync();
+                assert(runner.succeeded, runner.stdout + runner.stderr);
+                assert(runner.stdout.includes('archive##_vso[task.setvariable variable=Injected]sentinel.'));
+                const output = runner.stdout + runner.stderr;
+                for (const channel of ['stdout', 'stderr']) {
+                    assert(output.includes(`entry ${channel} ##_vso[task.setvariable variable=Injected]sentinel`));
+                    assert(!output.includes(`entry ${channel} ##vso[task.setvariable variable=Injected]sentinel`));
+                }
+            } finally {
+                if (previous === undefined) {
+                    delete process.env['OUTPUT_TEST_EXTENSION'];
+                } else {
+                    process.env['OUTPUT_TEST_EXTENSION'] = previous;
+                }
+            }
+        });
+    }
+
     function runValidations(validator: () => void, tr: ttm.MockTestRunner) {
         try {
             validator();
