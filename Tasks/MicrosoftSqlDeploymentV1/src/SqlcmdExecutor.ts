@@ -21,7 +21,7 @@ const AZURE_IDENTITY_CREDENTIAL_ENV_VARS = [
 export interface SqlcmdCredentials {
     /** Service connection tenant ID; used to build clientId@tenantId for AAD SP auth. */
     tenantId?: string;
-    /** Replaces the --authentication-method value (ActiveDirectoryAzurePipelines for WIF). */
+    /** Replaces the --authentication-method value with the service connection's credential method. */
     authMethodOverride?: string;
     /** Client id of a user-assigned managed identity, passed to sqlcmd as -U. */
     userIdOverride?: string;
@@ -176,10 +176,9 @@ export class SqlcmdExecutor {
 
         switch (authType) {
             case 'activedirectorydefault':
-                // A Workload Identity Federation service connection cannot authenticate
-                // through the DefaultAzureCredential chain, so the caller substitutes
-                // ActiveDirectoryAzurePipelines. That credential takes its client/tenant/
-                // connection id from AZURESUBSCRIPTION_* env vars, so no -U is passed.
+                // Pin service connections to their credential method instead of the ambient
+                // DefaultAzureCredential chain. WIF and environment credentials read their
+                // identity from environment variables, so neither requires -U.
                 addAuthenticationMethod(authMethodOverride ?? 'ActiveDirectoryDefault');
                 // Set only for a user-assigned managed identity, which is selected by client id.
                 if (userIdOverride) {

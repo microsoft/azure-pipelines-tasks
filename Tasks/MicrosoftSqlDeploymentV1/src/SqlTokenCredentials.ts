@@ -20,6 +20,21 @@ export function getSqlAudienceFromEnvironment(environment: string): string {
 }
 
 /**
+ * Pin the selected user-assigned identity before the first ARM request. The pinned package's
+ * MSAL MSI path omits client_id, and existing caches may belong to that unintended identity.
+ * Keep the ARM audience unchanged; the SQL credential is cloned and cleared separately.
+ */
+export function prepareArmCredentials(azureEndpoint: any): void {
+    const armCredentials = azureEndpoint.applicationTokenCredentials;
+    if (isUserAssignedManagedIdentity(azureEndpoint, armCredentials)) {
+        armCredentials.useMSAL = false;
+        armCredentials.token_deferred = undefined;
+        armCredentials.msalInstance = undefined;
+        armCredentials.accessToken = undefined;
+    }
+}
+
+/**
  * Builds a credential that requests SQL-audience tokens without disturbing the ARM
  * credential that firewall rule management depends on.
  *

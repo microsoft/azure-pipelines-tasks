@@ -21,6 +21,8 @@ tmr.setInput('azureSubscription', 'test-service-connection-id');
 // Skip the connectivity probe so this test isolates the deployment command
 tmr.setInput('firewallRuleManagement', 'false');
 
+process.env['AZURE_TOKEN_CREDENTIALS'] = 'AzureCLICredential';
+
 const CERT_PATH = '/tmp/spnCert.pem';
 
 tmr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint', {
@@ -54,7 +56,7 @@ const a: ma.TaskLibAnswers = {
     which: { '/usr/bin/sqlcmd': '/usr/bin/sqlcmd' },
     exec: {
         // Credentials arrive through AZURE_* env vars, so no -U on the command line.
-        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryDefault -l 30 -b -i test.sql': {
+        '/usr/bin/sqlcmd -S myserver.database.windows.net -d testdb --authentication-method ActiveDirectoryEnvironment -l 30 -b -i test.sql': {
             code: 0,
             stdout: 'Changed database context to testdb.'
         }
