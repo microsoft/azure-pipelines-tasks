@@ -5,8 +5,9 @@ parameters:
   type: string
 - name: nodeModulesSigningMode
   type: string
-  default: 'Catalog signing'
+  default: 'None'
   values:
+  - 'None'
   - 'Catalog signing'
   - 'Individual file signing'
 - name: catalogGenerationThrottle
