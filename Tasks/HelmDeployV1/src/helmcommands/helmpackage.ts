@@ -22,14 +22,16 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (version) {
-        helmCli.addArgument("--version ".concat(version));
+        helmCli.addSingleArgument("--version");
+        helmCli.addSingleArgument(version);
     }
 
     if (destination) {
         if (!tl.exist(destination)) {
             tl.mkdirP(destination);
         }
-        helmCli.addArgument("--destination \"" + destination + "\"");
+        helmCli.addSingleArgument("--destination");
+        helmCli.addSingleArgument(destination);
     }
 
     if (argumentsInput) {
@@ -37,6 +39,6 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
 
-    helmCli.addArgument("\"" + helmutil.resolvePath(chart) + "\"");
+    helmCli.addSingleArgument(helmutil.resolvePath(chart));
 
 }
