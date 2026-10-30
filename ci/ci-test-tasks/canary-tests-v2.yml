@@ -3,6 +3,10 @@ parameters:
   displayName: Flag to update LocalPackages buildconfig (for testing, this will be made  default later)
   type: boolean
   default: false # Note: keep in sync with /azure-pipelines.yml
+- name: requiredNodeHandler
+  displayName: Required Node handler for non-deprecated in-box tasks
+  type: string
+  default: Node24
 
 variables:
 - name: includeLocalPackagesBuildConfigParameter
@@ -28,10 +32,21 @@ jobs:
   steps:
   - script: |
       git fetch origin master
-      git diff --name-only origin/master
-      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$(node ./ci/ci-test-tasks/detect-changed-tasks.js $(git diff --name-only origin/master))"
+      changedFiles=$(git diff --name-only origin/master)
+      echo "$changedFiles"
+      tasks=$(node ./ci/ci-test-tasks/detect-changed-tasks.js $changedFiles)
+      echo "##vso[task.setvariable variable=CHANGED_TASKS]$tasks"
+      echo "##vso[task.setvariable variable=TASKS;isoutput=true]$tasks"
     displayName: 'Detect changed tasks'
     name: detect
+
+  - script: |
+      node --test ./ci/ci-test-tasks/validate-node-handler.test.js
+      node ./ci/ci-test-tasks/validate-node-handler.js "$REQUIRED_NODE_HANDLER" "$CHANGED_TASKS"
+    displayName: 'Validate ${{ parameters.requiredNodeHandler }} handler'
+    env:
+      REQUIRED_NODE_HANDLER: ${{ parameters.requiredNodeHandler }}
+      CHANGED_TASKS: $(CHANGED_TASKS)
 
 - job: run_main_test_pipeline
   displayName: Run main test pipeline
