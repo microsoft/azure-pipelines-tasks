@@ -2,6 +2,7 @@ import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
 import os = require('os');
+import assert = require('assert');
 
 const taskPath = path.join(__dirname, '..', 'azureclitask.js');
 const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -9,7 +10,8 @@ const tmr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 // Use os.tmpdir() to get the system's actual temp directory (cross-platform)
 const tempDir = os.tmpdir();
 process.env['AGENT_TEMPDIRECTORY'] = tempDir;
-process.env['DISTRIBUTEDTASK_TASKS_AZURECLICREDENTIALFILEISOLATIONENABLED'] = 'false';
+const directoryPath = path.join(tempDir, '.azclitask-credentials-mocked');
+const certificatePath = path.join(directoryPath, 'spnCert.pem');
 
 // Inputs
 tmr.setInput('connectedServiceNameARM', 'AzureRM');
@@ -48,7 +50,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             code: 0,
             stdout: 'cloud set'
         },
-        [`az login --service-principal -u "spId" --password="${path.join(tempDir, 'spnCert.pem')}" --tenant "tenantId"`]: {
+        [`az login --service-principal -u "spId" --password="${certificatePath}" --tenant "tenantId"`]: {
             code: 0,
             stdout: 'login ok'
         },
@@ -64,25 +66,24 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
             code: 0,
             stdout: 'script ok'
         }
-    },
-    rmRF: {
-        [path.join(tempDir, 'spnCert.pem')]: {
-            success: true
-        }
     }
 };
 
 tmr.setAnswers(a);
 
-const fs = require('fs');
-const fsClone = Object.assign({}, fs);
-fsClone.writeFileSync = function () { };
-fsClone.existsSync = function (filePath) {
-    return filePath === path.join(tempDir, 'spnCert.pem');
-};
-fsClone.unlinkSync = function () { };
-
-tmr.registerMock('fs', fsClone);
+tmr.registerMock('./src/AzureCliCredentialFile', {
+    createServicePrincipalCertificate: (root: string, content: string) => {
+        assert.strictEqual(root, tempDir);
+        assert.strictEqual(content, 'CERTDATA');
+        console.log('isolated certificate created');
+        return { certificatePath, directoryPath };
+    },
+    removeServicePrincipalCertificate: (certificate: string, directory: string) => {
+        assert.strictEqual(certificate, certificatePath);
+        assert.strictEqual(directory, directoryPath);
+        console.log('isolated certificate removed');
+    }
+});
 
 os.type = () => 'Linux';
 tmr.registerMock('os', os);
