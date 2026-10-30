@@ -10,5 +10,5 @@ Pushes a helm chart to ACR
 export async function addArguments(helmCli: helmcli): Promise<void> {
     helmCli.addArgument("push");
 
-    helmCli.addArgument(tl.getVariable("helmChartRef"));
+    helmCli.addSingleArgument(tl.getVariable("helmChartRef"));
 }

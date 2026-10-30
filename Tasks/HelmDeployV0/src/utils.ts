@@ -10,7 +10,7 @@ import * as semver from 'semver';
 import helmcli from "./helmcli";
 
 const matchPatternForReleaseName = new RegExp(/NAME:(.+)/i);
-const namespace = tl.getInput('namespace', false);
+const namespace = trimIdentifierInput(tl.getInput('namespace', false));
 
 export function getTempDirectory(): string {
     return tl.getVariable('agent.tempDirectory') || os.tmpdir();
@@ -54,10 +54,26 @@ export function resolvePath(path: string): string {
     }
 }
 
+/**
+ * Trims leading/trailing whitespace from a plain identifier-style value
+ * (a release name, namespace, chart name, or registry name) before it is
+ * added as a single Helm argument via addSingleArgument().
+ */
+export function trimIdentifierInput(value: string): string {
+    return value ? value.trim() : value;
+}
+
+export function validateReleaseName(value: string): string {
+    if (!value || value.startsWith("-")) {
+        throw new Error(tl.loc("InvalidReleaseName", value));
+    }
+    return value;
+}
+
 export function extractReleaseNameFromHelmOutput(output: string) {
     const releaseNameMatch = output.match(matchPatternForReleaseName);
     if (releaseNameMatch && releaseNameMatch.length >= 1)
-        return releaseNameMatch[1];
+        return releaseNameMatch[1].trim();
     return '';
 }
 
@@ -69,9 +85,11 @@ export function getManifestsFromRelease(helmCli: helmcli, releaseName: string): 
     helmCli.resetArguments();
     helmCli.setCommand('get');
     helmCli.addArgument('manifest');
-    helmCli.addArgument(releaseName);
-    if (namespace)
-        helmCli.addArgument('--namespace '.concat(namespace));
+    helmCli.addSingleArgument(releaseName);
+    if (namespace) {
+        helmCli.addSingleArgument('--namespace');
+        helmCli.addSingleArgument(namespace);
+    }
 
     const execResult = helmCli.execHelmCommand(true);
     yaml.safeLoadAll(execResult.stdout, (doc) => {
@@ -88,16 +106,18 @@ function ensureDirExists(dirPath: string): void {
 }
 
 export function getHelmPathForACR() {
-    const chartName = tl.getInput("chartNameForACR", true);
-    const acr = tl.getInput("azureContainerRegistry");
+    const chartName = trimIdentifierInput(tl.getInput("chartNameForACR", true));
+    const acr = trimIdentifierInput(tl.getInput("azureContainerRegistry"));
     return acr + "/helm/" + chartName;
 }
 
 export function addVersion(helmCli: helmcli, version: string) {
-    if (semver.valid(version))
-        helmCli.addArgument("--version ".concat(version));
-    else
+    if (semver.valid(version)) {
+        helmCli.addSingleArgument("--version");
+        helmCli.addSingleArgument(version);
+    } else {
         console.log("The given version is not valid. Running the helm install command with latest version");
+    }
 }
 
 export function replaceNewlinesWithCommas(overrideValues: string): string {
