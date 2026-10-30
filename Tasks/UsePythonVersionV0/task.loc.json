@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 281,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [],
@@ -121,7 +121,8 @@
     "MissingGithubToken": "ms-resource:loc.messages.MissingGithubToken",
     "DownloadNotFound": "ms-resource:loc.messages.DownloadNotFound",
     "ManifestDownloadFailed": "ms-resource:loc.messages.ManifestDownloadFailed",
-    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed"
+    "DownloadFailed": "ms-resource:loc.messages.DownloadFailed",
+    "InvalidArchitecture": "ms-resource:loc.messages.InvalidArchitecture"
   },
   "restrictions": {
     "commands": {
