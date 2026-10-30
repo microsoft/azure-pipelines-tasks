@@ -37,7 +37,10 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            console.log(tl.loc('NoTestResults', testResultsFiles));
+            tl.writeExternalOutput(
+                tl.loc('NoTestResults', testResultsFiles) + os.EOL,
+                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' }
+            );
             return 0;
         }
 
@@ -128,7 +131,8 @@ async function doWork() {
             tl.rmRF(reportBuildFile);
             tl.rmRF(instrumentedClassesDirectory);
         } catch (err) {
-            tl.debug("Error removing previous cc files: " + err);
+            tl.debugExternalOutput("Error removing previous cc files: " + err,
+                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
         }
 
         let buildProps: { [key: string]: string } = {};
@@ -162,13 +166,17 @@ async function doWork() {
                 antRunner.arg(antBuildFile);
                 antRunner.arg(ccReportTask);
             }
-            antRunner.exec().then(async function (code) {
+            antRunner.exec({
+                externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
+            }).then(async function (code) {
                 if (failIfCodeCoverageEmpty && await ccUtils.isCodeCoverageFileEmpty(summaryFile, ccTool)) {
                     throw tl.loc('NoCodeCoverage'); 
                 }
                 if (pathExistsAsFile(summaryFile)) {
-                    tl.debug("Summary file = " + summaryFile);
-                    tl.debug("Report directory = " + reportDirectory);
+                    tl.debugExternalOutput("Summary file = " + summaryFile,
+                        { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+                    tl.debugExternalOutput("Report directory = " + reportDirectory,
+                        { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
                     tl.debug("Publishing code coverage results to TFS");
                     let ccPublisher = new tl.CodeCoveragePublisher();
                     ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
@@ -200,7 +208,8 @@ async function doWork() {
         var antHomeUserInputPath = tl.getPathInput('antHomeUserInputPath', false, true);
         if (antHomeUserInputPath) {
             tl.debug('Using path from user input to set ANT_HOME');
-            tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
+            tl.debugExternalOutput('Set ANT_HOME to ' + antHomeUserInputPath,
+                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
             process.env['ANT_HOME'] = antHomeUserInputPath;
         }
 
@@ -233,7 +242,8 @@ async function doWork() {
         javacommons.publishJavaTelemetry('Ant', javaTelemetryData);
         
         if (specifiedJavaHome) {
-            tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
+            tl.debugExternalOutput('Set JAVA_HOME to ' + specifiedJavaHome,
+                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
             process.env['JAVA_HOME'] = specifiedJavaHome;
         }
 
@@ -253,7 +263,9 @@ async function doWork() {
 
         ccReportTask = await execEnableCodeCoverage();
 
-        await antv.exec();
+        await antv.exec({
+            externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
+        });
         var buffer;
         antb.on('stdout', (data) => {
             if (data) {
@@ -268,24 +280,30 @@ async function doWork() {
             }
         });
 
-        await antb.exec()
+        await antb.exec({
+            externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
+        })
             .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
                 await publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {
-                console.error(err.message);
+                tl.writeExternalOutput(err.message + os.EOL, {
+                    source: 'childProcess',
+                    vsoCommandMode: 'blockAndTelemetry',
+                    destination: process.stderr
+                });
                 publishTestResults(publishJUnitResults, testResultsFiles);
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, err);
             });
     } catch (e) {
-        tl.debug(e.message);
+        tl.debugExternalOutput(e.message,
+            { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
         tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
 }
 
 doWork();
-
