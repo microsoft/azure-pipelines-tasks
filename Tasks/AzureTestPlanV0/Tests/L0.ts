@@ -111,6 +111,39 @@ describe('AzureTestPlan Suite', function () {
         ]);
     });
 
+    it('should trim surrounding whitespace from structured Jest test names', function () {
+        const testNames = [' adds numbers', 'adds numbers ', ' adds numbers ', '\tadds numbers\t'];
+
+        for (const testName of testNames) {
+            const runner = tl.tool('npx');
+
+            utils.setJestTestRunnerArguments(runner, testName, true);
+
+            assert.deepStrictEqual(runner.args, [
+                'jest',
+                '--ci',
+                '--reporters=default',
+                '--reporters=jest-junit',
+                '--testNamePattern=adds numbers',
+            ], JSON.stringify(testName));
+        }
+    });
+
+    it('should keep option-shaped Jest test names in one argument after trimming whitespace', function () {
+        const testName = 'benign" --showConfig --testNamePattern="benign';
+        const runner = tl.tool('npx');
+
+        utils.setJestTestRunnerArguments(runner, ` \t${testName}\t `, true);
+
+        assert.deepStrictEqual(runner.args, [
+            'jest',
+            '--ci',
+            '--reporters=default',
+            '--reporters=jest-junit',
+            `--testNamePattern=${testName}`,
+        ]);
+    });
+
     it('should preserve legacy Jest command parsing when structured arguments are disabled', function () {
         const runner = tl.tool('npx');
 

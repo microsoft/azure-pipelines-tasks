@@ -170,5 +170,26 @@ test-registry = { index = "sparse+https://pkgs.dev.azure.com.attacker.example/fe
             assert(tr.stdout.indexOf('##vso[task.setvariable variable=CARGO_REGISTRIES_TEST_REGISTRY_TOKEN;') < 0,
                 'Task must not set a token for the untrusted registry');
         });
+
+        it('rejects a registry whose host differs between URL parsers before requesting a WIF token', async () => {
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[testConstants.TestEnvVars.workloadIdentityServiceConnection] = testConstants.TestData.wifServiceConnection;
+            process.env[testConstants.TestEnvVars.registryNames] = testConstants.TestData.testRegistry;
+            process.env[testConstants.TestEnvVars.wifToken] = testConstants.TestData.wifToken;
+            process.env['__mockConfigContent__'] = `
+[registries]
+test-registry = { index = "sparse+https://pkgs.dev.azure.com%2eattacker.example/feed/Cargo/index/" }
+`;
+
+            await tr.runAsync();
+
+            assert(tr.failed, 'Task should reject the registry');
+            assert(tr.stdout.indexOf('getFederatedWorkloadIdentityCredentialsForFeed called with ' +
+                testConstants.TestData.wifServiceConnection + ' and https://pkgs.dev.azure.com.attacker.example') > 0,
+                'the shared helper should receive the host Cargo will use');
+            assert(tr.stdout.indexOf('##vso[task.setvariable variable=CARGO_REGISTRIES_TEST_REGISTRY_TOKEN;') < 0,
+                'Task must not set a token for the registry');
+        });
     });
 });
