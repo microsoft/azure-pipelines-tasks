@@ -78,13 +78,17 @@ function buildEndpointCredentials(
     }
 }
 
+// Note: `always-auth` is intentionally not written. npm 7+ ignores it and
+// npm 11 emits "Unknown project config" warnings on stderr for it (see
+// https://github.com/microsoft/azure-pipelines-tasks/issues/21594). Scoped
+// credentials (//registry/:_authToken, //registry/:_password) are always sent
+// for their registry by modern npm without it.
 function formatNpmrcAuthLines(nerfed: string, credentials: EndpointCredentials): string {
     const lineEnd = os.EOL;
 
     // Bearer-style (external token)
     if (!credentials.username && credentials.password) {
-        return `${nerfed}:_authToken=${credentials.password}${lineEnd}`
-             + `${nerfed}:always-auth=true`;
+        return `${nerfed}:_authToken=${credentials.password}`;
     }
 
     // Basic-style (username + base64 password)
@@ -93,8 +97,7 @@ function formatNpmrcAuthLines(nerfed: string, credentials: EndpointCredentials):
 
     return `${nerfed}:username=${credentials.username}${lineEnd}`
          + `${nerfed}:_password=${password64}${lineEnd}`
-         + `${nerfed}:email=${credentials.email}${lineEnd}`
-         + `${nerfed}:always-auth=true`;
+         + `${nerfed}:email=${credentials.email}`;
 }
 
 // Probes the endpoint with an HTTP GET to check for x-tfs/x-vss response
