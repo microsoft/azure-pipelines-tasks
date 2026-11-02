@@ -326,4 +326,134 @@ describe("HelmDeployV1 Suite", function () {
         // Task will read feature flag and use "helm version --short" (without --client)
         assert(tr.succeeded, "task should have succeeded with feature flag ON");
     });
+
+    it("Run with DisableHelmOutputLogCommandSanitization feature flag ON - injected logging command passes through unsanitized", async function () {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        process.env['DISTRIBUTEDTASK_TASKS_DISABLEHELMOUTPUTLOGCOMMANDSANITIZATION'] = 'true';
+
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
+        process.env[shared.TestEnvVars.command] = shared.Commands.install;
+        process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
+        process.env[shared.TestEnvVars.chartName] = shared.testChartName;
+        process.env[shared.TestEnvVars.version] = shared.testChartVersion;
+        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
+        process.env[shared.TestEnvVars.namespace] = "##vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh";
+        process.env[shared.TestEnvVars.failOnStderr] = "true";
+        process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
+
+        await tr.runAsync();
+        assert(tr.stdout.indexOf("##vso[task.setvariable variable=BASH_ENV]") != -1, "Injected logging command should appear unsanitized when the feature flag is on (opt-out)");
+        assert(tr.succeeded, "task should have succeeded");
+
+        delete process.env['DISTRIBUTEDTASK_TASKS_DISABLEHELMOUTPUTLOGCOMMANDSANITIZATION'];
+    });
+
+    it("Run with DisableHelmOutputLogCommandSanitization feature flag OFF (default) - injected logging command is neutralized", async function () {
+        const tp = path.join(__dirname, "TestSetup.js");
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        delete process.env['DISTRIBUTEDTASK_TASKS_DISABLEHELMOUTPUTLOGCOMMANDSANITIZATION'];
+
+        process.env[shared.TestEnvVars.connectionType] = shared.ConnectionTypes.KubernetesServiceConnection;
+        process.env[shared.TestEnvVars.command] = shared.Commands.install;
+        process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
+        process.env[shared.TestEnvVars.chartName] = shared.testChartName;
+        process.env[shared.TestEnvVars.version] = shared.testChartVersion;
+        process.env[shared.TestEnvVars.releaseName] = shared.testReleaseName;
+        process.env[shared.TestEnvVars.namespace] = "\n##vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh";
+        process.env[shared.TestEnvVars.failOnStderr] = "true";
+        process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
+        process.env[shared.isHelmV3orHigher] = "true";
+
+        await tr.runAsync();
+        assert(tr.stdout.indexOf("\n##vso[task.setvariable variable=BASH_ENV]") == -1, "Injected logging command should have been neutralized by default");
+        assert(tr.stdout.indexOf("#_#vso[task.setvariable variable=BASH_ENV]") != -1, "Sanitized (readable but inert) text should still be visible in the log");
+        assert(tr.succeeded, "task should have succeeded");
+    });
+});
+
+describe("outputSanitizer Suite", function () {
+    const { sanitizeLogCommands } = require("../src/outputSanitizer");
+
+    it("neutralizes a '##vso[' logging command at the start of a line", function () {
+        const input = "##vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh";
+        assert.strictEqual(sanitizeLogCommands(input), "#_#vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh");
+    });
+
+    it("neutralizes an indented '##vso[' logging command", function () {
+        const input = "  ##vso[task.complete result=Failed]pwned";
+        assert.strictEqual(sanitizeLogCommands(input), "  #_#vso[task.complete result=Failed]pwned");
+    });
+
+    it("is case-insensitive, matching how the agent parses logging commands", function () {
+        const input = "##VSO[task.setvariable variable=X]y";
+        assert.strictEqual(sanitizeLogCommands(input), "#_#VSO[task.setvariable variable=X]y");
+    });
+
+    it("leaves ordinary text without a logging command untouched", function () {
+        const input = "NAME: myrelease\nSTATUS: deployed\n";
+        assert.strictEqual(sanitizeLogCommands(input), input);
+    });
+
+    it("leaves '##' not immediately followed by 'vso[' untouched", function () {
+        const input = "## this is just a markdown heading, not a logging command";
+        assert.strictEqual(sanitizeLogCommands(input), input);
+    });
+
+    it("handles null/empty input without throwing", function () {
+        assert.strictEqual(sanitizeLogCommands(null), null);
+        assert.strictEqual(sanitizeLogCommands(""), "");
+    });
+
+    it("neutralizes every matching line in multi-line output", function () {
+        const input = "safe line\n##vso[task.setvariable variable=A]1\nsafe line 2\n##vso[task.setvariable variable=B]2";
+        const result = sanitizeLogCommands(input);
+        assert.strictEqual(result.indexOf("##vso["), -1, "no unsanitized logging command should remain");
+        assert.strictEqual((result.match(/#_#vso\[/g) || []).length, 2, "both logging commands should have been sanitized");
+    });
+});
+
+describe("SanitizingWritable Suite", function () {
+    const { SanitizingWritable } = require("../src/outputSanitizer");
+
+    function makeTarget() {
+        let captured = "";
+        return {
+            write: (chunk: any) => { captured += chunk.toString(); },
+            get captured() { return captured; }
+        };
+    }
+
+    it("sanitizes a '##vso[' marker split across two separate chunk writes", function (done) {
+        const target = makeTarget();
+        const writable = new SanitizingWritable(target);
+        const full = "##vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh\n";
+        const splitAt = 4; // splits mid-marker: "##vs" | "o[task.setvariable..."
+        writable.write(Buffer.from(full.slice(0, splitAt)), "utf8", () => {
+            writable.write(Buffer.from(full.slice(splitAt)), "utf8", () => {
+                assert.strictEqual(target.captured.indexOf("##vso["), -1, "logging command must not survive a chunk split");
+                assert(target.captured.includes("#_#vso[task.setvariable variable=BASH_ENV]"), "logging command should still be sanitized and forwarded");
+                done();
+            });
+        });
+    });
+
+    it("flush() emits a held-back trailing line that never received a terminating newline", function () {
+        const target = makeTarget();
+        const writable = new SanitizingWritable(target);
+        writable._write(Buffer.from("##vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh"), "utf8", () => { });
+        assert.strictEqual(target.captured, "", "an incomplete trailing line must be held back, not written yet");
+        writable.flush();
+        assert.strictEqual(target.captured, "#_#vso[task.setvariable variable=BASH_ENV]/tmp/evil.sh");
+    });
+
+    it("forwards complete lines immediately without waiting for flush()", function () {
+        const target = makeTarget();
+        const writable = new SanitizingWritable(target);
+        writable._write(Buffer.from("##vso[task.setvariable variable=A]1\n"), "utf8", () => { });
+        assert.strictEqual(target.captured, "#_#vso[task.setvariable variable=A]1\n");
+    });
 });

@@ -107,7 +107,7 @@ if (process.env[shared.TestEnvVars.command] === shared.Commands.install) {
     let helmInstallCommand = `helm install${formatDebugFlag()}`;
 
     if (process.env[shared.TestEnvVars.namespace])
-        helmInstallCommand = helmInstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace]}`);
+        helmInstallCommand = helmInstallCommand.concat(` --namespace ${process.env[shared.TestEnvVars.namespace].trim()}`);
 
     if (process.env[shared.TestEnvVars.valueFile]) 
         helmInstallCommand = helmInstallCommand.concat(` --values ${process.env[shared.TestEnvVars.valueFile]}`);
