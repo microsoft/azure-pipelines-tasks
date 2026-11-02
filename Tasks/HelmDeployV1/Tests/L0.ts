@@ -6,6 +6,7 @@ import * as tl from 'azure-pipelines-task-lib';
 
 import * as shared from './TestShared';
 import './L0VsoCommandBlocking';
+import './L0ArgumentInjection';
 
 describe("HelmDeployV1 Suite", function () {
     this.timeout(30000);
