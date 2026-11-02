@@ -7,7 +7,7 @@ import * as helmutil from "./../utils";
 export async function addArguments(helmCli: helmcli): Promise<void> {
 
     var chart = tl.getInput("chartPath", true);
-    var version = tl.getInput("version", false);
+    var version = helmutil.trimIdentifierInput(tl.getInput("version", false));
     var updatedependency = tl.getBoolInput('updatedependency', false);
     var destination = tl.getInput("destination", false);
     var save = tl.getBoolInput('save', false);
