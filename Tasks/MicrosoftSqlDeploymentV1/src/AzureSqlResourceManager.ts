@@ -1,4 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
+import { randomUUID } from 'crypto';
 import { ServiceClient } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClient';
 import { ToError } from 'azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase';
 import { WebRequest, WebResponse } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
@@ -73,7 +74,7 @@ export default class AzureSqlResourceManager {
 
         const today = new Date();
         // Dots are not allowed in Azure resource names; replace with underscores for the rule name
-        const firewallRuleName = `ClientIPAddress_${today.getTime()}_${startIpAddress.replace(/\./g, '_')}`;
+        const firewallRuleName = `ClientIPAddress_${today.getTime()}_${startIpAddress.replace(/\./g, '_')}_${randomUUID()}`;
 
         tl.debug(`Creating firewall rule: ${firewallRuleName}`);
 
