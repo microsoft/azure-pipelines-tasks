@@ -5,6 +5,7 @@ import { spawnSync } from 'child_process';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
+import FirewallManager from '../src/FirewallManager';
 import SqlProjectBuilder from '../src/SqlProjectBuilder';
 import { SqlcmdExecutor } from '../src/SqlcmdExecutor';
 
@@ -306,6 +307,66 @@ describe('MicrosoftSqlDeployment Suite', function () {
         it('does not match a different server', function() {
             const sqlServer = server('myserver', 'myserver.database.windows.net');
             assert.strictEqual(AzureSqlResourceManager.matchesRequestedServer(sqlServer, 'otherserver.database.windows.net'), false);
+        });
+    });
+
+    describe('AzureSqlResourceManager - Concurrent firewall rules', function() {
+        it('keeps rules independent for the same IP and millisecond and cleans up the returned rule', async () => {
+            const originalGetTime = Date.prototype.getTime;
+            const activeRules = new Map<string, any>();
+            const returnedRules: any[] = [];
+            const deletedRules: any[] = [];
+            const serverId = '/subscriptions/sub/resourceGroups/rg/providers/Microsoft.Sql/servers/server';
+            const makeManager = (): FirewallManager => {
+                const resourceManager: any = Object.create(AzureSqlResourceManager.prototype);
+                resourceManager._sqlServer = { id: serverId };
+                resourceManager._client = {
+                    getRequestUri: (uri: string) => uri,
+                    beginRequest: async (request: any) => {
+                        if (request.method === 'PUT') {
+                            const name = request.uri.substring(request.uri.lastIndexOf('/') + 1);
+                            const rule = { name, id: request.uri, properties: JSON.parse(request.body).properties };
+                            activeRules.set(name, rule);
+                            returnedRules.push(rule);
+                            return { statusCode: 201, body: rule };
+                        }
+                        assert.strictEqual(request.method, 'DELETE');
+                        const name = request.uri.substring(request.uri.lastIndexOf('/') + 1);
+                        assert(activeRules.has(name), 'cleanup must target an existing rule');
+                        activeRules.delete(name);
+                        return { statusCode: 204 };
+                    }
+                };
+                const removeFirewallRule = resourceManager.removeFirewallRule.bind(resourceManager);
+                resourceManager.removeFirewallRule = async (rule: any) => {
+                    deletedRules.push(rule);
+                    await removeFirewallRule(rule);
+                };
+                return new FirewallManager(resourceManager);
+            };
+
+            try {
+                Date.prototype.getTime = () => 123456789;
+                const first = makeManager();
+                const second = makeManager();
+                await Promise.all([
+                    first.addFirewallRule('203.0.113.10'),
+                    second.addFirewallRule('203.0.113.10')
+                ]);
+                assert.strictEqual(activeRules.size, 2, 'concurrent runs must not overwrite one another');
+                assert.notStrictEqual(returnedRules[0].name, returnedRules[1].name);
+
+                await first.removeFirewallRule();
+                assert.strictEqual(deletedRules[0], returnedRules[0], 'cleanup must use the exact returned rule');
+                assert.strictEqual(activeRules.size, 1);
+                assert(activeRules.has(returnedRules[1].name), 'the second deployment must retain access');
+
+                await second.removeFirewallRule();
+                assert.strictEqual(deletedRules[1], returnedRules[1]);
+                assert.strictEqual(activeRules.size, 0);
+            } finally {
+                Date.prototype.getTime = originalGetTime;
+            }
         });
     });
 
