@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<ltd name="sample" version="2.0" xmlns="urn:Localization.Xliff.Utilities.LTD:2.0">
+  <globalSettings
+    extractLockedToSkeleton="false" 
+    extractCDATATo="Xliff" />
+  
+  <!-- The doc type is the first node in the document. The schema used for validation and the types 
+       of validation to run are configured by the doctype. -->
+  <doctypes>
+    <doctype name="myDocType1" schemaLocation="http://www.microsoft.com/localization/myDocType1.xsd"/>
+    <doctype name="myDocType2" schemaLocation="c:\schemas\myDocType2.dtd">
+      <validations>
+        <validation name="utf8" enabled="true" />
+        <validation name="schema" enabled="true" />
+      </validations>
+    </doctype>
+  </doctypes>
+  
+  <!-- The file types supported by the ltd. -->
+  <fileTypes>
+    <fileType name="XML" extension=".xml" />
+    <fileType name="Winpub Meta File" extension=".meta" />    
+  </fileTypes> 
+  
+  <!-- The elements and attributes and how they should be extracted. -->
+  <elements>    
+    <element name="el" subflow="false" extractTo="default">
+      <cultureSettings>
+        <!-- default culture settings for element -->
+        <culture name="*" translate="yes" canCopy="false" canDelete="false" />
+        <!-- specified settings override culture default-->
+        <culture name="de" translate="no" canCopy="true" canDelete="true" />
+        <!-- conditional locking -->
+        <culture name="fr" translate="yes" canCopy="true" canDelete="true">
+          <conditions>
+            <condition attributeKey="key" attributeValue="lock" translate="no" />
+            <condition attributeKey="key" attributeValue="unlock" translate="yes" />
+          </conditions>
+        </culture>
+      </cultureSettings>
+      <attributes>
+        <attribute name="title">
+          <cultureSettings>
+            <!-- default culture settings for attribute -->
+            <culture name="*" translate="yes" />
+            <!-- specified settings override culture default-->
+            <culture name="de" translate="yes" />
+            <!-- conditional locking -->
+            <culture name="fr" translate="no">
+              <conditions>
+                <condition attributeKey="key" attributeValue="lock" translate="no" />
+                <condition attributeKey="key" attributeValue="unlock" translate="yes" />
+              </conditions>
+            </culture>
+          </cultureSettings>
+        </attribute>
+      </attributes>
+    </element>
+  </elements>
+
+  <!-- rules are regular expression search patterns that are run on every element and/or attribute to lock or 
+       unlock the text contained within the search. -->
+  <rules>
+    <culture name="*">
+      <rule appliesTo="elementAndAttribute" translate="no">%s</rule>
+      <rule appliesTo="element" translate="no">{.*?}</rule>
+      <rule appliesTo="attribute" translate="no">%x</rule>
+    </culture>
+  </rules>
+  
+  <!-- Configure elements and attributes that should be written as xliff notes. -->
+  <notes>
+    <!-- creates an xliff note from the contents of <comment> elements -->
+    <note appliesTo="element" element="comment" target="PreviousUnit"/>
+    <!-- creates an xliff note from the contents of the Field element when the name attribute 
+         ends with "/Comment" (note that regular expressions are allowed in the condition)-->
+    <note appliesTo="element" element="Field">
+      <conditions>
+        <condition attributeKey="name" attributeValue="/Comment$" />
+      </conditions>
+    </note>
+    <!-- creates an xliff note from the contents of the title attribute of <a> elements -->
+    <note appliesTo="attribute" element="a" attribute="title" />
+    <!-- creates an xliff note from the contents of the title attribute of the <Field> element when the name 
+         attribute ends with "/Comment" (note that regular expressions are allowed in the condition) -->
+    <note appliesTo="attribute" element="Field" attribute="title">
+      <conditions>
+        <condition attributeKey="name" attributeValue="/Comment$" />
+      </conditions>
+    </note>
+  </notes>
+</ltd>

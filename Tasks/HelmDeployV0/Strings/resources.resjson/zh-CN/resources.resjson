@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "任务中未启用 TLS。正在跳过删除证书。",
   "loc.messages.SkipDownloadSecureFiles": "任务中未启用 TLS。正在跳过下载证书。",
   "loc.messages.FileNotFound": "在 %s 中找不到文件",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服务连接详细信息。",
   "loc.messages.ExpiredServicePrincipal": "无法提取 Azure 的访问令牌。请确保使用的服务主体有效且未过期。",
   "loc.messages.SaveSupportedInHelmsV3Only": "只有 Helms V3 中支持将图表保存到 Azure 容器注册表。",

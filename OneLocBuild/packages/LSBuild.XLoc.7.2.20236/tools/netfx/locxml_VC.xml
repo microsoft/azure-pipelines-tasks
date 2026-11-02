@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE _locDefinition SYSTEM "locXML.dtd">
+
+<!-- 
+	REVISION HISTORY:
+-->
+
+<_locDefinition>
+
+	<!-- VC: ribbon.mfcribbon-ms -->
+	<_locDefault _loc="locNone"/>
+	<_locTag _loc="locData">TEXT</_locTag>
+	<_locTag _loc="locData">LABEL</_locTag>
+	<_locTag _loc="locData">NAME</_locTag>
+
+	<!-- VC: root.manifest -->
+	<_locTag _loc="locData" _locIDAttr="Id">description</_locTag>
+</_locDefinition>
