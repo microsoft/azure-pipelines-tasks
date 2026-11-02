@@ -53,7 +53,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     //Version check for Helm, as --name flag with install is no longer supported in Helm 3
     if (helmCli.isHelmV3orHigher()) {
         if (releaseName) {
-            helmCli.addSingleArgument(releaseName);
+            helmCli.addSingleArgument(helmutil.validateReleaseName(releaseName));
         }
         else {
             helmCli.addArgument('--generate-name');
@@ -61,7 +61,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
     else if (releaseName) {
         helmCli.addSingleArgument("--name");
-        helmCli.addSingleArgument(releaseName);
+        helmCli.addSingleArgument(helmutil.validateReleaseName(releaseName));
     }
 
     if (waitForExecution) {
