@@ -9,7 +9,7 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 282,
+        "Minor": 283,
         "Patch": 0
     },
     "instanceNameFormat": "Azure App Configuration",
