@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "指定したパターンのパッケージが見つかりませんでした",
   "loc.messages.FirewallRuleNameCannotBeNull": "ファイアウォール規則名を null 値にすることはできません。",
   "loc.messages.SqlFileNotFound": "次のパスでファイルが見つかりませんでした: %s",
-  "loc.messages.InvalidDatabaseName": "データベース名 '%s' は無効です。使用できるのは、英数字、アンダースコア、ハイフン、ドル記号のみです。"
+  "loc.messages.InvalidDatabaseName": "データベース名 '%s' は無効です。使用できるのは、英数字、アンダースコア、ハイフン、ドル記号のみです。",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
 }

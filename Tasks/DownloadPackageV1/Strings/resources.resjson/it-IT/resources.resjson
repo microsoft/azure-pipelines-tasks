@@ -33,6 +33,7 @@
   "loc.messages.UnsupportedArchiveType": "Tipo di archivio non supportato: %s",
   "loc.messages.InvalidPackageFilePath": "Il percorso del file del pacchetto '%s' deve essere relativo e rimanere nella directory di destinazione.",
   "loc.messages.InvalidPackageFileLink": "Il percorso del file del pacchetto '%s' non può contenere un collegamento simbolico o una giunzione sotto la directory di destinazione.",
+  "loc.messages.InvalidPackageDestinationLink": "Package destination path '%s' cannot contain a symbolic link or junction.",
   "loc.messages.Error_UnexpectedErrorArtifactToolDownload": "Si è verificato un errore imprevisto durante il tentativo di scaricare il pacchetto. Codice di uscita: %s. Errore:%s",
   "loc.messages.Info_ResolvedToolFromCache": "Risoluzione dalla cache dello strumento: %s",
   "loc.messages.Info_DownloadingArtifactTool": "Download dello strumento dell'artefatto da %s",
