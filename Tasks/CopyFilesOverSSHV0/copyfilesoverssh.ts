@@ -430,7 +430,7 @@ async function run() {
                             .replace(/^\//g, "");
                     }
                     tl.debug('relativePath = ' + relativePath);
-                    let targetPath = path.posix.join(targetFolder, relativePath);
+                    let targetPath = utils.resolveTargetPath(targetFolder, relativePath);
 
                     if (!path.isAbsolute(targetPath) && !utils.pathIsUNC(targetPath)) {
                         targetPath = `./${targetPath}`;

@@ -1,8 +1,12 @@
 import assert = require('assert');
+import path = require('path');
+import tl = require('azure-pipelines-task-lib/task');
 import * as utils from '../utils';
 
 export function run() {
     context('Utils tests: ', function () {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
         const sourceFolder = './example';
         const targetFolder = './example';
 
@@ -42,6 +46,37 @@ export function run() {
                 assert(file[0] === filesToCopy[index], `Source file path should be the same as the original file path: ${file[0]} !== ${filesToCopy[index]}`);
                 assert(file[1] === expected[index], `Prepared file path should be the converted as flattened to a root since the flattendFolder argument is true: ${file[1]} !== ${expected[index]}`);
             });
+
+            done();
+        });
+
+        it('Should reject a file name with backslashes that would resolve outside the target folder', function (done: MochaDone) {
+            // Legal on Linux/Mac: a single filename containing literal backslashes (MSRC 160107).
+            const maliciousFile = './example/..\\..\\protected\\victim.txt';
+
+            assert.throws(
+                () => utils.prepareFiles([maliciousFile], sourceFolder, targetFolder, false),
+                (err: Error) => {
+                    assert.strictEqual(
+                        err.message,
+                        "File name '..\\..\\protected\\victim.txt' contains a backslash, which is not supported when copying from this agent's operating system."
+                    );
+                    return true;
+                }
+            );
+
+            done();
+        });
+
+        it('Should still allow a relative path that merely starts with a current-directory marker', function (done: MochaDone) {
+            const benignFile = './example/./inside-task.txt';
+
+            const preparedFiles = utils.prepareFiles([benignFile], sourceFolder, targetFolder, false);
+
+            assert(
+                preparedFiles[0][1] === './example/inside-task.txt',
+                `Benign relative path should stay inside the target folder: ${preparedFiles[0][1]}`
+            );
 
             done();
         });
