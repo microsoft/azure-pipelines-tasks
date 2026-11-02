@@ -17,13 +17,9 @@ function getDefaultProps() {
         osType: tl.osType(),
         planId: tl.getVariable('System.PlanId'),
         jobId: tl.getVariable('System.JobId'),
-        jobAttempt: tl.getVariable('System.JobAttempt'),
         taskInstanceId: tl.getVariable('System.TaskInstanceId'),
-        agentVersion: tl.getVariable('Agent.Version'),
         invocationId,
-        processId: process.pid,
-        nodeVersion: process.version,
-        nodeArchitecture: process.arch
+        nodeVersion: process.version
     };
 }
 

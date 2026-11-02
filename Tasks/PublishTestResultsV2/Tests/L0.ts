@@ -290,10 +290,11 @@ describe('PublishTestResults Suite', function() {
             assert.equal(event.planId, 'test-plan');
             assert.equal(event.jobId, 'test-job');
             assert.equal(event.taskInstanceId, 'test-task');
-            assert.equal(event.jobAttempt, '1');
-            assert(event.processId > 0);
             assert(event.nodeVersion);
-            assert(event.nodeArchitecture);
+            ['jobAttempt', 'processId', 'agentVersion', 'nodeArchitecture'].forEach(property => {
+                assert(!Object.prototype.hasOwnProperty.call(event, property),
+                    `Telemetry should omit unnecessary metadata: ${property}`);
+            });
         });
         const consolidated = events.find(event => event.subFeature === 'publishTestResultsTaskConsolidatedCiEvent');
         assert(consolidated, 'Existing consolidated telemetry must still be emitted');
