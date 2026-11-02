@@ -11,7 +11,9 @@ const mockStackCreate = async () => {
       outputs: {
         stringOutput: { type: 'String', value: 'hello world' },
         intOutput: { type: 'Int', value: 42 },
-        objectOutput: { type: 'Object', value: { key1: 'value1', key2: 'value2' } }
+        objectOutput: { type: 'Object', value: { key1: 'value1', key2: 'value2' } },
+        secretOutput: { type: 'String', value: 'masked-marker' },
+        secretObjectOutput: { type: 'Object', value: { key: 'masked-object-marker' } }
       }
     }
   };
@@ -30,6 +32,7 @@ let tr = createStackMockRunner(rewiremock);
 tr.setInput('operation', 'create');
 tr.setInput('name', 'test-stack-create');
 tr.setInput('parametersFile', path.join(__dirname, 'files', 'basic', 'main.bicepparam'));
+tr.setInput('maskedOutputs', 'SECRETOUTPUT,secretObjectOutput');
 
 tr.run();
 

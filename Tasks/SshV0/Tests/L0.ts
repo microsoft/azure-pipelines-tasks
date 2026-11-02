@@ -195,6 +195,49 @@ describe('SshV0 Suite', function () {
         }, tr);
     });
 
+    describe('shell-specific argument validation', function () {
+        const cases = [
+            { name: 'allows backslash-escaped semicolons for Bash', args: 'safe\\; date', powerShell: false, allowed: true },
+            { name: 'rejects backtick-escaped semicolons for Bash', args: 'safe`; date', powerShell: false, allowed: false },
+            { name: 'rejects backslash-escaped semicolons for PowerShell', args: 'safe\\; Get-Date', powerShell: true, allowed: false },
+            { name: 'allows backtick-escaped semicolons for PowerShell', args: 'safe`; Get-Date', powerShell: true, allowed: true }
+        ];
+
+        for (const testCase of cases) {
+            it(testCase.name, async () => {
+                const previousArgs = process.env['SSH_TEST_ARGS'];
+                const previousShell = process.env['SSH_TEST_POWERSHELL'];
+                const tr = new tmrm.MockTestRunner(path.join(__dirname, 'L0ScriptArgs.js'));
+                try {
+                    process.env['SSH_TEST_ARGS'] = testCase.args;
+                    process.env['SSH_TEST_POWERSHELL'] = String(testCase.powerShell);
+                    await tr.runAsync();
+                } finally {
+                    if (previousArgs === undefined) {
+                        delete process.env['SSH_TEST_ARGS'];
+                    } else {
+                        process.env['SSH_TEST_ARGS'] = previousArgs;
+                    }
+                    if (previousShell === undefined) {
+                        delete process.env['SSH_TEST_POWERSHELL'];
+                    } else {
+                        process.env['SSH_TEST_POWERSHELL'] = previousShell;
+                    }
+                }
+
+                runValidations(() => {
+                    assert.strictEqual(tr.succeeded, testCase.allowed, 'unexpected validation result');
+                    assert(tr.stdout.includes(`SHELL_PROBE:${testCase.powerShell ? 0 : 127}`), 'should detect the target shell');
+                    const command = `SCRIPT_EXECUTED:./L0ScriptArgs.js ${testCase.args}`;
+                    assert.strictEqual(tr.stdout.includes(command), testCase.allowed, 'allowed args should execute unchanged; rejected args should not execute');
+                    if (!testCase.allowed) {
+                        assert(tr.stdout.includes('loc_mock_ScriptArgsSanitized'), 'should fail because argument validation rejected the input');
+                    }
+                }, tr);
+            });
+        }
+    });
+
     describe('escapeVsoCommands', function () {
         it('escapes ##vso logging commands from remote output', async () => {
             process.env['sshEndpoint'] = 'IDValidPwd';

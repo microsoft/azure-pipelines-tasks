@@ -65,6 +65,7 @@ function resolveFileSet(filePath: string): { template: string; parameters?: stri
  */
 export function createBicepRpcClientMock() {
   return {
+    resolveConfigChain: async (_sourceFilePath: string) => ({}),
     Bicep: {
       getDownloadUrl: async () => 'https://downloads.bicep.azure.com/v1.2.3/bicep-linux-x64',
       install: async (_dir: string, _version?: string) => '/mock/path/to/bicep',

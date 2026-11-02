@@ -4,6 +4,9 @@ import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { NpmCommand, NpmTaskInput } from './constants';
+import { verifyAzureArtifactsFeedUrl } from 'azure-pipelines-tasks-artifacts-common/feedUrlUtils';
+import { ProtocolType } from 'azure-pipelines-tasks-artifacts-common/protocols';
+import { validatePackagingCollectionUrl } from './collectionurl';
 import * as npmCustom from './npmcustom';
 import * as npmPublish from './npmpublish';
 import { INpmRegistry } from 'azure-pipelines-tasks-packaging-common/npm/npmregistry';
@@ -23,8 +26,13 @@ async function main(): Promise<void> {
     }
     const forcedUrl = tl.getVariable('Npm.PackagingCollectionUrl');
     if (forcedUrl) {
-        packagingLocation.DefaultPackagingUri = forcedUrl;
-        packagingLocation.PackagingUris.push(forcedUrl);
+        const validatedUrl = await validatePackagingCollectionUrl(
+            forcedUrl,
+            tl.getVariable('System.ServerType'),
+            [tl.getVariable('System.TeamFoundationCollectionUri')],
+            url => verifyAzureArtifactsFeedUrl(url, ProtocolType.Npm));
+        packagingLocation.DefaultPackagingUri = validatedUrl;
+        packagingLocation.PackagingUris.push(validatedUrl);
     }
 
 

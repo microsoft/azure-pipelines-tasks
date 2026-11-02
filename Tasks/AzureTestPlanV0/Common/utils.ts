@@ -80,7 +80,7 @@ export function setJestTestRunnerArguments(jestRunner: tr.ToolRunner, testName: 
             '--ci',
             '--reporters=default',
             '--reporters=jest-junit',
-            `--testNamePattern=${testName}`,
+            `--testNamePattern=${testName.trim()}`,
         ]);
     } else {
         jestRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${testName}"`);

@@ -27,6 +27,8 @@ export class MysqlClientTests  {
                 "/usr/local/bin/mysql": true
             },
             "exec": {
+                // The rollback feature flag is explicitly mocked true below, so
+                // MysqlClient resolves to its pre-hardening (legacy) behavior: no --binary-mode.
                 "/usr/local/bin/mysql -hDEMO_MYSQL_SERVER -uDEMO_SQL_USERNAME -pDEMO_SQL_PASSWORD --ssl-mode=REQUIRED" : {
                     "code": 1,
                     "stderr": "ERROR 9000 (HY000): Client with IP address '250.250.250.250' is not allowed to connect to this MySQL server."
@@ -37,6 +39,10 @@ export class MysqlClientTests  {
             }
         };
         tr.setAnswers(a);
+        // Explicitly mock the rollback feature flag true, rather than relying on it
+        // simply being absent from the environment, so this legacy (ff-on rollback)
+        // test keeps exercising the pre-hardening code path even if a future default changes.
+        tr.registerMockExport('getPipelineFeature', () => true);
         tr.run();
     }
 

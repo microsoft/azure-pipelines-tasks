@@ -46,6 +46,10 @@ export const createLoggingMessageConfig = (): LoggingMessageConfig => ({
         tl.loc('BicepCacheHit', version, path),
     bicepDownloading: (version: string) =>
         tl.loc('BicepDownloading', version),
+    bicepVersionResolvedFromConfigChain: (version: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionResolvedFromConfigChain', version, constraint, configPath),
+    bicepVersionConstraintCouldNotBeChecked: (requestedVersion: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionConstraintCouldNotBeChecked', requestedVersion, constraint, configPath),
     requestFailedCorrelation: (correlationId: string | null) =>
         tl.loc('RequestFailedCorrelation', correlationId),
     filesIgnoredForDelete: tl.loc('FilesIgnoredForDelete'),
@@ -94,6 +98,26 @@ export const createErrorMessageConfig = (): ErrorMessageConfig => ({
     // Bicep cache errors
     failedToResolveBicepVersion: (url: string) =>
         tl.loc('FailedToResolveBicepVersion', url),
+    configFileNotFound: (configPath: string) =>
+        tl.loc('ConfigFileNotFound', configPath),
+    configChainCycleDetected: (configPath: string) =>
+        tl.loc('ConfigChainCycleDetected', configPath),
+    configChainTooDeep: (maxDepth: number) =>
+        tl.loc('ConfigChainTooDeep', maxDepth),
+    configChainAbsoluteExtendsPath: (extendsValue: string, configPath: string) =>
+        tl.loc('ConfigChainAbsoluteExtendsPath', extendsValue, configPath),
+    invalidConfigExtendsValue: (configPath: string) =>
+        tl.loc('InvalidConfigExtendsValue', configPath),
+    invalidBicepVersionConstraintType: (configPath: string) =>
+        tl.loc('InvalidBicepVersionConstraintType', configPath),
+    unparsableBicepVersionConstraint: (versionValue: string, configPath: string) =>
+        tl.loc('UnparsableBicepVersionConstraint', versionValue, configPath),
+    unsatisfiableBicepVersionConstraint: (versionValue: string, configPath: string) =>
+        tl.loc('UnsatisfiableBicepVersionConstraint', versionValue, configPath),
+    bicepVersionConflictsWithConfigChain: (requestedVersion: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionConflictsWithConfigChain', requestedVersion, constraint, configPath),
+    noReleaseSatisfiesBicepVersionConstraint: (constraint: string, configPath: string) =>
+        tl.loc('NoReleaseSatisfiesBicepVersionConstraint', constraint, configPath),
     
     // WhatIf errors
     invalidChangeType: (changeType: string) => 

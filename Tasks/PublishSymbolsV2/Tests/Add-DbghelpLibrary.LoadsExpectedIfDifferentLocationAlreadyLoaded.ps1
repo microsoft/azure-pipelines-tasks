@@ -27,7 +27,8 @@ Register-Mock Write-Warning
 Add-DbghelpLibrary 
 
 # Assert.
-Assert-WasCalled Invoke-LoadLibrary -Times 0
-Assert-WasCalled Write-Warning -Times 2
-Assert-WasCalled Write-Warning -- "UnexpectedDbghelpdllExpected0Actual1 $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\AgentHome\...\dbghelp.dll")) $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\SomeDir2\dbghelp.dll"))"
-Assert-WasCalled Write-Warning -- "UnexpectedDbghelpdllExpected0Actual1 $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\AgentHome\...\dbghelp.dll")) $([System.Management.Automation.WildcardPattern]::Escape("SomeDrive:\SomeDir3\dbghelp.dll"))"
+Assert-WasCalled Invoke-LoadLibrary -Times 1 -- -LiteralPath "SomeDrive:\AgentHome\...\dbghelp.dll"
+Assert-WasCalled Write-Warning -Times 0
+$method = [IndexHelpers.Dbghelp.NativeMethods].GetMethod('SymInitialize')
+$attribute = $method.GetCustomAttributes([System.Runtime.InteropServices.DllImportAttribute], $false)[0]
+Assert-AreEqual "SomeDrive:\AgentHome\...\dbghelp.dll" $attribute.Value
