@@ -4,7 +4,7 @@ import tl = require('azure-pipelines-task-lib/task');
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-import { resolveRemoteFilePath } from '../ftpuploadtask';
+import { resolveRemoteFilePath } from '../ftputils';
 
 describe('FtpUploadV2 resolveRemoteFilePath Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT!) || 20000);
