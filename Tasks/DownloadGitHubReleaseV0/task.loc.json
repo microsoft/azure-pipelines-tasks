@@ -10,7 +10,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "minimumAgentVersion": "2.144.0",
@@ -97,10 +97,6 @@
     }
   ],
   "execution": {
-    "Node10": {
-      "target": "main.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
