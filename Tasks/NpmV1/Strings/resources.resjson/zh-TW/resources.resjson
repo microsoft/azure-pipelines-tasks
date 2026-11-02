@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "正在還原專案 .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "請將您的工作目錄變更為有效的目錄",
   "loc.messages.NGCommon_AreaNotFoundInSps": "找不到 '%s' [%s] 區域。包含該區域的服務可能無法在您的地區使用。",
-  "loc.messages.UnsupportedServiceConnectionAuth": "服務連線並非使用支援的驗證方法。請使用個人存取權杖型驗證的服務連線。"
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with     personal access token based auth.",
+  "loc.messages.PackagingCollectionUrlInvalid": "The Npm.PackagingCollectionUrl variable is not a valid URL.",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "The Npm.PackagingCollectionUrl variable must use http or https.",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "The Npm.PackagingCollectionUrl variable must not contain credentials.",
+  "loc.messages.PackagingCollectionUrlMismatch": "The Npm.PackagingCollectionUrl variable does not match the collection URI."
 }
