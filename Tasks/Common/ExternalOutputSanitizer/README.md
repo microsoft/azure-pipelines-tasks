@@ -21,6 +21,6 @@ from microsoft/azure-pipelines-tasks#22726, including existing consumer protecti
 and version updates.
 
 FileTransformV1/V2 consume published `azure-pipelines-tasks-webdeployment-common`
-4.282.1 or later and explicitly pass the same feature-selected mode on folder and
-archive paths. The XDT compatibility gate remains independent and unchanged.
+4.282.3 or later and explicitly pass the same feature-selected mode on folder,
+archive extraction, and transformation paths. The XDT compatibility gate remains independent and unchanged.
 Inherited XDT tool command echo is outside this filename diagnostics scope.
