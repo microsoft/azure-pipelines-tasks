@@ -1,0 +1,38 @@
+{
+  "id": "169fc531-05b5-49ec-ae60-1df9f44948a6",
+  "name": "DownloadPipelineArtifactDev",
+  "friendlyName": "Download Pipeline Artifacts (dev only)",
+  "description": "Test-only Node replacement using an explicit local ArtifactTool build. Not for production.",
+  "helpMarkDown": "Uses a trusted local ArtifactTool executable in the normal task target. Includes task-side container and file-share adapters; live service parity is not yet established.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": { "Major": 2, "Minor": 0, "Patch": 0 },
+  "preview": true,
+  "minimumAgentVersion": "4.265.1",
+  "instanceNameFormat": "Download Pipeline Artifact (development)",
+  "inputs": [
+    { "name": "artifactToolPath", "type": "filePath", "label": "Local development ArtifactTool executable", "required": true, "defaultValue": "", "helpMarkDown": "Absolute trusted executable path visible in the normal task target, including containers. No tool download or PATH lookup." },
+    { "name": "source", "aliases": ["buildType"], "type": "radio", "label": "Download artifacts produced by", "required": true, "defaultValue": "current", "options": { "current": "Current run", "specific": "Specific run" } },
+    { "name": "project", "type": "string", "label": "Project name or ID", "required": true, "defaultValue": "", "visibleRule": "source = specific" },
+    { "name": "pipeline", "aliases": ["definition"], "type": "string", "label": "Pipeline name or ID", "required": true, "defaultValue": "", "visibleRule": "source = specific" },
+    { "name": "preferTriggeringPipeline", "aliases": ["specificBuildWithTriggering"], "type": "boolean", "label": "Prefer triggering build", "required": false, "defaultValue": "false", "visibleRule": "source = specific" },
+    { "name": "runVersion", "aliases": ["buildVersionToDownload"], "type": "pickList", "label": "Build version to download", "required": true, "defaultValue": "latest", "visibleRule": "source = specific", "options": { "latest": "Latest", "latestFromBranch": "Latest from branch and tags", "specific": "Specific version" } },
+    { "name": "runBranch", "aliases": ["branchName"], "type": "string", "label": "Branch name", "required": true, "defaultValue": "refs/heads/master", "visibleRule": "source = specific && runVersion = latestFromBranch" },
+    { "name": "runId", "aliases": ["pipelineId", "buildId"], "type": "string", "label": "Run ID", "required": true, "defaultValue": "", "visibleRule": "source = specific && runVersion = specific" },
+    { "name": "tags", "type": "string", "label": "Build tags", "required": false, "defaultValue": "", "visibleRule": "source = specific && runVersion != specific" },
+    { "name": "allowPartiallySucceededBuilds", "type": "boolean", "label": "Allow partially succeeded builds", "required": false, "defaultValue": "false", "visibleRule": "source = specific && runVersion != specific" },
+    { "name": "allowFailedBuilds", "type": "boolean", "label": "Allow failed builds", "required": false, "defaultValue": "false", "visibleRule": "source = specific && runVersion != specific" },
+    { "name": "allowCanceledBuilds", "type": "boolean", "label": "Allow canceled builds", "required": false, "defaultValue": "false", "visibleRule": "source = specific && runVersion != specific" },
+    { "name": "artifact", "aliases": ["artifactName"], "type": "string", "label": "Artifact name", "required": false, "defaultValue": "", "helpMarkDown": "Empty downloads all supported artifact types into artifact-specific layouts. Invalid artifact names fail before transfer." },
+    { "name": "patterns", "aliases": ["itemPattern"], "type": "multiLine", "label": "Matching patterns", "required": false, "defaultValue": "**", "helpMarkDown": "Newline-delimited patterns. Exact matching parity across all artifact types remains an E2E gate." },
+    { "name": "path", "aliases": ["targetPath", "downloadPath"], "type": "string", "label": "Destination directory", "required": true, "defaultValue": "$(Pipeline.Workspace)", "helpMarkDown": "Absolute path or path relative to System.DefaultWorkingDirectory." }
+  ],
+  "execution": { "Node24": { "target": "download.js" } },
+  "outputVariables": [
+    { "name": "BuildNumber", "description": "Source build ID, not its display build number, for compatibility." }
+  ],
+  "messages": {
+    "DevelopmentOnly": "Development-only task: invoking a trusted local ArtifactTool build. Production tasks and YAML shortcuts are unchanged.",
+    "TaskFailed": "Artifact task failed: %s"
+  }
+}

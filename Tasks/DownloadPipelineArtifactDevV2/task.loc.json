@@ -1,0 +1,191 @@
+{
+  "id": "169fc531-05b5-49ec-ae60-1df9f44948a6",
+  "name": "DownloadPipelineArtifactDev",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "preview": true,
+  "minimumAgentVersion": "4.265.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "artifactToolPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.artifactToolPath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactToolPath"
+    },
+    {
+      "name": "source",
+      "aliases": [
+        "buildType"
+      ],
+      "type": "radio",
+      "label": "ms-resource:loc.input.label.source",
+      "required": true,
+      "defaultValue": "current",
+      "options": {
+        "current": "Current run",
+        "specific": "Specific run"
+      }
+    },
+    {
+      "name": "project",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.project",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "source = specific"
+    },
+    {
+      "name": "pipeline",
+      "aliases": [
+        "definition"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.pipeline",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "source = specific"
+    },
+    {
+      "name": "preferTriggeringPipeline",
+      "aliases": [
+        "specificBuildWithTriggering"
+      ],
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.preferTriggeringPipeline",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "source = specific"
+    },
+    {
+      "name": "runVersion",
+      "aliases": [
+        "buildVersionToDownload"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.runVersion",
+      "required": true,
+      "defaultValue": "latest",
+      "visibleRule": "source = specific",
+      "options": {
+        "latest": "Latest",
+        "latestFromBranch": "Latest from branch and tags",
+        "specific": "Specific version"
+      }
+    },
+    {
+      "name": "runBranch",
+      "aliases": [
+        "branchName"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runBranch",
+      "required": true,
+      "defaultValue": "refs/heads/master",
+      "visibleRule": "source = specific && runVersion = latestFromBranch"
+    },
+    {
+      "name": "runId",
+      "aliases": [
+        "pipelineId",
+        "buildId"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.runId",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "source = specific && runVersion = specific"
+    },
+    {
+      "name": "tags",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.tags",
+      "required": false,
+      "defaultValue": "",
+      "visibleRule": "source = specific && runVersion != specific"
+    },
+    {
+      "name": "allowPartiallySucceededBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowPartiallySucceededBuilds",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "source = specific && runVersion != specific"
+    },
+    {
+      "name": "allowFailedBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowFailedBuilds",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "source = specific && runVersion != specific"
+    },
+    {
+      "name": "allowCanceledBuilds",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.allowCanceledBuilds",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "source = specific && runVersion != specific"
+    },
+    {
+      "name": "artifact",
+      "aliases": [
+        "artifactName"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifact",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.artifact"
+    },
+    {
+      "name": "patterns",
+      "aliases": [
+        "itemPattern"
+      ],
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.patterns",
+      "required": false,
+      "defaultValue": "**",
+      "helpMarkDown": "ms-resource:loc.input.help.patterns"
+    },
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath",
+        "downloadPath"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.path",
+      "required": true,
+      "defaultValue": "$(Pipeline.Workspace)",
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    }
+  ],
+  "execution": {
+    "Node24": {
+      "target": "download.js"
+    }
+  },
+  "outputVariables": [
+    {
+      "name": "BuildNumber",
+      "description": "Source build ID, not its display build number, for compatibility."
+    }
+  ],
+  "messages": {
+    "DevelopmentOnly": "ms-resource:loc.messages.DevelopmentOnly",
+    "TaskFailed": "ms-resource:loc.messages.TaskFailed"
+  }
+}

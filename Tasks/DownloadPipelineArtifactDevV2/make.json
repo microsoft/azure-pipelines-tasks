@@ -1,0 +1,15 @@
+{
+  "common": [
+    {
+      "module": "../Common/PipelineArtifactDev",
+      "type": "node",
+      "compile": true
+    }
+  ],
+  "cp": [
+    {
+      "source": "../DownloadPipelineArtifactV2/icon.png",
+      "dest": "."
+    }
+  ]
+}
