@@ -232,11 +232,38 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryEnvKeyCollision" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Registrys „%s“ verweisen auf dieselbe Cargo-Umgebungsvariable „%s“. Benennen Sie eine der Registrys um, um Mehrdeutigkeiten bei den Anmeldeinformationen zu vermeiden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryFeedVerificationFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry feed URL verification failed; skipping authentication for this registry.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Überprüfung der Registry-Feed-URL ist fehlgeschlagen. Die Authentifizierung für diese Registry wird übersprungen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Die eingegebenen Registrierungsnamen "%s" entsprechen keiner Registrierung in "config.toml".]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SkippingNonAzureDevOpsRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die Registry „%s“ wird übersprungen, da ihre Index-URL „%s“ nicht in Azure DevOps gehostet wird.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

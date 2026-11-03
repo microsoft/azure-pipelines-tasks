@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.input.help.releaseType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          <Val><![CDATA[Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[选择要安装的发布类型。Windows 上不支持 Nightly]]></Val>
+            <Val><![CDATA[选择要安装的发布类型。仅支持列出的发布类型。Windows 上不支持 Nightly]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -104,6 +107,24 @@
           <Val><![CDATA[Failed to download docker from location %s. Error %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未能从位置 %s 下载 Docker。错误为 %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid release type. Supported values are %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[发布类型无效。支持的值为 %s。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NightlyNotSupportedOnWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value nightly is not supported on Windows.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Windows 上不支持 nightly 值。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

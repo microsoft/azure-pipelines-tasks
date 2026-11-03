@@ -56,12 +56,12 @@
       </Item>
       <Item ItemId=";loc.input.help.workingFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
+          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored. Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Ruta de acceso al archivo .npmrc que especifica los registros con los que desea trabajar. Seleccione el archivo, no la carpeta; por ejemplo, "/packages/mypackage.npmrc". Si se establecen una dirección URL de Azure Artifacts y la conexión de servicio de usuario de Azure DevOps respaldada por el Id. de carga de trabajo de Entra, se omitirán los registros de npmrc.]]></Val>
+            <Val><![CDATA[Ruta de acceso al archivo .npmrc que especifica los registros con los que desea trabajar. Seleccione el archivo, no la carpeta; por ejemplo, "/packages/mypackage.npmrc". Si se establecen una dirección URL de Azure Artifacts y la conexión de servicio de usuario de Azure DevOps respaldada por el Id. de carga de trabajo de Entra, se omitirán los registros de npmrc. La limpieza posterior al trabajo solo restaura el contenido original después de validar la copia de seguridad y confirmar que sigue siendo el mismo archivo normal. Si la validación falla, la limpieza muestra una advertencia y omite la restauración sin escribir el contenido del archivo. Se sigue produciendo un error en la limpieza de los errores al cargar los índices, del sistema de archivos y de escritura.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc".]]></Val>
+            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -203,6 +203,15 @@
           <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[No se pueden autenticar registros en “%s” que mezclan direcciones URL HTTPS y no HTTPS. El ámbito de las credenciales npm no se delimitan por esquema. Use HTTPS para todos los registros de este host y puerto.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NoWritableBackupDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine a writable npmAuthenticate backup directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se puede determinar un directorio de copia de seguridad grabables de npmAuthenticate.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -438,11 +447,47 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_HomeDirectoryNotWritable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo usar Agent.HomeDirectory para la copia de seguridad de npmAuthenticate (%s). Revirtiendo a Agent.TempDirectory, que los contenedores de trabajos podrían ser grabables.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcBackupIntegrityMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La copia de seguridad de %s no pudo validar la integridad. Omitiendo la restauración sin escribir el contenido del archivo. Los cambios realizados por npmAuthenticate no se han revertido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_NpmrcFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[npmrc file not found: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[No se encontró el archivo npmrc: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcIdentityUnavailable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Falta la identidad de archivo de confianza para %s o no es válida. Omitiendo la restauración sin escribir el contenido del archivo. Los cambios realizados por npmAuthenticate no se han revertido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcRestoreSkipped" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La ruta de .npmrc en %s no se pudo verificar como el mismo archivo normal del que se hizo una copia de seguridad. Se omite la restauración sin escribir el contenido del archivo. Los cambios realizados por npmAuthenticate no se revirtieron.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

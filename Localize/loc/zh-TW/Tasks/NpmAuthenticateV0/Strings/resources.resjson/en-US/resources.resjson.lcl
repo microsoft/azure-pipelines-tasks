@@ -56,12 +56,12 @@
       </Item>
       <Item ItemId=";loc.input.help.workingFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
+          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored. Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[指定您要使用的登錄的 .npmrc 檔案的路徑。選取檔案，而非資料夾，例如 "/packages/mypackage.npmrc"。如果設定 Azure Artifacts URL 與 Entra 工作負載識別碼支援的 Azure DevOps 使用者的服務連線，則會忽略 npmrc 中的登錄。]]></Val>
+            <Val><![CDATA[指定您要使用的登錄的 .npmrc 檔案的路徑。選取檔案，而非資料夾，例如 "/packages/mypackage.npmrc"。如果設定 Azure Artifacts URL 與 Entra 工作負載識別碼支援的 Azure DevOps 使用者的服務連線，則會忽略 npmrc 中的登錄。只有在驗證備份並確認這仍是相同的一般檔案之後，工作後清除才能還原原始內容。如果驗證失敗，清除會警告並略過還原，而不會寫入檔案內容。索引載入、檔案系統和寫入錯誤仍然無法清除。]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc".]]></Val>
+            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -203,6 +203,15 @@
           <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[無法驗證在「%s」上混用 HTTPS 和非 HTTPS URL 的登錄。npm 認證資訊不會依通訊協定配置範圍。請在此主機和連接埠上的所有登錄都使用 HTTPS。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NoWritableBackupDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine a writable npmAuthenticate backup directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法判斷可寫入的 npmAuthenticate 備份目錄。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -438,11 +447,47 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_HomeDirectoryNotWritable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法將 Agent.HomeDirectory 用於 npmAuthenticate 備份 (%s)。回到工作容器可寫入的 Agent.TempDirectory。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcBackupIntegrityMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 的備份完整性驗證失敗。略過還原而不寫入檔案內容。npmAuthenticate 所做的變更未還原。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_NpmrcFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[npmrc file not found: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[找不到 npmrc 檔案: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcIdentityUnavailable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 的信任檔案識別遺失或無效。略過還原而不寫入檔案內容。npmAuthenticate 所做的變更未還原。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcRestoreSkipped" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[位於 %s 的 .npmrc 路徑無法驗證為備份的相同一般檔案。略過還原而不寫入檔案內容。未還原 npmAuthenticate 所做的變更。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

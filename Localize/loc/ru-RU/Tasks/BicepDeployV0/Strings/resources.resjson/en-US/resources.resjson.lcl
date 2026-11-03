@@ -201,10 +201,13 @@
       </Item>
       <Item ItemId=";loc.input.help.maskedOutputs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          <Val><![CDATA[Comma-separated list of output names to create as secret output variables. Their values are masked in logs and are not mapped to environment variables automatically; map them explicitly with `env` in later script steps.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Разделенный запятыми список имен выходных данных, значения которых нужно маскировать (например, секреты).]]></Val>
+            <Val><![CDATA[Разделенный запятыми список имен выходных данных для создания в качестве секретных выходных переменных. Их значения маскируются в журналах и автоматически не сопоставляются с переменными среды. Сопоставьте их явно с помощью `env` в последующих шагах сценария.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -613,6 +616,69 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BicepVersionConflictsWithConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The requested Bicep version "%s" does not satisfy the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Запрошенная версия Bicep "%s" не удовлетворяет ограничению "bicep.version", "%s" объявленному в %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionConstraintCouldNotBeChecked" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not verify that the requested Bicep version "%s" satisfies the "bicep.version" constraint "%s" declared in %s, because the requested version is not a recognized version number.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Не удалось проверить, что запрошенная версия Bicep "%s" соответствует ограничению "bicep.version" "%s", объявленному в %s, потому что запрошенная версия не является распознанным номером версии.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionResolvedFromConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved Bicep version %s to satisfy the "bicep.version" constraint "%s" declared in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Разрешена версия Bicep %s для соответствия ограничению "bicep.version" "%s", объявленному в %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainAbsoluteExtendsPath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property must be a relative path, but got an absolute path: %s in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Свойство "extends" должно быть относительным путем, но получен абсолютный путь: %s в %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainCycleDetected" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cycle detected while resolving "extends" chain at: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Обнаружен цикл при разрешении цепочки "extends" в: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainTooDeep" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" chain exceeds the maximum supported depth of %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Цепочка "extends" превышает максимальную поддерживаемую глубину %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigFileNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config file not found: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Файл конфигурации не найден: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CreateFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create failed]]></Val>
@@ -730,11 +796,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidBicepVersionConstraintType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Свойство "bicep.version" в %s должно быть строкой.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidChangeType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid change type: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Недопустимый тип изменения: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidConfigExtendsValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Свойство "extends" в %s должно быть строкой.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -771,6 +855,15 @@
           <Val><![CDATA[Azure login failed using Managed Service Identity]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Сбой входа Azure с использованием Управляемого удостоверения службы]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NoReleaseSatisfiesBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No published Bicep CLI release satisfies the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ни один опубликованный выпуск Bicep CLI не соответствует ограничению "bicep.version" "%s", объявленному в %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -852,6 +945,24 @@
           <Val><![CDATA[Unknown property change type: %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Неизвестный тип изменения свойства: %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnparsableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property "%s" in %s is not a valid Bicep version or version range.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Свойство "bicep.version" "%s" в %s не является допустимой версией Bicep или диапазоном версий.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnsatisfiableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" constraint "%s" in %s can never be satisfied by any version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ограничение "bicep.version", "%s" в %s никогда не может быть удовлетворено ни одной версией.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

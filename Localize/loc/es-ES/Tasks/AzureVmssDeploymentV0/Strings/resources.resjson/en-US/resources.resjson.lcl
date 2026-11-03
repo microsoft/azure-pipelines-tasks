@@ -480,6 +480,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidWindowsCustomScript" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Protected Windows invocation requires a relative .ps1 script inside the custom script directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La invocación protegida de Windows requiere un script .ps1 relativo dentro del directorio de scripts personalizados.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL for new VMSS image: %s.]]></Val>
@@ -710,6 +719,24 @@
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Actualizando el VMSS %s para que use la imagen nueva...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pueden eliminar los archivos temporales del script personalizado de Windows. Elimine los archivos de almacenamiento provisional de la tarea antes de volver a usar el agente.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptPayloadTooLarge" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UTF-8 Windows custom script payload exceeds the 1 MiB limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La carga útil del script personalizado de Windows en UTF-8 supera el límite de 1 MiB.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

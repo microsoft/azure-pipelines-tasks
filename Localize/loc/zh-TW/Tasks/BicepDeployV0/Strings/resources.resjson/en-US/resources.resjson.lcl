@@ -201,10 +201,13 @@
       </Item>
       <Item ItemId=";loc.input.help.maskedOutputs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          <Val><![CDATA[Comma-separated list of output names to create as secret output variables. Their values are masked in logs and are not mapped to environment variables automatically; map them explicitly with `env` in later script steps.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[以逗號分隔的輸出名稱清單，用於遮罩其值 (例如祕密)。]]></Val>
+            <Val><![CDATA[以逗號分隔的輸出名稱清單，以建立為秘密輸出變量。其值已在記錄中遮蔽，而不會自動對應至環境變數;在後續指令碼步驟中，以 `env` 明確對應這些值。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -613,6 +616,69 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BicepVersionConflictsWithConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The requested Bicep version "%s" does not satisfy the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[要求的 Bicep 版本 “%s” 不符合 %s 中宣告的 "bicep.version" 限制式 "%s"。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionConstraintCouldNotBeChecked" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not verify that the requested Bicep version "%s" satisfies the "bicep.version" constraint "%s" declared in %s, because the requested version is not a recognized version number.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[無法驗證要求的 Bicep 版本 "%s" 是否滿足 %s 中宣告的 "bicep.version" 限制式 "%s"，因為要求的版本不是可辨識的版本號碼。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionResolvedFromConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved Bicep version %s to satisfy the "bicep.version" constraint "%s" declared in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[已解析 Bicep 版本 %s，以滿足在 %s 中宣告的 "bicep.version" 限制式 "%s"]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainAbsoluteExtendsPath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property must be a relative path, but got an absolute path: %s in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["extends" 屬性必須是相對路徑，但在 %s 中取得絕對路徑: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainCycleDetected" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cycle detected while resolving "extends" chain at: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[於 %s 解析 "extends" 鏈結時偵測到週期]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainTooDeep" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" chain exceeds the maximum supported depth of %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[“extends” 鏈超超出 %s 的支援深度上限。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigFileNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config file not found: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[找不到組態檔: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CreateFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create failed]]></Val>
@@ -730,11 +796,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidBicepVersionConstraintType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 中的 "bicep.version" 屬性必須是字串。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidChangeType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid change type: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[變更類型無效: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidConfigExtendsValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 中的 "extends" 屬性必須是字串。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -771,6 +855,15 @@
           <Val><![CDATA[Azure login failed using Managed Service Identity]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[使用受控服務識別登入 Azure 失敗]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NoReleaseSatisfiesBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No published Bicep CLI release satisfies the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[沒有已發佈的 Bicep CLI 版本符合 %s 中宣告的 "bicep.version" 限制式 "%s"。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -852,6 +945,24 @@
           <Val><![CDATA[Unknown property change type: %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未知的屬性變更類型: %s。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnparsableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property "%s" in %s is not a valid Bicep version or version range.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 中的 "bicep.version" 屬性 "%s" 不是有效的 Bicep 版本或版本範圍。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnsatisfiableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" constraint "%s" in %s can never be satisfied by any version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[任何版本永遠不會滿足 %s 中的 "bicep.version" 限制式 "%s"。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

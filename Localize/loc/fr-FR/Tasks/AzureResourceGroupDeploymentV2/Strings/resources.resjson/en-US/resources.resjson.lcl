@@ -1454,19 +1454,25 @@
       </Item>
       <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Val><![CDATA[Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Les variables de sortie du déploiement ont été publiées au format précédent, car ce travail exécute la version de l’agent '%s'. La version %s ou ultérieure de l’agent est nécessaire pour les publier au format sécurisé, ce qui empêche que les noms et les valeurs de sortie soient interprétés comme des commandes d’agent. Mettez à niveau l’agent pour qu’il adopte le format sécurisé.]]></Val>
+            <Val><![CDATA[Les variables de sortie de déploiement ont été publiées au format précédent, ce qui n’empêche pas les noms et les valeurs de sortie d’être interprétés comme des commandes d’agent, car ce travail exécute la version '%s' de l’agent. La version de l’agent %s ou ultérieure est requise pour utiliser le format sécurisé. Mettez à niveau l’agent pour qu’il adopte le format sécurisé.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Val><![CDATA[Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Nous avons publié les variables de résultat du déploiement dans l’ancien format, car la variable %s est définie sur une valeur qui empêche l’agent de décoder l’échappement de pourcentage. Supprimez cette variable ou définissez-la sur la valeur true pour adopter le format sécurisé, qui empêche les noms et les valeurs de la sortie d’être interprétés en tant que commandes de l’agent.]]></Val>
+            <Val><![CDATA[Les variables de sortie du déploiement ont été publiées dans le format précédent. Cela n’empêche pas les noms et les valeurs de sortie d’être interprétés comme des commandes de l’agent, car la variable %s est définie sur une valeur que l’agent n’interprète pas comme true. Il ne décode donc pas l’échappement en pourcentage. Supprimez la variable ou définissez-la exactement sur true, 1 ou $true, sans espaces au début ni à la fin, pour adopter le format sécurisé.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -326,10 +326,13 @@
       </Item>
       <Item ItemId=";loc.messages.ScriptArgsSanitized" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\). More information is available here: https://aka.ms/ado/75787]]></Val>
+          <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using the target shell's escape character: backslash (\) for Bash or backtick (`) for PowerShell. More information is available here: https://aka.ms/ado/75787]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\). Puede obtener más información aquí: https://aka.ms/ado/75787]]></Val>
+            <Val><![CDATA[Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape los caracteres especiales mediante el carácter de escape del shell de destino: barra diagonal inversa (\) para Bash o acento grave (') para PowerShell. Más información disponible aquí: https://aka.ms/ado/75787]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\). More information is available here: https://aka.ms/ado/75787]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

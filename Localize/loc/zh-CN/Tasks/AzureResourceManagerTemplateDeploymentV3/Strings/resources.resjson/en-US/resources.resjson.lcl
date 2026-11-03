@@ -839,19 +839,25 @@
       </Item>
       <Item ItemId=";loc.messages.SafeOutputVariablesAgentTooOld" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          <Val><![CDATA[Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已使用以前的格式发布部署输出变量，因为此作业正在运行代理版本 '%s'。需要代理版本 %s 或更高版本才能使用安全格式发布它们，这可防止输出名称和值被解释为代理命令。升级代理以采用安全格式。]]></Val>
+            <Val><![CDATA[部署输出变量是使用以前的格式发布的，这不会阻止输出名称和值被解释为代理命令，因为此作业正在运行代理版本 '%s'。需要代理版本 %s 或更高版本才能使用安全格式。升级代理以采用安全格式。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deployment output variables were published using the previous format because this job is running agent version '%s'. Agent version %s or later is required to publish them using the safe format, which prevents output names and values from being interpreted as agent commands. Upgrade the agent to adopt the safe format.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.messages.SafeOutputVariablesPercentDecodingDisabled" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          <Val><![CDATA[Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[部署输出变量是使用以前的格式发布的，因为已将 %s 变量设置为可阻止智能体解码百分号转义的值。移除该变量或将其设置为 true 以采用安全格式，这可以阻止将输出名称和值解释为智能体命令。]]></Val>
+            <Val><![CDATA[部署输出变量使用旧格式发布，这无法阻止输出名称和值被解释为智能体命令。由于 %s 变量设置为智能体不视为 true 的值，因此它不会解码百分号转义。请移除该变量，或将其准确设置为 true、1 或 $true (前后无空格)，以采用安全格式。]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Deployment output variables were published using the previous format because the %s variable is set to a value that stops the agent from decoding percent escaping. Remove that variable or set it to true to adopt the safe format, which prevents output names and values from being interpreted as agent commands.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

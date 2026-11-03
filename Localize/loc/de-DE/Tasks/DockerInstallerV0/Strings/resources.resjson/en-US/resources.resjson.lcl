@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.input.help.releaseType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          <Val><![CDATA[Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Wählen Sie den zu installierenden Releasetyp aus. Nightly wird unter Windows nicht unterstützt.]]></Val>
+            <Val><![CDATA[Wählen Sie den zu installierenden Releasetyp aus. Nur die aufgeführten Releasetypen werden unterstützt. Nightly wird unter Windows nicht unterstützt.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -104,6 +107,24 @@
           <Val><![CDATA[Failed to download docker from location %s. Error %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Fehler beim Herunterladen von Docker aus Speicherort "%s". Fehler: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid release type. Supported values are %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ungültiger Veröffentlichungstyp. Unterstützte Werte sind %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NightlyNotSupportedOnWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value nightly is not supported on Windows.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Der Wert „nightly“ wird unter Windows nicht unterstützt.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

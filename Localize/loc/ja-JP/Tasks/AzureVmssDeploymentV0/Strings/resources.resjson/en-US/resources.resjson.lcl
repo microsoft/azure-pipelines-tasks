@@ -480,6 +480,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidWindowsCustomScript" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Protected Windows invocation requires a relative .ps1 script inside the custom script directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[保護された Windows の呼び出しには、カスタム スクリプト ディレクトリ内の相対 .ps1 スクリプトが必要です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL for new VMSS image: %s.]]></Val>
@@ -710,6 +719,24 @@
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[新しいイメージを使うように VMSS %s を更新しています...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[一時 Windows カスタム スクリプト ファイルを削除できませんでした。エージェントを再利用する前に、タスク ステージング ファイルを削除してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptPayloadTooLarge" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UTF-8 Windows custom script payload exceeds the 1 MiB limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[UTF-8 の Windows カスタム スクリプト ペイロードが 1 MiB の上限を超えています。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

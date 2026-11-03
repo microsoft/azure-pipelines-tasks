@@ -480,6 +480,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidWindowsCustomScript" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Protected Windows invocation requires a relative .ps1 script inside the custom script directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Für einen geschützten Windows-Aufruf ist ein relatives .ps1-Skript im Verzeichnis für benutzerdefinierte Skripts erforderlich.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL for new VMSS image: %s.]]></Val>
@@ -710,6 +719,24 @@
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[VMSS %s wird zur Verwendung des neuen Images aktualisiert...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Temporäre benutzerdefinierte Windows-Skriptdateien konnten nicht entfernt werden. Entfernen Sie die Taskstagingdateien, bevor Sie den Agent erneut verwenden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptPayloadTooLarge" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UTF-8 Windows custom script payload exceeds the 1 MiB limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Die UTF-8-Nutzlast des benutzerdefinierten Windows-Skripts überschreitet das Limit von 1 MiB.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
