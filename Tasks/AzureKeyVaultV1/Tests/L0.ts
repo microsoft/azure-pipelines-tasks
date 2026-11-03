@@ -111,4 +111,59 @@ describe('Azure Key Vault', function () {
             done(error);    
         }
     });
+
+    // MSRC case 169467: trySetSecret() prints "##vso[task.setsecret]" + fragment via a raw
+    // console.log call that bypasses azure-pipelines-task-lib's command formatter (which normally
+    // escapes CR/LF as %0D/%0A). A secret containing a literal LF (entering the multi-line/masking
+    // branch) whose LF-delimited fragment still contains a bare CR right before a "##vso[" prefix
+    // gets printed with that CR intact. The real agent's StreamReader.ReadLine() treats CR, LF, or
+    // CRLF all as line terminators, so it splits that single printed line into two, exposing the
+    // "##vso[...]" suffix as its own, attacker-controlled agent command line.
+    const forgedCommandLinePrefix = "##vso[task.setvariable variable=BASH_ENV]";
+
+    it("CR/LF masking fix flag off: reproduces the known pre-fix behavior (regression baseline)", (done) => {
+        let tp = path.join(__dirname, "downloadSecretCrInjectionFlagOff.js");
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+
+            const agentLines = tr.stdout.split(/\r\n|\r|\n/);
+            const injectedCommandSmuggled = agentLines.some((line: string) => line.startsWith(forgedCommandLinePrefix));
+            assert(injectedCommandSmuggled, "Expected the known pre-fix behavior: the injected ##vso command is split onto its own line when the flag is off");
+
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it("CR/LF masking fix flag on: injected ##vso command is never split onto its own line", (done) => {
+        let tp = path.join(__dirname, "downloadSecretCrInjectionFlagOn.js");
+        let tr = new ttm.MockTestRunner(tp);
+
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+
+            const agentLines = tr.stdout.split(/\r\n|\r|\n/);
+            const injectedCommandSmuggled = agentLines.some((line: string) => line.startsWith(forgedCommandLinePrefix));
+            assert(!injectedCommandSmuggled, "The injected ##vso[task.setvariable variable=BASH_ENV] command must never appear as its own agent command line when the fix is enabled");
+
+            const maskingLines = agentLines.filter((line: string) => line.startsWith("##vso[task.setsecret]"));
+            assert(maskingLines.length > 0, "Expected ##vso[task.setsecret] masking line(s) to be emitted");
+            assert(maskingLines.every((line: string) => line.indexOf("\r") < 0), "No masking line may contain a raw CR character");
+
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
 });

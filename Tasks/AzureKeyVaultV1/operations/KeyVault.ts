@@ -184,6 +184,10 @@ export class KeyVault {
             return;
         }
 
+        // Feature-flag gated fix: a secret containing a bare CR (no LF) is re-split by the agent's
+        // line reader into a second, attacker-controlled ##vso command (MSRC case 169467).
+        const fixCrLfSecretMaskingEnabled: boolean = tl.getPipelineFeature("AzureKeyVaultV1CrLfSecretMaskingFixEnabled");
+
         // Support multiple stages using different key vaults with the same secret name but with different version identifiers
         let secretNameWithoutVersion = secretName.split("/")[0];
 
@@ -194,7 +198,14 @@ export class KeyVault {
             return;
         }
 
-        if (secretValue.indexOf('\n') < 0) {
+        // When the fix is enabled, a bare CR (with no LF) must also be routed into the multi-line
+        // masking branch below instead of the single-line fast path, otherwise it never reaches
+        // trySetSecret and is emitted unmasked with the raw CR intact.
+        const hasCrOrLf = fixCrLfSecretMaskingEnabled
+            ? /\r|\n/.test(secretValue)
+            : secretValue.indexOf('\n') >= 0;
+
+        if (!hasCrOrLf) {
             // single-line case
             tl.setVariable(secretNameWithoutVersion, secretValue, true);
             tl.setVariable(secretName, secretValue, true);
@@ -208,9 +219,11 @@ export class KeyVault {
                 tl.setVariable(secretName, strVal, true);
             }
             else {
-                let lines = secretValue.split('\n');
+                let lines = fixCrLfSecretMaskingEnabled
+                    ? secretValue.split(/\r\n|\r|\n/)
+                    : secretValue.split('\n');
                 lines.forEach((line: string, index: number) => {
-                    this.trySetSecret(secretName, line);
+                    this.trySetSecret(secretName, line, fixCrLfSecretMaskingEnabled);
                 });
                 tl.setVariable(secretNameWithoutVersion, secretValue, true);
                 tl.setVariable(secretName, secretValue, true);
@@ -218,11 +231,12 @@ export class KeyVault {
         }
     }
 
-    private trySetSecret(secretName: string, secretValue: string): void {
+    private trySetSecret(secretName: string, secretValue: string, fixCrLfSecretMaskingEnabled: boolean): void {
         try {
-            let regExp = new RegExp(secretValue);
+            const valueToEmit = fixCrLfSecretMaskingEnabled ? secretValue.replace(/\r/g, '') : secretValue;
+            let regExp = new RegExp(valueToEmit);
 
-            console.log("##vso[task.setsecret]" + secretValue);
+            console.log("##vso[task.setsecret]" + valueToEmit);
         }
         catch (e) {
             console.log(tl.loc("CouldNotMaskSecret", secretName));
