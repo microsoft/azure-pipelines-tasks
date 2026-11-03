@@ -155,58 +155,6 @@ describe('ANT Suite', function () {
         assert(runner.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0);
     })
 
-    const processScenarios = ['version', 'build', 'coverage', 'failedBuild', 'failedBuildError'];
-    processScenarios.forEach(scenario => {
-        it(`blocks and reports Ant process logging commands for ${scenario}`, async () => {
-            const previousScenario = process.env['ANT_PROCESS_SCENARIO'];
-            process.env['ANT_PROCESS_SCENARIO'] = scenario;
-
-            try {
-                const runner = new MockTestRunner(path.join(__dirname, 'L0ExternalProcessOutput.js'));
-                await runner.runAsync();
-
-                const expectFailure = scenario === 'failedBuild' || scenario === 'failedBuildError';
-                assert.strictEqual(runner.failed, expectFailure, 'Build failures should still fail the task');
-                assert.strictEqual(runner.succeeded, !expectFailure, 'Successful builds should still succeed');
-                assert(runner.stdOutContained('ordinary stdout'), 'Ordinary stdout should remain visible');
-                assert(runner.stdOutContained('ordinary stderr'), 'Ordinary stderr should remain visible');
-                ['Stdout', 'Stderr'].forEach(stream => {
-                    const command = '[task.setvariable variable=AntProcess' + stream + 'Marker;]unexpected-' + stream.toLowerCase();
-                    assert(runner.stdOutContained('##_vso' + command), 'The process command marker should be neutralized');
-                    assert(!runner.stdOutContained('##vso' + command), 'The process command marker should not reach the log unchanged');
-                });
-                const telemetry = runner.stdout.split(/\r?\n/).filter(line =>
-                    line.startsWith('##vso[telemetry.publish area=TaskLib;feature=ExternalOutputVsoCommand;]'));
-                assert.strictEqual(telemetry.length, scenario === 'failedBuildError' ? 5 : 2,
-                    'Each stdout, stderr, displayed-command or execution-error marker should produce telemetry');
-                telemetry.forEach(line => {
-                    const event = JSON.parse(line.substring(line.indexOf(']') + 1));
-                    assert.strictEqual(event.source, 'childProcess');
-                    assert.strictEqual(event.commandName, 'task.setvariable');
-                    assert.strictEqual(event.blocked, true);
-                    assert(!line.includes('AntProcess') && !line.includes('unexpected-'),
-                        'Telemetry should not contain command properties or data');
-                });
-                if (scenario === 'coverage') {
-                    assert(runner.ran('/usr/local/bin/ANT -buildfile /build/build.xml CodeCoverage_9064e1d0'),
-                        'The coverage-report command should run');
-                    assert(runner.stdOutContained('codecoverage.publish'), 'Coverage publishing should continue');
-                }
-                if (scenario === 'failedBuildError') {
-                    assert(runner.stderr.includes('##_vso[task.setvariable variable=AntProcessErrorMarker;]unexpected-error'),
-                        'The execution error should stay on stderr with its marker neutralized');
-                    assert(!runner.stderr.includes('##vso['), 'Stderr should not contain an executable logging command');
-                }
-            } finally {
-                if (previousScenario === undefined) {
-                    delete process.env['ANT_PROCESS_SCENARIO'];
-                } else {
-                    process.env['ANT_PROCESS_SCENARIO'] = previousScenario;
-                }
-            }
-        });
-    });
-
     const debugScenarios = ['homes', 'coverage', 'error'];
     debugScenarios.forEach(scenario => {
         ['\n', '\r\n'].forEach(separator => {

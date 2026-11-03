@@ -166,9 +166,8 @@ async function doWork() {
                 antRunner.arg(antBuildFile);
                 antRunner.arg(ccReportTask);
             }
-            antRunner.exec({
-                externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
-            }).then(async function (code) {
+            // Ant builds may intentionally emit pipeline logging commands, so do not block them.
+            antRunner.exec().then(async function (code) {
                 if (failIfCodeCoverageEmpty && await ccUtils.isCodeCoverageFileEmpty(summaryFile, ccTool)) {
                     throw tl.loc('NoCodeCoverage'); 
                 }
@@ -263,9 +262,8 @@ async function doWork() {
 
         ccReportTask = await execEnableCodeCoverage();
 
-        await antv.exec({
-            externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
-        });
+        // Ant builds may intentionally emit pipeline logging commands, so do not block them.
+        await antv.exec();
         var buffer;
         antb.on('stdout', (data) => {
             if (data) {
@@ -280,9 +278,8 @@ async function doWork() {
             }
         });
 
-        await antb.exec({
-            externalOutput: { source: 'childProcess', vsoCommandMode: 'blockAndTelemetry' }
-        })
+        // Ant builds may intentionally emit pipeline logging commands, so do not block them.
+        await antb.exec()
             .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
                 await publishCodeCoverage(isCodeCoverageOpted, ccReportTask);
