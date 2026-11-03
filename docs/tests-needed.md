@@ -17,7 +17,6 @@ of untested tasks to 0!
 | AppCenterDistributeV1 | @DennisPan    @turanuk | :heavy_check_mark: |
 | AppCenterDistributeV2 | @DennisPan    @turanuk | :heavy_check_mark: |
 | AppCenterDistributeV3 | @DennisPan    @turanuk | :heavy_check_mark: |
-| AppCenterTestV1 | @owenniblock | :heavy_check_mark: |
 | ArchiveFilesV2 | @jtpetty | :heavy_check_mark: |
 | AzureAppServiceManageV0 | @kmkumaran      @SumiranAgg     @vincentdass | :heavy_check_mark: |
 | AzureAppServiceSettingsV1 | @eaarora-ms      @SumiranAgg     @vincentdass     @niadak |  |
