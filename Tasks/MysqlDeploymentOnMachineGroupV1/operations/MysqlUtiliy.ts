@@ -3,6 +3,16 @@ import task = require('azure-pipelines-task-lib/task');
 export class Utility {
 
     /**
+     * Rejects file paths that could break out of the mysql source argument
+     */
+    public static validateSqlFilePath(filePath: string): string {
+        if (/["';`\r\n\0]/.test(filePath)) {
+            throw new Error(task.loc('InvalidSqlFilePath', filePath));
+        }
+        return filePath;
+    }
+
+    /**
      * Is name valid or not
      */
     public static isNameValid(name: string): boolean {

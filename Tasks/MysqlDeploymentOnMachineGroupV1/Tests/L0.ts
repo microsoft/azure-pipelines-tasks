@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as path from 'path';
 import { MysqlClient } from '../sql/MysqlClient';
+import { Utility } from '../operations/MysqlUtiliy';
 import { isValidDatabaseName } from '../models/MysqlTaskParameter';
 
 describe('MySqlDeployment Suite', function() {
@@ -84,4 +85,14 @@ describe('MySqlDeployment Suite', function() {
         assert.strictEqual(tr.stdOutContained('MYSQL_EXECUTION_REACHED'), true, 'Task should proceed to mysql execution when validation is disabled.');
     });
 
+    it('validateSqlFilePath accepts ordinary paths', () => {
+        const p = '/home/vsts/work/1/s/db/migrate_01.sql';
+        assert.strictEqual(Utility.validateSqlFilePath(p), p);
+    });
+
+    ['x"; -h evil.example -e "SELECT 1 -- .sql', "x'.sql", 'a;b.sql', 'a`b.sql', 'a\nb.sql', 'a\rb.sql', 'a\0b.sql'].forEach((bad) => {
+        it('validateSqlFilePath rejects unsafe path ' + JSON.stringify(bad), () => {
+            assert.throws(() => Utility.validateSqlFilePath(bad), /InvalidSqlFilePath/);
+        });
+    });
 });
