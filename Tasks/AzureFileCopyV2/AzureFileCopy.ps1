@@ -71,6 +71,7 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 try {
 if ($featureFlags.retireAzureRM)
@@ -222,7 +223,11 @@ if ($useSanitizerActivate) {
         if(-not [string]::IsNullOrEmpty($outputStorageURI))
         {
             $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
-            Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageURI -Value $storageAccountContainerURI
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            }
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
@@ -234,7 +239,11 @@ if ($useSanitizerActivate) {
             {
                 $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission rl -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
             }
-            Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageContainerSASToken -Value $storageContainerSasToken
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            }
         }
 
         Remove-EndpointSecrets
@@ -284,7 +293,7 @@ if ($useSanitizerActivate) {
                                                 -useSanitizerActivate $useSanitizerActivate `
                                                 -useSourcePathHardening $useSourcePathHardening
 
-        Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName))
     }
     catch
     {

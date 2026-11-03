@@ -229,6 +229,37 @@ function ThrowError
     throw "$errorMessage $helpMessage"
 }
 
+$script:consoleOutputSanitizationFixEnabled = $false
+
+function Get-ConsoleOutputSanitizationFeatureFlag
+{
+    try
+    {
+        if (Get-Command -Name Get-VstsPipelineFeature -ErrorAction SilentlyContinue)
+        {
+            return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
+        }
+        Write-Verbose 'Console output sanitization feature lookup is unavailable; using legacy output.'
+    }
+    catch
+    {
+        Write-Verbose 'Console output sanitization feature lookup failed; using legacy output.'
+    }
+    return $false
+}
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        if (-not $script:consoleOutputSanitizationFixEnabled) { return $Text }
+        # Agent command markers are recognized anywhere in console output, not just after newlines.
+        $Text.Replace('##vso[', '# #vso[').Replace('##[', '# #[')
+    }
+}
+
 function Upload-FilesToAzureContainer
 {
     param([string][Parameter(Mandatory=$true)]$sourcePath,
@@ -248,7 +279,7 @@ function Upload-FilesToAzureContainer
 
     try
     {
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         $resolvedSourcePath = $sourcePath
 
@@ -279,21 +310,33 @@ function Upload-FilesToAzureContainer
 
         if ($useSourcePathHardening) {
             $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $splitArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $splitArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
+            }
         } elseif ($useSanitizerActivate) {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
+            }
         } else {
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"))
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadToBlobCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadToBlobCommand
+            }
         }
 
         if($LASTEXITCODE -eq 0)
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
         else
         {

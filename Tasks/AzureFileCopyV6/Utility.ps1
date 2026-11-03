@@ -174,6 +174,37 @@ function ConvertTo-Pfx {
     return $pfxFilePath, $pfxFilePassword
 }
 
+$script:consoleOutputSanitizationFixEnabled = $false
+
+function Get-ConsoleOutputSanitizationFeatureFlag
+{
+    try
+    {
+        if (Get-Command -Name Get-VstsPipelineFeature -ErrorAction SilentlyContinue)
+        {
+            return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
+        }
+        Write-Verbose 'Console output sanitization feature lookup is unavailable; using legacy output.'
+    }
+    catch
+    {
+        Write-Verbose 'Console output sanitization feature lookup failed; using legacy output.'
+    }
+    return $false
+}
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        if (-not $script:consoleOutputSanitizationFixEnabled) { return $Text }
+        # Agent command markers are recognized anywhere in console output, not just after newlines.
+        $Text.Replace('##vso[', '# #vso[').Replace('##[', '# #[')
+    }
+}
+
 function Upload-FilesToAzureContainer
 {
     param([string][Parameter(Mandatory=$true)]$sourcePath,
@@ -230,7 +261,7 @@ function Upload-FilesToAzureContainer
             throw (Get-VstsLocString -Key UnsupportedAuthScheme -ArgumentList $endPoint.Auth.Scheme)
         }
 
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         $blobPrefix = $blobPrefix.Trim()
         $trailingChars = [regex]::Escape("/") + '+$'
@@ -244,35 +275,55 @@ function Upload-FilesToAzureContainer
         {
 
             if ($useSourcePathHardening) {
-                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"
-                & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"))
+                if ($script:consoleOutputSanitizationFixEnabled) {
+                    & $azCopyExeLocation rm $rawContainerURL --recursive=true | ConvertTo-SafeConsoleText
+                } else {
+                    & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                }
             } else {
-                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"))
                 $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-                Invoke-Expression $cleanToBlobCommand
+                if ($script:consoleOutputSanitizationFixEnabled) {
+                    Invoke-Expression $cleanToBlobCommand | ConvertTo-SafeConsoleText
+                } else {
+                    Invoke-Expression $cleanToBlobCommand
+                }
             }
 
         }
         if ($useSourcePathHardening) {
             $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
-            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            }
         } elseif ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"))
             $uploadCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
-            Invoke-Expression $uploadCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadCommand
+            }
         } else {
 
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"))
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadToBlobCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadToBlobCommand
+            }
         }
 
         if($LASTEXITCODE -eq 0)
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
         else
         {

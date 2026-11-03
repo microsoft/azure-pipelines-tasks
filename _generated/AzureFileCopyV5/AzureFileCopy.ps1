@@ -66,6 +66,7 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 CleanUp-PSModulePathForHostedAgent
 
@@ -232,11 +233,19 @@ if ($useSanitizerActivate) {
     {
         # Get URI and SaSToken for output variable
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
-        Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        if ($script:consoleOutputSanitizationFixEnabled) {
+            Write-VstsSetVariable -Name StorageContainerUri -Value $storageAccountContainerURI
+        } else {
+            Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        }
 
 
         $storageContainerSaSToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
-        Write-Host "##vso[task.setvariable variable=StorageContainerSasToken]$storageContainerSasToken"
+        if ($script:consoleOutputSanitizationFixEnabled) {
+            Write-VstsSetVariable -Name StorageContainerSasToken -Value $storageContainerSasToken
+        } else {
+            Write-Host "##vso[task.setvariable variable=StorageContainerSasToken]$storageContainerSasToken"
+        }
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
@@ -285,7 +294,7 @@ if ($useSanitizerActivate) {
                                                 -useSanitizerActivate $useSanitizerActivate `
                                                 -useSourcePathHardening $useSourcePathHardening
 
-        Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName))
     }
     catch
     {

@@ -113,6 +113,7 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 CleanUp-PSModulePathForHostedAgent
 
@@ -260,7 +261,11 @@ if ($useSanitizerActivate) {
     if ($destination -eq "AzureBlob") {
         # Get URI for output variable
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
-        Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        if ($script:consoleOutputSanitizationFixEnabled) {
+            Write-VstsSetVariable -Name StorageContainerUri -Value $storageAccountContainerURI
+        } else {
+            Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        }
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
@@ -303,7 +308,7 @@ if ($useSanitizerActivate) {
             -useSanitizerActivate $useSanitizerActivate `
             -useSourcePathHardening $useSourcePathHardening
 
-        Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName))
     }
     catch {
         Write-Verbose $_.Exception.ToString()
