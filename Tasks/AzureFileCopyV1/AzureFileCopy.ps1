@@ -64,6 +64,7 @@ Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.Distri
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 # DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
 # Instead of sanitizing ##vso[ commands from remote machine output, this only publishes telemetry
@@ -269,7 +270,11 @@ if ($useSanitizerActivate) {
         if(-not [string]::IsNullOrEmpty($outputStorageURI))
         {
             $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
-            Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageURI -Value $storageAccountContainerURI
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            }
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
@@ -282,7 +287,11 @@ if ($useSanitizerActivate) {
                 $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
             }
 
-            Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageContainerSASToken -Value $storageContainerSasToken
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            }
         }
 
         Remove-EndpointSecrets
