@@ -31,8 +31,9 @@ parameters:
 - name: nodeModulesSigningMode
   displayName: Choose node_modules signing option
   type: string
-  default: 'Catalog signing'
+  default: 'None'
   values:
+  - 'None'
   - 'Catalog signing'
   - 'Individual file signing'
 - name: includeLocalPackagesBuildConfig
