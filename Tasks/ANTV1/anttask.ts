@@ -262,8 +262,9 @@ async function doWork() {
 
         ccReportTask = await execEnableCodeCoverage();
 
-        // Ant builds may intentionally emit pipeline logging commands, so do not block them.
-        await antv.exec();
+        await antv.exec({
+            externalOutput: { source: 'childProcess' }
+        });
         var buffer;
         antb.on('stdout', (data) => {
             if (data) {
