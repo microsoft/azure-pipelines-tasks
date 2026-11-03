@@ -39,7 +39,7 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
             tl.writeExternalOutput(
                 tl.loc('NoTestResults', testResultsFiles) + os.EOL,
-                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' }
+                { source: 'repository' }
             );
             return 0;
         }
@@ -131,8 +131,7 @@ async function doWork() {
             tl.rmRF(reportBuildFile);
             tl.rmRF(instrumentedClassesDirectory);
         } catch (err) {
-            tl.debugExternalOutput("Error removing previous cc files: " + err,
-                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+            tl.debug("Error removing previous cc files: " + err);
         }
 
         let buildProps: { [key: string]: string } = {};

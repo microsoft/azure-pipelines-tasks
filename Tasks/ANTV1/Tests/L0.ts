@@ -181,10 +181,13 @@ describe('ANT Suite', function () {
                     if (scenario === 'coverage') {
                         const buildRoot = path.join('/build', value);
                         messages.push(
-                            'Error removing previous cc files: Error: ' + value,
                             'Summary file = ' + path.join(buildRoot, 'CCReport43F6D5EF', 'summary.xml'),
                             'Report directory = ' + path.join(buildRoot, 'CCReport43F6D5EF')
                         );
+                        const cleanupMessage = ('Error removing previous cc files: Error: ' + value)
+                            .replace(/%/g, '%AZP25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+                        assert(runner.stdOutContained('##vso[task.debug]' + cleanupMessage),
+                            'The cleanup error should remain a single structured debug message without marker filtering');
                     }
                     messages.forEach(message => {
                         const encoded = message.replace(/##vso\[/g, '##_vso[')
@@ -222,7 +225,7 @@ describe('ANT Suite', function () {
 
     const patternSeparators = [' ', '\n', '\r\n'];
     patternSeparators.forEach(separator => {
-        it(`neutralizes and reports logging commands in unmatched test patterns with ${JSON.stringify(separator)}`, async () => {
+        it(`neutralizes logging commands without telemetry in unmatched test patterns with ${JSON.stringify(separator)}`, async () => {
             const pattern = '**/InvalidTestFilter-*.xml' + separator +
                 '##vso[task.setvariable variable=AntDiagnosticMarker;]unexpected' + separator +
                 '##vso[task.setvariable variable=AntOtherDiagnosticMarker;]unexpected';
@@ -243,16 +246,7 @@ describe('ANT Suite', function () {
                 }), 'The diagnostic should not emit a variable-setting logging command');
                 const telemetry = runner.stdout.split(/\r?\n/).filter(line =>
                     line.startsWith('##vso[telemetry.publish area=TaskLib;feature=ExternalOutputVsoCommand;]'));
-                assert.strictEqual(telemetry.length, 2, 'Each blocked command should produce one telemetry event');
-                telemetry.forEach(line => {
-                    const event = JSON.parse(line.substring(line.indexOf(']') + 1));
-                    assert.strictEqual(event.source, 'repository');
-                    assert.strictEqual(event.commandName, 'task.setvariable');
-                    assert.strictEqual(event.blocked, true);
-                    assert(!line.includes('AntDiagnosticMarker') && !line.includes('AntOtherDiagnosticMarker'),
-                        'Telemetry should not contain command properties');
-                    assert(!line.includes('unexpected'), 'Telemetry should not contain command data');
-                });
+                assert.strictEqual(telemetry.length, 0, 'Block-only diagnostics should not produce command telemetry');
             } finally {
                 if (previousPattern === undefined) {
                     delete process.env['ANT_TEST_RESULTS_PATTERN'];
