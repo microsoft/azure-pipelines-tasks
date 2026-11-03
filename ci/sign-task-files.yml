@@ -53,6 +53,7 @@ steps:
       **/*.ps1
       **/*.psm1
       **/*.psd1
+      !Common/ExternalOutputSanitizer/Tests/L0Protect-ExternalOutput.ps1
       !**/node_modules/**
     UseMinimatch: true
     signConfigType: inlineSignParams
