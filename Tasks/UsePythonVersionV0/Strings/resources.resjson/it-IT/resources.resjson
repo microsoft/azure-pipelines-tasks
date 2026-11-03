@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "È consigliabile fornire il token GitHub se si vuole scaricare una versione di Python. In caso contrario, è possibile che venga raggiunto il limite di download anonimo di GitHub.",
   "loc.messages.DownloadNotFound": "Non è stato possibile trovare la specifica Python corrispondente %s (%s) nel registro python-versions. Si noti che solo i sistemi elencati nel manifesto delle versioni di Python di Github Actions (https://github.com/actions/python-versions/blob/main/versions-manifest.json) sono idonei per il download di Python in anteprima. Il proxy non è inoltre supportato.",
   "loc.messages.ManifestDownloadFailed": "Non è stato possibile scaricare il manifesto delle versioni di Python dal registro python di Github Actions (https://github.com/actions/python-versions). È possibile che un token GitHub non valido sia la causa di questo problema.",
-  "loc.messages.DownloadFailed": "Non è stato possibile scaricare Python dal registro python di Github Actions (https://github.com/actions/python-versions). Errore: %s"
+  "loc.messages.DownloadFailed": "Non è stato possibile scaricare Python dal registro python di Github Actions (https://github.com/actions/python-versions). Errore: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

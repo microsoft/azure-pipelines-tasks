@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Keine Paketdatei mit dem angegebenen Muster gefunden.",
   "loc.messages.FirewallRuleNameCannotBeNull": "Der Name der Firewallregel darf nicht NULL sein.",
   "loc.messages.SqlFileNotFound": "Die Datei wurde im Pfad nicht gefunden: %s",
-  "loc.messages.InvalidDatabaseName": "Ungültiger Datenbankname „%s“. Nur alphanumerische Zeichen, Unterstriche, Bindestriche und Dollarzeichen sind zulässig."
+  "loc.messages.InvalidDatabaseName": "Ungültiger Datenbankname „%s“. Nur alphanumerische Zeichen, Unterstriche, Bindestriche und Dollarzeichen sind zulässig.",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
 }
