@@ -23,6 +23,7 @@
   "minimumAgentVersion": "1.100.0",
   "groups": [],
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The MysqlDeploymentOnMachineGroup@1 task is deprecated",
   "inputs": [
     {
