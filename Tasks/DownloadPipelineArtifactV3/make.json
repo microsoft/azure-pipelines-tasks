@@ -1,0 +1,9 @@
+{
+    "common": [
+        {
+            "module": "../Common/pipeline-artifacts-common",
+            "type": "node",
+            "compile": true
+        }
+    ]
+}

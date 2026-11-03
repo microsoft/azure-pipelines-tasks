@@ -1,0 +1,30 @@
+{
+  "name": "downloadpipelineartifact",
+  "version": "1.0.0",
+  "description": "Download Pipeline Artifact Task",
+  "main": "main.js",
+  "scripts": {
+    "build": "node ../../make.js build --task DownloadPipelineArtifactV3",
+    "serverBuild": "node ../../make.js serverBuild --task DownloadPipelineArtifactV3",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/azure-pipelines-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Microsoft/azure-pipelines-tasks/issues"
+  },
+  "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
+  "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^24.10.0",
+    "azure-pipelines-task-lib": "^5.2.11",
+    "azure-pipelines-tasks-pipeline-artifacts-common": "file:../../_build/Tasks/Common/azure-pipelines-tasks-pipeline-artifacts-common-1.0.0.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
