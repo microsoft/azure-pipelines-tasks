@@ -284,7 +284,6 @@ async function doWork() {
             .fail(function (err) {
                 tl.writeExternalOutput(err.message + os.EOL, {
                     source: 'childProcess',
-                    vsoCommandMode: 'blockAndTelemetry',
                     destination: process.stderr
                 });
                 publishTestResults(publishJUnitResults, testResultsFiles);
