@@ -17,13 +17,6 @@ The following need to be set up for the task to work properly.
 - [Azure Pipelines agent version 2.144](https://github.com/microsoft/azure-pipelines-agent/releases/tag/v2.144.0) or later
 - Service connection - [create a service connection](https://learn.microsoft.com/azure/azure-app-configuration/push-kv-devops-pipeline#create-a-service-connection)
 
-### Key Vault references
-
-Key Vault secret references must use HTTPS and a vault hostname within the service
-connection's Azure cloud (`.vault.azure.net`, `.vault.azure.cn`, or
-`.vault.usgovcloudapi.net`). URLs containing embedded credentials or non-default
-ports are not supported.
-
 ### Parameters of the task:
 
 The parameters of the task are described below. The parameters listed with a \* are required parameters for the task:
