@@ -20,7 +20,7 @@ async function main() {
         const diagnosticsMode = tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks') ? 'blockAndTelemetry' : 'telemetryOnly';
         let isFolderBasedDeployment: boolean = tl.stats(packagePath).isDirectory();
         if(!isFolderBasedDeployment) {
-            const folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType());
+            const folderPath = await generateTemporaryFolderForDeployment(isFolderBasedDeployment, packagePath, webPackage.getPackageType(), diagnosticsMode);
             enhancedFileTransformations(isFolderBasedDeployment, xmlTransformation, folderPath, xmlTransformationRules, xmlTargetFiles, jsonTargetFiles, diagnosticsMode);
             await archiveFolder(folderPath, path.dirname(packagePath), path.basename(packagePath));
         }

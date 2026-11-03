@@ -47,7 +47,7 @@ PackageUtility.getPackagePath = input => {
 Object.assign(utility, {
     generateTemporaryFolderForDeployment: async (...args: Parameters<typeof utility.generateTemporaryFolderForDeployment>) => {
         extractions++;
-        assert.deepStrictEqual(args, [false, packagePath, PackageType.zip]);
+        assert.deepStrictEqual(args, [false, packagePath, PackageType.zip, mode]);
         return folderPath;
     },
     findfiles: (pattern: string) => {
