@@ -171,10 +171,8 @@ async function doWork() {
                     throw tl.loc('NoCodeCoverage'); 
                 }
                 if (pathExistsAsFile(summaryFile)) {
-                    tl.debugExternalOutput("Summary file = " + summaryFile,
-                        { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
-                    tl.debugExternalOutput("Report directory = " + reportDirectory,
-                        { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+                    tl.debug("Summary file = " + summaryFile);
+                    tl.debug("Report directory = " + reportDirectory);
                     tl.debug("Publishing code coverage results to TFS");
                     let ccPublisher = new tl.CodeCoveragePublisher();
                     ccPublisher.publish(ccTool, summaryFile, reportDirectory, "");
@@ -206,8 +204,7 @@ async function doWork() {
         var antHomeUserInputPath = tl.getPathInput('antHomeUserInputPath', false, true);
         if (antHomeUserInputPath) {
             tl.debug('Using path from user input to set ANT_HOME');
-            tl.debugExternalOutput('Set ANT_HOME to ' + antHomeUserInputPath,
-                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+            tl.debug('Set ANT_HOME to ' + antHomeUserInputPath);
             process.env['ANT_HOME'] = antHomeUserInputPath;
         }
 
@@ -240,8 +237,7 @@ async function doWork() {
         javacommons.publishJavaTelemetry('Ant', javaTelemetryData);
         
         if (specifiedJavaHome) {
-            tl.debugExternalOutput('Set JAVA_HOME to ' + specifiedJavaHome,
-                { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+            tl.debug('Set JAVA_HOME to ' + specifiedJavaHome);
             process.env['JAVA_HOME'] = specifiedJavaHome;
         }
 
@@ -296,8 +292,7 @@ async function doWork() {
                 tl.setResult(tl.TaskResult.Failed, err);
             });
     } catch (e) {
-        tl.debugExternalOutput(e.message,
-            { source: 'repository', vsoCommandMode: 'blockAndTelemetry' });
+        tl.debug(e.message);
         tl.error(e);
         tl.setResult(tl.TaskResult.Failed, e.message);
     }
