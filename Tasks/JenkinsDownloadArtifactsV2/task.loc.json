@@ -21,6 +21,8 @@
     "Minor": 283,
     "Patch": 0
   },
+  "deprecated": true,
+  "deprecationMessage": "The JenkinsDownloadArtifacts@2 task is deprecated",
   "groups": [
     {
       "name": "propagatedArtifactsGroup",

@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 4,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [
@@ -21,6 +21,8 @@
   ],
   "releaseNotes": "What's new in Version 4.0: <br/>&nbsp;&nbsp; Support AzCopy.exe version 10.8.0",
   "minimumAgentVersion": "1.103.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureFileCopy@4 task is deprecated, please use the latest version of the AzureFileCopy task",
   "inputs": [
     {
       "name": "SourcePath",

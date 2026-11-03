@@ -17,13 +17,15 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [
     "Cmd"
   ],
   "minimumAgentVersion": "1.95.0",
+  "deprecated": true,
+  "deprecationMessage": "The ServiceFabricPowerShell@1 task is deprecated",
   "inputs": [
     {
       "name": "serviceConnectionName",
