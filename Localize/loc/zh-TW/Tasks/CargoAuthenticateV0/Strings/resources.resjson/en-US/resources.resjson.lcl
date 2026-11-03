@@ -232,11 +232,38 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryEnvKeyCollision" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[登錄 '%s' 對應至相同的 Cargo 環境變數 '%s'。重新命名其中一個登錄以避免認證模稜兩可。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryFeedVerificationFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry feed URL verification failed; skipping authentication for this registry.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[登錄摘要 URL 驗證失敗; 略過此登錄的驗證。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[登錄名稱輸入 '%s' 未對應 config.toml 中的任何登錄]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SkippingNonAzureDevOpsRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[正在略過登錄 '%s'，因為其索引 URL '%s' 未在 Azure DevOps 中託管。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

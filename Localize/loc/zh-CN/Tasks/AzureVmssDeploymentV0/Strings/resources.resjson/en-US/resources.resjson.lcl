@@ -480,6 +480,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidWindowsCustomScript" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Protected Windows invocation requires a relative .ps1 script inside the custom script directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[受保护的 Windows 调用要求自定义脚本目录内有相对路径的 .ps1 脚本。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL for new VMSS image: %s.]]></Val>
@@ -710,6 +719,24 @@
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[正在更新 VMSS %s 以使用新映像...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[无法删除临时 Windows 自定义脚本文件。在重用代理之前删除任务暂存文件。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptPayloadTooLarge" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UTF-8 Windows custom script payload exceeds the 1 MiB limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[UTF-8 Windows 自定义脚本有效负载超过 1 MiB 限制。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

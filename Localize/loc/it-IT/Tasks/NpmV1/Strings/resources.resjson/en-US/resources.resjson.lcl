@@ -369,6 +369,42 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlHasCredentials" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable must not contain credentials.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La variabile Npm.PackagingCollectionUrl non deve contenere credenziali.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlInvalid" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable is not a valid URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La variabile Npm.PackagingCollectionUrl non è un URL valido.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable does not match the collection URI.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La variabile Npm.PackagingCollectionUrl non corrisponde all'URI della raccolta.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlUnsupportedScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable must use http or https.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La variabile Npm.PackagingCollectionUrl deve usare http o https.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.PublishExternal" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publishing to external registry]]></Val>
@@ -461,10 +497,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnsupportedServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.]]></Val>
+          <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with     personal access token based auth.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale.]]></Val>
+            <Val><![CDATA[La connessione al servizio non usa un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -369,6 +369,42 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlHasCredentials" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable must not contain credentials.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Npm.PackagingCollectionUrl 변수는 자격 증명을 포함하면 안 됩니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlInvalid" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable is not a valid URL.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Npm.PackagingCollectionUrl 변수는 유효한 URL이 아닙니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable does not match the collection URI.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Npm.PackagingCollectionUrl 변수는 컬렉션 URI와 일치하지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.PackagingCollectionUrlUnsupportedScheme" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Npm.PackagingCollectionUrl variable must use http or https.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Npm.PackagingCollectionUrl 변수는 http 또는 https를 사용해야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.PublishExternal" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Publishing to external registry]]></Val>
@@ -461,10 +497,13 @@
       </Item>
       <Item ItemId=";loc.messages.UnsupportedServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.]]></Val>
+          <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with     personal access token based auth.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[서비스 연결에서 지원되는 인증 방법을 사용하지 않습니다. 개인용 액세스 토큰 기반 인증이 포함된 서비스 연결을 사용하세요.]]></Val>
+            <Val><![CDATA[서비스 연결에서 지원되는 인증 방법을 사용하지 않습니다. 개인용 액세스 토큰 기반 인증과 함께 서비스 연결을 사용하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth.]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

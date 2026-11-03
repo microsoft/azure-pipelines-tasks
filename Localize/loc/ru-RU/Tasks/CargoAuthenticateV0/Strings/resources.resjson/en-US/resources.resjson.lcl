@@ -232,11 +232,38 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryEnvKeyCollision" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Реестры '%s' сопоставляться с одной и той же переменной среды Cargo '%s'. Переименуйте один из реестров, чтобы избежать неоднозначности учетных данных.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryFeedVerificationFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry feed URL verification failed; skipping authentication for this registry.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Сбой проверки URL-адреса веб-канала реестра. Проверка подлинности для этого реестра пропускается.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Входные имена реестров "%s№ не соответствуют ни одному реестру в config.toml]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SkippingNonAzureDevOpsRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Пропуск '%s' реестра, так как его '%s' URL-адреса индекса не размещен в Azure DevOps.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

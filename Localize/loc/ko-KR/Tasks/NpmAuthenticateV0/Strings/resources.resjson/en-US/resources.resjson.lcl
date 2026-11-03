@@ -56,12 +56,12 @@
       </Item>
       <Item ItemId=";loc.input.help.workingFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
+          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored. Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[작업하려는 레지스트리를 지정하는 .npmrc 파일의 경로입니다. 폴더가 아닌 파일을 선택하세요(예: "/packages/mypackage.npmrc"). Azure Artifacts URL 및 Entra 워크로드 ID 지원 Azure DevOps 사용자의 서비스 연결이 설정된 경우 npmrc의 레지스트리가 무시됩니다.]]></Val>
+            <Val><![CDATA[작업하려는 레지스트리를 지정하는 .npmrc 파일의 경로입니다. 폴더가 아닌 파일을 선택하세요(예: "/packages/mypackage.npmrc"). Azure Artifacts URL 및 Entra 워크로드 ID 지원 Azure DevOps 사용자의 서비스 연결이 설정된 경우 npmrc의 레지스트리가 무시됩니다. 작업 후 정리에서는 백업의 유효성을 검사하고 파일이 여전히 동일한 일반 파일인지 확인한 후에만 원래 내용을 복원합니다. 유효성 검사에 실패하면 경고를 표시하고 복원을 건너뛰며 파일 내용은 쓰지 않습니다. 인덱스 로드, 파일 시스템 또는 쓰기 오류가 발생하면 여전히 정리가 실패합니다.]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc".]]></Val>
+            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -203,6 +203,15 @@
           <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[HTTPS URL과 HTTPS가 아닌 URL을 혼합한 '%s'의 레지스트리는 인증할 수 없습니다. npm 자격 증명은 구성표별로 범위가 지정되지 않습니다. 이 호스트와 포트의 모든 레지스트리에 HTTPS를 사용하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NoWritableBackupDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine a writable npmAuthenticate backup directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[쓰기 가능한 npmAuthenticate 백업 디렉터리를 확인할 수 없습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -438,11 +447,47 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_HomeDirectoryNotWritable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[npmAuthenticate 백업(%s)에 Agent.HomeDirectory를 사용할 수 없습니다. 작업 컨테이너에서 쓸 수 있는 Agent.TempDirectory로 대체합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcBackupIntegrityMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s에 대한 백업이 무결성 유효성 검사에 실패했습니다. 파일 내용을 쓰지 않고 복원을 건너뜁니다. npmAuthenticate로 변경된 내용이 되돌려지지 않았습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_NpmrcFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[npmrc file not found: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[npmrc 파일을 찾을 수 없습니다. %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcIdentityUnavailable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s에 대한 신뢰할 수 있는 파일 식별자가 없거나 잘못되었습니다. 파일 내용을 쓰지 않고 복원을 건너뜁니다. npmAuthenticate로 변경된 내용이 되돌려지지 않았습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcRestoreSkipped" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s에 있는 .npmrc 경로가 백업된 것과 동일한 일반 파일인지 확인할 수 없습니다. 파일 내용을 쓰지 않고 복원을 건너뜁니다. npmAuthenticate로 변경된 내용이 되돌려지지 않았습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

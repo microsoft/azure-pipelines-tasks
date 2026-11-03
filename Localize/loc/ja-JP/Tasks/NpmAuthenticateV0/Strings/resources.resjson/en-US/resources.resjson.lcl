@@ -56,12 +56,12 @@
       </Item>
       <Item ItemId=";loc.input.help.workingFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
+          <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored. Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[操作したいレジストリを指定する .npmrc ファイルへのパス。フォルダーではなく、ファイル (例、"/packages/mypackage.npmrc") を選択します。Azure Artifacts URL と Entra Workload ID に対応した Azure DevOps ユーザーのサービス接続が設定されている場合、npmrc のレジストリは無視されます。]]></Val>
+            <Val><![CDATA[操作するレジストリを指定する .npmrc ファイルへのパス。フォルダーではなく、ファイル (例: "/packages/mypackage.npmrc") を選択します。Azure Artifacts URL および Entra ワークロード ID に対応した Azure DevOps ユーザーのサービス接続が設定されている場合、npmrc のレジストリは無視されます。ジョブ後のクリーンアップでは、バックアップを検証し、これがまだ同じ通常ファイルであることを確認した後にのみ、元の内容が復元されます。検証に失敗した場合、クリーンアップで警告が表示され、ファイルの内容が書き込まれずに復元がスキップされます。インデックスの読み込み、ファイルシステム、書き込みのエラーでも、クリーンアップは失敗します。]]></Val>
           </Tgt>
           <Prev Cat="Text">
-            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc".]]></Val>
+            <Val><![CDATA[Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. "/packages/mypackage.npmrc". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored.]]></Val>
           </Prev>
         </Str>
         <Disp Icon="Str" />
@@ -203,6 +203,15 @@
           <Val><![CDATA[Cannot authenticate registries on '%s' that mix HTTPS and non-HTTPS URLs. npm credentials are not scoped by scheme. Use HTTPS for all registries on this host and port.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[HTTPS と非 HTTPS の URL が混在する '%s' 上のレジストリを認証できません。npm の資格情報はスキームによってスコープが設定されません。このホストとポート上のすべてのレジストリで HTTPS を使用してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_NoWritableBackupDirectory" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine a writable npmAuthenticate backup directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[書き込み可能な npmAuthenticate のバックアップ ディレクトリを特定できません。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -438,11 +447,47 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_HomeDirectoryNotWritable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[npmAuthenticate のバックアップ (%s) のために Agent.HomeDirectory を使用できませんでした。ジョブ コンテナーで書き込み可能な可能性がある Agent.TempDirectory にフォールバックします。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcBackupIntegrityMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s のバックアップが整合性の検証に失敗しました。ファイルの内容を書き込まず、復元をスキップします。npmAuthenticate によって行われた変更は元に戻されませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_NpmrcFileNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[npmrc file not found: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[npmrc ファイルが見つかりません: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcIdentityUnavailable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s の信頼されたファイル ID が見つからないか、無効です。ファイルの内容を書き込まず、復元をスキップします。npmAuthenticate によって行われた変更は元に戻されませんでした。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_NpmrcRestoreSkipped" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s の .npmrc パスは、バックアップされたのと同じ通常ファイルとして確認できませんでした。ファイルの内容を書き込まず、復元をスキップします。npmAuthenticate によって行われた変更は元に戻されませんでした。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

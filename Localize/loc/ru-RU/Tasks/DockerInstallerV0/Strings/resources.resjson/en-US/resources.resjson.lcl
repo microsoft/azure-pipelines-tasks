@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.input.help.releaseType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          <Val><![CDATA[Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Выберите тип выпуска для установки. Значение "Nightly" в Windows не поддерживается]]></Val>
+            <Val><![CDATA[Выберите тип выпуска для установки. Поддерживаются только перечисленные типы выпусков. Nightly не поддерживается в Windows]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -104,6 +107,24 @@
           <Val><![CDATA[Failed to download docker from location %s. Error %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Не удалось скачать Docker из расположения %s. Ошибка %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid release type. Supported values are %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Недопустимый тип выпуска. Поддерживаемые значения: %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NightlyNotSupportedOnWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value nightly is not supported on Windows.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Значение nightly не поддерживается в Windows.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

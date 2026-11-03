@@ -201,10 +201,13 @@
       </Item>
       <Item ItemId=";loc.input.help.maskedOutputs" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          <Val><![CDATA[Comma-separated list of output names to create as secret output variables. Their values are masked in logs and are not mapped to environment variables automatically; map them explicitly with `env` in later script steps.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[쉼표로 구분되어 있는, 값을 마스킹할 출력 이름 목록입니다(예: secrets).]]></Val>
+            <Val><![CDATA[비밀 출력 변수로 만들 출력 이름을 쉼표로 구분한 목록입니다. 해당 값은 로그에서 마스킹되며 환경 변수에 자동으로 매핑되지 않습니다. 이후 스크립트 단계에서 `env`를 사용해 명시적으로 매핑하세요.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Comma-separated list of output names to mask values for (e.g., secrets).]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -613,6 +616,69 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.BicepVersionConflictsWithConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The requested Bicep version "%s" does not satisfy the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Bicep 버전 %s은(는) %s에서 선언된 "bicep.version" 제약 조건 "%s"을(를) 충족하지 않습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionConstraintCouldNotBeChecked" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not verify that the requested Bicep version "%s" satisfies the "bicep.version" constraint "%s" declared in %s, because the requested version is not a recognized version number.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[요청된 버전이 인식된 버전 번호가 아니므로, 요청된 Bicep 버전 "%s"이(가) %s에 선언된 "bicep.version" 제약 조건 "%s"을(를) 충족하는지 확인할 수 없습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.BicepVersionResolvedFromConfigChain" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Resolved Bicep version %s to satisfy the "bicep.version" constraint "%s" declared in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s에서 선언된 "bicep.version" 제약 조건 "%s"을(를) 충족하는 Bicep 버전 %s이(가) 확인됨]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainAbsoluteExtendsPath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property must be a relative path, but got an absolute path: %s in %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["extends" 속성은 상대 경로여야 하지만 절대 경로를 가져옴: %s의 %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainCycleDetected" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Cycle detected while resolving "extends" chain at: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[다음 위치에서 "extends" 체인을 확인하는 동안 주기가 검색됨: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigChainTooDeep" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" chain exceeds the maximum supported depth of %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA["extends" 체인이 지원되는 최대 깊이 %s을(를) 초과합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.ConfigFileNotFound" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Config file not found: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[구성 파일을 찾을 수 없음: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.CreateFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Create failed]]></Val>
@@ -730,11 +796,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidBicepVersionConstraintType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s의 "bicep.version" 속성은 문자열이어야 합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidChangeType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid change type: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[잘못된 변경 유형: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidConfigExtendsValue" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "extends" property in %s must be a string.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s의 "extends" 속성은 문자열이어야 합니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -771,6 +855,15 @@
           <Val><![CDATA[Azure login failed using Managed Service Identity]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[관리되는 서비스 ID를 사용한 Azure 로그인에 실패했습니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NoReleaseSatisfiesBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[No published Bicep CLI release satisfies the "bicep.version" constraint "%s" declared in %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[게시된 Bicep CLI 릴리스 중 %s에 선언된 "bicep.version" 제약 조건 "%s"을(를) 충족하는 릴리스가 없습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -852,6 +945,24 @@
           <Val><![CDATA[Unknown property change type: %s.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[알 수 없는 속성 변경 유형: %s.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnparsableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" property "%s" in %s is not a valid Bicep version or version range.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s의 "bicep.version" 속성 "%s"은(는) 유효한 Bicep 버전 또는 버전 범위가 아닙니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.UnsatisfiableBicepVersionConstraint" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The "bicep.version" constraint "%s" in %s can never be satisfied by any version.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s의 "bicep.version" 제약 조건 "%s"은(는) 어떤 버전으로도 충족할 수 없습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.input.help.releaseType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          <Val><![CDATA[Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[설치할 릴리스 종류를 선택합니다. 야간은 Windows에서 지원되지 않습니다.]]></Val>
+            <Val><![CDATA[설치할 릴리스 유형을 선택합니다. 나열된 릴리스 유형만 지원됩니다. 야간은 Windows에서 지원되지 않습니다.]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -104,6 +107,24 @@
           <Val><![CDATA[Failed to download docker from location %s. Error %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[%s 위치에서 Docker를 다운로드하지 못했습니다. 오류 %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid release type. Supported values are %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[잘못된 릴리스 유형입니다. 지원되는 값은 %s입니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NightlyNotSupportedOnWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value nightly is not supported on Windows.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[야간 값은 Windows에서 지원되지 않습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

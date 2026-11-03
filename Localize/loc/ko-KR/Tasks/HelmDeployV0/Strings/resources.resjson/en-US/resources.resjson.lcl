@@ -864,6 +864,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[확인된 릴리스 이름 '%s'이(가) 비어 있거나 '-'로 시작합니다. 이 경우 Helm 자체 명령줄 파서가 릴리스 이름 대신 옵션으로 잘못 해석할 수 있습니다. 유효한 'releaseName' 입력을 설정하거나, 암시적 릴리스 이름 대체에 사용되는 값(예: 파이프라인의 빌드 번호)이 비어 있지 않고 '-'로 시작하지 않는지 확인하세요. 나머지 릴리스 이름 규칙은 명령이 실행될 때 설치된 Helm 버전에서 유효성을 검사합니다.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.KubeConfigFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Kubeconfig file path: %s]]></Val>

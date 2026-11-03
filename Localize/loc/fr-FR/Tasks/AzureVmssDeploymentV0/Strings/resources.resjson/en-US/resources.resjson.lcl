@@ -480,6 +480,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidWindowsCustomScript" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Protected Windows invocation requires a relative .ps1 script inside the custom script directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[L’appel de Windows protégé nécessite un script de .ps1 relatif dans le répertoire de script personnalisé.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.NewVMSSImageUrl" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[URL for new VMSS image: %s.]]></Val>
@@ -710,6 +719,24 @@
           <Val><![CDATA[Updating VMSS %s to use new image...]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Mise à jour du groupe VMSS %s pour l'utilisation d'une nouvelle image...]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptCleanupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Impossible de supprimer les fichiers temporaires de script personnalisé Windows. Supprimez les fichiers intermédiaires de tâche avant de réutiliser l’agent.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.WindowsScriptPayloadTooLarge" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UTF-8 Windows custom script payload exceeds the 1 MiB limit.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La charge utile du script personnalisé Windows au format UTF-8 dépasse la limite de 1 Mio.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

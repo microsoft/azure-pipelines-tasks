@@ -232,11 +232,38 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryEnvKeyCollision" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[I registri '%s' eseguire il mapping alla stessa variabile di ambiente Cargo '%s'. Rinominare uno dei registri per evitare ambiguità nelle credenziali.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryFeedVerificationFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry feed URL verification failed; skipping authentication for this registry.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Verifica dell'URL del feed del Registro di sistema non riuscita; L'autenticazione per questo Registro di sistema verrà ignorata.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[L'input dei nomi di Registro di sistema '%s' non corrisponde ad alcun Registro di sistema in config.toml]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SkippingNonAzureDevOpsRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Il '%s' del Registro di sistema verrà ignorato perché l'URL di indice '%s' non è ospitato in Azure DevOps.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

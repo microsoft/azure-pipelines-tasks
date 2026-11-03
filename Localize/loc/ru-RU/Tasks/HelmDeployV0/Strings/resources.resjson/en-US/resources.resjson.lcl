@@ -864,6 +864,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Разрешенное имя выпуска "%s" пусто или начинается с "-", поэтому собственный синтаксический анализатор командной строки Helm может неправильно интерпретировать его как параметр вместо имени выпуска. Установите допустимое входное значение "releaseName" или проверьте, не пусто ли значение, используемое для неявного резерва имени выпуска (например, номер сборки конвейера), и не начинается ли оно с "-". Установленная версия Helm проверяет остальные правила имени выпуска при выполнении команды.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.KubeConfigFilePath" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Kubeconfig file path: %s]]></Val>

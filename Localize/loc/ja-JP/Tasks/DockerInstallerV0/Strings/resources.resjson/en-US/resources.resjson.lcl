@@ -47,10 +47,13 @@
       </Item>
       <Item ItemId=";loc.input.help.releaseType" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          <Val><![CDATA[Pick the release type to install. Only the listed release types are supported. Nightly is not supported on Windows]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[インストールするリリースの種類を選択します。Windows では Nightly はサポートされていません]]></Val>
+            <Val><![CDATA[インストールするリリースの種類を選択します。一覧表示されているリリースの種類のみがサポートされています。Windows では Nightly はサポートされていません]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Pick the release type to install. Nightly is not supported on Windows]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -104,6 +107,24 @@
           <Val><![CDATA[Failed to download docker from location %s. Error %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[場所 %s から Docker をダウンロードできませんでした。エラー %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseType" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Invalid release type. Supported values are %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[リリースの種類が無効です。サポートされている値は %s です。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NightlyNotSupportedOnWindows" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The value nightly is not supported on Windows.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Windows では値 nightly はサポートされていません。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

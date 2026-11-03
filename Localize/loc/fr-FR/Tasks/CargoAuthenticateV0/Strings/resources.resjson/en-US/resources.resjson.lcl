@@ -232,11 +232,38 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryEnvKeyCollision" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Les registres '%s' mapper à la même variable d’environnement de chargement '%s'. Renommez l’un des registres pour éviter toute ambiguïté sur les informations d’identification.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryFeedVerificationFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Registry feed URL verification failed; skipping authentication for this registry.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Échec de la vérification de l’URL du flux du registre ; authentification ignorée pour ce registre.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.RegistryNotFound" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The registry names input '%s' does not correspond any registry in config.toml]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Les noms de registre saisis « %s » ne correspondent à aucun registre dans config.toml]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.SkippingNonAzureDevOpsRegistry" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La '%s' de registre est ignorée, car son URL d’index '%s' n’est pas hébergée dans Azure DevOps.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
