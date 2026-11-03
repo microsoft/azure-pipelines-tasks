@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "groups": [
@@ -524,9 +524,6 @@
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//downloadsecurefiles.js"
-    },
     "Node20_1": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
@@ -541,9 +538,6 @@
       "target": "src//helm.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//helm.js"
-    },
     "Node20_1": {
       "target": "src//helm.js",
       "argumentFormat": ""
@@ -557,9 +551,6 @@
     "Node16": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
-    },
-    "Node10": {
-      "target": "src//deletesecurefiles.js"
     },
     "Node20_1": {
       "target": "src//deletesecurefiles.js",
@@ -588,6 +579,7 @@
     "SkipDeleteSecureFiles": "TLS not enabled in the Task. Skipping delete of certificates.",
     "SkipDownloadSecureFiles": "TLS not enabled in the Task. Skipping download of certificates.",
     "FileNotFound": "File not found at %s",
+    "InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
     "KubernetesServiceConnectionNotFound": "Kubernetes service connection details not found.",
     "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
     "SaveSupportedInHelmsV3Only": "Save chart to Azure Container Registry is only supported in Helms V3.",

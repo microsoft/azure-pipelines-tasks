@@ -10,5 +10,5 @@ Removes a helm chart from local
 export async function addArguments(helmCli: helmcli): Promise<void> {
     helmCli.addArgument("remove");
 
-    helmCli.addArgument(tl.getVariable("helmChartRef"));
+    helmCli.addSingleArgument(tl.getVariable("helmChartRef"));
 }
