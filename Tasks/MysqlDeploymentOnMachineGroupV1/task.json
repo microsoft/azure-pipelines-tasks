@@ -17,7 +17,7 @@
   "version": {
     "Major": 1,
     "Minor": 283,
-    "Patch": 0
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -125,6 +125,7 @@
     "MysqlTaskParameterCannotBeEmpty": "The MySQL task parameter cannot be null.",
     "ToolPathCannotBeNull": "Tool path cannot be null.",
     "SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+    "InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
     "CallbackCannotBeNull": "The callback cannot be null.",
     "UnableToCreateDatabaseException": "Unable to create database.",
     "WindowMysqlClientMissingError": "MySQL client is missing on the Windows agent machine. Please install it by running the MySQL client installer 'https://aka.ms/window-mysqlcli-installer' script file on the agent machine.",

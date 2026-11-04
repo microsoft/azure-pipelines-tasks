@@ -377,7 +377,8 @@
     "NoAssociatedArtifacts": "ms-resource:loc.messages.NoAssociatedArtifacts",
     "OperationFailed": "ms-resource:loc.messages.OperationFailed",
     "RetryingOperation": "ms-resource:loc.messages.RetryingOperation",
-    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal"
+    "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
+    "ZipEntryOutsideTargetDirectory": "ms-resource:loc.messages.ZipEntryOutsideTargetDirectory"
   },
   "minimumAgentVersion": "2.144.0"
 }
