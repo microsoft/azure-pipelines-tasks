@@ -37,7 +37,10 @@ function publishTestResults(publishJUnitResults, testResultsFiles: string) {
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            console.log(tl.loc('NoTestResults', testResultsFiles));
+            tl.writeExternalOutput(
+                tl.loc('NoTestResults', testResultsFiles) + os.EOL,
+                { source: 'repository' }
+            );
             return 0;
         }
 
@@ -162,6 +165,7 @@ async function doWork() {
                 antRunner.arg(antBuildFile);
                 antRunner.arg(ccReportTask);
             }
+            // Ant builds may intentionally emit pipeline logging commands, so do not block them.
             antRunner.exec().then(async function (code) {
                 if (failIfCodeCoverageEmpty && await ccUtils.isCodeCoverageFileEmpty(summaryFile, ccTool)) {
                     throw tl.loc('NoCodeCoverage'); 
@@ -253,7 +257,9 @@ async function doWork() {
 
         ccReportTask = await execEnableCodeCoverage();
 
-        await antv.exec();
+        await antv.exec({
+            externalOutput: { source: 'childProcess' }
+        });
         var buffer;
         antb.on('stdout', (data) => {
             if (data) {
@@ -268,6 +274,7 @@ async function doWork() {
             }
         });
 
+        // Ant builds may intentionally emit pipeline logging commands, so do not block them.
         await antb.exec()
             .then(async function (code) {
                 publishTestResults(publishJUnitResults, testResultsFiles);
@@ -275,7 +282,10 @@ async function doWork() {
                 tl.setResult(tl.TaskResult.Succeeded, "Task succeeded");
             })
             .fail(function (err) {
-                console.error(err.message);
+                tl.writeExternalOutput(err.message + os.EOL, {
+                    source: 'childProcess',
+                    destination: process.stderr
+                });
                 publishTestResults(publishJUnitResults, testResultsFiles);
                 tl.debug('taskRunner fail');
                 tl.setResult(tl.TaskResult.Failed, err);
@@ -288,4 +298,3 @@ async function doWork() {
 }
 
 doWork();
-
