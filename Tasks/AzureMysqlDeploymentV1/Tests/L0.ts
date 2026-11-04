@@ -103,6 +103,24 @@ describe('AzureMySqlDeployment Suite', function() {
         assert.strictEqual(tr.stdOutContained('MYSQL_EXECUTION_REACHED'), true, 'Task should proceed to mysql execution when validation is disabled.');
     });
 
+    it('validateSqlFilePath allows unsafe path when the validation is disabled by feature flag', () => {
+        const featureEnvironmentVariable = 'DISTRIBUTEDTASK_TASKS_DISABLEAZUREMYSQLDEPLOYMENTSQLFILEPATHVALIDATION';
+        const previousFeatureValue = process.env[featureEnvironmentVariable];
+        try {
+            process.env[featureEnvironmentVariable] = 'true';
+            const p = 'a;b.sql';
+            assert.strictEqual(Utility.validateSqlFilePath(p), p);
+        }
+        finally {
+            if (previousFeatureValue === undefined) {
+                delete process.env[featureEnvironmentVariable];
+            }
+            else {
+                process.env[featureEnvironmentVariable] = previousFeatureValue;
+            }
+        }
+    });
+
     it('validateSqlFilePath accepts ordinary paths', () => {
         const p = '/home/vsts/work/1/s/db/migrate_01.sql';
         assert.strictEqual(Utility.validateSqlFilePath(p), p);

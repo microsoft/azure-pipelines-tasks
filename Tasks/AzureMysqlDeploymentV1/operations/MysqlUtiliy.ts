@@ -3,10 +3,10 @@ import task = require('azure-pipelines-task-lib/task');
 export class Utility {
 
     /**
-     * Rejects file paths that could break out of the mysql source argument
+     * Rejects file paths that could break out of the mysql source argument. Can be turned off with the DisableAzureMysqlDeploymentSqlFilePathValidation pipeline feature.
      */
     public static validateSqlFilePath(filePath: string): string {
-        if (/["';`\r\n\0]/.test(filePath)) {
+        if (!task.getPipelineFeature('DisableAzureMysqlDeploymentSqlFilePathValidation') && /["';`\r\n\0]/.test(filePath)) {
             throw new Error(task.loc('InvalidSqlFilePath', filePath));
         }
         return filePath;
