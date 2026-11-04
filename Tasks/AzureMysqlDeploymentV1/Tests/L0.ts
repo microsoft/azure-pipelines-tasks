@@ -104,7 +104,7 @@ describe('AzureMySqlDeployment Suite', function() {
     });
 
     it('validateSqlFilePath allows unsafe path when the validation is disabled by feature flag', () => {
-        const featureEnvironmentVariable = 'DISTRIBUTEDTASK_TASKS_DISABLEAZUREMYSQLDEPLOYMENTSQLFILEPATHVALIDATION';
+        const featureEnvironmentVariable = 'DISTRIBUTEDTASK_TASKS_AZUREMYSQLDEPLOYMENT_DISABLESQLFILEPATHVALIDATION';
         const previousFeatureValue = process.env[featureEnvironmentVariable];
         try {
             process.env[featureEnvironmentVariable] = 'true';
