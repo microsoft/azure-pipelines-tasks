@@ -982,7 +982,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
         $scriptBlockArgs += " -useSourcePathHardening"
     }
 
-    # Rollback preserves the original parser dependency: only SourcePath hardening needs it.
+    # Rollback preserves the original parser dependency: only SourcePath parsing needs it.
     if (!$disableTargetPathHardening -or $useSourcePathHardening)
     {
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue

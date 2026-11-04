@@ -184,12 +184,12 @@ try
         }
     }
 
-    # Rollback intentionally restores unsafe serialization; inspect it without executing it.
+    # Inspect the legacy rollback serialization without executing it.
     $global:targetPathRollback = $true
     $job = Get-RemoteJob -TargetPath "C:\Bob's" -ContainerName "c'quote" -SasToken "?sig=a'b" -AdditionalArguments "--x 'a b'"
     Assert-AreEqual " -containerURL 'https://storage.invalid/c'quote' -targetPath 'C:\Bob's' -containerSasToken '?sig=a'b' -additionalArguments '--x 'a b'' -disableTargetPathHardening -EnableDetailedLogging" `
         $job.scriptArguments 'Rollback serialization must match the old text plus the rollback switch.'
-    # Benign legacy variable expansion pins the Invoke-Expression branch, not its security.
+    # Legacy variable expansion exercises the Invoke-Expression branch.
     Assert-RemoteCopy -InputValues @{ TargetPath = '$HOME\deploy' } -ExpectedTarget "$HOME\deploy"
 
     $parserBody = (Get-Item function:Split-AdditionalArguments).ScriptBlock

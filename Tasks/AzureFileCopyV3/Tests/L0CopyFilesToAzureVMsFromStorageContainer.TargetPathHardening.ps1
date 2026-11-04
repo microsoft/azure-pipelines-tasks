@@ -172,7 +172,7 @@ finally
     [Environment]::SetEnvironmentVariable('AFC_TARGET_TEST_MISSING', $oldMissing)
 }
 
-# Unsafe rollback serialization is checked without executing it.
+# Legacy rollback serialization is inspected without executing it.
 $global:hardeningRollback = $true
 $job = Get-GeneratedRemoteJob @{ targetPath = "C:\Bob's"; additionalArguments = "/Pattern:'a b'" }
 Assert-AreEqual " -containerURL 'https://storage.invalid/files' -targetPath 'C:\Bob's' -containerSasToken 'sig=secret&sp=r' -additionalArguments '/Pattern:'a b'' -azCopyToolFileNamesString 'AzCopy.exe' -azCopyToolFileContentsString '$toolContents' -disableTargetPathHardening" $job.scriptArguments
@@ -188,7 +188,7 @@ Assert-AreEqual $true $caught
 Assert-AreEqual $true ($global:cleanupCalls -ge 3)
 
 Microsoft.PowerShell.Management\Remove-Item -Path function:Split-AdditionalArguments
-# Rollback without SourcePath hardening needs no parser, even with the older sanitizer.
+# Rollback without SourcePath parsing needs no parser, even with the older sanitizer.
 foreach ($sanitizer in @($false, $true))
 {
     Get-GeneratedRemoteJob @{ useSanitizerActivate = $sanitizer } | Out-Null
