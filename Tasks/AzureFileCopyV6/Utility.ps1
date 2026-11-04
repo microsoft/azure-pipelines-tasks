@@ -178,19 +178,18 @@ $script:consoleOutputSanitizationFixEnabled = $false
 
 function Get-ConsoleOutputSanitizationFeatureFlag
 {
+    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
+    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
+    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
     try
     {
-        if (Get-Command -Name Get-VstsPipelineFeature -ErrorAction SilentlyContinue)
-        {
-            return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
-        }
-        Write-Verbose 'Console output sanitization feature lookup is unavailable; using legacy output.'
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled') -eq $true
     }
     catch
     {
-        Write-Verbose 'Console output sanitization feature lookup failed; using legacy output.'
+        Write-Verbose 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
+        return $false
     }
-    return $false
 }
 
 function ConvertTo-SafeConsoleText
@@ -202,6 +201,29 @@ function ConvertTo-SafeConsoleText
         if (-not $script:consoleOutputSanitizationFixEnabled) { return $Text }
         # Agent command markers are recognized anywhere in console output, not just after newlines.
         $Text.Replace('##vso[', '# #vso[').Replace('##[', '# #[')
+    }
+}
+
+function Get-AzCopySpnDirectAuthFeatureFlag
+{
+    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
+    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
+    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
+    #
+    # AzCopy's PSCRED auto-login type spawns a separate process that re-reads the Az PowerShell
+    # context from disk. On agents where Az context autosave is disabled/Process-scoped (so the
+    # context is never persisted), that spawned process cannot retrieve a token and the copy
+    # fails. When this flag is enabled, AzCopy is instead handed the service principal
+    # credentials directly (AZCOPY_AUTO_LOGIN_TYPE=SPN) so no shared/persisted Az context is
+    # required.
+    try
+    {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.AzCopySpnDirectAuthFixEnabled') -eq $true
+    }
+    catch
+    {
+        Write-Verbose 'Failed to read the AzureFileCopy.AzCopySpnDirectAuthFixEnabled feature flag. Defaulting to disabled.'
+        return $false
     }
 }
 
@@ -235,16 +257,39 @@ function Upload-FilesToAzureContainer
 
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
+                $azCopySpnDirectAuthFixEnabled = Get-AzCopySpnDirectAuthFeatureFlag
+
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                     $pemFileContent = $endPoint.Auth.Parameters.ServicePrincipalCertificate
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
 
-                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
-                    $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                    if ($azCopySpnDirectAuthFixEnabled) {
+                        # Direct SPN auth: AzCopy authenticates with the certificate credentials
+                        # itself and does not depend on a persisted/shared Az PowerShell context.
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
+                        $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
+                        $env:AZCOPY_SPA_CERT_PATH = $pfxFilePath
+                        $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                    }
+                    else {
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
+                        $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                    }
                 }
                 else {
-                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
-                    $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                    if ($azCopySpnDirectAuthFixEnabled) {
+                        # Direct SPN auth: AzCopy authenticates with the client secret itself and
+                        # does not depend on a persisted/shared Az PowerShell context.
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
+                        $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
+                        $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                    }
+                    else {
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
+                        $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                    }
                 }
             }
             catch {
@@ -1069,7 +1114,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening'
+    try
+    {
+        $disableTargetPathHardening = (Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening') -eq $true
+    }
+    catch
+    {
+        Write-Verbose 'Failed to read the AzureFileCopyV6.DisableTargetPathHardening feature flag. Defaulting to disabled.'
+        $disableTargetPathHardening = $false
+    }
     if (-not $disableTargetPathHardening)
     {
         # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
