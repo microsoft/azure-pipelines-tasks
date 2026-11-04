@@ -166,6 +166,7 @@ foreach ($mode in @('disabled', 'telemetryOnly', 'blockOnly', 'blockAndTelemetry
     $blocked = $mode -in @('blockOnly', 'blockAndTelemetry')
     $expected = if ($blocked) { $inputText -replace '##vso\[', '##_vso[' } else { $inputText }
     Assert-AreEqual $expected $text[0]
+    Assert-AreEqual 1 $text.Count 'Telemetry must not enter the string return value.'
     $expectedEvents = if ($mode -in @('telemetryOnly', 'blockAndTelemetry')) { 1 } else { 0 }
     Assert-AreEqual $expectedEvents $events.Count
     foreach ($event in $events) {
@@ -184,6 +185,7 @@ foreach ($test in $encodingSuites) {
         $blocked = $mode -in @('blockOnly', 'blockAndTelemetry')
         $expected = if ($blocked) { $test.Expected } else { $test.Input }
         Assert-AreEqual $expected $text[0] "$($test.Name), mode=$mode"
+        Assert-AreEqual 1 $text.Count 'Telemetry must not enter the string return value.'
         $normalized = $test.Encoding.GetString($test.Encoding.GetBytes($test.Input))
         $expectedEvents = if ($mode -in @('telemetryOnly', 'blockAndTelemetry')) {
             [regex]::Matches($normalized, '##vso\[([\w]+\.[\w]+)(?=[ ;\]])', 'IgnoreCase').Count
