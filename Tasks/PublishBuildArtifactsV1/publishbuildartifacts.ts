@@ -191,13 +191,11 @@ async function run() {
                 powershell.arg('Unrestricted');
                 powershell.arg('-Command');
                 powershell.arg(command);
-                powershell.on('stdout', (buffer: Buffer) => {
-                    process.stdout.write(buffer);
-                });
-                powershell.on('stderr', (buffer: Buffer) => {
-                    process.stderr.write(buffer);
-                });
-                let execOptions = { silent: true } as tr.IExecOptions;
+                let execOptions = {
+                    externalOutput: {
+                        source: 'childProcess'
+                    }
+                } as tr.IExecOptions;
                 await powershell.exec(execOptions);
             }
             else {
