@@ -42,7 +42,7 @@ function Restore-TargetPathHardeningTestState
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\AzureFileCopyRemoteJob.ps1
 
-$global:hardeningFeatureName = (Split-Path (Split-Path $PSScriptRoot -Parent) -Leaf) + '.DisableTargetPathHardening'
+$global:hardeningFeatureName = 'AzureFileCopy.DisableTargetPathHardening'
 $global:hardeningRollback = $null
 $global:toolFile = [pscustomobject]@{ Name = 'AzCopy.exe'; FullName = $PSCommandPath }
 $toolContents = [Convert]::ToBase64String([IO.File]::ReadAllBytes($PSCommandPath))

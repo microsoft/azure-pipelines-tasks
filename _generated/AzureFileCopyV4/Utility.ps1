@@ -1020,7 +1020,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV4.DisableTargetPathHardening'
+    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.DisableTargetPathHardening'
     if (-not $disableTargetPathHardening)
     {
         # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.

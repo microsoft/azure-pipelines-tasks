@@ -11,7 +11,7 @@ Register-Mock Get-ChildItem { }
 Register-Mock Copy-FilesSequentiallyToAzureVMs { $global:capturedRemoteArgs = $args }
 Register-Mock Copy-FilesParallellyToAzureVMs { $global:capturedRemoteArgs = $args }
 Register-Mock Get-VstsPipelineFeature { return $global:targetPathRollback } -ParametersEvaluator {
-    $FeatureName -eq 'AzureFileCopyV4.DisableTargetPathHardening'
+    $FeatureName -eq 'AzureFileCopy.DisableTargetPathHardening'
 }
 # Any unexpected installation attempt must fail before network or machine-wide changes.
 function global:New-Item { throw 'Unexpected AzCopy installation' }

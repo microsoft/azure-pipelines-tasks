@@ -8,7 +8,7 @@ The task is used to copy application files and other artifacts that are required
 
 When copying to Azure VMs, remote arguments are escaped before script embedding. By default, the fallback AzCopy invocation passes arguments as data rather than evaluating them as PowerShell. It expands only `$env:NAME` and `${env:NAME}` references in the destination and additional arguments, once; other PowerShell expressions are not evaluated.
 
-For emergency rollback, set the pipeline variable `DistributedTask.Tasks.AzureFileCopyV3.DisableTargetPathHardening` to `true`. This restores the previous behavior, including unsafe argument evaluation, and should be temporary. Leave the variable unset or `false` to keep hardening enabled. Existing SourcePath hardening and sanitizer switches retain their precedence.
+For emergency rollback, set the shared pipeline variable `DistributedTask.Tasks.AzureFileCopy.DisableTargetPathHardening` to `true`. This disables this hardening across AzureFileCopy V2-V5, restoring the previous behavior, including unsafe argument evaluation, and should be temporary. Leave the variable unset or `false` to keep hardening enabled. Existing SourcePath hardening and sanitizer switches retain their precedence.
 
 This security backport does not change this version's deprecation status. Migrate to the latest AzureFileCopy version.
 
