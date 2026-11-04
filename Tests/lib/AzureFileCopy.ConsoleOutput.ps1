@@ -122,7 +122,7 @@ foreach ($flagCase in @('enabled', 'disabled', 'unset', 'lookup failure', 'missi
     Assert-AreEqual $enabled $script:consoleOutputSanitizationFixEnabled "Incorrect flag state: $flagCase"
     $expectedReads = $(if ($flagCase -eq 'missing cmdlet') { 0 } else { 1 })
     Assert-AreEqual $expectedReads $featureState.Reads
-    $diagnostics = @(Get-ConsoleOutputSanitizationFeatureFlag -Verbose 4>&1)
+    $diagnostics = @(Get-ConsoleOutputSanitizationFeatureFlag 3>&1)
     Assert-AreEqual $false ("$diagnostics".Contains('sensitive lookup exception')) 'Lookup diagnostics leaked exception data.'
     $featureState.Reads = 0
 
