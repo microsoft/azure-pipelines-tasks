@@ -125,19 +125,18 @@ $script:consoleOutputSanitizationFixEnabled = $false
 
 function Get-ConsoleOutputSanitizationFeatureFlag
 {
+    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
+    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
+    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
     try
     {
-        if (Get-Command -Name Get-VstsPipelineFeature -ErrorAction SilentlyContinue)
-        {
-            return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
-        }
-        Write-Verbose 'Console output sanitization feature lookup is unavailable; using legacy output.'
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled') -eq $true
     }
     catch
     {
-        Write-Verbose 'Console output sanitization feature lookup failed; using legacy output.'
+        Write-Verbose 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
+        return $false
     }
-    return $false
 }
 
 function ConvertTo-SafeConsoleText
