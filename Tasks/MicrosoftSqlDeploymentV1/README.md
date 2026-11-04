@@ -174,10 +174,17 @@ Server=myserver.database.windows.net;Database=mydb;Authentication=Active Directo
 
 When `azureSubscription` is set and `firewallRuleManagement` is `true` (the default), the task:
 1. Detects the agent's public IP address by probing the SQL server
-2. Adds a temporary firewall rule via the Azure ARM API
-3. Removes the rule after deployment completes (always, even on failure)
+2. Adds a temporary firewall rule via the Azure ARM API if the probe reports a blocked client IP
+3. Removes any rule it created after deployment completes (even on failure)
 
 This requires the service connection to have `Microsoft.Sql/servers/firewallRules/write` and `Microsoft.Sql/servers/firewallRules/delete` permissions on the SQL server.
+
+> **Overlapping deployments:** Deployments sharing an outbound IP can lose access when
+> another deployment removes its temporary firewall rule. Serialize deployments using
+> automatic temporary-firewall management per logical SQL server, covering the complete
+> task lifecycle, or preconfigure stable firewall access and set `firewallRuleManagement: false`.
+> A successful connectivity probe skips rule creation; unique rule names alone do not
+> coordinate access between overlapping deployments.
 
 > Firewall rules exist only for Azure SQL Database logical servers, which are
 > `Microsoft.Sql/servers` resources. Managed Instance, Fabric SQL and SQL Server on a virtual

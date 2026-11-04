@@ -1,6 +1,5 @@
 import tl = require('azure-pipelines-task-lib/task');
 import SqlConnectionConfig from './SqlConnectionConfig';
-import Constants from './Constants';
 import { SqlcmdExecutor, SqlcmdCredentials } from './SqlcmdExecutor';
 
 export interface ConnectionResult {
@@ -128,16 +127,15 @@ export default class SqlUtils {
     }
 
     /**
-     * Parse an error message to see if it contains an IP address
+     * Extract the blocked client IP only from Azure SQL's firewall error.
      * @param errorMessage The error message to parse
      * @returns The IP address if found, otherwise undefined
      */
     private static parseErrorForIpAddress(errorMessage: string): string | undefined {
-        const ipAddresses = errorMessage.match(Constants.ipv4MatchPattern);
-        if (ipAddresses && ipAddresses.length > 0) {
-            return ipAddresses[0];
+        const match = errorMessage.match(/\bClient with IP address '(\d{1,3}(?:\.\d{1,3}){3})' is not allowed to access the server\b/i);
+        if (match && match[1].split('.').every(octet => Number(octet) <= 255)) {
+            return match[1];
         }
         return undefined;
     }
 }
-

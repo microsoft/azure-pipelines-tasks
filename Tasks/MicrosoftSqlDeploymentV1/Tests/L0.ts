@@ -2,12 +2,15 @@ import * as assert from 'assert';
 import * as path from 'path';
 import { EventEmitter } from 'events';
 import { spawnSync } from 'child_process';
+import { Writable } from 'stream';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
 import FirewallManager from '../src/FirewallManager';
 import SqlProjectBuilder from '../src/SqlProjectBuilder';
 import { SqlcmdExecutor } from '../src/SqlcmdExecutor';
+import { SqlPackageExecutor } from '../src/SqlPackageExecutor';
+import SqlUtils from '../src/SqlUtils';
 
 describe('MicrosoftSqlDeployment Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
@@ -181,6 +184,163 @@ describe('MicrosoftSqlDeployment Suite', function () {
             queryExitCode = 1;
             await assert.rejects(() => SqlProjectBuilder.buildProject(projectPath), /SqlProjectBuildFailed/);
         });
+    });
+
+    describe('SqlPackageExecutor - Output handling', function() {
+        const taskLib = require('azure-pipelines-task-lib/task');
+        const fileSystem = require('fs');
+        let originals: any;
+        let output: { stdout: string; stderr: string };
+        let stdoutChunks: string[];
+        let stderrChunks: string[];
+        let executedArgs: string[];
+        let exitCode: number;
+        let executionError: Error;
+
+        beforeEach(() => {
+            originals = {
+                exec: taskLib.exec, loc: taskLib.loc, existsSync: fileSystem.existsSync,
+                createExternalOutputStream: taskLib.createExternalOutputStream
+            };
+            output = { stdout: '', stderr: '' };
+            stdoutChunks = [];
+            stderrChunks = [];
+            exitCode = 0;
+            executionError = undefined;
+            taskLib.loc = (key: string) => key;
+            fileSystem.existsSync = () => true;
+            taskLib.createExternalOutputStream = (options: any) => {
+                assert.strictEqual(options.source, 'remote');
+                const channel = options.destination === process.stdout ? 'stdout' : 'stderr';
+                return originals.createExternalOutputStream({
+                    ...options,
+                    destination: new Writable({
+                        write(chunk, _encoding, callback) {
+                            output[channel] += chunk.toString();
+                            callback();
+                        }
+                    })
+                });
+            };
+            taskLib.exec = async (_tool: string, args: string[], options: any) => {
+                executedArgs = args;
+                stdoutChunks.forEach(chunk => options.outStream.write(Buffer.from(chunk)));
+                stderrChunks.forEach(chunk => options.errStream.write(Buffer.from(chunk)));
+                if (executionError) { throw executionError; }
+                return exitCode;
+            };
+        });
+
+        afterEach(() => {
+            taskLib.exec = originals.exec;
+            taskLib.loc = originals.loc;
+            taskLib.createExternalOutputStream = originals.createExternalOutputStream;
+            fileSystem.existsSync = originals.existsSync;
+        });
+
+        function execute(action = 'publish', additionalArguments?: string): Promise<string | undefined> {
+            const config = new SqlConnectionConfig('Server=localhost;Database=db;User ID=sa;Password=test;');
+            return SqlPackageExecutor.executeSqlPackage('sqlpackage', action, 'test.dacpac',
+                config, undefined, additionalArguments);
+        }
+
+        it('filters commands split across stdout/stderr chunks and flushes trailing text', async () => {
+            stdoutChunks = ['Progress\n##v', 'so[task.setvariable variable=unexpected;]value\nTrailing ##vs'];
+            stderrChunks = ['Warning\n#', '#vso[task.complete result=Failed;]value\nTrailing ##vs'];
+            await execute();
+
+            assert(output.stdout.includes('Progress\n'));
+            assert(output.stderr.includes('Warning\n'));
+            assert(!output.stdout.includes('##vso['));
+            assert(!output.stderr.includes('##vso['));
+            assert(output.stdout.endsWith('Trailing ##vs'));
+            assert(output.stderr.endsWith('Trailing ##vs'));
+        });
+
+        it('retains filtered SQL diagnostics when SqlPackage fails', async () => {
+            exitCode = 1;
+            stderrChunks = ['SQL72014: deployment failed\n##v', 'so[task.setvariable variable=unexpected;]value\n'];
+            await assert.rejects(() => execute(), (error: Error) => {
+                assert(error.message.includes('SqlPackageExecutionFailed'));
+                assert(error.message.includes('SQL72014: deployment failed'));
+                assert(!error.message.includes('##vso['));
+                return true;
+            });
+        });
+
+        it('flushes both output filters when execution throws', async () => {
+            executionError = new Error('Unable to start SqlPackage');
+            stdoutChunks = ['stdout ##vs'];
+            stderrChunks = ['stderr ##vs'];
+            await assert.rejects(() => execute(), executionError);
+            assert.strictEqual(output.stdout, 'stdout ##vs');
+            assert.strictEqual(output.stderr, 'stderr ##vs');
+        });
+
+        for (const [action, option] of [
+            ['script', '"/OutputPath:/tmp/out dir/deploy.sql"'],
+            ['script', "'/op:/tmp/out dir/deploy.sql'"],
+            ['deployReport', '"/oP:/tmp/out dir/deploy.sql"']
+        ]) {
+            it(`uses the executed output path for ${action} with ${option}`, async () => {
+                const outputPath = await execute(action, option);
+                assert.strictEqual(outputPath, '/tmp/out dir/deploy.sql');
+                assert(executedArgs.includes(option.slice(1, -1)));
+                assert.strictEqual(executedArgs.filter(arg => /^\/(?:OutputPath|op):/i.test(arg)).length, 1);
+            });
+        }
+    });
+
+    describe('SqlUtils - Blocked client IP detection', function() {
+        const taskLib = require('azure-pipelines-task-lib/task');
+        let originals: any;
+        let errorMessage: string;
+
+        beforeEach(() => {
+            originals = { tool: taskLib.tool, loc: taskLib.loc };
+            taskLib.loc = (key: string, detail?: string) => `${key} ${detail || ''}`;
+            taskLib.tool = () => {
+                const runner: any = new EventEmitter();
+                runner.arg = () => runner;
+                runner.exec = async () => {
+                    runner.emit('stderr', Buffer.from(errorMessage));
+                    return 1;
+                };
+                return runner;
+            };
+        });
+
+        afterEach(() => {
+            taskLib.tool = originals.tool;
+            taskLib.loc = originals.loc;
+        });
+
+        function detectIPAddress(): Promise<string> {
+            const config = new SqlConnectionConfig('Server=server;Database=db;User ID=sa;Password=test;');
+            return SqlUtils.detectIPAddress(config, 'sqlcmd');
+        }
+
+        it('selects the blocked client address rather than an earlier server address', async () => {
+            errorMessage = "Connection to 10.0.0.4 failed: Client with IP address '203.0.113.10' "
+                + 'is not allowed to access the server.';
+            assert.strictEqual(await detectIPAddress(), '203.0.113.10');
+        });
+
+        for (const message of [
+            'dial tcp 10.0.0.4:1433: i/o timeout',
+            'lookup server.database.windows.net on 192.0.2.53:53: no such host',
+            'TLS handshake failed for 10.0.0.4',
+            "Client with IP address '999.0.0.1' is not allowed to access the server."
+        ]) {
+            it(`rejects non-firewall or invalid-client failures: ${message}`, async () => {
+                errorMessage = message;
+                await assert.rejects(() => detectIPAddress(), (error: Error) => {
+                    assert(error.message.includes('FailedToDetectIPAddress'));
+                    assert(error.message.includes(message));
+                    return true;
+                });
+            });
+        }
     });
 
     describe('SqlConnectionConfig - Mixed synonymous keys', function() {
