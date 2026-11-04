@@ -30,7 +30,6 @@ interface FtpOptions {
     customCmds: string[];
 }
 
-
 class ProgressTracker {
     progressFilesUploaded: number = 0;
     progressDirectoriesProcessed: number = 0;

@@ -210,6 +210,30 @@ async function newRun() {
         }
     }
 
+    // Identify the files to copy
+    const filesToCopy = getFilesToCopy(sourceFolder, contents);
+
+    // Copy files to remote machine
+    if (filesToCopy.length === 0) {
+        if (failOnEmptySource) {
+            tl.setResult(tl.TaskResult.Failed, tl.loc('NothingToCopy'));
+            return;
+        } else {
+            tl.warning(tl.loc('NothingToCopy'));
+            return;
+        }
+    }
+
+    let preparedFiles: string[][];
+    try {
+        preparedFiles = utils.prepareFiles(filesToCopy, sourceFolder, targetFolder, flattenFolders);
+    } catch (error) {
+        tl.setResult(tl.TaskResult.Failed, error instanceof Error ? error.message : String(error));
+        tl.debug('Closing the client connection');
+        await sshHelper.closeConnection();
+        return;
+    }
+
     // If the contents were parsed into an array and the first element was set as default "**",
     // then upload the entire directory
     // If the flattedFolders option is set to true, we should bypass this step.
@@ -228,22 +252,6 @@ async function newRun() {
         await sshHelper.closeConnection();
         return;
     }
-
-    // Identify the files to copy
-    const filesToCopy = getFilesToCopy(sourceFolder, contents);
-
-    // Copy files to remote machine
-    if (filesToCopy.length === 0) {
-        if (failOnEmptySource) {
-            tl.setResult(tl.TaskResult.Failed, tl.loc('NothingToCopy'));
-            return;
-        } else {
-            tl.warning(tl.loc('NothingToCopy'));
-            return;
-        }
-    }
-
-    const preparedFiles = utils.prepareFiles(filesToCopy, sourceFolder, targetFolder, flattenFolders);
 
     tl.debug(`Number of files to copy = ${preparedFiles.length}`);
     tl.debug(`filesToCopy = ${preparedFiles}`);

@@ -51,7 +51,7 @@ export function run() {
         });
 
         it('Should reject a file name with backslashes that would resolve outside the target folder', function (done: MochaDone) {
-            // Legal on Linux/Mac: a single filename containing literal backslashes (MSRC 160107).
+            // Legal on Linux/Mac: a single filename containing literal backslashes.
             const maliciousFile = './example/..\\..\\protected\\victim.txt';
 
             assert.throws(
