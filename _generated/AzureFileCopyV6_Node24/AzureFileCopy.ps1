@@ -114,6 +114,7 @@ $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
 $script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
+$script:azCopySpnDirectAuthFixEnabled = Get-AzCopySpnDirectAuthFeatureFlag
 
 CleanUp-PSModulePathForHostedAgent
 

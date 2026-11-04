@@ -51,10 +51,10 @@ function Get-SanitizerActivateStatus {
 # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
 function Get-SourcePathHardeningFeatureFlag {
     try {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening') -eq $true
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop) -eq $true
     }
     catch {
-        Write-Verbose 'Failed to read the AzureFileCopy.EnableSourcePathHardening feature flag. Defaulting to disabled.'
+        Write-Warning 'Failed to read the AzureFileCopy.EnableSourcePathHardening feature flag. Defaulting to disabled.'
         return $false
     }
 }

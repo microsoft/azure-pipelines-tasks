@@ -262,11 +262,11 @@ function Get-ConsoleOutputSanitizationFeatureFlag
     # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
     try
     {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled') -eq $true
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
     }
     catch
     {
-        Write-Verbose 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
+        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
         return $false
     }
 }

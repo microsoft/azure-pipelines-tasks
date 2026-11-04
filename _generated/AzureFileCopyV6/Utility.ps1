@@ -175,6 +175,7 @@ function ConvertTo-Pfx {
 }
 
 $script:consoleOutputSanitizationFixEnabled = $false
+$script:azCopySpnDirectAuthFixEnabled = $false
 
 function Get-ConsoleOutputSanitizationFeatureFlag
 {
@@ -183,11 +184,11 @@ function Get-ConsoleOutputSanitizationFeatureFlag
     # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
     try
     {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled') -eq $true
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
     }
     catch
     {
-        Write-Verbose 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
+        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
         return $false
     }
 }
@@ -218,11 +219,11 @@ function Get-AzCopySpnDirectAuthFeatureFlag
     # required.
     try
     {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.AzCopySpnDirectAuthFixEnabled') -eq $true
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.AzCopySpnDirectAuthFixEnabled' -ErrorAction Stop) -eq $true
     }
     catch
     {
-        Write-Verbose 'Failed to read the AzureFileCopy.AzCopySpnDirectAuthFixEnabled feature flag. Defaulting to disabled.'
+        Write-Warning 'Failed to read the AzureFileCopy.AzCopySpnDirectAuthFixEnabled feature flag. Defaulting to disabled.'
         return $false
     }
 }
@@ -257,7 +258,7 @@ function Upload-FilesToAzureContainer
 
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
-                $azCopySpnDirectAuthFixEnabled = Get-AzCopySpnDirectAuthFeatureFlag
+                $azCopySpnDirectAuthFixEnabled = $script:azCopySpnDirectAuthFixEnabled
 
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                     $pemFileContent = $endPoint.Auth.Parameters.ServicePrincipalCertificate
@@ -1116,11 +1117,11 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     try
     {
-        $disableTargetPathHardening = (Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening') -eq $true
+        $disableTargetPathHardening = (Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening' -ErrorAction Stop) -eq $true
     }
     catch
     {
-        Write-Verbose 'Failed to read the AzureFileCopyV6.DisableTargetPathHardening feature flag. Defaulting to disabled.'
+        Write-Warning 'Failed to read the AzureFileCopyV6.DisableTargetPathHardening feature flag. Defaulting to disabled.'
         $disableTargetPathHardening = $false
     }
     if (-not $disableTargetPathHardening)
