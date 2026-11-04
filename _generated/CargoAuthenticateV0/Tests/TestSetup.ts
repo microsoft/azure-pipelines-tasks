@@ -113,8 +113,11 @@ const configFileExists = process.env['__configFileExists__'] !== 'false';
 
 tr.registerMock('fs', {
     readFileSync: function(filePath: string, encoding: string) {
-        console.log(`Mock fs.readFileSync: ${filePath}`);
+        console.log(`Mock fs.readFileSync received original config path: ${filePath === configFilePath}`);
         if (filePath === configFilePath && configFileExists) {
+            if (process.env['__configFileReadError__'] === 'true') {
+                throw new Error(`Unable to read config file: ${filePath}`);
+            }
             return mockConfigContent;
         }
         throw new Error(`File not found: ${filePath}`);
