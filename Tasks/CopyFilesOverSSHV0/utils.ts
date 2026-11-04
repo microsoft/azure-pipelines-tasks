@@ -58,7 +58,7 @@ function isUnderRoot(normalizedRoot: string, candidate: string): boolean {
         return true;
     }
 
-    if (normalizedRoot === ".") {
+    if (normalizedRoot === "." || normalizedRoot === "./") {
         return candidate !== ".." && !candidate.startsWith("../");
     }
 
