@@ -47,7 +47,9 @@ describe('AzureCLIV1 Suite', function () {
         }
 
         assert(tr.succeeded, 'task should have succeeded');
-        const certPath = path.join(tempDir, 'spnCert.pem');
+        const certPath = path.join(tempDir, '.azclitask-credentials-mocked', 'spnCert.pem');
+        assert(tr.stdout.includes('isolated certificate created'), 'should create the isolated certificate');
+        assert(tr.stdout.includes('isolated certificate removed'), 'should clean up the isolated certificate directory');
         assert(tr.ran(`az login --service-principal -u "spId" --password="${certPath}" --tenant "tenantId"`), 'should login using service principal certificate');
     });
 
