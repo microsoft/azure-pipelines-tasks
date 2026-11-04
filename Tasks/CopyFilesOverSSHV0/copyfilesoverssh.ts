@@ -217,9 +217,13 @@ async function newRun() {
     if (filesToCopy.length === 0) {
         if (failOnEmptySource) {
             tl.setResult(tl.TaskResult.Failed, tl.loc('NothingToCopy'));
+            tl.debug('Closing the client connection');
+            await sshHelper.closeConnection();
             return;
         } else {
             tl.warning(tl.loc('NothingToCopy'));
+            tl.debug('Closing the client connection');
+            await sshHelper.closeConnection();
             return;
         }
     }

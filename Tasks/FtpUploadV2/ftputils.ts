@@ -10,7 +10,7 @@ function isUnderRoot(normalizedRoot: string, candidate: string): boolean {
         return true;
     }
 
-    if (normalizedRoot === ".") {
+    if (normalizedRoot === "." || normalizedRoot === "./") {
         return candidate !== ".." && !candidate.startsWith("../");
     }
 
@@ -35,8 +35,9 @@ export function resolveRemoteFilePath(remotePath: string, relativePath: string):
         throw new Error(tl.loc("RemoteFileContainsBackslash", relativePath));
     }
 
+    const posixRelativePath: string = process.platform === "win32" ? relativePath.replace(/\\/g, "/") : relativePath;
     const normalizedRemotePath: string = path.posix.normalize(remotePath);
-    const remoteFile: string = path.posix.join(remotePath, relativePath);
+    const remoteFile: string = path.posix.join(remotePath, posixRelativePath);
 
     if (!isUnderRoot(normalizedRemotePath, remoteFile)) {
         throw new Error(tl.loc("RemoteFileEscapesRemotePath", relativePath, remotePath));
