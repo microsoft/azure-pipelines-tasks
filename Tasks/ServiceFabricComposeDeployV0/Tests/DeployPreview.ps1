@@ -2,6 +2,7 @@
 param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+Register-Mock Get-VstsTaskVariable { $false } -- -Name 'DistributedTask.Tasks.EnableVsoCommandBlockingRMTasks' -AsBool
 
 $serviceConnectionName = "random connection name"
 $composeFilePath = "docker-compose.yml"
