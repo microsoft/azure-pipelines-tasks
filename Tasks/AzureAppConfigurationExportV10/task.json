@@ -9,8 +9,8 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 10,
-        "Minor": 283,
-        "Patch": 0
+        "Minor": 282,
+        "Patch": 1
     },
     "instanceNameFormat": "Azure App Configuration",
     "minimumAgentVersion": "2.144.0",
@@ -153,6 +153,7 @@
         "InvalidAppConfigurationEndpoint": "Invalid App Configuration endpoint %s. Please provide a valid App Configuration endpoint.",
         "SecretUrlCannotBeEmpty": "Secret url cannot be empty",
         "InvalidSecretUrl": "Invalid secret Url",
+        "InvalidCredentialScope": "The requested token scope does not match the configured service audience.",
         "AzureAppConfigurationTaskIsStartingUp": "Azure App Configuration Export Task is starting up...",
         "AzureSubscriptionTitle": "Azure Subscription:",
         "AppConfigurationEndpointTitle": "App Configuration Endpoint:",
