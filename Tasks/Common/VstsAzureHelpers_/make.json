@@ -153,9 +153,9 @@
         ],
         "archivePackages": [
             {
-                "archiveName": "openssl_new3.4.2.zip",
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.4.2/M262/openssl.zip",
-                "dest": "./opensslv3.4.2"
+                "archiveName": "openssl_new3.5.9.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/openssl/3.5.9/M282/openssl.zip",
+                "dest": "./opensslv3.5.9"
             },
             {
                 "archiveName": "openssl_new3.5.8.zip",
