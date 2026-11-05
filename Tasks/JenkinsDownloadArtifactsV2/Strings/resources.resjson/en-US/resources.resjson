@@ -130,5 +130,6 @@
   "loc.messages.NoAssociatedArtifacts": "No associated artifacts found",
   "loc.messages.OperationFailed": "Failed in %s with error: %s",
   "loc.messages.RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
-  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+  "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+  "loc.messages.ZipEntryOutsideTargetDirectory": "Archive entry '%s' resolves outside of the target directory."
 }

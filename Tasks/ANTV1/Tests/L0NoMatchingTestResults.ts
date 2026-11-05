@@ -8,7 +8,7 @@ let runner: TaskMockRunner = new TaskMockRunner(taskPath);
 runner.setInput('antBuildFile', '/build/build.xml'); // Make that checkPath returns true for this filename in the response file
 runner.setInput('javaHomeSelection', 'JDKVersion');
 runner.setInput('jdkVersion', 'default');
-runner.setInput('testResultsFiles', '**/InvalidTestFilter-*.xml');
+runner.setInput('testResultsFiles', process.env['ANT_TEST_RESULTS_PATTERN'] || '**/InvalidTestFilter-*.xml');
 runner.setInput('publishJUnitResults', 'true');
 runner.setInput('codeCoverageTool', 'None');
 
