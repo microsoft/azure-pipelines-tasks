@@ -194,17 +194,20 @@ describe('MicrosoftSqlDeployment Suite', function () {
         let stdoutChunks: string[];
         let stderrChunks: string[];
         let executedArgs: string[];
+        let loggedMessages: string[];
         let exitCode: number;
         let executionError: Error;
 
         beforeEach(() => {
             originals = {
                 exec: taskLib.exec, loc: taskLib.loc, existsSync: fileSystem.existsSync,
-                createExternalOutputStream: taskLib.createExternalOutputStream
+                createExternalOutputStream: taskLib.createExternalOutputStream, log: console.log
             };
             output = { stdout: '', stderr: '' };
             stdoutChunks = [];
             stderrChunks = [];
+            loggedMessages = [];
+            console.log = (message: string) => { loggedMessages.push(message); };
             exitCode = 0;
             executionError = undefined;
             taskLib.loc = (key: string) => key;
@@ -236,6 +239,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
             taskLib.loc = originals.loc;
             taskLib.createExternalOutputStream = originals.createExternalOutputStream;
             fileSystem.existsSync = originals.existsSync;
+            console.log = originals.log;
         });
 
         function execute(action = 'publish', additionalArguments?: string): Promise<string | undefined> {
@@ -285,6 +289,7 @@ describe('MicrosoftSqlDeployment Suite', function () {
             it(`uses the executed output path for ${action} with ${option}`, async () => {
                 const outputPath = await execute(action, option);
                 assert.strictEqual(outputPath, '/tmp/out dir/deploy.sql');
+                assert.deepStrictEqual(loggedMessages, [`##vso[task.uploadfile]${outputPath}`]);
                 assert(executedArgs.includes(option.slice(1, -1)));
                 assert.strictEqual(executedArgs.filter(arg => /^\/(?:OutputPath|op):/i.test(arg)).length, 1);
             });
