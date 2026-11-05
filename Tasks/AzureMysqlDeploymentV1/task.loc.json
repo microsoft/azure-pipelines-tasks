@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -226,6 +226,7 @@
     "AzureMysqlTaskParameterCannotBeEmpty": "ms-resource:loc.messages.AzureMysqlTaskParameterCannotBeEmpty",
     "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
     "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
+    "InvalidSqlFilePath": "ms-resource:loc.messages.InvalidSqlFilePath",
     "AzureEndpointCannotBeNull": "ms-resource:loc.messages.AzureEndpointCannotBeNull",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",

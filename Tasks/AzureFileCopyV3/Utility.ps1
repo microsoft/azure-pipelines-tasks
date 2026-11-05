@@ -949,8 +949,22 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
+    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.DisableTargetPathHardening'
+    if (-not $disableTargetPathHardening)
+    {
+        # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
+        $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+        $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+        $escapedContainerSasToken = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerSasToken)
+        $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+        $escapedAzCopyToolFileNamesString = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($azCopyToolFileNamesString)
+        $escapedAzCopyToolFileContentsString = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($azCopyToolFileContentsString)
+        $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -containerSasToken '$escapedContainerSasToken' -additionalArguments '$escapedAdditionalArguments' -azCopyToolFileNamesString '$escapedAzCopyToolFileNamesString' -azCopyToolFileContentsString '$escapedAzCopyToolFileContentsString'"
+    }
+    else
+    {
+        $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString' -disableTargetPathHardening"
+    }
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -966,10 +980,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
+    }
+
+    # Rollback preserves the original parser dependency: only SourcePath parsing needs it.
+    if (!$disableTargetPathHardening -or $useSourcePathHardening)
+    {
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
         if(!$splitAdditionalArgumentsFunctionInfo)
         {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
         }
         $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
