@@ -1,8 +1,12 @@
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as crypto from 'crypto';
 
 const area: string = 'TestExecution';
 const feature: string = 'PublishTestResultsTask';
 const consolidatedCiData: { [key: string]: any; } = <{ [key: string]: any; }>{};
+const invocationId: string = crypto.randomBytes(16).toString('hex');
+const startTime = process.hrtime();
+let sequence: number = 0;
 
 function getDefaultProps() {
     return {
@@ -10,12 +14,32 @@ function getDefaultProps() {
         releaseid: tl.getVariable('Release.ReleaseId'),
         builduri: tl.getVariable('Build.BuildUri'),
         buildid: tl.getVariable('Build.Buildid'),
-        osType: tl.osType()
+        osType: tl.osType(),
+        planId: tl.getVariable('System.PlanId'),
+        jobId: tl.getVariable('System.JobId'),
+        taskInstanceId: tl.getVariable('System.TaskInstanceId'),
+        invocationId,
+        nodeVersion: process.version
     };
 }
 
 export function addToConsolidatedCi(key: string, value: any) {
     consolidatedCiData[key] = value;
+}
+
+export function publishStage(stage: string, properties: { [key: string]: any } = {}): void {
+    const elapsed = process.hrtime(startTime);
+    const elapsedTimeMs = Math.round(elapsed[0] * 1000 + elapsed[1] / 1000000);
+    const previousStage = consolidatedCiData.lastStage;
+    consolidatedCiData.previousStage = previousStage;
+    consolidatedCiData.lastStage = stage;
+    consolidatedCiData.elapsedTimeMs = elapsedTimeMs;
+    publishEvent('publishTestResultsTaskStageEvent', Object.assign({}, properties, {
+        stage,
+        previousStage,
+        sequence: ++sequence,
+        elapsedTimeMs
+    }));
 }
 
 export function fireConsolidatedCi() {

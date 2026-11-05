@@ -55,6 +55,7 @@ function publish(testRunner, resultFiles, mergeResults, failTaskOnFailedTests, p
     }
     properties['testRunSystem'] = testRunSystem;
 
+    ci.publishStage('ResultsPublishCommandRequested');
     tl.command('results.publish', properties, '');
 }
 
@@ -108,6 +109,7 @@ function getDotNetVersion() {
 
 async function run() {
     try {
+        ci.publishStage('TaskStarted');
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
         const testRunner = tl.getInput('testRunner', true);
@@ -123,6 +125,7 @@ async function run() {
         const allowPtrToDetectTestRunRetryFiles = parseBooleanVariable(tl.getVariable('allowPtrToDetectTestRunRetryFiles'));
         let searchFolder = tl.getInput('searchFolder');
 
+        ci.publishStage('InputsRead');
         tl.debug('testRunner: ' + testRunner);
         tl.debug('testResultsFiles: ' + testResultsFiles);
         tl.debug('mergeResults: ' + mergeResults);
@@ -151,10 +154,12 @@ async function run() {
             followSymbolicLinks: true
         }; 
 
+        ci.publishStage('FindingResultFiles');
         const matchingTestResultsFiles = tl.findMatch(searchFolder, testResultsFiles, findOptions);
 
         const testResultsFilesCount = matchingTestResultsFiles ? matchingTestResultsFiles.length : 0;
 
+        ci.publishStage('ResultFilesFound', { testResultsFilesCount });
         tl.debug(`Detected ${testResultsFilesCount} test result files`);
 
         ci.addToConsolidatedCi('testRunner', testRunner);
@@ -167,9 +172,12 @@ async function run() {
         ci.addToConsolidatedCi('failTaskOnFailureToPublishResults', failTaskOnFailureToPublishResults);
         ci.addToConsolidatedCi('allowPtrToDetectTestRunRetryFiles', allowPtrToDetectTestRunRetryFiles);
 
+        ci.publishStage('CheckingDotNetTelemetryFeatureFlag');
         if (!await isFeatureFlagEnabled('TestManagement.PublishTestResultsTask.DisableDotNetVersionTelemetry')) {
+            ci.publishStage('GettingDotNetVersion');
             const dotnetVersion = getDotNetVersion();
             ci.addToConsolidatedCi('dotnetVersion', dotnetVersion);
+            ci.publishStage('DotNetVersionRead');
         }
 
         const forceMerge = testResultsFilesCount > MERGE_THRESHOLD;
@@ -242,7 +250,9 @@ async function run() {
             }
         }
         tl.setResult(tl.TaskResult.Succeeded, '');
+        ci.publishStage('TaskCompleted');
     } catch (err) {
+        ci.publishStage('TaskException', { exceptionType: err instanceof Error ? err.name : typeof err });
         tl.setResult(tl.TaskResult.Failed, err);
     } finally {
         ci.fireConsolidatedCi();
