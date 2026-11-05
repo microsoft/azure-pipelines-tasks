@@ -60,8 +60,8 @@ class HelmRenderEngine extends RenderEngine {
         const overrideValues = [];
         overridesInput.forEach(arg => {
             const overrideInput = arg.split(':');
-            const overrideName = overrideInput[0];
-            const overrideValue = overrideInput.slice(1).join(':');
+            const overrideName = utils.escapeHelmSetToken(overrideInput[0]);
+            const overrideValue = utils.escapeHelmSetToken(overrideInput.slice(1).join(':'));
             overrideValues.push({
                 name: overrideName,
                 value: overrideValue

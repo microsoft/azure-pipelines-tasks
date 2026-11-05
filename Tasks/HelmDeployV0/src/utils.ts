@@ -124,3 +124,14 @@ export function replaceNewlinesWithCommas(overrideValues: string): string {
     const keyValuePairs = overrideValues.split("\n").filter(pair => pair);
     return keyValuePairs.join(",");
 }
+
+// Builds the --set arguments as discrete argv entries so the value is never re-tokenized on whitespace. Enabling the HelmDeploy.DisableStrictSetArguments pipeline feature restores the legacy behavior.
+export function addOverrideValuesArguments(helmCli: any, overrideValues: string): void {
+    if (!tl.getPipelineFeature('HelmDeploy.DisableStrictSetArguments')) {
+        const value = overrideValues.split(/\r?\n/).filter(pair => pair).join(',').replace(/"/g, '');
+        helmCli.addSingleArgument('--set');
+        helmCli.addSingleArgument(value);
+    } else {
+        helmCli.addArgument('--set '.concat(replaceNewlinesWithCommas(overrideValues)));
+    }
+}

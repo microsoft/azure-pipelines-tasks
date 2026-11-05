@@ -55,7 +55,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (overrideValues) {
-        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
+        helmutil.addOverrideValuesArguments(helmCli, overrideValues);
     }
 
     if (waitForExecution) {
