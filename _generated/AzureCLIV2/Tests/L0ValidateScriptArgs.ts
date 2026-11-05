@@ -59,7 +59,7 @@ export const runValidateScriptArgsTests = () => {
         const env = [
             'AZP_75787_ENABLE_NEW_LOGIC=true',
             'AZP_75787_ENABLE_COLLECT=true',
-            'AZP_ENABLE_AST_PROBE_DIAGNOSTICS=true',
+            'DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS=true',
             'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true',
             'AGENT_VERSION=2.999.0'
         ];
@@ -134,9 +134,9 @@ export const runValidateScriptArgsTests = () => {
         for (const value of ['false', undefined]) {
             it(`preserves the existing timeout rejection and telemetry when diagnostics are ${value ?? 'unset'}`, () => {
                 if (value === undefined) {
-                    delete process.env.AZP_ENABLE_AST_PROBE_DIAGNOSTICS;
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
                 } else {
-                    process.env.AZP_ENABLE_AST_PROBE_DIAGNOSTICS = value;
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
                 }
                 mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
                 assert.throws(
@@ -154,9 +154,9 @@ export const runValidateScriptArgsTests = () => {
 
             it(`does not report probe diagnostics through a supplied callback when the flag is ${value ?? 'unset'}`, () => {
                 if (value === undefined) {
-                    delete process.env.AZP_ENABLE_AST_PROBE_DIAGNOSTICS;
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
                 } else {
-                    process.env.AZP_ENABLE_AST_PROBE_DIAGNOSTICS = value;
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
                 }
                 mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
                 let reported = false;

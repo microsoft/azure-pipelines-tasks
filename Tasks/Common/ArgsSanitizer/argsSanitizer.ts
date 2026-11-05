@@ -125,7 +125,7 @@ export function isPowerShellArgumentAstSafe(
         'if ($commands.Count -gt 1) { exit 4 }'
     ].join('; ');
     const timeoutMs = 10000;
-    const isAstProbeDiagnosticsEnabled = !!report && tl.getBoolFeatureFlag('AZP_ENABLE_AST_PROBE_DIAGNOSTICS');
+    const isAstProbeDiagnosticsEnabled = !!report && tl.getPipelineFeature('AzpEnableAstProbeDiagnostics');
     const started = isAstProbeDiagnosticsEnabled ? process.hrtime() : undefined;
     const result = spawnSync(psExe, ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', validator], {
         input: inputArguments,
@@ -565,7 +565,7 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
         : undefined;
     // Requires AZP_75787_ENABLE_NEW_LOGIC and DistributedTask.Tasks.EnableScriptArgumentsExpressionValidation;
     // this flag controls diagnostics only, not whether validation runs.
-    const isAstProbeDiagnosticsEnabled = tl.getBoolFeatureFlag('AZP_ENABLE_AST_PROBE_DIAGNOSTICS');
+    const isAstProbeDiagnosticsEnabled = tl.getPipelineFeature('AzpEnableAstProbeDiagnostics');
     let astDiagnostics: AstProbeDiagnostics | undefined;
     const reportAstProbe = isAstProbeDiagnosticsEnabled
         ? (diagnostics: AstProbeDiagnostics): void => {
