@@ -10,6 +10,7 @@ tr.setInput('containerregistrytype', process.env["__container_type__"] || 'Conta
 tr.setInput('action', process.env["__command__"] || 'Build services');
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
 tr.setInput('dockerComposeFile', process.env["__composeFilePath__"] ||'/tmp/tempdir/100/docker-compose.yml');
+tr.setInput('nopIfNoDockerComposeFile', process.env["__nopIfNoDockerComposeFile__"] || "false");
 tr.setInput('customCommand', "pull test/test:2");
 tr.setInput('includeLatestTag', process.env["__includeLatestTag__"] || "false");
 tr.setInput('qualifyImageNames', process.env["__qualifyImageNames__"] || "false");

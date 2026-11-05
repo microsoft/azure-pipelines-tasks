@@ -17,9 +17,30 @@ describe('Docker Compose Suite', function() {
         delete process.env["__qualifyImageNames__"];
         delete process.env["__additionalDockerComposeFiles__"];
         delete process.env["__composeFilePath__"];
+        delete process.env["__nopIfNoDockerComposeFile__"];
         delete process.env["__dockerComposeCommand__"];
         delete process.env["__arguments__"];
         delete process.env["__dockerComposePath__"];
+    });
+
+    [
+        { name: 'ordinary text', value: 'missing-compose.yml', expected: 'missing-compose.yml' },
+        { name: 'LF separators', value: 'missing-compose.yml\n##vso[example]value', expected: 'missing-compose.yml\n#vso[example]value' },
+        { name: 'CRLF separators', value: 'missing-compose.yml\r\n##vso[example]value', expected: 'missing-compose.yml\r\n#vso[example]value' }
+    ].forEach(testCase => {
+        it(`Formats the optional missing-file diagnostic with ${testCase.name}`, async () => {
+            const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
+            const tr = new ttm.MockTestRunner(path.join(__dirname, runner));
+            process.env["__nopIfNoDockerComposeFile__"] = "true";
+            process.env["__composeFilePath__"] = testCase.value;
+
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'the optional missing file should not fail the task');
+            assert.strictEqual(tr.invokedToolCount, 0, 'the optional missing file should not invoke a tool');
+            assert(tr.stdout.indexOf(`No Docker Compose file matching ${testCase.expected} was found.`) !== -1,
+                'the diagnostic should retain the expected file-path text');
+        });
     });
 
     if (tl.getPlatform() === tl.Platform.Windows) {

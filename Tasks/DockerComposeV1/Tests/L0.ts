@@ -23,6 +23,26 @@ describe('Docker Compose Suite', function() {
         delete process.env["__dockerComposePath__"];
     });
 
+    [
+        { name: 'ordinary text', value: 'missing-compose.yml', expected: 'missing-compose.yml' },
+        { name: 'LF separators', value: 'missing-compose.yml\n##vso[example]value', expected: 'missing-compose.yml\n#vso[example]value' },
+        { name: 'CRLF separators', value: 'missing-compose.yml\r\n##vso[example]value', expected: 'missing-compose.yml\r\n#vso[example]value' }
+    ].forEach(testCase => {
+        it(`Formats the optional missing-file diagnostic with ${testCase.name}`, async () => {
+            const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
+            const tr = new ttm.MockTestRunner(path.join(__dirname, runner));
+            process.env["__nopIfNoDockerComposeFile__"] = "true";
+            process.env["__composeFilePath__"] = testCase.value;
+
+            await tr.runAsync();
+
+            assert(tr.succeeded, 'the optional missing file should not fail the task');
+            assert.strictEqual(tr.invokedToolCount, 0, 'the optional missing file should not invoke a tool');
+            assert(tr.stdout.indexOf(`No Docker Compose file matching ${testCase.expected} was found.`) !== -1,
+                'the diagnostic should retain the expected file-path text');
+        });
+    });
+
     if (tl.getPlatform() === tl.Platform.Windows) {
         it('Runs successfully for windows docker compose service build', async () => {
             let tp = path.join(__dirname, 'L0Windows.js');
@@ -84,23 +104,6 @@ describe('Docker Compose Suite', function() {
                 "compose config stderr should still be reported as an error issue");
             assert(tr.errorIssues.every(issue => issue.indexOf("##vso[") == -1),
                 "no error issue should carry an unneutralized ##vso[ marker");
-        });
-
-        it('Neutralizes ##vso[ commands in the nopIfNoDockerComposeFile diagnostic message', async () => {
-            let tp = path.join(__dirname, 'L0Windows.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env["__command__"] = "Build services";
-            process.env["__nopIfNoDockerComposeFile__"] = "true";
-            process.env["__composeFilePath__"] = "F:\\dir2\\missing.yml\n##vso[task.setvariable variable=INJECTED]yes";
-
-            await tr.runAsync();
-
-            assert(tr.succeeded, 'task should succeed (nop path)');
-            assert(tr.invokedToolCount == 0, 'no tools should be invoked on the nop path');
-            assert(tr.stdout.indexOf("##vso[task.setvariable") == -1,
-                "##vso[ markers in the compose file path must be neutralized in the nop diagnostic");
-            assert(tr.stdout.indexOf("#vso[task.setvariable variable=INJECTED]yes") != -1,
-                "sanitized marker (single #) should still appear so the path stays readable");
         });
 
         it('Runs successfully for windows docker compose push service', async () => {
@@ -286,23 +289,6 @@ describe('Docker Compose Suite', function() {
                 "compose config stderr should still be reported as an error issue");
             assert(tr.errorIssues.every(issue => issue.indexOf("##vso[") == -1),
                 "no error issue should carry an unneutralized ##vso[ marker");
-        });
-
-        it('Neutralizes ##vso[ commands in the nopIfNoDockerComposeFile diagnostic message', async () => {
-            let tp = path.join(__dirname, 'L0Linux.js');
-            let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-            process.env["__command__"] = "Build services";
-            process.env["__nopIfNoDockerComposeFile__"] = "true";
-            process.env["__composeFilePath__"] = "/tmp/tempdir/100/missing.yml\n##vso[task.setvariable variable=INJECTED]yes";
-
-            await tr.runAsync();
-
-            assert(tr.succeeded, 'task should succeed (nop path)');
-            assert(tr.invokedToolCount == 0, 'no tools should be invoked on the nop path');
-            assert(tr.stdout.indexOf("##vso[task.setvariable") == -1,
-                "##vso[ markers in the compose file path must be neutralized in the nop diagnostic");
-            assert(tr.stdout.indexOf("#vso[task.setvariable variable=INJECTED]yes") != -1,
-                "sanitized marker (single #) should still appear so the path stays readable");
         });
 
         it('Runs successfully for linux docker compose push service', async () => {
