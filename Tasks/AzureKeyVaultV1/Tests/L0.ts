@@ -112,27 +112,20 @@ describe('Azure Key Vault', function () {
         }
     });
 
-    // MSRC case 169467: trySetSecret() prints "##vso[task.setsecret]" + fragment via a raw
-    // console.log call that bypasses azure-pipelines-task-lib's command formatter (which normally
-    // escapes CR/LF as %0D/%0A). A secret containing a literal LF (entering the multi-line/masking
-    // branch) whose LF-delimited fragment still contains a bare CR right before a "##vso[" prefix
-    // gets printed with that CR intact. The real agent's StreamReader.ReadLine() treats CR, LF, or
-    // CRLF all as line terminators, so it splits that single printed line into two, exposing the
-    // "##vso[...]" suffix as its own, attacker-controlled agent command line.
+    // MSRC case 169467: trySetSecret() prints "##vso[task.setsecret]" via a raw console.log that
+    // bypasses task-lib's CR/LF-escaping command formatter. A bare CR right before a "##vso["
+    // prefix survives into the printed line, and the agent's CR/LF/CRLF-aware line reader splits
+    // it into a second, forged command.
     const forgedCommandLinePrefix = "##vso[task.setvariable variable=BASH_ENV]";
 
-    // The mock test runner spawns the task as a child process; on Windows its captured stdout
-    // uses "\r\n" for ordinary line endings (azure-pipelines-task-lib's own mock-test.js performs
-    // the same normalization internally before tracing output). Collapsing only exact "\r\n"
-    // pairs strips that harness artifact while leaving any genuine bare CR (not followed by LF) -
-    // i.e. exactly the pattern these tests are checking for - untouched.
+    // The mock runner's captured stdout uses "\r\n" line endings on Windows; collapse only exact
+    // "\r\n" pairs so a genuine bare CR (what these tests check for) is left untouched.
     function getRawLines(stdout: string): string[] {
         return stdout.replace(/\r\n/g, '\n').split('\n');
     }
 
-    // Reverses azure-pipelines-task-lib's command escaping (escapedata() in taskcommand.ts) so a
-    // captured ##vso[task.setvariable ...]<value> line can be compared against the original,
-    // un-escaped secret value.
+    // Reverses task-lib's command escaping (escapedata() in taskcommand.ts) to recover the
+    // original secret value from a captured ##vso[task.setvariable ...]<value> line.
     function unescapeCommandValue(value: string): string {
         return value.replace(/%0D/g, '\r').replace(/%0A/g, '\n').replace(/%AZP25/g, '%');
     }
@@ -166,10 +159,8 @@ describe('Azure Key Vault', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
 
-            // Raw per-call lines (Windows CRLF artifacts normalized away, see getRawLines) - this
-            // is what actually got printed, *before* simulating the agent's CR/LF/CRLF
-            // re-splitting below. A masking line must never contain a raw CR here, otherwise the
-            // agent's real line reader (which the next assertion simulates) could still split it.
+            // Must check the raw (pre-split) output - after splitting on CR/LF, no line could
+            // ever contain a CR, so that check alone couldn't catch a regression.
             const rawLines = getRawLines(tr.stdout);
             const maskingLines = rawLines.filter((line: string) => line.startsWith("##vso[task.setsecret]"));
             assert(maskingLines.length > 0, "Expected ##vso[task.setsecret] masking line(s) to be emitted");

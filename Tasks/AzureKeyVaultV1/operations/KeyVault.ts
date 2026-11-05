@@ -184,8 +184,8 @@ export class KeyVault {
             return;
         }
 
-        // Feature-flag gated fix: a secret containing a bare CR (no LF) is re-split by the agent's
-        // line reader into a second, attacker-controlled ##vso command (MSRC case 169467).
+        // Feature-flag gated fix for MSRC case 169467 (a bare CR with no LF gets re-split by the
+        // agent's line reader into a forged ##vso command).
         const fixCrLfSecretMaskingEnabled: boolean = tl.getPipelineFeature("AzureKeyVaultV1CrLfSecretMaskingFixEnabled");
 
         // Support multiple stages using different key vaults with the same secret name but with different version identifiers
@@ -198,19 +198,16 @@ export class KeyVault {
             return;
         }
 
-        // Whether to flatten JSON / treat the value as truly multi-line is intentionally decided
-        // using only the original LF check, so a CR-only value's stored variable value and
-        // JSON-flattening behavior stay byte-for-byte identical to flag-off/master. The fix below
-        // only changes whether such a value *also* gets routed through per-fragment masking.
+        // isMultiline intentionally ignores the flag: JSON-flattening/stored-value handling must
+        // stay identical to flag-off/master even when the fix is on (see PR review - routing a
+        // CR-only value through flattening would silently alter its stored value).
         const isMultiline = secretValue.indexOf('\n') >= 0;
 
-        // When the fix is enabled, a bare CR (with no LF) must also be masked like a multi-line
-        // secret, otherwise it never reaches trySetSecret and is emitted unmasked with the raw CR
-        // intact. This only adds masking calls - it never changes which value gets stored.
+        // A bare CR with no LF still needs per-fragment masking, otherwise it never reaches
+        // trySetSecret; this only adds masking calls, it never changes the stored value.
         const hasBareCrOnly = fixCrLfSecretMaskingEnabled && !isMultiline && secretValue.indexOf('\r') >= 0;
 
         if (!isMultiline) {
-            // single-line case (value handling unchanged regardless of the flag)
             if (hasBareCrOnly) {
                 secretValue.split(/\r\n|\r|\n/).forEach((line: string) => {
                     this.trySetSecret(secretName, line, fixCrLfSecretMaskingEnabled);
