@@ -23,6 +23,18 @@ describe('CopyFiles L0 Suite', function () {
 
     after(() => { });
 
+    it('neutralizes filenames and retry errors without changing copy paths', async () => {
+        const runner = new mocktest.MockTestRunner(path.join(__dirname, 'L0LoggingCommands.js'));
+        await runner.runAsync();
+        assert(runner.succeeded, runner.stdout + runner.stderr);
+        assert(runner.stdout.includes('file##_vso[task.setvariable variable=Injected]sentinel.txt'));
+        assert(runner.stdout.includes('retry ##_vso[task.setvariable variable=Injected]sentinel'));
+        assert(!runner.stdout.includes('retry ##vso[task.setvariable variable=Injected]sentinel'));
+        assert(runner.stdout.includes('Original paths preserved'));
+        assert(runner.stderr.includes('timestamp ##_vso[task.setvariable variable=Injected]sentinel'));
+        assert(!runner.stderr.includes('timestamp ##vso[task.setvariable variable=Injected]sentinel'));
+    });
+
     it('copy files from srcdir to destdir', (done: Mocha.Done) => {
         this.timeout(1000);
 

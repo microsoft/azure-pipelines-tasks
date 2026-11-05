@@ -1,3 +1,6 @@
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as os from 'os';
+
 /**
  * Interface for FindOptions
  * Contains properties to control whether to follow symlinks
@@ -34,7 +37,7 @@ export class RetryHelper {
                 if (attempts <= 0) {
                     throw err;
                 }
-                console.log(`Error while ${actionName}: ${err}. Remaining attempts: ${attempts}`);
+                tl.writeExternalOutput(`Error while ${actionName}: ${err}. Remaining attempts: ${attempts}` + os.EOL, { source: 'repository' });
                 await this.sleep();
             }
         }

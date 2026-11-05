@@ -259,7 +259,7 @@ async function newRun() {
         for (const foldersPath of folderStructure) {
             try {
                 await sshHelper.createRemoteDirectory(foldersPath);
-                console.log(tl.loc("FolderCreated", foldersPath));
+                tl.writeExternalOutput(tl.loc("FolderCreated", foldersPath) + os.EOL, { source: 'repository' });
             } catch (error) {
                 await sshHelper.closeConnection();
                 tl.setResult(tl.TaskResult.Failed, tl.loc('TargetNotCreated', foldersPath, error));
@@ -285,7 +285,7 @@ async function newRun() {
             filepath,
             job: async () => {
                 tl.debug(`Filepath = ${filepath}`);
-                console.log(tl.loc('StartedFileCopy', filepath, targetPath));
+                tl.writeExternalOutput(tl.loc('StartedFileCopy', filepath, targetPath) + os.EOL, { source: 'repository' });
 
                 if (!overwrite && await sshHelper.checkRemotePathExists(targetPath)) {
                     throw new Error(tl.loc('FileExists', targetPath));
@@ -436,7 +436,7 @@ async function run() {
                         targetPath = `./${targetPath}`;
                     }
 
-                    console.log(tl.loc('StartedFileCopy', fileToCopy, targetPath));
+                    tl.writeExternalOutput(tl.loc('StartedFileCopy', fileToCopy, targetPath) + os.EOL, { source: 'repository' });
                     if (!overwrite) {
                         const fileExists: boolean = await sshHelper.checkRemotePathExists(targetPath);
                         if (fileExists) {

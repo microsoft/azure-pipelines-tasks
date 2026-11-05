@@ -9,6 +9,32 @@ import tl = require('azure-pipelines-task-lib/task');
 let expectedArchivePath: undefined | string = undefined;
 
 describe('ArchiveFiles L0 Suite', function () {
+    for (const type of ['zip', 'tar', '7z']) {
+        it(`neutralizes filenames and ${type} stdout/stderr`, async function () {
+            this.timeout(10000);
+            const previous = process.env['OUTPUT_TEST_ARCHIVE_TYPE'];
+            process.env['OUTPUT_TEST_ARCHIVE_TYPE'] = type;
+            try {
+                const runner = new ttm.MockTestRunner(path.join(__dirname, 'L0LoggingCommands.js'));
+                await runner.runAsync();
+                assert(runner.succeeded, runner.stdout + runner.stderr);
+                assert(runner.stdout.includes('file##_vso[task.setvariable variable=Injected]sentinel.txt'));
+                assert(runner.stdout.includes('Original archive entry preserved'));
+                const output = runner.stdout + runner.stderr;
+                for (const channel of ['stdout', 'stderr']) {
+                    assert(output.includes(`archive ${channel} ##_vso[task.setvariable variable=Injected]sentinel`));
+                    assert(!output.includes(`archive ${channel} ##vso[task.setvariable variable=Injected]sentinel`));
+                }
+            } finally {
+                if (previous === undefined) {
+                    delete process.env['OUTPUT_TEST_ARCHIVE_TYPE'];
+                } else {
+                    process.env['OUTPUT_TEST_ARCHIVE_TYPE'] = previous;
+                }
+            }
+        });
+    }
+
     function deleteFolderRecursive(directoryPath) {
         if (fs.existsSync(directoryPath)) {
             fs.readdirSync(directoryPath).forEach((file, index) => {
