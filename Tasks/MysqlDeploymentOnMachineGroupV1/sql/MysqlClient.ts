@@ -103,7 +103,7 @@ export class MysqlClient implements ISqlClient {
             fileSourceArgument = " -e" + '"' + this._mysqlTaskParameter.getSqlInline() + '"';
         }
         else {
-            fileSourceArgument = " -e" + '" source ' + packageUtility.PackageUtility.getPackagePath(this._mysqlTaskParameter.getSqlFile()) + '"';
+            fileSourceArgument = " -e" + '" source ' + Utility.validateSqlFilePath(packageUtility.PackageUtility.getPackagePath(this._mysqlTaskParameter.getSqlFile())) + '"';
         }
        
         return  fileSourceArgument;       
