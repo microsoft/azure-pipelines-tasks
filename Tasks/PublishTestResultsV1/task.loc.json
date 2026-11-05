@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 283,
+    "Minor": 279,
     "Patch": 0
   },
   "deprecated": true,
@@ -113,10 +113,6 @@
       "argumentFormat": ""
     },
     "Node20_1": {
-      "target": "publishtestresults.js",
-      "argumentFormat": ""
-    },
-    "Node24": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
     }
