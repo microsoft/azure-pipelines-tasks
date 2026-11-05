@@ -1,7 +1,6 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import { TokenCredential, AccessToken } from "@azure/identity";
 import { AzureEndpoint } from "azure-pipelines-tasks-azure-arm-rest/azureModels";
-import { ArgumentError } from "./errors";
 
 export class ConnectedServiceCredential implements TokenCredential {
 
@@ -17,8 +16,10 @@ export class ConnectedServiceCredential implements TokenCredential {
 
     async getToken(scopes: string | string[]): Promise<AccessToken> {
         const requestedScopes: string[] = Array.isArray(scopes) ? scopes : [scopes];
-        if (requestedScopes.length !== 1 || requestedScopes[0] !== `${this._audience}/.default`) {
-            throw new ArgumentError(tl.loc("InvalidCredentialScope"));
+        if (requestedScopes.length !== 1
+            || typeof requestedScopes[0] !== "string"
+            || !requestedScopes[0].startsWith(`${this._audience}/`)) {
+            throw new Error(tl.loc("InvalidCredentialScope"));
         }
 
         this._endpoint.applicationTokenCredentials.activeDirectoryResourceId = this._audience;

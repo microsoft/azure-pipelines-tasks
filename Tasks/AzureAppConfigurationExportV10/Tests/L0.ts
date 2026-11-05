@@ -173,17 +173,20 @@ describe("Key Vault credential scope validation", function() {
         };
     }
 
-    it("Accepts Key Vault scopes as strings or single-element arrays", async () => {
+    it("Accepts Key Vault scope names as strings or single-element arrays", async () => {
+        const scopeNames = ['.default', 'user_impersonation'];
         for (const audience of keyVaultAudiences) {
             const credential = new ConnectedServiceCredential(endpoint, audience);
-            const scope = `${audience}/.default`;
-            for (const scopes of [scope, [scope]]) {
-                const token = await credential.getToken(scopes);
-                assert.strictEqual(token.token, testToken);
-                assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, audience);
+            for (const scopeName of scopeNames) {
+                const scope = `${audience}/${scopeName}`;
+                for (const scopes of [scope, [scope]]) {
+                    const token = await credential.getToken(scopes);
+                    assert.strictEqual(token.token, testToken);
+                    assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, audience);
+                }
             }
         }
-        assert.strictEqual(tokenRequests, keyVaultAudiences.length * 2);
+        assert.strictEqual(tokenRequests, keyVaultAudiences.length * scopeNames.length * 2);
     });
 
     it("Rejects invalid Key Vault scopes before requesting a token or changing the resource", async () => {
@@ -195,12 +198,12 @@ describe("Key Vault credential scope validation", function() {
             otherScope, [otherScope],
             [expectedScope, otherScope], [otherScope, expectedScope], [expectedScope, expectedScope],
             keyVaultAudiences[0], `${keyVaultAudiences[1]}/.default`,
-            `${expectedScope}/extra`, 'https://vault.azure.net.example/.default'
+            'http://vault.azure.net/.default', 'https://vault.azure.net.example/.default'
         ];
         for (const scopes of invalidScopes) {
             await assert.rejects(
                 () => credential.getToken(scopes),
-                (error: Error) => error instanceof ArgumentError && error.message === invalidScopeMessage,
+                (error: Error) => error.constructor === Error && error.message === invalidScopeMessage,
                 `Scope input: ${JSON.stringify(scopes)}`
             );
             assert.strictEqual(tokenRequests, 0);
@@ -231,7 +234,7 @@ describe("Key Vault credential scope validation", function() {
 
     for (const challenge of [
         `resource="${otherAudience}"`,
-        `scope="${otherAudience}/.default"`
+        `scope="${otherAudience}/user_impersonation"`
     ]) {
         it(`Rejects the Key Vault SDK challenge ${challenge} without obtaining or sending a token`, async () => {
             const credential = new ConnectedServiceCredential(endpoint, keyVaultAudiences[0]);
@@ -242,7 +245,7 @@ describe("Key Vault credential scope validation", function() {
 
             await assert.rejects(
                 () => client.getSecret('sample'),
-                (error: Error) => error instanceof ArgumentError && error.message === invalidScopeMessage
+                (error: Error) => error.constructor === Error && error.message === invalidScopeMessage
             );
             assert.deepStrictEqual(authorizationHeaders, [undefined]);
             assert.strictEqual(tokenRequests, 0);
