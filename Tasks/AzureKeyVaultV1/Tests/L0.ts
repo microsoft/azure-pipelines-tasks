@@ -121,6 +121,22 @@ describe('Azure Key Vault', function () {
     // "##vso[...]" suffix as its own, attacker-controlled agent command line.
     const forgedCommandLinePrefix = "##vso[task.setvariable variable=BASH_ENV]";
 
+    // The mock test runner spawns the task as a child process; on Windows its captured stdout
+    // uses "\r\n" for ordinary line endings (azure-pipelines-task-lib's own mock-test.js performs
+    // the same normalization internally before tracing output). Collapsing only exact "\r\n"
+    // pairs strips that harness artifact while leaving any genuine bare CR (not followed by LF) -
+    // i.e. exactly the pattern these tests are checking for - untouched.
+    function getRawLines(stdout: string): string[] {
+        return stdout.replace(/\r\n/g, '\n').split('\n');
+    }
+
+    // Reverses azure-pipelines-task-lib's command escaping (escapedata() in taskcommand.ts) so a
+    // captured ##vso[task.setvariable ...]<value> line can be compared against the original,
+    // un-escaped secret value.
+    function unescapeCommandValue(value: string): string {
+        return value.replace(/%0D/g, '\r').replace(/%0A/g, '\n').replace(/%AZP25/g, '%');
+    }
+
     it("CR/LF masking fix flag off: reproduces the known pre-fix behavior (regression baseline)", (done) => {
         let tp = path.join(__dirname, "downloadSecretCrInjectionFlagOff.js");
         let tr = new ttm.MockTestRunner(tp);
@@ -150,13 +166,76 @@ describe('Azure Key Vault', function () {
         try {
             assert(tr.succeeded, "Should have succeeded");
 
+            // Raw per-call lines (Windows CRLF artifacts normalized away, see getRawLines) - this
+            // is what actually got printed, *before* simulating the agent's CR/LF/CRLF
+            // re-splitting below. A masking line must never contain a raw CR here, otherwise the
+            // agent's real line reader (which the next assertion simulates) could still split it.
+            const rawLines = getRawLines(tr.stdout);
+            const maskingLines = rawLines.filter((line: string) => line.startsWith("##vso[task.setsecret]"));
+            assert(maskingLines.length > 0, "Expected ##vso[task.setsecret] masking line(s) to be emitted");
+            assert(maskingLines.every((line: string) => line.indexOf("\r") < 0), "No masking line may contain a raw CR character before agent-side line splitting");
+
             const agentLines = tr.stdout.split(/\r\n|\r|\n/);
             const injectedCommandSmuggled = agentLines.some((line: string) => line.startsWith(forgedCommandLinePrefix));
             assert(!injectedCommandSmuggled, "The injected ##vso[task.setvariable variable=BASH_ENV] command must never appear as its own agent command line when the fix is enabled");
 
-            const maskingLines = agentLines.filter((line: string) => line.startsWith("##vso[task.setsecret]"));
-            assert(maskingLines.length > 0, "Expected ##vso[task.setsecret] masking line(s) to be emitted");
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it("CR-only (no LF) secret flag on: masked per-fragment without a smuggled command line", (done) => {
+        let tp = path.join(__dirname, "downloadSecretCrOnlyFlagOn.js");
+        let tr = new ttm.MockTestRunner(tp);
+        const originalSecretValue = require("./mock_node_modules/azure-arm-keyvault-cronly").secretValue;
+
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+
+            const rawLines = getRawLines(tr.stdout);
+            const maskingLines = rawLines.filter((line: string) => line.startsWith("##vso[task.setsecret]"));
+            assert(maskingLines.length > 0, "Expected ##vso[task.setsecret] masking line(s) to be emitted for a CR-only secret when the fix is enabled");
             assert(maskingLines.every((line: string) => line.indexOf("\r") < 0), "No masking line may contain a raw CR character");
+
+            const agentLines = tr.stdout.split(/\r\n|\r|\n/);
+            const injectedCommandSmuggled = agentLines.some((line: string) => line.startsWith(forgedCommandLinePrefix));
+            assert(!injectedCommandSmuggled, "The injected ##vso[task.setvariable variable=BASH_ENV] command must never appear as its own agent command line");
+
+            const setVarLine = rawLines.find((line: string) => line.startsWith("##vso[task.setvariable variable=crOnlySecret;"));
+            assert(setVarLine, "Expected a ##vso[task.setvariable variable=crOnlySecret;...] line");
+            const storedValue = unescapeCommandValue(setVarLine.substring(setVarLine.indexOf(']') + 1));
+            assert.strictEqual(storedValue, originalSecretValue, "The stored variable value must be preserved exactly for a CR-only secret");
+
+            done();
+        }
+        catch (error) {
+            console.log("STDERR", tr.stderr);
+            console.log("STDOUT", tr.stdout);
+            done(error);
+        }
+    });
+
+    it("CR-only JSON secret flag on: stored variable value is not JSON-flattened", (done) => {
+        let tp = path.join(__dirname, "downloadSecretCrOnlyJsonFlagOn.js");
+        let tr = new ttm.MockTestRunner(tp);
+        const originalSecretValue = require("./mock_node_modules/azure-arm-keyvault-cronlyjson").secretValue;
+
+        tr.run();
+        try {
+            assert(tr.succeeded, "Should have succeeded");
+
+            const rawLines = getRawLines(tr.stdout);
+            const setVarLine = rawLines.find((line: string) => line.startsWith("##vso[task.setvariable variable=crOnlyJsonSecret;"));
+            assert(setVarLine, "Expected a ##vso[task.setvariable variable=crOnlyJsonSecret;...] line");
+            const storedValue = unescapeCommandValue(setVarLine.substring(setVarLine.indexOf(']') + 1));
+
+            assert.strictEqual(storedValue, originalSecretValue, "A CR-only (no LF) secret must never be routed through JSON flattening, even when the masking fix is enabled - its stored value must stay byte-for-byte identical to the original");
+            assert(rawLines.every((line: string) => line.indexOf("has been converted to single line") < 0), "tryFlattenJson's conversion message must not be printed for a CR-only secret");
 
             done();
         }
