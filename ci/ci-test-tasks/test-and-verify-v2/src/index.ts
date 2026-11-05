@@ -63,6 +63,11 @@ async function main() {
   console.log(`Found ${pipelines.length} total pipelines in the project`);
 
   for (const task of api.tasks) {
+    if (!task) {
+      console.warn('Skipping blank task name: matching by prefix would select every pipeline in the project.');
+      continue;
+    }
+
     console.log(`starting tests for ${task} task`);
 
     // Find all pipelines that start with the task name
