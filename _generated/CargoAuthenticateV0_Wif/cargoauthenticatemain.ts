@@ -32,7 +32,10 @@ async function main(): Promise<void> {
             throw new Error(tl.loc('ConfigTomlDoesNotExist', configtoml));
         }
         else {
-            console.log(tl.loc("AuthenticatingThisConfigToml", configtoml));
+            tl.writeExternalOutput(tl.loc("AuthenticatingThisConfigToml", configtoml) + '\n', {
+                source: 'repository',
+                vsoCommandMode: 'blockOnly'
+            });
         }
         
         // These two formats will work
