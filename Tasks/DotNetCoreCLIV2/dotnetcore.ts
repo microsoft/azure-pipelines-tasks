@@ -226,12 +226,30 @@ export class dotNetExe {
         }
     }
 
+    // `dotnet test` requires the test target to be introduced by one of these options when the
+    // tests run on Microsoft.Testing.Platform. Everything in the arguments input is appended
+    // after the target, so a selector given there is taken out and passed in front of it.
+    // https://learn.microsoft.com/dotnet/core/testing/unit-testing-with-dotnet-test
+    private extractTestSelector(): string {
+        const match = /(^|\s)(--project|--solution|--test-modules)(?=\s|$)/.exec(this.arguments);
+        if (!match) {
+            return '';
+        }
+
+        this.arguments = (this.arguments.substring(0, match.index) + this.arguments.substring(match.index + match[0].length)).trim();
+        return match[2];
+    }
+
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
         console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
+
+        // Has to run before the trx arguments below are prepended, so that only the arguments
+        // provided by the user are inspected.
+        const testSelector: string = this.extractTestSelector();
 
         if (enablePublishTestResults && enablePublishTestResults === true) {
             if (isMTP) {
@@ -259,7 +277,10 @@ export class dotNetExe {
             const dotnet = tl.tool(dotnetPath);
             dotnet.arg(this.command);
 
-            if (isMTP && projectFile.length > 0) {
+            if (testSelector) {
+                dotnet.arg(testSelector);
+            }
+            else if (isMTP && projectFile.length > 0) {
                 // https://github.com/dotnet/sdk/blob/cbb8f75623c4357919418d34c53218ca9b57358c/src/Cli/dotnet/Commands/Test/CliConstants.cs#L34
                 if (projectFile.endsWith(".proj") || projectFile.endsWith(".csproj") || projectFile.endsWith(".vbproj") || projectFile.endsWith(".fsproj")) {
                     dotnet.arg("--project");
