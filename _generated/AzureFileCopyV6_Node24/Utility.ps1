@@ -177,21 +177,9 @@ function ConvertTo-Pfx {
 $script:consoleOutputSanitizationFixEnabled = $false
 $script:azCopySpnDirectAuthFixEnabled = $false
 
-function Get-ConsoleOutputSanitizationFeatureFlag
-{
-    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
-    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
-    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
-    try
-    {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
-    }
-    catch
-    {
-        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
-        return $false
-    }
-}
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
 
 function ConvertTo-SafeConsoleText
 {
@@ -199,9 +187,11 @@ function ConvertTo-SafeConsoleText
 
     process
     {
-        if (-not $script:consoleOutputSanitizationFixEnabled) { return $Text }
-        # Agent command markers are recognized anywhere in console output, not just after newlines.
-        $Text.Replace('##vso[', '# #vso[').Replace('##[', '# #[')
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
     }
 }
 
@@ -245,6 +235,24 @@ function Upload-FilesToAzureContainer
           [bool]$useSourcePathHardening = $false
     )
 
+    # AzCopy SPN direct-auth environment variables. Captured up-front so they can be restored
+    # (or removed, if previously unset) once this invocation completes, regardless of success or
+    # failure -- this prevents a prior run's credentials (e.g. a leftover cert path) from leaking
+    # into, or being left behind for, a different auth mode or a different task invocation.
+    $azCopySpnEnvVarNames = @(
+        'AZCOPY_ACTIVE_DIRECTORY_ENDPOINT',
+        'AZCOPY_AUTO_LOGIN_TYPE',
+        'AZCOPY_TENANT_ID',
+        'AZCOPY_SPA_APPLICATION_ID',
+        'AZCOPY_SPA_CERT_PATH',
+        'AZCOPY_SPA_CERT_PASSWORD',
+        'AZCOPY_SPA_CLIENT_SECRET'
+    )
+    $azCopySpnEnvVarSnapshot = @{}
+    foreach ($envVarName in $azCopySpnEnvVarNames) {
+        $azCopySpnEnvVarSnapshot[$envVarName] = [System.Environment]::GetEnvironmentVariable($envVarName)
+    }
+
     try
     {
         $aadAuthorityUrl = "https://login.microsoftonline.com/"
@@ -268,10 +276,14 @@ function Upload-FilesToAzureContainer
                         # Direct SPN auth: AzCopy authenticates with the certificate credentials
                         # itself and does not depend on a persisted/shared Az PowerShell context.
                         $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_ACTIVE_DIRECTORY_ENDPOINT = $aadAuthorityUrl
                         $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
                         $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
                         $env:AZCOPY_SPA_CERT_PATH = $pfxFilePath
                         $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                        # No client secret is used for certificate auth; clear it so a value left
+                        # behind by a prior key-auth run cannot be picked up instead.
+                        Remove-Item Env:\AZCOPY_SPA_CLIENT_SECRET -ErrorAction SilentlyContinue
                     }
                     else {
                         $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
@@ -283,9 +295,14 @@ function Upload-FilesToAzureContainer
                         # Direct SPN auth: AzCopy authenticates with the client secret itself and
                         # does not depend on a persisted/shared Az PowerShell context.
                         $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_ACTIVE_DIRECTORY_ENDPOINT = $aadAuthorityUrl
                         $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
                         $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
                         $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                        # A certificate path/password inherited from a prior certificate-auth run
+                        # would otherwise take priority over the client secret in AzCopy.
+                        Remove-Item Env:\AZCOPY_SPA_CERT_PATH -ErrorAction SilentlyContinue
+                        Remove-Item Env:\AZCOPY_SPA_CERT_PASSWORD -ErrorAction SilentlyContinue
                     }
                     else {
                         $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
@@ -396,6 +413,11 @@ function Upload-FilesToAzureContainer
         Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
         Remove-EndpointSecrets
 
+        # Restore the AzCopy SPN environment variables to their pre-call state (or remove them if
+        # they were unset) so credentials/config from this call never leak into a later one.
+        foreach ($envVarName in $azCopySpnEnvVarNames) {
+            [System.Environment]::SetEnvironmentVariable($envVarName, $azCopySpnEnvVarSnapshot[$envVarName])
+        }
     }
 }
 

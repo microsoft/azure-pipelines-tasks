@@ -46,15 +46,53 @@ function Get-SanitizerActivateStatus {
     return $activateFlag
 }
 
-# Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
-# variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
-# registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
+# Checks the AzureFileCopy.EnableSourcePathHardening pipeline feature flag via
+# Get-VstsPipelineFeature. That cmdlet was only added in a later VstsTaskSdk
+# release, so on an older agent it may not exist yet even though the task's
+# own minimumAgentVersion allows the task to run. Calling it unguarded would
+# throw command-not-found and break the task outright. Guard for that case by
+# checking cmdlet availability first, attempting to re-import the task's local
+# VstsTaskSdk copy if needed, and falling back to "disabled" if the cmdlet is
+# still unavailable or the flag check itself throws.
 function Get-SourcePathHardeningFeatureFlag {
+    $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet not found. Attempting to import VstsTaskSdk module..."
+        try {
+            Import-Module (Join-Path $PSScriptRoot '..\VstsTaskSdk') -ErrorAction Stop
+            $hasFeatureFlagCmdlet = Get-Command -Name 'Get-VstsPipelineFeature' -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Warning "Failed to import VstsTaskSdk module: $_"
+        }
+    }
+
+    if (-not $hasFeatureFlagCmdlet) {
+        Write-Warning "Get-VstsPipelineFeature cmdlet unavailable (older agent or missing module). SourcePath hardening will remain disabled."
+        return $false
+    }
+
     try {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop) -eq $true
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.EnableSourcePathHardening' -ErrorAction Stop)
     }
     catch {
-        Write-Warning 'Failed to read the AzureFileCopy.EnableSourcePathHardening feature flag. Defaulting to disabled.'
+        Write-Warning "Failed to check AzureFileCopy.EnableSourcePathHardening feature flag: $_. Defaulting to disabled."
+        return $false
+    }
+}
+
+# Checks the AzureFileCopy.ConsoleOutputSanitizationFixEnabled pipeline feature flag via
+# Get-VstsPipelineFeature. Shared across AzureFileCopy V1-V6 (each task reads it once per run
+# and caches the result at script scope) so the check is defined in exactly one place.
+function Get-ConsoleOutputSanitizationFeatureFlag {
+    try {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
+    }
+    catch {
+        # Do not interpolate the caught exception here - its message may originate from
+        # an untrusted lookup path and must not be echoed into task diagnostics.
+        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
         return $false
     }
 }

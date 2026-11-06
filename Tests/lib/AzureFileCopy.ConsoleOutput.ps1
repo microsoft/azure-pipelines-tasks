@@ -2,8 +2,9 @@
 param([Parameter(Mandatory = $true)][string]$TaskDirectory)
 
 . $PSScriptRoot\Initialize-Test.ps1
-. "$TaskDirectory\Utility.ps1"
 . "$PSScriptRoot\..\..\Tasks\Common\Sanitizer\ArgumentsSanitizer.ps1"
+. "$PSScriptRoot\..\..\Tasks\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+. "$TaskDirectory\Utility.ps1"
 
 $major = (Get-Content -LiteralPath "$TaskDirectory\task.json" -Raw | ConvertFrom-Json).version.Major
 $uploadResponse = @{ Status = 'Succeeded' }
@@ -159,7 +160,7 @@ foreach ($case in $cases) {
         Assert-AreEqual $true (@($output | Where-Object { "$_" -like 'AFC_UploadFilesStorageAccount *' }).Count -eq 1) 'Upload start message was not exercised.'
         Assert-AreEqual $true (@($output | Where-Object { "$_" -like 'AFC_UploadFileSuccessful *' }).Count -eq 1) 'Upload success message was not exercised.'
         $expectedEcho = "echo: $($case.Source) $($case.Prefix)"
-        if ($enabled) { $expectedEcho = $expectedEcho.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+        if ($enabled) { $expectedEcho = $expectedEcho.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
         Assert-AreEqual $true ($output -contains $expectedEcho) "Native stdout mismatch: $flagCase"
         $expectedEchoCount = $(if ($major -eq 1) { 1 } else { $commandCount })
         Assert-AreEqual $expectedEchoCount @($output | Where-Object { "$_" -ceq $expectedEcho }).Count 'Not all native stdout was forwarded.'
@@ -180,7 +181,7 @@ foreach ($case in $cases) {
             } else {
                 $expectedLoginDisplay = ' & "Invoke-ConsoleOutputAzCopy" login --identity --aad-endpoint "https://login.microsoftonline.com/"'
             }
-            if ($enabled) { $expectedLoginDisplay = $expectedLoginDisplay.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+            if ($enabled) { $expectedLoginDisplay = $expectedLoginDisplay.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
             Assert-AreEqual $true ($output -contains ("##[command]" + $expectedLoginDisplay)) 'Login display command changed unexpectedly.'
             Assert-AreEqual $true ($output -contains '##[command] & "Invoke-ConsoleOutputAzCopy" logout') 'Logout display command changed.'
         }
@@ -203,11 +204,11 @@ foreach ($case in $cases) {
                 $argumentSpacing = $(if ($mode.useSourcePathHardening -or $mode.useSanitizerActivate) { ' ' } else { '  ' })
                 $expectedCopyDisplay = " & `"Invoke-ConsoleOutputAzCopy`" copy `"$($case.Source)`" `"$expectedDestination`"$argumentSpacing$displayArguments"
             }
-            if ($enabled) { $expectedCopyDisplay = $expectedCopyDisplay.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+            if ($enabled) { $expectedCopyDisplay = $expectedCopyDisplay.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
             Assert-AreEqual $true ($output -contains ("##[command]" + $expectedCopyDisplay)) "Copy display mismatch V${major}, $flagCase, source=$($mode.useSourcePathHardening), sanitizer=$($mode.useSanitizerActivate)."
             if ($major -ge 5) {
                 $expectedRemoveDisplay = " & `"Invoke-ConsoleOutputAzCopy`" rm `"$expectedDestination`" --recursive=true"
-                if ($enabled) { $expectedRemoveDisplay = $expectedRemoveDisplay.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+                if ($enabled) { $expectedRemoveDisplay = $expectedRemoveDisplay.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
                 Assert-AreEqual $true ($output -contains ("##[command]" + $expectedRemoveDisplay)) 'Removal display command changed unexpectedly.'
             }
             $copyIndex = 0
@@ -255,7 +256,7 @@ if ($major -ge 2) {
     Assert-AreEqual 1 $global:LASTEXITCODE 'Filtering stdout lost the native exit code.'
     Assert-ConsoleText -Output $output -CommandCount $commandCount
     $expectedFailure = $script:toolOutput[0]
-    if ($enabled) { $expectedFailure = $expectedFailure.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+    if ($enabled) { $expectedFailure = $expectedFailure.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
     Assert-AreEqual $true ($output -contains $expectedFailure) 'Native failure stdout changed unexpectedly.'
     Assert-AreEqual $false (@($output | Where-Object { "$_" -like 'AFC_UploadFileSuccessful *' }).Count -gt 0) 'Failed copies must not log success.'
     $script:toolExitCode = 0
@@ -287,7 +288,7 @@ if ($major -ge 2) {
     Assert-AreEqual 1 $output.Count
     $expectedSuccess = "AFC_CopySuccessful $sourcePath $environmentName"
 }
-if ($enabled) { $expectedSuccess = $expectedSuccess.Replace('##vso[', '# #vso[').Replace('##[', '# #[') }
+if ($enabled) { $expectedSuccess = $expectedSuccess.Replace('##vso[', '##_vso[').Replace('##[', '##_[') }
 Assert-AreEqual $expectedSuccess "$($output[-1])" 'VM success message changed unexpectedly.'
 
 $outputStorageURI = "custom;name]`r`nvalue"
