@@ -9,7 +9,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 10,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -153,6 +153,7 @@
     "InvalidAppConfigurationEndpoint": "ms-resource:loc.messages.InvalidAppConfigurationEndpoint",
     "SecretUrlCannotBeEmpty": "ms-resource:loc.messages.SecretUrlCannotBeEmpty",
     "InvalidSecretUrl": "ms-resource:loc.messages.InvalidSecretUrl",
+    "InvalidCredentialScope": "ms-resource:loc.messages.InvalidCredentialScope",
     "AzureAppConfigurationTaskIsStartingUp": "ms-resource:loc.messages.AzureAppConfigurationTaskIsStartingUp",
     "AzureSubscriptionTitle": "ms-resource:loc.messages.AzureSubscriptionTitle",
     "AppConfigurationEndpointTitle": "ms-resource:loc.messages.AppConfigurationEndpointTitle",
