@@ -220,4 +220,19 @@ fsClone.readFileSync = function(filePath, options) {
 };
 tr.registerMock('fs', fsClone);
 
+// Lets tests simulate a broken sanitizer ('noop' returns the text unchanged, 'throw' throws) without
+// affecting other docker-common internals, which import the module by relative path.
+const sanitizerBehavior = process.env[shared.TestEnvVars.sanitizerBehavior];
+if (sanitizerBehavior) {
+    const realDockerCommandUtils = require('azure-pipelines-tasks-docker-common/dockercommandutils');
+    tr.registerMock('azure-pipelines-tasks-docker-common/dockercommandutils', Object.assign({}, realDockerCommandUtils, {
+        sanitizeDockerOutput: (data: string) => {
+            if (sanitizerBehavior === 'throw') {
+                throw new Error('simulated sanitizer failure');
+            }
+            return data;
+        }
+    }));
+}
+
 tr.run();
