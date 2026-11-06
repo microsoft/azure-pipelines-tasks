@@ -61,6 +61,13 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
+# Sanitizer (imported here, ahead of its normal spot below, because Utility.ps1
+# needs Get-ConsoleOutputSanitizationFeatureFlag from it immediately after being dot-sourced)
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# External output sanitization (shared across AzureFileCopy V1-V6)
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
@@ -185,8 +192,7 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
+# Sanitizer (module already imported above, ahead of the Utility.ps1 dot-source)
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 

@@ -64,6 +64,13 @@ try {
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
+# Sanitizer (imported here, ahead of its normal spot below, because Utility.ps1
+# needs Get-ConsoleOutputSanitizationFeatureFlag from it immediately after being dot-sourced)
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# External output sanitization (shared across AzureFileCopy V1-V6)
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
 $script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
@@ -94,8 +101,7 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
+# Sanitizer (module already imported above, ahead of the Utility.ps1 dot-source)
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 $useSourcePathHardening = Get-SourcePathHardeningFeatureFlag

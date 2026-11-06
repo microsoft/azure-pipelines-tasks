@@ -255,21 +255,9 @@ function ThrowError
 
 $script:consoleOutputSanitizationFixEnabled = $false
 
-function Get-ConsoleOutputSanitizationFeatureFlag
-{
-    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
-    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
-    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
-    try
-    {
-        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
-    }
-    catch
-    {
-        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
-        return $false
-    }
-}
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
 
 function ConvertTo-SafeConsoleText
 {
@@ -277,9 +265,11 @@ function ConvertTo-SafeConsoleText
 
     process
     {
-        if (-not $script:consoleOutputSanitizationFixEnabled) { return $Text }
-        # Agent command markers are recognized anywhere in console output, not just after newlines.
-        $Text.Replace('##vso[', '# #vso[').Replace('##[', '# #[')
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
     }
 }
 

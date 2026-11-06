@@ -22,6 +22,7 @@ param()
 # within the same additionalArguments string.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
