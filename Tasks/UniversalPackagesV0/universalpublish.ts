@@ -191,7 +191,9 @@ function publishPackageUsingArtifactTool(
         command.push("--project", options.projectId);
     }
 
-    console.log(tl.loc("Info_Publishing", options.packageName, options.packageVersion, options.feedId, options.projectId));
+    tl.writeExternalOutput(
+        tl.loc("Info_Publishing", options.packageName, options.packageVersion, options.feedId, options.projectId) + "\n",
+        { source: "repository", vsoCommandMode: "blockOnly" });
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(
         options.artifactToolPath,
         command,
