@@ -12,9 +12,6 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
-#if WIF
-import { getFederatedWorkloadIdentityCredentials } from 'azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils';
-#endif
 
 export function writeRepositoryOutput(message: string): void {
     tl.writeExternalOutput(message + os.EOL, { source: 'repository' });
@@ -362,16 +359,3 @@ export function removeExistingCredentialEntries(
     fs.writeFileSync(npmrcPath, lines.join(os.EOL));
     return lines;
 }
-
-#if WIF
-export async function getAzureDevOpsServiceConnectionCredentials(adoServiceConnection: string): Promise<string | undefined> {
-    if (!adoServiceConnection) {
-        return undefined;
-    }
-    const federatedAuthToken = await getFederatedWorkloadIdentityCredentials(adoServiceConnection);
-    if (!federatedAuthToken) {
-        throw new Error(tl.loc('FailedToGetServiceConnectionAuth', adoServiceConnection));
-    }
-    return federatedAuthToken;
-}
-#endif

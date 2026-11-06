@@ -67,13 +67,20 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
-    getFederatedWorkloadIdentityCredentials: async function (serviceConnectionName: string) {
+    getFederatedWorkloadIdentityCredentialsForFeed: async function (serviceConnectionName: string, feedUrl: string | URL) {
+        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+        if (parsedFeedUrl.protocol !== 'https:') {
+            throw new Error('Error_UrlHttpsRequired');
+        }
+        if (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com')) {
+            throw new Error('Error_FeedUrlUntrustedHost');
+        }
         if (wifShouldFail) {
             throw new Error(`Simulated WIF failure for ${serviceConnectionName}`);
         }
-        return wifToken;
-    },
-    getFeedTenantId: async function () { return 'mock-tenant-id'; }
+        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called for ${parsedFeedUrl.href}`);
+        return wifToken ? { accessToken: wifToken, feedUrl: parsedFeedUrl } : undefined;
+    }
 });
 
 // Mock http/https for isEndpointInternal probe (returns non-Azure DevOps response)
