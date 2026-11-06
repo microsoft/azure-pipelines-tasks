@@ -174,6 +174,26 @@ function ConvertTo-Pfx {
     return $pfxFilePath, $pfxFilePassword
 }
 
+$script:consoleOutputSanitizationFixEnabled = $false
+
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
+    }
+}
+
 function Upload-FilesToAzureContainer
 {
     param([string][Parameter(Mandatory=$true)]$sourcePath,
@@ -210,17 +230,25 @@ function Upload-FilesToAzureContainer
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
 
                     $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
+                    Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""))
 
                     $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --certificate-path `"$($pfxFilePath)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-                    Invoke-Expression $command
+                    if ($script:consoleOutputSanitizationFixEnabled) {
+                        Invoke-Expression $command | ConvertTo-SafeConsoleText
+                    } else {
+                        Invoke-Expression $command
+                    }
                 }
                 else {
                     $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
-                    Write-Output "##[command] & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
+                    Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""))
 
                     $command = "& `"$azCopyExeLocation`" login --service-principal --application-id `"$($endPoint.Auth.Parameters.ServicePrincipalId)`" --tenant-id=`"$($endPoint.Auth.Parameters.TenantId)`" --aad-endpoint `"$aadAuthorityUrl`""
-                    Invoke-Expression $command
+                    if ($script:consoleOutputSanitizationFixEnabled) {
+                        Invoke-Expression $command | ConvertTo-SafeConsoleText
+                    } else {
+                        Invoke-Expression $command
+                    }
                 }
             }
             catch {
@@ -231,17 +259,21 @@ function Upload-FilesToAzureContainer
             }
         }
         elseif ($endPoint.Auth.Scheme -eq 'ManagedServiceIdentity') {
-            Write-Output "##[command] & `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""))
 
             $command = "& `"$azCopyExeLocation`" login --identity --aad-endpoint `"$aadAuthorityUrl`""
-            Invoke-Expression $command
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $command | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $command
+            }
 
         }
         else {
             throw (Get-VstsLocString -Key UnsupportedAuthScheme -ArgumentList $endPoint.Auth.Scheme)
         }
 
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         $blobPrefix = $blobPrefix.Trim()
         $trailingChars = [regex]::Escape("/") + '+$'
@@ -255,35 +287,55 @@ function Upload-FilesToAzureContainer
         {
 
              if ($useSourcePathHardening) {
-                 Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"
-                 & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                 Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"))
+                 if ($script:consoleOutputSanitizationFixEnabled) {
+                     & $azCopyExeLocation rm $rawContainerURL --recursive=true | ConvertTo-SafeConsoleText
+                 } else {
+                     & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                 }
              } else {
-                 Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                 Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"))
                  $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-                 Invoke-Expression $cleanToBlobCommand
+                 if ($script:consoleOutputSanitizationFixEnabled) {
+                     Invoke-Expression $cleanToBlobCommand | ConvertTo-SafeConsoleText
+                 } else {
+                     Invoke-Expression $cleanToBlobCommand
+                 }
              }
 
         }
 
         if ($useSourcePathHardening) {
             $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
-            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            }
         } elseif ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"))
             $uploadCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
-            Invoke-Expression $uploadCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadCommand
+            }
         } else {
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"))
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadToBlobCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadToBlobCommand
+            }
         }
 
         if($LASTEXITCODE -eq 0)
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
         else
         {
@@ -309,9 +361,13 @@ function Upload-FilesToAzureContainer
     {
         try {
             #azcopy logout to remove all credentials
-            Write-Output "##[command] & `"$azCopyExeLocation`" logout"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" logout"))
             $command = "& `"$azCopyExeLocation`" logout"
-            Invoke-Expression $command
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $command | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $command
+            }
         }
         finally {
             Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"

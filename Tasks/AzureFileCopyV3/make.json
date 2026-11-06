@@ -33,6 +33,10 @@
         {
             "module": "../Common/Sanitizer",
             "type": "ps"
+        },
+        {
+            "module": "../Common/ExternalOutputSanitizer",
+            "type": "ps"
         }
     ],
     "externals": {
