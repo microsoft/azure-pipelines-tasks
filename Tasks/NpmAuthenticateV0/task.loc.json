@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -25,6 +25,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.workingFile",
       "type": "filePath",
       "required": true
+    },
+    {
+      "name": "useGlobalConfig",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
+      "type": "boolean",
+      "defaultValue": "false",
+      "required": false
     },
     {
       "name": "customEndpoint",
@@ -78,11 +86,30 @@
       "allowed": [
         "SAVE_NPMRC_PATH",
         "NPM_AUTHENTICATE_TEMP_DIRECTORY",
-        "EXISTING_ENDPOINTS"
+        "EXISTING_ENDPOINTS",
+        "NPM_CONFIG_GLOBALCONFIG",
+        "NPM_AUTHENTICATE_GLOBAL_CONFIG",
+        "NPM_AUTHENTICATE_GLOBAL_CONFIG_STATE"
       ]
     }
   },
   "messages": {
+    "Error_GlobalConfigStateInvalid": "ms-resource:loc.messages.Error_GlobalConfigStateInvalid",
+    "Error_GlobalConfigDirectoryLocation": "ms-resource:loc.messages.Error_GlobalConfigDirectoryLocation",
+    "Error_GlobalConfigDirectoryChanged": "ms-resource:loc.messages.Error_GlobalConfigDirectoryChanged",
+    "Error_GlobalConfigFileChanged": "ms-resource:loc.messages.Error_GlobalConfigFileChanged",
+    "Error_GlobalConfigResolution": "ms-resource:loc.messages.Error_GlobalConfigResolution",
+    "Error_GlobalConfigSource": "ms-resource:loc.messages.Error_GlobalConfigSource",
+    "Error_GlobalConfigSections": "ms-resource:loc.messages.Error_GlobalConfigSections",
+    "Error_GlobalConfigMerge": "ms-resource:loc.messages.Error_GlobalConfigMerge",
+    "Error_GlobalConfigRelativePath": "ms-resource:loc.messages.Error_GlobalConfigRelativePath",
+    "Error_GlobalConfigPermissions": "ms-resource:loc.messages.Error_GlobalConfigPermissions",
+    "Error_GlobalConfigSelectionChanged": "ms-resource:loc.messages.Error_GlobalConfigSelectionChanged",
+    "Error_GlobalConfigTempDirectory": "ms-resource:loc.messages.Error_GlobalConfigTempDirectory",
+    "Error_GlobalConfigWrite": "ms-resource:loc.messages.Error_GlobalConfigWrite",
+    "Error_GlobalConfigCleanup": "ms-resource:loc.messages.Error_GlobalConfigCleanup",
+    "Info_GlobalConfigMissing": "ms-resource:loc.messages.Info_GlobalConfigMissing",
+    "Warning_GlobalConfigPrecedence": "ms-resource:loc.messages.Warning_GlobalConfigPrecedence",
     "FoundBuildCredentials": "ms-resource:loc.messages.FoundBuildCredentials",
     "ServiceEndpointNotDefined": "ms-resource:loc.messages.ServiceEndpointNotDefined",
     "NpmrcNotNpmrc": "ms-resource:loc.messages.NpmrcNotNpmrc",

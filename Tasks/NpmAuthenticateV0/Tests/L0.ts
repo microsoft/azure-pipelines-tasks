@@ -7,6 +7,7 @@ import './L0.Telemetry';
 import './L0.Cleanup';
 import './L0.EndpointCredential';
 import './L0.ErrorPaths';
+import './L0.GlobalConfig';
 #if WIF
 import './L0.WIF';
 #endif

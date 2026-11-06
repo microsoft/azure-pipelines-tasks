@@ -1,6 +1,14 @@
 {
   "inputs": [
     {
+      "name": "useGlobalConfig",
+      "label": "Store credentials in temporary global configuration",
+      "helpMarkDown": "Opt in to a temporary global npm config instead of modifying workingFile. workingFile remains required for registry discovery and is not modified. Existing global settings are copied; project and user settings, including expired credentials, take precedence. Sets NPM_CONFIG_GLOBALCONFIG for subsequent steps in this job. The temporary file is removed post-job.",
+      "type": "boolean",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "workloadIdentityServiceConnection",
       "aliases": ["azureDevOpsServiceConnection"],
       "label": "'Azure DevOps' Service Connection",
@@ -23,7 +31,7 @@
     {
       "name": "workingFile",
       "label": ".npmrc file to authenticate",
-      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". If Azure Artifacts URL and Entra Workload ID-backed Azure DevOps user' Service Connection are set, registries in npmrc will be ignored. Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.",
+      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". With useGlobalConfig enabled, this file is read only for registry discovery and is not modified; npm must still load the appropriate project config for package routing. When Azure Artifacts URL and its service connection are set, authentication is restricted to matching registries in this file. Otherwise, post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.",
       "type": "filePath",
       "required": true
     },

@@ -3,10 +3,15 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
 import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 import { emitNpmConfigTelemetry, writeRepositoryOutput } from './npmauthutils';
+import { cleanupGlobalConfig } from './npmGlobalConfig';
 
 async function run() {
     emitNpmConfigTelemetry(constants.NpmConfigTelemetryPhase.PostJob);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
+    if (tl.getBoolInput('useGlobalConfig')) {
+        cleanupGlobalConfig();
+        return;
+    }
     const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     const indexFile = npmrcPath && path.join(npmrcPath, 'index.json');

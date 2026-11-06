@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 0
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -22,9 +22,17 @@
     {
       "name": "workingFile",
       "label": ".npmrc file to authenticate",
-      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". Post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.",
+      "helpMarkDown": "Path to the .npmrc file that specifies the registries you want to work with. Select the file, not the folder e.g. \"/packages/mypackage.npmrc\". With useGlobalConfig enabled, this file is read only for registry discovery and is not modified; npm must still load the appropriate project config for package routing. Otherwise, post-job cleanup restores the original contents only after validating the backup and confirming this is still the same regular file. If validation fails, cleanup warns and skips restoration without writing file contents. Index-loading, filesystem, and write errors still fail cleanup.",
       "type": "filePath",
       "required": true
+    },
+    {
+      "name": "useGlobalConfig",
+      "label": "Store credentials in temporary global configuration",
+      "helpMarkDown": "Opt in to a temporary global npm config instead of modifying workingFile. workingFile remains required for registry discovery and is not modified. Existing global settings are copied; project and user settings, including expired credentials, take precedence. Sets NPM_CONFIG_GLOBALCONFIG for subsequent steps in this job. The temporary file is removed post-job.",
+      "type": "boolean",
+      "defaultValue": "false",
+      "required": false
     },
     {
       "name": "customEndpoint",
@@ -78,11 +86,30 @@
       "allowed": [
         "SAVE_NPMRC_PATH",
         "NPM_AUTHENTICATE_TEMP_DIRECTORY",
-        "EXISTING_ENDPOINTS"
+        "EXISTING_ENDPOINTS",
+        "NPM_CONFIG_GLOBALCONFIG",
+        "NPM_AUTHENTICATE_GLOBAL_CONFIG",
+        "NPM_AUTHENTICATE_GLOBAL_CONFIG_STATE"
       ]
     }
   },
   "messages": {
+    "Error_GlobalConfigStateInvalid": "Saved global npm config state is missing, malformed, or inconsistent. Refusing to update or delete task-owned paths.",
+    "Error_GlobalConfigDirectoryLocation": "The temporary global npm config path is outside the expected task-owned location. Refusing to update or delete it.",
+    "Error_GlobalConfigDirectoryChanged": "The temporary global npm config directory was replaced or is no longer a regular directory. Refusing to update or delete it.",
+    "Error_GlobalConfigFileChanged": "The temporary global npm config file was replaced or is no longer a regular file. Refusing to update or delete it.",
+    "Error_GlobalConfigResolution": "Unable to resolve the effective npm global config. Ensure npm is available and its configuration is valid.",
+    "Error_GlobalConfigSource": "The selected global npm config must be a readable file.",
+    "Error_GlobalConfigSections": "Global npm configs containing INI sections are not supported in global authentication mode.",
+    "Error_GlobalConfigMerge": "Unable to merge authentication into the global npm config. Check for invalid entries or unsupported INI sections.",
+    "Error_GlobalConfigRelativePath": "The global npm config contains an unsupported relative path setting. Use absolute paths before opting in.",
+    "Error_GlobalConfigPermissions": "Unable to restrict access to the temporary global npm config directory.",
+    "Error_GlobalConfigSelectionChanged": "The global npm config selection changed after an earlier authentication step. Restore its selection before authenticating again.",
+    "Error_GlobalConfigTempDirectory": "Agent.TempDirectory is required for global npm authentication.",
+    "Error_GlobalConfigWrite": "Unable to write the temporary global npm config.",
+    "Error_GlobalConfigCleanup": "Unable to remove task-owned global npm authentication files. Credentials may remain on disk.",
+    "Info_GlobalConfigMissing": "The selected global npm config does not exist; no existing settings were copied.",
+    "Warning_GlobalConfigPrecedence": "Global npm authentication is enabled. Project and user credentials take precedence, including expired credentials. Do not override NPM_CONFIG_GLOBALCONFIG in later steps.",
     "FoundBuildCredentials": "Found build credentials",
     "ServiceEndpointNotDefined": "Couldn't find the service connection. Make sure the selected service connection still exists.",
     "NpmrcNotNpmrc": "The file you selected to authenticate (%s) is not a valid .npmrc file.",

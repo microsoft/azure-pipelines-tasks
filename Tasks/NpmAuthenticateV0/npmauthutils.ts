@@ -219,7 +219,8 @@ export async function resolvePackagingLocation(): Promise<pkgLocationUtils.Packa
 // and generates auth tokens for them using System.AccessToken.
 export function resolveInternalFeedCredentials(
     npmrc: string,
-    packagingUris: string[]
+    packagingUris: string[],
+    readOnly: boolean = false
 ): NpmrcCredential[] {
     if (!fs.existsSync(npmrc)) {
         return [];
@@ -229,7 +230,7 @@ export function resolveInternalFeedCredentials(
         .map(uri => { try { return new URL(uri).origin; } catch { return undefined; } })
         .filter((origin): origin is string => origin !== undefined && origin !== 'null');
 
-    const allRegistries = getRegistriesFromNpmrc(npmrc);
+    const allRegistries = getRegistriesFromNpmrc(npmrc, readOnly);
     const localRegistries = allRegistries.filter(registryUrl => {
         try {
             const origin = new URL(registryUrl).origin;
@@ -306,7 +307,7 @@ export function tryResolveFromLocalRegistries(
     return null;
 }
 
-export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
+export function getRegistriesFromNpmrc(npmrcPath: string, readOnly: boolean = false): string[] {
     if (!fs.existsSync(npmrcPath)) {
         tl.warning(tl.loc('Warning_NpmrcFileNotFound', npmrcPath));
         return [];
@@ -324,41 +325,140 @@ export function getRegistriesFromNpmrc(npmrcPath: string): string[] {
     }
 
     // Write normalized URLs back so downstream npm/yarn sees trailing slashes.
-    tl.writeFile(npmrcPath, ini.stringify(config));
+    if (!readOnly) {
+        tl.writeFile(npmrcPath, ini.stringify(config));
+    }
 
     return registries;
 }
 
+export interface NpmrcMergeOptions {
+    removeExisting: 'settingsReferencingRegistry' | 'credentialsForExactRegistry';
+    removeComments: boolean;
+}
+
+interface NpmrcCredentialRemoval {
+    lines: string[];
+    replacedExistingCredentials: boolean;
+}
+
+interface NpmrcCredentialMerge extends NpmrcCredentialRemoval {
+    contents: string;
+}
+
+const authKeys = new Set(['_auth', '_authToken', 'username', '_password', 'email', 'always-auth']);
+
+// Identify lines using legacy substring matching or exact normalized authentication scope.
+function matchesCredentialLine(line: string, registryUrl: URL, removeExisting: NpmrcMergeOptions['removeExisting']): boolean {
+    if (removeExisting === 'settingsReferencingRegistry') {
+        return line.indexOf(registryUrl.host) !== -1
+            && line.indexOf(registryUrl.pathname) !== -1
+            && line.indexOf('registry=') === -1;
+    }
+    const parsed = ini.parse(line);
+    return Object.keys(parsed).some(key => {
+        const separator = key.lastIndexOf(':');
+        if (separator < 0 || !authKeys.has(key.slice(separator + 1))) {
+            return false;
+        }
+        const prefix = key.slice(0, separator);
+        return prefix.startsWith('//') && toNerfDart(`https:${prefix}`) === toNerfDart(registryUrl.href);
+    });
+}
+
+// Remove matching entries without I/O, retaining blank placeholders for legacy callers.
+function removeMatchingCredentialLines(
+    lines: string[],
+    registryUrl: URL,
+    options: NpmrcMergeOptions
+): NpmrcCredentialRemoval {
+    const remainingLines: string[] = [];
+    let replacedExistingCredentials = false;
+    for (const line of lines) {
+        if (options.removeComments && /^\s*[#;]/.test(line)) {
+            continue;
+        }
+        if (matchesCredentialLine(line, registryUrl, options.removeExisting)) {
+            replacedExistingCredentials = true;
+            if (options.removeExisting === 'settingsReferencingRegistry') {
+                remainingLines.push('');
+            }
+        } else {
+            remainingLines.push(line);
+        }
+    }
+    return { lines: remainingLines, replacedExistingCredentials };
+}
+
+// Wrap formatted authentication with the line endings used by the legacy file writer.
+function formatCredentialEntry(authEntry: string): string {
+    return os.EOL + authEntry + os.EOL;
+}
+
+// Replace matching entries and insert fresh authentication without file writes or logging.
+export function mergeNpmrcCredential(
+    lines: string[],
+    entry: NpmrcCredential,
+    options: NpmrcMergeOptions
+): NpmrcCredentialMerge {
+    const result = removeMatchingCredentialLines(lines, new URL(entry.url), options);
+    if (options.removeExisting === 'settingsReferencingRegistry') {
+        const authEntry = formatCredentialEntry(entry.auth);
+        const contents = result.lines.join(os.EOL) + authEntry;
+        // Legacy callers cache the entire appended block as one array entry.
+        result.lines.push(authEntry);
+        return { ...result, contents };
+    }
+    result.lines.push(...entry.auth.split(/\r?\n/));
+    return { ...result, contents: result.lines.join(os.EOL) + os.EOL };
+}
+
+// Warn once when replacing checked-in entries, excluding registries added earlier.
+function warnForReplacedCredentials(registryUrl: URL, addedRegistryUrls: URL[]): void {
+    const isRegistryAlreadyAdded = addedRegistryUrls.some(
+        url => url !== registryUrl && toNerfDart(url.href) === toNerfDart(registryUrl.href)
+    );
+    if (!isRegistryAlreadyAdded) {
+        tl.warning(tl.loc('CheckedInCredentialsOverriden', registryUrl.host));
+    }
+}
+
+// Merge authentication into the project file while preserving legacy warnings and cached lines.
+export function replaceAuthInNpmrc(
+    npmrcPath: string,
+    lines: string[],
+    entry: NpmrcCredential,
+    registryUrl: URL,
+    addedRegistryUrls: URL[]
+): void {
+    const result = mergeNpmrcCredential(lines, entry, { removeExisting: 'settingsReferencingRegistry', removeComments: false });
+    if (result.replacedExistingCredentials) {
+        warnForReplacedCredentials(registryUrl, addedRegistryUrls);
+    }
+    tl.debug(tl.loc('AddingAuthRegistry', entry.url));
+    fs.writeFileSync(npmrcPath, result.contents);
+    tl.debug(tl.loc('SuccessfulAppend'));
+    lines.splice(0, lines.length, ...result.lines);
+}
+
+// Append authentication using the same credential block formatting as the shared merger.
 export function appendAuthToNpmrc(npmrcPath: string, authEntry: string): void {
-    fs.appendFileSync(npmrcPath, os.EOL + authEntry + os.EOL);
+    fs.appendFileSync(npmrcPath, formatCredentialEntry(authEntry));
     tl.debug(tl.loc('SuccessfulAppend'));
 }
 
+// Remove existing project-file entries using the shared legacy matching policy.
 export function removeExistingCredentialEntries(
     npmrcPath: string,
     lines: string[],
     registryUrl: URL,
     addedRegistryUrls: URL[]
 ): string[] {
-    let warned = false;
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        const referencesHost = line.indexOf(registryUrl.host) !== -1;
-        const referencesPath = line.indexOf(registryUrl.pathname) !== -1;
-        const isRegistryLine = line.indexOf('registry=') !== -1;
-        if (referencesHost && referencesPath && !isRegistryLine) {
-            // Suppress the warning if we've already added auth for this exact
-            // registry (e.g., same URL appears as both registry= and @scope:registry=).
-            const isRegistryAlreadyAdded = addedRegistryUrls.some(
-                url => url !== registryUrl && toNerfDart(url.href) === toNerfDart(registryUrl.href)
-            );
-            if (!warned && !isRegistryAlreadyAdded) {
-                tl.warning(tl.loc('CheckedInCredentialsOverriden', registryUrl.host));
-            }
-            warned = true;
-            lines[i] = '';
-        }
+    const result = removeMatchingCredentialLines(lines, registryUrl, { removeExisting: 'settingsReferencingRegistry', removeComments: false });
+    if (result.replacedExistingCredentials) {
+        warnForReplacedCredentials(registryUrl, addedRegistryUrls);
     }
+    lines.splice(0, lines.length, ...result.lines);
     fs.writeFileSync(npmrcPath, lines.join(os.EOL));
     return lines;
 }

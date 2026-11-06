@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
-import { appendAuthToNpmrc, removeExistingCredentialEntries } from '../npmauthutils';
+import { appendAuthToNpmrc, removeExistingCredentialEntries, replaceAuthInNpmrc } from '../npmauthutils';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
@@ -229,6 +229,29 @@ describe('NpmAuthenticate L0 - Authentication (Integration)', function () {
 
             const content = fs.readFileSync(npmrcPath, 'utf8');
             assert(content.includes('//registry.npmjs.org/:_authToken=test-token'));
+        });
+
+        it('writes the shared legacy merge and updates the caller-owned line cache', function () {
+            const npmrcPath = path.join(tempDir, '.npmrc');
+            const registryUrl = new URL('https://registry.example/feed/');
+            const lines = [
+                `registry=${registryUrl.href}`,
+                '//registry.example/feed/:_authToken=old-token',
+                '//other.example/:_authToken=keep-token'
+            ];
+            const auth = '//registry.example/feed/:_authToken=new-token';
+            fs.writeFileSync(npmrcPath, lines.join(os.EOL), 'utf8');
+
+            replaceAuthInNpmrc(npmrcPath, lines, { url: registryUrl.href, auth }, registryUrl, [registryUrl]);
+
+            assert.deepStrictEqual(lines, [
+                `registry=${registryUrl.href}`,
+                '',
+                '//other.example/:_authToken=keep-token',
+                os.EOL + auth + os.EOL
+            ]);
+            assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'),
+                lines.slice(0, -1).join(os.EOL) + os.EOL + auth + os.EOL);
         });
 
         it('removes pre-existing credential lines for the same registry', function () {

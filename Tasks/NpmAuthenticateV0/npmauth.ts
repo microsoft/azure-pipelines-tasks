@@ -7,6 +7,7 @@ import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
 import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 import { NpmConfigTelemetryPhase } from './constants';
+import { cleanupGlobalConfig, saveAndActivateGlobalConfig } from './npmGlobalConfig';
 
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
@@ -17,14 +18,18 @@ async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     // Path to user provided npmrc
     const npmrc = npmauthutils.validateNpmrcPath();
+    const useGlobalConfig = tl.getBoolInput('useGlobalConfig');
+    const globalCredentials: NpmrcCredential[] = useGlobalConfig ? [] : undefined;
     const previouslyAuthenticatedUrls = npmauthutils.getPreviouslyAuthenticatedUrls();
 
     // Preserve the original user provided .npmrc on first task execution, so the post-job cleanup can restore it. 
-    const backupDirectory = npmauthutils.initializeBackupDirectory();
-    const backupManager = new NpmrcBackupManager(backupDirectory);
-    const fileIdentity = backupManager.ensureBackedUp(npmrc);
-    tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
-    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
+    if (!useGlobalConfig) {
+        const backupDirectory = npmauthutils.initializeBackupDirectory();
+        const backupManager = new NpmrcBackupManager(backupDirectory);
+        const fileIdentity = backupManager.ensureBackedUp(npmrc);
+        tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
+    }
+    let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc, useGlobalConfig);
     
     let packagingLocation;
     try {
@@ -35,7 +40,7 @@ async function main(): Promise<void> {
     }
 
     // Collect internal feeds (from .npmrc) and external registries (from service connections)
-    const internalFeedCredentials = npmauthutils.resolveInternalFeedCredentials(npmrc, packagingLocation.PackagingUris);
+    const internalFeedCredentials = npmauthutils.resolveInternalFeedCredentials(npmrc, packagingLocation.PackagingUris, useGlobalConfig);
     const endpointRegistries = await npmauthutils.resolveEndpointRegistries(previouslyAuthenticatedUrls);
 
     // Read the target .npmrc into memory for credential line replacement
@@ -88,7 +93,7 @@ async function main(): Promise<void> {
             npmauthutils.writeRepositoryOutput(tl.loc("Info_AddingFederatedFeedAuth", entraWifServiceConnectionName, registryUrlString));
             npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", entraWifServiceConnectionName));
             const npmrcEntry: NpmrcCredential = { url: registryUrlString, auth: `${npmauthutils.toNerfDart(registryUrlString)}:_authToken=${federatedAuthToken}` };
-            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries);
+            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, registryURL, addedRegistries, globalCredentials);
             federatedFeedAuthSuccessCount++;
             npmauthutils.writeRepositoryOutput(tl.loc("Info_SuccessAddingFederatedFeedAuth", registryUrlString));
             continue;
@@ -99,7 +104,7 @@ async function main(): Promise<void> {
             const npmrcEntry = npmauthutils.tryResolveFromEndpoints(registryUrlString, endpointRegistries);
             if (npmrcEntry) {
                 npmauthutils.writeRepositoryOutput(tl.loc("AddingEndpointCredentials", registryURL.host));
-                writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
+                writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries, globalCredentials);
                 externalFeedSuccessCount++;
                 continue;
             }
@@ -113,12 +118,15 @@ async function main(): Promise<void> {
         );
         if (npmrcEntry) {
             npmauthutils.writeRepositoryOutput(tl.loc("AddingLocalCredentials"));
-            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries);
+            writeCredentialEntry(npmrc, npmrcFile, npmrcEntry, new URL(npmrcEntry.url), addedRegistries, globalCredentials);
             internalFeedSuccessCount++;
             continue;
         }
 
         npmauthutils.writeRepositoryOutput(tl.loc("IgnoringRegistry", registryURL.host));
+    }
+    if (useGlobalConfig) {
+        saveAndActivateGlobalConfig(globalCredentials);
     }
 }
 
@@ -128,18 +136,26 @@ function writeCredentialEntry(
     npmrcFile: string[],
     entry: NpmrcCredential,
     registryURL: URL,
-    addedRegistries: URL[]
+    addedRegistries: URL[],
+    globalCredentials?: NpmrcCredential[]
 ): void {
+    if (globalCredentials) {
+        globalCredentials.push(entry);
+        return;
+    }
     addedRegistries.push(registryURL);
-    npmauthutils.removeExistingCredentialEntries(npmrcPath, npmrcFile, registryURL, addedRegistries);
-    tl.debug(tl.loc('AddingAuthRegistry', entry.url));
-    npmauthutils.appendAuthToNpmrc(npmrcPath, entry.auth);
-    npmrcFile.push(os.EOL + entry.auth + os.EOL);
+    npmauthutils.replaceAuthInNpmrc(npmrcPath, npmrcFile, entry, registryURL, addedRegistries);
 }
 
 
 main().catch(error => {
-    if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+    if (tl.getBoolInput('useGlobalConfig')) {
+        try {
+            cleanupGlobalConfig({ onlyUnactivated: true });
+        } catch (cleanupError) {
+            tl.error(tl.loc('Error_GlobalConfigCleanup'));
+        }
+    } else if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
         tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
         // Clear the variables after we rm-rf the main root directory
         tl.setVariable("SAVE_NPMRC_PATH", "", false);

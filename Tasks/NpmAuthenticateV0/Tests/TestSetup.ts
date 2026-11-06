@@ -14,6 +14,26 @@ const npmrcPath = process.env[TestEnvVars.npmrcPath] || '';
 if (npmrcPath) {
     tr.setInput('workingFile', npmrcPath);
 }
+if (process.env[TestEnvVars.useGlobalConfig] !== undefined) {
+    tr.setInput('useGlobalConfig', process.env[TestEnvVars.useGlobalConfig]);
+}
+if (process.env[TestEnvVars.useGlobalConfig] === 'true') {
+    process.env.AGENT_TEMPDIRECTORY = process.env[TestEnvVars.globalTestRoot];
+    process.env.NPM_CONFIG_GLOBALCONFIG = process.env[TestEnvVars.globalSourcePath];
+    delete process.env.npm_config_globalconfig;
+    tr.registerMockExport('which', (tool: string) => tool);
+    tr.registerMockExport('execSync', (tool: string, _args: string[], options: { silent?: boolean }) => {
+        if (!options.silent) {
+            throw new Error('Global configuration tools must run silently');
+        }
+        return {
+            code: process.env[TestEnvVars.globalResolutionFailure] ? 1 : 0,
+            stdout: tool === 'npm' ? process.env.NPM_CONFIG_GLOBALCONFIG : '"test","S-1-5-21-123"',
+            stderr: 'sensitive diagnostic',
+            error: undefined
+        };
+    });
+}
 if (process.env[TestEnvVars.customEndpoint]) {
     tr.setInput('customEndpoint', process.env[TestEnvVars.customEndpoint]);
 }

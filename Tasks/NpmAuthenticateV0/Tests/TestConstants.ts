@@ -1,5 +1,10 @@
 // Test environment variable keys
 export const TestEnvVars = {
+    globalScenario: '__npmauth_globalScenario__',
+    globalTestRoot: '__npmauth_globalTestRoot__',
+    globalResolutionFailure: '__npmauth_globalResolutionFailure__',
+    useGlobalConfig: '__npmauth_useGlobalConfig__',
+    globalSourcePath: '__npmauth_globalSourcePath__',
     systemAccessToken: '__npmauth_systemAccessToken__',
     npmrcPath: '__npmauth_npmrcPath__',
     npmrcShouldExist: '__npmauth_npmrcShouldExist__',   // 'false' to simulate missing file

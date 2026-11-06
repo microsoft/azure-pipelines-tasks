@@ -1,6 +1,14 @@
 {
   "inputs": [
     {
+      "name": "useGlobalConfig",
+      "label": "ms-resource:loc.input.label.useGlobalConfig",
+      "helpMarkDown": "ms-resource:loc.input.help.useGlobalConfig",
+      "type": "boolean",
+      "defaultValue": "false",
+      "required": false
+    },
+    {
       "name": "workloadIdentityServiceConnection",
       "aliases": ["azureDevOpsServiceConnection"],
       "label": "ms-resource:loc.input.label.workloadIdentityServiceConnection",

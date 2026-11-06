@@ -4,3 +4,4 @@
 import './Unit/Unit.npmauthutils';
 import './Unit/Unit.npmrcBackupManager';
 import './Unit/Unit.npmrcCredential';
+import './Unit/Unit.npmGlobalConfig';
