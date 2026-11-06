@@ -292,6 +292,40 @@ describe('HelmDeployV1 Helm command-line argument construction', function () {
             'a namespace value padded with stray whitespace must be trimmed before reaching Helm');
     });
 
+    it('keeps an overrideValues entry containing whitespace as one argument by default', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'image.tag=1.2.3 --extra-flag value\nreplicas=2');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        delete process.env[featureEnv];
+        let argv: string[];
+        try {
+            argv = await buildUpgradeArgv();
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+
+        const setIndex = argv.indexOf('--set');
+        assert.ok(setIndex !== -1, '--set flag must be present');
+        assert.strictEqual(argv[setIndex + 1], 'image.tag=1.2.3 --extra-flag value,replicas=2');
+        assert.strictEqual(argv.indexOf('--extra-flag'), -1, 'whitespace inside a value must not become a separate argument');
+    });
+
+    it('restores the previous overrideValues tokenization when HelmDeploy.DisableStrictSetArguments is enabled', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'image.tag=1.2.3 --extra-flag');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        process.env[featureEnv] = 'true';
+        let argv: string[];
+        try {
+            argv = await buildUpgradeArgv();
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+
+        assert.notStrictEqual(argv.indexOf('--extra-flag'), -1, 'legacy behavior applies while the kill-switch is enabled');
+    });
     it('still lets a quoted overrideValues entry have its quotes stripped, matching Helm --set quoting conventions', async function () {
         process.env.BUILD_BUILDNUMBER = '20261027.3';
         setInput('overrideValues', 'image.tag="1.2.3"');

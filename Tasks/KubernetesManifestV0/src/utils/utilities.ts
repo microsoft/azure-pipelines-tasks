@@ -156,3 +156,11 @@ export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
     tl.debug("api-version: " + trafficSplitAPIVersion);
     return trafficSplitAPIVersion;
 }
+
+export function escapeHelmSetToken(token: string): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableStrictSetArguments')) {
+        return token;
+    }
+
+    return token.replace(/([\\,])/g, '\\$1');
+}

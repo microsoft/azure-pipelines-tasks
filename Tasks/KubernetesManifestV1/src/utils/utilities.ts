@@ -182,3 +182,11 @@ function ensureDirExists(dirPath : string) : void
         fs.mkdirSync(dirPath);
     }
 }
+
+export function escapeHelmSetToken(token: string): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableStrictSetArguments')) {
+        return token;
+    }
+
+    return token.replace(/([\\,])/g, '\\$1');
+}
