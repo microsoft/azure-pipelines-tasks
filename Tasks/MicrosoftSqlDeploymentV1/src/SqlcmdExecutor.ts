@@ -80,7 +80,8 @@ export class SqlcmdExecutor {
         const result = await tl.exec(sqlcmdPath, args, {
             env: envVars,
             failOnStdErr: false,
-            ignoreReturnCode: true
+            ignoreReturnCode: true,
+            externalOutput: { source: 'remote' }
         });
 
         if (result !== 0) {
@@ -101,6 +102,14 @@ export class SqlcmdExecutor {
         if (credentials?.source && credentials.source !== 'tenantOnly') {
             for (const variableName of AZURE_IDENTITY_CREDENTIAL_ENV_VARS) {
                 delete envVars[variableName];
+            }
+        }
+
+        if (credentials?.source === 'managedIdentity') {
+            for (const name of Object.keys(envVars)) {
+                if (name.toUpperCase() === 'SQLCMDUSER') {
+                    delete envVars[name];
+                }
             }
         }
 

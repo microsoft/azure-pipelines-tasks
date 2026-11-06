@@ -8,7 +8,7 @@ import SqlConnectionConfig from '../src/SqlConnectionConfig';
 import AzureSqlResourceManager, { AzureSqlServer } from '../src/AzureSqlResourceManager';
 import FirewallManager from '../src/FirewallManager';
 import SqlProjectBuilder from '../src/SqlProjectBuilder';
-import { SqlcmdExecutor } from '../src/SqlcmdExecutor';
+import { SqlcmdExecutor, SqlcmdCredentials } from '../src/SqlcmdExecutor';
 import { SqlPackageExecutor } from '../src/SqlPackageExecutor';
 import SqlUtils from '../src/SqlUtils';
 
@@ -69,23 +69,118 @@ describe('MicrosoftSqlDeployment Suite', function () {
             }
         });
 
-        it('preserves ambient Azure credentials when no service connection credential is intended', function() {
+        for (const [selectorName, userIdOverride] of [
+            ['SQLCMDUSER', undefined],
+            ['sQlCmDuSeR', 'selected-managed-identity']
+        ]) {
+            it(`removes inherited ${selectorName} without changing the selected managed identity`, function() {
+                const originalUser = process.env[selectorName];
+                process.env[selectorName] = 'ambient-managed-identity';
+
+                try {
+                    const config = new SqlConnectionConfig(
+                        'Server=server;Database=db;Authentication=Active Directory Default;');
+                    const credentials: SqlcmdCredentials = {
+                        source: 'managedIdentity',
+                        authMethodOverride: 'ActiveDirectoryManagedIdentity',
+                        userIdOverride
+                    };
+                    const environment = SqlcmdExecutor.buildEnvironment(config, credentials);
+                    const args = SqlcmdExecutor.buildConnectionArguments(config, credentials);
+
+                    assert(!Object.keys(environment).some(name => name.toUpperCase() === 'SQLCMDUSER'));
+                    assert.strictEqual(process.env[selectorName], 'ambient-managed-identity');
+                    if (userIdOverride) {
+                        assert.strictEqual(args[args.indexOf('-U') + 1], userIdOverride);
+                    } else {
+                        assert(!args.includes('-U'));
+                    }
+                } finally {
+                    if (originalUser === undefined) {
+                        delete process.env[selectorName];
+                    } else {
+                        process.env[selectorName] = originalUser;
+                    }
+                }
+            });
+        }
+
+        it('preserves ambient Azure credentials and SQLCMDUSER when no service connection credential is intended', function() {
             const originalSecret = process.env['AZURE_CLIENT_SECRET'];
+            const originalUser = process.env['SQLCMDUSER'];
             process.env['AZURE_CLIENT_SECRET'] = 'ambient-secret';
+            process.env['SQLCMDUSER'] = 'ambient-user';
 
             try {
                 const config = new SqlConnectionConfig(
                     'Server=server;Database=db;Authentication=Active Directory Default;');
                 const environment = SqlcmdExecutor.buildEnvironment(config);
                 assert.strictEqual(environment['AZURE_CLIENT_SECRET'], 'ambient-secret');
+                assert.strictEqual(environment['SQLCMDUSER'], 'ambient-user');
             } finally {
                 if (originalSecret === undefined) {
                     delete process.env['AZURE_CLIENT_SECRET'];
                 } else {
                     process.env['AZURE_CLIENT_SECRET'] = originalSecret;
                 }
+                if (originalUser === undefined) {
+                    delete process.env['SQLCMDUSER'];
+                } else {
+                    process.env['SQLCMDUSER'] = originalUser;
+                }
             }
         });
+    });
+
+    describe('SqlcmdExecutor - Remote output', function() {
+        const taskLib = require('azure-pipelines-task-lib/task');
+        let originals: any;
+
+        beforeEach(() => {
+            originals = { exec: taskLib.exec, loc: taskLib.loc };
+            taskLib.loc = (key: string) => key;
+        });
+
+        afterEach(() => {
+            taskLib.exec = originals.exec;
+            taskLib.loc = originals.loc;
+        });
+
+        for (const exitCode of [0, 5]) {
+            it(`filters database messages on stdout and stderr with exit code ${exitCode}`, async () => {
+                let displayedOutput = '';
+                const destination = new Writable({
+                    write(chunk, _encoding, callback) {
+                        displayedOutput += chunk.toString();
+                        callback();
+                    }
+                });
+                const script = [
+                    "const marker = '##v' + 'so[';",
+                    "process.stdout.write('Server PRINT message\\n' + marker + 'task.setvariable variable=unexpected;]value\\n');",
+                    "process.stderr.write('Server diagnostic\\n' + marker + 'task.complete result=Failed;]value\\n');",
+                    `process.exitCode = ${exitCode};`
+                ].join(' ');
+                taskLib.exec = (_tool: string, _args: string[], options: any) => originals.exec.call(
+                    taskLib, process.execPath, ['-e', script], {
+                        ...options, outStream: destination, errStream: destination
+                    });
+
+                const config = new SqlConnectionConfig(
+                    'Server=server;Database=db;Authentication=Active Directory Default;');
+                const execution = SqlcmdExecutor.executeSqlcmd('sqlcmd', 'test.sql', config);
+                if (exitCode) {
+                    await assert.rejects(() => execution, /SqlcmdExecutionFailed/);
+                } else {
+                    await execution;
+                }
+
+                const lines = displayedOutput.split(/\r?\n/);
+                assert(lines.includes('Server PRINT message'));
+                assert(lines.includes('Server diagnostic'));
+                assert(!displayedOutput.includes('##vso['));
+            });
+        }
     });
 
     // ============================================
