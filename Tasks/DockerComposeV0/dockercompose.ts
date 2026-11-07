@@ -7,6 +7,7 @@ import * as DockerComposeUtils from "./dockercomposeutils";
 import ACRAuthenticationTokenProvider from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/acrauthenticationtokenprovider"
 import DockerComposeConnection from "./dockercomposeconnection";
 import { getDockerRegistryEndpointAuthenticationToken } from "azure-pipelines-tasks-docker-common/registryauthenticationprovider/registryauthenticationtoken";
+import { sanitizeDockerOutput } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 import Q = require('q');
 
@@ -33,7 +34,11 @@ var dockerComposeFile = tl.getInput("dockerComposeFile", true);
 var nopIfNoDockerComposeFile = tl.getBoolInput("nopIfNoDockerComposeFile");
 var dockerFile = DockerComposeUtils.findDockerFile(dockerComposeFile, cwd);
 if (nopIfNoDockerComposeFile && !tl.exist(dockerFile)) {
-    console.log("No Docker Compose file matching " + dockerComposeFile + " was found.");
+    let loggedFileName = "[path omitted]";
+    if (!tl.getPipelineFeature("UseDockerComposeMissingFileMessageFallback")) {
+        loggedFileName = sanitizeDockerOutput(dockerComposeFile ?? "");
+    }
+    console.log("No Docker Compose file matching " + loggedFileName + " was found.");
     tl.setResult(tl.TaskResult.Succeeded, "");
 } else {
     registryAuthenticationToken

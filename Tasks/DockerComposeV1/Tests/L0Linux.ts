@@ -9,7 +9,12 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('containerregistrytype', process.env["__container_type__"] || 'Container Registry');
 tr.setInput('action', process.env["__command__"] || 'Build services');
 tr.setInput('dockerRegistryEndpoint', 'dockerhubendpoint');
-tr.setInput('dockerComposeFile', process.env["__composeFilePath__"] ||'/tmp/tempdir/100/docker-compose.yml');
+if (process.env["__omitComposeFile__"] === "true") {
+    delete process.env["INPUT_DOCKERCOMPOSEFILE"];
+} else {
+    tr.setInput('dockerComposeFile', process.env["__composeFilePath__"] ||'/tmp/tempdir/100/docker-compose.yml');
+}
+tr.setInput('nopIfNoDockerComposeFile', process.env["__nopIfNoDockerComposeFile__"] || "false");
 tr.setInput('customCommand', "pull test/test:2");
 tr.setInput('includeLatestTag', process.env["__includeLatestTag__"] || "false");
 tr.setInput('qualifyImageNames', process.env["__qualifyImageNames__"] || "false");
@@ -150,6 +155,19 @@ tr.registerMock('./utils', {
         return outputFileName;
     }
 });
+
+const taskLib = require('azure-pipelines-task-lib/task');
+delete process.env["DISTRIBUTEDTASK_TASKS_USEDOCKERCOMPOSEMISSINGFILEMESSAGEFALLBACK"];
+if (process.env["__useMissingFileMessageFallback__"] !== undefined) {
+    taskLib.setVariable("DistributedTask.Tasks.UseDockerComposeMissingFileMessageFallback", process.env["__useMissingFileMessageFallback__"]);
+}
+if (process.env["__failMissingFileFormatter__"] === "true") {
+    const commandUtils = require('azure-pipelines-tasks-docker-common/dockercommandutils');
+    tr.registerMock('azure-pipelines-tasks-docker-common/dockercommandutils', {
+        ...commandUtils,
+        sanitizeDockerOutput: () => { throw new Error("Synthetic formatter failure"); }
+    });
+}
 
 tr.setAnswers(a);
 tr.run();
