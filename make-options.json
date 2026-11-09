@@ -146,6 +146,7 @@
         "MavenV2",
         "MavenV3",
         "MavenV4",
+        "MicrosoftSqlDeploymentV1",
         "MSBuildV1",
         "MysqlDeploymentOnMachineGroupV1",
         "NodeTaskRunnerInstallerV0",
@@ -259,6 +260,7 @@
         "AppCenterDistributeV3",
         "AzureIoTEdgeV2",
         "AzureMysqlDeploymentV2",
+        "AzureStaticWebAppV0",
         "PublishSymbolsV2"
     ],
     "wif_242": [

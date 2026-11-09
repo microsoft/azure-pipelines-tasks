@@ -1,10 +1,13 @@
 import assert = require('assert');
+import path = require('path');
 import stream = require('stream');
 import tl = require('azure-pipelines-task-lib/task');
 import * as utils from '../utils';
 
 export function run() {
     context('Utils tests: ', function () {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+
         it('Should recognize UNC paths', function (done: MochaDone) {
             const paths: string[] = [
                 '\\\\host\\one\\two',
@@ -55,6 +58,25 @@ export function run() {
                 Buffer.concat(chunks).toString('utf8'),
                 'ordinary remote output\n##_vso[task.setvariable variable=unsafe]value\n'
             );
+        });
+        it('Should reject a relative path that escapes the target folder using forward slashes', function (done: MochaDone) {
+            assert.throws(
+                () => utils.resolveTargetPath('./example', '../../etc/passwd'),
+                (err: Error) => {
+                    assert.strictEqual(
+                        err.message,
+                        "File name '../../etc/passwd' would be copied outside the target folder './example'."
+                    );
+                    return true;
+                }
+            );
+            done();
+        });
+
+        it('Should accept a relative path that stays inside the target folder', function (done: MochaDone) {
+            const result = utils.resolveTargetPath('./example', 'folder1/file2.txt');
+            assert.strictEqual(result, 'example/folder1/file2.txt');
+            done();
         });
     });
 }

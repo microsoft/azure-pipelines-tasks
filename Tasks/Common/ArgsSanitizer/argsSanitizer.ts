@@ -91,7 +91,19 @@ function escapeControlChars(s: string): string {
     return s.replace(/[\x00-\x1f]/g, escapeControlChar);
 }
 
-export function isPowerShellArgumentAstSafe(inputArguments: string, executable?: string): boolean {
+export interface AstProbeDiagnostics {
+    astProbeDurationMs: number;
+    astProbeTimeoutMs: number;
+    astProbeErrorCode?: string;
+    astProbeExitCode: number | null;
+    astProbeSignal: string | null;
+}
+
+export function isPowerShellArgumentAstSafe(
+    inputArguments: string,
+    executable?: string,
+    report?: (diagnostics: AstProbeDiagnostics) => void
+): boolean {
     if (!/[@{}\[\]]/.test(inputArguments)) {
         return true;
     }
@@ -112,13 +124,26 @@ export function isPowerShellArgumentAstSafe(inputArguments: string, executable?:
         '$commands = $ast.FindAll({ param($node) $node -is [System.Management.Automation.Language.CommandAst] }, $true)',
         'if ($commands.Count -gt 1) { exit 4 }'
     ].join('; ');
+    const timeoutMs = 10000;
+    const isAstProbeDiagnosticsEnabled = !!report && tl.getPipelineFeature('AzpEnableAstProbeDiagnostics');
+    const started = isAstProbeDiagnosticsEnabled ? process.hrtime() : undefined;
     const result = spawnSync(psExe, ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', validator], {
         input: inputArguments,
         encoding: 'utf8',
-        timeout: 10000,
+        timeout: timeoutMs,
         windowsHide: true
     });
 
+    if (isAstProbeDiagnosticsEnabled && started && report) {
+        const elapsed = process.hrtime(started);
+        report({
+            astProbeDurationMs: Math.round(elapsed[0] * 1000 + elapsed[1] / 1e6),
+            astProbeTimeoutMs: timeoutMs,
+            astProbeErrorCode: (result.error as NodeJS.ErrnoException | undefined)?.code,
+            astProbeExitCode: result.status,
+            astProbeSignal: result.signal
+        });
+    }
     return isAstProbeResultSafe(result);
 }
 
@@ -538,9 +563,18 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
     const astExecutable = runAst && normalizedScriptType === 'ps'
         ? (tl.which('powershell', false) || tl.which('pwsh', false) || undefined)
         : undefined;
+    // Requires AZP_75787_ENABLE_NEW_LOGIC and DistributedTask.Tasks.EnableScriptArgumentsExpressionValidation;
+    // this flag controls diagnostics only, not whether validation runs.
+    const isAstProbeDiagnosticsEnabled = tl.getPipelineFeature('AzpEnableAstProbeDiagnostics');
+    let astDiagnostics: AstProbeDiagnostics | undefined;
+    const reportAstProbe = isAstProbeDiagnosticsEnabled
+        ? (diagnostics: AstProbeDiagnostics): void => {
+            astDiagnostics = diagnostics;
+        }
+        : undefined;
     const astSafe = !runAst
-        || (isPowerShellArgumentAstSafe(inputArguments, astExecutable)
-            && (expandedArgs === inputArguments || isPowerShellArgumentAstSafe(expandedArgs, astExecutable)));
+        || (isPowerShellArgumentAstSafe(inputArguments, astExecutable, reportAstProbe)
+            && (expandedArgs === inputArguments || isPowerShellArgumentAstSafe(expandedArgs, astExecutable, reportAstProbe)));
 
     // CR/LF is a statement separator at the `. '<script>' <args>` dot-source sink (MSRC 129198). It is
     // rejected only when the newline-validation feature is on (and the org is enforcing). Test the
@@ -563,7 +597,8 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
             ...(envTelemetry ?? {}),
             ...(sanitizerTelemetry ?? {}),
             ...(hasBatchPercent ? { batchPercentDetected: true } : {}),
-            ...(!astSafe ? { astBackstopRejected: true } : {})
+            ...(!astSafe ? { astBackstopRejected: true } : {}),
+            ...(isAstProbeDiagnosticsEnabled && !astSafe ? astDiagnostics : {})
         };
         try {
             emitTelemetry('TaskHub', opts.taskName, telemetry);
@@ -584,7 +619,9 @@ export function validateScriptArgs(inputArguments: string, scriptType: string, o
                 ? (opts.bashMessageLocKey ?? opts.messageLocKey ?? 'ScriptArgsSanitized')
                 : (opts.messageLocKey ?? 'ScriptArgsSanitized');
         let message = tl.loc(messageKey);
-        if (offendingChars) {
+        if (isAstProbeDiagnosticsEnabled && !astSafe && astDiagnostics?.astProbeErrorCode === 'ETIMEDOUT') {
+            message = `PowerShell argument validation timed out after ${astDiagnostics.astProbeDurationMs} ms (limit: ${astDiagnostics.astProbeTimeoutMs} ms). Argument safety could not be established; the script was not run.`;
+        } else if (offendingChars) {
             message = `${message} Offending characters: ${offendingChars}.`;
         } else if (!astSafe) {
             message = `${message} The arguments contain a PowerShell expression that would be evaluated at runtime (for example a command, a method or property access, a cast, or a script block inside a data constructor); pass only literal values.`;
