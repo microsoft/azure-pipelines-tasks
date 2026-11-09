@@ -5,3 +5,4 @@
 import './L0.ArtifactToolInstaller';  // Pre-job artifact tool installation scenarios
 import './L0.Download';               // Internal download scenarios
 import './L0.DownloadDiagnostics';
+import './L0.Publish';
