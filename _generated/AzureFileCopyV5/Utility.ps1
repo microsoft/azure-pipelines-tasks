@@ -6,7 +6,7 @@ $jobId = $env:SYSTEM_JOBID;
 
 $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2'
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureHelpers'
 }
 
 function Get-AzureCmdletsVersion
@@ -152,12 +152,12 @@ function ConvertTo-Pfx {
     }
 
     if (-not $featureFlags.useOpenssLatestVersion) {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.cnf"
     }
     else {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version
