@@ -30,12 +30,30 @@
   ],
   "inputs": [
     {
+      "name": "useGoMod",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.useGoMod",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.useGoMod"
+    },
+    {
+      "name": "workingDirectory",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.workingDirectory",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.workingDirectory",
+      "visibleRule": "useGoMod = true"
+    },
+    {
       "name": "version",
       "type": "string",
       "label": "ms-resource:loc.input.label.version",
       "defaultValue": "1.10",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.version"
+      "helpMarkDown": "ms-resource:loc.input.help.version",
+      "visibleRule": "useGoMod = false"
     },
     {
       "name": "goPath",
