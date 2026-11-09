@@ -1,0 +1,106 @@
+{
+  "id": "e049b461-bf9e-494b-93b6-bfe5ce2a461a",
+  "name": "PublishPipelineArtifactDev",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 0
+  },
+  "preview": true,
+  "minimumAgentVersion": "4.265.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "artifactToolPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.artifactToolPath",
+      "required": true,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactToolPath"
+    },
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "required": true,
+      "defaultValue": "$(Pipeline.Workspace)",
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "artifactName",
+      "aliases": [
+        "artifact"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "artifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactType",
+      "required": true,
+      "defaultValue": "pipeline",
+      "options": {
+        "pipeline": "Azure Pipelines",
+        "filepath": "A file share"
+      }
+    },
+    {
+      "name": "fileSharePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fileSharePath",
+      "required": true,
+      "defaultValue": "",
+      "visibleRule": "artifactType = filepath",
+      "helpMarkDown": "ms-resource:loc.input.help.fileSharePath"
+    },
+    {
+      "name": "parallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.parallel",
+      "required": false,
+      "defaultValue": "false",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallelCount",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.parallelCount",
+      "required": false,
+      "defaultValue": 8,
+      "visibleRule": "artifactType = filepath && parallel = true",
+      "helpMarkDown": "ms-resource:loc.input.help.parallelCount"
+    },
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.properties",
+      "required": false,
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
+    }
+  ],
+  "execution": {
+    "Node24": {
+      "target": "publish.js"
+    }
+  },
+  "messages": {
+    "DevelopmentOnly": "ms-resource:loc.messages.DevelopmentOnly",
+    "TaskFailed": "ms-resource:loc.messages.TaskFailed"
+  }
+}

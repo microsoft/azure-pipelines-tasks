@@ -1,0 +1,28 @@
+{
+  "id": "e049b461-bf9e-494b-93b6-bfe5ce2a461a",
+  "name": "PublishPipelineArtifactDev",
+  "friendlyName": "Publish Pipeline Artifacts (dev only)",
+  "description": "Test-only Node replacement using an explicit local ArtifactTool build. Not for production.",
+  "helpMarkDown": "Uses a trusted local ArtifactTool executable in the normal task target, including containers. Does not download tools or invoke agent plug-ins.",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": { "Major": 1, "Minor": 0, "Patch": 0 },
+  "preview": true,
+  "minimumAgentVersion": "4.265.1",
+  "instanceNameFormat": "Publish Pipeline Artifact (development)",
+  "inputs": [
+    { "name": "artifactToolPath", "type": "filePath", "label": "Local development ArtifactTool executable", "required": true, "defaultValue": "", "helpMarkDown": "Absolute executable path visible inside the task target. Must be a trusted development build with pipeline artifact metadata and pattern support. No tool download or PATH lookup is performed." },
+    { "name": "path", "aliases": ["targetPath"], "type": "filePath", "label": "File or directory path", "required": true, "defaultValue": "$(Pipeline.Workspace)", "helpMarkDown": "File or directory to publish; relative paths use System.DefaultWorkingDirectory. Wildcards are not supported." },
+    { "name": "artifactName", "aliases": ["artifact"], "type": "string", "label": "Artifact name", "required": false, "defaultValue": "", "helpMarkDown": "Defaults to the normalized job identifier. Strict artifact name validation is always enabled in this development task." },
+    { "name": "artifactType", "aliases": ["publishLocation"], "type": "pickList", "label": "Publish location", "required": true, "defaultValue": "pipeline", "options": { "pipeline": "Azure Pipelines", "filepath": "A file share" } },
+    { "name": "fileSharePath", "type": "string", "label": "File share path", "required": true, "defaultValue": "", "visibleRule": "artifactType = filepath", "helpMarkDown": "Windows-only share accessible to the normal task target, not implicitly to the host." },
+    { "name": "parallel", "type": "boolean", "label": "Parallel copy", "required": false, "defaultValue": "false", "visibleRule": "artifactType = filepath" },
+    { "name": "parallelCount", "type": "int", "label": "Parallel count", "required": false, "defaultValue": 8, "visibleRule": "artifactType = filepath && parallel = true", "helpMarkDown": "Copy parallelism from 1 to 128; out-of-range values are clamped with a warning." },
+    { "name": "properties", "type": "string", "label": "Custom properties", "required": false, "defaultValue": "", "helpMarkDown": "JSON object of strings with user- prefixed keys." }
+  ],
+  "execution": { "Node24": { "target": "publish.js" } },
+  "messages": {
+    "DevelopmentOnly": "Development-only task: invoking a trusted local ArtifactTool build. Production tasks and YAML shortcuts are unchanged.",
+    "TaskFailed": "Artifact task failed: %s"
+  }
+}
