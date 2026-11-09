@@ -1,0 +1,511 @@
+{
+  "description": "Files and empty directories restored by the in-box DownloadPipelineArtifact@2 / DownloadBuildArtifacts@1 tasks (Windows agent, patterns input) from one artifact. Produced by a pipeline that ran the in-box tasks.",
+  "ignoreCase": true,
+  "paths": [
+    ".hidden.txt",
+    "Mixed.Txt",
+    "UPPER.TXT",
+    "brace{1,2}.txt",
+    "dir/.dot/e.txt",
+    "dir/a.txt",
+    "dir/b.log",
+    "dir/emptysub",
+    "dir/sub/c.txt",
+    "dir/sub/d.md",
+    "emptydir",
+    "other/f.txt",
+    "other/sub/g.txt",
+    "root.log",
+    "root.txt",
+    "sp ace/h.txt"
+  ],
+  "cases": [
+    {
+      "id": "d01",
+      "patterns": [
+        "**/*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/sub/c.txt",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "d02",
+      "patterns": [
+        "**/*.txt",
+        "!**/c.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "d03",
+      "patterns": [
+        "dir/**"
+      ],
+      "expected": [
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md"
+      ]
+    },
+    {
+      "id": "d04",
+      "patterns": [
+        "old-patterns/dir/**"
+      ],
+      "expected": []
+    },
+    {
+      "id": "d05",
+      "patterns": [
+        "old-patterns/**"
+      ],
+      "expected": []
+    },
+    {
+      "id": "d06",
+      "patterns": [
+        "**/dir/**"
+      ],
+      "expected": [
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md"
+      ]
+    },
+    {
+      "id": "p01",
+      "patterns": [
+        "**/*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/sub/c.txt",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p02",
+      "patterns": [
+        "*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "Mixed.Txt",
+        "root.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p03",
+      "patterns": [
+        "**/*.txt",
+        "!**/c.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p04",
+      "patterns": [
+        "!**/c.txt",
+        "**/*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p05",
+      "patterns": [
+        "!**/*.txt"
+      ],
+      "expected": [
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/d.md",
+        "emptydir",
+        "root.log"
+      ]
+    },
+    {
+      "id": "p06",
+      "patterns": [
+        "**/*.txt",
+        "**/*.log"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/sub/c.txt",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p07",
+      "patterns": [
+        "dir/**"
+      ],
+      "expected": [
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md"
+      ]
+    },
+    {
+      "id": "p08",
+      "patterns": [
+        "dir/*"
+      ],
+      "expected": [
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub"
+      ]
+    },
+    {
+      "id": "p09",
+      "patterns": [
+        "dir"
+      ],
+      "expected": []
+    },
+    {
+      "id": "p10",
+      "patterns": [
+        "**/.dot/**"
+      ],
+      "expected": [
+        "dir/.dot/e.txt"
+      ]
+    },
+    {
+      "id": "p11",
+      "patterns": [
+        "**/.*"
+      ],
+      "expected": [
+        ".hidden.txt"
+      ]
+    },
+    {
+      "id": "p12",
+      "patterns": [
+        "**/upper*"
+      ],
+      "expected": [
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p13",
+      "patterns": [
+        "**/*.{txt,log}"
+      ],
+      "expected": []
+    },
+    {
+      "id": "p14",
+      "patterns": [
+        "/dir/**"
+      ],
+      "expected": []
+    },
+    {
+      "id": "p15",
+      "patterns": [
+        "dir\\**"
+      ],
+      "expected": [
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md"
+      ]
+    },
+    {
+      "id": "p16",
+      "patterns": [
+        "#c.txt",
+        "**/*.log"
+      ],
+      "expected": [
+        "dir/b.log",
+        "root.log"
+      ]
+    },
+    {
+      "id": "p17",
+      "patterns": [
+        "**/*.log",
+        "",
+        "  **/*.md  "
+      ],
+      "expected": [
+        "dir/b.log",
+        "dir/sub/d.md",
+        "root.log"
+      ]
+    },
+    {
+      "id": "p18",
+      "patterns": [
+        "**/*.txt",
+        "!dir/**"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/sub/c.txt",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p19",
+      "patterns": [
+        "!dir/**",
+        "!other/**"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p20",
+      "patterns": [
+        "**/c.txt",
+        "**/g.txt"
+      ],
+      "expected": [
+        "dir/sub/c.txt",
+        "other/sub/g.txt"
+      ]
+    },
+    {
+      "id": "p21",
+      "patterns": [
+        "dir/sub/c.txt"
+      ],
+      "expected": [
+        "dir/sub/c.txt"
+      ]
+    },
+    {
+      "id": "p22",
+      "patterns": [
+        "**"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p23",
+      "patterns": [
+        "!**/*.log",
+        "!**/*.md"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p24",
+      "patterns": [
+        "**/{a,b}.*"
+      ],
+      "expected": []
+    },
+    {
+      "id": "p25",
+      "patterns": [
+        "**/*.txt",
+        "!**/*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    },
+    {
+      "id": "p26",
+      "patterns": [
+        "!**/*.txt",
+        "**/*.txt"
+      ],
+      "expected": [
+        ".hidden.txt",
+        "brace{1,2}.txt",
+        "dir/.dot/e.txt",
+        "dir/a.txt",
+        "dir/b.log",
+        "dir/emptysub",
+        "dir/sub/c.txt",
+        "dir/sub/d.md",
+        "emptydir",
+        "Mixed.Txt",
+        "other/f.txt",
+        "other/sub/g.txt",
+        "root.log",
+        "root.txt",
+        "sp ace/h.txt",
+        "UPPER.TXT"
+      ]
+    }
+  ]
+}

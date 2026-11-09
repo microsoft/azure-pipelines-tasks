@@ -1,0 +1,125 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "releaseNotes": "ms-resource:loc.releaseNotes",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 282,
+    "Patch": 0
+  },
+  "groups": [],
+  "demands": [],
+  "preview": false,
+  "minimumAgentVersion": "4.248.0",
+  "inputs": [
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "defaultValue": "$(Pipeline.Workspace)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "artifactName",
+      "aliases": [
+        "artifact"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "artifactType",
+      "aliases": [
+        "publishLocation"
+      ],
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.artifactType",
+      "defaultValue": "pipeline",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactType",
+      "options": {
+        "pipeline": "Azure Pipelines",
+        "filepath": "A file share"
+      }
+    },
+    {
+      "name": "fileSharePath",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.fileSharePath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.fileSharePath",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallel",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.parallel",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallel",
+      "visibleRule": "artifactType = filepath"
+    },
+    {
+      "name": "parallelCount",
+      "type": "int",
+      "label": "ms-resource:loc.input.label.parallelCount",
+      "defaultValue": 8,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.parallelCount",
+      "visibleRule": "artifactType = filepath && parallel = true"
+    },
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "main.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "OnPremIsNotSupported": "ms-resource:loc.messages.OnPremIsNotSupported",
+    "ArtifactNameIsNotValid": "ms-resource:loc.messages.ArtifactNameIsNotValid",
+    "PathDoesNotExist": "ms-resource:loc.messages.PathDoesNotExist",
+    "UploadingPipelineArtifact": "ms-resource:loc.messages.UploadingPipelineArtifact",
+    "UploadArtifactFinished": "ms-resource:loc.messages.UploadArtifactFinished",
+    "CannotUploadFromCurrentEnvironment": "ms-resource:loc.messages.CannotUploadFromCurrentEnvironment",
+    "BuildIdIsNotValid": "ms-resource:loc.messages.BuildIdIsNotValid",
+    "CannotBeNullOrEmpty": "ms-resource:loc.messages.CannotBeNullOrEmpty",
+    "ArtifactCustomPropertyInvalid": "ms-resource:loc.messages.ArtifactCustomPropertyInvalid",
+    "ArtifactCustomPropertiesNotJson": "ms-resource:loc.messages.ArtifactCustomPropertiesNotJson",
+    "FileShareOperatingSystemNotSupported": "ms-resource:loc.messages.FileShareOperatingSystemNotSupported",
+    "UnexpectedParallelCount": "ms-resource:loc.messages.UnexpectedParallelCount",
+    "ParallelCountNotANumber": "ms-resource:loc.messages.ParallelCountNotANumber",
+    "CopyFileComplete": "ms-resource:loc.messages.CopyFileComplete",
+    "AssociateArtifactWithBuild": "ms-resource:loc.messages.AssociateArtifactWithBuild",
+    "PublishingArtifactUsingRobocopy": "ms-resource:loc.messages.PublishingArtifactUsingRobocopy",
+    "RobocopyBasedPublishArtifactTaskExitCode": "ms-resource:loc.messages.RobocopyBasedPublishArtifactTaskExitCode",
+    "RobocopyBasedPublishArtifactTaskFailed": "ms-resource:loc.messages.RobocopyBasedPublishArtifactTaskFailed"
+  }
+}
