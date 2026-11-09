@@ -225,6 +225,6 @@ export function logCommandResult(area: string, feature: string, resultCode: numb
 }
 
 export function logInfo(key: string, ...params: any[]): void {
-    console.log(tl.loc(key, ...params));
+    tl.writeExternalOutput(tl.loc(key, ...params) + "\n",
+        { source: "repository", vsoCommandMode: "blockOnly" });
 }
-
