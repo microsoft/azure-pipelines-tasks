@@ -70,6 +70,14 @@ export function validateReleaseName(value: string): string {
     return value;
 }
 
+// Chart references and repository URLs are positional Helm arguments, so a leading '-' would be parsed as an option.
+export function validateChartReference(value: string): string {
+    if (!tl.getPipelineFeature('HelmDeploy.DisableStrictSetArguments') && value && value.startsWith('-')) {
+        throw new Error(tl.loc('InvalidChartReference', value));
+    }
+    return value;
+}
+
 export function extractReleaseNameFromHelmOutput(output: string) {
     const releaseNameMatch = output.match(matchPatternForReleaseName);
     if (releaseNameMatch && releaseNameMatch.length >= 1)
@@ -128,9 +136,14 @@ export function replaceNewlinesWithCommas(overrideValues: string): string {
 // Builds the --set arguments as discrete argv entries so the value is never re-tokenized on whitespace. Enabling the HelmDeploy.DisableStrictSetArguments pipeline feature restores the legacy behavior.
 export function addOverrideValuesArguments(helmCli: any, overrideValues: string): void {
     if (!tl.getPipelineFeature('HelmDeploy.DisableStrictSetArguments')) {
-        const value = overrideValues.split(/\r?\n/).filter(pair => pair).join(',').replace(/\\"|"/g, m => m === '"' ? '' : '"');
-        helmCli.addSingleArgument('--set');
-        helmCli.addSingleArgument(value);
+        const value = overrideValues.split(/\r?\n/).filter(pair => pair.trim()).join(',').replace(/\\"|"/g, m => m === '"' ? '' : '"').trim();
+        if (value) {
+            if (value.indexOf(' --') !== -1) {
+                tl.warning(tl.loc('OverrideValuesContainOptionLikeText'));
+            }
+            helmCli.addSingleArgument('--set');
+            helmCli.addSingleArgument(value);
+        }
     } else {
         helmCli.addArgument('--set '.concat(replaceNewlinesWithCommas(overrideValues)));
     }

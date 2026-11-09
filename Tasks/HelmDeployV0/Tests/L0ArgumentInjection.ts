@@ -344,6 +344,55 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
         assert.ok(setIndex !== -1, '--set flag must be present');
         assert.strictEqual(argv[setIndex + 1], 'greeting=say "hi"!');
     });
+    it('omits --set for empty, whitespace-only or quote-only override values and trims the rest', async function () {
+        const cases: [string, string | null][] = [['', null], ['   ', null], ['""', null], ['  image.tag=1.2.3  ', 'image.tag=1.2.3'], ['  \na=b', 'a=b'], ['image.tag="\\"true\\""', 'image.tag="true"']];
+        for (const [input, expected] of cases) {
+            process.env.BUILD_BUILDNUMBER = '20261027.3';
+            setInput('overrideValues', input);
+            const argv = await buildUpgradeArgv();
+            const i = argv.indexOf('--set');
+            if (expected === null) {
+                assert.strictEqual(i, -1, 'no --set expected for: ' + input);
+            } else {
+                assert.strictEqual(argv[i + 1], expected, 'for: ' + input);
+            }
+        }
+    });
+    it('validates chart references: rejects a leading dash, accepts ordinary forms, and honors the kill-switch', function () {
+        const utils = require('../src/utils');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        try {
+            delete process.env[featureEnv];
+            assert.throws(() => utils.validateChartReference('--post-renderer=x'), /InvalidChartReference|starts with '-'/);
+            for (const ok of ['stable/nginx', 'oci://registry.example.com/charts/app', './charts/app', 'C:\\charts\\app', 'myregistry.azurecr.io/helm/app']) {
+                assert.strictEqual(utils.validateChartReference(ok), ok);
+            }
+            process.env[featureEnv] = 'true';
+            assert.strictEqual(utils.validateChartReference('--x'), '--x');
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+    });
+
+    it('warns when an overrideValues entry contains option-like text but still passes it as one value', function () {
+        const utils = require('../src/utils');
+        const originalWarning = tl.warning;
+        const warnings: string[] = [];
+        (tl as any).warning = (m: string) => { warnings.push(m); };
+        const added: string[] = [];
+        const fakeCli = { addSingleArgument: (a: string) => added.push(a), addArgument: (a: string) => added.push(a) };
+        try {
+            utils.addOverrideValuesArguments(fakeCli, 'a=b --extra');
+            assert.strictEqual(warnings.length, 1);
+            assert.deepStrictEqual(added, ['--set', 'a=b --extra']);
+            warnings.length = 0;
+            utils.addOverrideValuesArguments(fakeCli, 'a=b');
+            assert.strictEqual(warnings.length, 0);
+        } finally {
+            (tl as any).warning = originalWarning;
+        }
+    });
     it('omits a single-token argument entirely when its value is empty, rather than adding a stray empty element', function () {
         let captured: string[] = null;
         const originalExecSync = tr.ToolRunner.prototype.execSync;

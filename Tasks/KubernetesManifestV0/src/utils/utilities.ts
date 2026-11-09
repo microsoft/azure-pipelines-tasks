@@ -186,11 +186,21 @@ export function escapeHelmSetToken(token: string, allowLists: boolean = false): 
             result += i + 1 < token.length ? c + token[++i] : '\\\\';
         } else if (c === ',' && !(isList && depth > 0)) {
             result += '\\,';
+        } else if (c === '=' && !allowLists) {
+            result += '\\=';
         } else {
             if (isList && c === '{') { depth++; }
             else if (isList && c === '}') { depth--; }
             result += c;
         }
     }
-    return result;
+    // A value starting with an unescaped '{' opens a Helm list, after which further keys can follow without a comma.
+    return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
+}
+
+export function validateReleaseName(value: string): string {
+    if (value && value.startsWith('-')) {
+        throw new Error(tl.loc('InvalidReleaseName', value));
+    }
+    return value;
 }

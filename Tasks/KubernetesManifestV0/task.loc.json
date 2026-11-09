@@ -392,6 +392,7 @@
     "InvalidBaselineAndCanaryReplicas": "ms-resource:loc.messages.InvalidBaselineAndCanaryReplicas",
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
-    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink"
+    "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
+    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName"
   }
 }
