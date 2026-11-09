@@ -338,6 +338,16 @@ describe('HelmDeployV1 Helm command-line argument construction', function () {
             'quotes around an overrideValues value must still be stripped so Helm does not receive literal quote characters');
     });
 
+    it('keeps escaped literal quotes in an overrideValues entry while stripping grouping quotes', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'greeting="say \\"hi\\"!"');
+
+        const argv = await buildUpgradeArgv();
+
+        const setIndex = argv.indexOf('--set');
+        assert.ok(setIndex !== -1, '--set flag must be present');
+        assert.strictEqual(argv[setIndex + 1], 'greeting=say "hi"!');
+    });
     it('omits a single-token argument entirely when its value is empty, rather than adding a stray empty element', function () {
         let captured: string[] = null;
         const originalExecSync = tr.ToolRunner.prototype.execSync;
