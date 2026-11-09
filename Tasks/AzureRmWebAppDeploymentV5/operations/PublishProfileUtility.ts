@@ -5,6 +5,34 @@ import * as Constant from './Constants';
 import path = require('path');
 import Q = require('q');
 
+const PUBLISH_PROFILE_LOG_ALLOWLIST: string[] = [
+    "WebPublishMethod",
+    Constant.PublishProfileXml.MSDeployServiceURL,
+    Constant.PublishProfileXml.DeployIisAppPath,
+    Constant.PublishProfileXml.UserName
+];
+
+export function getRedactedPublishProfileForLog(propertyGroup: Record<string, unknown>): {
+    safe: Record<string, unknown>;
+    droppedFieldCount: number;
+    hasNestedDbSettings: boolean;
+} {
+    const safe: Record<string, unknown> = {};
+    let droppedFieldCount = 0;
+    for (const key of Object.keys(propertyGroup || {})) {
+        if (PUBLISH_PROFILE_LOG_ALLOWLIST.indexOf(key) >= 0) {
+            safe[key] = propertyGroup[key];
+        } else {
+            droppedFieldCount++;
+        }
+    }
+    return {
+        safe,
+        droppedFieldCount,
+        hasNestedDbSettings: !!(propertyGroup && propertyGroup["PublishDatabaseSettings"])
+    };
+}
+
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
@@ -112,7 +140,22 @@ export class PublishProfileUtility {
                                 || !propertyGroup[index].hasOwnProperty(Constant.PublishProfileXml.UserName)) {
                                 reject(tl.loc('InvalidPublishProfile'));
                             }
-                            tl.debug("Publish Profile: " + JSON.stringify(propertyGroup[index]));
+                            if (tl.getPipelineFeature('EnablePublishProfileLogRedaction')) {
+                                const redacted = getRedactedPublishProfileForLog(propertyGroup[index]);
+                                tl.debug("Publish Profile: " + JSON.stringify(redacted.safe));
+                                try {
+                                    console.log(`##vso[telemetry.publish area=TaskHub;feature=${PublishProfileUtility._telemetryFeature}]`
+                                        + JSON.stringify({
+                                            event: 'PublishProfileLogRedacted',
+                                            droppedFieldCount: redacted.droppedFieldCount,
+                                            hasNestedDbSettings: redacted.hasNestedDbSettings
+                                        }));
+                                } catch (error) {
+                                    tl.debug("Unable to publish redaction telemetry: " + error);
+                                }
+                            } else {
+                                tl.debug("Publish Profile: " + JSON.stringify(propertyGroup[index]));
+                            }
                             response(propertyGroup[index]);
                         }
                     }
