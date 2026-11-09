@@ -12,6 +12,7 @@ import { AzureStorageArtifactDownloader } from "./AzureStorageArtifacts/AzureSto
 import { ArtifactDetailsDownloader } from "./ArtifactDetails/ArtifactDetailsDownloader";
 import { JenkinsRestClient, JenkinsJobDetails } from "./ArtifactDetails/JenkinsRestClient"
 import { JenkinsOutput } from './JenkinsOutput';
+import { findEntryOutsideRoot } from './ZipEntryValidator';
 
 let extractZip: any;
 
@@ -110,25 +111,54 @@ function publishEvent(feature, properties: any): void {
 export async function unzip(zipLocation: string, unzipLocation: string): Promise<void> {
     await new Promise<void>(function (resolve, reject) {
         tl.debug('Extracting ' + zipLocation + ' to ' + unzipLocation);
+        // Kill switch: when enabled, skip zip entry validation and use the original extraction behavior.
+        const skipZipEntryValidation = !!tl.getPipelineFeature('JenkinsDownloadArtifacts.DisableZipEntryValidation');
         if (isCurrentNodeVersionAtLeast20) {
             tl.debug(`Using extract-zip package for extracting archive`);
-            extractZip(zipLocation, { dir: unzipLocation }).then(() => {
+            const extractOptions: any = { dir: unzipLocation };
+            if (!skipZipEntryValidation) {
+                extractOptions.onEntry = (entry: any) => {
+                    if (findEntryOutsideRoot(unzipLocation, [entry.fileName]) !== undefined) {
+                        throw new Error(tl.loc("ZipEntryOutsideTargetDirectory", entry.fileName));
+                    }
+                };
+            }
+            extractZip(zipLocation, extractOptions).then(() => {
                 resolve();
             }).catch((error) => {
                 reject(error);
             });
         } else {
-            var unzipper = new extractZip(zipLocation);
-            unzipper.on('error', err => {
-                return reject(tl.loc("ExtractionFailed", err))
-            });
-            unzipper.on('extract', log => {
-                tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-                return resolve();
-            });
-            unzipper.extract({
-                path: unzipLocation
-            });
+            const extractArchive = () => {
+                const unzipper = new extractZip(zipLocation);
+                unzipper.on('error', err => {
+                    return reject(tl.loc("ExtractionFailed", err))
+                });
+                unzipper.on('extract', log => {
+                    tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
+                    return resolve();
+                });
+                unzipper.extract({
+                    path: unzipLocation
+                });
+            };
+            if (!skipZipEntryValidation) {
+                const zipLister = new extractZip(zipLocation);
+                zipLister.on('error', err => {
+                    return reject(tl.loc("ExtractionFailed", err))
+                });
+                zipLister.on('list', (files: string[]) => {
+                    const invalidEntry = findEntryOutsideRoot(unzipLocation, files);
+                    if (invalidEntry !== undefined) {
+                        return reject(new Error(tl.loc("ZipEntryOutsideTargetDirectory", invalidEntry)));
+                    }
+
+                    extractArchive();
+                });
+                zipLister.list();
+            } else {
+                extractArchive();
+            }
         }
     });
 }

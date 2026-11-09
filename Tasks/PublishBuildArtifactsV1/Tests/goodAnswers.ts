@@ -34,6 +34,11 @@ export const goodAnswers: TaskLibAnswers = {
       'stderr': '',
       'code': 0
     },
+    [`powershell.exe -NoLogo -Sta -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command & \'${path.resolve(__dirname, '..', 'Invoke-Robocopy.ps1')}\' -Source \'C:\\bin\\release\' -Target \'\\\\UNCShare\\loggingcommand\\drop\' -ParallelCount 1`]: {
+      'stdout': '\t    New File  \t\t          0\tC:\\bin\\release\\##vso[task.setvariable variable=injected]unsafe',
+      'stderr': '',
+      'code': 0
+    },
     [`path/to/tar cf ${path.join(process.cwd(), 'drop.tar')} --directory /bin/release file`]: {
       'stdout': 'test stdout from tar: added file to archive',
       'stderr': '',

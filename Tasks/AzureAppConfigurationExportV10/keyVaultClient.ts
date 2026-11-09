@@ -22,12 +22,20 @@ export class KeyVaultClient {
             throw new ArgumentNullError(tl.loc("SecretUrlCannotBeEmpty")); 
         }
         
-        if (!this.isValidUrl(setting.value.secretId)) {
+        let secretUrl: URL;
+        try {
+            secretUrl = new URL(setting.value.secretId);
+        }
+        catch {
+            throw new ArgumentError(tl.loc("InvalidSecretUrl"));
+        }
+
+        if (!this.isValidUrl(secretUrl)) {
             throw new ArgumentError(tl.loc("InvalidSecretUrl"));      
         }
 
         const parsedSecretIdentifier: KeyVaultSecretIdentifier = parseKeyVaultSecretIdentifier(
-            setting.value.secretId
+            secretUrl.href
         );
        
         const uriScheme: string = "https://";
@@ -61,9 +69,11 @@ export class KeyVaultClient {
         }
     }
 
-    private isValidUrl(secretUrl: string): boolean {
-        const components: string[] = secretUrl.substring("https://".length).split('/');
-
-        return components.length > 2 && components[0].toLowerCase().endsWith(this._vaultHostNameSuffix);
+    private isValidUrl(secretUrl: URL): boolean {
+        return secretUrl.protocol === "https:"
+            && secretUrl.hostname.endsWith(`.${this._vaultHostNameSuffix}`)
+            && !secretUrl.username
+            && !secretUrl.password
+            && !secretUrl.port;
     }
 }

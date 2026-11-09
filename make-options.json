@@ -258,6 +258,8 @@
     "Node24_overwrite": [
         "AppCenterDistributeV3",
         "AzureIoTEdgeV2",
+        "AzureMysqlDeploymentV2",
+        "AzureStaticWebAppV0",
         "PublishSymbolsV2"
     ],
     "wif_242": [

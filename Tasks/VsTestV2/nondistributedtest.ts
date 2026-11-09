@@ -9,6 +9,7 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as process from 'process';
 import { InputDataContract } from './inputdatacontract';
+import { sanitizeForLoggingCommand } from './sanitize';
 
 export class NonDistributedTest {
     constructor(inputDataContract: InputDataContract) {
@@ -98,7 +99,7 @@ export class NonDistributedTest {
     }
     private createTestSourcesFile(): string {
         try {
-            console.log(tl.loc('UserProvidedSourceFilter', this.sourceFilter.toString()));
+            console.log(tl.loc('UserProvidedSourceFilter', sanitizeForLoggingCommand(this.sourceFilter.toString())));
             const telemetryProps: { [key: string]: any; } = { MiniMatchLines: this.sourceFilter.length };
             telemetryProps.ExecutionFlow = 'NonDistributed';
             const start = new Date().getTime();
@@ -117,11 +118,12 @@ export class NonDistributedTest {
 
             tl.debug('Files matching count :' + filesMatching.length);
             if (filesMatching.length === 0) {
-                tl.warning(tl.loc('noTestSourcesFound', this.sourceFilter.toString()));
+                const sourceFilterForLogging = sanitizeForLoggingCommand(this.sourceFilter.toString());
+                tl.warning(tl.loc('noTestSourcesFound', sourceFilterForLogging));
                 if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() === 'fail') {
                     throw new Error(tl.loc('minTestsNotExecuted', this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
                 } else {
-                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', this.sourceFilter.toString()), true);
+                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', sourceFilterForLogging), true);
                     process.exit(0);
                 }
             }
