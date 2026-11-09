@@ -6,7 +6,7 @@ $jobId = $env:SYSTEM_JOBID;
 
 $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2'
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureHelpers'
 }
 
 function Get-AzureCmdletsVersion
@@ -152,12 +152,12 @@ function ConvertTo-Pfx {
     }
 
     if (-not $featureFlags.useOpenssLatestVersion) {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.cnf"
     }
     else {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version
@@ -1037,8 +1037,20 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments'"
+    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.DisableTargetPathHardening'
+    if (-not $disableTargetPathHardening)
+    {
+        # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
+        $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+        $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+        $escapedContainerSasToken = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerSasToken)
+        $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+        $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -containerSasToken '$escapedContainerSasToken' -additionalArguments '$escapedAdditionalArguments'"
+    }
+    else
+    {
+        $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -disableTargetPathHardening"
+    }
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1054,10 +1066,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
+    }
+
+    # Rollback preserves the original parser dependency: only SourcePath parsing needs it.
+    if (!$disableTargetPathHardening -or $useSourcePathHardening)
+    {
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
         if(!$splitAdditionalArgumentsFunctionInfo)
         {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
         }
         $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }

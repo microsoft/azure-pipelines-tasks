@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 5,
-    "Minor": 282,
-    "Patch": 7
+    "Minor": 283,
+    "Patch": 3
   },
   "releaseNotes": "ms-resource:loc.releaseNotes",
   "groups": [
@@ -214,7 +214,7 @@
     "Az_LowerVersionWarning": "ms-resource:loc.messages.Az_LowerVersionWarning"
   },
   "_buildConfigMapping": {
-    "Default": "5.282.6",
-    "Node24_1": "5.282.7"
+    "Default": "5.283.2",
+    "Node24_1": "5.283.3"
   }
 }
