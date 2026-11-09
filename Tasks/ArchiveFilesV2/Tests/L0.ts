@@ -366,11 +366,13 @@ describe('ArchiveFiles L0 Suite', function () {
             }
         });
 
+        const archiveFilesModulePath = path.join(__dirname, '..', 'archivefiles.js');
+
         try {
-            delete require.cache[require.resolve('..\\archivefiles.js')];
-            require('..\\archivefiles.js');
+            delete require.cache[require.resolve(archiveFilesModulePath)];
+            require(archiveFilesModulePath);
         } finally {
-            delete require.cache[require.resolve('..\\archivefiles.js')];
+            delete require.cache[require.resolve(archiveFilesModulePath)];
             Object.assign(taskLib, originalTaskLib);
         }
 
