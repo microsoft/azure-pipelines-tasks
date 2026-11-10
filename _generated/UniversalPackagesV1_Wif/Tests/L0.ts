@@ -9,6 +9,7 @@ tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
 // Import pre-job installer tests
 import './L0.ArtifactToolInstaller';
+import './L0.InfoDiagnostics';
 
 describe('UniversalPackages Suite', function () {
     describe('Download Operations', function () {
