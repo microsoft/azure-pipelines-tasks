@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 283,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -477,6 +477,7 @@
     "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
     "RolloutStatusTimedout": "Rollout status check failed.",
     "EnvironmentLink": "For more information, go to %s",
-    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s",
+    "InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input."
   }
 }

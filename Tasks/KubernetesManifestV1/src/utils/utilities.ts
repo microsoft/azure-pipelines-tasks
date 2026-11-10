@@ -182,3 +182,51 @@ function ensureDirExists(dirPath : string) : void
         fs.mkdirSync(dirPath);
     }
 }
+
+export function escapeHelmSetToken(token: string, allowLists: boolean = false): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableStrictSetArguments')) {
+        return token;
+    }
+
+    // Existing backslash escapes (for example \. in key paths) are preserved; only separators that
+    // would start a new --set pair are escaped.
+    // Commas stay active only when the whole token is a single flat Helm list: {a,b}.
+    let isList = false;
+    if (allowLists && token.length >= 2 && token[0] === '{') {
+        let opens = 0;
+        let closes = 0;
+        let lastCloseAt = -1;
+        for (let i = 0; i < token.length; i++) {
+            if (token[i] === '\\') { i++; continue; }
+            if (token[i] === '{') { opens++; }
+            else if (token[i] === '}') { closes++; lastCloseAt = i; }
+        }
+        isList = opens === 1 && closes === 1 && lastCloseAt === token.length - 1;
+    }
+
+    let depth = 0;
+    let result = '';
+    for (let i = 0; i < token.length; i++) {
+        const c = token[i];
+        if (c === '\\') {
+            result += i + 1 < token.length ? c + token[++i] : '\\\\';
+        } else if (c === ',' && !(isList && depth > 0)) {
+            result += '\\,';
+        } else if (c === '=' && !allowLists) {
+            result += '\\=';
+        } else {
+            if (isList && c === '{') { depth++; }
+            else if (isList && c === '}') { depth--; }
+            result += c;
+        }
+    }
+    // A value starting with an unescaped '{' opens a Helm list, after which further keys can follow without a comma.
+    return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
+}
+
+export function validateReleaseName(value: string): string {
+    if (value && value.startsWith('-')) {
+        throw new Error(tl.loc('InvalidReleaseName', value));
+    }
+    return value;
+}
