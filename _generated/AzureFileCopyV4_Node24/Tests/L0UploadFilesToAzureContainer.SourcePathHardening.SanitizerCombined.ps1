@@ -27,6 +27,7 @@ param()
 # enabled, asserting the value with the embedded space survives as one token.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 
