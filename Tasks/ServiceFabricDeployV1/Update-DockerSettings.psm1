@@ -183,6 +183,13 @@ function Update-DockerSettings
     Trace-VstsEnteringInvocation $MyInvocation
     try
     {
+        # Kill switch: when enabled, fall back entirely to the legacy behavior (no registry authority checks or strict manifest parsing).
+        $legacyBehavior = [bool](Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
+        if ($legacyBehavior)
+        {
+            Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled)
+        }
+
         # Get the credentials of the selected registry endpoint
         $registryCredentials = Get-VstsInput -Name registryCredentials -Require
         switch ($registryCredentials) {
@@ -206,7 +213,7 @@ function Update-DockerSettings
             {
                 $dockerRegistryInput = Get-VstsInput -Name dockerRegistryEndpoint -Require
                 $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryInput -Require
-                $registryUrl = Get-RegistryConnectionAuthority -Endpoint $dockerRegistryEndpoint
+                $registryUrl = if ($legacyBehavior) { $null } else { Get-RegistryConnectionAuthority -Endpoint $dockerRegistryEndpoint }
                 $acrOnly = $false
                 $restrictToRegistry = $true
 
@@ -291,6 +298,28 @@ function Update-DockerSettings
                         [void]($serviceManifestImport.AppendChild($policies))
                     }
 
+                    if ($legacyBehavior)
+                    {
+                        $legacyPolicy = @($policies.ContainerHostPolicies) | where { $_.CodePackageRef -eq $codePackage.Name }
+                        if (-not $legacyPolicy)
+                        {
+                            $legacyPolicy = $appManifestXml.CreateElement("ContainerHostPolicies", $appManifestXml.ApplicationManifest.NamespaceURI)
+                            $legacyPolicy.SetAttribute("CodePackageRef", $codePackage.Name)
+                            [void]($policies.AppendChild($legacyPolicy))
+                        }
+
+                        if (-not $legacyPolicy.RepositoryCredentials)
+                        {
+                            $repositoryCredentials = $appManifestXml.CreateElement("RepositoryCredentials", $appManifestXml.ApplicationManifest.NamespaceURI)
+                            $repositoryCredentials.SetAttribute("AccountName", $userName)
+                            $repositoryCredentials.SetAttribute("Password", $password)
+                            $repositoryCredentials.SetAttribute("PasswordEncrypted", $isPasswordEncrypted.ToString().ToLower())
+                            [void]($legacyPolicy.AppendChild($repositoryCredentials))
+                        }
+
+                        continue
+                    }
+
                     # Ensure there is a ContainerHostPolicies element. Duplicate elements for the same code package are all handled.
                     $containerHostPolicies = @(Get-ChildElements -Parent $policies -LocalName 'ContainerHostPolicies' | where { $_.GetAttribute('CodePackageRef') -eq $codePackage.Name })
                     if (-not $containerHostPolicies)
@@ -329,15 +358,7 @@ function Update-DockerSettings
                         {
                             if (-not (Test-ImageMatchesRegistry -ImageName $imageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
                             {
-                                # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
-                                if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
-                                {
-                                    Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $imageName, $codePackage.Name)
-                                }
-                                else
-                                {
-                                    throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
-                                }
+                                throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
                             }
                         }
                     }

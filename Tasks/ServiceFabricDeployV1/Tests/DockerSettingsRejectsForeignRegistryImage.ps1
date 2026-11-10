@@ -125,6 +125,12 @@ try
     $flagEnabled = $true
     Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
     Assert-AreEqual $true ((Get-Content -Raw "$pkg\ApplicationManifest.xml") -match 'RepositoryCredentials')
+    Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" "$pkg\ApplicationManifest.xml"
+
+    # Flag on: strict parsing is skipped as well, so a comment-split ImageName is applied as before
+    Set-Content -LiteralPath $smPath -Value ($smOriginal -replace '<ImageName>([^<]*)</ImageName>', '<ImageName><!--c-->$1</ImageName>')
+    Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
+    Assert-AreEqual $true ((Get-Content -Raw "$pkg\ApplicationManifest.xml") -match 'RepositoryCredentials')
 }
 finally
 {

@@ -88,7 +88,7 @@
   "loc.messages.UnsupportedARMAuthScheme": "Unsupported authentication scheme '{0}' for ARM endpoint.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Unsupported authentication scheme '{0}' for Azure container registry.",
   "loc.messages.RegistryAuthorityMismatch": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.",
-  "loc.messages.RegistryAuthorityCheckDisabled": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials, but the registry check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. The credentials will be applied to this image.",
+  "loc.messages.RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
   "loc.messages.SFSDK_InvalidManifestPathSegment": "Invalid {0} value '{1}' found in the application package. This value is used as a folder name while building a file path from the application package, so it must be a simple name: it cannot be empty, contain a path separator or a relative path segment, be an absolute path, or end with a trailing '.' or ' ' character that Windows would normalize away.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} is not a valid Service Fabric application package.",
   "loc.messages.SFSDK_PackageValidationFailed": "Validation failed for package: {0}",
