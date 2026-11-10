@@ -135,5 +135,8 @@ describe('AzureFileCopy Suite', function () {
         it('Validate Copy-FilesToAzureVMsFromStorageContainer generated arguments survive the real remote runner', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.RemoteRunner.ps1'), done);
         });
+        it('Validate Upload-FilesToAzureContainer direct-SPN-auth AzCopy env vars use the endpoint authority and do not leak between cert/secret auth', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.AzCopySpnDirectAuth.ps1'), done);
+        });
     }   
 });
