@@ -4,6 +4,7 @@ param()
 # Exercise the shared runner's UTF-8 temp file and fresh powershell.exe, not an emulation.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\AzureFileCopyRemoteJob.ps1
 . $PSScriptRoot\..\..\Common\RemoteDeployer\RunPowerShellScriptJob.ps1

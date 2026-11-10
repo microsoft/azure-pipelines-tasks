@@ -82,6 +82,21 @@ function Get-SourcePathHardeningFeatureFlag {
     }
 }
 
+# Checks the AzureFileCopy.ConsoleOutputSanitizationFixEnabled pipeline feature flag via
+# Get-VstsPipelineFeature. Shared across AzureFileCopy V1-V6 (each task reads it once per run
+# and caches the result at script scope) so the check is defined in exactly one place.
+function Get-ConsoleOutputSanitizationFeatureFlag {
+    try {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.ConsoleOutputSanitizationFixEnabled' -ErrorAction Stop) -eq $true
+    }
+    catch {
+        # Do not interpolate the caught exception here - its message may originate from
+        # an untrusted lookup path and must not be echoed into task diagnostics.
+        Write-Warning 'Failed to read the AzureFileCopy.ConsoleOutputSanitizationFixEnabled feature flag. Defaulting to disabled.'
+        return $false
+    }
+}
+
 # This is a wrapper for Get-SanitizedArguments to handle feature flags in one place
 # It will return sanitized arguments string if feature flag is enabled
 function Protect-ScriptArguments([string]$inputArgs, [string]$taskName, [switch]$AllowDataConstructors) {
