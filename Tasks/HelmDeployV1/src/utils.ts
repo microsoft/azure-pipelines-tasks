@@ -135,10 +135,46 @@ export function replaceNewlinesWithCommas(overrideValues: string): string {
     return keyValuePairs.join(",");
 }
 
+// Strips grouping quotes. A quote preceded by an odd number of backslashes is a literal quote, except one that closes an open group at the end of a value (e.g. path="C:\temp\"), which keeps the backslash.
+function normalizeGroupingQuotes(input: string): string {
+    let out = '';
+    let inGroup = false;
+    let i = 0;
+    while (i < input.length) {
+        const c = input[i];
+        if (c === '\\') {
+            let n = 0;
+            while (input[i + n] === '\\') { n++; }
+            if (input[i + n] !== '"') {
+                out += input.substr(i, n);
+                i += n;
+                continue;
+            }
+            const rest = input.substr(i + n + 1);
+            const closesGroup = inGroup && /^\s*(,|$)/.test(rest) && ((rest.match(/"/g) || []).length % 2 === 0);
+            if (n % 2 === 1 && !closesGroup) {
+                out += input.substr(i, n - 1) + '"';
+            } else {
+                out += input.substr(i, n);
+                inGroup = !inGroup;
+            }
+            i += n + 1;
+            continue;
+        }
+        if (c === '"') {
+            inGroup = !inGroup;
+        } else {
+            out += c;
+        }
+        i++;
+    }
+    return out;
+}
+
 // Builds the --set arguments as discrete argv entries so the value is never re-tokenized on whitespace. Enabling the HelmDeploy.DisableStrictSetArguments pipeline feature restores the legacy behavior.
 export function addOverrideValuesArguments(helmCli: any, overrideValues: string): void {
     if (!tl.getPipelineFeature('HelmDeploy.DisableStrictSetArguments')) {
-        const value = overrideValues.split(/\r?\n/).filter(pair => pair.trim()).join(',').replace(/\\"|"/g, m => m === '"' ? '' : '"').trim();
+        const value = normalizeGroupingQuotes(overrideValues.split(/\r?\n/).filter(pair => pair.trim()).join(',')).trim();
         if (value) {
             if (value.indexOf(' --') !== -1) {
                 tl.warning(tl.loc('OverrideValuesContainOptionLikeText'));

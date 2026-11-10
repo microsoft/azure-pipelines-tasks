@@ -344,6 +344,14 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
         assert.ok(setIndex !== -1, '--set flag must be present');
         assert.strictEqual(argv[setIndex + 1], 'greeting=say "hi"!');
     });
+    it('keeps a trailing backslash that precedes a closing grouping quote', async function () {
+        const cases: [string, string][] = [['path="C:\\temp\\"', 'path=C:\\temp\\'], ['path="C:\\temp\\",b=c', 'path=C:\\temp\\,b=c'], ['a="x\\\\"', 'a=x\\\\'], ['path="C:\\temp\\" ', 'path=C:\\temp\\'], ['path="C:\\temp\\",b="x"', 'path=C:\\temp\\,b=x'], ['a="{\\"k\\":\\"v\\",\\"j\\":1}"', 'a={"k":"v","j":1}']];
+        for (const [input, expected] of cases) {
+            setInput('overrideValues', input);
+            const argv = await buildUpgradeArgv();
+            assert.strictEqual(argv[argv.indexOf('--set') + 1], expected, input);
+        }
+    });
     it('omits --set for empty, whitespace-only or quote-only override values and trims the rest', async function () {
         const cases: [string, string | null][] = [['', null], ['   ', null], ['""', null], ['  image.tag=1.2.3  ', 'image.tag=1.2.3'], ['  \na=b', 'a=b'], ['image.tag="\\"true\\""', 'image.tag="true"']];
         for (const [input, expected] of cases) {
