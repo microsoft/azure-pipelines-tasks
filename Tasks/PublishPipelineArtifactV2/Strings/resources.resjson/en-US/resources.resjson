@@ -8,5 +8,11 @@
   "loc.input.label.artifactName": "Artifact name",
   "loc.input.help.artifactName": "Name of the artifact to publish. If not set, defaults to a unique ID scoped to the job.",
   "loc.input.label.properties": "Custom properties",
-  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+  "loc.input.help.properties": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'",
+  "loc.input.label.domainId": "Domain Id",
+  "loc.input.help.domainId": "Specify an alternate storage domain for the artifact. Cannot be combined with Region.",
+  "loc.input.label.region": "Region",
+  "loc.input.help.region": "Let the service select a domain in the specified Azure region. Cannot be combined with Domain Id (e.g. westus2).",
+  "loc.input.label.durability": "Durability",
+  "loc.input.help.durability": "Optional storage durability to request with Region (e.g. Standard_ZRS). If omitted, the service default is applied. Can only be used with Region."
 }

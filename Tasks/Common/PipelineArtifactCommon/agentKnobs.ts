@@ -54,8 +54,32 @@ export function chunkHashTypeArgs(task: TaskInputs, log: (message: string) => vo
     return [];
 }
 
-/** Selects the publish domain override, when set, as the agent did: the first non-empty source wins. */
+/** Selects an explicit task domain, then a dynamic region, then the legacy agent domain override. */
 export function publishDomainArgs(task: TaskInputs): string[] {
+    const domainId = task.input("domainId").trim();
+    const region = task.input("region").trim();
+    const durability = task.input("durability").trim();
+
+    if (domainId && region) {
+        throw new Error("Domain Id and Region cannot both be set.");
+    }
+
+    if (durability && !region) {
+        throw new Error("Durability can only be used with Region.");
+    }
+
+    if (domainId) {
+        return ["--domain-id", domainId];
+    }
+
+    if (region) {
+        const args = ["--region", region];
+        if (durability) {
+            args.push("--durability", durability);
+        }
+        return args;
+    }
+
     const domain = PublishDomainVariables.map(name => task.variable(name)).find(value => !!value);
     return domain?.trim() ? ["--domain-id", domain] : [];
 }

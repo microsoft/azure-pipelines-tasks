@@ -117,6 +117,32 @@ describe("PublishPipelineArtifact L0 Suite", function () {
             assert.deepStrictEqual(blankDomain.environment, {});
         });
 
+        it("passes explicit domain or dynamic region inputs and prefers them to the agent override", () => {
+            const explicitDomain = preparePublish(inputs({ path: "out", artifactName: "drop", domainId: " 03 " },
+                { ...variables, SEND_PIPELINE_ARTIFACTS_TO_BLOBSTORE_DOMAIN: "01" }), environment);
+            assert.strictEqual(optionValue(explicitDomain.args, "--domain-id"), "03");
+
+            const dynamicDomain = preparePublish(inputs({
+                path: "out", artifactName: "drop", region: " westus2 ", durability: " Standard_ZRS "
+            }, { ...variables, SEND_PIPELINE_ARTIFACTS_TO_BLOBSTORE_DOMAIN: "01" }), environment);
+            assert.strictEqual(optionValue(dynamicDomain.args, "--domain-id"), undefined);
+            assert.strictEqual(optionValue(dynamicDomain.args, "--region"), "westus2");
+            assert.strictEqual(optionValue(dynamicDomain.args, "--durability"), "Standard_ZRS");
+
+            const regionDefault = preparePublish(inputs({ path: "out", artifactName: "drop", region: "westus2" }, variables), environment);
+            assert.strictEqual(optionValue(regionDefault.args, "--region"), "westus2");
+            assert.strictEqual(optionValue(regionDefault.args, "--durability"), undefined);
+        });
+
+        it("rejects conflicting domain inputs and durability without a region", () => {
+            assert.throws(() => preparePublish(inputs({
+                path: "out", artifactName: "drop", domainId: "01", region: "westus2"
+            }, variables), environment), /Domain Id and Region cannot both be set/);
+            assert.throws(() => preparePublish(inputs({
+                path: "out", artifactName: "drop", durability: "Standard_ZRS"
+            }, variables), environment), /Durability can only be used with Region/);
+        });
+
         it("defaults the artifact name to the normalized job identifier", () => {
             const plan = preparePublish(inputs({ path: "out" }, variables), environment);
 

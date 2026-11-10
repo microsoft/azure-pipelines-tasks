@@ -9,10 +9,16 @@
     "author": "Microsoft Corporation",
     "version": {
         "Major": 2,
-        "Minor": 280,
+        "Minor": 283,
         "Patch": 0
     },
-    "groups": [],
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": true
+        }
+    ],
     "demands": [],
     "preview": false,
     "minimumAgentVersion": "4.248.0",
@@ -46,6 +52,35 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Enter custom properties to associate with the artifact. Valid JSON string expected with all keys having the prefix 'user-'"
+        },
+        {
+            "name": "domainId",
+            "type": "string",
+            "label": "Domain Id",
+            "defaultValue": "",
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Specify an alternate storage domain for the artifact. Cannot be combined with Region."
+        },
+        {
+            "name": "region",
+            "type": "string",
+            "label": "Region",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "domainId == ''",
+            "groupName": "advanced",
+            "helpMarkDown": "Let the service select a domain in the specified Azure region. Cannot be combined with Domain Id (e.g. westus2)."
+        },
+        {
+            "name": "durability",
+            "type": "string",
+            "label": "Durability",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "region != ''",
+            "groupName": "advanced",
+            "helpMarkDown": "Optional storage durability to request with Region (e.g. Standard_ZRS). If omitted, the service default is applied. Can only be used with Region."
         }
     ],
     "instanceNameFormat": "Publish Pipeline Artifact",
