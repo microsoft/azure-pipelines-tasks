@@ -4,6 +4,103 @@
 # in the diff-package path.
 . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
 
+function Get-ImageRegistryAuthority
+{
+    [CmdletBinding()]
+    Param(
+        [String]
+        $ImageName
+    )
+
+    # Follows Docker reference rules: the first path component is a registry if it contains '.' or ':',
+    # is 'localhost' or contains an uppercase letter; otherwise the image lives on Docker Hub.
+    $imageName = $ImageName.Trim()
+    if (-not $imageName.Contains('/'))
+    {
+        return 'docker.io'
+    }
+
+    $firstComponent = $imageName.Split('/')[0]
+    if ($firstComponent -match '[@\\]')
+    {
+        return $null
+    }
+
+    if ($firstComponent -match '[.:]' -or $firstComponent -eq 'localhost' -or $firstComponent -cne $firstComponent.ToLowerInvariant())
+    {
+        return Get-NormalizedRegistryAuthority -Value $firstComponent
+    }
+
+    return 'docker.io'
+}
+
+function Get-NormalizedRegistryAuthority
+{
+    [CmdletBinding()]
+    Param(
+        [String]
+        $Value
+    )
+
+    $uri = $null
+    $candidate = if ($Value -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') { $Value } else { "https://$Value" }
+    if (-not [Uri]::TryCreate($candidate, [UriKind]::Absolute, [ref]$uri) -or -not $uri.Host)
+    {
+        return $null
+    }
+
+    # A user-info section means the host the client would contact differs from the leading text; never trust it.
+    if ($uri.UserInfo)
+    {
+        return $null
+    }
+
+    $registryHost = $uri.IdnHost.ToLowerInvariant()
+    if (@('index.docker.io', 'registry-1.docker.io', 'registry.hub.docker.com') -contains $registryHost)
+    {
+        $registryHost = 'docker.io'
+    }
+
+    if ($uri.IsDefaultPort -or $uri.Port -eq 80 -or $uri.Port -eq 443)
+    {
+        return $registryHost
+    }
+
+    return "${registryHost}:$($uri.Port)"
+}
+
+function Test-ImageMatchesRegistry
+{
+    [CmdletBinding()]
+    Param(
+        [String]
+        $ImageName,
+
+        # Registry service connection URL.
+        [String]
+        $RegistryUrl,
+
+        # Credentials that are not tied to a registry URL (ARM service principal) are only valid for Azure Container Registry.
+        [switch]
+        $AzureContainerRegistryOnly
+    )
+
+    $imageAuthority = Get-ImageRegistryAuthority -ImageName $ImageName
+    if (-not $imageAuthority)
+    {
+        return $false
+    }
+
+    if ($AzureContainerRegistryOnly)
+    {
+        return ($imageAuthority -match '^[^:]+\.azurecr\.(io|cn|us|de)$')
+    }
+
+    # A registry connection without a usable URL cannot be verified, so fail closed.
+    $registryAuthority = Get-NormalizedRegistryAuthority -Value $RegistryUrl
+    return ($registryAuthority -and $imageAuthority -eq $registryAuthority)
+}
+
 function Update-DockerSettings
 {
     [CmdletBinding()]
@@ -33,11 +130,17 @@ function Update-DockerSettings
                 $userName = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalId
                 $password = $connectedServiceEndpoint.Auth.Parameters.ServicePrincipalKey
                 $isPasswordEncrypted = $false
+                $registryUrl = $null
+                $acrOnly = $true
+                $restrictToRegistry = $true
             }
             "ContainerRegistryEndpoint"
             {
                 $dockerRegistryInput = Get-VstsInput -Name dockerRegistryEndpoint -Require
                 $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryInput -Require
+                $registryUrl = $dockerRegistryEndpoint.Url
+                $acrOnly = $false
+                $restrictToRegistry = $true
 
                 if ($dockerRegistryEndpoint.Data.registrytype -eq "ACR")
                 {
@@ -60,6 +163,8 @@ function Update-DockerSettings
                 $username = Get-VstsInput -Name registryUserName -Require
                 $password = Get-VstsInput -Name registryPassword -Require
                 $isPasswordEncrypted = (Get-VstsInput -Name passwordEncrypted -Require) -eq "true"
+                $registryUrl = $null
+                $restrictToRegistry = $false
             }
         }
 
@@ -131,6 +236,21 @@ function Update-DockerSettings
                     # If there isn't already a RepositoryCredentials element, create one with the credentials of the selected registry
                     if (-not $containerHostPolicy.RepositoryCredentials)
                     {
+                        # The ImageName comes from the (untrusted) application package. Never hand a service
+                        # connection's secret to a registry other than the one the connection points at.
+                        if ($restrictToRegistry -and -not (Test-ImageMatchesRegistry -ImageName $codePackage.EntryPoint.ContainerHost.ImageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                        {
+                            # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
+                            if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
+                            {
+                                Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $codePackage.EntryPoint.ContainerHost.ImageName, $codePackage.Name)
+                            }
+                            else
+                            {
+                                throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $codePackage.EntryPoint.ContainerHost.ImageName, $codePackage.Name)
+                            }
+                        }
+
                         $repositoryCredentials = $appManifestXml.CreateElement("RepositoryCredentials", $appManifestXml.ApplicationManifest.NamespaceURI)
                         $repositoryCredentials.SetAttribute("AccountName", $userName)
                         $repositoryCredentials.SetAttribute("Password", $password)
