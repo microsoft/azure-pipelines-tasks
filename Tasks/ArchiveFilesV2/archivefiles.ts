@@ -32,7 +32,7 @@ function getSevenZipLocation(): string {
     if (win) {
         return winSevenZipLocation;
     } else {
-        if (typeof xpTarLocation == "undefined") {
+        if (typeof xpSevenZipLocation == "undefined") {
             xpSevenZipLocation = tl.which('7z', true);
         }
         return xpSevenZipLocation;
