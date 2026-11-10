@@ -58,7 +58,7 @@ describe('ArchiveFiles L0 Suite', function () {
         }
         const testOutput = path.join(__dirname, 'test_output');
         if (fs.existsSync(testOutput)) {
-            deleteFolderRecursive(testTemp);
+            deleteFolderRecursive(testOutput);
         }
     })
 
