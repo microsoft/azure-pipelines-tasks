@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 2
   },
   "demands": [],
@@ -524,9 +524,6 @@
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//downloadsecurefiles.js"
-    },
     "Node20_1": {
       "target": "src//downloadsecurefiles.js",
       "argumentFormat": ""
@@ -541,9 +538,6 @@
       "target": "src//helm.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//helm.js"
-    },
     "Node20_1": {
       "target": "src//helm.js",
       "argumentFormat": ""
@@ -557,9 +551,6 @@
     "Node16": {
       "target": "src//deletesecurefiles.js",
       "argumentFormat": ""
-    },
-    "Node10": {
-      "target": "src//deletesecurefiles.js"
     },
     "Node20_1": {
       "target": "src//deletesecurefiles.js",
@@ -588,6 +579,9 @@
     "SkipDeleteSecureFiles": "ms-resource:loc.messages.SkipDeleteSecureFiles",
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
+    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName",
+    "InvalidChartReference": "ms-resource:loc.messages.InvalidChartReference",
+    "OverrideValuesContainOptionLikeText": "ms-resource:loc.messages.OverrideValuesContainOptionLikeText",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",

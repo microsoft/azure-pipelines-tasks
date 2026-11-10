@@ -111,6 +111,39 @@ describe('AzureTestPlan Suite', function () {
         ]);
     });
 
+    it('should trim surrounding whitespace from structured Jest test names', function () {
+        const testNames = [' adds numbers', 'adds numbers ', ' adds numbers ', '\tadds numbers\t'];
+
+        for (const testName of testNames) {
+            const runner = tl.tool('npx');
+
+            utils.setJestTestRunnerArguments(runner, testName, true);
+
+            assert.deepStrictEqual(runner.args, [
+                'jest',
+                '--ci',
+                '--reporters=default',
+                '--reporters=jest-junit',
+                '--testNamePattern=adds numbers',
+            ], JSON.stringify(testName));
+        }
+    });
+
+    it('should keep option-shaped Jest test names in one argument after trimming whitespace', function () {
+        const testName = 'benign" --showConfig --testNamePattern="benign';
+        const runner = tl.tool('npx');
+
+        utils.setJestTestRunnerArguments(runner, ` \t${testName}\t `, true);
+
+        assert.deepStrictEqual(runner.args, [
+            'jest',
+            '--ci',
+            '--reporters=default',
+            '--reporters=jest-junit',
+            `--testNamePattern=${testName}`,
+        ]);
+    });
+
     it('should preserve legacy Jest command parsing when structured arguments are disabled', function () {
         const runner = tl.tool('npx');
 
@@ -188,6 +221,28 @@ describe('AzureTestPlan Suite', function () {
             '--reporters=jest-junit',
             `--testNamePattern=${testName}`,
         ]);
+    });
+
+    it('should neutralize logging commands in selector diagnostic output', async function () {
+        const selector = 'manualTests\n##vso[task.setvariable variable=marker;]value';
+        const previousSelector = process.env['__testSelector__'];
+        process.env['__testSelector__'] = selector;
+
+        try {
+            const tp: string = path.join(__dirname, 'L0SampleTest.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+
+            assert(tr.stdOutContained('Test Selector selected: manualTests'), 'Should log the test selector prefix');
+            assert(tr.stdOutContained('##_vso[task.setvariable variable=marker;]value'), 'Should neutralize logging command marker in selector diagnostic output');
+            assert(!tr.stdOutContained('\n##vso[task.setvariable variable=marker;]value'), 'Should not emit raw logging command in selector diagnostic output');
+        } finally {
+            if (previousSelector === undefined) {
+                delete process.env['__testSelector__'];
+            } else {
+                process.env['__testSelector__'] = previousSelector;
+            }
+        }
     });
     
 });

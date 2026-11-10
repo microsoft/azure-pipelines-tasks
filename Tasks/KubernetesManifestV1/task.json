@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 0
+    "Minor": 283,
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -437,9 +437,6 @@
       "target": "src//run.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//run.js"
-    },
     "Node20_1": {
       "target": "src//run.js",
       "argumentFormat": ""
@@ -480,6 +477,7 @@
     "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
     "RolloutStatusTimedout": "Rollout status check failed.",
     "EnvironmentLink": "For more information, go to %s",
-    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+    "KubeloginFailed": "Kubelogin authentication failed. Exception: %s",
+    "InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input."
   }
 }

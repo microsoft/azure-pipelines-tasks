@@ -105,5 +105,6 @@
   "loc.messages.InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
   "loc.messages.RolloutStatusTimedout": "Rollout status check failed.",
   "loc.messages.EnvironmentLink": "For more information, go to %s",
-  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s"
+  "loc.messages.KubeloginFailed": "Kubelogin authentication failed. Exception: %s",
+  "loc.messages.InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input."
 }

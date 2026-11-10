@@ -1,7 +1,15 @@
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 try {
+
+    $vsoCommandMode = if (Get-VstsPipelineFeature -FeatureName 'EnableVsoCommandBlockingRMTasks') {
+        'blockAndTelemetry'
+    } else {
+        'telemetryOnly'
+    }
 
     $ServiceName = Get-VstsInput -Name ServiceName -Require
     $ResourceGroupName = Get-VstsInput -Name ResourceGroupName -Require
@@ -46,12 +54,12 @@ try {
 
     Write-Host "Finding $CsCfg"
     $serviceConfigFile = Find-VstsFiles -LegacyPattern "$CsCfg"
-    Write-Host "serviceConfigFile= $serviceConfigFile"
+    Write-Host "serviceConfigFile= $($serviceConfigFile | Protect-ExternalOutput -Source repository -VsoCommandMode $vsoCommandMode)"
     $serviceConfigFile = Get-SingleFile $serviceConfigFile $CsCfg
 
     Write-Host "Find-VstsFiles -LegacyPattern $CsPkg"
     $servicePackageFile = Find-VstsFiles -LegacyPattern "$CsPkg"
-    Write-Host "servicePackageFile= $servicePackageFile"
+    Write-Host "servicePackageFile= $($servicePackageFile | Protect-ExternalOutput -Source repository -VsoCommandMode $vsoCommandMode)"
     $servicePackageFile = Get-SingleFile $servicePackageFile $CsPkg
 
     $label = $DeploymentLabel

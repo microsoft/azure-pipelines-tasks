@@ -9,8 +9,12 @@ import { FilesystemProvider, WebProvider, ZipProvider } from 'artifact-engine/Pr
 import { BasicCredentialHandler } from 'typed-rest-client/Handlers';
 import { HttpClient } from 'typed-rest-client/HttpClient';
 import { JenkinsRestClient } from '../ArtifactDetails/JenkinsRestClient';
+import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
 import { getDownloaderOptions } from './L0CommandBlocking';
 import { assertDetection, captureEngineOutput, loadArtifactEngine } from './ArtifactEngineOutputTestHelper';
+
+// Reuse the Node runtime already installed by make.js to avoid flaky nodejs.org downloads under CI network isolation.
+(MockTestRunner.prototype as any).getNodePath = async () => process.execPath;
 
 describe('Jenkins artifact-engine v2 compatibility', function () {
     this.timeout(30000);
@@ -69,10 +73,13 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
                 response.end('Try again');
             } else {
                 // A fragment in the synthetic download URL is not sent over HTTP.
-                const relativePath = request.url.indexOf('/artifact/drop/marker-') !== -1
+                const rawPath = request.url.indexOf('/artifact/drop/marker-') !== -1
                     ? downloadedMarker : request.url.split('/artifact/')[1];
-                if (Object.prototype.hasOwnProperty.call(files, relativePath)) {
-                    response.end(files[relativePath]);
+                const decodedPath = rawPath ? decodeURIComponent(rawPath) : rawPath;
+                if (Object.prototype.hasOwnProperty.call(files, rawPath)) {
+                    response.end(files[rawPath]);
+                } else if (Object.prototype.hasOwnProperty.call(files, decodedPath)) {
+                    response.end(files[decodedPath]);
                 } else {
                     response.writeHead(404);
                     response.end('Not found');
@@ -94,6 +101,7 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
     });
 
     function webProvider(): WebProvider {
+        new JenkinsRestClient();
         return new WebProvider(
             `${endpoint}/job/example/42/api/json?tree=artifacts[*]`,
             path.join(__dirname, '..', 'jenkins.handlebars.txt'),
@@ -115,9 +123,17 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
         return result;
     }
 
+    const optionsCache = new Map<string, ArtifactEngineOptions>();
     async function taskOptions(pattern: string, flag: string) {
-        const result = await getDownloaderOptions(pattern, flag, '4', 'false');
-        // Exercise failures without leaving production retry timers beyond the test lifetime.
+        const cacheKey = `${pattern}\0${flag}`;
+        let base = optionsCache.get(cacheKey);
+        if (!base) {
+            base = await getDownloaderOptions(pattern, flag, '1', 'false');
+            optionsCache.set(cacheKey, base);
+        }
+        const result = Object.assign(new ArtifactEngineOptions(), base);
+        // Exercise failures without leaving production retry or worker timers beyond the test lifetime.
+        result.parallelProcessingLimit = 1;
         result.retryLimit = 1;
         result.retryIntervalInSeconds = 0;
         return result;
@@ -262,4 +278,402 @@ describe('Jenkins artifact-engine v2 compatibility', function () {
             assert.strictEqual(output.performance.length, 1);
         });
     }
+
+    describe('artifact path encoding and audit modes', () => {
+        const encodingFeatureVar = 'DISTRIBUTEDTASK_TASKS_ENABLEJENKINSARTIFACTPATHENCODING';
+        const auditFeatureVar = 'DISTRIBUTEDTASK_TASKS_ENABLEJENKINSARTIFACTPATHAUDIT';
+        let secondaryServer: http.Server;
+        let secondaryEndpoint: string;
+        let secondaryPort: number;
+        let secondaryRequests: { url: string; authorization: string }[];
+        let originalEncodingVar: string;
+        let originalAuditVar: string;
+
+        beforeEach(async () => {
+            originalEncodingVar = process.env[encodingFeatureVar];
+            originalAuditVar = process.env[auditFeatureVar];
+            delete process.env[encodingFeatureVar];
+            delete process.env[auditFeatureVar];
+            new JenkinsRestClient();
+
+            secondaryRequests = [];
+            secondaryServer = http.createServer((request, response) => {
+                secondaryRequests.push({ url: request.url, authorization: request.headers.authorization });
+                response.setHeader('Connection', 'close');
+                response.end('secondary-endpoint-content');
+            });
+            await new Promise<void>(resolve => secondaryServer.listen(0, '127.0.0.1', resolve));
+            secondaryPort = (secondaryServer.address() as AddressInfo).port;
+            secondaryEndpoint = `http://127.0.0.1:${secondaryPort}`;
+        });
+
+        afterEach(async () => {
+            if (originalEncodingVar === undefined) {
+                delete process.env[encodingFeatureVar];
+            } else {
+                process.env[encodingFeatureVar] = originalEncodingVar;
+            }
+            if (originalAuditVar === undefined) {
+                delete process.env[auditFeatureVar];
+            } else {
+                process.env[auditFeatureVar] = originalAuditVar;
+            }
+            await new Promise<void>((resolve, reject) => secondaryServer.close(error => error ? reject(error) : resolve()));
+        });
+
+        function setFlags(encoding?: string, audit?: string): void {
+            if (encoding === undefined) {
+                delete process.env[encodingFeatureVar];
+            } else {
+                process.env[encodingFeatureVar] = encoding;
+            }
+            if (audit === undefined) {
+                delete process.env[auditFeatureVar];
+            } else {
+                process.env[auditFeatureVar] = audit;
+            }
+        }
+
+        for (const offState of [undefined, 'false']) {
+            it(`reproduces baseline backslash-normalized metadata override when encoding is ${offState}`, async () => {
+                setFlags(offState, 'false');
+                const relativePath = `release.zip","downloadUrl":"http:${'\\'.repeat(4)}127.0.0.1:${secondaryPort}","z":"safe`;
+                metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+                const downloadOptions = await taskOptions('*.zip', 'false');
+
+                await captureEngineOutput(false, async () => {
+                    await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                });
+
+                assert.strictEqual(secondaryRequests.length, 1);
+                assert.strictEqual(secondaryRequests[0].url, '/');
+                assert.strictEqual(secondaryRequests[0].authorization, 'Basic ' + Buffer.from('username:password').toString('base64'));
+                assert.strictEqual(fs.readFileSync(path.join(root, 'release.zip'), 'utf8'), 'secondary-endpoint-content');
+            });
+
+            it(`reproduces baseline unicode-escaped metadata override when encoding is ${offState}`, async () => {
+                setFlags(offState, 'false');
+                const relativePath = `drop/nested/result.txt","downloadUrl":"http:\\u002f\\u002f127.0.0.1:${secondaryPort}\\u002fsentinel`;
+                metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+                const downloadOptions = await taskOptions('drop/nested/**', 'false');
+
+                await captureEngineOutput(false, async () => {
+                    await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                });
+
+                assert.strictEqual(secondaryRequests.length, 1);
+                assert.strictEqual(secondaryRequests[0].url, '/sentinel');
+                assert.strictEqual(secondaryRequests[0].authorization, 'Basic ' + Buffer.from('username:password').toString('base64'));
+            });
+        }
+
+        async function captureAuditEvents(action: () => Promise<void>): Promise<string[]> {
+            const lines: string[] = [];
+            const originalLog = console.log;
+            console.log = (...args: any[]) => {
+                const text = args.map(a => String(a)).join(' ');
+                if (text.indexOf('feature=artifactPathEncodingAudit]') !== -1) {
+                    lines.push(text);
+                }
+                if (text.indexOf('##vso[') === -1) {
+                    originalLog.apply(console, args);
+                }
+            };
+            try {
+                await captureEngineOutput(false, action);
+                return lines;
+            } finally {
+                console.log = originalLog;
+            }
+        }
+
+        it('keeps backslash-containing metadata on the configured endpoint when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const relativePath = `release.zip","downloadUrl":"http:${'\\'.repeat(4)}127.0.0.1:${secondaryPort}","z":"safe`;
+            metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+            const downloadOptions = await taskOptions('*.zip', 'true');
+
+            let tickets: any[] = [];
+            await captureEngineOutput(false, async () => {
+                tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
+
+            assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests');
+            const fileTickets = tickets.filter((t: any) => t.artifactItem.path !== '');
+            assert.strictEqual(fileTickets.length, 1);
+            assert.strictEqual(fileTickets[0].artifactItem.path, relativePath);
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf(
+                endpoint + '/job/example//42/artifact/release.zip%22%2C%22downloadUrl%22%3A%22http%3A%5C%5C%5C%5C') === 0);
+        });
+
+        it('keeps unicode-escape metadata on the configured endpoint when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const relativePath = `drop/nested/result.txt","downloadUrl":"http:\\u002f\\u002f127.0.0.1:${secondaryPort}\\u002fsentinel`;
+            metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+            const downloadOptions = await taskOptions('!drop/**', 'true');
+
+            let tickets: any[] = [];
+            await captureEngineOutput(false, async () => {
+                tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
+
+            assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests');
+            const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+            assert.strictEqual(fileTickets.length, 1);
+            assert.strictEqual(fileTickets[0].artifactItem.path, relativePath);
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf(endpoint + '/job/example//42/artifact/drop/nested/') === 0);
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf('%22') !== -1);
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf('%5C') !== -1);
+        });
+
+        it('prevents multi-item JSON breakout and neutralizes skipped command markers when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const relativePath = `release.zip","metadata":{"downloadUrl":"http:\\u002f\\u002f127.0.0.1:${secondaryPort}\\u002fpayload"}},{"path":"drop/##vso[task.setvariable variable=SYNTHETIC_TEST_MARKER]synthetic","itemType":"file","metadata":{"downloadUrl":"${endpoint}\\u002funused`;
+            metadataBody = JSON.stringify({ artifacts: [{ relativePath }] });
+            const downloadOptions = await taskOptions('!release.zip*', 'true');
+
+            const output = await captureEngineOutput(true, async () => {
+                const tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+                assert.strictEqual(fileTickets.length, 1, 'must not inject a second artifact item');
+                assert.strictEqual(fileTickets[0].artifactItem.path, relativePath);
+            });
+
+            assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests');
+            assert(output.ordinary.every(line => line.indexOf('##vso[task.setvariable') === -1));
+            assert.strictEqual(process.env['SYNTHETIC_TEST_MARKER'], undefined);
+        });
+
+        it('encodes URL-special filename segments while preserving path separators and normal downloads', async () => {
+            setFlags('true', 'false');
+            const downloadablePath = 'drop/nested/build #42 100% done.txt';
+            const excludedQueryPath = 'drop/excluded/file?rev=1&part=a.txt';
+            files[downloadablePath] = 'special-artifact-bytes';
+            try {
+                metadataBody = JSON.stringify({
+                    artifacts: [
+                        { relativePath: downloadablePath },
+                        { relativePath: excludedQueryPath }
+                    ]
+                });
+                const downloadOptions = await taskOptions('drop/nested/**\n!drop/excluded/**', 'true');
+
+                let tickets: any[] = [];
+                await captureEngineOutput(false, async () => {
+                    tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                });
+                const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+                assert.strictEqual(fileTickets.length, 2);
+
+                const downloadedTicket = fileTickets.find(t => t.artifactItem.path === downloadablePath);
+                assert(downloadedTicket, 'expected downloadable ticket');
+                assert.strictEqual(
+                    downloadedTicket.artifactItem.metadata['downloadUrl'],
+                    `${endpoint}/job/example//42/artifact/drop/nested/build%20%2342%20100%25%20done.txt`);
+                assert(requests.some(r => r.url === '/job/example/42/artifact/drop/nested/build%20%2342%20100%25%20done.txt'),
+                    requests.map(r => r.url).join('\n'));
+                assert.strictEqual(fs.readFileSync(path.join(root, 'drop', 'nested', 'build #42 100% done.txt'), 'utf8'), 'special-artifact-bytes');
+
+                const excludedTicket = fileTickets.find(t => t.artifactItem.path === excludedQueryPath);
+                assert(excludedTicket, 'expected excluded ticket');
+                assert.strictEqual(
+                    excludedTicket.artifactItem.metadata['downloadUrl'],
+                    `${endpoint}/job/example//42/artifact/drop/excluded/file%3Frev%3D1%26part%3Da.txt`);
+            } finally {
+                delete files[downloadablePath];
+            }
+        });
+
+        it('emits bounded wouldEncode audit telemetry without altering baseline behavior when only audit is enabled', async () => {
+            setFlags('false', 'true');
+            const expectedVersion = JSON.stringify(require('../task.json').version);
+            const relativePath = 'drop/nested/file"quote\\slash.txt';
+            metadataBody = JSON.stringify({
+                artifacts: [
+                    { relativePath: 'drop/nested/ordinary.txt' },
+                    { relativePath }
+                ]
+            });
+            const downloadOptions = await taskOptions('!drop/**', 'true');
+            downloadOptions.retryLimit = 3;
+
+            const auditLines = await captureAuditEvents(async () => {
+                // With encoding off, raw quote in relativePath causes JSON.parse to fail as in baseline.
+                await assert.rejects(
+                    new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
+                    error => error instanceof SyntaxError);
+            });
+
+            assert.strictEqual(auditLines.length, 1, 'must emit exactly one deduplicated audit event across retries');
+            assert(auditLines[0].indexOf('"encodingEnabled":false') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"auditEnabled":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"decision":"wouldEncode"') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf(`"version":${expectedVersion}`) !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasQuote":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasBackslash":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"hasEncodingError":false') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"totalArtifacts"') === -1, 'per-item counters must not be emitted');
+            assert(auditLines[0].indexOf('file"quote') === -1, 'audit event must never contain raw filenames');
+        });
+
+        it('emits bounded encoded audit telemetry when encoding is enabled', async () => {
+            const expectedVersion = JSON.stringify(require('../task.json').version);
+            for (const auditFlag of ['false', 'true']) {
+                setFlags('true', auditFlag);
+                const relativePath = 'drop/nested/file"quote\\slash.txt';
+                metadataBody = JSON.stringify({
+                    artifacts: [
+                        { relativePath: 'drop/nested/ordinary.txt' },
+                        { relativePath }
+                    ]
+                });
+                const downloadOptions = await taskOptions('!drop/**', 'true');
+
+                const auditLines = await captureAuditEvents(async () => {
+                    const tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                    assert.strictEqual(tickets.filter(t => t.artifactItem.path !== '').length, 2);
+                });
+
+                assert.strictEqual(auditLines.length, 1);
+                assert(auditLines[0].indexOf('"encodingEnabled":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf(`"auditEnabled":${auditFlag}`) !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"decision":"encoded"') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf(`"version":${expectedVersion}`) !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasQuote":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasBackslash":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasEncodingError":false') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"totalArtifacts"') === -1, 'per-item counters must not be emitted');
+                assert(auditLines[0].indexOf('file"quote') === -1, 'audit event must never contain raw filenames');
+            }
+        });
+
+        it('emits no audit telemetry and reads feature flags only once per render when both flags are disabled', async () => {
+            setFlags('false', 'false');
+            metadataBody = JSON.stringify({
+                artifacts: [
+                    { relativePath: 'drop/nested/ordinary-1.txt' },
+                    { relativePath: 'drop/nested/ordinary-2.txt' },
+                    { relativePath: 'drop/nested/ordinary-3.txt' }
+                ]
+            });
+            const downloadOptions = await taskOptions('!drop/**', 'true');
+
+            let output!: import('./ArtifactEngineOutputTestHelper').CapturedOutput;
+            const auditLines = await captureAuditEvents(async () => {
+                await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
+            output = await captureEngineOutput(false, async () => {
+                await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
+
+            assert.strictEqual(auditLines.length, 0);
+            if (output.debugEnabled) {
+                const encodingFlagReads = output.debug.filter(line => line.indexOf("Feature 'EnableJenkinsArtifactPathEncoding'") !== -1);
+                assert.strictEqual(encodingFlagReads.length, 1, `expected 1 flag lookup per render, got ${encodingFlagReads.length}`);
+            }
+        });
+
+        it('locks the pipeline feature flag names for encoding and audit', () => {
+            assert.strictEqual(JenkinsRestClient.ArtifactPathEncodingFeature, 'EnableJenkinsArtifactPathEncoding');
+            assert.strictEqual(JenkinsRestClient.ArtifactPathAuditFeature, 'EnableJenkinsArtifactPathAudit');
+        });
+
+        it('coerces non-string relativePath values such as arrays when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const nestedArrayPath = [`release.zip","downloadUrl":"http:${'\\'.repeat(4)}127.0.0.1:${secondaryPort}","z":"safe`];
+            metadataBody = JSON.stringify({ artifacts: [{ relativePath: nestedArrayPath }] });
+            const downloadOptions = await taskOptions('*.zip', 'true');
+
+            let tickets: any[] = [];
+            await captureEngineOutput(false, async () => {
+                tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+            });
+
+            assert.strictEqual(secondaryRequests.length, 0, 'secondary endpoint must receive no requests for array-coerced relativePath');
+            const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+            assert.strictEqual(fileTickets.length, 1);
+            assert.strictEqual(fileTickets[0].artifactItem.path, String(nestedArrayPath));
+            assert(fileTickets[0].artifactItem.metadata['downloadUrl'].indexOf(endpoint + '/job/example//42/artifact/') === 0);
+        });
+
+        it('handles unpaired UTF-16 surrogates and null boundary items safely during audit', async () => {
+            setFlags('false', 'true');
+            const surrogatePath = 'drop/nested/surrogate-\uD800-item.txt';
+            metadataBody = JSON.stringify({
+                artifacts: [
+                    { relativePath: null },
+                    { relativePath: surrogatePath },
+                    { relativePath: undefined }
+                ]
+            });
+            const downloadOptions = await taskOptions('!drop/**', 'true');
+
+            const auditLines = await captureAuditEvents(async () => {
+                const tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                assert(tickets.length >= 1);
+            });
+
+            assert.strictEqual(auditLines.length, 1, 'must emit audit summary even when first/last items are null/undefined or contain lone surrogates');
+            assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"decision":"wouldEncode"') !== -1, auditLines[0]);
+        });
+
+        it('explicitly rejects unpaired UTF-16 surrogates and emits audit telemetry when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            metadataBody = JSON.stringify({
+                artifacts: [{ relativePath: 'drop/nested/surrogate-\uD800-item.txt' }]
+            });
+            const downloadOptions = await taskOptions('drop/**', 'true');
+
+            const auditLines = await captureAuditEvents(async () => {
+                await assert.rejects(
+                    new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
+                    error => error instanceof URIError);
+            });
+
+            assert.strictEqual(auditLines.length, 1, 'must emit audit telemetry when encoding rejects a lone surrogate');
+            assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"inspectionComplete":false') !== -1, auditLines[0]);
+            assert(auditLines[0].indexOf('"decision":"rejected"') !== -1, auditLines[0]);
+        });
+
+        it('keeps unicode-escaped newline and hash sequences as literal text and rejects raw control characters when encoding is enabled', async () => {
+            setFlags('true', 'false');
+            const unicodeEscapedCommandPath = 'drop/leaf.txt","path":"nomatch\\u000a\\u0023\\u0023vso[task.setvariable variable=SYNTHETIC_TEST_MARKER]--require=./drop/bootstrap.cjs\\u000atail';
+            metadataBody = JSON.stringify({
+                artifacts: [{ relativePath: unicodeEscapedCommandPath }]
+            });
+            const downloadOptions = await taskOptions('drop/*.txt', 'false');
+
+            const output = await captureEngineOutput(false, async () => {
+                const tickets = await new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions);
+                const fileTickets = tickets.filter(t => t.artifactItem.path !== '');
+                assert.strictEqual(fileTickets.length, 1);
+                assert.strictEqual(fileTickets[0].artifactItem.path, unicodeEscapedCommandPath);
+                assert.strictEqual(fileTickets[0].artifactItem.path.indexOf('\n'), -1, 'parsed path must not contain a decoded newline');
+                assert.strictEqual(fileTickets[0].artifactItem.path.indexOf('##vso['), -1, 'parsed path must not contain a decoded ##vso[ prefix');
+            });
+
+            assert.strictEqual(output.ordinary.some(line => line.indexOf('##vso[task.setvariable') !== -1), false);
+
+            for (const controlChar of ['\n', '\r', '\0']) {
+                metadataBody = JSON.stringify({
+                    artifacts: [{ relativePath: `drop/control-${controlChar}-##vso[task.setvariable variable=SYNTHETIC_TEST_MARKER]bad.txt` }]
+                });
+                const auditLines = await captureAuditEvents(async () => {
+                    await assert.rejects(
+                        new ArtifactEngine().processItems(webProvider(), new FilesystemProvider(root), downloadOptions),
+                        (error: Error) => error instanceof SyntaxError && error.message.indexOf('Control characters are not supported') !== -1);
+                });
+                assert.strictEqual(auditLines.length, 1, 'must emit audit telemetry when encoding rejects a control character');
+                assert(auditLines[0].indexOf('"hasControlChar":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"hasEncodingError":true') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"inspectionComplete":false') !== -1, auditLines[0]);
+                assert(auditLines[0].indexOf('"decision":"rejected"') !== -1, auditLines[0]);
+            }
+        });
+    });
 });

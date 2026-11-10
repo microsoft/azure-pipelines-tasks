@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 0
+    "Minor": 283,
+    "Patch": 3
   },
   "demands": [],
   "groups": [],
@@ -437,9 +437,6 @@
       "target": "src//run.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "src//run.js"
-    },
     "Node20_1": {
       "target": "src//run.js",
       "argumentFormat": ""
@@ -480,6 +477,7 @@
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed",
+    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName"
   }
 }

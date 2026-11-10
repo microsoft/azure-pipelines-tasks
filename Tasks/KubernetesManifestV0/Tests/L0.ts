@@ -8,6 +8,7 @@ import * as utils from '../src/utils/utilities';
 import { updateImagePullSecrets, updateImageDetails } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
+import './L0HelmSetArguments';
 
 describe('Kubernetes Manifests Suite', function () {
     this.timeout(30000);
