@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 283,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -477,6 +477,7 @@
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed"
+    "KubeloginFailed": "ms-resource:loc.messages.KubeloginFailed",
+    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName"
   }
 }
