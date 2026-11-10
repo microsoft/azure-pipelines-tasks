@@ -42,7 +42,7 @@ class HelmRenderEngine extends RenderEngine {
             fs.chmodSync(kubeconfigPath, '600');
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
-        const helmReleaseName = tl.getInput('releaseName', false);
+        const helmReleaseName = utils.validateReleaseName(tl.getInput('releaseName', false));
         const result = helmCommand.template(helmReleaseName, tl.getPathInput('helmChart', true), tl.getDelimitedInput('overrideFiles', '\n'), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
@@ -60,8 +60,8 @@ class HelmRenderEngine extends RenderEngine {
         const overrideValues = [];
         overridesInput.forEach(arg => {
             const overrideInput = arg.split(':');
-            const overrideName = overrideInput[0];
-            const overrideValue = overrideInput.slice(1).join(':');
+            const overrideName = utils.escapeHelmSetToken(overrideInput[0]);
+            const overrideValue = utils.escapeHelmSetToken(overrideInput.slice(1).join(':'), true);
             overrideValues.push({
                 name: overrideName,
                 value: overrideValue

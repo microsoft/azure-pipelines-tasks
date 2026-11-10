@@ -27,6 +27,9 @@ describe('AzureFileCopy Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('Validate console output safety', (done) => {
+            psr.run(path.join(__dirname, 'L0ConsoleOutput.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Get-AzureUtility', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureUtility.ps1'), done);
         });
