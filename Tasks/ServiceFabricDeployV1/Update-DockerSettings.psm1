@@ -56,13 +56,78 @@ function Get-NormalizedRegistryAuthority
     }
 
     $registryHost = $uri.IdnHost.ToLowerInvariant()
-    if (@('index.docker.io', 'registry-1.docker.io', 'registry.hub.docker.com') -contains $registryHost)
+    if (@('index.docker.io', 'registry-1.docker.io', 'registry.hub.docker.com', 'hub.docker.com', 'docker.com') -contains $registryHost)
     {
         $registryHost = 'docker.io'
     }
 
     # Keep the effective port (scheme default when omitted): different ports can be different registry services.
     return "${registryHost}:$($uri.Port)"
+}
+
+function Get-RegistryConnectionAuthority
+{
+    [CmdletBinding()]
+    Param(
+        $Endpoint
+    )
+
+    # The service connection's Url is not the registry for every connection type (ACR connections point at the ARM
+    # endpoint and Docker Hub at hub.docker.com); the actual registry is stored in the authorization parameters.
+    $parameters = $Endpoint.Auth.Parameters
+    switch ($Endpoint.Data.registrytype)
+    {
+        "ACR" { $value = if ($parameters.loginServer) { $parameters.loginServer } else { $parameters.registry } }
+        "DockerHub" { $value = 'docker.io' }
+        default { $value = if ($parameters.registry) { $parameters.registry } else { $Endpoint.Url } }
+    }
+
+    if (-not $value)
+    {
+        $value = $Endpoint.Url
+    }
+
+    return $value
+}
+
+function Get-ElementText
+{
+    [CmdletBinding()]
+    Param(
+        [System.Xml.XmlElement]
+        $Element
+    )
+
+    # Only plain text content is accepted: PowerShell's XML adapter returns an XmlElement (not a string) for an element
+    # with comment or element children, which would otherwise be stringified to the type name.
+    foreach ($child in $Element.ChildNodes)
+    {
+        if ($child.NodeType -ne [System.Xml.XmlNodeType]::Text -and $child.NodeType -ne [System.Xml.XmlNodeType]::CDATA)
+        {
+            return $null
+        }
+    }
+
+    return $Element.InnerText.Trim()
+}
+
+function Get-ChildElements
+{
+    [CmdletBinding()]
+    Param(
+        [System.Xml.XmlNode]
+        $Parent,
+
+        [String]
+        $LocalName
+    )
+
+    if (-not $Parent)
+    {
+        return @()
+    }
+
+    return @($Parent.ChildNodes | where { $_.NodeType -eq [System.Xml.XmlNodeType]::Element -and $_.LocalName -eq $LocalName })
 }
 
 function Test-ImageMatchesRegistry
@@ -80,6 +145,13 @@ function Test-ImageMatchesRegistry
         [switch]
         $AzureContainerRegistryOnly
     )
+
+    # Application parameter tokens ('[Param]', possibly embedded) are resolved at deployment time from files this task does not
+    # control, and an empty name is not a valid image: neither can be verified.
+    if ([string]::IsNullOrWhiteSpace($ImageName) -or $ImageName -match '\[[^\]]+\]')
+    {
+        return $false
+    }
 
     $imageAuthority = Get-ImageRegistryAuthority -ImageName $ImageName
     if (-not $imageAuthority)
@@ -134,7 +206,7 @@ function Update-DockerSettings
             {
                 $dockerRegistryInput = Get-VstsInput -Name dockerRegistryEndpoint -Require
                 $dockerRegistryEndpoint = Get-VstsEndpoint -Name $dockerRegistryInput -Require
-                $registryUrl = $dockerRegistryEndpoint.Url
+                $registryUrl = Get-RegistryConnectionAuthority -Endpoint $dockerRegistryEndpoint
                 $acrOnly = $false
                 $restrictToRegistry = $true
 
@@ -219,48 +291,59 @@ function Update-DockerSettings
                         [void]($serviceManifestImport.AppendChild($policies))
                     }
 
-                    # Ensure there is a ContainerHostPolicies element
-                    $containerHostPolicies = @($policies.ContainerHostPolicies)
-                    $containerHostPolicy = $containerHostPolicies | where { $_.CodePackageRef -eq $codePackage.Name }
-                    if (-not $containerHostPolicy)
+                    # Ensure there is a ContainerHostPolicies element. Duplicate elements for the same code package are all handled.
+                    $containerHostPolicies = @(Get-ChildElements -Parent $policies -LocalName 'ContainerHostPolicies' | where { $_.GetAttribute('CodePackageRef') -eq $codePackage.Name })
+                    if (-not $containerHostPolicies)
                     {
                         $containerHostPolicy = $appManifestXml.CreateElement("ContainerHostPolicies", $appManifestXml.ApplicationManifest.NamespaceURI)
                         $containerHostPolicy.SetAttribute("CodePackageRef", $codePackage.Name)
                         [void]($policies.AppendChild($containerHostPolicy))
+                        $containerHostPolicies = @($containerHostPolicy)
                     }
 
-                    # If there isn't already a RepositoryCredentials element, create one with the credentials of the selected registry
-                    if (-not $containerHostPolicy.RepositoryCredentials)
+                    # If a policy doesn't already have a RepositoryCredentials element, create one with the credentials of the selected registry
+                    $policiesNeedingCredentials = @($containerHostPolicies | where { -not (Get-ChildElements -Parent $_ -LocalName 'RepositoryCredentials') })
+                    if ($policiesNeedingCredentials -and $restrictToRegistry)
                     {
                         # ImageName comes from the (untrusted) application package, and ImageOverrides can select a different
                         # image at deployment time. Never hand a service connection's secret to a registry other than the one
                         # the connection points at, whichever image ends up being used.
-                        if ($restrictToRegistry)
+                        $imageNames = @()
+                        foreach ($imageNameElement in (Get-ChildElements -Parent $codePackage.EntryPoint.ContainerHost -LocalName 'ImageName'))
                         {
-                            $imageNames = @($codePackage.EntryPoint.ContainerHost.ImageName)
-                            if ($containerHostPolicy.ImageOverrides)
-                            {
-                                $imageNames += @($containerHostPolicy.ImageOverrides.Image | where { $_ } | foreach { $_.Name })
-                            }
+                            $imageNames += Get-ElementText -Element $imageNameElement
+                        }
 
-                            foreach ($imageName in $imageNames)
+                        foreach ($containerHostPolicy in $containerHostPolicies)
+                        {
+                            foreach ($imageOverrides in (Get-ChildElements -Parent $containerHostPolicy -LocalName 'ImageOverrides'))
                             {
-                                # An override name that is an application parameter ('[Param]') is resolved only at deployment time
-                                # from files this task does not control, so it cannot be verified here.
-                                if ($imageName -match '^\s*\[.*\]\s*$' -or -not (Test-ImageMatchesRegistry -ImageName $imageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                                foreach ($image in (Get-ChildElements -Parent $imageOverrides -LocalName 'Image'))
                                 {
-                                    # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
-                                    if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
-                                    {
-                                        Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $imageName, $codePackage.Name)
-                                    }
-                                    else
-                                    {
-                                        throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
-                                    }
+                                    $imageNames += $image.GetAttribute('Name')
                                 }
                             }
                         }
+
+                        foreach ($imageName in $imageNames)
+                        {
+                            if (-not (Test-ImageMatchesRegistry -ImageName $imageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                            {
+                                # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
+                                if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
+                                {
+                                    Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $imageName, $codePackage.Name)
+                                }
+                                else
+                                {
+                                    throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
+                                }
+                            }
+                        }
+                    }
+
+                    foreach ($containerHostPolicy in $policiesNeedingCredentials)
+                    {
                         $repositoryCredentials = $appManifestXml.CreateElement("RepositoryCredentials", $appManifestXml.ApplicationManifest.NamespaceURI)
                         $repositoryCredentials.SetAttribute("AccountName", $userName)
                         $repositoryCredentials.SetAttribute("Password", $password)
@@ -270,7 +353,6 @@ function Update-DockerSettings
                 }
             }
         }
-
         $appManifestXml.Save($appManifestPath)
     }
     finally

@@ -43,7 +43,27 @@ $module = Get-Module Update-DockerSettings
     Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'app')
     Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'azurecr.io.attacker.invalid/app')
     Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'myregistry.azurecr.io:5000/app')
-}
+
+    # Embedded parameter tokens and empty names cannot be verified
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -RegistryUrl 'https://myregistry.azurecr.io' -ImageName 'myregistry.azurecr.io/[Repo]')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName '[Prefix].azurecr.io/app')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -RegistryUrl 'https://myregistry.azurecr.io' -ImageName $null)
+
+    # Registry authority of service connections whose Url is not the registry
+    $acr = @{ Url = 'https://management.azure.com/'; Data = @{ registrytype = 'ACR' }; Auth = @{ Parameters = @{ loginServer = 'myregistry.azurecr.io' } } }
+    Assert-AreEqual 'myregistry.azurecr.io' (Get-RegistryConnectionAuthority -Endpoint $acr)
+    Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $acr) -ImageName 'myregistry.azurecr.io/app')
+    $hub = @{ Url = 'https://hub.docker.com/'; Data = @{ registrytype = 'DockerHub' }; Auth = @{ Parameters = @{} } }
+    Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $hub) -ImageName 'library/ubuntu')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $hub) -ImageName 'attacker.invalid/app')
+    $others = @{ Url = 'https://hub.docker.com/'; Data = @{ registrytype = 'Others' }; Auth = @{ Parameters = @{ registry = 'https://reg.example.com' } } }
+    Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $others) -ImageName 'reg.example.com/app')
+
+    # Comment/element children must not be stringified to the type name
+    $doc = [xml]'<ContainerHost><ImageName><!--c-->foreign.example/app</ImageName><ImageName>ok/app</ImageName></ContainerHost>'
+    $names = @(Get-ChildElements -Parent $doc.ContainerHost -LocalName 'ImageName')
+    Assert-AreEqual $null (Get-ElementText -Element $names[0])
+    Assert-AreEqual 'ok/app' (Get-ElementText -Element $names[1])}
 
 # Kill switch: package images (myregistry.azurecr.io) don't match this connection's URL
 Register-Mock Get-VstsInput { "ContainerRegistryEndpoint" } -- -Name registryCredentials -Require
@@ -83,6 +103,24 @@ try
         Assert-AreEqual $false ((Get-Content -Raw $manifestPath) -match 'RepositoryCredentials')
         Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" $manifestPath
     }
+    # Duplicate ContainerHostPolicies: every one is validated and receives credentials; a comment-split ImageName is rejected
+    $endpointUrl = 'https://myregistry.azurecr.io'
+    $manifestPath = "$pkg\ApplicationManifest.xml"
+    $xml = [xml](Get-Content -Raw $manifestPath)
+    $ns = $xml.ApplicationManifest.NamespaceURI
+    $import = @($xml.ApplicationManifest.ServiceManifestImport)[0]
+    $policies = $import.AppendChild($xml.CreateElement('Policies', $ns))
+    foreach ($i in 1..2) { $policies.AppendChild($xml.CreateElement('ContainerHostPolicies', $ns)).SetAttribute('CodePackageRef', 'Code') }
+    $xml.Save($manifestPath)
+    Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
+    Assert-AreEqual 3 (([regex]::Matches((Get-Content -Raw $manifestPath), '<RepositoryCredentials')).Count)
+    Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" $manifestPath
+
+    $smPath = Get-ChildItem $pkg -Recurse -Filter ServiceManifest.xml | Select-Object -First 1 -ExpandProperty FullName
+    $smOriginal = Get-Content -Raw $smPath
+    Set-Content -LiteralPath $smPath -Value ($smOriginal -replace '<ImageName>([^<]*)</ImageName>', '<ImageName><!--c-->$1</ImageName>')
+    Assert-Throws { Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{} } -MessagePattern "registry mismatch"
+    Set-Content -LiteralPath $smPath -Value $smOriginal
     $endpointUrl = 'https://other.azurecr.io'
     $flagEnabled = $true
     Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
