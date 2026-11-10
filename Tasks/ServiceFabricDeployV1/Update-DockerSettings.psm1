@@ -17,7 +17,7 @@ function Get-ImageRegistryAuthority
     $imageName = $ImageName.Trim()
     if (-not $imageName.Contains('/'))
     {
-        return 'docker.io'
+        return 'docker.io:443'
     }
 
     $firstComponent = $imageName.Split('/')[0]
@@ -31,7 +31,7 @@ function Get-ImageRegistryAuthority
         return Get-NormalizedRegistryAuthority -Value $firstComponent
     }
 
-    return 'docker.io'
+    return 'docker.io:443'
 }
 
 function Get-NormalizedRegistryAuthority
@@ -61,11 +61,7 @@ function Get-NormalizedRegistryAuthority
         $registryHost = 'docker.io'
     }
 
-    if ($uri.IsDefaultPort -or $uri.Port -eq 80 -or $uri.Port -eq 443)
-    {
-        return $registryHost
-    }
-
+    # Keep the effective port (scheme default when omitted): different ports can be different registry services.
     return "${registryHost}:$($uri.Port)"
 }
 
@@ -93,7 +89,7 @@ function Test-ImageMatchesRegistry
 
     if ($AzureContainerRegistryOnly)
     {
-        return ($imageAuthority -match '^[^:]+\.azurecr\.(io|cn|us|de)$')
+        return ($imageAuthority -match '^[^:]+\.azurecr\.(io|cn|us|de):443$')
     }
 
     # A registry connection without a usable URL cannot be verified, so fail closed.
@@ -236,21 +232,35 @@ function Update-DockerSettings
                     # If there isn't already a RepositoryCredentials element, create one with the credentials of the selected registry
                     if (-not $containerHostPolicy.RepositoryCredentials)
                     {
-                        # The ImageName comes from the (untrusted) application package. Never hand a service
-                        # connection's secret to a registry other than the one the connection points at.
-                        if ($restrictToRegistry -and -not (Test-ImageMatchesRegistry -ImageName $codePackage.EntryPoint.ContainerHost.ImageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                        # ImageName comes from the (untrusted) application package, and ImageOverrides can select a different
+                        # image at deployment time. Never hand a service connection's secret to a registry other than the one
+                        # the connection points at, whichever image ends up being used.
+                        if ($restrictToRegistry)
                         {
-                            # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
-                            if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
+                            $imageNames = @($codePackage.EntryPoint.ContainerHost.ImageName)
+                            if ($containerHostPolicy.ImageOverrides)
                             {
-                                Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $codePackage.EntryPoint.ContainerHost.ImageName, $codePackage.Name)
+                                $imageNames += @($containerHostPolicy.ImageOverrides.Image | where { $_ } | foreach { $_.Name })
                             }
-                            else
+
+                            foreach ($imageName in $imageNames)
                             {
-                                throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $codePackage.EntryPoint.ContainerHost.ImageName, $codePackage.Name)
+                                # An override name that is an application parameter ('[Param]') is resolved only at deployment time
+                                # from files this task does not control, so it cannot be verified here.
+                                if ($imageName -match '^\s*\[.*\]\s*$' -or -not (Test-ImageMatchesRegistry -ImageName $imageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                                {
+                                    # Kill switch: when enabled, fall back to the legacy behavior of applying the credentials to any image.
+                                    if (Get-VstsPipelineFeature -FeatureName 'ServiceFabricDeploy.DisableRegistryAuthorityCheck')
+                                    {
+                                        Write-Warning (Get-VstsLocString -Key RegistryAuthorityCheckDisabled -ArgumentList $imageName, $codePackage.Name)
+                                    }
+                                    else
+                                    {
+                                        throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
+                                    }
+                                }
                             }
                         }
-
                         $repositoryCredentials = $appManifestXml.CreateElement("RepositoryCredentials", $appManifestXml.ApplicationManifest.NamespaceURI)
                         $repositoryCredentials.SetAttribute("AccountName", $userName)
                         $repositoryCredentials.SetAttribute("Password", $password)

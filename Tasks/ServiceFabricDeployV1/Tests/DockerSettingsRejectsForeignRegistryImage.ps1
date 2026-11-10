@@ -34,6 +34,8 @@ $module = Get-Module Update-DockerSettings
     # Connection without a URL cannot be verified; HTTP default ports
     Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName 'myregistry.azurecr.io/app' -RegistryUrl '')
     Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName 'trusted.example:80/app' -RegistryUrl 'http://trusted.example:80')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName 'trusted.example:80/app' -RegistryUrl 'https://trusted.example')
+    Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName 'trusted.example/app' -RegistryUrl 'https://trusted.example:443')
 
     # ARM service principal: only Azure Container Registry hosts
     Assert-AreEqual $true (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'myregistry.azurecr.io/app')
@@ -47,7 +49,7 @@ $module = Get-Module Update-DockerSettings
 Register-Mock Get-VstsInput { "ContainerRegistryEndpoint" } -- -Name registryCredentials -Require
 Register-Mock Get-VstsInput { "registry connection" } -- -Name dockerRegistryEndpoint -Require
 Register-Mock Get-VstsEndpoint {
-    @{ Url = 'https://other.azurecr.io'; Data = @{ registrytype = 'Others' }; Auth = @{ Scheme = 'UsernamePassword'; Parameters = @{ UserName = 'u'; Password = 'p' } } }
+    @{ Url = $endpointUrl; Data = @{ registrytype = 'Others' }; Auth = @{ Scheme = 'UsernamePassword'; Parameters = @{ UserName = 'u'; Password = 'p' } } }
 } -- -Name "registry connection" -Require
 Register-Mock Get-VstsLocString { "registry mismatch" }
 Register-Mock Write-Warning
@@ -62,6 +64,26 @@ try
     Assert-Throws { Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{} } -MessagePattern "registry mismatch"
     Assert-AreEqual $false ((Get-Content -Raw "$pkg\ApplicationManifest.xml") -match 'RepositoryCredentials')
 
+    # ImageOverrides can select another image at deployment time: foreign and parameterized overrides are rejected too
+    foreach ($override in @('attacker.invalid/app:1', '[ImageParam]'))
+    {
+        $manifestPath = "$pkg\ApplicationManifest.xml"
+        $xml = [xml](Get-Content -Raw $manifestPath)
+        $ns = $xml.ApplicationManifest.NamespaceURI
+        $import = @($xml.ApplicationManifest.ServiceManifestImport)[0]
+        $policies = $import.AppendChild($xml.CreateElement('Policies', $ns))
+        $chp = $policies.AppendChild($xml.CreateElement('ContainerHostPolicies', $ns))
+        $chp.SetAttribute('CodePackageRef', 'Code')
+        $ov = $chp.AppendChild($xml.CreateElement('ImageOverrides', $ns))
+        $img = $ov.AppendChild($xml.CreateElement('Image', $ns))
+        $img.SetAttribute('Name', $override)
+        $xml.Save($manifestPath)
+        $endpointUrl = 'https://myregistry.azurecr.io'
+        Assert-Throws { Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{} } -MessagePattern "registry mismatch"
+        Assert-AreEqual $false ((Get-Content -Raw $manifestPath) -match 'RepositoryCredentials')
+        Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" $manifestPath
+    }
+    $endpointUrl = 'https://other.azurecr.io'
     $flagEnabled = $true
     Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
     Assert-AreEqual $true ((Get-Content -Raw "$pkg\ApplicationManifest.xml") -match 'RepositoryCredentials')
