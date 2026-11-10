@@ -92,9 +92,7 @@ function handleOperationErrorsAndResults(manualResult: IOperationResult, automat
 
 export async function run() {
     const testSelectorInput = tl.getInput('testSelector');
-    tl.writeExternalOutput('Test Selector selected: ' + testSelectorInput + os.EOL, {
-        source: 'repository'
-    });
+    tl.writeExternalOutput('Test Selector selected: ' + testSelectorInput + os.EOL, { source: 'repository' });
 
     let ciData: ciDictionary = {
         TestSelector: testSelectorInput,

@@ -233,12 +233,9 @@ describe('AzureTestPlan Suite', function () {
             const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
             await tr.runAsync();
 
-            assert(tr.stdOutContained('Test Selector selected: manualTests'),
-                'Should log the test selector prefix');
-            assert(tr.stdOutContained('##_vso[task.setvariable variable=marker;]value'),
-                'Should neutralize logging command marker in selector diagnostic output');
-            assert(!tr.stdOutContained('\n##vso[task.setvariable variable=marker;]value'),
-                'Should not emit raw logging command in selector diagnostic output');
+            assert(tr.stdOutContained('Test Selector selected: manualTests'), 'Should log the test selector prefix');
+            assert(tr.stdOutContained('##_vso[task.setvariable variable=marker;]value'), 'Should neutralize logging command marker in selector diagnostic output');
+            assert(!tr.stdOutContained('\n##vso[task.setvariable variable=marker;]value'), 'Should not emit raw logging command in selector diagnostic output');
         } finally {
             if (previousSelector === undefined) {
                 delete process.env['__testSelector__'];
