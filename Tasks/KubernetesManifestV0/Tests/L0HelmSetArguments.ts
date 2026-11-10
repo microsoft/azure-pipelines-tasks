@@ -33,6 +33,30 @@ describe('Helm set argument handling', function () {
         assert.strictEqual(utils.escapeHelmSetToken('{alpha,beta', true), '\\{alpha\\,beta');
     });
 
+    it('preserves literal opening braces and escaped delimiters in flat lists', () => {
+        [
+            '{{,\\}}',
+            '{alpha,{beta,gamma}',
+            '{{,a\\,b,c\\}d}',
+            '{{,\\\\}',
+            '{}'
+        ].forEach(value => {
+            assert.strictEqual(utils.escapeHelmSetToken(value, true), value, value);
+        });
+    });
+
+    it('requires the first unescaped list terminator to end the value', () => {
+        [
+            ['{{,\\}}other.value=next', '\\{{\\,\\}}other.value=next'],
+            ['{{,\\}},other.value=next', '\\{{\\,\\}}\\,other.value=next'],
+            ['{{,\\}}other.value={next}', '\\{{\\,\\}}other.value={next}'],
+            ['{{,\\}', '\\{{\\,\\}'],
+            ['{{,tail\\', '\\{{\\,tail\\\\']
+        ].forEach(([value, expected]) => {
+            assert.strictEqual(utils.escapeHelmSetToken(value, true), expected, value);
+        });
+    });
+
     it('escapes equals signs in names and neutralizes trailing list text', () => {
         assert.strictEqual(utils.escapeHelmSetToken('a=b'), 'a\\=b');
         assert.strictEqual(utils.escapeHelmSetToken('{x}k=v', true), '\\{x}k=v');
@@ -41,6 +65,8 @@ describe('Helm set argument handling', function () {
     it('keeps legacy behavior when the kill-switch is enabled', () => {
         process.env[flag] = 'true';
         assert.strictEqual(utils.escapeHelmSetToken('x,image.repository=other'), 'x,image.repository=other');
+        assert.strictEqual(utils.escapeHelmSetToken('{{,\\}}', true), '{{,\\}}');
+        assert.strictEqual(utils.escapeHelmSetToken('{{,\\}}other.value=next', true), '{{,\\}}other.value=next');
     });
 
     it('leaves previously working override syntax unchanged', () => {
