@@ -5,6 +5,7 @@ import * as os from 'os';
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 #if WIF
 import { requireHttpsUrl } from "azure-pipelines-tasks-artifacts-common/webapi";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 #endif
@@ -91,21 +92,25 @@ async function main(): Promise<void> {
         // First match wins; subsequent sources are skipped for this registry.
 #if WIF
         if (entraWifServiceConnectionName) {
-            let federatedCredentials;
             try {
-                federatedCredentials = await getFederatedWorkloadIdentityCredentialsForFeed(
-                    entraWifServiceConnectionName,
-                    registryUrlString,
-                    ProtocolType.Npm);
+                await verifyAzureArtifactsFeedUrl(registryUrlString, ProtocolType.Npm);
             } catch (error) {
                 const reason = error instanceof Error ? error.message : String(error);
                 if (feedUrlInput) {
                     throw new Error(tl.loc('Error_WifFeedUrlNotVerified', reason));
                 }
+
+                // The upstream feed URL verifier does not expose distinct error types.
+                // Skip registries that fail verification.
                 tl.debug(reason);
                 npmauthutils.writeRepositoryOutput(tl.loc('Info_SkippingUnverifiedWifRegistry', registryURL.host));
                 continue;
             }
+
+            const federatedCredentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                entraWifServiceConnectionName,
+                registryUrlString,
+                ProtocolType.Npm);
 
             if (!federatedCredentials) {
                 throw new Error(tl.loc('FailedToGetServiceConnectionAuth', entraWifServiceConnectionName));

@@ -272,7 +272,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         });
 
-        it('skips a registry whose token request fails when no feedUrl is given', async () => {
+        it('fails when the token request fails for an Azure Artifacts registry and no feedUrl is given', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
 
             const tr = await TestHelpers.runTestWithEnv({
@@ -282,12 +282,17 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
                 [TestEnvVars.wifShouldFail]: 'true'
             });
 
-            TestHelpers.assertSuccess(tr);
-            TestHelpers.assertOutputContains(tr, 'Info_SkippingUnverifiedWifRegistry pkgs.dev.azure.com');
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Simulated WIF failure');
+            const verificationCalls = tr.stdout.split('Mock WIF: verifying registry').length - 1;
+            assert.strictEqual(verificationCalls, 1, 'Verification must not be retried after credential acquisition fails');
+            assert.ok(tr.stdout.indexOf('Mock WIF: verifying registry') <
+                tr.stdout.indexOf('Mock WIF: acquiring credentials'), 'Verification must precede credential acquisition');
+            assert.ok(!tr.stdout.includes('Info_SkippingUnverifiedWifRegistry'), 'A verified Azure Artifacts feed must not be skipped');
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         });
 
-        it('fails with the verification error when the token request fails for feedUrl', async () => {
+        it('preserves the credential acquisition error when the token request fails for feedUrl', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
 
             const tr = await TestHelpers.runTestWithEnv({
@@ -299,9 +304,36 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             });
 
             TestHelpers.assertFailure(tr);
-            TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+            TestHelpers.assertOutputContains(tr, 'Simulated WIF failure');
+            TestHelpers.assertOutputNotContains(tr, 'Error_WifFeedUrlNotVerified');
+            TestHelpers.assertOutputNotContains(tr, 'Info_SkippingUnverifiedWifRegistry');
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         });
+
+        for (const explicitFeedUrl of [false, true]) {
+            it(`${explicitFeedUrl ? 'fails' : 'skips'} on discovery failure ${explicitFeedUrl ? 'with' : 'without'} feedUrl before acquiring credentials`, async () => {
+                const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);
+
+                const tr = await TestHelpers.runTestWithEnv({
+                    [TestEnvVars.npmrcPath]: npmrcPath,
+                    [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                    [TestEnvVars.wifRegistryUrl]: explicitFeedUrl ? TestData.wifRegistryUrl : '',
+                    [TestEnvVars.wifToken]: TestData.wifToken,
+                    [TestEnvVars.wifVerificationShouldFail]: 'true'
+                });
+
+                if (explicitFeedUrl) {
+                    TestHelpers.assertFailure(tr);
+                    TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+                    TestHelpers.assertOutputContains(tr, 'Simulated WIF discovery failure');
+                } else {
+                    TestHelpers.assertSuccess(tr);
+                    TestHelpers.assertOutputContains(tr, 'Info_SkippingUnverifiedWifRegistry');
+                }
+                TestHelpers.assertOutputNotContains(tr, 'Mock WIF: acquiring credentials');
+                assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+            });
+        }
 
         it('fails and writes no credentials when feedUrl is not an Azure Artifacts feed', async () => {
             const npmrcPath = TestHelpers.createTempNpmrc(`registry=${untrustedRegistry}`);
@@ -315,6 +347,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
 
             TestHelpers.assertFailure(tr);
             TestHelpers.assertOutputContains(tr, 'Error_WifFeedUrlNotVerified');
+            TestHelpers.assertOutputNotContains(tr, 'Mock WIF: acquiring credentials');
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
             TestHelpers.assertOutputNotContains(tr, TestData.wifToken);
         });
@@ -331,6 +364,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             TestHelpers.assertSuccess(tr);
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
             TestHelpers.assertOutputContains(tr, 'Info_SkippingUnverifiedWifRegistry registry.example.com');
+            TestHelpers.assertOutputNotContains(tr, 'Mock WIF: acquiring credentials');
             TestHelpers.assertOutputNotContains(tr, 's3cret');
         });
 

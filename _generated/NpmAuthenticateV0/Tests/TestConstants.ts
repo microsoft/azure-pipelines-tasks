@@ -12,6 +12,7 @@ export const TestEnvVars = {
     wifRegistryUrl: '__npmauth_wifRegistryUrl__',
     wifToken: '__npmauth_wifToken__',
     wifShouldFail: '__npmauth_wifShouldFail__',
+    wifVerificationShouldFail: '__npmauth_wifVerificationShouldFail__',
     throwTelemetryError: '__npmauth_throwTelemetryError__',
     saveNpmrcPath: 'SAVE_NPMRC_PATH',   // pre-created dir passed to the task to skip mkdtempSync
 

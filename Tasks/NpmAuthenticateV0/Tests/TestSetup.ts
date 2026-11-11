@@ -66,15 +66,29 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
+function verifyMockFeedUrl(feedUrl: string | URL): URL {
+    const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+    if (parsedFeedUrl.protocol !== 'https:') {
+        throw new Error('Error_UrlHttpsRequired');
+    }
+    if (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com')) {
+        throw new Error('Error_FeedUrlUntrustedHost');
+    }
+    return parsedFeedUrl;
+}
+tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async function (feedUrl: string | URL) {
+        console.log('Mock WIF: verifying registry');
+        if (process.env[TestEnvVars.wifVerificationShouldFail] === 'true') {
+            throw new Error('Simulated WIF discovery failure');
+        }
+        return verifyMockFeedUrl(feedUrl);
+    }
+});
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
     getFederatedWorkloadIdentityCredentialsForFeed: async function (serviceConnectionName: string, feedUrl: string | URL) {
-        const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
-        if (parsedFeedUrl.protocol !== 'https:') {
-            throw new Error('Error_UrlHttpsRequired');
-        }
-        if (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com')) {
-            throw new Error('Error_FeedUrlUntrustedHost');
-        }
+        console.log('Mock WIF: acquiring credentials');
+        const parsedFeedUrl = verifyMockFeedUrl(feedUrl);
         if (wifShouldFail) {
             throw new Error(`Simulated WIF failure for ${serviceConnectionName}`);
         }
