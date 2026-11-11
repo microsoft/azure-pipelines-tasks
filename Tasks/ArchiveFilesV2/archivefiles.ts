@@ -33,7 +33,10 @@ function getSevenZipLocation(): string {
         return winSevenZipLocation;
     } else {
         if (typeof xpSevenZipLocation == "undefined") {
-            xpSevenZipLocation = tl.which('7z', true);
+            xpSevenZipLocation = tl.which('7z', false);
+            if (!xpSevenZipLocation) {
+                xpSevenZipLocation = tl.which('7zz', true);
+            }
         }
         return xpSevenZipLocation;
     }
