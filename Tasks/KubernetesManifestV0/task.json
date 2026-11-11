@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 1
   },
   "demands": [],
@@ -392,6 +392,7 @@
     "InvalidBaselineAndCanaryReplicas": "Invalid value for replica count.",
     "InvalidTimeoutValue": "Invalid value for timeout. Enter a valid number.",
     "RolloutStatusTimedout": "Rollout status check failed.",
-    "EnvironmentLink": "For more information, go to %s"
+    "EnvironmentLink": "For more information, go to %s",
+    "InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input."
   }
 }
