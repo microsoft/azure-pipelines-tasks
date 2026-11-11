@@ -446,6 +446,7 @@ class Utils {
                 if(this.isBicepAvailable(azcliversion, filePathExtension)){
                     setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService, azureCliPath);
                     const azureLoginCredentials = await loginAzureRM(taskParameters.connectedService, azureCliPath);
+                    let loggedOut = false;
                     try {
                         await this.execBicepBuild(filePath, azureCliPath)
                         if(filePathExtension === 'bicep'){
@@ -462,7 +463,15 @@ class Utils {
                             filePath = filePath.replace(bicepParamExtension, '.parameters.json')
                         }
                         await this.logoutAzure(azureCliPath);
+                        loggedOut = true;
                     } finally {
+                        if (!loggedOut) {
+                            try {
+                                await this.logoutAzure(azureCliPath);
+                            } catch (err) {
+                                tl.debug(`Failed to clear Azure CLI account after bicep build failure: ${err}`);
+                            }
+                        }
                         // Azure CLI reads the certificate on every command, so remove it only after the last az call.
                         cleanupAzureRMLoginCredentials(azureLoginCredentials);
                     }

@@ -25,23 +25,25 @@ export class AzureAuthenticationHelper {
     }
 
     public logoutAzure() {
-        if (this.cliPasswordPath) {
-            tl.debug('Removing spn certificate file');
-            tl.rmRF(this.cliPasswordPath);
-        }
-
-        if (this.sessionLoggedIn) {
-            tl.debug('Attempting to log out from Azure');
-            try {
-                tl.execSync('az', ' account clear');
-            } catch (err) {
-                // task should not fail if logout doesn`t occur
-                tl.warning(`The following error occurred while logging out: ${err.message}`);
+        try {
+            if (this.cliPasswordPath) {
+                tl.debug('Removing spn certificate file');
+                tl.rmRF(this.cliPasswordPath);
             }
-        }
 
-        // Azure CLI reads the certificate on every command, so remove it only after logout.
-        cleanupAzureRMLoginCredentials(this.loginCredentials);
-        this.loginCredentials = null;
+            if (this.sessionLoggedIn) {
+                tl.debug('Attempting to log out from Azure');
+                try {
+                    tl.execSync('az', ' account clear');
+                } catch (err) {
+                    // task should not fail if logout doesn`t occur
+                    tl.warning(`The following error occurred while logging out: ${err.message}`);
+                }
+            }
+        } finally {
+            // Azure CLI reads the certificate on every command, so remove it only after logout.
+            cleanupAzureRMLoginCredentials(this.loginCredentials);
+            this.loginCredentials = null;
+        }
     }
 }
