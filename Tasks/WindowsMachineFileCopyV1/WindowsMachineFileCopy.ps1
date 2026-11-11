@@ -48,6 +48,8 @@ $useSanitizerActivate = Get-SanitizerActivateStatus
 Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force -ArgumentList @{ NonInteractive = $true }
 $enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
 
+$enableLegacyWindowsMachineFileCopyNetUseCommand = Get-VstsPipelineFeature -FeatureName 'EnableLegacyWindowsMachineFileCopyNetUseCommand'
+
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"
 }
@@ -82,7 +84,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
     Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening -scriptRoot $PSScriptRoot
+                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening -scriptRoot $PSScriptRoot -enableLegacyWindowsMachineFileCopyNetUseCommand $enableLegacyWindowsMachineFileCopyNetUseCommand
     Write-Verbose "Files copied to destination successfully."
 }
 else
@@ -116,7 +118,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot, $enableLegacyWindowsMachineFileCopyNetUseCommand
         } 
     }
     else
@@ -131,7 +133,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot, $enableLegacyWindowsMachineFileCopyNetUseCommand
 
             $Jobs.Add($job.Id, $resourceProperties)
         }        
