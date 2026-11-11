@@ -126,7 +126,8 @@ describe('ArchiveFiles L0 Suite', function () {
     });
 
     // These tests rely on 7z which isnt present on macOS
-    if (process.platform.indexOf('darwin') < 0) {
+    // Windows bundles 7z; other platforms need it on PATH (not present on Linux CI agents)
+    if (process.platform.indexOf('darwin') < 0 && (process.platform === 'win32' || tl.which('7z'))) {
         it('Successfully creates a 7z', async function () {
             this.timeout(5000);
             process.env['archiveType'] = '7z';
