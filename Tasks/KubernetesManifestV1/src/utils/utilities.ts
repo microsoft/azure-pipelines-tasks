@@ -182,3 +182,47 @@ function ensureDirExists(dirPath : string) : void
         fs.mkdirSync(dirPath);
     }
 }
+
+export function escapeHelmSetToken(token: string, allowLists: boolean = false): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableStrictSetArguments')) {
+        return token;
+    }
+
+    // Existing backslash escapes (for example \. in key paths) are preserved; only separators that
+    // would start a new --set pair are escaped.
+    // Commas stay active only when the whole token is a single flat Helm list: {a,b}.
+    let isList = false;
+    if (allowLists && token.length >= 2 && token[0] === '{') {
+        // Helm treats additional '{' characters as item text, not nested lists.
+        for (let i = 1; i < token.length; i++) {
+            if (token[i] === '\\') { i++; continue; }
+            if (token[i] === '}') {
+                isList = i === token.length - 1;
+                break;
+            }
+        }
+    }
+
+    let result = '';
+    for (let i = 0; i < token.length; i++) {
+        const c = token[i];
+        if (c === '\\') {
+            result += i + 1 < token.length ? c + token[++i] : '\\\\';
+        } else if (c === ',' && !isList) {
+            result += '\\,';
+        } else if (c === '=' && !allowLists) {
+            result += '\\=';
+        } else {
+            result += c;
+        }
+    }
+    // A value starting with an unescaped '{' opens a Helm list, after which further keys can follow without a comma.
+    return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
+}
+
+export function validateReleaseName(value: string): string {
+    if (value && value.startsWith('-')) {
+        throw new Error(tl.loc('InvalidReleaseName', value));
+    }
+    return value;
+}
