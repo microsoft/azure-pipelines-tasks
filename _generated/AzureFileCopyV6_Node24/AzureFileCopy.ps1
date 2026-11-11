@@ -111,8 +111,17 @@ try {
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 
+# Sanitizer (imported here, ahead of its normal spot below, because Utility.ps1
+# needs Get-ConsoleOutputSanitizationFeatureFlag from it immediately after being dot-sourced)
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# External output sanitization (shared across AzureFileCopy V1-V6)
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 # Update PSModulePath for hosted agent
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
+$script:azCopySpnDirectAuthFixEnabled = Get-AzCopySpnDirectAuthFeatureFlag
 
 CleanUp-PSModulePathForHostedAgent
 
@@ -140,8 +149,7 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
+# Sanitizer (module already imported above, ahead of the Utility.ps1 dot-source)
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 $useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
@@ -260,7 +268,11 @@ if ($useSanitizerActivate) {
     if ($destination -eq "AzureBlob") {
         # Get URI for output variable
         $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
-        Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        if ($script:consoleOutputSanitizationFixEnabled) {
+            Write-VstsSetVariable -Name StorageContainerUri -Value $storageAccountContainerURI
+        } else {
+            Write-Host "##vso[task.setvariable variable=StorageContainerUri]$storageAccountContainerURI"
+        }
 
         Remove-EndpointSecrets
         Write-Verbose "Completed Azure File Copy Task for Azure Blob Destination"
@@ -303,7 +315,7 @@ if ($useSanitizerActivate) {
             -useSanitizerActivate $useSanitizerActivate `
             -useSourcePathHardening $useSourcePathHardening
 
-        Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName))
     }
     catch {
         Write-Verbose $_.Exception.ToString()

@@ -27,6 +27,9 @@ describe('AzureFileCopy Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('Validate console output safety', (done) => {
+            psr.run(path.join(__dirname, 'L0ConsoleOutput.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Get-AzureUtility', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureUtility.ps1'), done);
         });
@@ -101,6 +104,12 @@ describe('AzureFileCopy Suite', function () {
         });
         it('Validate AzureFileCopy.Utility Copy-FilesToAzureVMsFromStorageContainer', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.ps1'), done);
+        });
+        it('Validate VM copy TargetPath hardening and AzCopy v8 arguments', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.TargetPathHardening.ps1'), done);
+        });
+        it('Validate VM copy escaping across the real remote runner boundary', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.RemoteRunner.ps1'), done);
         });
         it('Validate AzureFileCopy.Utility Validate-CustomScriptExecutionStatus', (done) => {
             psr.run(path.join(__dirname, 'L0ValidateCustomScriptExecutionStatus.ps1'), done);

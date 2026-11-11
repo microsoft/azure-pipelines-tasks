@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": 0,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "preview": true,
@@ -188,6 +188,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "index.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "index.js",
       "argumentFormat": ""
     }

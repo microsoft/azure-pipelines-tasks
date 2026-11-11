@@ -14,6 +14,7 @@ import * as uuid from 'uuid';
 import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
+import { sanitizeForLoggingCommand } from './sanitize';
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -52,7 +53,7 @@ export function startTest() {
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
             uploadVstestDiagFile();
             console.log('##vso[task.logissue type=warning;code=002004;]');
-            tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
+            tl.warning(tl.loc('NoMatchingTestAssemblies', sanitizeForLoggingCommand(vstestConfig.sourceFilter.toString())));
             return;
         }
 
