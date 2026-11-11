@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as os from "os";
-import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { AzureRMLoginCredentials, cleanupAzureRMLoginCredentials, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import util from "./util";
 import Constants from "./constant";
 import { TelemetryEvent } from './telemetry';
@@ -13,6 +13,7 @@ import { TaskError } from './taskerror';
 
 class azureclitask {
   private static isLoggedIn = false;
+  private static loginCredentials: AzureRMLoginCredentials = null;
   static checkIfAzurePythonSdkIsInstalled() {
     return !!tl.which("az", false);
   }
@@ -143,7 +144,7 @@ class azureclitask {
       tl.debug(JSON.stringify(result));
     }
 
-    await loginAzureRM(connectedService);
+    this.loginCredentials = await loginAzureRM(connectedService);
 
     this.isLoggedIn = true;
   }
@@ -155,6 +156,11 @@ class azureclitask {
     catch (err) {
       // task should not fail if logout doesn`t occur
       tl.warning(tl.loc("FailedToLogout"));
+    }
+    finally {
+      // Azure CLI reads the certificate on every command, so remove it only after logout.
+      cleanupAzureRMLoginCredentials(this.loginCredentials);
+      this.loginCredentials = null;
     }
   }
 }

@@ -158,6 +158,18 @@ export function runConfigDirIsolationTests() {
             assert.strictEqual(process.env['AZURE_CONFIG_DIR'], undefined);
         });
 
+        it('removes isolated login credentials on logout', () => {
+            const helper: any = new AzureAuthenticationHelper();
+            const credentialDir = fs.mkdtempSync(path.join(agentTemp, '.azarmrest-credentials-'));
+            const certificatePath = path.join(credentialDir, 'spnCert.pem');
+            fs.writeFileSync(certificatePath, 'cert');
+            helper.loginCredentials = { certificatePath, directoryPath: credentialDir };
+
+            assert.doesNotThrow(() => helper.logoutAzure());
+            assert(!fs.existsSync(credentialDir), 'isolated credential dir must be removed on logout');
+            assert.strictEqual(helper.loginCredentials, null, 'helper must clear its reference');
+        });
+
         it('is a no-op when isolation never ran', () => {
             const helper: any = new AzureAuthenticationHelper();
             assert.doesNotThrow(() => helper.logoutAzure());

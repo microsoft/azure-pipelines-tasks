@@ -1,11 +1,12 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { AzureRMLoginCredentials, cleanupAzureRMLoginCredentials, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from './azureConfigDir';
 
 export class AzureAuthenticationHelper {
     private sessionLoggedIn: boolean = false;
     private cliPasswordPath: string = null;
+    private loginCredentials: AzureRMLoginCredentials | null = null;
     private azureConfigDir: string | null = null;
 
     public async loginAzure(connectedService: string): Promise<void> {
@@ -20,11 +21,13 @@ export class AzureAuthenticationHelper {
             tl.debug('Agent.TempDirectory not set; skipping AZURE_CONFIG_DIR isolation');
         }
 
-        await loginAzureRM(connectedService);
+        this.loginCredentials = await loginAzureRM(connectedService);
 
-        // Track certificate path for cleanup if using certificate-based auth
+        // Track the shared legacy certificate path for cleanup. Isolated credentials are
+        // removed through cleanupAzureRMLoginCredentials instead.
         const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-        if (authScheme.toLowerCase() === 'serviceprincipal') {
+        const usesIsolatedCredentials = !!(this.loginCredentials && this.loginCredentials.directoryPath);
+        if (!usesIsolatedCredentials && authScheme.toLowerCase() === 'serviceprincipal') {
             const authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
             if (authType === 'spnCertificate') {
                 this.cliPasswordPath = path.join(
@@ -61,6 +64,11 @@ export class AzureAuthenticationHelper {
                 }
             }
         } finally {
+            // Azure CLI reads the certificate on every command, so remove it only after
+            // `az account clear`.
+            cleanupAzureRMLoginCredentials(this.loginCredentials);
+            this.loginCredentials = null;
+
             // Must run AFTER `az account clear` so it still sees the per-invocation
             // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`
             // to mutate the agent's global profile. In `finally` so an earlier cleanup

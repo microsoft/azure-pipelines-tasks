@@ -10,7 +10,7 @@ import { TemplateObject, ParameterValue } from "../models/Types";
 import httpInterfaces = require("typed-rest-client/Interfaces");
 import { DeploymentParameters } from "./DeploymentParameters";
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
-import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM, cleanupAzureRMLoginCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import { v4 as uuidv4 } from "uuid";
 
 var hm = require("typed-rest-client/HttpClient");
@@ -445,22 +445,27 @@ class Utils {
             if(parseFloat(azcliversion)){
                 if(this.isBicepAvailable(azcliversion, filePathExtension)){
                     setAzureCloudBasedOnServiceEndpoint(taskParameters.connectedService, azureCliPath);
-                    await loginAzureRM(taskParameters.connectedService, azureCliPath);
-                    await this.execBicepBuild(filePath, azureCliPath)
-                    if(filePathExtension === 'bicep'){
-                        filePath = filePath.replace('.bicep', '.json')      
-                    }
-                    else{
-                        var fullFileName: string = filePath.split(path.sep).pop()
-                        var bicepParamExtension: string = '.bicepparam'
-                        if(fullFileName.split('.').length > 2){
-                            var nameArray: Array<string> = fullFileName.split('.')
-                            nameArray.splice(0, 1)
-                            bicepParamExtension = '.'+nameArray.join('.')
+                    const azureLoginCredentials = await loginAzureRM(taskParameters.connectedService, azureCliPath);
+                    try {
+                        await this.execBicepBuild(filePath, azureCliPath)
+                        if(filePathExtension === 'bicep'){
+                            filePath = filePath.replace('.bicep', '.json')
                         }
-                        filePath = filePath.replace(bicepParamExtension, '.parameters.json')      
-                    }        
-                    await this.logoutAzure(azureCliPath);
+                        else{
+                            var fullFileName: string = filePath.split(path.sep).pop()
+                            var bicepParamExtension: string = '.bicepparam'
+                            if(fullFileName.split('.').length > 2){
+                                var nameArray: Array<string> = fullFileName.split('.')
+                                nameArray.splice(0, 1)
+                                bicepParamExtension = '.'+nameArray.join('.')
+                            }
+                            filePath = filePath.replace(bicepParamExtension, '.parameters.json')
+                        }
+                        await this.logoutAzure(azureCliPath);
+                    } finally {
+                        // Azure CLI reads the certificate on every command, so remove it only after the last az call.
+                        cleanupAzureRMLoginCredentials(azureLoginCredentials);
+                    }
                 }else{
                     //Maintain backwards compatibility for runs that are not using bicep param and do not require higher version
                     if(filePathExtension === 'bicep'){
