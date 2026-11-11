@@ -1,3 +1,4 @@
+import * as os from 'os';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { manualTestsFlow } from './Manual Flow/manualTests';
 import { getTestPlanData, TestPlanData } from './testPlanData';
@@ -91,7 +92,7 @@ function handleOperationErrorsAndResults(manualResult: IOperationResult, automat
 
 export async function run() {
     const testSelectorInput = tl.getInput('testSelector');
-    console.log('Test Selector selected: ' + testSelectorInput);
+    tl.writeExternalOutput('Test Selector selected: ' + testSelectorInput + os.EOL, { source: 'repository' });
 
     let ciData: ciDictionary = {
         TestSelector: testSelectorInput,
