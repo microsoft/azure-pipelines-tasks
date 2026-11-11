@@ -10,20 +10,6 @@ import tl = require('azure-pipelines-task-lib/task');
 let expectedArchivePath: undefined | string = undefined;
 
 describe('ArchiveFiles L0 Suite', function () {
-    function getRunnerDiagnostics(tr: ttm.MockTestRunner): string {
-        const cmdlines = tr.cmdlines && tr.cmdlines.length ? tr.cmdlines.join(os.EOL) : '<none>';
-        const errorIssues = tr.errorIssues && tr.errorIssues.length ? tr.errorIssues.join(os.EOL) : '<none>';
-        const stderr = tr.stderr && tr.stderr.length ? tr.stderr : '<none>';
-
-        return [
-            `succeeded=${tr.succeeded}`,
-            `failed=${tr.failed}`,
-            `cmdlines=${cmdlines}`,
-            `errorIssues=${errorIssues}`,
-            `stderr=${stderr}`
-        ].join(os.EOL);
-    }
-
     function deleteFolderRecursive(directoryPath) {
         if (fs.existsSync(directoryPath)) {
             fs.readdirSync(directoryPath).forEach((file, index) => {
@@ -147,26 +133,14 @@ describe('ArchiveFiles L0 Suite', function () {
             process.env['archiveFile'] = 'my7z';
             process.env['includeRootFolder'] = 'true';
             expectedArchivePath = path.join(__dirname, 'test_output', 'my7z.7z');
-            const previousSystemDebug = process.env['SYSTEM_DEBUG'];
-            process.env['SYSTEM_DEBUG'] = 'true';
 
             let tp: string = path.join(__dirname, 'L0CreateArchive.js');
             let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-            try {
-                await tr.runAsync();
-            } finally {
-                if (typeof previousSystemDebug === 'undefined') {
-                    delete process.env['SYSTEM_DEBUG'];
-                } else {
-                    process.env['SYSTEM_DEBUG'] = previousSystemDebug;
-                }
-            }
+            await tr.runAsync();
 
-            const diagnostics = getRunnerDiagnostics(tr);
-            assert(tr.succeeded, `7z archive command should succeed.${os.EOL}${diagnostics}`);
-            assert(tr.stdout.indexOf('Creating archive') > -1, `Should have tried to create archive.${os.EOL}${diagnostics}`);
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}${os.EOL}${diagnostics}`);
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
 
         it('Successfully creates a wim', async function () {
@@ -178,26 +152,14 @@ describe('ArchiveFiles L0 Suite', function () {
             if (process.platform.indexOf('win') < 0) {
                 expectedArchivePath = path.join(__dirname, 'test_output', 'mywim.wim');
             }
-            const previousSystemDebug = process.env['SYSTEM_DEBUG'];
-            process.env['SYSTEM_DEBUG'] = 'true';
 
             let tp: string = path.join(__dirname, 'L0CreateArchive.js');
             let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
 
-            try {
-                await tr.runAsync();
-            } finally {
-                if (typeof previousSystemDebug === 'undefined') {
-                    delete process.env['SYSTEM_DEBUG'];
-                } else {
-                    process.env['SYSTEM_DEBUG'] = previousSystemDebug;
-                }
-            }
+            await tr.runAsync();
 
-            const diagnostics = getRunnerDiagnostics(tr);
-            assert(tr.succeeded, `wim archive command should succeed.${os.EOL}${diagnostics}`);
-            assert(tr.stdout.indexOf('Creating archive') > -1, `Should have tried to create archive.${os.EOL}${diagnostics}`);
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}${os.EOL}${diagnostics}`);
+            assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
 
         it('Replace archive file in the root folder', async function () {
