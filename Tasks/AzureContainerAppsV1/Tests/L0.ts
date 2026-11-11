@@ -697,3 +697,25 @@ describe('AzureContainerApps Docker output filtering', function () {
         }
     }
 });
+
+describe('AzureContainerApps escapeVsoCommands', function () {
+    const { Utility } = require('../src/Utility');
+
+    it('neutralizes ##vso[ prefixes so they are not parsed as logging commands', () => {
+        const util = new Utility();
+        assert.strictEqual(
+            util.escapeVsoCommands('##vso[task.setvariable variable=NODE_OPTIONS]--trace-warnings'),
+            '##_vso[task.setvariable variable=NODE_OPTIONS]--trace-warnings'
+        );
+        assert.strictEqual(
+            util.escapeVsoCommands('path with ##VSO[task.logissue type=error]injected text'),
+            'path with ##_vso[task.logissue type=error]injected text'
+        );
+    });
+
+    it('leaves ordinary strings unchanged', () => {
+        const util = new Utility();
+        const ordinary = '/samplepath/to/app-source';
+        assert.strictEqual(util.escapeVsoCommands(ordinary), ordinary);
+    });
+});

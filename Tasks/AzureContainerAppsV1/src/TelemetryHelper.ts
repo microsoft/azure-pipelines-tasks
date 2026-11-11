@@ -81,7 +81,8 @@ export class TelemetryHelper {
 
                 let errorMessageArg: string = '';
                 if (!util.isNullOrEmpty(this.errorMessage)) {
-                    errorMessageArg = `--property 'errorMessage=${this.errorMessage}'`;
+                    // Escape "##vso[" since errorMessage may contain untrusted input.
+                    errorMessageArg = `--property 'errorMessage=${util.escapeVsoCommands(this.errorMessage)}'`;
                 }
 
                 const dockerCommand = `run --rm ${ORYX_CLI_IMAGE} /bin/bash -c "oryx telemetry --event-name 'ContainerAppsPipelinesTaskV1' ` +
