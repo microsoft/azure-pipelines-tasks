@@ -48,12 +48,12 @@ export class TaskController {
         console.log(tl.loc("SelectionModeTitle"), SelectionMode[this._taskparameters.selectionMode]);
 
         if (this._taskparameters.selectionMode == SelectionMode.Default) {
-            console.log(tl.loc("KeyFilterTitle"),`'${this._taskparameters.keyFilter}'`);
-            console.log(tl.loc("LabelFilterTitle"),this._taskparameters.label ? `"${this._taskparameters.label}"` : "(No label)");
+            tl.writeExternalOutput(`${tl.loc("KeyFilterTitle")} '${this._taskparameters.keyFilter}'\n`, { source: "repository" });
+            tl.writeExternalOutput(`${tl.loc("LabelFilterTitle")} ${this._taskparameters.label ? `"${this._taskparameters.label}"` : "(No label)"}\n`, { source: "repository" });
         }
 
         if (this._taskparameters.selectionMode == SelectionMode.Snapshot) {
-            console.log(tl.loc("SnapshotNameTitle"),`'${this._taskparameters.snapshotName}'`);
+            tl.writeExternalOutput(`${tl.loc("SnapshotNameTitle")} '${this._taskparameters.snapshotName}'\n`, { source: "repository" });
         }
 
         const configurationSettings: ConfigurationSetting<string>[] = await this._getConfigurationSettings();
