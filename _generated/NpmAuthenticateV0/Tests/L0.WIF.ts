@@ -310,6 +310,25 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         });
 
+        it('restores the .npmrc when a later registry fails to acquire a token', async () => {
+            const secondRegistry = 'https://pkgs.dev.azure.com/testorg/_packaging/SecondFeed/npm/registry/';
+            const npmrcPath = TestHelpers.createTempNpmrc(
+                `registry=${TestData.wifRegistryUrl}\n@scope:registry=${secondRegistry}`
+            );
+
+            const tr = await TestHelpers.runTestWithEnv({
+                [TestEnvVars.npmrcPath]: npmrcPath,
+                [TestEnvVars.workloadIdentityServiceConnection]: TestData.wifServiceConnection,
+                [TestEnvVars.wifToken]: TestData.wifToken,
+                [TestEnvVars.wifFailingRegistry]: 'SecondFeed'
+            });
+
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Simulated WIF failure');
+            TestHelpers.assertOutputContains(tr, `getFederatedWorkloadIdentityCredentialsForFeed called for ${TestData.wifRegistryUrl}`);
+            assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+        });
+
         for (const explicitFeedUrl of [false, true]) {
             it(`${explicitFeedUrl ? 'fails' : 'skips'} on discovery failure ${explicitFeedUrl ? 'with' : 'without'} feedUrl before acquiring credentials`, async () => {
                 const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.wifRegistryUrl}`);

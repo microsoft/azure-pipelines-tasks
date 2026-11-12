@@ -15,6 +15,7 @@ import { NpmConfigTelemetryPhase } from './constants';
 let internalFeedSuccessCount: number = 0;
 let externalFeedSuccessCount: number = 0;
 let federatedFeedAuthSuccessCount: number = 0;
+let restoreNpmrc: (() => void) | undefined;
 
 async function main(): Promise<void> {
     npmauthutils.emitNpmConfigTelemetry(NpmConfigTelemetryPhase.Main);
@@ -28,6 +29,13 @@ async function main(): Promise<void> {
     const backupManager = new NpmrcBackupManager(backupDirectory);
     const fileIdentity = backupManager.ensureBackedUp(npmrc);
     tl.setTaskVariable(NpmrcFileIdentityTaskVariable, JSON.stringify(fileIdentity));
+    restoreNpmrc = () => {
+        try {
+            backupManager.restoreBackedUpFile(npmrc, fileIdentity);
+        } catch {
+            tl.warning(tl.loc('Warning_NpmrcRestoreSkipped', npmrc));
+        }
+    };
     let npmrcRegistries = npmauthutils.getRegistriesFromNpmrc(npmrc);
     
     let packagingLocation;
@@ -165,6 +173,8 @@ function writeCredentialEntry(
 
 main().catch(error => {
     if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
+        // Discarding the backup below would leave any credentials already written in the .npmrc.
+        restoreNpmrc?.();
         tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
         // Clear the variables after we rm-rf the main root directory
         tl.setVariable("SAVE_NPMRC_PATH", "", false);

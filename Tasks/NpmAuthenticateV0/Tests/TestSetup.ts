@@ -38,6 +38,8 @@ if (!fs.existsSync(_saveNpmrcBase)) {
 }
 const _saveNpmrcPath = fs.mkdtempSync(_saveNpmrcBase + path.sep);
 process.env['SAVE_NPMRC_PATH'] = _saveNpmrcPath;
+// initializeBackupDirectory sets both variables together in a real run.
+process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'] = _saveNpmrcBase;
 
 // SYSTEMVSSCONNECTION for resolveInternalFeedCredentials
 process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = TestData.systemAccessToken;
@@ -89,7 +91,8 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConne
     getFederatedWorkloadIdentityCredentialsForFeed: async function (serviceConnectionName: string, feedUrl: string | URL) {
         console.log('Mock WIF: acquiring credentials');
         const parsedFeedUrl = verifyMockFeedUrl(feedUrl);
-        if (wifShouldFail) {
+        const failingRegistry = process.env[TestEnvVars.wifFailingRegistry];
+        if (wifShouldFail || (failingRegistry && parsedFeedUrl.href.includes(failingRegistry))) {
             throw new Error(`Simulated WIF failure for ${serviceConnectionName}`);
         }
         console.log(`Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called for ${parsedFeedUrl.href}`);
@@ -135,7 +138,8 @@ const answers: ma.TaskLibAnswers = {
     which: {},
     checkPath: {},
     exist: { [npmrcPath]: npmrcShouldExist },
-    stats: {}
+    stats: {},
+    rmRF: { [_saveNpmrcBase]: { success: true } }
 };
 tr.setAnswers(answers);
 
