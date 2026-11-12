@@ -131,12 +131,14 @@ steps:
   condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', false))
   env:
     PACKAGE_TOKEN: $(System.AccessToken)
+    npm_config_loglevel: verbose
 
 - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)" $(includeLocalPackagesBuildConfigParameter) --useSemverBuildConfig true --fast-build $(IS_FAST_BUILD_ENABLED)
   displayName: Build Tasks
   condition: and(succeeded(), ne(variables['numTasks'], 0), eq('${{ parameters.useSemverBuildConfig }}', true))
   env:
     PACKAGE_TOKEN: $(System.AccessToken)
+      npm_config_loglevel: verbose
 
 - script: node ./ci/after-build-check-tasks.js
   displayName: After build tasks validation
