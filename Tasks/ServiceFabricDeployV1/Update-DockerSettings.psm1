@@ -28,7 +28,7 @@ function Get-ImageRegistryAuthority
 
     if ($firstComponent -match '[.:]' -or $firstComponent -eq 'localhost' -or $firstComponent -cne $firstComponent.ToLowerInvariant())
     {
-        return Get-NormalizedRegistryAuthority -Value $firstComponent
+        return Get-NormalizedRegistryAuthority -Value $firstComponent 
     }
 
     return 'docker.io:443'
@@ -39,11 +39,14 @@ function Get-NormalizedRegistryAuthority
     [CmdletBinding()]
     Param(
         [String]
-        $Value
+        $Value,
+
+        [String]
+        $DefaultScheme = 'https'
     )
 
     $uri = $null
-    $candidate = if ($Value -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') { $Value } else { "https://$Value" }
+    $candidate = if ($Value -match '^[a-zA-Z][a-zA-Z0-9+.-]*://') { $Value } else { "${DefaultScheme}://$Value" }
     if (-not [Uri]::TryCreate($candidate, [UriKind]::Absolute, [ref]$uri) -or -not $uri.Host)
     {
         return $null
@@ -56,7 +59,19 @@ function Get-NormalizedRegistryAuthority
     }
 
     $registryHost = $uri.IdnHost.ToLowerInvariant()
-    if (@('index.docker.io', 'registry-1.docker.io', 'registry.hub.docker.com', 'hub.docker.com', 'docker.com') -contains $registryHost)
+    if ($uri.HostNameType -eq [UriHostNameType]::IPv6)
+    {
+        # Canonicalize equivalent spellings ([::1] / [0:0:0:0:0:0:0:1]); zone identifiers are not valid in image references.
+        $address = $null
+        $bare = $registryHost.Trim('[', ']')
+        if ($bare.Contains('%') -or -not [System.Net.IPAddress]::TryParse($bare, [ref]$address))
+        {
+            return $null
+        }
+
+        $registryHost = "[$($address.ToString())]"
+    }
+    elseif (@('index.docker.io', 'registry-1.docker.io', 'registry.hub.docker.com', 'hub.docker.com', 'docker.com') -contains $registryHost)
     {
         $registryHost = 'docker.io'
     }
@@ -130,6 +145,34 @@ function Get-ChildElements
     return @($Parent.ChildNodes | where { $_.NodeType -eq [System.Xml.XmlNodeType]::Element -and $_.LocalName -eq $LocalName })
 }
 
+function Resolve-ImageNameParameter
+{
+    [CmdletBinding()]
+    Param(
+        [String]
+        $ImageName,
+
+        # Effective application parameters (manifest defaults, parameter file, overrides).
+        [Hashtable]
+        $Parameters
+    )
+
+    # Only a whole-value '[Name]' is substituted; the result is validated like a literal image name, so a value that
+    # is missing, empty or still contains a '[...]' token (nested or partial) is left for Test-ImageMatchesRegistry to reject.
+    if ($ImageName -and $ImageName.Trim() -match '^\[([^\[\]]+)\]$')
+    {
+        $name = $Matches[1]
+        if ($Parameters -and $Parameters.ContainsKey($name) -and -not [string]::IsNullOrWhiteSpace([string]$Parameters[$name]))
+        {
+            return ([string]$Parameters[$name]).Trim()
+        }
+
+        return $null
+    }
+
+    return $ImageName
+}
+
 function Test-ImageMatchesRegistry
 {
     [CmdletBinding()]
@@ -148,11 +191,25 @@ function Test-ImageMatchesRegistry
 
     # Application parameter tokens ('[Param]', possibly embedded) are resolved at deployment time from files this task does not
     # control, and an empty name is not a valid image: neither can be verified.
-    if ([string]::IsNullOrWhiteSpace($ImageName) -or $ImageName -match '\[[^\]]+\]')
+    if ([string]::IsNullOrWhiteSpace($ImageName))
     {
         return $false
     }
 
+    # A bracketed IPv6 literal (with optional port) is valid only as the registry host, i.e. the first path component.
+    $tokenScope = $ImageName.Trim()
+    $slash = $tokenScope.IndexOf('/')
+    if ($slash -gt 0 -and $tokenScope.Substring(0, $slash) -match '^\[[a-fA-F0-9]*:[a-fA-F0-9:]*\](:[0-9]+)?$')
+    {
+        $tokenScope = $tokenScope.Substring($slash + 1)
+    }
+
+    if ($tokenScope -match '\[[^\]]+\]')
+    {
+        return $false
+    }
+
+    # An image reference without a port is pulled over HTTPS (443) first, so it never matches a plain-http registry; such a registry requires an explicit port in the image name.
     $imageAuthority = Get-ImageRegistryAuthority -ImageName $ImageName
     if (-not $imageAuthority)
     {
@@ -177,7 +234,12 @@ function Update-DockerSettings
         $ApplicationPackagePath,
 
         [Hashtable]
-        $ClusterConnectionParameters
+        $ClusterConnectionParameters,
+
+        # Application parameters from the parameter file or publish profile, with task overrides applied. They are layered
+        # over the application manifest defaults, as at deployment, so parameterized image names can be validated.
+        [Hashtable]
+        $ApplicationParameter
     )
 
     Trace-VstsEnteringInvocation $MyInvocation
@@ -255,6 +317,23 @@ function Update-DockerSettings
 
         $appManifestPath = Join-Path $ApplicationPackagePath "ApplicationManifest.xml"
         $appManifestXml = [xml](Get-Content -LiteralPath $appManifestPath)
+
+        $effectiveParameters = @{}
+        if (-not $legacyBehavior)
+        {
+            foreach ($manifestParameter in @($appManifestXml.DocumentElement.ChildNodes | Where-Object { $_.LocalName -eq 'Parameters' } | ForEach-Object { $_.ChildNodes } | Where-Object { $_.LocalName -eq 'Parameter' }))
+            {
+                $effectiveParameters[$manifestParameter.GetAttribute('Name')] = $manifestParameter.GetAttribute('DefaultValue')
+            }
+        }
+
+        if (-not $legacyBehavior -and $ApplicationParameter)
+        {
+            foreach ($key in $ApplicationParameter.Keys)
+            {
+                $effectiveParameters[[string]$key] = $ApplicationParameter[$key]
+            }
+        }
 
         $serviceManifestImports = @($appManifestXml.ApplicationManifest.ServiceManifestImport)
         foreach ($serviceManifestImport in $serviceManifestImports)
@@ -368,7 +447,8 @@ function Update-DockerSettings
 
                         foreach ($imageName in $imageNames)
                         {
-                            if (-not (Test-ImageMatchesRegistry -ImageName $imageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
+                            $resolvedImageName = Resolve-ImageNameParameter -ImageName $imageName -Parameters $effectiveParameters
+                            if (-not (Test-ImageMatchesRegistry -ImageName $resolvedImageName -RegistryUrl $registryUrl -AzureContainerRegistryOnly:$acrOnly))
                             {
                                 throw (Get-VstsLocString -Key RegistryAuthorityMismatch -ArgumentList $imageName, $codePackage.Name)
                             }
