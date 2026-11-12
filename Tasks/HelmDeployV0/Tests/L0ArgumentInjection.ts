@@ -288,6 +288,40 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
             'a namespace value padded with stray whitespace must be trimmed before reaching Helm');
     });
 
+    it('keeps an overrideValues entry containing whitespace as one argument by default', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'image.tag=1.2.3 --extra-flag value\nreplicas=2');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        delete process.env[featureEnv];
+        let argv: string[];
+        try {
+            argv = await buildUpgradeArgv();
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+
+        const setIndex = argv.indexOf('--set');
+        assert.ok(setIndex !== -1, '--set flag must be present');
+        assert.strictEqual(argv[setIndex + 1], 'image.tag=1.2.3 --extra-flag value,replicas=2');
+        assert.strictEqual(argv.indexOf('--extra-flag'), -1, 'whitespace inside a value must not become a separate argument');
+    });
+
+    it('restores the previous overrideValues tokenization when HelmDeploy.DisableStrictSetArguments is enabled', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'image.tag=1.2.3 --extra-flag');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        process.env[featureEnv] = 'true';
+        let argv: string[];
+        try {
+            argv = await buildUpgradeArgv();
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+
+        assert.notStrictEqual(argv.indexOf('--extra-flag'), -1, 'legacy behavior applies while the kill-switch is enabled');
+    });
     it('still lets a quoted overrideValues entry have its quotes stripped, matching Helm --set quoting conventions', async function () {
         process.env.BUILD_BUILDNUMBER = '20261027.3';
         setInput('overrideValues', 'image.tag="1.2.3"');
@@ -300,6 +334,73 @@ describe('HelmDeployV0 Helm command-line argument construction', function () {
             'quotes around an overrideValues value must still be stripped so Helm does not receive literal quote characters');
     });
 
+    it('keeps escaped literal quotes in an overrideValues entry while stripping grouping quotes', async function () {
+        process.env.BUILD_BUILDNUMBER = '20261027.3';
+        setInput('overrideValues', 'greeting="say \\"hi\\"!"');
+
+        const argv = await buildUpgradeArgv();
+
+        const setIndex = argv.indexOf('--set');
+        assert.ok(setIndex !== -1, '--set flag must be present');
+        assert.strictEqual(argv[setIndex + 1], 'greeting=say "hi"!');
+    });
+    it('keeps a trailing backslash that precedes a closing grouping quote', async function () {
+        const cases: [string, string][] = [['path="C:\\temp\\"', 'path=C:\\temp\\'], ['path="C:\\temp\\",b=c', 'path=C:\\temp\\,b=c'], ['a="x\\\\"', 'a=x\\\\'], ['path="C:\\temp\\" ', 'path=C:\\temp\\'], ['path="C:\\temp\\",b="x"', 'path=C:\\temp\\,b=x'], ['a="{\\"k\\":\\"v\\",\\"j\\":1}"', 'a={"k":"v","j":1}']];
+        for (const [input, expected] of cases) {
+            setInput('overrideValues', input);
+            const argv = await buildUpgradeArgv();
+            assert.strictEqual(argv[argv.indexOf('--set') + 1], expected, input);
+        }
+    });
+    it('omits --set for empty, whitespace-only or quote-only override values and trims the rest', async function () {
+        const cases: [string, string | null][] = [['', null], ['   ', null], ['""', null], ['  image.tag=1.2.3  ', 'image.tag=1.2.3'], ['  \na=b', 'a=b'], ['image.tag="\\"true\\""', 'image.tag="true"']];
+        for (const [input, expected] of cases) {
+            process.env.BUILD_BUILDNUMBER = '20261027.3';
+            setInput('overrideValues', input);
+            const argv = await buildUpgradeArgv();
+            const i = argv.indexOf('--set');
+            if (expected === null) {
+                assert.strictEqual(i, -1, 'no --set expected for: ' + input);
+            } else {
+                assert.strictEqual(argv[i + 1], expected, 'for: ' + input);
+            }
+        }
+    });
+    it('validates chart references: rejects a leading dash, accepts ordinary forms, and honors the kill-switch', function () {
+        const utils = require('../src/utils');
+        const featureEnv = 'DISTRIBUTEDTASK_TASKS_HELMDEPLOY_DISABLESTRICTSETARGUMENTS';
+        const original = process.env[featureEnv];
+        try {
+            delete process.env[featureEnv];
+            assert.throws(() => utils.validateChartReference('--post-renderer=x'), /InvalidChartReference|starts with '-'/);
+            for (const ok of ['stable/nginx', 'oci://registry.example.com/charts/app', './charts/app', 'C:\\charts\\app', 'myregistry.azurecr.io/helm/app']) {
+                assert.strictEqual(utils.validateChartReference(ok), ok);
+            }
+            process.env[featureEnv] = 'true';
+            assert.strictEqual(utils.validateChartReference('--x'), '--x');
+        } finally {
+            if (original === undefined) { delete process.env[featureEnv]; } else { process.env[featureEnv] = original; }
+        }
+    });
+
+    it('warns when an overrideValues entry contains option-like text but still passes it as one value', function () {
+        const utils = require('../src/utils');
+        const originalWarning = tl.warning;
+        const warnings: string[] = [];
+        (tl as any).warning = (m: string) => { warnings.push(m); };
+        const added: string[] = [];
+        const fakeCli = { addSingleArgument: (a: string) => added.push(a), addArgument: (a: string) => added.push(a) };
+        try {
+            utils.addOverrideValuesArguments(fakeCli, 'a=b --extra');
+            assert.strictEqual(warnings.length, 1);
+            assert.deepStrictEqual(added, ['--set', 'a=b --extra']);
+            warnings.length = 0;
+            utils.addOverrideValuesArguments(fakeCli, 'a=b');
+            assert.strictEqual(warnings.length, 0);
+        } finally {
+            (tl as any).warning = originalWarning;
+        }
+    });
     it('omits a single-token argument entirely when its value is empty, rather than adding a stray empty element', function () {
         let captured: string[] = null;
         const originalExecSync = tr.ToolRunner.prototype.execSync;
