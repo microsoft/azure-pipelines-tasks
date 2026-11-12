@@ -1,9 +1,9 @@
 [CmdletBinding()]
 param()
 
-# Security regression test for Update-DockerSettings.psm1.
+# Registry authority validation test for Update-DockerSettings.psm1.
 #
-# ImageName comes from the application package, which is not trusted. The secret of the selected registry
+# ImageName comes from the application package. The secret of the selected registry
 # credentials must only be written into the application manifest for images hosted on that registry.
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
@@ -18,8 +18,8 @@ $module = Get-Module Update-DockerSettings
         Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName $image -RegistryUrl 'https://trusted.azurecr.io')
     }
 
-    foreach ($image in @('attacker.invalid/team/app:1.0', 'evil.example:5443/ns/app:2.0', 'capture.trusted.azurecr.io/app',
-                         'trusted.azurecr.io:5000/app', 'trusted.azurecr.io@attacker.invalid/app', 'trusted.azurecr.io\@attacker.invalid/app', 'library/app'))
+    foreach ($image in @('other.invalid/team/app:1.0', 'evil.example:5443/ns/app:2.0', 'capture.trusted.azurecr.io/app',
+                         'trusted.azurecr.io:5000/app', 'trusted.azurecr.io@other.invalid/app', 'trusted.azurecr.io\@other.invalid/app', 'library/app'))
     {
         Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName $image -RegistryUrl 'https://trusted.azurecr.io')
     }
@@ -27,7 +27,7 @@ $module = Get-Module Update-DockerSettings
     # Docker Hub connection
     Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName 'myuser/app' -RegistryUrl 'https://index.docker.io/v1/')
     Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName 'app' -RegistryUrl 'https://index.docker.io/v1/')
-    Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName 'attacker.invalid/app' -RegistryUrl 'https://index.docker.io/v1/')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName 'other.invalid/app' -RegistryUrl 'https://index.docker.io/v1/')
     Assert-AreEqual $true (Test-ImageMatchesRegistry -ImageName 'ubuntu@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef' -RegistryUrl 'https://index.docker.io/v1/')
     Assert-AreEqual $false (Test-ImageMatchesRegistry -ImageName 'EVIL/app' -RegistryUrl 'https://index.docker.io/v1/')
 
@@ -39,9 +39,9 @@ $module = Get-Module Update-DockerSettings
 
     # ARM service principal: only Azure Container Registry hosts
     Assert-AreEqual $true (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'myregistry.azurecr.io/app')
-    Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'attacker.invalid/app')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'other.invalid/app')
     Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'app')
-    Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'azurecr.io.attacker.invalid/app')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'azurecr.io.other.invalid/app')
     Assert-AreEqual $false (Test-ImageMatchesRegistry -AzureContainerRegistryOnly -ImageName 'myregistry.azurecr.io:5000/app')
 
     # Embedded parameter tokens and empty names cannot be verified
@@ -55,7 +55,7 @@ $module = Get-Module Update-DockerSettings
     Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $acr) -ImageName 'myregistry.azurecr.io/app')
     $hub = @{ Url = 'https://hub.docker.com/'; Data = @{ registrytype = 'DockerHub' }; Auth = @{ Parameters = @{} } }
     Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $hub) -ImageName 'library/ubuntu')
-    Assert-AreEqual $false (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $hub) -ImageName 'attacker.invalid/app')
+    Assert-AreEqual $false (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $hub) -ImageName 'other.invalid/app')
     $others = @{ Url = 'https://hub.docker.com/'; Data = @{ registrytype = 'Others' }; Auth = @{ Parameters = @{ registry = 'https://reg.example.com' } } }
     Assert-AreEqual $true (Test-ImageMatchesRegistry -RegistryUrl (Get-RegistryConnectionAuthority -Endpoint $others) -ImageName 'reg.example.com/app')
 
@@ -85,7 +85,7 @@ try
     Assert-AreEqual $false ((Get-Content -Raw "$pkg\ApplicationManifest.xml") -match 'RepositoryCredentials')
 
     # ImageOverrides can select another image at deployment time: foreign and parameterized overrides are rejected too
-    foreach ($override in @('attacker.invalid/app:1', '[ImageParam]'))
+    foreach ($override in @('other.invalid/app:1', '[ImageParam]'))
     {
         $manifestPath = "$pkg\ApplicationManifest.xml"
         $xml = [xml](Get-Content -Raw $manifestPath)
@@ -103,6 +103,35 @@ try
         Assert-AreEqual $false ((Get-Content -Raw $manifestPath) -match 'RepositoryCredentials')
         Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" $manifestPath
     }
+    # An override without Os replaces the base image, so only the override is validated
+    $smPath0 = Get-ChildItem $pkg -Recurse -Filter ServiceManifest.xml | Select-Object -First 1 -ExpandProperty FullName
+    $smBackup = Get-Content -Raw $smPath0
+    Set-Content -LiteralPath $smPath0 -Value ($smBackup -replace '<ImageName>([^<]*)</ImageName>', '<ImageName>other.invalid/base:1</ImageName>')
+    foreach ($case in @(@{ Os = $null; Name = 'myregistry.azurecr.io/app:1'; Throws = $false }, @{ Os = '16299'; Name = 'myregistry.azurecr.io/app:1'; Throws = $true }))
+    {
+        $xml = [xml](Get-Content -Raw $manifestPath)
+        $ns = $xml.ApplicationManifest.NamespaceURI
+        $import = @($xml.ApplicationManifest.ServiceManifestImport)[0]
+        $policies = $import.AppendChild($xml.CreateElement('Policies', $ns))
+        $chp = $policies.AppendChild($xml.CreateElement('ContainerHostPolicies', $ns))
+        $chp.SetAttribute('CodePackageRef', 'Code')
+        $img = $chp.AppendChild($xml.CreateElement('ImageOverrides', $ns)).AppendChild($xml.CreateElement('Image', $ns))
+        $img.SetAttribute('Name', $case.Name)
+        if ($case.Os) { $img.SetAttribute('Os', $case.Os) }
+        $xml.Save($manifestPath)
+        if ($case.Throws)
+        {
+            Assert-Throws { Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{} } -MessagePattern "registry mismatch"
+        }
+        else
+        {
+            Update-DockerSettings -ApplicationPackagePath $pkg -ClusterConnectionParameters @{}
+            Assert-AreEqual $true ((Get-Content -Raw $manifestPath) -match 'RepositoryCredentials')
+        }
+        Copy-Item -Force "$PSScriptRoot\data\DockerSupportAssets\AppPkg\ApplicationManifest.xml" $manifestPath
+    }
+    Set-Content -LiteralPath $smPath0 -Value $smBackup
+
     # Duplicate ContainerHostPolicies: every one is validated and receives credentials; a comment-split ImageName is rejected
     $endpointUrl = 'https://myregistry.azurecr.io'
     $manifestPath = "$pkg\ApplicationManifest.xml"

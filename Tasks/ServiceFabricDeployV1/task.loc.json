@@ -422,7 +422,7 @@
     "UnsupportedARMAuthScheme": "ms-resource:loc.messages.UnsupportedARMAuthScheme",
     "UnsupportedContainerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedContainerRegistryAuthScheme",
     "RegistryAuthorityMismatch": "ms-resource:loc.messages.RegistryAuthorityMismatch",
-    "RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
+    "RegistryAuthorityCheckDisabled": "ms-resource:loc.messages.RegistryAuthorityCheckDisabled",
     "SFSDK_InvalidManifestPathSegment": "ms-resource:loc.messages.SFSDK_InvalidManifestPathSegment",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",

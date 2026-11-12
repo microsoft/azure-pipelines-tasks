@@ -334,25 +334,37 @@ function Update-DockerSettings
                     $policiesNeedingCredentials = @($containerHostPolicies | where { -not (Get-ChildElements -Parent $_ -LocalName 'RepositoryCredentials') })
                     if ($policiesNeedingCredentials -and $restrictToRegistry)
                     {
-                        # ImageName comes from the (untrusted) application package, and ImageOverrides can select a different
-                        # image at deployment time. Never hand a service connection's secret to a registry other than the one
-                        # the connection points at, whichever image ends up being used.
-                        $imageNames = @()
-                        foreach ($imageNameElement in (Get-ChildElements -Parent $codePackage.EntryPoint.ContainerHost -LocalName 'ImageName'))
-                        {
-                            $imageNames += Get-ElementText -Element $imageNameElement
-                        }
-
+                        # ImageName comes from the application package, and ImageOverrides can select a different image at deployment time.
+                        # Registry credentials are applied only when the image's registry matches the service connection, whichever image ends up being used.
+                        $overrideImageNames = @()
+                        $hasDefaultOverride = $false
                         foreach ($containerHostPolicy in $containerHostPolicies)
                         {
                             foreach ($imageOverrides in (Get-ChildElements -Parent $containerHostPolicy -LocalName 'ImageOverrides'))
                             {
                                 foreach ($image in (Get-ChildElements -Parent $imageOverrides -LocalName 'Image'))
                                 {
-                                    $imageNames += $image.GetAttribute('Name')
+                                    $overrideImageNames += $image.GetAttribute('Name')
+                                    if (-not $image.HasAttribute('Os'))
+                                    {
+                                        $hasDefaultOverride = $true
+                                    }
                                 }
                             }
                         }
+
+                        # An override without an Os replaces the service manifest image for every host, so the base image can
+                        # never be selected and is not validated. Every other image that can be selected is.
+                        $imageNames = @()
+                        if (-not $hasDefaultOverride)
+                        {
+                            foreach ($imageNameElement in (Get-ChildElements -Parent $codePackage.EntryPoint.ContainerHost -LocalName 'ImageName'))
+                            {
+                                $imageNames += Get-ElementText -Element $imageNameElement
+                            }
+                        }
+
+                        $imageNames += $overrideImageNames
 
                         foreach ($imageName in $imageNames)
                         {
