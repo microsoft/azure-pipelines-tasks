@@ -141,7 +141,7 @@ describe('ArchiveFiles L0 Suite', function () {
             await tr.runAsync();
 
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}\nTask stdout:\n${tr.stdout}\nTask stderr:\n${tr.stderr}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
 
         it('Successfully creates a wim', async function () {
@@ -160,7 +160,7 @@ describe('ArchiveFiles L0 Suite', function () {
             await tr.runAsync();
 
             assert(tr.stdout.indexOf('Creating archive') > -1, 'Should have tried to create archive');
-            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}\nTask stdout:\n${tr.stdout}\nTask stderr:\n${tr.stderr}`);
+            assert(fs.existsSync(expectedArchivePath), `Should have successfully created the archive at ${expectedArchivePath}, instead directory contents are ${fs.readdirSync(path.dirname(expectedArchivePath))}`);
         });
 
         it('Replace archive file in the root folder', async function () {
