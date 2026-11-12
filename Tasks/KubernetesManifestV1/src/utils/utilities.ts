@@ -193,30 +193,26 @@ export function escapeHelmSetToken(token: string, allowLists: boolean = false): 
     // Commas stay active only when the whole token is a single flat Helm list: {a,b}.
     let isList = false;
     if (allowLists && token.length >= 2 && token[0] === '{') {
-        let opens = 0;
-        let closes = 0;
-        let lastCloseAt = -1;
-        for (let i = 0; i < token.length; i++) {
+        // Helm treats additional '{' characters as item text, not nested lists.
+        for (let i = 1; i < token.length; i++) {
             if (token[i] === '\\') { i++; continue; }
-            if (token[i] === '{') { opens++; }
-            else if (token[i] === '}') { closes++; lastCloseAt = i; }
+            if (token[i] === '}') {
+                isList = i === token.length - 1;
+                break;
+            }
         }
-        isList = opens === 1 && closes === 1 && lastCloseAt === token.length - 1;
     }
 
-    let depth = 0;
     let result = '';
     for (let i = 0; i < token.length; i++) {
         const c = token[i];
         if (c === '\\') {
             result += i + 1 < token.length ? c + token[++i] : '\\\\';
-        } else if (c === ',' && !(isList && depth > 0)) {
+        } else if (c === ',' && !isList) {
             result += '\\,';
         } else if (c === '=' && !allowLists) {
             result += '\\=';
         } else {
-            if (isList && c === '{') { depth++; }
-            else if (isList && c === '}') { depth--; }
             result += c;
         }
     }

@@ -211,7 +211,7 @@ export function runCommandOnRemoteMachine(
                 handleError(data);
             });
             stream.on('exit', function (code: any, signal: any) {
-                console.log(`>> exited interactive session with code = ${code}, signal = ${signal}`);
+                console.log(escapeVsoCommands(`>> exited interactive session with code = ${code}, signal = ${signal}`));
                 stream.end();
             });
         });
