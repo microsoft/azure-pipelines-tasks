@@ -51,11 +51,4 @@ export class Utility {
                 : (commandBlockingEnabled ? 'blockAndTelemetry' : 'telemetryOnly')
         };
     }
-
-    /**
-     * Escapes "##vso[" logging-command prefixes so untrusted input can't be read as an Agent logging command.
-     */
-    public escapeVsoCommands(data: string): string {
-        return data.replace(/##vso\[/gi, '##_vso[');
-    }
 }

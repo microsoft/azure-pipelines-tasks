@@ -392,10 +392,10 @@ export class ContainerAppHelper {
         imageToDeploy: string,
         appSourcePath: string,
         dockerfilePath: string) {
-            tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${new Utility().escapeVsoCommands(dockerfilePath)}" with image name "${imageToDeploy}"`);
+            const externalOutput = new Utility().getExternalOutputOptions(this.disableTelemetry);
+            tl.debugExternalOutput(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`, externalOutput);
             try {
                 const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
-                const externalOutput = new Utility().getExternalOutputOptions(this.disableTelemetry);
                 if (useArgArray) {
                     new Utility().throwIfError(
                         tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`], { externalOutput }),

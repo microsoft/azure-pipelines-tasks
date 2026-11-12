@@ -364,10 +364,11 @@ export class azurecontainerapps {
         // Get Dockerfile to build, if provided, or check if one exists at the root of the provided application
         let dockerfilePath: string = tl.getInput('dockerfilePath', false);
         if (util.isNullOrEmpty(dockerfilePath)) {
-            console.log(tl.loc('CheckForAppSourceDockerfileMessage', util.escapeVsoCommands(this.appSourcePath)));
+            const externalOutput = util.getExternalOutputOptions(this.telemetryHelper.disableTelemetry);
+            tl.writeExternalOutput(tl.loc('CheckForAppSourceDockerfileMessage', this.appSourcePath), externalOutput);
             const rootDockerfilePath = path.join(this.appSourcePath, 'Dockerfile');
             if (fs.existsSync(rootDockerfilePath)) {
-                console.log(tl.loc('FoundAppSourceDockerfileMessage', util.escapeVsoCommands(rootDockerfilePath)));
+                tl.writeExternalOutput(tl.loc('FoundAppSourceDockerfileMessage', rootDockerfilePath), externalOutput);
                 dockerfilePath = rootDockerfilePath;
             } else {
                 // No Dockerfile found or provided, build the image using the builder
@@ -399,7 +400,7 @@ export class azurecontainerapps {
         this.runtimeStack = tl.getInput('runtimeStack', false);
         if (util.isNullOrEmpty(this.runtimeStack)) {
             this.runtimeStack = await this.appHelper.determineRuntimeStackAsync(appSourcePath);
-            console.log(tl.loc('DefaultRuntimeStackMessage', util.escapeVsoCommands(this.runtimeStack)));
+            tl.writeExternalOutput(tl.loc('DefaultRuntimeStackMessage', this.runtimeStack), util.getExternalOutputOptions(this.telemetryHelper.disableTelemetry));
         }
 
         console.log(tl.loc('CreateImageWithBuilderMessage'));
@@ -421,7 +422,7 @@ export class azurecontainerapps {
      * @param imageToBuild - The name of the image to build.
      */
     private static builderImageFromDockerfile(appSourcePath: string, dockerfilePath: string, imageToBuild: string) {
-        console.log(tl.loc('CreateImageWithDockerfileMessage', util.escapeVsoCommands(dockerfilePath)));
+        tl.writeExternalOutput(tl.loc('CreateImageWithDockerfileMessage', dockerfilePath), util.getExternalOutputOptions(this.telemetryHelper.disableTelemetry));
         this.appHelper.createRunnableAppImageFromDockerfile(imageToBuild, appSourcePath, dockerfilePath);
 
         // If telemetry is enabled, log that the Dockerfile scenario was targeted for this task

@@ -81,15 +81,16 @@ export class TelemetryHelper {
 
                 let errorMessageArg: string = '';
                 if (!util.isNullOrEmpty(this.errorMessage)) {
-                    // Escape "##vso[" since errorMessage may contain untrusted input.
-                    errorMessageArg = `--property 'errorMessage=${util.escapeVsoCommands(this.errorMessage)}'`;
+                    // errorMessage may contain untrusted input; the traced command line is sanitized below via externalOutput.
+                    errorMessageArg = `--property 'errorMessage=${this.errorMessage}'`;
                 }
 
                 const dockerCommand = `run --rm ${ORYX_CLI_IMAGE} /bin/bash -c "oryx telemetry --event-name 'ContainerAppsPipelinesTaskV1' ` +
                 `--processing-time '${taskLengthMilliseconds}' ${resultArg} ${scenarioArg} ${errorMessageArg}"`
 
                 // Don't use Utility's throwIfError() since it will still record an error in the pipeline logs, but won't fail the task
-                tl.execSync('docker', dockerCommand)
+                const externalOutput = util.getExternalOutputOptions(this.disableTelemetry);
+                tl.execSync('docker', dockerCommand, { externalOutput })
             } catch (err) {
                 tl.warning(`Skipping telemetry logging due to the following exception: ${err.message}`);
             }

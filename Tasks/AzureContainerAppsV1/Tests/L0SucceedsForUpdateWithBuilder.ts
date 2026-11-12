@@ -121,8 +121,8 @@ tmr.registerMock('./src/Utility', {
             isNullOrEmpty(str: string): boolean {
                 return str === null || str === undefined || str === "";
             },
-            escapeVsoCommands(data: string): string {
-                return data;
+            getExternalOutputOptions(disableTelemetry: boolean) {
+                return { source: 'childProcess' };
             }
         };
     }
