@@ -217,7 +217,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const outputLines = tr.stdout.split(/\r?\n/);
         const repositoryOutput = outputLines.find(line => line.includes('Info_AddingFederatedFeedAuth'));
         assert(repositoryOutput, 'Expected the task to display the registry URL');
-        assert(repositoryOutput.includes('https://pkgs.dev.azure.com/test/'));
+        assert(/https:\/\/pkgs\.dev\.azure\.com\/test\/(\s|$)/.test(repositoryOutput), 'Expected only the origin and path to be logged');
         assert(!repositoryOutput.includes('unexpected'), 'Fragment must not be logged');
         assert(!outputLines.some(line => line.startsWith(marker)), 'Logging command must not begin an output line');
     });

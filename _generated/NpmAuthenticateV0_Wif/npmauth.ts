@@ -55,7 +55,7 @@ async function main(): Promise<void> {
         npmrcRegistries = npmauthutils.validateAndFilterRegistryUrls(npmrcRegistries);
 
         // When feedUrl is provided, only add WIF credentials for matching registries in the npmrc.
-        // Otherwise, apply WIF credentials to all registries (pre-feedUrl input behavior).
+        // Otherwise, apply WIF credentials to all Azure Artifacts registries (pre-feedUrl input behavior).
         if (feedUrlInput) {
             const feedUrl = requireHttpsUrl(feedUrlInput);
             const feedNerfDart = npmauthutils.toNerfDart(feedUrl.href);
