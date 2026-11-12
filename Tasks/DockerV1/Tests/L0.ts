@@ -462,7 +462,7 @@ describe('Docker Suite', function() {
         // it) must have the ##vso[ marker neutralized to a single #.
         assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
             "##vso[ markers from attacker-controlled build output must be neutralized before reaching the log");
-        assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nSuccessfully built abc123") != -1,
+        assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##_vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nSuccessfully built abc123") != -1,
             "sanitized marker (single #) should still be present so the output stays readable");
         console.log(tr.stderr);
     });

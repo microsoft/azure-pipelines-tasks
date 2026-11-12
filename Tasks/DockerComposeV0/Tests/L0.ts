@@ -34,8 +34,8 @@ describe('Docker Compose Suite', function() {
     ].forEach(flag => {
         [
             { name: 'ordinary text', value: 'missing-compose.yml', expected: 'missing-compose.yml' },
-            { name: 'LF separators', value: 'missing-compose.yml\n##vso[example]value', expected: 'missing-compose.yml\n#vso[example]value' },
-            { name: 'CRLF separators', value: 'missing-compose.yml\r\n##vso[example]value', expected: 'missing-compose.yml\r\n#vso[example]value' }
+            { name: 'LF separators', value: 'missing-compose.yml\n##vso[example]value', expected: 'missing-compose.yml\n##_vso[example]value' },
+            { name: 'CRLF separators', value: 'missing-compose.yml\r\n##vso[example]value', expected: 'missing-compose.yml\r\n##_vso[example]value' }
         ].forEach(testCase => {
             it(`Reports the optional missing file with ${testCase.name} and message fallback ${flag.name}`, async () => {
                 const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
@@ -157,8 +157,8 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
                 "##vso[ markers from attacker-controlled compose build output must be neutralized before reaching the log");
-            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
-                "sanitized marker (single #) should still be present so the output stays readable");
+                        assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##_vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
+                            "sanitized marker (##_vso[) should still be present so the output stays readable");
         });
 
         it('Runs successfully for windows docker compose config and neutralizes ##vso[ commands on stderr', async () => {
@@ -175,7 +175,7 @@ describe('Docker Compose Suite', function() {
             // tl.error(). tl.error() emits the marker inside its own ##vso[task.issue] line and
             // escapes newlines, so this is defense in depth rather than an open hole, but the
             // sanitization must not regress.
-            assert(tr.errorIssues.some(issue => issue.indexOf("#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js") != -1),
+                        assert(tr.errorIssues.some(issue => issue.indexOf("##_vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js") != -1),
                 "compose config stderr should still be reported as an error issue");
             assert(tr.errorIssues.every(issue => issue.indexOf("##vso[") == -1),
                 "no error issue should carry an unneutralized ##vso[ marker");
@@ -339,11 +339,11 @@ describe('Docker Compose Suite', function() {
             assert(tr.succeeded, 'task should have succeeded');
             // Verifies createSanitizedExecOptions() is really wired into execCommandWithLogging:
             // the console-visible build output (as the agent's log parser would see it) must
-            // have the ##vso[ marker neutralized to a single #.
+            // have the ##vso[ marker neutralized to ##_vso[.
             assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##vso[task.setvariable") == -1,
                 "##vso[ markers from attacker-controlled compose build output must be neutralized before reaching the log");
-            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
-                "sanitized marker (single #) should still be present so the output stays readable");
+            assert(tr.stdout.indexOf("Step 1/2 : FROM node:18\n##_vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js\nsucessfully built the service images") != -1,
+                "sanitized marker (##_vso[) should still be present so the output stays readable");
         });
 
         it('Runs successfully for linux docker compose config and neutralizes ##vso[ commands on stderr', async () => {
@@ -360,7 +360,7 @@ describe('Docker Compose Suite', function() {
             // tl.error(). tl.error() emits the marker inside its own ##vso[task.issue] line and
             // escapes newlines, so this is defense in depth rather than an open hole, but the
             // sanitization must not regress.
-            assert(tr.errorIssues.some(issue => issue.indexOf("#vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js") != -1),
+                        assert(tr.errorIssues.some(issue => issue.indexOf("##_vso[task.setvariable variable=NODE_OPTIONS]--require /tmp/evil.js") != -1),
                 "compose config stderr should still be reported as an error issue");
             assert(tr.errorIssues.every(issue => issue.indexOf("##vso[") == -1),
                 "no error issue should carry an unneutralized ##vso[ marker");

@@ -26,7 +26,7 @@
     "agent-base": "6.0.2",
     "azure-devops-node-api": "^12.2.0",
     "azure-pipelines-task-lib": "^5.283.0",
-    "azure-pipelines-tasks-docker-common": "^2.268.0",
+    "azure-pipelines-tasks-docker-common": "^2.281.1",
     "azure-pipelines-tasks-utility-common": "3.272.0",
     "azure-pipelines-tool-lib": "^2.0.10",
     "performance-now": "0.2.0",
