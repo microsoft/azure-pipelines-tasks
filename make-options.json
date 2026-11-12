@@ -261,6 +261,7 @@
         "AzureIoTEdgeV2",
         "AzureMysqlDeploymentV2",
         "AzureStaticWebAppV0",
+        "AzureTestPlanV0",
         "PublishSymbolsV2"
     ],
     "wif_242": [
