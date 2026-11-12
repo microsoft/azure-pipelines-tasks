@@ -12,7 +12,7 @@
     "@types/uuid": "^8.3.0",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^5.281.0",
-    "azure-pipelines-tasks-docker-common": "^2.281.0",
+    "azure-pipelines-tasks-docker-common": "^2.281.1",
     "azure-pipelines-tasks-kubernetes-common": "^2.281.0",
     "azure-pipelines-tasks-utility-common": "^3.281.0",
     "del": "2.2.0",

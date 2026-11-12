@@ -14,7 +14,7 @@
     "@types/node": "^24.10.0",
     "agent-base": "6.0.2",
     "azure-pipelines-task-lib": "^5.281.1",
-    "azure-pipelines-tasks-docker-common": "^2.281.0"
+    "azure-pipelines-tasks-docker-common": "^2.281.1"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
