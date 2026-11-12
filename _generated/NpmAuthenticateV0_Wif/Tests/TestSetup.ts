@@ -38,8 +38,6 @@ if (!fs.existsSync(_saveNpmrcBase)) {
 }
 const _saveNpmrcPath = fs.mkdtempSync(_saveNpmrcBase + path.sep);
 process.env['SAVE_NPMRC_PATH'] = _saveNpmrcPath;
-// initializeBackupDirectory sets both variables together in a real run.
-process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'] = _saveNpmrcBase;
 
 // SYSTEMVSSCONNECTION for resolveInternalFeedCredentials
 process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = TestData.systemAccessToken;
@@ -138,8 +136,7 @@ const answers: ma.TaskLibAnswers = {
     which: {},
     checkPath: {},
     exist: { [npmrcPath]: npmrcShouldExist },
-    stats: {},
-    rmRF: { [_saveNpmrcBase]: { success: true } }
+    stats: {}
 };
 tr.setAnswers(answers);
 

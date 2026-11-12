@@ -3,6 +3,7 @@
 // the NpmAuthenticateV0_Wif build variant.
 
 import assert from 'assert';
+import * as fs from 'fs';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
@@ -201,7 +202,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         TestHelpers.assertNpmrcContains(npmrcPath, TestData.wifToken);
     });
 
-    it('neutralizes logging commands in registry values from .npmrc', async () => {
+    it('displays only the origin and path of registry values from .npmrc', async () => {
         const marker = '##vso[task.setvariable variable=unexpected;]injected';
         const registry = `https://pkgs.dev.azure.com/test/#metadata${marker}`;
         const npmrcPath = TestHelpers.createTempNpmrc(`registry="${registry}"`);
@@ -216,7 +217,8 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
         const outputLines = tr.stdout.split(/\r?\n/);
         const repositoryOutput = outputLines.find(line => line.includes('Info_AddingFederatedFeedAuth'));
         assert(repositoryOutput, 'Expected the task to display the registry URL');
-        assert(repositoryOutput.includes('##_vso[task.setvariable variable=unexpected;]injected'));
+        assert(repositoryOutput.includes('https://pkgs.dev.azure.com/test/'));
+        assert(!repositoryOutput.includes('unexpected'), 'Fragment must not be logged');
         assert(!outputLines.some(line => line.startsWith(marker)), 'Logging command must not begin an output line');
     });
 
@@ -310,11 +312,10 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
         });
 
-        it('restores the .npmrc when a later registry fails to acquire a token', async () => {
+        it('writes no credentials when a later registry fails to acquire a token', async () => {
             const secondRegistry = 'https://pkgs.dev.azure.com/testorg/_packaging/SecondFeed/npm/registry/';
-            const npmrcPath = TestHelpers.createTempNpmrc(
-                `registry=${TestData.wifRegistryUrl}\n@scope:registry=${secondRegistry}`
-            );
+            const originalContent = `registry=${TestData.wifRegistryUrl}\n@scope:registry=${secondRegistry}`;
+            const npmrcPath = TestHelpers.createTempNpmrc(originalContent);
 
             const tr = await TestHelpers.runTestWithEnv({
                 [TestEnvVars.npmrcPath]: npmrcPath,
@@ -327,6 +328,7 @@ describe('NpmAuthenticate L0 - Workload Identity Federation (WIF)', function () 
             TestHelpers.assertOutputContains(tr, 'Simulated WIF failure');
             TestHelpers.assertOutputContains(tr, `getFederatedWorkloadIdentityCredentialsForFeed called for ${TestData.wifRegistryUrl}`);
             assert.deepStrictEqual(TestHelpers.getAppendedAuth(tr, npmrcPath), []);
+                        assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), originalContent);
         });
 
         for (const explicitFeedUrl of [false, true]) {
