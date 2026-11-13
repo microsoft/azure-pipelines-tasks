@@ -19,6 +19,13 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
         return new ttm.MockTestRunner(path.join(__dirname, 'testsetup.js'));
     }
 
+    it('should use canonical paths for agent and Gradle home fixtures', () => {
+        const fixtureRoot = process.env['GRADLE_CREDPROVIDER_HOME']!;
+        assert.strictEqual(path.relative(fs.realpathSync(fixtureRoot), fixtureRoot), '');
+        assert.strictEqual(path.dirname(process.env[TestEnvVars.agentTempDirectory]!), fixtureRoot);
+        assert.strictEqual(path.dirname(process.env[TestEnvVars.gradleUserHome]!), fixtureRoot);
+    });
+
     it('should isolate jobs beneath Agent.TempDirectory', async () => {
         const first = configuredRunner();
         await first.runAsync();

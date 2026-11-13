@@ -38,7 +38,7 @@ export class TestHelpers {
         });
 
         // Create a temp directory with a dummy JAR for tests
-        testJarDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-jar-'));
+        testJarDir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'gradle-test-jar-')));
         fs.writeFileSync(
             path.join(testJarDir, 'artifacts-gradle-credprovider-1.0.0.jar'),
             'dummy-jar-content'
