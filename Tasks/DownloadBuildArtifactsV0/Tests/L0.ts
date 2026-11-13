@@ -140,6 +140,24 @@ describe('DownloadBuildArtifactsV0 Suite', function () {
         throw err;
     };
   }).timeout(5000);;
+
+  it('a non-retryable redirect download error fails without retrying the redirect attempt or falling back to the classic download', async () => {
+    const tp: string = path.join(__dirname, 'L0RedirectNonRetryable.js');
+    const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+    tr.nodePath = nodePath;
+
+    try {
+        await tr.runAsync();
+        assert(tr.stdOutContained('REDIRECT_CALLS=1'), 'the redirect download should be attempted exactly once, not retried');
+        assert(tr.stdOutContained('CLASSIC_CALLS=0'), 'a non-retryable redirect error must not fall back to the classic download');
+        assert(tr.failed, 'task should have failed');
+    } catch (err) {
+        console.log(tr.stdout);
+        console.log(tr.stderr);
+        console.log(err);
+        throw err;
+    };
+  }).timeout(10000);
 });
 
 describe('DownloadBuildArtifactsV0 symlink validation', function () {
