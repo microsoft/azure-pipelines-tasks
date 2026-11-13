@@ -156,6 +156,17 @@ if (process.env[shared.TestEnvVars.isKubectlPresentOnMachine] && JSON.parse(proc
 a.checkPath[kubectlPath] = true;
 a.findMatch[process.env[shared.TestEnvVars.manifests]] = [process.env[shared.TestEnvVars.manifests]];
 
+['123', '1.2', '9007199254740992', '1.20'].forEach(name => {
+    a.exec[`${kubectlPath} get Deployment/${name}-baseline -o json --namespace testnamespace`] = {
+        'code': 1,
+        'stderr': 'not found'
+    };
+});
+a.exec[`${kubectlPath} delete Deployment 123-canary 1.2-canary 9007199254740992-canary 1.20-canary --namespace testnamespace`] = {
+    'code': 0,
+    'stdout': 'numeric canaries deleted'
+};
+
 if (process.env[shared.TestEnvVars.isStableDeploymentPresent] && JSON.parse(process.env[shared.TestEnvVars.isStableDeploymentPresent])) {
     a.exec[`${kubectlPath} get Deployment/nginx-deployment -o json --namespace testnamespace`] = {
         'code': 0,

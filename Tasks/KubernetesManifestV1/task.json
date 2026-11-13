@@ -14,7 +14,7 @@
   "version": {
     "Major": 1,
     "Minor": 283,
-    "Patch": 3
+    "Patch": 4
   },
   "demands": [],
   "groups": [],
@@ -478,6 +478,7 @@
     "RolloutStatusTimedout": "Rollout status check failed.",
     "EnvironmentLink": "For more information, go to %s",
     "KubeloginFailed": "Kubelogin authentication failed. Exception: %s",
-    "InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input."
+    "InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input.",
+    "InvalidManifestObjectToken": "The manifest field '%s' is empty or contains whitespace, quotes, control characters, or starts with '-', which could be misinterpreted as a kubectl option. Use a valid Kubernetes object name."
   }
 }
