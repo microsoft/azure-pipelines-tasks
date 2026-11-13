@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS не включен в задаче. Удаление сертификатов пропускается.",
   "loc.messages.SkipDownloadSecureFiles": "TLS не включен в задаче. Скачивание сертификатов пропускается.",
   "loc.messages.FileNotFound": "Файл не найден в %s",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Сведения о подключении к службе Kubernetes не найдены.",
   "loc.messages.ExpiredServicePrincipal": "Не удалось получить маркер доступа для Azure. Убедитесь, что используемый субъект-служба является допустимым, а срок его действия не истек.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Сохранение диаграммы в Реестре контейнеров Azure поддерживается только в диаграммах Helm версии 3.",

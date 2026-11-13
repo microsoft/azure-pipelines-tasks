@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS ist nicht in der Aufgabe aktiviert. Das Löschen von Zertifikaten wird übersprungen.",
   "loc.messages.SkipDownloadSecureFiles": "TLS ist nicht in der Aufgabe aktiviert. Das Herunterladen von Zertifikaten wird übersprungen.",
   "loc.messages.FileNotFound": "Datei nicht unter \"%s\" gefunden.",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Die Details zur Kubernetes-Dienstverbindung wurden nicht gefunden.",
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Das Speichern des Diagramms in Azure Container Registry wird nur in Helm V3 unterstützt.",

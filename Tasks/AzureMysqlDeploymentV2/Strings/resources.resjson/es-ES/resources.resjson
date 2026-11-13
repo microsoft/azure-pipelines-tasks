@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "No se encontró ningún paquete con el patrón especificado",
   "loc.messages.FirewallRuleNameCannotBeNull": "El nombre de la regla de firewall no puede ser un valor null.",
   "loc.messages.SqlFileNotFound": "No se encontró el archivo SQL en la ruta de acceso: %s",
-  "loc.messages.InvalidDatabaseName": "Nombre de base de datos no válido: \"%s\". Solo se permiten caracteres alfanuméricos, caracteres de subrayado, guiones y signos de dólar."
+  "loc.messages.InvalidDatabaseName": "Nombre de base de datos no válido: \"%s\". Solo se permiten caracteres alfanuméricos, caracteres de subrayado, guiones y signos de dólar.",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
 }

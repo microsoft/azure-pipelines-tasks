@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Пакет с указанным шаблоном не найден",
   "loc.messages.FirewallRuleNameCannotBeNull": "Имя правила брандмауэра не может иметь значение NULL.",
   "loc.messages.SqlFileNotFound": "Файл SQL не найден на пути: %s",
-  "loc.messages.InvalidDatabaseName": "Недопустимое имя базы данных \"%s\". Допускаются только буквенно-цифровые символы, знаки подчеркивания и дефисы."
+  "loc.messages.InvalidDatabaseName": "Недопустимое имя базы данных \"%s\". Допускаются только буквенно-цифровые символы, знаки подчеркивания и дефисы.",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
 }
