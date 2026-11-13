@@ -188,6 +188,7 @@ function updateTrafficSplitObject(kubectl: Kubectl, serviceName: string): string
 }
 
 function createTrafficSplitManifestFile(kubectl: Kubectl, serviceName: string, stableWeight: number, baselineWeight: number, canaryWeight: number): string {
+    utils.validateManifestObjectToken(serviceName, 'metadata.name');
     const smiObjectString = getTrafficSplitObject(kubectl, serviceName, stableWeight, baselineWeight, canaryWeight);
     const manifestFile = fileHelper.writeManifestToFile(smiObjectString, TRAFFIC_SPLIT_OBJECT, serviceName);
     if (!manifestFile) {

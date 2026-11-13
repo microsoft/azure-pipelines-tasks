@@ -37,4 +37,18 @@ export class Utility {
     public isNullOrEmpty(str: string): boolean {
         return str === null || str === undefined || str === "";
     }
+
+    /**
+     * Builds externalOutput options for filtering child-process (pack/docker/oryx) logging commands.
+     * @param disableTelemetry - whether the task has opted out of telemetry
+     */
+    public getExternalOutputOptions(disableTelemetry: boolean): tl.ExternalOutputOptions {
+        const commandBlockingEnabled = tl.getPipelineFeature('AzureContainerAppsEnableVsoCommandBlocking');
+        return {
+            source: 'childProcess',
+            vsoCommandMode: disableTelemetry
+                ? (commandBlockingEnabled ? 'blockOnly' : 'disabled')
+                : (commandBlockingEnabled ? 'blockAndTelemetry' : 'telemetryOnly')
+        };
+    }
 }
