@@ -4,6 +4,24 @@ import * as tmt from 'azure-pipelines-task-lib/mock-task';
 import * as constants from './Constants';
 import * as path from 'path';
 
+process.env['AGENT_VERSION'] = '5.281.1';
+process.env['Build.Buildid'] = '12345';
+process.env['System.PlanId'] = 'test-plan';
+process.env['System.JobId'] = 'test-job';
+process.env['System.TaskInstanceId'] = 'test-task';
+process.env['System.JobAttempt'] = '1';
+process.env['Agent.Version'] = '5.281.1';
+
+if (process.env['PTR_TEST_FAILURE'] === 'telemetry') {
+    const log = console.log;
+    console.log = function (message, ...args) {
+        if (typeof message === 'string' && message.indexOf('##vso[telemetry.publish ') === 0) {
+            throw new Error('Simulated telemetry failure');
+        }
+        log.apply(console, [message, ...args]);
+    };
+}
+
 // Get the task path
 const taskPath = path.join(__dirname, '..', 'publishtestresults.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -65,12 +83,26 @@ tlClone.osType = function () {
 }
 
 tlClone.findMatch = function () {
+    if (process.env['PTR_TEST_FAILURE'] === 'find') {
+        throw new Error('Simulated file discovery failure containing mock-secret');
+    }
     let matchingFiles: string[] = ["n-files0.xml"];
     return matchingFiles;
 }
 
 tlClone.getEndpointAuthorizationParameter = function () {
     return 'ad4sldkajdsf4ksa5randomaccesstoken7lf9adsnfandfjlsdf';
+}
+
+if (process.env['PTR_TEST_FAILURE'] === 'publisher') {
+    const tool = tlClone.tool;
+    tlClone.tool = function (file) {
+        const runner = tool(file);
+        runner.exec = function () {
+            return Promise.reject(new Error('Simulated publisher launch failure containing mock-secret'));
+        };
+        return runner;
+    };
 }
 tr.registerMock('azure-pipelines-task-lib/mock-task', tlClone);
 

@@ -31,6 +31,7 @@ describe('PublishTestResults Suite', function() {
         delete process.env[constants.failTaskOnFailedTests];
         delete process.env[constants.failTaskOnFailureToPublishResults];
         delete process.env[constants.allowPtrToDetectTestRunRetryFiles];
+        delete process.env['PTR_TEST_FAILURE'];
 
         done();
     });
@@ -53,6 +54,13 @@ describe('PublishTestResults Suite', function() {
         process.env[constants.proxyPassword] = '1';
         process.env[constants.proxyByPassHosts] = undefined;
         process.env[constants.failTaskOnFailureToPublishResults] = 'false';
+    }
+
+    function getTelemetryEvents(runner: ttm.MockTestRunner): { [key: string]: any }[] {
+        const prefix = '##vso[telemetry.publish area=TestExecution;feature=PublishTestResultsTask]';
+        return runner.stdout.split(/\r?\n/)
+            .filter(line => line.indexOf(prefix) === 0)
+            .map(line => JSON.parse(line.substring(prefix.length)));
     }
 
     after(function () {
@@ -128,6 +136,9 @@ describe('PublishTestResults Suite', function() {
         assert(tr.stdout.indexOf(`TestResultsPublisher.exe`) < 0,
             `TestResultsPublisher.exe should not have been called on non-windows OS`);
         assert.equal(tr.invokedToolCount, 0, `invoked tool count should be 0`);
+        const stages = getTelemetryEvents(tr).map(event => event.stage);
+        assert(stages.indexOf('ResultsPublishCommandRequested') >= 0);
+        assert(stages.indexOf('NativePublisherLaunchRequested') < 0);
 
         done();
     });
@@ -169,6 +180,11 @@ describe('PublishTestResults Suite', function() {
             `Should have called TestResultsPublisher.exe first`);
         assert(tr.stdOutContained(`vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=false;resultFiles=n-files0.xml;failTaskOnFailedTests=false;failTaskOnFailureToPublishResults=false;testRunSystem=VSTS - PTR;]`),
             `Should have published results through Command when feature flag is off`);
+        const stages = getTelemetryEvents(tr).filter(event => event.stage);
+        const returned = stages.findIndex(event => event.stage === 'NativePublisherReturned');
+        const fallback = stages.findIndex(event => event.stage === 'ResultsPublishCommandRequested');
+        assert.equal(stages[returned].exitCode, 20000);
+        assert(fallback > returned, 'Fallback telemetry should follow the native return');
 
         done();
     });
@@ -246,5 +262,123 @@ describe('PublishTestResults Suite', function() {
         assert(tr.stdout.indexOf('isDetectTestRunRetry=true;') < 0, 'Publish command should not include retry-detection property when variable is false');
 
         done();
+    });
+
+    it('Correlates ordered native-publisher milestones and consolidated telemetry per invocation', () => {
+        setCommonRetryDetectionInputs();
+        process.env[constants.osType] = 'Windows_NT';
+        process.env[constants.listPackagesReturnCode] = '0';
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.succeeded);
+        const events = getTelemetryEvents(runner);
+        const stages = events.filter(event => event.subFeature === 'publishTestResultsTaskStageEvent');
+        assert.deepEqual(stages.map(event => event.stage), [
+            'TaskStarted', 'InputsRead', 'FindingResultFiles', 'ResultFilesFound',
+            'CheckingDotNetTelemetryFeatureFlag', 'GettingDotNetVersion', 'DotNetVersionRead',
+            'NativePublisherPreparing', 'NativePublisherLaunchRequested', 'NativePublisherReturned', 'TaskCompleted'
+        ]);
+        stages.forEach((event, index) => {
+            assert.equal(event.sequence, index + 1);
+            assert.equal(event.previousStage, index > 0 ? stages[index - 1].stage : undefined);
+            assert(event.elapsedTimeMs >= (index > 0 ? stages[index - 1].elapsedTimeMs : 0));
+        });
+        events.forEach(event => {
+            assert.equal(event.invocationId, stages[0].invocationId);
+            assert.equal(event.buildid, '12345');
+            assert.equal(event.planId, 'test-plan');
+            assert.equal(event.jobId, 'test-job');
+            assert.equal(event.taskInstanceId, 'test-task');
+            assert(event.nodeVersion);
+            ['jobAttempt', 'processId', 'agentVersion', 'nodeArchitecture'].forEach(property => {
+                assert(!Object.prototype.hasOwnProperty.call(event, property),
+                    `Telemetry should omit unnecessary metadata: ${property}`);
+            });
+        });
+        const consolidated = events.find(event => event.subFeature === 'publishTestResultsTaskConsolidatedCiEvent');
+        assert(consolidated, 'Existing consolidated telemetry must still be emitted');
+        assert.equal(consolidated.lastStage, 'TaskCompleted');
+
+        const nextRunner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        nextRunner.run();
+        assert.notEqual(getTelemetryEvents(nextRunner)[0].invocationId, stages[0].invocationId);
+    });
+
+    it('Reports the failing discovery stage without including exception text in telemetry', () => {
+        setCommonRetryDetectionInputs();
+        process.env['PTR_TEST_FAILURE'] = 'find';
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.failed);
+        const events = getTelemetryEvents(runner);
+        const failure = events.find(event => event.stage === 'TaskException');
+        assert.equal(failure.previousStage, 'FindingResultFiles');
+        assert.equal(failure.exceptionType, 'Error');
+        assert(JSON.stringify(events).indexOf('mock-secret') < 0);
+        const consolidated = events.find(event => event.subFeature === 'publishTestResultsTaskConsolidatedCiEvent');
+        assert.equal(consolidated.lastStage, 'TaskException');
+        assert.equal(consolidated.previousStage, 'FindingResultFiles');
+        assert.equal(runner.invokedToolCount, 0);
+    });
+
+    it('Reports a rejected native invocation without recording a native return', () => {
+        setCommonRetryDetectionInputs();
+        process.env[constants.osType] = 'Windows_NT';
+        process.env['PTR_TEST_FAILURE'] = 'publisher';
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.failed);
+        const events = getTelemetryEvents(runner);
+        const failure = events.find(event => event.stage === 'TaskException');
+        assert.equal(failure.previousStage, 'NativePublisherLaunchRequested');
+        assert.equal(failure.exceptionType, 'Error');
+        assert(!events.some(event => event.stage === 'NativePublisherReturned'));
+        assert(JSON.stringify(events).indexOf('mock-secret') < 0);
+    });
+
+    it('Records a native failed-tests exit without changing task failure handling', () => {
+        setCommonRetryDetectionInputs();
+        process.env[constants.osType] = 'Windows_NT';
+        process.env[constants.listPackagesReturnCode] = '40000';
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.failed);
+        const events = getTelemetryEvents(runner);
+        assert.equal(events.find(event => event.stage === 'NativePublisherReturned').exitCode, 40000);
+        assert(!events.some(event => event.stage === 'TaskException'));
+        assert(events.some(event => event.stage === 'TaskCompleted'));
+    });
+
+    it('Reports response-file failure while preserving command fallback', () => {
+        setCommonRetryDetectionInputs();
+        process.env[constants.osType] = 'Windows_NT';
+        process.env[constants.agentTempDirectory] = path.join(__dirname, 'missing-telemetry-directory');
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.succeeded);
+        const stages = getTelemetryEvents(runner).filter(event => event.stage);
+        const failure = stages.findIndex(event => event.stage === 'ResponseFileCreationFailed');
+        assert(failure >= 0);
+        assert.equal(stages[failure].previousStage, 'NativePublisherPreparing');
+        assert(stages.findIndex(event => event.stage === 'ResultsPublishCommandRequested') > failure);
+        assert(!stages.some(event => event.stage === 'NativePublisherLaunchRequested'));
+        assert.equal(runner.invokedToolCount, 0);
+    });
+
+    it('Does not fail publishing when telemetry output throws', () => {
+        setCommonRetryDetectionInputs();
+        process.env['PTR_TEST_FAILURE'] = 'telemetry';
+        const runner = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        runner.run();
+
+        assert(runner.succeeded);
+        assert(runner.stdOutContained('##vso[results.publish '));
+        assert.equal(getTelemetryEvents(runner).length, 0);
+        assert.equal(runner.errorIssues.length, 0);
     });
 });

@@ -25,6 +25,7 @@ export class TestResultsPublisher {
     }
 
     public async publishResultsThroughExe(): Promise<number> {
+        ci.publishStage('NativePublisherPreparing');
         const testResultsPublisherTool: tr.ToolRunner = tl.tool(this.getTestResultsPublisherLocation());
         const envVars: { [key: string]: string; } = this.getEnvironmentVariables();
         const args: string[] = this.getArguments(this.matchingTestResultsFiles);
@@ -33,7 +34,9 @@ export class TestResultsPublisher {
         }
         testResultsPublisherTool.arg(args);
 
+        ci.publishStage('NativePublisherLaunchRequested');
         const exitCode: number = await testResultsPublisherTool.exec(<tr.IExecOptions>{ env: envVars, ignoreReturnCode: true });
+        ci.publishStage('NativePublisherReturned', { exitCode });
 
         return exitCode;
     }
@@ -70,6 +73,7 @@ export class TestResultsPublisher {
             // Writing matching file names in the response file
             fs.writeFileSync(responseFilePath, fileContent);
         } catch (ex) {
+            ci.publishStage('ResponseFileCreationFailed', { exceptionType: ex instanceof Error ? ex.name : typeof ex });
             // Log telemetry and return null path
             ci.addToConsolidatedCi('exception', ex);
             
