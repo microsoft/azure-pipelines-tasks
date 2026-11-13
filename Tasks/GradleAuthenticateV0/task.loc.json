@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "runsOn": [
@@ -92,11 +92,18 @@
     "settableVariables": {
       "allowed": [
         "ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO",
-        "ARTIFACTS_GRADLE_AUTH_CONFIG"
+        "ARTIFACTS_GRADLE_AUTH_CONFIG",
+        "ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_IDENTITY"
       ]
     }
   },
   "messages": {
+    "Error_CiProviderChecksumMismatch": "ms-resource:loc.messages.Error_CiProviderChecksumMismatch",
+    "Error_InvalidCiProviderRelease": "ms-resource:loc.messages.Error_InvalidCiProviderRelease",
+    "Error_AgentTempUnavailable": "ms-resource:loc.messages.Error_AgentTempUnavailable",
+    "Error_InvalidJobIdentity": "ms-resource:loc.messages.Error_InvalidJobIdentity",
+    "Error_UnsafeJobPath": "ms-resource:loc.messages.Error_UnsafeJobPath",
+    "Error_UnownedJobResource": "ms-resource:loc.messages.Error_UnownedJobResource",
     "Error_CouldNotDetermineVersion": "ms-resource:loc.messages.Error_CouldNotDetermineVersion",
     "Error_CouldNotResolveCiJar": "ms-resource:loc.messages.Error_CouldNotResolveCiJar",
     "Error_InvalidPluginVersion": "ms-resource:loc.messages.Error_InvalidPluginVersion",
@@ -118,7 +125,6 @@
     "Info_PluginVersionFromFile": "ms-resource:loc.messages.Info_PluginVersionFromFile",
     "Info_PluginVersionFromInput": "ms-resource:loc.messages.Info_PluginVersionFromInput",
     "Info_PostExecDeletedInitScript": "ms-resource:loc.messages.Info_PostExecDeletedInitScript",
-    "Info_PostExecDeletedTempDir": "ms-resource:loc.messages.Info_PostExecDeletedTempDir",
     "Info_PostExecUnsetVars": "ms-resource:loc.messages.Info_PostExecUnsetVars",
     "Info_SuccessResult": "ms-resource:loc.messages.Info_SuccessResult",
     "Info_SynthesizedVersion": "ms-resource:loc.messages.Info_SynthesizedVersion",

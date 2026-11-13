@@ -79,6 +79,13 @@ describe('Unit Tests - Pure Functions', function () {
                 'Script should reference the CI plugin repo env var');
         });
 
+        it('should convert repository paths to file URIs without treating Windows drive letters as hosts', () => {
+            const script = generateInitScript('1.0.0');
+            assert.ok(script.includes("new File(System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')).toURI()"));
+            assert.ok(script.includes('new File(ciRepoUrl).toURI()'));
+            assert.ok(!script.includes('uri("file://'));
+        });
+
         it('should reject a version that can break out of the classpath string', () => {
             const version = "1.0.0'; println 'x'; classpath 'a:b:1.0.0";
 

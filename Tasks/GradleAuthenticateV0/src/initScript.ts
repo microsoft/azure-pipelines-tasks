@@ -27,7 +27,7 @@ initscript {
     repositories {
         maven {
             name = 'AzureArtifactsCI'
-            url = uri("file://\${System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')}")
+            url = new File(System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')).toURI()
             content {
                 includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
             }
@@ -56,7 +56,7 @@ beforeSettings { settings ->
             repositories {
                 maven {
                     name = 'AzureArtifactsCI-PluginMgmt'
-                    url = uri("file://\${ciRepoUrl}")
+                    url = new File(ciRepoUrl).toURI()
                     content {
                         includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
                         includeModule 'com.microsoft.azure.artifacts.credprovider', 'com.microsoft.azure.artifacts.credprovider.gradle.plugin'

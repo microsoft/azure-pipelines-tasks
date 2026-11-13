@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 import * as fs from 'fs';
-import * as os from 'os';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
@@ -14,10 +13,10 @@ import { generateInitScript } from './initScript';
 import { resolvePluginVersions } from './versionResolver';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { isValidAzureArtifactsUrl } from './utils/urlUtils';
+import { getGradleUserHome, prepareJobTempDirectory, writeJobInitScript } from './gradleTaskResources';
 
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
 
-const INIT_SCRIPT_NAME = 'azure-artifacts-init.gradle';
 const AUTH_CONFIG_NAME = 'azure-artifacts-auth-config.json';
 
 async function run(): Promise<void> {
@@ -25,6 +24,14 @@ async function run(): Promise<void> {
     let isWifServiceConnection = false;
     let versionSource: string = 'none';
     let isPluginToolVersionIncluded = false;
+
+    // Capture incoming settings before this invocation exports its own staging paths.
+    const overrideTelemetry = {
+        'IsGradleUserHomeEnvSet': !!process.env['GRADLE_USER_HOME'],
+        'IsCredProviderHomeEnvSet': !!process.env['GRADLE_CREDPROVIDER_HOME'],
+        'IsCiPluginRepoSet': !!tl.getVariable('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO'),
+        'IsAuthConfigSet': !!tl.getVariable('ARTIFACTS_GRADLE_AUTH_CONFIG'),
+    };
 
     try {
         const inputs = readInputs();
@@ -38,25 +45,15 @@ async function run(): Promise<void> {
         feedCount = feeds.length;
         logFeeds(feeds);
 
-        const ciJarPath = resolveCiJar();
+        const tempDir = prepareJobTempDirectory();
+        const ciJar = resolveCiJar();
         tl.debug(tl.loc('Info_CiJarResolved'));
 
-        const versionResult = resolvePluginVersions({ ...inputs, ciJarPath });
-
+        const versionResult = resolvePluginVersions({ ...inputs, ciJarPath: ciJar.path });
         const versions = versionResult.versions;
         versionSource = versionResult.source;
 
-        // Reuse existing temp directory from a previous GradleAuthenticate run
-        // in the same job (multi-invocation / additive scenario). This ensures
-        // the Maven repo layout accumulates all versions across runs and the
-        // auth config file is merged correctly.
-        const existingRepoDir = tl.getVariable('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO');
-        const tempDir = existingRepoDir && fs.existsSync(existingRepoDir)
-            ? existingRepoDir
-            : path.join(os.tmpdir(), 'gradle-auth');
-        fs.mkdirSync(tempDir, { recursive: true });
-
-        layoutMavenRepo(tempDir, ciJarPath, versions);
+        layoutMavenRepo(tempDir, ciJar.content, versions);
         tl.debug(tl.loc('Info_MavenRepoLaidOut'));
 
         if (!inputs.adoServiceConnection) {
@@ -73,15 +70,10 @@ async function run(): Promise<void> {
         writeAuthConfig(authConfigPath, authEntries);
         tl.debug(tl.loc('Info_AuthConfigWritten'));
 
-        exportEnvironmentVariables(tempDir, authConfigPath);
-
-        const initScriptPath = writeInitScript(
-            inputs.gradleUserHome,
-            versionResult.classpathVersion);
+        writeJobInitScript(inputs.gradleUserHome, generateInitScript(versionResult.classpathVersion));
         tl.debug(tl.loc('Info_InitScriptWritten'));
 
-        tl.setTaskVariable('ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_PATH', initScriptPath, false);
-        tl.setTaskVariable('ARTIFACTS_GRADLE_AUTH_TEMP_DIR', tempDir, false);
+        exportEnvironmentVariables(tempDir, authConfigPath);
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Info_SuccessResult'));
     } catch (err: unknown) {
@@ -96,6 +88,7 @@ async function run(): Promise<void> {
             'IsRepositoryUrlIncluded': !!(tl.getInput('repositoryUrl', false)),
             'IsPluginToolVersionIncluded': isPluginToolVersionIncluded,
             'IsGradleUserHomeIncluded': !!(tl.getInput('gradleUserHome', false)),
+            ...overrideTelemetry,
             'CollectionId': tl.getVariable('System.CollectionId') || '',
             'HostType': tl.getVariable('System.HostType') || '',
             'AgentOS': tl.getVariable('Agent.OS') || '',
@@ -144,7 +137,7 @@ function readInputs(): TaskInputs {
         repositoryUrls: validUrls,
         adoServiceConnection: tl.getInput('adoServiceConnection', false) || '',
         pluginToolVersion,
-        gradleUserHome: tl.getInput('gradleUserHome', false) || getDefaultGradleUserHome(),
+        gradleUserHome: getGradleUserHome(),
     };
 }
 
@@ -165,22 +158,10 @@ function logFeeds(feeds: { url: string; source: string }[]): void {
 }
 
 function exportEnvironmentVariables(tempDir: string, authConfigPath: string): void {
-    // Normalize backslashes to forward slashes for the repo dir env var.
-    // This value is used in Groovy init scripts as file:// URIs, which
-    // require forward slashes on all platforms including Windows.
     const repoDir = tempDir.replace(/\\/g, '/');
     tl.setVariable('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO', repoDir);
     tl.setVariable('ARTIFACTS_GRADLE_AUTH_CONFIG', authConfigPath);
     tl.debug(tl.loc('Info_EnvVarsSet'));
-}
-
-function writeInitScript(gradleUserHome: string, pluginVersion: string): string {
-    const initDir = path.join(gradleUserHome, 'init.d');
-    fs.mkdirSync(initDir, { recursive: true });
-
-    const initScriptPath = path.join(initDir, INIT_SCRIPT_NAME);
-    fs.writeFileSync(initScriptPath, generateInitScript(pluginVersion), 'utf-8');
-    return initScriptPath;
 }
 
 function splitLines(raw: string): string[] {
@@ -209,10 +190,6 @@ function discoverBuildFiles(): string[] {
             { source: 'repository' });
     }
     return found;
-}
-
-function getDefaultGradleUserHome(): string {
-    return process.env['GRADLE_USER_HOME'] || path.join(os.homedir(), '.gradle');
 }
 
 run();

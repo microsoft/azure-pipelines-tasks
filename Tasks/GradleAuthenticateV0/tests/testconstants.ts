@@ -12,12 +12,26 @@ export const TestEnvVars = {
     adoServiceConnection: '__adoServiceConnection__',
     pluginToolVersion: '__pluginToolVersion__',
     gradleUserHome: '__gradleUserHome__',
+    agentTempDirectory: '__agentTempDirectory__',
+    existingRepoDir: '__existingRepoDir__',
+    existingAuthConfig: '__existingAuthConfig__',
+    ciProviderScenario: '__ciProviderScenario__',
+    jobId: '__jobId__',
+    jobAttempt: '__jobAttempt__',
+    postexecInitScript: '__postexec_initScriptPath__',
+    postexecTemp: '__postexec_tempDir__',
+    postexecDryRun: '__postexec_dryRun__',
+    postexecRealVariables: '__postexec_realVariables__',
+    initScriptIdentity: '__initScriptIdentity__',
 };
 
 /**
  * Shared test data constants.
  */
 export const TestData = {
+    initScriptIdentityVariable: 'ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_IDENTITY',
+    jobId: '01234567-89ab-cdef-0123-456789abcdef',
+    otherJobId: 'fedcba98-7654-3210-fedc-ba9876543210',
     feedUrl: 'https://pkgs.dev.azure.com/testorg/testproject/_packaging/testfeed/maven/v1',
     feedUrl2: 'https://pkgs.dev.azure.com/testorg/testproject/_packaging/testfeed2/maven/v1',
     accessToken: 'test-access-token-value',

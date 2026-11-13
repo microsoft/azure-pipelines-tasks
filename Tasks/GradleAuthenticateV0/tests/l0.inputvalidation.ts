@@ -130,12 +130,8 @@ repositories {
 
         await tr.runAsync();
 
-        const initScriptPath = path.join(
-            gradleUserHome,
-            'init.d',
-            'azure-artifacts-init.gradle');
         assert.strictEqual(
-            fs.existsSync(initScriptPath),
+            fs.existsSync(path.join(gradleUserHome, 'init.d')),
             false,
             'The init script must not be written for an unsafe plugin version');
         fs.rmSync(tempDir, { recursive: true, force: true });
