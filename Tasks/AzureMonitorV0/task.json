@@ -22,7 +22,7 @@
     "version": {
         "Major": 0,
         "Minor": 283,
-        "Patch": 0
+        "Patch": 1
     },
     "instanceNameFormat": "Query Azure Monitor alerts",
     "groups": [],
