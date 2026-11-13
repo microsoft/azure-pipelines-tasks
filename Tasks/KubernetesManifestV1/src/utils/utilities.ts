@@ -220,6 +220,21 @@ export function escapeHelmSetToken(token: string, allowLists: boolean = false): 
     return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
 }
 
+// Names and kinds read from manifests are joined into a kubectl command line, so they must stay a single
+// token and must not be parseable as an option.
+// Enabling the KubernetesManifest.DisableManifestObjectNameValidation pipeline feature restores the legacy behavior.
+export function validateManifestObjectToken(value: any, description: string): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableManifestObjectNameValidation')) {
+        return value;
+    }
+
+    if (typeof value !== 'string' || value.length === 0 || value.length > 253 ||
+        value.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(value)) {
+        throw new Error(tl.loc('InvalidManifestObjectToken', description));
+    }
+    return value;
+}
+
 export function validateReleaseName(value: string): string {
     if (value && value.startsWith('-')) {
         throw new Error(tl.loc('InvalidReleaseName', value));
