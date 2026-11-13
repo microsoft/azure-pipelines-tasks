@@ -202,11 +202,12 @@ export function validateManifestObjectToken(value: any, description: string): st
         return value;
     }
 
-    if (typeof value !== 'string' || value.length === 0 || value.length > 253 ||
-        value.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(value)) {
+    const token = typeof value === 'number' && Number.isSafeInteger(value) ? String(value) : value;
+    if (typeof token !== 'string' || token.length === 0 || token.length > 253 ||
+        token.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(token)) {
         throw new Error(tl.loc('InvalidManifestObjectToken', description));
     }
-    return value;
+    return token;
 }
 
 export function validateReleaseName(value: string): string {

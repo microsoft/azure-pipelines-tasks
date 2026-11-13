@@ -1,9 +1,19 @@
 import * as assert from 'assert';
+import * as path from 'path';
 import * as utils from '../src/utils/utilities';
+import * as canaryDeploymentHelper from '../src/utils/CanaryDeploymentHelper';
 
 describe('Manifest object name validation', function () {
     it('accepts ordinary names', () => {
         assert.strictEqual(utils.validateManifestObjectToken('my-app.v1', 'metadata.name'), 'my-app.v1');
+    });
+
+    it('converts numeric YAML names to strings', () => {
+        assert.strictEqual(utils.validateManifestObjectToken(123, 'metadata.name'), '123');
+    });
+
+    it('rejects numeric names that cannot be represented safely', () => {
+        assert.throws(() => utils.validateManifestObjectToken(Number.MAX_SAFE_INTEGER + 1, 'metadata.name'));
     });
 
     it('rejects names that could be parsed as kubectl options', () => {
@@ -30,5 +40,29 @@ describe('Manifest object name validation', function () {
         } finally {
             delete process.env[flag];
         }
+    });
+
+    it('cleans up canary resources for manifests with unquoted numeric names', () => {
+        const getResourceCalls = [];
+        let deleteArgs = '';
+        const kubectl = {
+            getResource: (kind: string, name: string) => {
+                getResourceCalls.push(`${kind}/${name}`);
+                return { code: 1, stderr: 'not found' };
+            },
+            delete: (args: string) => {
+                deleteArgs = args;
+                return { code: 0, stdout: 'deleted' };
+            }
+        } as any;
+
+        canaryDeploymentHelper.deleteCanaryDeployment(
+            kubectl,
+            [path.join(__dirname, 'manifests', 'numeric-name.yaml')],
+            false
+        );
+
+        assert.deepStrictEqual(getResourceCalls, ['Deployment/123-baseline']);
+        assert.strictEqual(deleteArgs, 'Deployment 123-canary');
     });
 });
