@@ -28,13 +28,24 @@ function assertCanonicalDirectory(directory: string): void {
     }
 }
 
-function ensureCanonicalDirectory(directory: string): void {
+function findExistingAncestor(directory: string): string {
     let existing = path.resolve(directory);
     while (!fs.lstatSync(existing, { throwIfNoEntry: false })) {
         const parent = path.dirname(existing);
         if (parent === existing) throw new Error(tl.loc('Error_UnsafeJobPath'));
         existing = parent;
     }
+    return existing;
+}
+
+function resolveDirectory(directory: string): string {
+    const requested = path.resolve(directory);
+    const existing = findExistingAncestor(requested);
+    return path.resolve(fs.realpathSync(existing), path.relative(existing, requested));
+}
+
+function ensureCanonicalDirectory(directory: string): void {
+    const existing = findExistingAncestor(directory);
     assertCanonicalDirectory(existing);
     fs.mkdirSync(directory, { recursive: true, mode: 0o700 });
     assertCanonicalDirectory(directory);
@@ -56,7 +67,7 @@ function jobDirectory(): string {
     const key = jobKey();
     const root = tl.getVariable('Agent.TempDirectory');
     if (!root) throw new Error(tl.loc('Error_AgentTempUnavailable'));
-    return path.resolve(root, `gradle-auth-${key}`);
+    return path.join(resolveDirectory(root), `gradle-auth-${key}`);
 }
 
 function readRepository(directory: string): string {
@@ -98,11 +109,12 @@ export function prepareJobTempDirectory(): string {
     return repository;
 }
 
-export function writeJobInitScript(gradleUserHome: string, pluginVersion: string): void {
-    const file = getInitScriptPath(gradleUserHome);
+export function writeJobInitScript(gradleUserHome: string, pluginVersion: string, repository: string): void {
+    const resolvedHome = resolveDirectory(gradleUserHome);
+    const file = getInitScriptPath(resolvedHome);
     const directory = path.dirname(file);
-    const job = jobDirectory();
-    readRepository(job);
+    const job = path.dirname(repository);
+    if (readRepository(job) !== repository) throw new Error(tl.loc('Error_UnownedJobResource'));
     ensureCanonicalDirectory(directory);
     assertRegularFile(file);
     const temporaryFile = path.join(directory, `.azure-artifacts-init-${randomUUID()}.tmp`);
@@ -117,8 +129,7 @@ export function writeJobInitScript(gradleUserHome: string, pluginVersion: string
     tl.setTaskVariable(INIT_SCRIPT_IDENTITY, JSON.stringify({
         device: stat.dev.toString(),
         inode: stat.ino.toString(),
-        birthtimeNs: stat.birthtimeNs.toString(),
-        gradleUserHome: path.resolve(gradleUserHome),
+        gradleUserHome: resolvedHome,
     }));
 }
 
@@ -129,8 +140,6 @@ export function deleteJobInitScript(): boolean {
     if (!identity || typeof identity !== 'object'
         || !('device' in identity) || typeof identity.device !== 'string'
         || !('inode' in identity) || typeof identity.inode !== 'string'
-        || !('birthtimeNs' in identity) || typeof identity.birthtimeNs !== 'string'
-        || !/^(0|[1-9][0-9]*)$/.test(identity.birthtimeNs)
         || !('gradleUserHome' in identity) || typeof identity.gradleUserHome !== 'string'
         || !path.isAbsolute(identity.gradleUserHome)
         || identity.gradleUserHome !== path.resolve(identity.gradleUserHome)) {
@@ -142,11 +151,7 @@ export function deleteJobInitScript(): boolean {
     assertCanonicalDirectory(directory);
     if (!assertRegularFile(file)) return false;
     const stat = fs.lstatSync(file, { bigint: true });
-    if (identity.birthtimeNs === '0' || stat.birthtimeNs <= BigInt(0)) {
-        throw new Error(tl.loc('Error_InitScriptCreationTimeUnavailable'));
-    }
-    if (stat.dev.toString() !== identity.device || stat.ino.toString() !== identity.inode
-        || stat.birthtimeNs.toString() !== identity.birthtimeNs) {
+    if (stat.dev.toString() !== identity.device || stat.ino.toString() !== identity.inode) {
         throw new Error(tl.loc('Error_UnownedJobResource'));
     }
     fs.unlinkSync(file);

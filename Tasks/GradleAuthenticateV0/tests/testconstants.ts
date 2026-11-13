@@ -24,7 +24,6 @@ export const TestEnvVars = {
     postexecRealVariables: '__postexec_realVariables__',
     initScriptIdentity: '__initScriptIdentity__',
     initScriptBirthtime: '__initScriptBirthtime__',
-    postexecReusedInode: '__postexec_reusedInode__',
 };
 
 /**

@@ -219,47 +219,23 @@ describe('GradleAuthenticate L0 - Post-Execution Cleanup', function () {
         assert.strictEqual(fs.existsSync(initPath()), true);
     });
 
-    it('does not delete an unlinked-and-recreated script when the inode is reused', async () => {
-        await main();
-        const original = fs.readFileSync(initPath());
-        fs.unlinkSync(initPath());
-        fs.writeFileSync(initPath(), original);
-        process.env[TestEnvVars.postexecReusedInode] = '1';
-        const runner = await post();
-        assertNoDeletion(runner);
-        TestHelpers.assertWarningContains(runner, 'Error_UnownedJobResource');
-        assert.deepStrictEqual(fs.readFileSync(initPath()), original);
-    });
-
-    it('keeps authentication working but skips cleanup when creation time is unavailable at setup', async () => {
-        process.env[TestEnvVars.initScriptBirthtime] = '0';
-        await main();
-        delete process.env[TestEnvVars.initScriptBirthtime];
-        const runner = await post();
-        assertNoDeletion(runner);
-        TestHelpers.assertWarningContains(runner, 'Error_InitScriptCreationTimeUnavailable');
-        assert.strictEqual(fs.existsSync(initPath()), true);
-    });
-
-    it('skips cleanup when creation time is unavailable during post-job execution', async () => {
-        await main();
-        process.env[TestEnvVars.initScriptBirthtime] = '0';
-        const runner = await post();
-        assertNoDeletion(runner);
-        TestHelpers.assertWarningContains(runner, 'Error_InitScriptCreationTimeUnavailable');
-        assert.strictEqual(fs.existsSync(initPath()), true);
-    });
-
-    for (const birthtimeNs of [undefined, 1, '-1', 'invalid']) {
-        it(`does not delete a script with an invalid saved creation time (${birthtimeNs})`, async () => {
+    for (const [setupTime, cleanupTime] of [
+        ['0', '0'],
+        ['0', undefined],
+        [undefined, '0'],
+        ['1', '2'],
+    ]) {
+        it(`cleans the script without relying on creation time (${setupTime} -> ${cleanupTime})`, async () => {
+            if (setupTime !== undefined) process.env[TestEnvVars.initScriptBirthtime] = setupTime;
             await main();
             const identity = JSON.parse(process.env[TestEnvVars.initScriptIdentity]!);
-            identity.birthtimeNs = birthtimeNs;
-            process.env[TestEnvVars.initScriptIdentity] = JSON.stringify(identity);
+            assert.strictEqual('birthtimeNs' in identity, false);
+            if (cleanupTime === undefined) delete process.env[TestEnvVars.initScriptBirthtime];
+            else process.env[TestEnvVars.initScriptBirthtime] = cleanupTime;
             const runner = await post();
-            assertNoDeletion(runner);
-            TestHelpers.assertWarningContains(runner, 'Error_UnownedJobResource');
-            assert.strictEqual(fs.existsSync(initPath()), true);
+            TestHelpers.assertOutputContains(runner, 'TEST_DELETE_FILE');
+            assert.deepStrictEqual(runner.warningIssues, []);
+            assert.strictEqual(fs.existsSync(initPath()), false);
         });
     }
 
@@ -329,6 +305,68 @@ describe('GradleAuthenticate L0 - Post-Execution Cleanup', function () {
         process.env[TestEnvVars.initScriptIdentity] = firstIdentity;
         await post();
         assert.strictEqual(fs.existsSync(firstScript), false);
+    });
+
+    it('cleans the original physical home after the configured home link is retargeted', async () => {
+        const home = process.env[TestEnvVars.gradleUserHome]!;
+        const link = `${home}-link`;
+        const otherHome = `${home}-other`;
+        const script = initPath();
+        fs.mkdirSync(home);
+        fs.symlinkSync(home, link, 'junction');
+        process.env[TestEnvVars.gradleUserHome] = link;
+        try {
+            await main();
+            assert.strictEqual(JSON.parse(process.env[TestEnvVars.initScriptIdentity]!).gradleUserHome, fs.realpathSync(home));
+            const otherScript = path.join(otherHome, 'init.d', path.basename(script));
+            fs.mkdirSync(path.dirname(otherScript), { recursive: true });
+            fs.writeFileSync(otherScript, '// unrelated script');
+            fs.unlinkSync(link);
+            fs.symlinkSync(otherHome, link, 'junction');
+            const runner = await post();
+            assert.deepStrictEqual(runner.warningIssues, []);
+            assert.strictEqual(fs.existsSync(script), false);
+            assert.strictEqual(fs.readFileSync(otherScript, 'utf8'), '// unrelated script');
+        } finally {
+            fs.unlinkSync(link);
+        }
+    });
+
+    it('cleans the original physical home even after its configured alias is removed', async () => {
+        const home = process.env[TestEnvVars.gradleUserHome]!;
+        const script = initPath();
+        const link = `${home}-link`;
+        fs.mkdirSync(home);
+        fs.symlinkSync(home, link, 'junction');
+        process.env[TestEnvVars.gradleUserHome] = link;
+        try {
+            await main();
+        } finally {
+            fs.unlinkSync(link);
+        }
+        const runner = await post();
+        assert.deepStrictEqual(runner.warningIssues, []);
+        assert.strictEqual(fs.existsSync(script), false);
+    });
+
+    it('refuses cleanup if the saved physical home is replaced by a link', async () => {
+        await main();
+        const home = process.env[TestEnvVars.gradleUserHome]!;
+        const script = initPath();
+        const otherHome = `${home}-other`;
+        const otherScript = path.join(otherHome, 'init.d', path.basename(script));
+        fs.mkdirSync(path.dirname(otherScript), { recursive: true });
+        fs.writeFileSync(otherScript, '// unrelated script');
+        fs.renameSync(home, `${home}-original`);
+        fs.symlinkSync(otherHome, home, 'junction');
+        try {
+            const runner = await post();
+            assertNoDeletion(runner);
+            TestHelpers.assertWarningContains(runner, 'Error_UnsafeJobPath');
+            assert.strictEqual(fs.readFileSync(otherScript, 'utf8'), '// unrelated script');
+        } finally {
+            fs.unlinkSync(home);
+        }
     });
 
     it('does not let an earlier invocation delete a script refreshed by a later invocation', async () => {

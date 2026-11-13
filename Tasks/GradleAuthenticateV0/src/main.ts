@@ -69,7 +69,7 @@ async function run(): Promise<void> {
         writeAuthConfig(authConfigPath, authEntries);
         tl.debug(tl.loc('Info_AuthConfigWritten'));
 
-        writeJobInitScript(inputs.gradleUserHome, versionResult.classpathVersion);
+        writeJobInitScript(inputs.gradleUserHome, versionResult.classpathVersion, tempDir);
         tl.debug(tl.loc('Info_InitScriptWritten'));
 
         exportEnvironmentVariables(tempDir, authConfigPath);

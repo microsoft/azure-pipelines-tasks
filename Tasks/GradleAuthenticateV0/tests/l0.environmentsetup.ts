@@ -174,23 +174,189 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
         }
     });
 
-    it('should reject a redirected Gradle-home ancestor before creating nested directories', async () => {
+    it('should resolve a linked Gradle-home ancestor before creating nested directories', async () => {
         const runner = configuredRunner();
-        const victim = path.join(process.env['GRADLE_CREDPROVIDER_HOME']!, 'unowned');
+        const target = path.join(process.env['GRADLE_CREDPROVIDER_HOME']!, 'home-parent');
         const link = path.join(process.env['GRADLE_CREDPROVIDER_HOME']!, 'redirect');
-        fs.mkdirSync(victim);
-        fs.writeFileSync(path.join(victim, 'keep.txt'), 'unchanged');
-        fs.symlinkSync(victim, link, 'junction');
+        fs.mkdirSync(target);
+        fs.writeFileSync(path.join(target, 'keep.txt'), 'unchanged');
+        fs.symlinkSync(target, link, 'junction');
         process.env[TestEnvVars.gradleUserHome] = path.join(link, 'nested', 'home');
         try {
             await runner.runAsync();
-            TestHelpers.assertFailure(runner);
-            TestHelpers.assertOutputContains(runner, 'Error_UnsafeJobPath');
-            assert.deepStrictEqual(fs.readdirSync(victim), ['keep.txt']);
+            TestHelpers.assertSuccess(runner);
+            const home = path.join(target, 'nested', 'home');
+            const script = path.join(home, 'init.d', `azure-artifacts-init-${TestData.jobId}-1.gradle`);
+            assert.strictEqual(fs.existsSync(script), true);
+            assert.strictEqual(JSON.parse(TestHelpers.initScriptIdentity(runner)).gradleUserHome, home);
+            assert.strictEqual(fs.readFileSync(path.join(target, 'keep.txt'), 'utf8'), 'unchanged');
         } finally {
             fs.unlinkSync(link);
         }
     });
+
+    for (const useEnvironment of [false, true]) {
+        it(`should resolve an existing linked Gradle home selected through ${useEnvironment ? 'the environment' : 'the input'}`, async () => {
+            const home = process.env[TestEnvVars.gradleUserHome]!;
+            const link = `${home}-link`;
+            fs.mkdirSync(home);
+            fs.symlinkSync(home, link, 'junction');
+            if (useEnvironment) {
+                delete process.env[TestEnvVars.gradleUserHome];
+                process.env['GRADLE_USER_HOME'] = link;
+            } else {
+                process.env[TestEnvVars.gradleUserHome] = link;
+            }
+            try {
+                const runner = configuredRunner();
+                await runner.runAsync();
+                TestHelpers.assertSuccess(runner);
+                assert.strictEqual(JSON.parse(TestHelpers.initScriptIdentity(runner)).gradleUserHome, fs.realpathSync(home));
+                assert.strictEqual(fs.existsSync(path.join(home, 'init.d',
+                    `azure-artifacts-init-${TestData.jobId}-1.gradle`)), true);
+            } finally {
+                fs.unlinkSync(link);
+            }
+        });
+    }
+
+    it('should still reject a linked init.d beneath the resolved Gradle home', async () => {
+        const home = process.env[TestEnvVars.gradleUserHome]!;
+        const target = `${home}-init`;
+        fs.mkdirSync(home);
+        fs.mkdirSync(target);
+        fs.writeFileSync(path.join(target, 'keep.txt'), 'unchanged');
+        fs.symlinkSync(target, path.join(home, 'init.d'), 'junction');
+        try {
+            const runner = configuredRunner();
+            await runner.runAsync();
+            TestHelpers.assertFailure(runner);
+            TestHelpers.assertOutputContains(runner, 'Error_UnsafeJobPath');
+            assert.deepStrictEqual(fs.readdirSync(target), ['keep.txt']);
+        } finally {
+            fs.unlinkSync(path.join(home, 'init.d'));
+        }
+    });
+
+    it('should resolve a linked Agent.TempDirectory and reuse its physical repository', async () => {
+        const root = process.env[TestEnvVars.agentTempDirectory]!;
+        const target = `${root}-physical`;
+        fs.mkdirSync(target);
+        fs.writeFileSync(path.join(target, 'keep.txt'), 'unchanged');
+        fs.symlinkSync(target, root, 'junction');
+        try {
+            const runner = configuredRunner();
+            await runner.runAsync();
+            TestHelpers.assertSuccess(runner);
+            const repository = path.normalize(TestHelpers.stagedRepo(runner));
+            assert.strictEqual(path.dirname(path.dirname(repository)), fs.realpathSync(target));
+            TestHelpers.assertOutputContains(runner, path.join(repository, 'azure-artifacts-auth-config.json'));
+            process.env[TestEnvVars.existingRepoDir] = TestHelpers.stagedRepo(runner);
+            const second = configuredRunner();
+            await second.runAsync();
+            TestHelpers.assertSuccess(second);
+            assert.strictEqual(TestHelpers.stagedRepo(second), TestHelpers.stagedRepo(runner));
+            assert.strictEqual(fs.readFileSync(path.join(target, 'keep.txt'), 'utf8'), 'unchanged');
+        } finally {
+            fs.unlinkSync(root);
+        }
+    });
+
+    it('should resolve an agent work-folder link before creating the temporary root', async () => {
+        const fixture = process.env['GRADLE_CREDPROVIDER_HOME']!;
+        const work = path.join(fixture, 'work');
+        const alias = path.join(fixture, 'work-alias');
+        fs.mkdirSync(work);
+        fs.symlinkSync(work, alias, 'junction');
+        process.env[TestEnvVars.agentTempDirectory] = path.join(alias, '_temp');
+        try {
+            const runner = configuredRunner();
+            await runner.runAsync();
+            TestHelpers.assertSuccess(runner);
+            const repository = path.normalize(TestHelpers.stagedRepo(runner));
+            assert.strictEqual(path.dirname(path.dirname(repository)), path.join(fs.realpathSync(work), '_temp'));
+            assert.ok(fs.existsSync(path.join(repository, 'azure-artifacts-auth-config.json')));
+        } finally {
+            fs.unlinkSync(alias);
+        }
+    });
+
+    it('should reuse the repository when the temp-root spelling changes but its physical location does not', async () => {
+        const root = process.env[TestEnvVars.agentTempDirectory]!;
+        const alias = `${root}-alias`;
+        fs.mkdirSync(root);
+        fs.symlinkSync(root, alias, 'junction');
+        try {
+            const first = configuredRunner();
+            await first.runAsync();
+            TestHelpers.assertSuccess(first);
+            process.env[TestEnvVars.existingRepoDir] = TestHelpers.stagedRepo(first);
+            process.env[TestEnvVars.agentTempDirectory] = alias;
+            const second = configuredRunner();
+            await second.runAsync();
+            TestHelpers.assertSuccess(second);
+            assert.strictEqual(TestHelpers.stagedRepo(second), TestHelpers.stagedRepo(first));
+        } finally {
+            fs.unlinkSync(alias);
+        }
+    });
+
+    it('should ignore an inherited same-job repository under another temporary root', async () => {
+        const fixture = process.env['GRADLE_CREDPROVIDER_HOME']!;
+        const unowned = path.join(fixture, 'unowned', `gradle-auth-${TestData.jobId}-1`, 'repo-Ab1234');
+        fs.mkdirSync(unowned, { recursive: true });
+        fs.writeFileSync(path.join(unowned, 'keep.txt'), 'unchanged');
+        process.env[TestEnvVars.existingRepoDir] = unowned;
+        const runner = configuredRunner();
+        await runner.runAsync();
+        TestHelpers.assertSuccess(runner);
+        assert.notStrictEqual(path.normalize(TestHelpers.stagedRepo(runner)), unowned);
+        assert.strictEqual(path.dirname(path.dirname(path.normalize(TestHelpers.stagedRepo(runner)))),
+            process.env[TestEnvVars.agentTempDirectory]);
+        assert.deepStrictEqual(fs.readdirSync(unowned), ['keep.txt']);
+    });
+
+    it('should reject a linked job directory beneath a linked agent temporary root', async () => {
+        const root = process.env[TestEnvVars.agentTempDirectory]!;
+        const target = `${root}-physical`;
+        const unowned = `${root}-unowned`;
+        fs.mkdirSync(target);
+        fs.mkdirSync(unowned);
+        fs.writeFileSync(path.join(unowned, 'keep.txt'), 'unchanged');
+        const job = path.join(target, `gradle-auth-${TestData.jobId}-1`);
+        fs.symlinkSync(target, root, 'junction');
+        fs.symlinkSync(unowned, job, 'junction');
+        try {
+            const runner = configuredRunner();
+            await runner.runAsync();
+            TestHelpers.assertFailure(runner);
+            TestHelpers.assertOutputContains(runner, 'Error_UnsafeJobPath');
+            assert.deepStrictEqual(fs.readdirSync(unowned), ['keep.txt']);
+        } finally {
+            fs.unlinkSync(job);
+            fs.unlinkSync(root);
+        }
+    });
+
+    for (const dangling of [false, true]) {
+        it(`should reject ${dangling ? 'a dangling link' : 'a regular file'} as the agent temporary root`, async () => {
+            const root = process.env[TestEnvVars.agentTempDirectory]!;
+            if (dangling) {
+                fs.symlinkSync(`${root}-missing`, root, 'junction');
+            } else {
+                fs.writeFileSync(root, 'unchanged');
+            }
+            try {
+                const runner = configuredRunner();
+                await runner.runAsync();
+                TestHelpers.assertFailure(runner);
+                TestHelpers.assertOutputDoesNotContain(runner, '##vso[task.setvariable variable=ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO;');
+                if (!dangling) assert.strictEqual(fs.readFileSync(root, 'utf8'), 'unchanged');
+            } finally {
+                fs.unlinkSync(root);
+            }
+        });
+    }
 
     it('should refresh a regular job-specific init script without creating receipt files', async () => {
         const runner = configuredRunner();
@@ -206,7 +372,6 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
         assert.deepStrictEqual(identity, {
             device: stat.dev.toString(),
             inode: stat.ino.toString(),
-            birthtimeNs: stat.birthtimeNs.toString(),
             gradleUserHome: path.resolve(process.env[TestEnvVars.gradleUserHome]!),
         });
         const jobDirectory = path.dirname(TestHelpers.stagedRepo(runner));
