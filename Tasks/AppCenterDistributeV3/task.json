@@ -13,10 +13,12 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 3,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "minimumAgentVersion": "2.206.1",
+  "deprecated": true,
+  "deprecationMessage": "The AppCenterDistribute@3 task is deprecated",
   "releaseNotes": "Added support for forwarding Android mapping to App Center Diagnostics. Added missing descriptions.",
   "groups": [
     {
