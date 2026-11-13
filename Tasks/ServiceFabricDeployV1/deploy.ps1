@@ -58,12 +58,6 @@ try
     # Connect to cluster
     $certificate = Connect-ServiceFabricClusterFromServiceEndpoint -ClusterConnectionParameters $clusterConnectionParameters -ConnectedServiceEndpoint $connectedServiceEndpoint
 
-    if ($configureDockerSettings)
-    {
-        Import-Module "$PSScriptRoot\Update-DockerSettings.psm1"
-        Update-DockerSettings -ApplicationPackagePath $applicationPackagePath -ClusterConnectionParameters $clusterConnectionParameters
-    }
-
     . "$PSScriptRoot\ServiceFabricSDK\ServiceFabricSDK.ps1"
     . "$PSScriptRoot\ServiceFabricSDK\Utilities.ps1"
 
@@ -80,6 +74,19 @@ try
     else
     {
         throw (Get-VstsLocString -Key PublishProfileRequiredAppParams)
+    }
+
+    if ($configureDockerSettings)
+    {
+        # Effective parameter values (parameter file, then task overrides) let parameterized image names be validated.
+        $effectiveApplicationParameters = Get-ApplicationParametersFromApplicationParameterFile $applicationParameterFile
+        if ($overrideApplicationParameters)
+        {
+            $effectiveApplicationParameters = Merge-HashTables -HashTableOld $effectiveApplicationParameters -HashTableNew (Get-OverridenApplicationParameters -ApplicationManifestPath (Get-ApplicationManifestPath -ApplicationPackagePath $applicationPackagePath))
+        }
+
+        Import-Module "$PSScriptRoot\Update-DockerSettings.psm1"
+        Update-DockerSettings -ApplicationPackagePath $applicationPackagePath -ClusterConnectionParameters $clusterConnectionParameters -ApplicationParameter $effectiveApplicationParameters
     }
 
     if ((Get-VstsInput -Name overridePublishProfileSettings) -eq "true")
