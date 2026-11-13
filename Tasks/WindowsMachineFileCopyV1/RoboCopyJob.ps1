@@ -8,7 +8,8 @@ param (
     $additionalArguments,
     [string]$useSanitizerActivate,
     [bool]$enableWindowsMachineFileCopyArgumentsHardening,
-    [string]$scriptRoot
+    [string]$scriptRoot,
+    [bool]$enableLegacyWindowsMachineFileCopyNetUseCommand = $false
     )
 
     # The parallel-copy path runs this scriptblock through Start-Job in a separate
@@ -228,14 +229,28 @@ param (
 
     if($machineShare)
     {
-        $command = "$netExeCommand use `"$machineShare`""
-        if($userName)
+        if ($enableLegacyWindowsMachineFileCopyNetUseCommand)
         {
-            $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
+            $command = "$netExeCommand use `"$machineShare`""
+            if($userName)
+            {
+                $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
+            }
+            $command += " 2>&1"
+
+            $dtl_mapOut = iex $command
         }
-        $command += " 2>&1"
-        
-        $dtl_mapOut = iex $command
+        else
+        {
+            $netUseArgs = @('use', $machineShare)
+            if($userName)
+            {
+                $netUseArgs += @("/user:$userName", $password)
+            }
+
+            $dtl_mapOut = & $netExeCommand @netUseArgs 2>&1
+        }
+
         if ($LASTEXITCODE -ne 0) 
         {
             $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
@@ -298,7 +313,14 @@ param (
     {
         if($machineShare)
         {            
-            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
+            if ($enableLegacyWindowsMachineFileCopyNetUseCommand)
+            {
+                $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";
+            }
+            else
+            {
+                $dtl_deleteMap = & $netExeCommand use $machineShare /D /Y
+            }
         }
     }
 }

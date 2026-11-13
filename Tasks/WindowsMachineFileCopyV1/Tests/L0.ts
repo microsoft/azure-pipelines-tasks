@@ -68,6 +68,9 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Imports VstsTaskSdk non-interactively so unset variables never prompt through Read-Host', (done) => {
             psr.run(path.join(__dirname, 'L0VstsTaskSdkNonInteractiveImport.ps1'), done);
         });
+        it('Does not execute a crafted AdminUserName as code when mapping the net use share, unless the legacy rollback feature is on (MSRC 171316)', (done) => {
+            psr.run(path.join(__dirname, 'L0NetUseCommandInjection.ps1'), done);
+        });
     }
     else {
         console.warn('Cannot run tests for WindowsMachineFileCopy on Non-Windows Platform');
