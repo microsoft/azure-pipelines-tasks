@@ -202,7 +202,8 @@ export function validateManifestObjectToken(value: any, description: string): st
         return value;
     }
 
-    const token = typeof value === 'number' && Number.isSafeInteger(value) ? String(value) : value;
+    // Match legacy name derivation after YAML has already coerced numeric scalars.
+    const token = typeof value === 'number' && Number.isFinite(value) ? String(value) : value;
     if (typeof token !== 'string' || token.length === 0 || token.length > 253 ||
         token.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(token)) {
         throw new Error(tl.loc('InvalidManifestObjectToken', description));

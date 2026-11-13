@@ -2,3 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: 123
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 1.20
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 9007199254740993
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "1.20"

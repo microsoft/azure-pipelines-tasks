@@ -10,10 +10,14 @@ describe('Manifest object name validation', function () {
 
     it('converts numeric YAML names to strings', () => {
         assert.strictEqual(utils.validateManifestObjectToken(123, 'metadata.name'), '123');
+        assert.strictEqual(utils.validateManifestObjectToken(1.2, 'metadata.name'), '1.2');
+        assert.strictEqual(utils.validateManifestObjectToken(Number.MAX_SAFE_INTEGER + 1, 'metadata.name'), '9007199254740992');
     });
 
-    it('rejects numeric names that cannot be represented safely', () => {
-        assert.throws(() => utils.validateManifestObjectToken(Number.MAX_SAFE_INTEGER + 1, 'metadata.name'));
+    it('rejects non-finite numeric names', () => {
+        [NaN, Infinity, -Infinity].forEach(value => {
+            assert.throws(() => utils.validateManifestObjectToken(value, 'metadata.name'));
+        });
     });
 
     it('rejects names that could be parsed as kubectl options', () => {
@@ -21,6 +25,7 @@ describe('Manifest object name validation', function () {
             'invalid name',
             '--invalid',
             '-n',
+            -1,
             'a\tb',
             'a\nb',
             '',
@@ -62,7 +67,12 @@ describe('Manifest object name validation', function () {
             false
         );
 
-        assert.deepStrictEqual(getResourceCalls, ['Deployment/123-baseline']);
-        assert.strictEqual(deleteArgs, 'Deployment 123-canary');
+        assert.deepStrictEqual(getResourceCalls, [
+            'Deployment/123-baseline',
+            'Deployment/1.2-baseline',
+            'Deployment/9007199254740992-baseline',
+            'Deployment/1.20-baseline'
+        ]);
+        assert.strictEqual(deleteArgs, 'Deployment 123-canary 1.2-canary 9007199254740992-canary 1.20-canary');
     });
 });
