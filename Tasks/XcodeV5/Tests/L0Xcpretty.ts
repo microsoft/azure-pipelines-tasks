@@ -31,6 +31,13 @@ tr.registerMock('./xcodeutils', {
     },
     setTaskState: function(variableName: string, variableValue: string) {
         console.log('Xcode set task state ' + variableName + ' = ' + variableValue);
+    },
+    getXcodebuildExecOptions: function () {
+        return {
+            externalOutput: {
+                source: 'childProcess'
+            }
+        };
     }
 });
 

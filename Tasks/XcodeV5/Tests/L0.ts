@@ -23,6 +23,33 @@ describe('Xcode L0 Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
     });
 
+    it('neutralizes VSO commands injected via untrusted xcodebuild output', async function () {
+        let tp = path.join(__dirname, 'L0XcodeVsoInjection.js');
+        let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+
+        assert(tr.ran('/home/bin/xcodebuild -version'), 'xcodebuild for version should have been run.');
+        assert(tr.ran('/home/bin/xcodebuild -sdk $(SDK) -configuration $(Configuration) ' +
+            '-workspace /user/build/fun.xcodeproj/project.xcworkspace -scheme myscheme build'),
+            'xcodebuild for building the ios project/workspace should have been run.');
+
+        // The raw markers must never appear unescaped in the captured output...
+        assert(tr.stdout.indexOf('##vso[task.logissue type=error]injected error from untrusted xcodebuild output') < 0,
+            'the injected ##vso[task.logissue] command should have been neutralized, not left intact.');
+        assert(tr.stdout.indexOf('##vso[task.complete result=Failed]injected failure') < 0,
+            'the injected ##vso[task.complete] command should have been neutralized, not left intact.');
+
+        // ...but the neutralized form should still be visible in the log for diagnostics.
+        assert(tr.stdout.indexOf('##_vso[task.logissue type=error]injected error from untrusted xcodebuild output') >= 0,
+            'the neutralized marker should still be present in the log output.');
+
+        // Since the markers were neutralized, they must not have been parsed as real commands.
+        assert(!tr.createdErrorIssue('injected error from untrusted xcodebuild output'),
+            'the injected error should not have been recorded as a real task error issue.');
+        assert(tr.succeeded, 'the injected task.complete=Failed command should not have failed the task.');
+    });
+
     it('run Xcode with project and no workspace', async function () {
         let tp = path.join(__dirname, 'L0XcodeNoWorkspace.js');
         let tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);

@@ -29,6 +29,13 @@ tr.registerMock('./xcodeutils', {
     },
     emitTelemetry: function(area: string, feature: string, taskSpecificTelemetry: { [key: string]: any; }) {
         console.log('Xcode task telemetry');
+    },
+    getXcodebuildExecOptions: function () {
+        return {
+            externalOutput: {
+                source: 'childProcess'
+            }
+        };
     }
 });
 
