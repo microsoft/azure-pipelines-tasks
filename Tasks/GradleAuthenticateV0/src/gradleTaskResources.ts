@@ -6,6 +6,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { randomUUID } from 'crypto';
 import * as tl from 'azure-pipelines-task-lib/task';
+import { generateInitScript } from './initScript';
 
 const INIT_SCRIPT_IDENTITY = 'ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_IDENTITY';
 
@@ -97,7 +98,7 @@ export function prepareJobTempDirectory(): string {
     return repository;
 }
 
-export function writeJobInitScript(gradleUserHome: string, content: string): void {
+export function writeJobInitScript(gradleUserHome: string, pluginVersion: string): void {
     const file = getInitScriptPath(gradleUserHome);
     const directory = path.dirname(file);
     const job = jobDirectory();
@@ -105,7 +106,8 @@ export function writeJobInitScript(gradleUserHome: string, content: string): voi
     ensureCanonicalDirectory(directory);
     assertRegularFile(file);
     const temporaryFile = path.join(directory, `.azure-artifacts-init-${randomUUID()}.tmp`);
-    fs.writeFileSync(temporaryFile, content, { encoding: 'utf8', mode: 0o600, flag: 'wx' });
+    fs.writeFileSync(temporaryFile, generateInitScript(pluginVersion, jobKey()),
+        { encoding: 'utf8', mode: 0o600, flag: 'wx' });
     try {
         fs.renameSync(temporaryFile, file);
     } finally {
@@ -115,19 +117,23 @@ export function writeJobInitScript(gradleUserHome: string, content: string): voi
     tl.setTaskVariable(INIT_SCRIPT_IDENTITY, JSON.stringify({
         device: stat.dev.toString(),
         inode: stat.ino.toString(),
+        gradleUserHome: path.resolve(gradleUserHome),
     }));
 }
 
 export function deleteJobInitScript(): boolean {
-    const file = getInitScriptPath(getGradleUserHome());
     const serialized = tl.getTaskVariable(INIT_SCRIPT_IDENTITY);
     if (!serialized) return false;
     const identity: unknown = JSON.parse(serialized);
     if (!identity || typeof identity !== 'object'
         || !('device' in identity) || typeof identity.device !== 'string'
-        || !('inode' in identity) || typeof identity.inode !== 'string') {
+        || !('inode' in identity) || typeof identity.inode !== 'string'
+        || !('gradleUserHome' in identity) || typeof identity.gradleUserHome !== 'string'
+        || !path.isAbsolute(identity.gradleUserHome)
+        || identity.gradleUserHome !== path.resolve(identity.gradleUserHome)) {
         throw new Error(tl.loc('Error_UnownedJobResource'));
     }
+    const file = getInitScriptPath(identity.gradleUserHome);
     const directory = path.dirname(file);
     if (!fs.lstatSync(directory, { throwIfNoEntry: false })) return false;
     assertCanonicalDirectory(directory);

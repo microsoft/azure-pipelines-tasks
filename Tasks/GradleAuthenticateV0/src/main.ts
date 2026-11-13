@@ -9,7 +9,6 @@ import { discoverFeedUrls } from './buildFileScanner';
 import { writeAuthConfig, buildAuthEntries } from './authConfig';
 import { resolveCiJar } from './ciJarResolver';
 import { layoutMavenRepo } from './mavenLayout';
-import { generateInitScript } from './initScript';
 import { resolvePluginVersions } from './versionResolver';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
 import { isValidAzureArtifactsUrl } from './utils/urlUtils';
@@ -70,7 +69,7 @@ async function run(): Promise<void> {
         writeAuthConfig(authConfigPath, authEntries);
         tl.debug(tl.loc('Info_AuthConfigWritten'));
 
-        writeJobInitScript(inputs.gradleUserHome, generateInitScript(versionResult.classpathVersion));
+        writeJobInitScript(inputs.gradleUserHome, versionResult.classpathVersion);
         tl.debug(tl.loc('Info_InitScriptWritten'));
 
         exportEnvironmentVariables(tempDir, authConfigPath);

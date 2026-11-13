@@ -12,6 +12,7 @@ import { assertSafePluginVersions } from '../src/utils/pluginVersionUtils';
 import { generateInitScript } from '../src/initScript';
 import { extractPluginVersion, discoverFeedUrls } from '../src/buildFileScanner';
 import { probeFeedTenantId } from '../src/authConfig';
+import { TestData } from './testconstants';
 
 // Required for tl.loc() / tl.warning() calls inside discoverFeedUrls
 tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
@@ -61,36 +62,48 @@ describe('Unit Tests - Pure Functions', function () {
     });
 
     describe('generateInitScript', () => {
+        const jobKey = `${TestData.jobId}-1`;
+
         it('should embed the version in the classpath declaration', () => {
-            const script = generateInitScript('1.2.3');
+            const script = generateInitScript('1.2.3', jobKey);
             assert.ok(script.includes("classpath 'com.microsoft.azure:artifacts-gradle-credprovider:1.2.3'"),
                 'Script should contain the versioned classpath');
         });
 
         it('should use + as dynamic version when no specific version is provided', () => {
-            const script = generateInitScript('+');
+            const script = generateInitScript('+', jobKey);
             assert.ok(script.includes("classpath 'com.microsoft.azure:artifacts-gradle-credprovider:+'"),
                 'Script should contain the dynamic + classpath');
         });
 
         it('should reference ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO env var', () => {
-            const script = generateInitScript('1.0.0');
+            const script = generateInitScript('1.0.0', jobKey);
             assert.ok(script.includes('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO'),
                 'Script should reference the CI plugin repo env var');
         });
 
         it('should convert repository paths to file URIs without treating Windows drive letters as hosts', () => {
-            const script = generateInitScript('1.0.0');
+            const script = generateInitScript('1.0.0', jobKey);
             assert.ok(script.includes("new File(System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')).toURI()"));
             assert.ok(script.includes('new File(ciRepoUrl).toURI()'));
             assert.ok(!script.includes('uri("file://'));
+        });
+
+        it('should gate both classpath setup and plugin application on the owning job and attempt', () => {
+            const script = generateInitScript('1.0.0', jobKey);
+            const guard = `if ('${jobKey}' == (System.getenv('SYSTEM_JOBID')?.toLowerCase(java.util.Locale.ROOT) + '-' + System.getenv('SYSTEM_JOBATTEMPT')))`;
+            assert.strictEqual(script.split(guard).length - 1, 2);
+            assert.ok(script.indexOf(guard) < script.indexOf('classpath '));
+            assert.ok(script.lastIndexOf(guard) < script.indexOf('apply plugin:'));
+            assert.notStrictEqual(script, generateInitScript('1.0.0', `${TestData.otherJobId}-1`));
+            assert.notStrictEqual(script, generateInitScript('1.0.0', `${TestData.jobId}-2`));
         });
 
         it('should reject a version that can break out of the classpath string', () => {
             const version = "1.0.0'; println 'x'; classpath 'a:b:1.0.0";
 
             assert.throws(
-                () => generateInitScript(version),
+                () => generateInitScript(version, jobKey),
                 /plugin version is invalid/i);
         });
     });

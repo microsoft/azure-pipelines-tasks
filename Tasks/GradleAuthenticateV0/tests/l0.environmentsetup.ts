@@ -196,7 +196,11 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
         assert.ok(fs.readFileSync(script, 'utf8').includes('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO'));
         const identity = JSON.parse(TestHelpers.initScriptIdentity(runner));
         const stat = fs.lstatSync(script, { bigint: true });
-        assert.deepStrictEqual(identity, { device: stat.dev.toString(), inode: stat.ino.toString() });
+        assert.deepStrictEqual(identity, {
+            device: stat.dev.toString(),
+            inode: stat.ino.toString(),
+            gradleUserHome: path.resolve(process.env[TestEnvVars.gradleUserHome]!),
+        });
         const jobDirectory = path.dirname(TestHelpers.stagedRepo(runner));
         assert.ok(fs.readdirSync(jobDirectory).every(name => !name.startsWith('init-script-')));
     });

@@ -10,9 +10,11 @@ import { assertSafePluginVersions } from './utils/pluginVersionUtils';
  * 3. Injects the local repo into pluginManagement.repositories via beforeSettings
  *
  * @param version The credprovider plugin version, or '+' to resolve the latest from the local repo.
+ * @param jobKey The validated job ID/attempt used to name the owning job's resources.
  */
-export function generateInitScript(version: string): string {
+export function generateInitScript(version: string, jobKey: string): string {
     assertSafePluginVersions([version]);
+    const ownsJob = `'${jobKey}' == (System.getenv('SYSTEM_JOBID')?.toLowerCase(java.util.Locale.ROOT) + '-' + System.getenv('SYSTEM_JOBATTEMPT'))`;
 
     return `// azure-artifacts-auth.gradle — written by GradleAuthenticate@0.
 // Deleted automatically after the build step completes.
@@ -22,44 +24,39 @@ export function generateInitScript(version: string): string {
 // plugins {} block resolves from the local layout (no network request).
 
 initscript {
-    // initscript { repositories } is ISOLATED — does not affect project repositories.
-    // ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO points to a Maven local repo laid out by GradleAuthenticate.
-    repositories {
-        maven {
-            name = 'AzureArtifactsCI'
-            url = new File(System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')).toURI()
-            content {
-                includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
+    // Gradle loads every init.d script, including scripts left by other jobs.
+    if (${ownsJob}) {
+        repositories {
+            maven {
+                name = 'AzureArtifactsCI'
+                url = new File(System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')).toURI()
+                content {
+                    includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
+                }
             }
         }
-    }
-    dependencies {
-        classpath 'com.microsoft.azure:artifacts-gradle-credprovider:${version}'
+        dependencies {
+            classpath 'com.microsoft.azure:artifacts-gradle-credprovider:${version}'
+        }
     }
 }
 
-apply plugin: com.microsoft.azure.artifacts.credprovider.gradle.GradleCredentialProviderPlugin
+if (${ownsJob}) {
+    apply plugin: com.microsoft.azure.artifacts.credprovider.gradle.GradleCredentialProviderPlugin
 
-// Inject the local Maven repo into pluginManagement.repositories so that
-// the \`plugins { id '...' version '...' }\` declaration in settings.gradle
-// resolves from our local file:// repo instead of attempting to download
-// from Gradle Plugin Portal.
-//
-// NOTE: \`apply plugin\` at the Gradle level does NOT pre-empt the \`plugins {}\`
-// block in settings.gradle — Gradle still resolves the plugin artifact through
-// pluginManagement.repositories. This hook ensures that resolution succeeds
-// from the local layout. A plugin marker POM must be present in the layout.
-beforeSettings { settings ->
-    def ciRepoUrl = System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')
-    if (ciRepoUrl) {
-        settings.pluginManagement {
-            repositories {
-                maven {
-                    name = 'AzureArtifactsCI-PluginMgmt'
-                    url = new File(ciRepoUrl).toURI()
-                    content {
-                        includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
-                        includeModule 'com.microsoft.azure.artifacts.credprovider', 'com.microsoft.azure.artifacts.credprovider.gradle.plugin'
+    // The settings plugins block still needs a local repository and marker POM.
+    beforeSettings { settings ->
+        def ciRepoUrl = System.getenv('ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO')
+        if (ciRepoUrl) {
+            settings.pluginManagement {
+                repositories {
+                    maven {
+                        name = 'AzureArtifactsCI-PluginMgmt'
+                        url = new File(ciRepoUrl).toURI()
+                        content {
+                            includeModule 'com.microsoft.azure', 'artifacts-gradle-credprovider'
+                            includeModule 'com.microsoft.azure.artifacts.credprovider', 'com.microsoft.azure.artifacts.credprovider.gradle.plugin'
+                        }
                     }
                 }
             }

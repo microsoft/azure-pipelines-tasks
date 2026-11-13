@@ -226,7 +226,10 @@ describe('GradleAuthenticate L0 - Post-Execution Cleanup', function () {
         assert.strictEqual(fs.existsSync(initPath()), true);
     });
 
-    for (const content of ['null', '{}', 'not-json']) {
+    for (const content of ['null', '{}', 'not-json',
+        '{"device":"1","inode":"2"}',
+        '{"device":"1","inode":"2","gradleUserHome":42}',
+        '{"device":"1","inode":"2","gradleUserHome":"relative-home"}']) {
         it(`does not delete an init script with an invalid task-scoped identity (${content})`, async () => {
             await main();
             process.env[TestEnvVars.initScriptIdentity] = content;
@@ -236,6 +239,36 @@ describe('GradleAuthenticate L0 - Post-Execution Cleanup', function () {
             assert.strictEqual(fs.existsSync(initPath()), true);
         });
     }
+
+    it('cleans the recorded home when GRADLE_USER_HOME changes before post-job execution', async () => {
+        const originalHome = process.env[TestEnvVars.gradleUserHome]!;
+        delete process.env[TestEnvVars.gradleUserHome];
+        process.env['GRADLE_USER_HOME'] = originalHome;
+        await main();
+        const script = path.join(originalHome, 'init.d', `azure-artifacts-init-${TestData.jobId}-1.gradle`);
+        const changedHome = path.join(path.dirname(originalHome), 'changed-gradle-home');
+        const changedScript = path.join(changedHome, 'init.d', path.basename(script));
+        fs.mkdirSync(path.dirname(changedScript), { recursive: true });
+        fs.writeFileSync(changedScript, '// unrelated script');
+        process.env['GRADLE_USER_HOME'] = changedHome;
+        const runner = await post();
+        assert.deepStrictEqual(runner.warningIssues, []);
+        assert.strictEqual(fs.existsSync(script), false);
+        assert.strictEqual(fs.readFileSync(changedScript, 'utf8'), '// unrelated script');
+    });
+
+    it('records an absolute home when the input is relative and does not recompute it during cleanup', async () => {
+        const originalHome = process.env[TestEnvVars.gradleUserHome]!;
+        const script = initPath();
+        process.env[TestEnvVars.gradleUserHome] = path.relative(process.cwd(), originalHome);
+        await main();
+        const identity = JSON.parse(process.env[TestEnvVars.initScriptIdentity]!);
+        assert.strictEqual(identity.gradleUserHome, path.resolve(originalHome));
+        process.env[TestEnvVars.gradleUserHome] = path.join(path.dirname(originalHome), 'different-home');
+        const runner = await post();
+        assert.deepStrictEqual(runner.warningIssues, []);
+        assert.strictEqual(fs.existsSync(script), false);
+    });
 
     it('keeps independent task identities for different Gradle homes in the same job', async () => {
         await main();
