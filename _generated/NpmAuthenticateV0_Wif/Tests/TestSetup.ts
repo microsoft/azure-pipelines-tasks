@@ -66,14 +66,36 @@ tr.registerMock('azure-pipelines-tasks-artifacts-common/telemetry', {
 
 const wifToken = process.env[TestEnvVars.wifToken];
 const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
+function verifyMockFeedUrl(feedUrl: string | URL): URL {
+    const parsedFeedUrl = typeof feedUrl === 'string' ? new URL(feedUrl) : feedUrl;
+    if (parsedFeedUrl.protocol !== 'https:') {
+        throw new Error('Error_UrlHttpsRequired');
+    }
+    if (parsedFeedUrl.hostname !== 'dev.azure.com' && !parsedFeedUrl.hostname.endsWith('.dev.azure.com')) {
+        throw new Error('Error_FeedUrlUntrustedHost');
+    }
+    return parsedFeedUrl;
+}
+tr.registerMock('azure-pipelines-tasks-artifacts-common/feedUrlUtils', {
+    verifyAzureArtifactsFeedUrl: async function (feedUrl: string | URL) {
+        console.log('Mock WIF: verifying registry');
+        if (process.env[TestEnvVars.wifVerificationShouldFail] === 'true') {
+            throw new Error('Simulated WIF discovery failure');
+        }
+        return verifyMockFeedUrl(feedUrl);
+    }
+});
 tr.registerMock('azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils', {
-    getFederatedWorkloadIdentityCredentials: async function (serviceConnectionName: string) {
-        if (wifShouldFail) {
+    getFederatedWorkloadIdentityCredentialsForFeed: async function (serviceConnectionName: string, feedUrl: string | URL) {
+        console.log('Mock WIF: acquiring credentials');
+        const parsedFeedUrl = verifyMockFeedUrl(feedUrl);
+        const failingRegistry = process.env[TestEnvVars.wifFailingRegistry];
+        if (wifShouldFail || (failingRegistry && parsedFeedUrl.href.includes(failingRegistry))) {
             throw new Error(`Simulated WIF failure for ${serviceConnectionName}`);
         }
-        return wifToken;
-    },
-    getFeedTenantId: async function () { return 'mock-tenant-id'; }
+        console.log(`Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed called for ${parsedFeedUrl.href}`);
+        return wifToken ? { accessToken: wifToken, feedUrl: parsedFeedUrl } : undefined;
+    }
 });
 
 // Mock http/https for isEndpointInternal probe (returns non-Azure DevOps response)
