@@ -8,6 +8,7 @@ import * as utils from '../src/utils/utilities';
 import { updateImagePullSecrets, updateImageDetails } from '../src/utils/KubernetesObjectUtility';
 import * as yaml from 'js-yaml';
 import './L0HelmSetArguments';
+import './L0ManifestObjectToken';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 describe('Kubernetes Manifests Suite', function () {
@@ -157,6 +158,25 @@ describe('Kubernetes Manifests Suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('"azure-pipelines/version": "baseline"') == -1, 'nginx-deployment-baseline workload does not exist');
         assert(tr.stdout.indexOf('"nginx-deployment-canary" deleted') != -1, 'Canary workload deleted');
+    });
+
+    it('cleans up canary resources for manifests with numeric names', async () => {
+        const tr = new ttm.MockTestRunner(path.join(__dirname, 'TestSetup.js'));
+        const previousManifests = process.env[shared.TestEnvVars.manifests];
+        process.env[shared.TestEnvVars.action] = shared.Actions.reject;
+        process.env[shared.TestEnvVars.strategy] = shared.Strategy.canary;
+        process.env[shared.TestEnvVars.manifests] = path.join(__dirname, 'manifests', 'numeric-name.yaml');
+        try {
+            await tr.runAsync();
+            assert(tr.succeeded, 'task should have succeeded');
+            const kubectl = shared.formatPath('newUserDir/kubectl.exe');
+            ['123', '1.2', '9007199254740992', '1.20'].forEach(name => {
+                assert(tr.ran(`${kubectl} get Deployment/${name}-baseline -o json --namespace testnamespace`));
+            });
+            assert(tr.ran(`${kubectl} delete Deployment 123-canary 1.2-canary 9007199254740992-canary 1.20-canary --namespace testnamespace`));
+        } finally {
+            process.env[shared.TestEnvVars.manifests] = previousManifests;
+        }
     });
 
     it('Run should fail for reject with none strategy', async () => {
