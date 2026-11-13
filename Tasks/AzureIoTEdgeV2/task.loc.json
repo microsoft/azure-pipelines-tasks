@@ -16,6 +16,8 @@
     "Minor": 283,
     "Patch": 0
   },
+  "deprecated": true,
+  "deprecationMessage": "The AzureIoTEdge@2 task is deprecated",
   "preview": false,
   "showEnvironmentVariables": true,
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
