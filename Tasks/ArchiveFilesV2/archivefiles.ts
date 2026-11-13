@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import tr = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs');
+import os = require('os');
 import stream = require("stream");
 import utils = require('./utils.js');
 
@@ -31,7 +32,7 @@ function getSevenZipLocation(): string {
     if (win) {
         return winSevenZipLocation;
     } else {
-        if (typeof xpTarLocation == "undefined") {
+        if (typeof xpSevenZipLocation == "undefined") {
             xpSevenZipLocation = tl.which('7z', true);
         }
         return xpSevenZipLocation;
@@ -167,7 +168,7 @@ function zipArchive(archive: string, files: string[]) {
     zip.arg('--');
     for (var i = 0; i < files.length; i++) {
         zip.arg(files[i]);
-        console.log(tl.loc('Filename', files[i]));
+        tl.writeExternalOutput(tl.loc('Filename', files[i]) + os.EOL, { source: 'repository' });
     }
     return handleExecResult(zip.execSync(getOptions()), archive);
 }
@@ -276,7 +277,7 @@ function createArchive(files: string[]) {
                 var tarExists = tl.exist(tarFile);
                 try {
                     if (tarExists) {
-                        console.log(tl.loc('TarExists', tarFile));
+                        tl.writeExternalOutput(tl.loc('TarExists', tarFile) + os.EOL, { source: 'repository' });
                     }
 
                     // this file could already exist, but not checking because by default files will be added to it
@@ -332,7 +333,7 @@ function doWork() {
                 try {
                     var stats: fs.Stats = tl.stats(archiveFile);
                     if (stats.isFile()) {
-                        console.log(tl.loc('RemoveBeforeCreation', archiveFile));
+                        tl.writeExternalOutput(tl.loc('RemoveBeforeCreation', archiveFile) + os.EOL, { source: 'repository' });
                         tl.rmRF(archiveFile);
                     } else {
                         failTask(tl.loc('ArchiveFileExistsButNotAFile', archiveFile));
@@ -341,13 +342,13 @@ function doWork() {
                     failTask(tl.loc('FailedArchiveFile', archiveFile, e));
                 }
             } else {
-                console.log(tl.loc('AlreadyExists', archiveFile));
+                tl.writeExternalOutput(tl.loc('AlreadyExists', archiveFile) + os.EOL, { source: 'repository' });
             }
         }
 
         // Find matching archive files
         var files: string[] = findFiles();
-        utils.reportArchivePlan(files).forEach(line => console.log(line));
+        utils.reportArchivePlan(files).forEach(line => tl.writeExternalOutput(line + os.EOL, { source: 'repository' }));
 
         tl.debug(`Listing all ${files.length} files to archive:`);
         files.forEach(file => tl.debug(file));
