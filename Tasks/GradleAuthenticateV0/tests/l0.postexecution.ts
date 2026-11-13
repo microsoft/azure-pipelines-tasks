@@ -219,6 +219,50 @@ describe('GradleAuthenticate L0 - Post-Execution Cleanup', function () {
         assert.strictEqual(fs.existsSync(initPath()), true);
     });
 
+    it('does not delete an unlinked-and-recreated script when the inode is reused', async () => {
+        await main();
+        const original = fs.readFileSync(initPath());
+        fs.unlinkSync(initPath());
+        fs.writeFileSync(initPath(), original);
+        process.env[TestEnvVars.postexecReusedInode] = '1';
+        const runner = await post();
+        assertNoDeletion(runner);
+        TestHelpers.assertWarningContains(runner, 'Error_UnownedJobResource');
+        assert.deepStrictEqual(fs.readFileSync(initPath()), original);
+    });
+
+    it('keeps authentication working but skips cleanup when creation time is unavailable at setup', async () => {
+        process.env[TestEnvVars.initScriptBirthtime] = '0';
+        await main();
+        delete process.env[TestEnvVars.initScriptBirthtime];
+        const runner = await post();
+        assertNoDeletion(runner);
+        TestHelpers.assertWarningContains(runner, 'Error_InitScriptCreationTimeUnavailable');
+        assert.strictEqual(fs.existsSync(initPath()), true);
+    });
+
+    it('skips cleanup when creation time is unavailable during post-job execution', async () => {
+        await main();
+        process.env[TestEnvVars.initScriptBirthtime] = '0';
+        const runner = await post();
+        assertNoDeletion(runner);
+        TestHelpers.assertWarningContains(runner, 'Error_InitScriptCreationTimeUnavailable');
+        assert.strictEqual(fs.existsSync(initPath()), true);
+    });
+
+    for (const birthtimeNs of [undefined, 1, '-1', 'invalid']) {
+        it(`does not delete a script with an invalid saved creation time (${birthtimeNs})`, async () => {
+            await main();
+            const identity = JSON.parse(process.env[TestEnvVars.initScriptIdentity]!);
+            identity.birthtimeNs = birthtimeNs;
+            process.env[TestEnvVars.initScriptIdentity] = JSON.stringify(identity);
+            const runner = await post();
+            assertNoDeletion(runner);
+            TestHelpers.assertWarningContains(runner, 'Error_UnownedJobResource');
+            assert.strictEqual(fs.existsSync(initPath()), true);
+        });
+    }
+
     it('does not delete an init script when its task-scoped identity is missing', async () => {
         await main();
         delete process.env[TestEnvVars.initScriptIdentity];

@@ -19,6 +19,7 @@
   "loc.messages.Error_InvalidJobIdentity": "System.JobId must be a GUID and System.JobAttempt must be a positive integer to establish job-scoped Gradle paths.",
   "loc.messages.Error_UnsafeJobPath": "A Gradle task path is not a regular, single-link file or canonical directory. Symlink and junction paths are not supported; configure a canonical Gradle user home.",
   "loc.messages.Error_UnownedJobResource": "A Gradle job resource is unrecognized or does not match its recorded file identity. Refusing to reuse or delete it.",
+  "loc.messages.Error_InitScriptCreationTimeUnavailable": "The filesystem does not provide a usable init-script creation time. Refusing to delete the script without a complete file identity.",
   "loc.messages.Error_CouldNotDetermineVersion": "Could not determine the credential provider plugin version. Either declare the plugin in settings.gradle and include it in buildFiles, or set the pluginToolVersion input.",
   "loc.messages.Error_CouldNotResolveCiJar": "Could not resolve the credential provider JAR.",
   "loc.messages.Error_InvalidPluginVersion": "The plugin version is invalid. Use 1-64 letters, numbers, periods, plus signs, underscores, or hyphens.",

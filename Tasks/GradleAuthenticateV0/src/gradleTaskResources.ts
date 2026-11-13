@@ -117,6 +117,7 @@ export function writeJobInitScript(gradleUserHome: string, pluginVersion: string
     tl.setTaskVariable(INIT_SCRIPT_IDENTITY, JSON.stringify({
         device: stat.dev.toString(),
         inode: stat.ino.toString(),
+        birthtimeNs: stat.birthtimeNs.toString(),
         gradleUserHome: path.resolve(gradleUserHome),
     }));
 }
@@ -128,6 +129,8 @@ export function deleteJobInitScript(): boolean {
     if (!identity || typeof identity !== 'object'
         || !('device' in identity) || typeof identity.device !== 'string'
         || !('inode' in identity) || typeof identity.inode !== 'string'
+        || !('birthtimeNs' in identity) || typeof identity.birthtimeNs !== 'string'
+        || !/^(0|[1-9][0-9]*)$/.test(identity.birthtimeNs)
         || !('gradleUserHome' in identity) || typeof identity.gradleUserHome !== 'string'
         || !path.isAbsolute(identity.gradleUserHome)
         || identity.gradleUserHome !== path.resolve(identity.gradleUserHome)) {
@@ -139,7 +142,11 @@ export function deleteJobInitScript(): boolean {
     assertCanonicalDirectory(directory);
     if (!assertRegularFile(file)) return false;
     const stat = fs.lstatSync(file, { bigint: true });
-    if (stat.dev.toString() !== identity.device || stat.ino.toString() !== identity.inode) {
+    if (identity.birthtimeNs === '0' || stat.birthtimeNs <= BigInt(0)) {
+        throw new Error(tl.loc('Error_InitScriptCreationTimeUnavailable'));
+    }
+    if (stat.dev.toString() !== identity.device || stat.ino.toString() !== identity.inode
+        || stat.birthtimeNs.toString() !== identity.birthtimeNs) {
         throw new Error(tl.loc('Error_UnownedJobResource'));
     }
     fs.unlinkSync(file);

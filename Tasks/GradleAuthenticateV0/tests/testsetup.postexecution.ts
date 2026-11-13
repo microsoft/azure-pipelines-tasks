@@ -42,6 +42,24 @@ if (realVariables) {
 
 tmr.registerMock('fs', {
     ...fs,
+    lstatSync: (file: fs.PathLike, options?: fs.StatSyncOptions) => {
+        const stat = fs.lstatSync(file, options);
+        if (stat && options?.bigint) {
+            if (process.env[TestEnvVars.postexecReusedInode] === '1') {
+                const identity = JSON.parse(process.env[TestEnvVars.initScriptIdentity]!);
+                return {
+                    ...stat,
+                    dev: BigInt(identity.device),
+                    ino: BigInt(identity.inode),
+                    birthtimeNs: BigInt(identity.birthtimeNs) + BigInt(1),
+                };
+            }
+            if (process.env[TestEnvVars.initScriptBirthtime] !== undefined) {
+                return { ...stat, birthtimeNs: BigInt(process.env[TestEnvVars.initScriptBirthtime]!) };
+            }
+        }
+        return stat;
+    },
     rmSync: () => {
         console.log('TEST_DELETE_DIRECTORY');
         throw new Error('Directory deletion is forbidden');

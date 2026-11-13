@@ -206,6 +206,7 @@ describe('GradleAuthenticate L0 - Environment Setup', function () {
         assert.deepStrictEqual(identity, {
             device: stat.dev.toString(),
             inode: stat.ino.toString(),
+            birthtimeNs: stat.birthtimeNs.toString(),
             gradleUserHome: path.resolve(process.env[TestEnvVars.gradleUserHome]!),
         });
         const jobDirectory = path.dirname(TestHelpers.stagedRepo(runner));

@@ -23,6 +23,8 @@ export const TestEnvVars = {
     postexecDryRun: '__postexec_dryRun__',
     postexecRealVariables: '__postexec_realVariables__',
     initScriptIdentity: '__initScriptIdentity__',
+    initScriptBirthtime: '__initScriptBirthtime__',
+    postexecReusedInode: '__postexec_reusedInode__',
 };
 
 /**

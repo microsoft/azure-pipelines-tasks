@@ -104,6 +104,7 @@
     "Error_InvalidJobIdentity": "ms-resource:loc.messages.Error_InvalidJobIdentity",
     "Error_UnsafeJobPath": "ms-resource:loc.messages.Error_UnsafeJobPath",
     "Error_UnownedJobResource": "ms-resource:loc.messages.Error_UnownedJobResource",
+    "Error_InitScriptCreationTimeUnavailable": "ms-resource:loc.messages.Error_InitScriptCreationTimeUnavailable",
     "Error_CouldNotDetermineVersion": "ms-resource:loc.messages.Error_CouldNotDetermineVersion",
     "Error_CouldNotResolveCiJar": "ms-resource:loc.messages.Error_CouldNotResolveCiJar",
     "Error_InvalidPluginVersion": "ms-resource:loc.messages.Error_InvalidPluginVersion",

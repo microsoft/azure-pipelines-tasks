@@ -65,6 +65,18 @@ if (providerScenario) {
 // ---------------------------------------------------------------------------
 // Task inputs (read from env vars set by test scenarios)
 // ---------------------------------------------------------------------------
+if (process.env[TestEnvVars.initScriptBirthtime] !== undefined) {
+    tmr.registerMock('fs', {
+        ...fs,
+        lstatSync: (file: fs.PathLike, options?: fs.StatSyncOptions) => {
+            const stat = fs.lstatSync(file, options);
+            return stat && options?.bigint
+                ? { ...stat, birthtimeNs: BigInt(process.env[TestEnvVars.initScriptBirthtime]!) }
+                : stat;
+        },
+    });
+}
+
 if (process.env[TestEnvVars.buildFiles]) {
     tmr.setInput('buildFiles', process.env[TestEnvVars.buildFiles]!);
 }
