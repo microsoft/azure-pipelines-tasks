@@ -3,6 +3,10 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+// Direct unit tests for resolveRemoteFilePath live in their own file; require it here so the
+// suite registers under this L0.js entry (the harness only runs _build/Tests/L0.js).
+require('./L0ResolveRemoteFilePathTests');
+
 describe('FtpUploadV2 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT!) || 20000);
 

@@ -7,7 +7,9 @@ describe('UniversalPackages L0 Suite - Artifact Tool Installer', function () {
     afterEach(() => TestHelpers.afterEach());
 
     describe('Artifact Tool Installation', function () {
-        it('installs artifact tool successfully', async () => {
+        it('installs artifact tool successfully', async function () {
+            // The first mock run may download and extract its Node runtime.
+            this.timeout(60000);
             const tr = await TestHelpers.runPreJobTest({
                 [testConstants.TestEnvVars.serverType]: 'hosted',
             });
