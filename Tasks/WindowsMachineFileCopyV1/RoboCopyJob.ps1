@@ -228,14 +228,16 @@ param (
 
     if($machineShare)
     {
-        $command = "$netExeCommand use `"$machineShare`""
+        # MachineShare (derived from the resource FQDN) and the credential are passed to net.exe
+        # as separate array elements instead of being interpolated into a string parsed by
+        # Invoke-Expression.
+        $netUseArgs = @('use', $machineShare)
         if($userName)
         {
-            $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
+            $netUseArgs += @("/user:$userName", $password)
         }
-        $command += " 2>&1"
-        
-        $dtl_mapOut = iex $command
+
+        $dtl_mapOut = & $netExeCommand @netUseArgs 2>&1
         if ($LASTEXITCODE -ne 0) 
         {
             $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
@@ -275,7 +277,11 @@ param (
         }
         else
         {
-            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            # sourceDirectory, destinationNetworkPath and filesToCopy are deferred to
+            # Invoke-Expression's own scope (it runs in the current scope, so they resolve the
+            # same as if expanded here) instead of being expanded into the command text.
+            # robocopyParameters stays expanded: it carries the task's own additional-arguments input.
+            $command = "robocopy `"`$sourceDirectory`" `"`$destinationNetworkPath`" `"`$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
         }
 
@@ -298,7 +304,7 @@ param (
     {
         if($machineShare)
         {            
-            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
+            $dtl_deleteMap = & $netExeCommand use $machineShare /D /Y 2>&1
         }
     }
 }

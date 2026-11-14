@@ -68,6 +68,9 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Imports VstsTaskSdk non-interactively so unset variables never prompt through Read-Host', (done) => {
             psr.run(path.join(__dirname, 'L0VstsTaskSdkNonInteractiveImport.ps1'), done);
         });
+        it('Passes the resource FQDN to the net-use mapping as literal data', (done) => {
+            psr.run(path.join(__dirname, 'L0TreatsResourceFqdnAsData.ps1'), done);
+        });
     }
     else {
         console.warn('Cannot run tests for WindowsMachineFileCopy on Non-Windows Platform');
