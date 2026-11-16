@@ -24,7 +24,8 @@ import * as path from 'path';
  *         com.microsoft.azure.artifacts.credprovider.gradle.plugin-<version>.pom
  *       com.microsoft.azure.artifacts.credprovider.gradle.plugin/maven-metadata.xml
  */
-export function layoutMavenRepo(repoDir: string, jarSourcePath: string, versions: string[]): void {
+export function layoutMavenRepo(repoDir: string, jarSource: string | Buffer, versions: string[]): void {
+    const jarContent = typeof jarSource === 'string' ? fs.readFileSync(jarSource) : jarSource;
     const groupId = 'com.microsoft.azure';
     const artifactId = 'artifacts-gradle-credprovider';
     const pluginId = 'com.microsoft.azure.artifacts.credprovider';
@@ -35,7 +36,7 @@ export function layoutMavenRepo(repoDir: string, jarSourcePath: string, versions
         const artifactDir = path.join(repoDir, ...groupId.split('.'), artifactId, version);
         fs.mkdirSync(artifactDir, { recursive: true });
 
-        fs.copyFileSync(jarSourcePath, path.join(artifactDir, `${artifactId}-${version}.jar`));
+        fs.writeFileSync(path.join(artifactDir, `${artifactId}-${version}.jar`), jarContent);
         fs.writeFileSync(
             path.join(artifactDir, `${artifactId}-${version}.pom`),
             generateArtifactPom(groupId, artifactId, version),

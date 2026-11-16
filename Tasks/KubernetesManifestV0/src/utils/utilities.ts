@@ -194,6 +194,23 @@ export function escapeHelmSetToken(token: string, allowLists: boolean = false): 
     return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
 }
 
+// Names and kinds read from manifests are joined into a kubectl command line, so they must stay a single
+// token and must not be parseable as an option.
+// Enabling the KubernetesManifest.DisableManifestObjectNameValidation pipeline feature restores the legacy behavior.
+export function validateManifestObjectToken(value: any, description: string): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableManifestObjectNameValidation')) {
+        return value;
+    }
+
+    // Match legacy name derivation after YAML has already coerced numeric scalars.
+    const token = typeof value === 'number' && Number.isFinite(value) ? String(value) : value;
+    if (typeof token !== 'string' || token.length === 0 || token.length > 253 ||
+        token.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(token)) {
+        throw new Error(tl.loc('InvalidManifestObjectToken', description));
+    }
+    return token;
+}
+
 export function validateReleaseName(value: string): string {
     if (value && value.startsWith('-')) {
         throw new Error(tl.loc('InvalidReleaseName', value));

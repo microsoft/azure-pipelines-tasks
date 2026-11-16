@@ -3,33 +3,53 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { createHash } from 'crypto';
 import * as tl from 'azure-pipelines-task-lib/task';
+
+interface CiProviderRelease {
+    jarSha256: string;
+}
+
+const release: CiProviderRelease = require('../data/credprovider-release.json');
+
+export interface ResolvedCiJar {
+    path: string;
+    content: Buffer;
+}
 
 /**
  * Resolve the CI JAR:
  * 1. GRADLE_CREDPROVIDER_HOME env var — optional override (usually unset)
- * 2. Bundled JAR shipped with the task (primary source, downloaded at build time from externals)
+ * 2. Bundled JAR downloaded at task build time, verified before staging.
  */
-export function resolveCiJar(): string {
+export function resolveCiJar(): ResolvedCiJar {
     // Check override first
     const credproviderHome = process.env['GRADLE_CREDPROVIDER_HOME'];
     if (credproviderHome) {
         const jar = findJarInDir(credproviderHome);
         if (jar) {
             tl.debug(tl.loc('Info_CiJarFromHome'));
-            return jar;
+            return { path: jar, content: fs.readFileSync(jar) };
         }
     }
 
-    // Primary: Bundled JAR (downloaded via make.json externals at build time)
-    const bundledDir = path.join(__dirname, '..', 'GradleCredProvider');
-    const jar = findJarInDir(bundledDir);
-    if (jar) {
-        tl.debug(tl.loc('Info_CiJarFromBundled'));
-        return jar;
+    if (typeof release.jarSha256 !== 'string' || !/^[a-fA-F0-9]{64}$/.test(release.jarSha256)) {
+        throw new Error(tl.loc('Error_InvalidCiProviderRelease'));
     }
 
-    throw new Error(tl.loc('Error_NoCiJarFound'));
+    const jar = findJarInDir(path.join(__dirname, '..', 'GradleCredProvider'));
+    if (!jar) {
+        throw new Error(tl.loc('Error_NoCiJarFound'));
+    }
+
+    const content = fs.readFileSync(jar);
+    const actualChecksum = createHash('sha256').update(content).digest('hex');
+    if (actualChecksum !== release.jarSha256.toLowerCase()) {
+        throw new Error(tl.loc('Error_CiProviderChecksumMismatch'));
+    }
+
+    tl.debug(tl.loc('Info_CiJarFromBundled'));
+    return { path: jar, content };
 }
 
 /**
