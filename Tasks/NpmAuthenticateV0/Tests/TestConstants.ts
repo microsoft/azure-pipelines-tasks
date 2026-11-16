@@ -12,6 +12,8 @@ export const TestEnvVars = {
     wifRegistryUrl: '__npmauth_wifRegistryUrl__',
     wifToken: '__npmauth_wifToken__',
     wifShouldFail: '__npmauth_wifShouldFail__',
+    wifFailingRegistry: '__npmauth_wifFailingRegistry__',  // fail token requests only for registry URLs containing this text
+    wifVerificationShouldFail: '__npmauth_wifVerificationShouldFail__',
     throwTelemetryError: '__npmauth_throwTelemetryError__',
     saveNpmrcPath: 'SAVE_NPMRC_PATH',   // pre-created dir passed to the task to skip mkdtempSync
 

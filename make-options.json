@@ -146,6 +146,7 @@
         "MavenV2",
         "MavenV3",
         "MavenV4",
+        "MicrosoftSqlDeploymentV1",
         "MSBuildV1",
         "MysqlDeploymentOnMachineGroupV1",
         "NodeTaskRunnerInstallerV0",

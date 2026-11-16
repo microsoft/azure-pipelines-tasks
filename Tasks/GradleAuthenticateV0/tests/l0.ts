@@ -10,3 +10,6 @@ import './l0.postexecution';
 import './l0.unitfunctions';
 import './l0.authconfig';
 import './l0.mavenlayout';
+import './l0.cijarintegrity';
+import './l0.ciproviderinstall';
+import './l0.telemetry';

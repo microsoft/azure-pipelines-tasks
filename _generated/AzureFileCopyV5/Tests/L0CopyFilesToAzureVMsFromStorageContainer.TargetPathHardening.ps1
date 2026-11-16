@@ -4,6 +4,7 @@ param()
 # Covers both serialization boundaries from the V6 regressions, adapted for SAS authentication.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\AzureFileCopyRemoteJob.ps1
 
