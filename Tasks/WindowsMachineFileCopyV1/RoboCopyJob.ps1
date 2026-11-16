@@ -8,7 +8,8 @@ param (
     $additionalArguments,
     [string]$useSanitizerActivate,
     [bool]$enableWindowsMachineFileCopyArgumentsHardening,
-    [string]$scriptRoot
+    [string]$scriptRoot,
+    [bool]$enableLegacyWindowsMachineFileCopyNetUseCommand = $false
     )
 
     # The parallel-copy path runs this scriptblock through Start-Job in a separate
@@ -216,6 +217,70 @@ param (
         Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
         return 'net'
     }
+
+    function Get-Win32QuotedArgument(
+        [string]$argument
+        )
+    {
+        if ($argument.Length -gt 0 -and $argument -notmatch '[\s"]')
+        {
+            return $argument
+        }
+
+        $quoted = New-Object System.Text.StringBuilder
+        [void]$quoted.Append('"')
+
+        $charIndex = 0
+        while ($charIndex -lt $argument.Length)
+        {
+            $backslashCount = 0
+            while ($charIndex -lt $argument.Length -and $argument[$charIndex] -eq '\')
+            {
+                $backslashCount++
+                $charIndex++
+            }
+
+            if ($charIndex -eq $argument.Length)
+            {
+                [void]$quoted.Append('\' * ($backslashCount * 2))
+            }
+            elseif ($argument[$charIndex] -eq '"')
+            {
+                [void]$quoted.Append('\' * ($backslashCount * 2 + 1))
+                [void]$quoted.Append('"')
+                $charIndex++
+            }
+            else
+            {
+                [void]$quoted.Append('\' * $backslashCount)
+                [void]$quoted.Append($argument[$charIndex])
+                $charIndex++
+            }
+        }
+
+        [void]$quoted.Append('"')
+        return $quoted.ToString()
+    }
+
+    function Invoke-NetExeCommand(
+        [string]$netExeCommand,
+        [string[]]$netExeArguments
+        )
+    {
+        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+        $startInfo.FileName = $netExeCommand
+        $startInfo.Arguments = (($netExeArguments | ForEach-Object { Get-Win32QuotedArgument $_ }) -join ' ')
+        $startInfo.RedirectStandardOutput = $true
+        $startInfo.RedirectStandardError = $true
+        $startInfo.UseShellExecute = $false
+
+        $process = [System.Diagnostics.Process]::Start($startInfo)
+        $output = $process.StandardOutput.ReadToEnd() + $process.StandardError.ReadToEnd()
+        $process.WaitForExit()
+        $global:LASTEXITCODE = $process.ExitCode
+
+        return $output
+    }
     
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
@@ -228,14 +293,28 @@ param (
 
     if($machineShare)
     {
-        $command = "$netExeCommand use `"$machineShare`""
-        if($userName)
+        if ($enableLegacyWindowsMachineFileCopyNetUseCommand)
         {
-            $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
+            $command = "$netExeCommand use `"$machineShare`""
+            if($userName)
+            {
+                $command += " /user:`"$userName`" `'$($password -replace "['`]", '$&$&')`'"
+            }
+            $command += " 2>&1"
+
+            $dtl_mapOut = iex $command
         }
-        $command += " 2>&1"
-        
-        $dtl_mapOut = iex $command
+        else
+        {
+            $netUseArgs = @('use', $machineShare)
+            if($userName)
+            {
+                $netUseArgs += @("/user:$userName", $password)
+            }
+
+            $dtl_mapOut = Invoke-NetExeCommand -netExeCommand $netExeCommand -netExeArguments $netUseArgs
+        }
+
         if ($LASTEXITCODE -ne 0) 
         {
             $errorMessage = (Get-LocalizedString -Key "Failed to connect to the path {0} with the user {1} for copying.`n" -ArgumentList $machineShare, $($credential.UserName)) + $dtl_mapOut
@@ -275,7 +354,7 @@ param (
         }
         else
         {
-            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            $command = "robocopy `"`$sourceDirectory`" `"`$destinationNetworkPath`" `"`$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
         }
 
@@ -298,7 +377,14 @@ param (
     {
         if($machineShare)
         {            
-            $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";  
+            if ($enableLegacyWindowsMachineFileCopyNetUseCommand)
+            {
+                $dtl_deleteMap = iex "$netExeCommand use `"$machineShare`" /D /Y";
+            }
+            else
+            {
+                $dtl_deleteMap = Invoke-NetExeCommand -netExeCommand $netExeCommand -netExeArguments @('use', $machineShare, '/D', '/Y')
+            }
         }
     }
 }
