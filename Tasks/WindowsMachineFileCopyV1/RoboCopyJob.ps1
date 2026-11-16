@@ -217,6 +217,70 @@ param (
         Write-Verbose "Unable to get the path for net.exe. Net command will be 'net'"
         return 'net'
     }
+
+    function Get-Win32QuotedArgument(
+        [string]$argument
+        )
+    {
+        if ($argument.Length -gt 0 -and $argument -notmatch '[\s"]')
+        {
+            return $argument
+        }
+
+        $quoted = New-Object System.Text.StringBuilder
+        [void]$quoted.Append('"')
+
+        $charIndex = 0
+        while ($charIndex -lt $argument.Length)
+        {
+            $backslashCount = 0
+            while ($charIndex -lt $argument.Length -and $argument[$charIndex] -eq '\')
+            {
+                $backslashCount++
+                $charIndex++
+            }
+
+            if ($charIndex -eq $argument.Length)
+            {
+                [void]$quoted.Append('\' * ($backslashCount * 2))
+            }
+            elseif ($argument[$charIndex] -eq '"')
+            {
+                [void]$quoted.Append('\' * ($backslashCount * 2 + 1))
+                [void]$quoted.Append('"')
+                $charIndex++
+            }
+            else
+            {
+                [void]$quoted.Append('\' * $backslashCount)
+                [void]$quoted.Append($argument[$charIndex])
+                $charIndex++
+            }
+        }
+
+        [void]$quoted.Append('"')
+        return $quoted.ToString()
+    }
+
+    function Invoke-NetExeCommand(
+        [string]$netExeCommand,
+        [string[]]$netExeArguments
+        )
+    {
+        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
+        $startInfo.FileName = $netExeCommand
+        $startInfo.Arguments = (($netExeArguments | ForEach-Object { Get-Win32QuotedArgument $_ }) -join ' ')
+        $startInfo.RedirectStandardOutput = $true
+        $startInfo.RedirectStandardError = $true
+        $startInfo.UseShellExecute = $false
+
+        $process = [System.Diagnostics.Process]::Start($startInfo)
+        $output = $process.StandardOutput.ReadToEnd() + $process.StandardError.ReadToEnd()
+        $process.WaitForExit()
+        $global:LASTEXITCODE = $process.ExitCode
+
+        return $output
+    }
     
     $machineShare = Get-MachineShare -fqdn $fqdn -targetPath $targetPath    
     $destinationNetworkPath = Get-DestinationNetworkPath -targetPath $targetPath -machineShare $machineShare
@@ -248,7 +312,7 @@ param (
                 $netUseArgs += @("/user:$userName", $password)
             }
 
-            $dtl_mapOut = & $netExeCommand @netUseArgs 2>&1
+            $dtl_mapOut = Invoke-NetExeCommand -netExeCommand $netExeCommand -netExeArguments $netUseArgs
         }
 
         if ($LASTEXITCODE -ne 0) 
@@ -290,7 +354,7 @@ param (
         }
         else
         {
-            $command = "robocopy `"$sourceDirectory`" `"$destinationNetworkPath`" `"$filesToCopy`" $robocopyParameters"
+            $command = "robocopy `"`$sourceDirectory`" `"`$destinationNetworkPath`" `"`$filesToCopy`" $robocopyParameters"
             Invoke-Expression $command
         }
 
@@ -319,7 +383,7 @@ param (
             }
             else
             {
-                $dtl_deleteMap = & $netExeCommand use $machineShare /D /Y
+                $dtl_deleteMap = Invoke-NetExeCommand -netExeCommand $netExeCommand -netExeArguments @('use', $machineShare, '/D', '/Y')
             }
         }
     }
