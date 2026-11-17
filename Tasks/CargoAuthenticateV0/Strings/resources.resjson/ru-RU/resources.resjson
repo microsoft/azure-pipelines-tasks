@@ -24,7 +24,7 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "Не удалось получить федеративные учетные данные из подключения службы: %s.",
   "loc.messages.MissingRegistryNameOrServiceConnection": "Необходимо настроить и имя реестра, и подключение службы, они не могут быть пустыми.",
   "loc.messages.RegistryNotFound": "Входные имена реестров \"%s№ не соответствуют ни одному реестру в config.toml",
-  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
-  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
+  "loc.messages.RegistryEnvKeyCollision": "Реестры '%s' сопоставляться с одной и той же переменной среды Cargo '%s'. Переименуйте один из реестров, чтобы избежать неоднозначности учетных данных.",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "Пропуск '%s' реестра, так как его '%s' URL-адреса индекса не размещен в Azure DevOps.",
+  "loc.messages.RegistryFeedVerificationFailed": "Сбой проверки URL-адреса веб-канала реестра. Проверка подлинности для этого реестра пропускается."
 }

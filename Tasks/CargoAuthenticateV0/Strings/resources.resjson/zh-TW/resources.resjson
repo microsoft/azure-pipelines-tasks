@@ -24,7 +24,7 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "無法取得服務連線的同盟認證: %s。",
   "loc.messages.MissingRegistryNameOrServiceConnection": "登錄名稱和服務連線都必須設定，且不能是空的。",
   "loc.messages.RegistryNotFound": "登錄名稱輸入 '%s' 未對應 config.toml 中的任何登錄",
-  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
-  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
+  "loc.messages.RegistryEnvKeyCollision": "登錄 '%s' 對應至相同的 Cargo 環境變數 '%s'。重新命名其中一個登錄以避免認證模稜兩可。",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "正在略過登錄 '%s'，因為其索引 URL '%s' 未在 Azure DevOps 中託管。",
+  "loc.messages.RegistryFeedVerificationFailed": "登錄摘要 URL 驗證失敗; 略過此登錄的驗證。"
 }

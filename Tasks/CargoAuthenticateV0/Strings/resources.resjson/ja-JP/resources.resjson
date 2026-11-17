@@ -24,7 +24,7 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "サービス接続からフェデレーション資格情報を取得できません: %s。",
   "loc.messages.MissingRegistryNameOrServiceConnection": "レジストリ名とサービス接続は、両方とも設定する必要があり、空にすることはできません。",
   "loc.messages.RegistryNotFound": "レジストリ名の入力 '%s' は、config.toml 内のいずれのレジストリにも対応していません。",
-  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
-  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
+  "loc.messages.RegistryEnvKeyCollision": "レジストリ '%s' は、同じ Cargo 環境変数 '%s' にマップされています。資格情報のあいまいさを避けるため、いずれかのレジストリの名前を変更してください。",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "レジストリ '%s' は、そのインデックス URL '%s' が Azure DevOps でホストされていないためスキップしています。",
+  "loc.messages.RegistryFeedVerificationFailed": "レジストリ フィード URL の検証に失敗しました。このレジストリの認証をスキップしています。"
 }
