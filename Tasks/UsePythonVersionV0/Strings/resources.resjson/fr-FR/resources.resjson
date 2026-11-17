@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "Vous devez fournir un jeton GitHub si vous voulez télécharger une mise en production Python. Sinon, vous pouvez atteindre la limite de téléchargement anonyme GitHub.",
   "loc.messages.DownloadNotFound": "Impossible de trouver le %s de spécifications correspondant à Python (%s) dans le Registre des versions Python. Notez que seuls les systèmes répertoriés dans le manifeste des versions Python de Github Actions (https://github.com/actions/python-versions/blob/main/versions-manifest.json) sont adaptés au téléchargement de Python en version d’évaluation. En outre, le proxy n’est pas pris en charge.",
   "loc.messages.ManifestDownloadFailed": "Échec du téléchargement du manifeste des versions Python à partir du registre Python Github Actions (https://github.com/actions/python-versions). jeton GitHub non valide peut en être la cause.",
-  "loc.messages.DownloadFailed": "Échec du téléchargement de Python à partir du registre Python Github Actions (erreur https://github.com/actions/python-versions). : %s"
+  "loc.messages.DownloadFailed": "Échec du téléchargement de Python à partir du registre Python Github Actions (erreur https://github.com/actions/python-versions). : %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "TLS non è abilitato nell'attività. L'eliminazione dei certificati verrà ignorata.",
   "loc.messages.SkipDownloadSecureFiles": "TLS non è abilitato nell'attività. Il download dei certificati verrà ignorato.",
   "loc.messages.FileNotFound": "Il file non è stato trovato in %s",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "I dettagli della connessione al servizio Kubernetes non sono stati trovati.",
   "loc.messages.ExpiredServicePrincipal": "Non è stato possibile recuperare il token di accesso per Azure. Verificare che l'entità servizio usata sia valida e non sia scaduta.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Il salvataggio del grafico in Registro Azure Container è supportato solo Helm V3.",

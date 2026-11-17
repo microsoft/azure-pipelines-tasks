@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "Python 릴리스를 다운로드하려면 GitHub 토큰을 제공해야 합니다. 그렇지 않으면 GitHub 익명 다운로드 제한에 도달할 수 있습니다.",
   "loc.messages.DownloadNotFound": "Python 버전 레지스트리에서 Python 일치 사양 %s(%s)를 찾을 수 없습니다. Github Actions python 버전 매니페스트(https://github.com/actions/python-versions/blob/main/versions-manifest.json)에 나열된 시스템만 python on-flight 다운로드에 적합합니다. 또한 프록시는 지원되지 않습니다.",
   "loc.messages.ManifestDownloadFailed": "Github Actions python 레지스트리(https://github.com/actions/python-versions)에서 Python 버전 매니페스트를 다운로드하지 못했습니다. 잘못된 GitHub 토큰으로 인해 이 문제가 발생할 수 있습니다.",
-  "loc.messages.DownloadFailed": "Github Actions python 레지스트리(https://github.com/actions/python-versions)에서 Python을 다운로드하지 못했습니다. 오류: %s"
+  "loc.messages.DownloadFailed": "Github Actions python 레지스트리(https://github.com/actions/python-versions)에서 Python을 다운로드하지 못했습니다. 오류: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

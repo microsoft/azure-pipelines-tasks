@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "タスクで TLS が有効になっていません。証明書の削除をスキップしています。",
   "loc.messages.SkipDownloadSecureFiles": "タスクで TLS が有効になっていません。証明書のダウンロードをスキップしています。",
   "loc.messages.FileNotFound": "%s でファイルが見つかりませんでした",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes サービス接続の詳細が見つかりませんでした。",
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.SaveSupportedInHelmsV3Only": "Azure Container Registry への chart の保存は、Helm V3 でのみサポートされています。",

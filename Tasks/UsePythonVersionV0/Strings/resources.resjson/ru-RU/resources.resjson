@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "Если вы хотите скачать выпуск Python, укажите токен GitHub. В противном случае вы можете столкнуться с ограничением на количество анонимных скачиваний в GitHub.",
   "loc.messages.DownloadNotFound": "Не удалось найти соответствующую спецификацию Python %s (%s) в реестре python-versions. Обратите внимание, что только системы, перечисленные в манифесте версий Python для GitHub Actions (https://github.com/actions/python-versions/blob/main/versions-manifest.json) могут загружать Python во время работы. Прокси-серверы не поддерживаются.",
   "loc.messages.ManifestDownloadFailed": "Не удалось скачать манифест версий Python из реестра Python в Github Actions (https://github.com/actions/python-versions). Это может быть вызвано недопустимым токеном GitHub.",
-  "loc.messages.DownloadFailed": "Не удалось скачать Python из реестра Python в GitHub Actions(https://github.com/actions/python-versions). Ошибка: %s"
+  "loc.messages.DownloadFailed": "Не удалось скачать Python из реестра Python в GitHub Actions(https://github.com/actions/python-versions). Ошибка: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

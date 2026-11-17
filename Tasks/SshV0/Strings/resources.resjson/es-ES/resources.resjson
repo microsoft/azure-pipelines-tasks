@@ -37,5 +37,5 @@
   "loc.messages.SettingUpSshConnection": "Intentando establecer una conexión SSH con %s@%s: %s",
   "loc.messages.SshConnectionSuccessful": "Conectado correctamente.",
   "loc.messages.UseDefaultPort": "Usando el puerto 22, que es el predeterminado para SSH, porque no se especificó ningún puerto.",
-  "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\\). Puede obtener más información aquí: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using the target shell's escape character: backslash (\\) for Bash or backtick (`) for PowerShell. More information is available here: https://aka.ms/ado/75787"
 }
