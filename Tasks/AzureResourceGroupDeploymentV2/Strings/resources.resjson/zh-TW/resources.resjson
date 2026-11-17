@@ -201,6 +201,6 @@
   "loc.messages.ManagedServiceIdentityDetails": "請確定已將資源群組 %s 的適當角色指派給用於部署的受控服務識別。如需詳細資料，請參閱此連結: https://docs.microsoft.com/zh-tw/azure/active-directory/managed-identities-azure-resources/howto-assign-access-portal (機器翻譯)",
   "loc.messages.DeploymentGroupConfigurationFailedOnVM": "虛擬機器 '%s' 失敗: %s",
   "loc.messages.TroubleshootingGuide": "請參閱疑難排解手冊，查看問題是否已解決: https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops#troubleshooting",
-  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
-  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
+  "loc.messages.SafeOutputVariablesAgentTooOld": "部署輸出變數是使用先前的格式發佈，但無法防止輸出名稱和值解譯為代理程式命令，因為此工作執行代理程式版本 '%s'。需要代理程式版本 %s 或更新版本才能使用安全格式。請升級代理程式，以採用安全格式。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "部署輸出變數是使用先前的格式發佈，但無法防止輸出名稱和值解譯為代理程式命令，因為 %s 變數已設定為代理程式未讀取為 true 的值，因此不會解碼百分比逸出。移除變數，或將其設定為 true、1 或 $true 且沒有前置或結尾空格，以採用安全格式。"
 }

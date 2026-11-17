@@ -69,5 +69,5 @@
   "loc.messages.FirewallRuleNameCannotBeNull": "防火牆規則名稱不得為 null。",
   "loc.messages.SqlFileNotFound": "在路徑找不到 SQL 檔案: %s",
   "loc.messages.InvalidDatabaseName": "無效的資料庫名稱 '%s'。只允許英數字元、底線、連字號和美元符號。",
-  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "不允許其他 MySQL 選項 '%s'。啟用強化時，--binary-mode 由工作管理，無法透過 SqlAdditionalArguments 設定。"
 }
