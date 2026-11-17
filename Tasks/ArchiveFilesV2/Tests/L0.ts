@@ -3,6 +3,7 @@ import * as utils from '../utils.js';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import fs = require('fs');
 import path = require('path');
+import os = require('os');
 import tl = require('azure-pipelines-task-lib/task');
 
 // path to creating archive
@@ -57,7 +58,7 @@ describe('ArchiveFiles L0 Suite', function () {
         }
         const testOutput = path.join(__dirname, 'test_output');
         if (fs.existsSync(testOutput)) {
-            deleteFolderRecursive(testTemp);
+            deleteFolderRecursive(testOutput);
         }
     })
 
@@ -125,7 +126,8 @@ describe('ArchiveFiles L0 Suite', function () {
     });
 
     // These tests rely on 7z which isnt present on macOS
-    if (process.platform.indexOf('darwin') < 0) {
+    // Windows bundles 7z; other platforms need it on PATH (not present on Linux CI agents)
+    if (process.platform.indexOf('darwin') < 0 && (process.platform === 'win32' || tl.which('7z'))) {
         it('Successfully creates a 7z', async function () {
             this.timeout(5000);
             process.env['archiveType'] = '7z';
@@ -233,4 +235,235 @@ describe('ArchiveFiles L0 Suite', function () {
             });
         });
     }
+
+    type ExternalOutputCall = {
+        message: string;
+        options: tl.ExternalOutputOptions;
+    };
+
+    function runArchiveFilesWithMockedTaskLib(inputs: {
+        archiveType: string;
+        archiveFile: string;
+        includeRootFolder?: boolean;
+        replaceExistingArchive?: boolean;
+        verbose?: boolean;
+        tarCompression?: string;
+        osType?: string;
+        existingPaths?: Record<string, boolean>;
+    }): ExternalOutputCall[] {
+        const taskLib = require('azure-pipelines-task-lib/task');
+        const testTemp = path.join(__dirname, 'test_temp');
+        const rootFolderOrFile = path.join(testTemp, 'sink_test_input');
+
+        fs.mkdirSync(rootFolderOrFile, { recursive: true });
+
+        const archiveFile = path.normalize(inputs.archiveFile);
+        const externalOutputs: ExternalOutputCall[] = [];
+        const outputPathOverrides = new Map<string, boolean>(
+            Object.entries(inputs.existingPaths ?? {}).map(([k, v]) => [path.normalize(k), v])
+        );
+
+        const originalTaskLib = {
+            getVariable: taskLib.getVariable,
+            getPathInput: taskLib.getPathInput,
+            getBoolInput: taskLib.getBoolInput,
+            getInput: taskLib.getInput,
+            osType: taskLib.osType,
+            setResourcePath: taskLib.setResourcePath,
+            debug: taskLib.debug,
+            warning: taskLib.warning,
+            error: taskLib.error,
+            exist: taskLib.exist,
+            stats: taskLib.stats,
+            rmRF: taskLib.rmRF,
+            ls: taskLib.ls,
+            mkdirP: taskLib.mkdirP,
+            which: taskLib.which,
+            tool: taskLib.tool,
+            setResult: taskLib.setResult,
+            writeExternalOutput: taskLib.writeExternalOutput,
+            loc: taskLib.loc,
+            TaskResult: taskLib.TaskResult
+        };
+
+        Object.assign(taskLib, {
+            TaskResult: { Succeeded: 0, Failed: 1 },
+            getVariable: (name: string) => {
+                if (name === 'System.DefaultWorkingDirectory') {
+                    return testTemp;
+                }
+                if (name === 'Agent.TempDirectory') {
+                    return testTemp;
+                }
+                return '';
+            },
+            getPathInput: (name: string) => {
+                if (name === 'rootFolderOrFile') {
+                    return rootFolderOrFile;
+                }
+                if (name === 'archiveFile') {
+                    return archiveFile;
+                }
+                return '';
+            },
+            getBoolInput: (name: string) => {
+                if (name === 'includeRootFolder') {
+                    return inputs.includeRootFolder ?? true;
+                }
+                if (name === 'replaceExistingArchive') {
+                    return inputs.replaceExistingArchive ?? true;
+                }
+                if (name === 'verbose') {
+                    return inputs.verbose ?? false;
+                }
+                if (name === 'quiet') {
+                    return false;
+                }
+                return false;
+            },
+            getInput: (name: string) => {
+                if (name === 'archiveType') {
+                    return inputs.archiveType;
+                }
+                if (name === 'tarCompression') {
+                    return inputs.tarCompression ?? 'gz';
+                }
+                if (name === 'sevenZipCompression') {
+                    return '';
+                }
+                return '';
+            },
+            osType: () => inputs.osType ?? process.platform,
+            setResourcePath: () => { },
+            debug: () => { },
+            warning: () => { },
+            error: () => { },
+            loc: (key: string, ...args: any[]) => `${key}:${args.join(',')}`,
+            exist: (checkPath: string) => {
+                const normalized = path.normalize(checkPath);
+                if (outputPathOverrides.has(normalized)) {
+                    return outputPathOverrides.get(normalized);
+                }
+                return fs.existsSync(normalized);
+            },
+            stats: () => ({ isFile: () => true }),
+            rmRF: () => { },
+            ls: () => [],
+            mkdirP: () => { },
+            which: (tool: string) => tool,
+            tool: () => {
+                const runner = {
+                    arg: () => runner,
+                    execSync: () => ({ code: 0, stdout: '', stderr: '', error: null })
+                };
+                return runner;
+            },
+            setResult: () => { },
+            writeExternalOutput: (message: string | Buffer, options: tl.ExternalOutputOptions) => {
+                externalOutputs.push({
+                    message: message.toString(),
+                    options
+                });
+            }
+        });
+
+        const archiveFilesModulePath = path.join(__dirname, '..', 'archivefiles.js');
+
+        try {
+            delete require.cache[require.resolve(archiveFilesModulePath)];
+            require(archiveFilesModulePath);
+        } finally {
+            delete require.cache[require.resolve(archiveFilesModulePath)];
+            Object.assign(taskLib, originalTaskLib);
+        }
+
+        return externalOutputs;
+    }
+
+    function findCall(calls: ExternalOutputCall[], predicate: (call: ExternalOutputCall) => boolean): ExternalOutputCall {
+        const call = calls.find(predicate);
+        assert(call, 'Expected external output call was not emitted');
+        return call!;
+    }
+
+    it('Routes archive plan and overwrite notice through repository external output with EOL', () => {
+        const archiveFile = path.join(__dirname, 'test_temp', 'replace-me.zip');
+        const calls = runArchiveFilesWithMockedTaskLib({
+            archiveType: 'zip',
+            archiveFile,
+            replaceExistingArchive: true,
+            osType: 'Windows_NT',
+            existingPaths: {
+                [archiveFile]: true
+            }
+        });
+
+        const removeBeforeCreation = findCall(calls, (call) => call.message === `RemoveBeforeCreation:${path.normalize(archiveFile)}${os.EOL}`);
+        assert.strictEqual(removeBeforeCreation.options.source, 'repository');
+
+        const expectedPlanLines = [
+            `FoundNFiles:1${os.EOL}`,
+            `ArchivingFile:sink_test_input${os.EOL}`
+        ];
+
+        expectedPlanLines.forEach((expectedLine) => {
+            const planLine = findCall(calls, (call) => call.message === expectedLine);
+            assert.strictEqual(planLine.options.source, 'repository');
+        });
+    });
+
+    it('Routes existing-archive notice through repository external output with EOL', () => {
+        const archiveFile = path.join(__dirname, 'test_temp', 'already-there.zip');
+        const calls = runArchiveFilesWithMockedTaskLib({
+            archiveType: 'zip',
+            archiveFile,
+            replaceExistingArchive: false,
+            osType: 'Windows_NT',
+            existingPaths: {
+                [archiveFile]: true
+            }
+        });
+
+        const alreadyExists = findCall(calls, (call) => call.message === `AlreadyExists:${path.normalize(archiveFile)}${os.EOL}`);
+        assert.strictEqual(alreadyExists.options.source, 'repository');
+    });
+
+    it('Routes tar-exists and filename lines through repository external output with EOL', () => {
+        const compressedTar = path.join(__dirname, 'test_temp', 'existing.tar.gz');
+        const innerTar = path.join(__dirname, 'test_temp', 'existing.tar');
+
+        const tarCalls = runArchiveFilesWithMockedTaskLib({
+            archiveType: 'tar',
+            archiveFile: compressedTar,
+            tarCompression: 'gz',
+            osType: 'Windows_NT',
+            existingPaths: {
+                [innerTar]: true
+            }
+        });
+
+        const tarExists = findCall(tarCalls, (call) => call.message === `TarExists:${path.normalize(innerTar)}${os.EOL}`);
+        assert.strictEqual(tarExists.options.source, 'repository');
+
+        const zipCalls = runArchiveFilesWithMockedTaskLib({
+            archiveType: 'zip',
+            archiveFile: path.join(__dirname, 'test_temp', 'nonwin.zip'),
+            osType: 'Linux'
+        });
+
+        const filename = findCall(zipCalls, (call) => call.message === `Filename:sink_test_input${os.EOL}`);
+        assert.strictEqual(filename.options.source, 'repository');
+    });
+
+    it('Routes filename external output even when verbose is disabled', () => {
+        const zipCalls = runArchiveFilesWithMockedTaskLib({
+            archiveType: 'zip',
+            archiveFile: path.join(__dirname, 'test_temp', 'quiet-nonwin.zip'),
+            verbose: false,
+            osType: 'Linux'
+        });
+
+        const filename = findCall(zipCalls, (call) => call.message === `Filename:sink_test_input${os.EOL}`);
+        assert.strictEqual(filename.options.source, 'repository');
+    });
 });

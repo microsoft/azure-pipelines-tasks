@@ -88,6 +88,7 @@ $regKeyObj = @{
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
 
 Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
+Register-Mock Get-ApplicationParametersFromApplicationParameterFile { @{} } -- "$PSScriptRoot\data\ApplicationParameters.xml"
 
 # Indicate that the application does not exist on cluster
 Register-Mock Get-ServiceFabricApplicationAction { $null } -- -ApplicationName $appName
