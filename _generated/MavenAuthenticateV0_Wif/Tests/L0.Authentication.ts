@@ -138,4 +138,160 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
             `settings.xml server password should be the custom System.AccessToken value`
         );
     });
+
+    describe('home directory resolution', function () {
+        const overriddenHome = path.join(__dirname, 'overriddenhome');
+        const testHome = path.join(__dirname, 'testhome');
+
+        beforeEach(function () {
+            // The fallback home must exist so the task can inspect it.
+            fs.mkdirSync(testHome, { recursive: true });
+        });
+
+        afterEach(function () {
+            fs.rmSync(overriddenHome, { recursive: true, force: true });
+            delete process.env['AGENT_WORKFOLDER'];
+        });
+
+        it('should ignore a HOME/USERPROFILE override and write settings.xml to the account home', async () => {
+            // Arrange
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+            process.env[TestEnvVars.homeEnvOverride] = overriddenHome;
+
+            // Act
+            await tr.runAsync();
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            assert(
+                fs.existsSync(TestHelpers.getSettingsXmlPath()),
+                'settings.xml must be written under the account home'
+            );
+            assert(
+                !fs.existsSync(path.join(overriddenHome, '.m2', 'settings.xml')),
+                'settings.xml must not be written under the overridden HOME/USERPROFILE'
+            );
+            TestHelpers.assertWarningLogged(tr, 'Warning_HomeEnvVarIgnored');
+        });
+
+        it('should not warn when HOME/USERPROFILE matches the account home', async () => {
+            // Arrange
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+
+            // Act
+            await tr.runAsync();
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertOutputDoesNotContain(tr, 'Warning_HomeEnvVarIgnored');
+        });
+
+        it('should fall back to the environment home with a warning when the account home is unavailable', async () => {
+            // Arrange
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+            process.env[TestEnvVars.userInfoShouldFail] = 'true';
+
+            // Act
+            await tr.runAsync();
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertWarningLogged(tr, 'Warning_AccountHomeLookupFailed');
+            assert(
+                fs.existsSync(TestHelpers.getSettingsXmlPath()),
+                'settings.xml should be written under the environment home'
+            );
+        });
+
+        it('should fall back to the environment home with a warning when the account home is "/"', async () => {
+            // Arrange
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+            process.env[TestEnvVars.accountHomeDir] = '/';
+
+            // Act
+            await tr.runAsync();
+
+            // Assert
+            TestHelpers.assertSuccess(tr);
+            TestHelpers.assertWarningLogged(tr, 'Warning_AccountHomeUnusable');
+            TestHelpers.assertOutputDoesNotContain(tr, 'Warning_HomeEnvVarIgnored');
+            assert(
+                fs.existsSync(TestHelpers.getSettingsXmlPath()),
+                'settings.xml should be written under the environment home'
+            );
+        });
+
+        it('should not write credentials to a fallback home inside an agent folder', async () => {
+            // Arrange
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+            process.env[TestEnvVars.userInfoShouldFail] = 'true';
+            process.env['AGENT_WORKFOLDER'] = __dirname;
+
+            // Act
+            await tr.runAsync();
+
+            // Assert
+            TestHelpers.assertFailure(tr);
+            TestHelpers.assertOutputContains(tr, 'Error_FallbackHomeInAgentFolder');
+            assert(!fs.existsSync(TestHelpers.getSettingsXmlPath()), 'settings.xml must not be written');
+        });
+
+        describe('on POSIX file systems', function () {
+            before(function () {
+                if (process.platform === 'win32') {
+                    this.skip();
+                }
+            });
+
+            it('should not write credentials to a fallback home writable by other users', async () => {
+                // Arrange
+                fs.mkdirSync(overriddenHome, { recursive: true });
+                fs.chmodSync(overriddenHome, 0o777);
+                const tp = path.join(__dirname, 'TestSetup.js');
+                const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+                process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+                process.env[TestEnvVars.osType] = 'Linux';
+                process.env[TestEnvVars.userInfoShouldFail] = 'true';
+                process.env[TestEnvVars.homeEnvOverride] = overriddenHome;
+
+                // Act
+                await tr.runAsync();
+
+                // Assert
+                TestHelpers.assertFailure(tr);
+                TestHelpers.assertOutputContains(tr, 'Error_FallbackHomeWritableByOthers');
+                assert(!fs.existsSync(path.join(overriddenHome, '.m2', 'settings.xml')), 'settings.xml must not be written');
+            });
+
+            it('should write to a private fallback home and warn about older Java versions', async () => {
+                // Arrange
+                fs.mkdirSync(overriddenHome, { recursive: true });
+                fs.chmodSync(overriddenHome, 0o700);
+                const tp = path.join(__dirname, 'TestSetup.js');
+                const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+                process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+                process.env[TestEnvVars.osType] = 'Linux';
+                process.env[TestEnvVars.userInfoShouldFail] = 'true';
+                process.env[TestEnvVars.homeEnvOverride] = overriddenHome;
+
+                // Act
+                await tr.runAsync();
+
+                // Assert
+                TestHelpers.assertSuccess(tr);
+                TestHelpers.assertWarningLogged(tr, 'Warning_FallbackHomeJavaCompat');
+                assert(fs.existsSync(path.join(overriddenHome, '.m2', 'settings.xml')), 'settings.xml should be written under the fallback home');
+            });
+        });
+    });
 });

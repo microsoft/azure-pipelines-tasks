@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -109,10 +109,19 @@
     "Error_FailedCleanupM2": "ms-resource:loc.messages.Error_FailedCleanupM2",
     "Error_FailedToGetServiceConnectionAuth": "ms-resource:loc.messages.Error_FailedToGetServiceConnectionAuth",
     "Warning_ChmodFailed": "ms-resource:loc.messages.Warning_ChmodFailed",
-    "Warning_StatFailed": "ms-resource:loc.messages.Warning_StatFailed"
+    "Warning_StatFailed": "ms-resource:loc.messages.Warning_StatFailed",
+    "Warning_HomeEnvVarIgnored": "ms-resource:loc.messages.Warning_HomeEnvVarIgnored",
+    "Warning_AccountHomeLookupFailed": "ms-resource:loc.messages.Warning_AccountHomeLookupFailed",
+    "Warning_AccountHomeUnusable": "ms-resource:loc.messages.Warning_AccountHomeUnusable",
+    "Error_FallbackHomeNotAbsolute": "ms-resource:loc.messages.Error_FallbackHomeNotAbsolute",
+    "Error_FallbackHomeUnreadable": "ms-resource:loc.messages.Error_FallbackHomeUnreadable",
+    "Error_FallbackHomeInAgentFolder": "ms-resource:loc.messages.Error_FallbackHomeInAgentFolder",
+    "Error_FallbackHomeNotOwned": "ms-resource:loc.messages.Error_FallbackHomeNotOwned",
+    "Error_FallbackHomeWritableByOthers": "ms-resource:loc.messages.Error_FallbackHomeWritableByOthers",
+    "Warning_FallbackHomeJavaCompat": "ms-resource:loc.messages.Warning_FallbackHomeJavaCompat"
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.283.0",
+    "wif_242": "0.283.1"
   }
 }

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -109,10 +109,19 @@
     "Error_FailedCleanupM2": "Failed to delete credentials from the user settings.xml file: %s",
     "Error_FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
     "Warning_ChmodFailed": "Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.",
-    "Warning_StatFailed": "Unable to read permissions on %s: %s. Original permissions may not be restored."
+    "Warning_StatFailed": "Unable to read permissions on %s: %s. Original permissions may not be restored.",
+    "Warning_HomeEnvVarIgnored": "The %s environment variable differs from the account home directory and was ignored. Using %s.",
+    "Warning_AccountHomeLookupFailed": "Unable to determine the account home directory: %s. Falling back to the home directory from the environment.",
+    "Warning_AccountHomeUnusable": "The account home directory '%s' is not usable. Falling back to the home directory from the environment.",
+    "Error_FallbackHomeNotAbsolute": "The home directory from the environment ('%s') is not an absolute path, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+    "Error_FallbackHomeUnreadable": "Unable to inspect the home directory from the environment ('%s'): %s. Credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+    "Error_FallbackHomeInAgentFolder": "The home directory from the environment ('%s') is inside the agent folder '%s', so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+    "Error_FallbackHomeNotOwned": "The home directory from the environment ('%s') isn't owned by the current user, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+    "Error_FallbackHomeWritableByOthers": "The home directory from the environment ('%s') is writable by other users, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+    "Warning_FallbackHomeJavaCompat": "Writing credentials to %s. Java 18 and earlier don't read Maven settings from this location when the account has no usable home directory. If authentication fails, pass '-s %s' to Maven."
   },
   "_buildConfigMapping": {
-    "Default": "0.282.2",
-    "wif_242": "0.282.3"
+    "Default": "0.283.0",
+    "wif_242": "0.283.1"
   }
 }

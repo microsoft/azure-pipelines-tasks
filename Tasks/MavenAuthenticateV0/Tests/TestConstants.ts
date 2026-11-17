@@ -104,5 +104,8 @@ export const TestEnvVars = {
     wifShouldFail: '__wifShouldFail__',
     osType: '__osType__',
     settingsXmlMode: '__settingsXmlMode__',
-    chmodShouldFail: '__chmodShouldFail__'
+    chmodShouldFail: '__chmodShouldFail__',
+    homeEnvOverride: '__homeEnvOverride__',
+    userInfoShouldFail: '__userInfoShouldFail__',
+    accountHomeDir: '__accountHomeDir__'
 };
