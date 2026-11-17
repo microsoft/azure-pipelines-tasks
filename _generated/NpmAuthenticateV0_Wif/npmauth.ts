@@ -9,7 +9,7 @@ import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
-import { NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { getTrustedBackupRootDirectory, NpmrcBackupManager, NpmrcBackupRootTaskVariable, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 import { NpmConfigTelemetryPhase } from './constants';
 
 let internalFeedSuccessCount: number = 0;
@@ -17,6 +17,7 @@ let externalFeedSuccessCount: number = 0;
 let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
+    tl.setTaskVariable(NpmrcBackupRootTaskVariable, '');
     npmauthutils.emitNpmConfigTelemetry(NpmConfigTelemetryPhase.Main);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     // Path to user provided npmrc
@@ -195,8 +196,9 @@ async function acquireFederatedAccessTokens(
 }
 
 main().catch(error => {
-    if (tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY")) {
-        tl.rmRF(tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY"));
+    const backupRootDirectory = getTrustedBackupRootDirectory();
+    if (backupRootDirectory) {
+        tl.rmRF(backupRootDirectory);
         // Clear the variables after we rm-rf the main root directory
         tl.setVariable("SAVE_NPMRC_PATH", "", false);
         tl.setVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY", "", false);

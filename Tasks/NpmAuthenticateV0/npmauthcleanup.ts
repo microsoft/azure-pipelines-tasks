@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { FileIdentity, getTrustedBackupRootDirectory, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 import { emitNpmConfigTelemetry, writeRepositoryOutput } from './npmauthutils';
 
 async function run() {
@@ -30,8 +30,8 @@ async function run() {
         if (restored) {
             writeRepositoryOutput(tl.loc("RevertedChangesToNpmrc", workingFilePath));
         }
-        const tempDirectoryPath = tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY");
-        if (tl.exist(tempDirectoryPath) && backupManager.isOnlyIndexFileRemaining()) {
+        const tempDirectoryPath = getTrustedBackupRootDirectory();
+        if (tempDirectoryPath && backupManager.isOnlyIndexFileRemaining()) {
             tl.rmRF(tempDirectoryPath);
         }
     }

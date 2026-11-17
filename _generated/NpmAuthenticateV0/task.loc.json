@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 2
+    "Patch": 4
   },
   "runsOn": [
     "Agent",
@@ -91,6 +91,7 @@
     "Warning_NpmrcRestoreSkipped": "ms-resource:loc.messages.Warning_NpmrcRestoreSkipped",
     "Warning_NpmrcBackupIntegrityMismatch": "ms-resource:loc.messages.Warning_NpmrcBackupIntegrityMismatch",
     "Warning_NpmrcIdentityUnavailable": "ms-resource:loc.messages.Warning_NpmrcIdentityUnavailable",
+    "Warning_NpmrcBackupCleanupSkipped": "ms-resource:loc.messages.Warning_NpmrcBackupCleanupSkipped",
     "UnableToWriteFileContents": "ms-resource:loc.messages.UnableToWriteFileContents",
     "ServiceEndpointUrlNotDefined": "ms-resource:loc.messages.ServiceEndpointUrlNotDefined",
     "SavingFile": "ms-resource:loc.messages.SavingFile",
@@ -126,7 +127,7 @@
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.283.2",
-    "wif_242": "0.283.3"
+    "Default": "0.283.4",
+    "wif_242": "0.283.5"
   }
 }

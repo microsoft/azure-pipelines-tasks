@@ -2,6 +2,8 @@
 export const TestEnvVars = {
     systemAccessToken: '__npmauth_systemAccessToken__',
     npmrcPath: '__npmauth_npmrcPath__',
+    npmAuthTempDirectory: '__npmauth_tempDirectory__',
+    npmAuthTaskTempDirectory: 'VSTS_TASKVARIABLE_NPM_AUTHENTICATE_BACKUP_ROOT',
     npmrcShouldExist: '__npmauth_npmrcShouldExist__',   // 'false' to simulate missing file
     npmrcRegistries: '__npmauth_npmrcRegistries__',      // semicolon-separated registry URLs
     customEndpoint: '__npmauth_customEndpoint__',
@@ -23,7 +25,9 @@ export const TestEnvVars = {
     cleanupIndexShouldExist: '__npmcleanup_indexShouldExist__',
     cleanupNpmrcShouldExist: '__npmcleanup_npmrcShouldExist__',
     cleanupTempDirectory: '__npmcleanup_tempDirectory__',
-    cleanupTempDirExists: '__npmcleanup_tempDirExists__',
+    cleanupTaskTempDirectory: '__npmcleanup_taskTempDirectory__',
+    cleanupAgentHomeDirectory: '__npmcleanup_agentHomeDirectory__',
+    cleanupAgentTempDirectory: '__npmcleanup_agentTempDirectory__',
 
     // Endpoint credential tests
     endpointAuthScheme: '__npmauth_endpointAuthScheme__',    // 'Token' or 'UsernamePassword'
