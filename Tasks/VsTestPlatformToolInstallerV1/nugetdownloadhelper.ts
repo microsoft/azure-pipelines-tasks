@@ -79,7 +79,7 @@ export class NugetDownloadHelper {
 
         tl.debug(`Downloading Test Platform version ${testPlatformVersion} from ${packageSource} to ${downloadPath}.`);
         startTime = perf();
-        const resultCode = await nugetTool.exec();
+        const resultCode = await nugetTool.execAsync();
         ci.addToConsolidatedCi('downloadTime', perf() - startTime);
 
         tl.debug(`Nuget.exe returned with result code ${resultCode}`);

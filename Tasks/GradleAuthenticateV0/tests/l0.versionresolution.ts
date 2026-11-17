@@ -43,8 +43,12 @@ describe('GradleAuthenticate L0 - Version Resolution', function () {
         const tp = path.join(__dirname, 'testsetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
         process.env[TestEnvVars.repositoryUrl] = 'https://pkgs.dev.azure.com/testorg/_packaging/feed/maven/v1';
-        // Remove env var — falls back to dummy version for local Maven layout
-        delete process.env['GRADLE_CREDPROVIDER_HOME'];
+        // A custom JAR without a version in its name exercises the fallback
+        // independently of the downloaded bundle.
+        const jarDir = process.env['GRADLE_CREDPROVIDER_HOME']!;
+        fs.renameSync(
+            path.join(jarDir, 'artifacts-gradle-credprovider-1.0.0.jar'),
+            path.join(jarDir, 'custom-provider.jar'));
 
         await tr.runAsync();
 

@@ -117,6 +117,10 @@
     "Node20_1": {
       "target": "vstestplatformtoolinstaller.js",
       "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "vstestplatformtoolinstaller.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
