@@ -55,6 +55,7 @@
   "loc.messages.AzureMysqlTaskParameterCannotBeEmpty": "Azure MySQL 工作參數不得為 null。",
   "loc.messages.ToolPathCannotBeNull": "工具路徑不可為 null。",
   "loc.messages.SqlExecutionException": "發生 SQL 執行例外狀況。請檢查 SQL 指令碼。錯誤: %s。",
+  "loc.messages.InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
   "loc.messages.AzureEndpointCannotBeNull": "訂用帳戶名稱無效。Azure 服務連線不可為 null。",
   "loc.messages.CallbackCannotBeNull": "回呼不得為 null。",
   "loc.messages.UnableToCreateDatabaseException": "無法建立資料庫。",

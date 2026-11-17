@@ -87,6 +87,8 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Azure Pipelines タスクにおいて、アップグレード設定を上書きするか、または公開プロファイルを指定する必要があります。",
   "loc.messages.UnsupportedARMAuthScheme": "'{0}' は ARM エンドポイントではサポートされていない認証スキームです。",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "'{0}' は Azure コンテナー レジストリではサポートされていない認証スキームです。",
+  "loc.messages.RegistryAuthorityMismatch": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.",
+  "loc.messages.RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
   "loc.messages.SFSDK_InvalidManifestPathSegment": "アプリケーション パッケージで無効な {0} 値 '{1}' 見つかりました。この値は、アプリケーション パッケージからファイル パスを構築するときにフォルダー名として使用されるため、単純な名前にする必要があります。空にしたり、パスの区切り記号や相対パス セグメントを含めたり、絶対パスにしたり、末尾に '.' または ' ' 文字を付けたりすることはできません。",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} は有効な Service Fabric アプリケーション パッケージではありません。",
   "loc.messages.SFSDK_PackageValidationFailed": "パッケージの検証に失敗しました: {0}",

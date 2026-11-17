@@ -55,6 +55,7 @@
   "loc.messages.AzureMysqlTaskParameterCannotBeEmpty": "Параметр задачи Azure MySQL не может иметь значение NULL.",
   "loc.messages.ToolPathCannotBeNull": "Путь к средству не может иметь значение NULL.",
   "loc.messages.SqlExecutionException": "При выполнении SQL произошло исключение. Проверьте скрипт SQL. Ошибка: %s.",
+  "loc.messages.InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
   "loc.messages.AzureEndpointCannotBeNull": "Недопустимое имя подписки. Подключение к службе Azure не может иметь значение NULL.",
   "loc.messages.CallbackCannotBeNull": "Обратный вызов не может иметь значение NULL.",
   "loc.messages.UnableToCreateDatabaseException": "Не удается создать базу данных.",

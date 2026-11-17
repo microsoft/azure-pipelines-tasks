@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:Localization.Xliff.Utilities.LTD:2.0" targetNamespace="urn:Localization.Xliff.Utilities.LTD:2.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" elementFormDefault="qualified">
+  <xs:element name="cultureSettings">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="culture" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="conditions" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="condition" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:attribute name="attributeKey" form="unqualified" type="xs:string" use="required" />
+                        <xs:attribute name="attributeValue" form="unqualified" type="xs:string" use="required" />
+                        <xs:attribute name="translate" form="unqualified" type="xs:string" use="required" />
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" />
+            <xs:attribute name="translate" type="xs:string" />            
+            <xs:attribute name="prohibitAdd" type="xs:string" />
+            <xs:attribute name="prohibitRemove" type="xs:string" />
+            <xs:attribute name="canCopy" type="xs:string" />
+            <xs:attribute name="canDelete" type="xs:string" />
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ltd">    
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="globalSettings" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:attribute name="extractLockedToSkeleton" form="unqualified" type="xs:boolean" />            
+            <xs:attribute name="extractCDATATo" form="unqualified" type="xs:string" />    
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="doctypes" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="doctype" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="validations" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="validation" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="name" form="unqualified" type="xs:string" use="required" />
+                              <xs:attribute name="enabled" form="unqualified" type="xs:string" use="required" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" form="unqualified" type="xs:string" use="required" />
+                  <xs:attribute name="schemaLocation" form="unqualified" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="fileTypes" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="fileType" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="name" form="unqualified" type="xs:string" />
+                  <xs:attribute name="extension" form="unqualified" type="xs:string" use="required" />                  
+                </xs:complexType>                
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="elements" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="element" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="cultureSettings" minOccurs="0" maxOccurs="1" />
+                    <xs:element name="attributes" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element ref="cultureSettings" minOccurs="0" maxOccurs="1" />
+                              </xs:sequence>
+                              <xs:attribute name="name" type="xs:string" />
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string" />
+                  <xs:attribute name="subflow" type="xs:string" />
+                  <!-- deprecated- leaving in for backward compatibility. Use extractTo instead. -->
+                  <xs:attribute name="alwaysInSkeleton" type="xs:string" />
+                  <!-- deprecated- leaving in for backward compatibility. Use extractTo instead. -->
+                  <xs:attribute name="alwaysInXliff" type="xs:string" />
+                  <xs:attribute name="extractTo" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="rules" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="culture" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>                    
+                    <xs:element name="rule" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:simpleContent msdata:ColumnName="rule_Text" msdata:Ordinal="2">
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="appliesTo" form="unqualified" type="xs:string" />
+                            <xs:attribute name="translate" form="unqualified" type="xs:string" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="notes" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="note" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="conditions" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="condition" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:attribute name="attributeKey" form="unqualified" type="xs:string" use="required" />
+                              <xs:attribute name="attributeValue" form="unqualified" type="xs:string" use="required" />                              
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="appliesTo" form="unqualified" type="xs:string" use="required" />
+                  <xs:attribute name="element" form="unqualified" type="xs:string" use="required" />
+                  <xs:attribute name="attribute" form="unqualified" type="xs:string" />
+                  <xs:attribute name="target" form="unqualified" type="xs:string" />
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>        
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="version" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element ref="cultureSettings" />
+        <xs:element ref="ltd" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

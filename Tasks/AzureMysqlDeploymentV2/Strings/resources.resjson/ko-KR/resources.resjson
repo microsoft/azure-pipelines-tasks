@@ -69,5 +69,5 @@
   "loc.messages.FirewallRuleNameCannotBeNull": "방화벽 규칙 이름은 null일 수 없습니다.",
   "loc.messages.SqlFileNotFound": "경로에서 SQL 파일을 찾을 수 없음: %s",
   "loc.messages.InvalidDatabaseName": "데이터베이스 이름 '%s'이(가) 잘못되었습니다. 영숫자, 밑줄, 하이픈 및 달러 기호만 허용됩니다.",
-  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "추가 MySQL 옵션 '%s'는 허용되지 않습니다. 강화를 사용하도록 설정하면 --binary-mode가 작업에 의해 관리되며 SqlAdditionalArguments를 통해 구성할 수 없습니다."
 }

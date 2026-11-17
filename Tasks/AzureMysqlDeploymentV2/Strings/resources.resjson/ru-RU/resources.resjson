@@ -69,5 +69,5 @@
   "loc.messages.FirewallRuleNameCannotBeNull": "Имя правила брандмауэра не может иметь значение NULL.",
   "loc.messages.SqlFileNotFound": "Файл SQL не найден на пути: %s",
   "loc.messages.InvalidDatabaseName": "Недопустимое имя базы данных \"%s\". Допускаются только буквенно-цифровые символы, знаки подчеркивания и дефисы.",
-  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "Дополнительный параметр MySQL '%s' не разрешен. Если усиление защиты включено, --binary-mode управляется задачей и не может быть настроен с помощью SqlAdditionalArguments."
 }

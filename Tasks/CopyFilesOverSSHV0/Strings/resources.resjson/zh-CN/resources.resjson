@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "正在检查远程计算机上是否存在 %s。",
   "loc.messages.PathExists": "远程计算机上仍存在 %s",
   "loc.messages.PathNotExists": "远程计算机上不存在 %s",
-  "loc.messages.UploadFolderFailed": "未能将文件夹 %s 上传到远程计算机上的 %s。%s。"
+  "loc.messages.UploadFolderFailed": "未能将文件夹 %s 上传到远程计算机上的 %s。%s。",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }

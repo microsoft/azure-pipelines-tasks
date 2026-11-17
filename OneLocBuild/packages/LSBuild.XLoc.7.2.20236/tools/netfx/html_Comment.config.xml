@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?><config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Config.xsd">
+ <html>
+  <localizable>
+   <tags>
+    <tag name="%"/>
+    <tag name="A"/>
+    <tag name="B"/>
+    <tag name="BIG"/>
+    <tag name="BLINK"/>
+    <tag name="BR"/>
+    <tag name="CITE"/>
+    <tag name="CODE"/>
+    <tag name="DFN"/>
+    <tag name="EM"/>
+    <tag name="FONT"/>
+    <tag name="I"/>
+    <tag name="IMG"/>
+    <tag name="KBD"/>
+    <tag name="NOBR"/>
+    <tag name="S"/>
+    <tag name="SAMP"/>
+    <tag name="SMALL"/>
+    <tag name="STRIKE"/>
+    <tag name="STRONG"/>
+    <tag name="SUB"/>
+    <tag name="SUP"/>
+    <tag name="TT"/>
+    <tag name="U"/>
+    <tag name="VAR"/>
+    <tag name="WBR"/>
+   </tags>
+   <attributes>
+    <tag name="!--">
+     <attribute name="(HTMLComments)" category="Text" lock="false"/>
+     <attribute name="(IncludeFile)" category="File Name" lock="false"/>
+    </tag>
+    <tag name="%">
+     <attribute name="(HTMLComments)" category="Text" lock="false"/>
+    </tag>
+    <tag name="(DEFAULT)">
+     <attribute name="accessKey" category="Accelerator" lock="false"/>
+     <attribute name="align" category="Property" lock="false"/>
+     <attribute name="alt" category="Alternative Text" lock="false"/>
+     <attribute name="Title" category="HTML Title" lock="false"/>
+    </tag>
+    <tag name="A">
+     <attribute name="href" category="Address" lock="false"/>
+     <attribute name="URN" category="Address" lock="false"/>
+    </tag>
+    <tag name="APPLET">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="AREA">
+     <attribute name="href" category="Address" lock="false"/>
+    </tag>
+    <tag name="BASE">
+     <attribute name="href" category="Address" lock="false"/>
+    </tag>
+    <tag name="BASEFONT">
+     <attribute name="face" category="Font Name" lock="false"/>
+     <attribute name="size" category="Number" lock="false"/>
+    </tag>
+    <tag name="BGSOUND">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="BODY">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="CAPTION">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="EMBED">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="EVENT">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="FONT">
+     <attribute name="face" category="Font Name" lock="false"/>
+     <attribute name="size" category="Number" lock="false"/>
+    </tag>
+    <tag name="FRAME">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="HR">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="IFRAME">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+    <tag name="IMG">
+     <attribute name="dynSrc" category="File Name" lock="false"/>
+     <attribute name="lowsrc" category="File Name" lock="false"/>
+     <attribute name="useMap" category="File Name" lock="false"/>
+     <attribute name="vrml" category="File Name" lock="false"/>
+    </tag>
+    <tag name="INPUT">
+     <attribute name="defaultValue" category="Static Text" lock="false"/>
+     <attribute name="size" category="Number" lock="false"/>
+     <attribute name="src" category="File Name" lock="false"/>
+     <attribute name="Value" category="Static Text" lock="false"/>
+    </tag>
+    <tag name="META">
+     <attribute name="URL" category="Address" lock="false"/>
+    </tag>
+    <tag name="OBJECT">
+     <attribute name="Standby" category="Message" lock="false"/>
+    </tag>
+    <tag name="OPTION">
+     <attribute name="Value" category="Static Text" lock="false"/>
+    </tag>
+    <tag name="PARAM">
+     <attribute name="Value" category="Static Text" lock="false"/>
+    </tag>
+    <tag name="TD">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="TEXTAREA">
+     <attribute name="defaultValue" category="Static Text" lock="false"/>
+    </tag>
+    <tag name="TH">
+     <attribute name="Background" category="File Name" lock="false"/>
+    </tag>
+    <tag name="UL">
+     <attribute name="src" category="File Name" lock="false"/>
+    </tag>
+   </attributes>
+   <properties>
+    <property name="behavior" category="Text" lock="false"/>
+    <property name="font-family" category="Font Name" lock="false"/>
+    <property name="font-size" category="Number" lock="false"/>
+    <property name="height" category="Number" lock="false"/>
+    <property name="left" category="Number" lock="false"/>
+    <property name="line-height" category="Number" lock="false"/>
+    <property name="top" category="Number" lock="false"/>
+    <property name="width" category="Number" lock="false"/>
+   </properties>
+  </localizable>
+  <known>
+   <tags/>
+  </known>
+  <locked>
+   <tags>
+    <tag name="LINK"/>
+   </tags>
+  </locked>
+ </html>
+ <xml>
+  <localizable>
+   <tags/>
+   <attributes>
+   </attributes>
+  </localizable>
+  <known>
+   <tags>
+    <tag name="![CDATA" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:apply-imports" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:apply-templates" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:attribute" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:attribute-set" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:call-template" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:choose" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:comment" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:copy" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:copy-of" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:decimal-format" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:element" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:eval" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:exclude-result-prefixes" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:extension-element-prefixes" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:fallback" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:for-each" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:if" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:import" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:include" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:key" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:message" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:namespace-alias" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:number" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:otherwise" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:output" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:param" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:preserve-space" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:processing-instruction" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:sort" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:strip-space" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:stylesheet" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:template" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:text" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:transform" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:use-attribute-sets" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:value-of" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:variable" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:vendor" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:vendor-url" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:version" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:when" canBeEmpty="false" tagType="Optional"/>
+    <tag name="xsl:with-param" canBeEmpty="false" tagType="Optional"/>
+   </tags>
+   <attributes>
+   </attributes>
+   <entities/>
+  </known>
+  <locked>
+   <tags/>
+  </locked>
+ </xml>
+ <options>
+   <general>
+    <option AllowUnderscoresInCSSIdentifiers="false"/>
+    <option AttributeExtractionLevel="ExtractLocalizableItems"/>
+    <option ContentLocking="false"/>
+    <option CustomValidationDLLs=""/>
+    <option DisableMessagesForNonLocCSSProperties="true"/>
+    <option DisableXMLValidation="false"/>
+    <option ExtractOnlyTermsWithRealResIds="false"/>
+    <option ExtractScripting="true"/>
+    <option IncludeHiddenAttrValues="false"/>
+    <option LOOMConfigLastModifiedDateTime="2012-05-07T15:22:37"/>
+    <option PropertyExtractionLevel="ExtractLocalizableItems"/>
+    <option ReverseLocking="false"/>
+    <option ScriptingResourceModel="true"/>
+    <option ServerSideScripting="true"/>
+   </general>
+   <disabledMessages>
+    <disabledMessage id="1043" type="Information">
+     <description><![CDATA[Term does not have a real Resource Identifier.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3002" type="Warning">
+     <description><![CDATA[Style Sheet Syntax Error. Illegal semicolon ';' found.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3010" type="Warning">
+     <description><![CDATA[Style Sheet Syntax. Quotes used around non-String Value %s of "%s" Property.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3011" type="Warning">
+     <description><![CDATA[Non-terminated Comment in Style Sheet. Skipping rest of Style Sheet.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3013" type="Warning">
+     <description><![CDATA[Style Sheet Property Name is an extension to CSS1: "%s"]]></description>
+    </disabledMessage>
+    <disabledMessage id="3017" type="Warning">
+     <description><![CDATA[Unexpected "@import" in the middle of Style Sheet.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3019" type="Warning">
+     <description><![CDATA[CSS1 Style Sheet Syntax. '=' used instead of ':']]></description>
+    </disabledMessage>
+    <disabledMessage id="3021" type="Warning">
+     <description><![CDATA[Style Sheet Property Value "%s" for "%s" Property is an extension to CSS1.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3025" type="Warning">
+     <description><![CDATA[Non-standard (CSS1) Character '%c' (Unicode 0x%X) in Style Sheet Value.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3026" type="Warning">
+     <description><![CDATA[Style Sheet: Non-standard HTML comment used: "%s". Expected "<!--" or "-->" for CSS1.]]></description>
+    </disabledMessage>
+    <disabledMessage id="3029" type="Warning">
+     <description><![CDATA[Negative Margin Value "%s" used for "%s" Property. This may result in illegible output in CSS compliant browsers.]]></description>
+    </disabledMessage>
+    <disabledMessage id="4015" type="Information">
+     <description><![CDATA[Unassigned Quoted String found in Script: "%s" ]]></description>
+    </disabledMessage>
+   </disabledMessages>
+   <fileExtensions>
+    <fileExtension name="HTML Files" extensions="HTM ALX ASA ASP AST BAS CSS DLG FRM HFM HHC HHK HTML HTP HTR HTS HTT HTX INC JAV JAVA JS PGI PPG SHTML SMP STM STML STY VBS XWT HTA HTC"/>
+    <fileExtension name="CSS Style Sheet Files" extensions="CSS STY"/>
+    <fileExtension name="JavaScript Files" extensions="JS"/>
+    <fileExtension name="Visual Basic Script Files" extensions="VBS FRM BAS INC"/>
+    <fileExtension name="HTML Help Table of Contents Files" extensions="HHC"/>
+    <fileExtension name="HTML Help Index Files" extensions="HHK"/>
+    <fileExtension name="Java Files" extensions="JAVA JAV"/>
+    <fileExtension name="XML Files" extensions="XML XQL CML ENT MATH MTX RDF SMIL SVG UI WML XDR XHTML DVT XSF XSD XAML XFP"/>
+    <fileExtension name="XML Stylesheet Files" extensions="XSL XSLT"/>
+    <fileExtension name="RAW Files" extensions="GIF JPG"/>
+    <fileExtension name="CeX Files" extensions="CEX CIX"/>
+    <fileExtension name="REG or DEF Files" extensions="REG DEF"/>
+   </fileExtensions>
+   <update>
+    <option AdditionCost="3"/>
+    <option DeletionCost="1"/>
+    <option MoveCost="2"/>
+    <option MaxFormattingWeight="20"/>
+    <option MinSimilarity="50"/>
+   </update>
+ </options>
+</config>

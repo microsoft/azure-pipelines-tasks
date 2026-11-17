@@ -104,6 +104,6 @@
   "loc.messages.BicepParamBuildFailed": "\"az bicep build-param\" が失敗しました。エラー: %s",
   "loc.messages.IncompatibleAzureCLIVersionBicepParam": ".bicepparam ファイルを使用するには、Azure CLI バージョンを 2.47.0 以上にする必要があります",
   "loc.messages.ErrorWhileOverrideParameterUndefined": "指定されたメタデータ ファイル '%s' にパラメーター '%s' のメタデータがありません",
-  "loc.messages.SafeOutputVariablesAgentTooOld": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because this job is running agent version '%s'. Agent version %s or later is required to use the safe format. Upgrade the agent to adopt the safe format.",
-  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "Deployment output variables were published using the previous format, which does not prevent output names and values from being interpreted as agent commands, because the %s variable is set to a value that the agent does not read as true, so it does not decode percent escaping. Remove the variable, or set it to exactly true, 1, or $true with no leading or trailing spaces, to adopt the safe format."
+  "loc.messages.SafeOutputVariablesAgentTooOld": "デプロイ出力変数が、以前の形式を使用して発行されました。これにより、出力の名前と値がエージェント コマンドとして解釈されるのを防ぐことはできません。このジョブはエージェント バージョン '%s' を実行しているためです。安全な形式を使用するには、エージェント バージョン %s 以降が必要です。エージェントをアップグレードして、安全な形式を採用してください。",
+  "loc.messages.SafeOutputVariablesPercentDecodingDisabled": "デプロイ出力変数が、以前の形式を使用して発行されました。これにより、出力の名前と値がエージェント コマンドとして解釈されるのを防ぐことはできません。%s 変数は、エージェントが true として読み取らない値に設定されているためです。それで、パーセント エスケープはデコードされません。安全な形式を採用するために、この変数を削除するか、先頭または末尾にスペースを付けずに正確に true、1、または $true に設定してください。"
 }
