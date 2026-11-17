@@ -2,11 +2,19 @@
     "externals": {
         "archivePackages": [
             {
-                "url": "https://vstsagenttools.blob.core.windows.net/tools/GradleCredProviderCI/0.0.0/artifacts-gradle-credprovider-ci.zip",
+                "url": "https://vstsagenttools.blob.core.windows.net/tools/GradleCredProviderCI/0.0.1/artifacts-gradle-credprovider-ci.zip",
                 "dest": "./GradleCredProvider/"
             }
         ]
     },
+    "cp": [
+        {
+            "source": [
+                "data"
+            ],
+            "options": "-R"
+        }
+    ],
     "rm": [
         {
             "items": [

@@ -72,6 +72,8 @@ export function fetchCanaryResource(kubectl: Kubectl, kind: string, name: string
 }
 
 export function fetchResource(kubectl: Kubectl, kind: string, name: string): object {
+    utils.validateManifestObjectToken(kind, 'kind');
+    utils.validateManifestObjectToken(name, 'metadata.name');
     const result = kubectl.getResource(kind, name);
 
     if (result == null || !!result.stderr) {
@@ -102,15 +104,15 @@ export function isSMICanaryStrategy() {
 }
 
 export function getCanaryResourceName(name: string) {
-    return name + CANARY_SUFFIX;
+    return utils.validateManifestObjectToken(name, 'metadata.name') + CANARY_SUFFIX;
 }
 
 export function getBaselineResourceName(name: string) {
-    return name + BASELINE_SUFFIX;
+    return utils.validateManifestObjectToken(name, 'metadata.name') + BASELINE_SUFFIX;
 }
 
 export function getStableResourceName(name: string) {
-    return name + STABLE_SUFFIX;
+    return utils.validateManifestObjectToken(name, 'metadata.name') + STABLE_SUFFIX;
 }
 
 function UnsetsClusterSpecficDetails(resource: any) {
@@ -196,6 +198,8 @@ function deleteCanaryAndBaselineObjects(kubectl: Kubectl, files: string[], inclu
             const kind = inputObject.kind;
             if (helper.isDeploymentEntity(kind)
                 || (includeServices && helper.isServiceEntity(kind))) {
+                utils.validateManifestObjectToken(name, 'metadata.name');
+                utils.validateManifestObjectToken(kind, 'kind');
                 const canaryObjectName = getCanaryResourceName(name);
                 const baselineObjectName = getBaselineResourceName(name);
                 addValueToList(kindNameMap, kind, canaryObjectName);

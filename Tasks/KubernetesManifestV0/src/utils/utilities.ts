@@ -156,3 +156,64 @@ export function getTrafficSplitAPIVersion(kubectl: Kubectl) {
     tl.debug("api-version: " + trafficSplitAPIVersion);
     return trafficSplitAPIVersion;
 }
+
+export function escapeHelmSetToken(token: string, allowLists: boolean = false): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableStrictSetArguments')) {
+        return token;
+    }
+
+    // Existing backslash escapes (for example \. in key paths) are preserved; only separators that
+    // would start a new --set pair are escaped.
+    // Commas stay active only when the whole token is a single flat Helm list: {a,b}.
+    let isList = false;
+    if (allowLists && token.length >= 2 && token[0] === '{') {
+        // Helm treats additional '{' characters as item text, not nested lists.
+        for (let i = 1; i < token.length; i++) {
+            if (token[i] === '\\') { i++; continue; }
+            if (token[i] === '}') {
+                isList = i === token.length - 1;
+                break;
+            }
+        }
+    }
+
+    let result = '';
+    for (let i = 0; i < token.length; i++) {
+        const c = token[i];
+        if (c === '\\') {
+            result += i + 1 < token.length ? c + token[++i] : '\\\\';
+        } else if (c === ',' && !isList) {
+            result += '\\,';
+        } else if (c === '=' && !allowLists) {
+            result += '\\=';
+        } else {
+            result += c;
+        }
+    }
+    // A value starting with an unescaped '{' opens a Helm list, after which further keys can follow without a comma.
+    return allowLists && !isList && result.startsWith('{') ? '\\' + result : result;
+}
+
+// Names and kinds read from manifests are joined into a kubectl command line, so they must stay a single
+// token and must not be parseable as an option.
+// Enabling the KubernetesManifest.DisableManifestObjectNameValidation pipeline feature restores the legacy behavior.
+export function validateManifestObjectToken(value: any, description: string): string {
+    if (tl.getPipelineFeature('KubernetesManifest.DisableManifestObjectNameValidation')) {
+        return value;
+    }
+
+    // Match legacy name derivation after YAML has already coerced numeric scalars.
+    const token = typeof value === 'number' && Number.isFinite(value) ? String(value) : value;
+    if (typeof token !== 'string' || token.length === 0 || token.length > 253 ||
+        token.startsWith('-') || /[\s\x00-\x1f\x7f"'`\\]/.test(token)) {
+        throw new Error(tl.loc('InvalidManifestObjectToken', description));
+    }
+    return token;
+}
+
+export function validateReleaseName(value: string): string {
+    if (value && value.startsWith('-')) {
+        throw new Error(tl.loc('InvalidReleaseName', value));
+    }
+    return value;
+}

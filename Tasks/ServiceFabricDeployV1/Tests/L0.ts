@@ -80,6 +80,9 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Docker settings rejects path traversal in service manifest name', done => {
         psr.run(path.join(__dirname, 'DockerSettingsRejectsTraversalInServiceManifestName.ps1'), done);
     });
+    it('Docker settings only apply credentials to images of the selected registry', done => {
+        psr.run(path.join(__dirname, 'DockerSettingsRejectsForeignRegistryImage.ps1'), done);
+    });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
     });

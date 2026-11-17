@@ -81,8 +81,13 @@ try
     function global:Get-VstsPipelineFeature {
         param([string]$FeatureName)
 
-        $global:featureLookupCallCount++
-        return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
+        if ($FeatureName -eq 'EnableWindowsMachineFileCopyArgumentsHardening')
+        {
+            $global:featureLookupCallCount++
+            return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
+        }
+
+        return $false
     }
     function global:robocopy {
         $global:robocopyInvocations.Add(@($args))
