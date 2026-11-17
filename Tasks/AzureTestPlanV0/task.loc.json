@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 1
+    "Patch": 2
   },
   "preview": true,
   "demands": [],
@@ -191,15 +191,15 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "Node10": {
-      "target": "runTestPlan.js",
-      "argumentFormat": ""
-    },
     "Node16": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "runTestPlan.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "runTestPlan.js",
       "argumentFormat": ""
     }
