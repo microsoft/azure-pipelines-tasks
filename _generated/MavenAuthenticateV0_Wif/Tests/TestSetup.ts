@@ -298,13 +298,19 @@ tr.setAnswers({
 
 if (!osType.match(/^Win/)) {
     const fs = require('fs');
+    // directoryAlias makes one directory report another's identity, simulating a bind mount.
+    const directoryAlias = process.env[TestEnvVars.directoryAlias];
+    const directoryAliasTarget = process.env[TestEnvVars.directoryAliasTarget];
     tr.registerMock('fs', {
         ...fs,
-        statSync: (filePath: string) => {
+        statSync: (filePath: string, options?: any) => {
             if (filePath === settingsXmlPath) {
                 return { mode: settingsXmlMode };
             }
-            return fs.statSync(filePath);
+            if (directoryAlias && directoryAliasTarget && filePath === directoryAlias) {
+                return fs.statSync(directoryAliasTarget, options);
+            }
+            return fs.statSync(filePath, options);
         },
         chmodSync: (filePath: string, mode: number) => {
             if (chmodShouldFail) {

@@ -33,10 +33,35 @@ function isSamePath(first: string, second: string, caseInsensitive: boolean): bo
     return caseInsensitive ? a.toLowerCase() === b.toLowerCase() : a === b;
 }
 
-function isInside(child: string, parent: string, caseInsensitive: boolean): boolean {
-    const normalize = (p: string) => caseInsensitive ? path.resolve(p).toLowerCase() : path.resolve(p);
-    const relative = path.relative(normalize(parent), normalize(child));
-    return !!relative && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
+// Identify directories by device and inode so that aliases realpath can't see through
+// (bind mounts, case variants, subst drives, 8.3 names) still match.
+function getDirectoryId(directory: string): string | undefined {
+    try {
+        const stats = fs.statSync(directory, { bigint: true });
+        return stats.ino ? `${stats.dev}:${stats.ino}` : undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+// Agent folders that don't exist are skipped: nothing can be nested inside them.
+function getAgentFolders(): { name: string; realPath: string; id?: string }[] {
+    const folders: { name: string; realPath: string; id?: string }[] = [];
+    for (const variableName of ['Agent.WorkFolder', 'Agent.TempDirectory', 'Agent.ToolsDirectory', 'Agent.HomeDirectory']) {
+        const folder = tl.getVariable(variableName);
+        if (!folder) {
+            continue;
+        }
+
+        try {
+            const realPath = fs.realpathSync(folder);
+            folders.push({ name: folder, realPath, id: getDirectoryId(realPath) });
+        } catch {
+            continue;
+        }
+    }
+
+    return folders;
 }
 
 // Pipeline variables, including queue-time overrides, are applied to the task's environment,
@@ -93,21 +118,18 @@ function getFallbackHomeDirectory(isWindows: boolean): string {
         throw new Error(tl.loc("Error_FallbackHomeUnreadable", home, (err && err.message) ? err.message : err));
     }
 
-    for (const variableName of ['Agent.WorkFolder', 'Agent.TempDirectory', 'Agent.ToolsDirectory', 'Agent.HomeDirectory']) {
-        const agentFolder = tl.getVariable(variableName);
-        if (!agentFolder) {
-            continue;
+    const agentFolders = getAgentFolders();
+    for (let current = realHome; ; current = path.dirname(current)) {
+        const currentId = getDirectoryId(current);
+        const agentFolder = agentFolders.find(folder => folder.id && currentId
+            ? folder.id === currentId
+            : isSamePath(current, folder.realPath, isWindows));
+        if (agentFolder) {
+            throw new Error(tl.loc("Error_FallbackHomeInAgentFolder", home, agentFolder.name));
         }
 
-        let realAgentFolder: string;
-        try {
-            realAgentFolder = fs.realpathSync(agentFolder);
-        } catch {
-            realAgentFolder = path.resolve(agentFolder);
-        }
-
-        if (isSamePath(realHome, realAgentFolder, isWindows) || isInside(realHome, realAgentFolder, isWindows)) {
-            throw new Error(tl.loc("Error_FallbackHomeInAgentFolder", home, agentFolder));
+        if (path.dirname(current) === current) {
+            break;
         }
     }
 

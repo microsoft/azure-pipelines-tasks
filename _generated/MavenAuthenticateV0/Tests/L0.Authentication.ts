@@ -246,6 +246,34 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
             assert(!fs.existsSync(TestHelpers.getSettingsXmlPath()), 'settings.xml must not be written');
         });
 
+        it('should not write credentials to a fallback home that aliases an agent folder', async () => {
+            // Arrange
+            const agentWorkFolder = path.join(__dirname, 'agentwork');
+            fs.mkdirSync(agentWorkFolder, { recursive: true });
+            fs.mkdirSync(overriddenHome, { recursive: true });
+            const tp = path.join(__dirname, 'TestSetup.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+            process.env[TestEnvVars.osType] = 'Linux';
+            process.env[TestEnvVars.userInfoShouldFail] = 'true';
+            process.env[TestEnvVars.homeEnvOverride] = overriddenHome;
+            process.env[TestEnvVars.directoryAlias] = fs.realpathSync(overriddenHome);
+            process.env[TestEnvVars.directoryAliasTarget] = agentWorkFolder;
+            process.env['AGENT_WORKFOLDER'] = agentWorkFolder;
+
+            try {
+                // Act
+                await tr.runAsync();
+
+                // Assert
+                TestHelpers.assertFailure(tr);
+                TestHelpers.assertOutputContains(tr, 'Error_FallbackHomeInAgentFolder');
+                assert(!fs.existsSync(path.join(overriddenHome, '.m2', 'settings.xml')), 'settings.xml must not be written');
+            } finally {
+                fs.rmSync(agentWorkFolder, { recursive: true, force: true });
+            }
+        });
+
         describe('on POSIX file systems', function () {
             before(function () {
                 if (process.platform === 'win32') {
