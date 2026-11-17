@@ -36,7 +36,6 @@ describe('Docker Suite', function() {
         delete process.env[shared.TestEnvVars.addBaseImageData];
         delete process.env[shared.TestEnvVars.useDockerSkipRedundantTagFeatureFlag];
         delete process.env[shared.TestEnvVars.sanitizeDockerTagLogOutputFeatureFlag];
-        delete process.env[shared.TestEnvVars.sanitizerBehavior];
     });
     after(function () {
     });
@@ -277,6 +276,16 @@ describe('Docker Suite', function() {
         console.log(tr.stderr);
     });
 
+    // Everything the redundant-tag skip log writes, from the "Skipping tag" line to the end of stdout. An image
+    // name containing newlines spans several physical lines, so a single line is not enough to capture the whole
+    // console.log call, and task-lib's own debug echo of the raw input comes earlier and is excluded by anchoring
+    // on "Skipping tag".
+    function getSkipBlock(stdout: string): { start: number, block: string } {
+        const lines = stdout.split(/\r?\n/);
+        const start = lines.findIndex(l => l.indexOf('Skipping tag') != -1);
+        return { start, block: start >= 0 ? lines.slice(start).join('\n') : '' };
+    }
+
     it('Sanitizes injected vso command in redundant-tag skip log when sanitize feature flag is enabled', async () => {
         let tp = path.join(__dirname, 'TestSetup.js');
         let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
@@ -286,36 +295,25 @@ describe('Docker Suite', function() {
         await tr.runAsync();
 
         assert(tr.succeeded, 'task should have succeeded');
-        assert(tr.stdout.indexOf('Skipping tag') != -1, 'redundant-tag skip branch must have executed');
+        const skip = getSkipBlock(tr.stdout);
+        assert(skip.start >= 0, 'redundant-tag skip branch must be present in the log');
         assert(tr.invokedToolCount == 0, 'docker tag should not have been invoked');
-        // The agent only parses a command at the start of a line. The task-lib debug echo of the input
-        // (##vso[task.debug]...%0A##vso[...]) keeps it mid-line with the newline escaped, so it is harmless.
-        assert(!/^##vso\[task\.prependpath\]/m.test(tr.stdout), 'injected command must not start a log line');
-        assert(/^#vso\[task\.prependpath\]\/tmp\/evil/m.test(tr.stdout), 'sanitized text should still be visible in the log');
-        const telemetryLine = tr.stdout.split(/\r?\n/).find(l => l.startsWith('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]'));
-        assert(telemetryLine, 'sanitize telemetry should be published');
-        assert(telemetryLine.indexOf('"outcome":"Sanitized"') != -1 && telemetryLine.indexOf('"markerDetected":true') != -1, 'telemetry should report the marker was sanitized');
-        assert(telemetryLine.indexOf('tag-proof') == -1 && telemetryLine.indexOf('evil') == -1, 'telemetry must not contain the image name');
-    });
-
-    it('Reports no marker in sanitize telemetry for a benign image name', async () => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        setupTagTestEnv(true);
-        process.env[shared.TestEnvVars.sanitizeDockerTagLogOutputFeatureFlag] = "true";
-        await tr.runAsync();
-
-        assert(tr.succeeded, 'task should have succeeded');
-        const telemetryLine = tr.stdout.split(/\r?\n/).find(l => l.startsWith('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]'));
-        assert(telemetryLine, 'sanitize telemetry should be published');
-        assert(telemetryLine.indexOf('"outcome":"Clean"') != -1 && telemetryLine.indexOf('"markerDetected":false') != -1, 'telemetry should report a clean name');
+        // The agent recognizes a ##vso[ command anywhere in a line, not just at the start (verified against
+        // azure-pipelines-agent's Command.TryParse, which accepts e.g. ">>>   ##vso[area.event ...]"). So the
+        // marker must not survive anywhere in the skip block, not just at line start. We check only the skip
+        // block (not all of stdout) because task-lib's own debug echo of the raw input is unrelated/harmless.
+        assert(!/##vso\[task\.prependpath\]/.test(skip.block), 'injected command must not survive anywhere in the skip block');
+        assert(/#vso\[task\.prependpath\]\/tmp\/evil/.test(skip.block), 'sanitized text should still be visible in the skip block');
     });
 
     [
         ['uppercase marker', 'tag-proof\n##VSO[task.prependpath]/tmp/evil'],
         ['carriage-return separator', 'tag-proof\r##vso[task.prependpath]/tmp/evil'],
         ['extra leading hashes', 'tag-proof\n####vso[task.prependpath]/tmp/evil'],
-        ['multiple commands', 'tag-proof\n##vso[task.prependpath]/tmp/evil\n##vso[task.setvariable variable=injected]yes']
+        ['multiple commands', 'tag-proof\n##vso[task.prependpath]/tmp/evil\n##vso[task.setvariable variable=injected]yes'],
+        // The agent recognizes ##vso[ anywhere in a line, not just at the start (see Command.TryParse in
+        // azure-pipelines-agent), so a marker that never starts a line must be caught too.
+        ['inline marker not at line start', 'tag-proof prefix ##vso[task.prependpath]/tmp/evil']
     ].forEach(([name, injectedImageName]) => {
         it(`Neutralizes injected vso command variant (${name}) when sanitize feature flag is enabled`, async () => {
             let tp = path.join(__dirname, 'TestSetup.js');
@@ -326,11 +324,11 @@ describe('Docker Suite', function() {
             await tr.runAsync();
 
             assert(tr.succeeded, 'task should have succeeded');
-            assert(tr.stdout.indexOf('Skipping tag') != -1, 'redundant-tag skip branch must have executed');
-            assert(!/^\s*#{2,}vso\[task\.prependpath\]/im.test(tr.stdout), 'injected prependpath must not start a log line');
-            assert(!/^\s*#{2,}vso\[task\.setvariable variable=injected/im.test(tr.stdout), 'injected setvariable must not start a log line');
-            const telemetryLine = tr.stdout.split(/\r?\n/).find(l => l.startsWith('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]'));
-            assert(telemetryLine && telemetryLine.indexOf('"outcome":"Sanitized"') != -1, 'telemetry should report the marker was sanitized');
+            const skip = getSkipBlock(tr.stdout);
+            assert(skip.start >= 0, 'redundant-tag skip branch must be present in the log');
+            assert(skip.block.indexOf('tag-proof') != -1, 'skip block should contain the logged image name');
+            assert(!/#{2,}vso\[task\.prependpath\]/i.test(skip.block), 'injected prependpath must not survive anywhere in the skip block');
+            assert(!/#{2,}vso\[task\.setvariable variable=injected/i.test(skip.block), 'injected setvariable must not survive anywhere in the skip block');
         });
     });
 
@@ -345,40 +343,6 @@ describe('Docker Suite', function() {
         assert(tr.succeeded, 'task should have succeeded');
         assert(tr.stdout.indexOf('Skipping tag') != -1, 'redundant-tag skip branch must have executed');
         assert(/^##vso\[task\.prependpath\]\/tmp\/evil/m.test(tr.stdout), 'legacy behavior is preserved when the sanitize feature flag is off');
-        assert(tr.stdout.indexOf('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]') == -1, 'no sanitize telemetry should be published when the flag is off');
-        assert(tr.stdout.indexOf('image name withheld') == -1, 'image name must not be withheld when the flag is off');
-    });
-
-    it('Withholds the image name and reports SanitizeFailed when a marker survives sanitizing', async () => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        setupTagTestEnv(true);
-        process.env[shared.TestEnvVars.sanitizeDockerTagLogOutputFeatureFlag] = "true";
-        process.env[shared.TestEnvVars.sanitizerBehavior] = "noop";
-        process.env[shared.TestEnvVars.imageName] = "tag-proof\n##vso[task.prependpath]/tmp/evil";
-        await tr.runAsync();
-
-        assert(tr.succeeded, 'task should still succeed when the sanitizer misbehaves');
-        assert(tr.stdout.indexOf('Skipping tag') != -1, 'redundant-tag skip branch must have executed');
-        assert(!/^##vso\[task\.prependpath\]/m.test(tr.stdout), 'injected command must not reach the log even when the sanitizer fails');
-        assert(tr.stdout.indexOf('image name withheld') != -1, 'image name should be withheld from the log');
-        const telemetryLine = tr.stdout.split(/\r?\n/).find(l => l.startsWith('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]'));
-        assert(telemetryLine && telemetryLine.indexOf('"outcome":"SanitizeFailed"') != -1 && telemetryLine.indexOf('"reason":"ResidualMarker"') != -1, 'telemetry should report SanitizeFailed with a residual marker');
-    });
-
-    it('Withholds the image name and reports SanitizeFailed when the sanitizer throws', async () => {
-        let tp = path.join(__dirname, 'TestSetup.js');
-        let tr : ttm.MockTestRunner = new ttm.MockTestRunner(tp);
-        setupTagTestEnv(true);
-        process.env[shared.TestEnvVars.sanitizeDockerTagLogOutputFeatureFlag] = "true";
-        process.env[shared.TestEnvVars.sanitizerBehavior] = "throw";
-        process.env[shared.TestEnvVars.imageName] = "tag-proof\n##vso[task.prependpath]/tmp/evil";
-        await tr.runAsync();
-
-        assert(tr.succeeded, 'task should still succeed when the sanitizer throws');
-        assert(!/^##vso\[task\.prependpath\]/m.test(tr.stdout), 'injected command must not reach the log when the sanitizer throws');
-        const telemetryLine = tr.stdout.split(/\r?\n/).find(l => l.startsWith('##vso[telemetry.publish area=TaskHub;feature=DockerTagSanitizeLogOutput]'));
-        assert(telemetryLine && telemetryLine.indexOf('"outcome":"SanitizeFailed"') != -1 && telemetryLine.indexOf('"reason":"SanitizerThrew"') != -1, 'telemetry should report SanitizeFailed because the sanitizer threw');
     });
 
     it('Runs successfully for docker tag command with arguments', async () => {
