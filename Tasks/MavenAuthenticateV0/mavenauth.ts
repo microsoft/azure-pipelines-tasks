@@ -39,7 +39,7 @@ function isSamePath(first: string, second: string, caseInsensitive: boolean): bo
 function isInside(child: string, parent: string, caseInsensitive: boolean): boolean {
     const normalize = (p: string) => caseInsensitive ? path.resolve(p).toLowerCase() : path.resolve(p);
     const relative = path.relative(normalize(parent), normalize(child));
-    return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+    return !!relative && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
 }
 
 // Pipeline variables, including queue-time overrides, are applied to the task's environment,
