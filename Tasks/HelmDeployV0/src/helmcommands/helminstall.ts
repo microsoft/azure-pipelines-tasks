@@ -43,7 +43,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     }
 
     if (overrideValues) {
-        helmCli.addArgument("--set ".concat(helmutil.replaceNewlinesWithCommas(overrideValues)));
+        helmutil.addOverrideValuesArguments(helmCli, overrideValues);
     }
 
     if (updatedependency) {
@@ -78,7 +78,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
 
     if (chartType === "Name") {
         var chartName = helmutil.trimIdentifierInput(tl.getInput("chartName", true));
-        helmCli.addSingleArgument(chartName);
+        helmCli.addSingleArgument(helmutil.validateChartReference(chartName));
 
     }
     else {

@@ -353,6 +353,7 @@ export class ContainerAppHelper {
             tl.debug(`Attempting to create a runnable application image using the Oryx++ Builder with image name "${imageToDeploy}"`);
             try {
                 const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+                const externalOutput = new Utility().getExternalOutputOptions(this.disableTelemetry);
                 if (useArgArray) {
                     let telemetryArg = 'CALLER_ID=azure-pipelines-v1';
                     if (this.disableTelemetry) {
@@ -360,7 +361,7 @@ export class ContainerAppHelper {
                     }
 
                     new Utility().throwIfError(
-                        tl.execSync(PACK_CMD, ['build', `${imageToDeploy}`, '--path', `${appSourcePath}`, '--builder', `${ORYX_BUILDER_IMAGE}`, '--run-image', `mcr.microsoft.com/oryx/${runtimeStack}`, '--env', telemetryArg]),
+                        tl.execSync(PACK_CMD, ['build', `${imageToDeploy}`, '--path', `${appSourcePath}`, '--builder', `${ORYX_BUILDER_IMAGE}`, '--run-image', `mcr.microsoft.com/oryx/${runtimeStack}`, '--env', telemetryArg], { externalOutput }),
                         tl.loc('CreateImageWithBuilderFailed')
                     );
                 } else {
@@ -370,7 +371,7 @@ export class ContainerAppHelper {
                     }
 
                     new Utility().throwIfError(
-                        tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`),
+                        tl.execSync(PACK_CMD, `build ${imageToDeploy} --path ${appSourcePath} --builder ${ORYX_BUILDER_IMAGE} --run-image mcr.microsoft.com/oryx/${runtimeStack} ${telemetryArg}`, { externalOutput }),
                         tl.loc('CreateImageWithBuilderFailed')
                     );
                 }
@@ -391,16 +392,10 @@ export class ContainerAppHelper {
         imageToDeploy: string,
         appSourcePath: string,
         dockerfilePath: string) {
-            tl.debug(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`);
+            const externalOutput = new Utility().getExternalOutputOptions(this.disableTelemetry);
+            tl.debugExternalOutput(`Attempting to create a runnable application image from the provided/found Dockerfile "${dockerfilePath}" with image name "${imageToDeploy}"`, externalOutput);
             try {
                 const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
-                const commandBlockingEnabled = tl.getPipelineFeature('AzureContainerAppsEnableVsoCommandBlocking');
-                const externalOutput: tl.ExternalOutputOptions = {
-                    source: 'childProcess',
-                    vsoCommandMode: this.disableTelemetry
-                        ? (commandBlockingEnabled ? 'blockOnly' : 'disabled')
-                        : (commandBlockingEnabled ? 'blockAndTelemetry' : 'telemetryOnly')
-                };
                 if (useArgArray) {
                     new Utility().throwIfError(
                         tl.execSync('docker', ['build', '--tag', `${imageToDeploy}`, '--file', `${dockerfilePath}`, `${appSourcePath}`], { externalOutput }),
@@ -428,16 +423,17 @@ export class ContainerAppHelper {
         try {
             // Use 'oryx dockerfile' command to determine the runtime stack to use and write it to a temp file
             const useArgArray = tl.getPipelineFeature('UseArgArrayForFilePath');
+            const externalOutput = new Utility().getExternalOutputOptions(this.disableTelemetry);
             if (useArgArray) {
                 const dockerCommand: string[] = ['run', '--rm', '-v', `${appSourcePath}:/app`, `${ORYX_CLI_IMAGE}`, '/bin/bash', '-c', "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"];
                 new Utility().throwIfError(
-                    tl.execSync('docker', dockerCommand),
+                    tl.execSync('docker', dockerCommand, { externalOutput }),
                     tl.loc('DetermineRuntimeStackFailed', appSourcePath)
                 );
             } else {
                 const dockerCommand: string = `run --rm -v ${appSourcePath}:/app ${ORYX_CLI_IMAGE} /bin/bash -c "oryx dockerfile /app | head -n 1 | sed 's/ARG RUNTIME=//' >> /app/oryx-runtime.txt"`;
                 new Utility().throwIfError(
-                    tl.execSync('docker', dockerCommand),
+                    tl.execSync('docker', dockerCommand, { externalOutput }),
                     tl.loc('DetermineRuntimeStackFailed', appSourcePath)
                 );
             }
