@@ -21,7 +21,7 @@ Register-Mock Get-VstsInput { return $validScriptPath } -ParametersEvaluator{ $N
 Register-Mock Get-VstsInput { return $userName } -ParametersEvaluator{ $Name -eq  "adminUserName" }
 Register-Mock Get-VstsInput { return $password } -ParametersEvaluator{ $Name -eq  "adminPassword" }
 Register-Mock Get-VstsInput { return $winRmProtocol } -ParametersEvaluator{ $Name -eq  "protocol" }
-Register-Mock Get-VstsInput { return $testCertificate } -ParametersEvaluator{ $Name -eq  "False" }
+Register-Mock Get-VstsInput { return "False" } -ParametersEvaluator{ $Name -eq  "testCertificate" }
 Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "RunPowershellInParallel" }
 Register-Mock Get-VstsInput { return "" } -ParametersEvaluator{ $Name -eq  "InitializationScriptPath" }
 
