@@ -49,6 +49,9 @@ describe('PowerShellOnTargetMachine Suite', function () {
         it('Performs deployment on all machines with same resource name', (done) => {
             psr.run(path.join(__dirname, 'L0ParallelRunDuplicate.ps1'), done);
         });
+        it('Passes resource FQDN and WinRM port to Invoke-PsOnRemote as literal data', (done) => {
+            psr.run(path.join(__dirname, 'L0TreatsResourcePropertiesAsData.ps1'), done);
+        });
     }
 });
 
