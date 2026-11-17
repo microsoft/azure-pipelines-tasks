@@ -20,8 +20,14 @@ export function getRedactedPublishProfileForLog(propertyGroup: Record<string, un
     const safe: Record<string, unknown> = {};
     let droppedFieldCount = 0;
     for (const key of Object.keys(propertyGroup || {})) {
-        if (PUBLISH_PROFILE_LOG_ALLOWLIST.indexOf(key) >= 0) {
-            safe[key] = propertyGroup[key];
+        if (PUBLISH_PROFILE_LOG_ALLOWLIST.indexOf(key) < 0) {
+            droppedFieldCount++;
+            continue;
+        }
+        const value = propertyGroup[key];
+        const element = Array.isArray(value) ? value[0] : value;
+        if (typeof element === 'string') {
+            safe[key] = Array.isArray(value) ? [element] : element;
         } else {
             droppedFieldCount++;
         }
@@ -143,16 +149,6 @@ export class PublishProfileUtility {
                             if (tl.getPipelineFeature('EnablePublishProfileLogRedaction')) {
                                 const redacted = getRedactedPublishProfileForLog(propertyGroup[index]);
                                 tl.debug("Publish Profile: " + JSON.stringify(redacted.safe));
-                                try {
-                                    console.log(`##vso[telemetry.publish area=TaskHub;feature=${PublishProfileUtility._telemetryFeature}]`
-                                        + JSON.stringify({
-                                            event: 'PublishProfileLogRedacted',
-                                            droppedFieldCount: redacted.droppedFieldCount,
-                                            hasNestedDbSettings: redacted.hasNestedDbSettings
-                                        }));
-                                } catch (error) {
-                                    tl.debug("Unable to publish redaction telemetry: " + error);
-                                }
                             } else {
                                 tl.debug("Publish Profile: " + JSON.stringify(propertyGroup[index]));
                             }

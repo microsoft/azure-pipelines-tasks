@@ -10,7 +10,7 @@ describe('Publish profile log redaction', function() {
         ['false', 'preserves legacy logging when the feature is disabled'],
         ['unset', 'preserves legacy logging when the feature is unset'],
         ['no-database', 'reports profiles without nested database settings'],
-        ['telemetry-failure', 'preserves the profile when telemetry fails']
+        ['attribute-leak', 'drops an allowlisted field whose value carries hidden XML attributes']
     ];
 
     for (const [mode, description] of cases) {

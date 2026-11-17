@@ -23,9 +23,8 @@ Only diagnostic text is filtered; file selection and deployment paths are unchan
 The pipeline feature `EnablePublishProfileLogRedaction` limits the `Publish Profile`
 debug log to `WebPublishMethod`, `MSDeployServiceURL`, `DeployIisAppPath`, and
 `UserName`. Other fields, including passwords and nested database settings, are
-omitted from this log. The task emits `PublishProfileLogRedacted` telemetry containing
-only the dropped-field count and whether database settings are present; deployment
-still receives the full profile. An unset or false feature preserves legacy logging.
+omitted from this log; deployment still receives the full profile. An unset or
+false feature preserves legacy logging.
 
 ## Contact Information
 
