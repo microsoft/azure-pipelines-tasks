@@ -14,7 +14,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 1
+    "Patch": 2
   },
   "demands": [],
   "groups": [],
@@ -393,6 +393,7 @@
     "InvalidTimeoutValue": "ms-resource:loc.messages.InvalidTimeoutValue",
     "RolloutStatusTimedout": "ms-resource:loc.messages.RolloutStatusTimedout",
     "EnvironmentLink": "ms-resource:loc.messages.EnvironmentLink",
-    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName"
+    "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName",
+    "InvalidManifestObjectToken": "ms-resource:loc.messages.InvalidManifestObjectToken"
   }
 }
