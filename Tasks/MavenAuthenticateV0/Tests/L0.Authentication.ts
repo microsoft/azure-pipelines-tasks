@@ -273,6 +273,33 @@ describe('MavenAuthenticate L0 - Feed Authentication', function () {
                 assert(!fs.existsSync(path.join(overriddenHome, '.m2', 'settings.xml')), 'settings.xml must not be written');
             });
 
+            it('should not follow a symlinked .m2 under the fallback home', async () => {
+                // Arrange
+                const symlinkTarget = path.join(__dirname, 'workspace-m2');
+                fs.mkdirSync(symlinkTarget, { recursive: true });
+                fs.mkdirSync(overriddenHome, { recursive: true });
+                fs.chmodSync(overriddenHome, 0o700);
+                fs.symlinkSync(symlinkTarget, path.join(overriddenHome, '.m2'));
+                const tp = path.join(__dirname, 'TestSetup.js');
+                const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+                process.env[TestEnvVars.artifactsFeeds] = TestConstants.feeds.feedName1;
+                process.env[TestEnvVars.osType] = 'Linux';
+                process.env[TestEnvVars.userInfoShouldFail] = 'true';
+                process.env[TestEnvVars.homeEnvOverride] = overriddenHome;
+
+                try {
+                    // Act
+                    await tr.runAsync();
+
+                    // Assert
+                    TestHelpers.assertFailure(tr);
+                    TestHelpers.assertOutputContains(tr, 'Error_FallbackHomeSymlink');
+                    assert(!fs.existsSync(path.join(symlinkTarget, 'settings.xml')), 'settings.xml must not be written through the symlink');
+                } finally {
+                    fs.rmSync(symlinkTarget, { recursive: true, force: true });
+                }
+            });
+
             it('should write to a private fallback home and warn about older Java versions', async () => {
                 // Arrange
                 fs.mkdirSync(overriddenHome, { recursive: true });

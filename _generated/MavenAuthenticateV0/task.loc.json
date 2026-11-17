@@ -118,6 +118,7 @@
     "Error_FallbackHomeInAgentFolder": "ms-resource:loc.messages.Error_FallbackHomeInAgentFolder",
     "Error_FallbackHomeNotOwned": "ms-resource:loc.messages.Error_FallbackHomeNotOwned",
     "Error_FallbackHomeWritableByOthers": "ms-resource:loc.messages.Error_FallbackHomeWritableByOthers",
+    "Error_FallbackHomeSymlink": "ms-resource:loc.messages.Error_FallbackHomeSymlink",
     "Warning_FallbackHomeJavaCompat": "ms-resource:loc.messages.Warning_FallbackHomeJavaCompat"
   },
   "_buildConfigMapping": {

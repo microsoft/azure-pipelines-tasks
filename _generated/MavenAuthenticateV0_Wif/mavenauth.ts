@@ -37,12 +37,12 @@ function isSamePath(first: string, second: string, caseInsensitive: boolean): bo
 function isInside(child: string, parent: string, caseInsensitive: boolean): boolean {
     const normalize = (p: string) => caseInsensitive ? path.resolve(p).toLowerCase() : path.resolve(p);
     const relative = path.relative(normalize(parent), normalize(child));
-    return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+    return !!relative && relative !== '..' && !relative.startsWith('..' + path.sep) && !path.isAbsolute(relative);
 }
 
 // Pipeline variables, including queue-time overrides, are applied to the task's environment,
 // so HOME/USERPROFILE can't be trusted to locate the credential file. Use the OS account's home instead.
-function getUserHomeDirectory(isWindows: boolean): string {
+function getUserHomeDirectory(isWindows: boolean): { path: string; isFallback: boolean } {
     const homeEnvVarName = isWindows ? "USERPROFILE" : "HOME";
     const homeEnvVarValue = process.env[homeEnvVarName];
 
@@ -57,13 +57,13 @@ function getUserHomeDirectory(isWindows: boolean): string {
     }
 
     if (!accountHome) {
-        return getFallbackHomeDirectory(isWindows);
+        return { path: getFallbackHomeDirectory(isWindows), isFallback: true };
     }
 
     // Match the JDK's user.home fallback (JDK-8282102): a home shorter than 2 characters, such as "/", is unusable.
     if (accountHome.length < 2) {
         tl.warning(tl.loc("Warning_AccountHomeUnusable", accountHome), IssueSource.CustomerScript);
-        return getFallbackHomeDirectory(isWindows);
+        return { path: getFallbackHomeDirectory(isWindows), isFallback: true };
     }
 
     if (homeEnvVarValue && !isSamePath(homeEnvVarValue, accountHome, isWindows)) {
@@ -73,7 +73,7 @@ function getUserHomeDirectory(isWindows: boolean): string {
         );
     }
 
-    return accountHome;
+    return { path: accountHome, isFallback: false };
 }
 
 // The fallback comes from HOME/USERPROFILE, which pipeline variables can override,
@@ -129,6 +129,26 @@ function getFallbackHomeDirectory(isWindows: boolean): string {
     return home;
 }
 
+// A symlinked .m2 or settings file under the fallback home could redirect the credentials
+// into the workspace or another shared location, so refuse to follow one.
+function rejectSymlinks(paths: string[]): void {
+    for (const candidate of paths) {
+        let stats: fs.Stats;
+        try {
+            stats = fs.lstatSync(candidate);
+        } catch (err) {
+            if (err && err.code === 'ENOENT') {
+                continue;
+            }
+            throw new Error(tl.loc("Error_FallbackHomeUnreadable", candidate, (err && err.message) ? err.message : err));
+        }
+
+        if (stats.isSymbolicLink()) {
+            throw new Error(tl.loc("Error_FallbackHomeSymlink", candidate));
+        }
+    }
+}
+
 async function run(): Promise<void> {
     let internalFeedServerElements: any[] = [];
     let externalServiceEndpointsServerElements: any[] = [];
@@ -136,7 +156,14 @@ async function run(): Promise<void> {
     try {
         const isWindows = !!tl.osType().match(/^Win/);
         const restrictPermissions = !isWindows;
-        const userM2FolderPath: string = path.join(getUserHomeDirectory(isWindows), M2FolderName);
+        const userHome = getUserHomeDirectory(isWindows);
+        const userM2FolderPath: string = path.join(userHome.path, M2FolderName);
+        const userSettingsXmlPath: string = path.join(userM2FolderPath, SettingsXmlName);
+        const backupSettingsXmlPath: string = path.join(userM2FolderPath, backupSettingsXmlName);
+
+        if (userHome.isFallback) {
+            rejectSymlinks([userM2FolderPath, userSettingsXmlPath, backupSettingsXmlPath]);
+        }
 
         if (!tl.exist(userM2FolderPath)) {
             tl.debug(tl.loc("Info_M2FolderDoesntExist", userM2FolderPath));
@@ -146,8 +173,6 @@ async function run(): Promise<void> {
             }
         }
 
-        let userSettingsXmlPath: string = path.join(userM2FolderPath, SettingsXmlName);
-        let backupSettingsXmlPath: string = path.join(userM2FolderPath, backupSettingsXmlName);
         let settingsJson: any;
         
         tl.setTaskVariable('userM2SettingsXmlPath', userSettingsXmlPath);

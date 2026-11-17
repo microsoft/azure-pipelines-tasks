@@ -30,5 +30,6 @@
   "loc.messages.Error_FallbackHomeInAgentFolder": "The home directory from the environment ('%s') is inside the agent folder '%s', so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
   "loc.messages.Error_FallbackHomeNotOwned": "The home directory from the environment ('%s') isn't owned by the current user, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
   "loc.messages.Error_FallbackHomeWritableByOthers": "The home directory from the environment ('%s') is writable by other users, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
+  "loc.messages.Error_FallbackHomeSymlink": "The Maven settings path '%s' under the home directory from the environment is a symbolic link, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.",
   "loc.messages.Warning_FallbackHomeJavaCompat": "Writing credentials to %s. Java 18 and earlier don't read Maven settings from this location when the account has no usable home directory. If authentication fails, pass '-s %s' to Maven."
 }
