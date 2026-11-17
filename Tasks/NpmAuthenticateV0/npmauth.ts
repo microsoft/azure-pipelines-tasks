@@ -11,7 +11,7 @@ import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 #endif
 import * as npmauthutils from './npmauthutils';
 import { NpmrcCredential } from './npmrcCredential';
-import { getTrustedBackupRootDirectory, NpmrcBackupManager, NpmrcBackupRootTaskVariable, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { getTrustedBackupRootDirectory, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
 import { NpmConfigTelemetryPhase } from './constants';
 
 let internalFeedSuccessCount: number = 0;
@@ -19,7 +19,6 @@ let externalFeedSuccessCount: number = 0;
 let federatedFeedAuthSuccessCount: number = 0;
 
 async function main(): Promise<void> {
-    tl.setTaskVariable(NpmrcBackupRootTaskVariable, '');
     npmauthutils.emitNpmConfigTelemetry(NpmConfigTelemetryPhase.Main);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     // Path to user provided npmrc

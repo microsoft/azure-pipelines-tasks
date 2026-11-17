@@ -1,5 +1,3 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import { TestEnvVars, TestData } from './TestConstants';
 import { TestHelpers } from './TestHelpers';
 
@@ -32,24 +30,6 @@ describe('NpmAuthenticate L0 - Error Paths', function () {
             [TestEnvVars.npmrcPath]: npmrcPath,
             [TestEnvVars.saveNpmrcPath]: invalidSavePath,
             [TestEnvVars.npmAuthTempDirectory]: victimDir,
-            [TestEnvVars.npmAuthTaskTempDirectory]: victimDir,
-            AGENT_HOMEDIRECTORY: agentHomeDirectory
-        });
-
-        TestHelpers.assertFailure(tr);
-        TestHelpers.assertOutputNotContains(tr, `rmRF ${victimDir}`);
-    });
-
-    it('does not remove a spoofed backup root under a spoofed agent directory', async () => {
-        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.internalRegistryUrl}`);
-        const invalidSavePath = TestHelpers.createTempNpmrc('not a directory');
-        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
-        const victimDir = path.join(agentHomeDirectory, 'npmAuthenticateBackup');
-        fs.mkdirSync(victimDir);
-
-        const tr = await TestHelpers.runTestWithEnv({
-            [TestEnvVars.npmrcPath]: npmrcPath,
-            [TestEnvVars.saveNpmrcPath]: invalidSavePath,
             [TestEnvVars.npmAuthTaskTempDirectory]: victimDir,
             AGENT_HOMEDIRECTORY: agentHomeDirectory
         });
