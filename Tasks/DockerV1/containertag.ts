@@ -22,7 +22,6 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
     // Skip only when the feature flag is enabled and source/target are identical.
     if (shouldSkipRedundantTag && sourceImage === targetImage) {
         if (!shouldSanitizeLogOutput) {
-            // Feature off: exactly the original behavior.
             console.log(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sourceImage}`);
             return Q.resolve();
         }
