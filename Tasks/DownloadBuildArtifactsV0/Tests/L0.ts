@@ -6,7 +6,9 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { validateSymbolicLinks, extractTarsIfPresent } from '../file_helper';
 import { ArtifactEngineOptions } from 'artifact-engine/Engine';
-import { TicketState } from 'artifact-engine/Models';
+import { ArtifactItem, ItemType, TicketState } from 'artifact-engine/Models';
+import { FilesystemProvider } from 'artifact-engine/Providers';
+import { ArtifactItemStore } from 'artifact-engine/Store';
 import { DownloadHandlerFilePath } from '../DownloadHandlers/DownloadHandlerFilePath';
 
 describe('DownloadBuildArtifactsV0 flag-free artifact matching', function () {
@@ -74,6 +76,141 @@ describe('DownloadBuildArtifactsV0 flag-free artifact matching', function () {
             });
         }
     }
+});
+
+describe('DownloadBuildArtifactsV0 hardened path validation (task-level)', function () {
+    const pathValidationFlag = 'DISTRIBUTEDTASK_TASKS_ENABLEARTIFACTENGINEPATHVALIDATION';
+    const legacyPathValidationFlag = 'DISTRIBUTEDTASK_TASKS_ENABLELEGACYARTIFACTPATHVALIDATION';
+    let originalPathValidationFlag: string | undefined;
+    let originalLegacyFlag: string | undefined;
+    let root: string;
+
+    before(() => tl.setResourcePath(path.join(__dirname, '..', 'task.json')));
+
+    beforeEach(() => {
+        originalPathValidationFlag = process.env[pathValidationFlag];
+        originalLegacyFlag = process.env[legacyPathValidationFlag];
+        process.env[pathValidationFlag] = 'true';
+        delete process.env[legacyPathValidationFlag];
+        root = fs.mkdtempSync(path.join(os.tmpdir(), 'dba-hardened-'));
+    });
+
+    afterEach(() => {
+        if (originalPathValidationFlag === undefined) {
+            delete process.env[pathValidationFlag];
+        } else {
+            process.env[pathValidationFlag] = originalPathValidationFlag;
+        }
+        if (originalLegacyFlag === undefined) {
+            delete process.env[legacyPathValidationFlag];
+        } else {
+            process.env[legacyPathValidationFlag] = originalLegacyFlag;
+        }
+        fs.rmSync(root, { recursive: true, force: true });
+    });
+
+    it('downloads nested files into a destination root that does not exist yet', async function () {
+        this.timeout(10000);
+
+        const source = path.join(root, 'source');
+        const destination = path.join(root, 'brand', 'new', 'destination');
+        fs.mkdirSync(path.join(source, 'drop', 'a', 'b', 'c'), { recursive: true });
+        fs.writeFileSync(path.join(source, 'drop', 'a', 'b', 'c', 'deep.txt'), 'nested contents');
+
+        const options = new ArtifactEngineOptions();
+        options.parallelProcessingLimit = 1;
+        options.retryLimit = 1;
+        const handler = new DownloadHandlerFilePath({
+            artifactInfo: { name: 'drop', resource: { type: 'FilePath', data: source } },
+            downloadPath: destination,
+            downloaderOptions: options,
+            checkDownloadedFiles: true
+        });
+
+        const tickets = await handler.downloadResources();
+        const fileTicket = tickets.find(ticket => ticket.artifactItem.path === path.join('drop', 'a', 'b', 'c', 'deep.txt'));
+        assert.ok(fileTicket, 'the nested file should have a download ticket');
+        assert.strictEqual(fileTicket.state, TicketState.Processed);
+        const downloadedFile = path.join(destination, 'drop', 'a', 'b', 'c', 'deep.txt');
+        assert.ok(fs.existsSync(downloadedFile), 'nested file should exist under the freshly-created destination root');
+        assert.strictEqual(fs.readFileSync(downloadedFile, 'utf8'), 'nested contents');
+    });
+
+    it('writes a root-path ("") item directly to the zip filename, matching DownloadHandlerContainerZip\'s destination provider', async function () {
+        const downloadPath = path.join(root, 'brand', 'new', 'zip-destination');
+        const zipLocation = path.join(downloadPath, 'drop.zip');
+
+        const provider = new FilesystemProvider(zipLocation);
+        provider.artifactItemStore = new ArtifactItemStore();
+        const item = new ArtifactItem();
+        item.itemType = ItemType.File;
+        item.path = '';
+        provider.artifactItemStore.addItem(item);
+
+        const Readable = require('stream').Readable;
+        const contentStream = Readable.from([Buffer.from('zip contents')]);
+
+        await provider.putArtifactItem(item, contentStream);
+
+        assert.ok(fs.existsSync(zipLocation), 'the zip file should be written at the provider root, with its parent directories created');
+        assert.strictEqual(fs.readFileSync(zipLocation, 'utf8'), 'zip contents');
+    });
+
+    it('fails the download when a directory-type artifact collides with an existing file, instead of swallowing the error', async function () {
+        this.timeout(10000);
+
+        const source = path.join(root, 'source');
+        const destination = path.join(root, 'destination');
+        fs.mkdirSync(path.join(source, 'drop', 'conflict'), { recursive: true });
+        fs.writeFileSync(path.join(source, 'drop', 'conflict', 'inner.txt'), 'inner contents');
+        fs.mkdirSync(destination, { recursive: true });
+        fs.writeFileSync(path.join(destination, 'drop'), '');
+
+        const options = new ArtifactEngineOptions();
+        options.parallelProcessingLimit = 1;
+        options.retryLimit = 1;
+        const handler = new DownloadHandlerFilePath({
+            artifactInfo: { name: 'drop', resource: { type: 'FilePath', data: source } },
+            downloadPath: destination,
+            downloaderOptions: options,
+            checkDownloadedFiles: true
+        });
+
+        await assert.rejects(
+            () => handler.downloadResources(),
+            'a directory/file collision must reject downloadResources(), reaching the task as a failure'
+        );
+    });
+
+    it('only enforces path-escape protection when EnableArtifactEnginePathValidation is set', async function () {
+        const destination = path.join(root, 'destination');
+        fs.mkdirSync(destination, { recursive: true });
+        const outside = path.join(root, 'outside.txt');
+
+        const makeItem = (): ArtifactItem => {
+            const item = new ArtifactItem();
+            item.itemType = ItemType.File;
+            item.path = path.join('..', 'outside.txt');
+            return item;
+        };
+        const makeStream = () => require('stream').Readable.from([Buffer.from('escaping contents')]);
+
+        const securedProvider = new FilesystemProvider(destination);
+        securedProvider.artifactItemStore = new ArtifactItemStore();
+        const securedItem = makeItem();
+        securedProvider.artifactItemStore.addItem(securedItem);
+        await assert.rejects(() => securedProvider.putArtifactItem(securedItem, makeStream()));
+        assert.ok(!fs.existsSync(outside), 'path escape must not be written to disk when validation is enabled');
+
+        delete process.env[pathValidationFlag];
+        const legacyProvider = new FilesystemProvider(destination);
+        legacyProvider.artifactItemStore = new ArtifactItemStore();
+        const legacyItem = makeItem();
+        legacyProvider.artifactItemStore.addItem(legacyItem);
+        await legacyProvider.putArtifactItem(legacyItem, makeStream());
+        assert.ok(fs.existsSync(outside), 'legacy behavior (flag absent) is expected to allow the escape, confirming the flag is what gates protection');
+        fs.rmSync(outside, { force: true });
+    });
 });
 
 describe('DownloadBuildArtifactsV0 Suite', function () {
