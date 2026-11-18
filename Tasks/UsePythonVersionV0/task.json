@@ -14,7 +14,7 @@
   "minimumAgentVersion": "2.182.1",
   "version": {
     "Major": 0,
-    "Minor": 283,
+    "Minor": 284,
     "Patch": 0
   },
   "demands": [],
@@ -79,7 +79,9 @@
       "options": {
         "x86": "x86",
         "x64": "x64",
-        "arm64": "arm64"
+        "arm64": "arm64",
+        "x64-freethreaded": "x64-freethreaded",
+        "arm64-freethreaded": "arm64-freethreaded"
       }
     }
   ],
@@ -122,7 +124,7 @@
     "DownloadNotFound": "Could not find Python matching spec %s (%s) in the python-versions registry. Beware that only systems listed in the Github Actions python versions manifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) are fit for downloading python on-flight. Also, proxy is not supported.",
     "ManifestDownloadFailed": "Failed to download Python versions manifest from the Github Actions python registry (https://github.com/actions/python-versions). Invalid GitHub token could cause this.",
     "DownloadFailed": "Failed to download Python from the Github Actions python registry (https://github.com/actions/python-versions). Error: %s",
-    "InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
+    "InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64, x64-freethreaded, arm64-freethreaded."
   },
   "restrictions": {
     "commands": {

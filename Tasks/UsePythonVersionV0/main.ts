@@ -11,7 +11,7 @@ import { usePythonVersion } from './usepythonversion';
         const disableDownloadFromRegistry = task.getBoolInput('disableDownloadFromRegistry');
         const allowUnstable = task.getBoolInput('allowUnstable');
         const addToPath = task.getBoolInput('addToPath', true);
-        const ALLOWED_ARCHITECTURES = ['x86', 'x64', 'arm64'];
+        const ALLOWED_ARCHITECTURES = ['x86', 'x64', 'arm64', 'x64-freethreaded', 'arm64-freethreaded'];
         const architecture = task.getInput('architecture', true);
         if (!ALLOWED_ARCHITECTURES.includes(architecture)) {
             throw new Error(task.loc('InvalidArchitecture', architecture));
