@@ -53,9 +53,9 @@ export function run(connection: ContainerConnection): Q.Promise<void> {
     let imageMappings = utils.getImageMappings(connection, imageNames, additionalImageTags);
 
     let firstMapping = imageMappings.shift();
-    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName,     qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput);
+    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput);
     imageMappings.forEach(mapping => {
-            promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput));
+        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput));
     });
 
     return promise;
