@@ -5,6 +5,40 @@ import * as Constant from './Constants';
 import path = require('path');
 import Q = require('q');
 
+const PUBLISH_PROFILE_LOG_ALLOWLIST: string[] = [
+    "WebPublishMethod",
+    Constant.PublishProfileXml.MSDeployServiceURL,
+    Constant.PublishProfileXml.DeployIisAppPath,
+    Constant.PublishProfileXml.UserName
+];
+
+export function getRedactedPublishProfileForLog(propertyGroup: Record<string, unknown>): {
+    safe: Record<string, unknown>;
+    droppedFieldCount: number;
+    hasNestedDbSettings: boolean;
+} {
+    const safe: Record<string, unknown> = {};
+    let droppedFieldCount = 0;
+    for (const key of Object.keys(propertyGroup || {})) {
+        if (PUBLISH_PROFILE_LOG_ALLOWLIST.indexOf(key) < 0) {
+            droppedFieldCount++;
+            continue;
+        }
+        const value = propertyGroup[key];
+        const element = Array.isArray(value) ? value[0] : value;
+        if (typeof element === 'string') {
+            safe[key] = Array.isArray(value) ? [element] : element;
+        } else {
+            droppedFieldCount++;
+        }
+    }
+    return {
+        safe,
+        droppedFieldCount,
+        hasNestedDbSettings: !!(propertyGroup && propertyGroup["PublishDatabaseSettings"])
+    };
+}
+
 var packageUtility = require('azure-pipelines-tasks-webdeployment-common/packageUtility.js');
 var parseString = require('xml2js').parseString;
 const ERROR_FILE_NAME = "error.txt";
@@ -112,7 +146,12 @@ export class PublishProfileUtility {
                                 || !propertyGroup[index].hasOwnProperty(Constant.PublishProfileXml.UserName)) {
                                 reject(tl.loc('InvalidPublishProfile'));
                             }
-                            tl.debug("Publish Profile: " + JSON.stringify(propertyGroup[index]));
+                            if (tl.getPipelineFeature('EnablePublishProfileLogRedaction')) {
+                                const redacted = getRedactedPublishProfileForLog(propertyGroup[index]);
+                                tl.debug("Publish Profile: " + JSON.stringify(redacted.safe));
+                            } else {
+                                tl.debug("Publish Profile: " + JSON.stringify(propertyGroup[index]));
+                            }
                             response(propertyGroup[index]);
                         }
                     }
