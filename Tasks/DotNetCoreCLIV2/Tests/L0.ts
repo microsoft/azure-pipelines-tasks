@@ -497,6 +497,30 @@ describe('DotNetCoreExe Suite', function () {
         assert.equal(tr.errorIssues.length, 0, 'should have no errors');
     });
 
+    it('test command moves a --project argument in front of the project and still publishes results', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/publishtestsWithProjectSelectorArgument.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.ran('c:\\path\\dotnet.exe test --project c:\\agent\\home\\directory\\temp.csproj --logger trx --results-directory c:\\agent\\home\\temp --no-build'), 'it should have run dotnet test with --project before the project file');
+        assert(tr.stdOutContained('dotnet output'), 'should have dotnet output');
+        assert(tr.stdOutContained('vso[results.publish type=VSTest;mergeResults=false;publishRunAttachments=true;resultFiles=c:\\agent\\home\\temp\\sample.trx;]'), 'should publish trx');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
+    it('test command does not add the selector twice when MTP is detected and it is also given in the arguments', async () => {
+        const tp = path.join(__dirname, './TestCommandTests/runTestsWithGlobalJsonAndProjectSelectorArgument.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+
+        await tr.runAsync();
+        assert(tr.invokedToolCount === 1, 'should have run dotnet once');
+        assert(tr.stdout.indexOf('--project --project') === -1, 'should not repeat the selector');
+        assert(tr.succeeded, 'should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'should have no errors');
+    });
+
     it('custom command fails when no project match found', async () => {
         process.env["__command__"] = "custom";
         process.env["__custom__"] = "test";
