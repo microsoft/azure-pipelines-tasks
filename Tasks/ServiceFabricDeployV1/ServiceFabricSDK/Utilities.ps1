@@ -46,6 +46,8 @@
     }
 }
 
+. "$PSScriptRoot\..\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
 function Get-NamesFromApplicationManifest
 {
     <#
@@ -339,7 +341,9 @@ function Wait-ServiceFabricApplicationUpgradeAction
             [object]$LastUpgradeStatus
         )
         $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-        Write-Host (Get-VstsLocString -Key SFSDK_CurrentUpgradeState) $upgradeStatus.UpgradeState
+        Write-Host (Get-VstsLocString -Key SFSDK_CurrentUpgradeState) `
+            (Protect-ExternalOutput -InputObject $upgradeStatus.UpgradeState `
+                -Source remote -VsoCommandMode blockAndTelemetry)
 
         $currentDomainWiseUpgradeStatus = Get-DomainUpgradeStatus -UpgradeDomainsStatus $upgradeStatus.UpgradeDomainsStatus
         $lastDomainWiseUpgradeStatus = ""
@@ -350,7 +354,9 @@ function Wait-ServiceFabricApplicationUpgradeAction
 
         if (($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus) -and ($currentDomainWiseUpgradeStatus -ne ""))
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_DomainUpgradeStatus) $currentDomainWiseUpgradeStatus
+            Write-Host (Get-VstsLocString -Key SFSDK_DomainUpgradeStatus) `
+                (Protect-ExternalOutput -InputObject $currentDomainWiseUpgradeStatus `
+                    -Source remote -VsoCommandMode blockAndTelemetry)
         }
 
         # unhealthy evaluations to be printed.
@@ -365,7 +371,8 @@ function Wait-ServiceFabricApplicationUpgradeAction
 
             if (($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation) -and ($currentUnhealthyEvaluation -ne ""))
             {
-                Write-Host $currentUnhealthyEvaluation.Trim()
+                Write-Host (Protect-ExternalOutput -InputObject $currentUnhealthyEvaluation.Trim() `
+                    -Source remote -VsoCommandMode blockAndTelemetry)
             }
         }
 
@@ -924,7 +931,9 @@ function Trace-ServiceFabricClusterHealth
     try
     {
         Write-Host (Get-VstsLocString -Key SFSDK_ClusterHealth)
-        Get-ServiceFabricClusterHealth
+        Write-Host (Protect-ExternalOutput `
+            -InputObject (Get-ServiceFabricClusterHealth | Out-String).TrimEnd() `
+            -Source remote -VsoCommandMode blockAndTelemetry)
     }
     catch
     {}
@@ -940,7 +949,9 @@ function Trace-ServiceFabricApplicationHealth
     try
     {
         Write-Host (Get-VstsLocString -Key SFSDK_ApplicationHealth)
-        Get-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+        Write-Host (Protect-ExternalOutput `
+            -InputObject (Get-ServiceFabricApplicationHealth -ApplicationName $ApplicationName | Out-String).TrimEnd() `
+            -Source remote -VsoCommandMode blockAndTelemetry)
     }
     catch
     {

@@ -201,7 +201,12 @@
 
             if ($removeApp)
             {
-                Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
+                Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @(
+                    $ApplicationName,
+                    (Protect-ExternalOutput -InputObject $app.ApplicationTypeName `
+                        -Source remote -VsoCommandMode blockAndTelemetry),
+                    (Protect-ExternalOutput -InputObject $app.ApplicationTypeVersion `
+                        -Source remote -VsoCommandMode blockAndTelemetry)))
                 Remove-ServiceFabricApplicationAction -ApplicationName $($app.ApplicationName)
 
                 if ($OverwriteBehavior.Equals("Always"))

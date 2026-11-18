@@ -419,7 +419,9 @@ function Publish-UpgradedServiceFabricApplication
         }
         catch
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed -ArgumentList $_.Exception.Message)
+            Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed `
+                -ArgumentList (Protect-ExternalOutput -InputObject $_.Exception.Message `
+                    -Source remote -VsoCommandMode blockAndTelemetry))
             try
             {
                 if (!$ApplicationTypeAlreadyRegistered)
