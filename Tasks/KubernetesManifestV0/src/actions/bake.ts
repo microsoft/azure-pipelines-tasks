@@ -102,8 +102,10 @@ class KustomizeRenderEngine extends RenderEngine {
         const kubectlPath = await utils.getKubectl();
         this.validateKustomize(kubectlPath);
         const command = tl.tool(kubectlPath);
-        console.log(`[command] ${kubectlPath} kustomize ${tl.getPathInput('kustomizationPath')}`);
-        command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
+        const kustomizationPath = tl.getPathInput('kustomizationPath');
+        console.log(`[command] ${kubectlPath} kustomize`);
+        tl.debug(`[command] ${kubectlPath} kustomize ${kustomizationPath}`);
+        command.arg(['kustomize', kustomizationPath]);
 
         const result = command.execSync({ silent: true } as IExecOptions);
         if (result.stderr) {

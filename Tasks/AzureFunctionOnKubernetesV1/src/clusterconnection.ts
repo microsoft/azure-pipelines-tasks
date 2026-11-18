@@ -1,12 +1,17 @@
 "use strict";
 
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
 import * as utils from "./utils/utilities";
 import * as toolLib from 'azure-pipelines-tool-lib/tool';
 import { Kubelogin } from 'azure-pipelines-tasks-kubernetes-common/kubelogin';
+
+export function logConnectionType(connectionType: string): void {
+    tl.writeExternalOutput(`Connection type: ${connectionType}` + os.EOL, { source: 'repository' });
+}
 
 export default class ClusterConnection {
     private kubectlPath: string;
@@ -58,7 +63,7 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
-        console.log("Connection type: " + connectionType);
+        logConnectionType(connectionType);
         if (connectionType === "None") {
             return this.initialize();
         }
