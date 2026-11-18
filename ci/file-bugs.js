@@ -291,12 +291,29 @@ async function run() {
         }
     });
 
+    if (!azpPAT) {
+        console.warn('AZP_PAT is not set; skipping Azure DevOps bug filing.');
+        return;
+    }
+
     try {
         await fileBugs(labelMap, staleLabelMap, untouchedLabelMap);
     }
     catch (err) {
         // Log error before throwing or it will get swallowed since its inside an async function
-        console.log(err);
+        console.error(err);
+        // A 401 means the AZP PAT is expired or invalid. Treat this as a
+        // warning so the daily statistics run still succeeds and the job
+        // doesn't fire noisy failure notifications every day while the token
+        // is being renewed.
+        if (err && err.statusCode === 401) {
+            console.warn(
+                'Azure DevOps returned 401 (Unauthorized). ' +
+                'The AZP_TOKEN secret has likely expired. ' +
+                'Please rotate the secret and re-run the workflow.'
+            );
+            return;
+        }
         throw err;
     }
 }
