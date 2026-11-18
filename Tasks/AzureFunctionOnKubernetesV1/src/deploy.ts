@@ -67,7 +67,9 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
 
 function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnection, pullSecretName: string) {
     const funcDeployCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, args);
-    commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir } as tr.IExecOptions);
+    // 'func kubernetes deploy' builds the user's Dockerfile/repo content. Its output is untrusted
+    // and must not be allowed to inject logging commands (##vso[...]) into the agent.
+    commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir, externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
 }
 
 function annotateKubernetesResources(commandHelper: CommandHelper, resourcesYaml: string) {
@@ -87,7 +89,8 @@ function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnecti
     let resourcesYaml = null;
     const argsWithDryRun = args ? args.concat(' --dry-run') : '--dry-run';
     const funcDeployDryRunCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, argsWithDryRun);
-    const result: tr.IExecSyncResult = commandHelper.execCommand(funcDeployDryRunCommand, { cwd: funcRootDir } as tr.IExecOptions);
+    // Same untrusted build output concern as funcDeploy() above.
+    const result: tr.IExecSyncResult = commandHelper.execCommand(funcDeployDryRunCommand, { cwd: funcRootDir, externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
     resourcesYaml = result.stdout;
 
     return resourcesYaml;
