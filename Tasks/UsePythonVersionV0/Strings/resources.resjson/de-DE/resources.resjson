@@ -30,5 +30,5 @@
   "loc.messages.DownloadNotFound": "Die Python-Abgleichsspezifikation %s (%s) wurde in der Python-Versionsregistrierung nicht gefunden. Achten Sie darauf, dass nur Systeme, die im GitHub Actions-Python-Versionsmanifest (https://github.com/actions/python-versions/blob/main/versions-manifest.json) aufgeführt sind, für das Herunterladen von Python während des Flugs geeignet sind. Außerdem wird der Proxy nicht unterstützt.",
   "loc.messages.ManifestDownloadFailed": "Fehler beim Herunterladen des Python-Versionsmanifests aus der GitHub Actions-Python-Registrierung (https://github.com/actions/python-versions). Dies kann durch ein ungültiges GitHub-Token verursacht werden.",
   "loc.messages.DownloadFailed": "Fehler beim Herunterladen von Python aus der GitHub Actions-Python-Registrierung (https://github.com/actions/python-versions). Fehler: %s",
-  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
+  "loc.messages.InvalidArchitecture": "Ungültige Architektur: %s. Zulässige Werte sind x86, x64, arm64."
 }

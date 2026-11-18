@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "Vérification de l'existence de %s sur la machine distante.",
   "loc.messages.PathExists": "%s existe sur la machine distante",
   "loc.messages.PathNotExists": "%s n'existe pas sur la machine distante",
-  "loc.messages.UploadFolderFailed": "Désolé... Nous n’avons pas pu charger le dossier %s vers %s sur la machine distante. %s."
+  "loc.messages.UploadFolderFailed": "Désolé... Nous n’avons pas pu charger le dossier %s vers %s sur la machine distante. %s.",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }

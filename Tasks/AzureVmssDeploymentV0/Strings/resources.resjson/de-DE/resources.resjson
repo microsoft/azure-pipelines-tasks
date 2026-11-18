@@ -79,7 +79,7 @@
   "loc.messages.ExpiredServicePrincipal": "Das Zugriffstoken für Azure konnte nicht abgerufen werden. Stellen Sie sicher, dass der verwendete Dienstprinzipal gültig und nicht abgelaufen ist.",
   "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen Backtick (`), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787",
   "loc.messages.ScriptArgsSanitizedBash": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen umgekehrten Schrägstrich (\\), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787",
-  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
-  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
-  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
+  "loc.messages.InvalidWindowsCustomScript": "Für einen geschützten Windows-Aufruf ist ein relatives .ps1-Skript im Verzeichnis für benutzerdefinierte Skripts erforderlich.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "Die UTF-8-Nutzlast des benutzerdefinierten Windows-Skripts überschreitet das Limit von 1 MiB.",
+  "loc.messages.WindowsScriptCleanupFailed": "Temporäre benutzerdefinierte Windows-Skriptdateien konnten nicht entfernt werden. Entfernen Sie die Taskstagingdateien, bevor Sie den Agent erneut verwenden."
 }

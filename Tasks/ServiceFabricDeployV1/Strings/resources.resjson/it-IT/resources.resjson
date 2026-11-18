@@ -87,6 +87,8 @@
   "loc.messages.PublishProfileRequiredUpgrade": "È necessario sostituire le impostazioni di aggiornamento oppure specificare un profilo di pubblicazione nell'attività Azure Pipelines.",
   "loc.messages.UnsupportedARMAuthScheme": "Lo schema di autenticazione '{0}' non è supportato per l'endpoint ARM.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Lo schema di autenticazione '{0}' per il Registro contenitori di Azure non è supportato.",
+  "loc.messages.RegistryAuthorityMismatch": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.",
+  "loc.messages.RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
   "loc.messages.SFSDK_InvalidManifestPathSegment": "Valore {0} non valido '{1}' trovato nel pacchetto dell'applicazione. Questo valore viene usato come nome di cartella durante la compilazione di un percorso di file dal pacchetto dell'applicazione, quindi deve essere un nome semplice: non può essere vuoto, contenere un separatore di percorso o un segmento di percorso relativo, essere un percorso assoluto o terminare con un carattere finale '.' o ' ' che verrebbe normalizzato da Windows.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} non è un pacchetto dell'applicazione di Service Fabric valido.",
   "loc.messages.SFSDK_PackageValidationFailed": "La convalida non è riuscita per il pacchetto: {0}",

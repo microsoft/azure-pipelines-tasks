@@ -30,5 +30,5 @@
   "loc.messages.DownloadNotFound": "No se encontró ninguna especificación coincidente de Python %s (%s) en el Registro de versiones de Python. Tenga en cuenta que solo los sistemas enumerados en el manifiesto de versiones de Python de Acciones de GitHub (https://github.com/actions/python-versions/blob/main/versions-manifest.json) son adecuados para descargar Python en el entorno piloto. Además, no se admite el proxy.",
   "loc.messages.ManifestDownloadFailed": "No se pudo descargar el manifiesto de las versiones de Python desde el registro de Python de acciones de GitHub (https://github.com/actions/python-versions). Un token de GitHub no válido podría provocar esto.",
   "loc.messages.DownloadFailed": "No se pudo descargar Python desde el registro de Python de acciones de GitHub (https://github.com/actions/python-versions). Error: %s",
-  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
+  "loc.messages.InvalidArchitecture": "Arquitectura no válida: %s. Los valores permitidos son x86, x64 y arm64."
 }
