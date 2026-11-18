@@ -303,7 +303,7 @@ describe('Docker Suite', function() {
         // marker must not survive anywhere in the skip block, not just at line start. We check only the skip
         // block (not all of stdout) because task-lib's own debug echo of the raw input is unrelated/harmless.
         assert(!/##vso\[task\.prependpath\]/.test(skip.block), 'injected command must not survive anywhere in the skip block');
-        assert(/#vso\[task\.prependpath\]\/tmp\/evil/.test(skip.block), 'sanitized text should still be visible in the skip block');
+        assert(/##_vso\[task\.prependpath\]\/tmp\/evil/.test(skip.block), 'neutralized text should still be visible in the skip block');
     });
 
     [
@@ -327,8 +327,9 @@ describe('Docker Suite', function() {
             const skip = getSkipBlock(tr.stdout);
             assert(skip.start >= 0, 'redundant-tag skip branch must be present in the log');
             assert(skip.block.indexOf('tag-proof') != -1, 'skip block should contain the logged image name');
-            assert(!/#{2,}vso\[task\.prependpath\]/i.test(skip.block), 'injected prependpath must not survive anywhere in the skip block');
-            assert(!/#{2,}vso\[task\.setvariable variable=injected/i.test(skip.block), 'injected setvariable must not survive anywhere in the skip block');
+            // Case-sensitive on purpose: the agent (Command.TryParse) and the sanitizer both match "##vso[" ordinally, so "##VSO[" is not a command.
+            assert(!/#{2,}vso\[task\.prependpath\]/.test(skip.block), 'injected prependpath must not survive anywhere in the skip block');
+            assert(!/#{2,}vso\[task\.setvariable variable=injected/.test(skip.block), 'injected setvariable must not survive anywhere in the skip block');
         });
     });
 
