@@ -110,18 +110,33 @@ export function runConfigDirIsolationTests() {
 
     describe('AzureAuthenticationHelper.logoutAzure cleanup guarantees', () => {
         let agentTemp: string;
-        let realRmRF: typeof tl.rmRF;
+        let realExecSync: typeof tl.execSync;
+        let originalAgentTemp: string | undefined;
 
         beforeEach(() => {
             agentTemp = fs.mkdtempSync(path.join(os.tmpdir(), 'bicepdeploy-agenttmp-'));
-            realRmRF = tl.rmRF;
+            realExecSync = tl.execSync;
+            originalAgentTemp = process.env['AGENT_TEMPDIRECTORY'];
+            process.env['AGENT_TEMPDIRECTORY'] = agentTemp;
         });
 
         afterEach(() => {
-            (tl as any).rmRF = realRmRF;
+            (tl as any).execSync = realExecSync;
+            if (originalAgentTemp === undefined) {
+                delete process.env['AGENT_TEMPDIRECTORY'];
+            } else {
+                process.env['AGENT_TEMPDIRECTORY'] = originalAgentTemp;
+            }
             try { fs.rmSync(agentTemp, { recursive: true, force: true }); } catch { /* ignore */ }
             delete process.env['AZURE_CONFIG_DIR'];
         });
+
+        function createLoginCredentials() {
+            const directoryPath = fs.mkdtempSync(path.join(agentTemp, '.azarmrest-credentials-'));
+            const certificatePath = path.join(directoryPath, 'spnCert.pem');
+            fs.writeFileSync(certificatePath, 'test-certificate');
+            return { certificatePath, directoryPath };
+        }
 
         it('removes the isolated config dir and unsets the env var', () => {
             const helper: any = new AzureAuthenticationHelper();
@@ -135,26 +150,45 @@ export function runConfigDirIsolationTests() {
             assert.strictEqual(process.env['AZURE_CONFIG_DIR'], undefined);
         });
 
-        // A throw from certificate cleanup must not strand the isolated config dir.
-        it('removes the isolated config dir even when certificate cleanup fails', () => {
+        it('removes login credential files after az logout and before the config dir', () => {
             const helper: any = new AzureAuthenticationHelper();
-            const dir = createPerInvocationAzureConfigDir(agentTemp);
-            helper.azureConfigDir = dir;
-            helper.cliPasswordPath = path.join(agentTemp, 'spnCert.pem');
-            fs.writeFileSync(helper.cliPasswordPath, 'cert');
+            const configDir = createPerInvocationAzureConfigDir(agentTemp);
+            const credentials = createLoginCredentials();
+            helper.azureConfigDir = configDir;
+            helper.loginCredentials = credentials;
+            helper.sessionLoggedIn = true;
 
-            // Throw only for the certificate path -- removePerInvocationAzureConfigDir
-            // calls tl.rmRF too, so a blanket stub would sabotage the code under test.
-            (tl as any).rmRF = (p: string) => {
-                if (p === helper.cliPasswordPath) {
-                    throw new Error('simulated certificate cleanup failure');
-                }
-                return realRmRF(p);
+            const observedDuringLogout: { credentialsPresent?: boolean, configDirPresent?: boolean } = {};
+            (tl as any).execSync = (tool: string, args: string) => {
+                assert.strictEqual(tool, 'az');
+                assert.strictEqual(args, 'account clear');
+                observedDuringLogout.credentialsPresent = fs.existsSync(credentials.certificatePath);
+                observedDuringLogout.configDirPresent = fs.existsSync(configDir);
+                return { code: 0, stdout: '', stderr: '' };
             };
 
-            assert.doesNotThrow(() => helper.logoutAzure(),
-                'certificate cleanup failure must not fail the task');
-            assert(!fs.existsSync(dir), 'config dir must be removed despite the failure');
+            helper.logoutAzure();
+
+            assert.strictEqual(observedDuringLogout.credentialsPresent, true, 'credential files must remain until az logout runs');
+            assert.strictEqual(observedDuringLogout.configDirPresent, true, 'config dir must remain until az logout runs');
+            assert(!fs.existsSync(credentials.directoryPath), 'credential directory must be removed after logout');
+            assert(!fs.existsSync(configDir), 'config dir must be removed after logout');
+            assert.strictEqual(helper.loginCredentials, undefined, 'helper must clear its credential reference');
+        });
+
+        it('removes login credential files and the config dir even when az logout fails', () => {
+            const helper: any = new AzureAuthenticationHelper();
+            const configDir = createPerInvocationAzureConfigDir(agentTemp);
+            const credentials = createLoginCredentials();
+            helper.azureConfigDir = configDir;
+            helper.loginCredentials = credentials;
+            helper.sessionLoggedIn = true;
+
+            (tl as any).execSync = () => { throw new Error('simulated logout failure'); };
+
+            assert.doesNotThrow(() => helper.logoutAzure(), 'logout failure must not fail the task');
+            assert(!fs.existsSync(credentials.directoryPath), 'credential directory must be removed despite the failure');
+            assert(!fs.existsSync(configDir), 'config dir must be removed despite the failure');
             assert.strictEqual(process.env['AZURE_CONFIG_DIR'], undefined);
         });
 
@@ -162,6 +196,7 @@ export function runConfigDirIsolationTests() {
             const helper: any = new AzureAuthenticationHelper();
             assert.doesNotThrow(() => helper.logoutAzure());
             assert.strictEqual(helper.azureConfigDir, null);
+            assert.strictEqual(helper.loginCredentials, undefined);
         });
     });
 }
