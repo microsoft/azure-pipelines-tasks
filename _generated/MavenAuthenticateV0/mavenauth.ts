@@ -147,7 +147,7 @@ function getFallbackHomeDirectory(isWindows: boolean): string {
         tl.warning(tl.loc("Warning_FallbackHomeJavaCompat", settingsXmlPath, settingsXmlPath), IssueSource.CustomerScript);
     }
 
-    return home;
+    return realHome;
 }
 
 // A symlinked .m2 or settings file under the fallback home could redirect the credentials
