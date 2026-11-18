@@ -14,7 +14,7 @@
   "loc.input.label.scriptPath": "Script Path",
   "loc.input.help.scriptPath": "Fully qualified path of the script(.ps1 or .bat or .cmd when using Windows based agent else .ps1 or .sh when using linux based agent) or a path relative to the the default working directory",
   "loc.input.label.inlineScript": "Inline Script",
-  "loc.input.help.inlineScript": "You can write your scripts inline here. When using Windows agent, use PowerShell or PowerShell Core or batch scripting whereas use PowerShell Core or shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for PowerShell/PowerShellCore/shell: \naz --version \naz account show \n\n example for batch:\ncall  az --version \ncall az account show",
+  "loc.input.help.inlineScript": "You can write your scripts inline here. When using Windows agent, use PowerShell or PowerShell Core or batch scripting whereas use PowerShell Core or shell scripting when using Linux based agents. For batch files use the prefix \"call\" before every azure command. You can also pass predefined and custom variables to this script using arguments \n\n example for PowerShell/PowerShellCore/shell: \naz --version \naz account show \n\n example for batch:\ncall az --version \ncall az account show",
   "loc.input.label.scriptArguments": "Script Arguments",
   "loc.input.help.scriptArguments": "Arguments passed to the script",
   "loc.input.label.powerShellErrorActionPreference": "ErrorActionPreference",
