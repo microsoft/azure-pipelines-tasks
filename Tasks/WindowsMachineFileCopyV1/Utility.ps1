@@ -101,9 +101,10 @@ function Copy-OnLocalMachine(
     [object] $additionalArguments,
     [bool] $useSanitizerActivate = $false,
     [bool] $enableWindowsMachineFileCopyArgumentsHardening = $false,
-    [string] $scriptRoot = ""
+    [string] $scriptRoot = "",
+    [bool] $enableLegacyWindowsMachineFileCopyNetUseCommand = $false
     )
 {
     $credential = New-Object 'System.Net.NetworkCredential' -ArgumentList $adminUserName, $adminPassword
-    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $scriptRoot
+    Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $scriptRoot, $enableLegacyWindowsMachineFileCopyNetUseCommand
 }

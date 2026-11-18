@@ -6,7 +6,6 @@ param()
 . $PSScriptRoot\..\IndexHelpers\DbghelpFunctions.ps1
 
 Register-Mock Get-DbghelpPath { "SomeDrive:\AgentHome\...\dbghelp.dll" }
-Register-Mock Initialize-DbghelpNativeMethods
 
 Register-Mock Get-CurrentProcess {
     New-Object psobject -Property @{

@@ -1,11 +1,10 @@
-import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
+import { AzureRMLoginCredentials, cleanupAzureRMLoginCredentials, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from './azureConfigDir';
 
 export class AzureAuthenticationHelper {
     private sessionLoggedIn: boolean = false;
-    private cliPasswordPath: string = null;
+    private loginCredentials: AzureRMLoginCredentials | undefined;
     private azureConfigDir: string | null = null;
 
     public async loginAzure(connectedService: string): Promise<void> {
@@ -20,36 +19,14 @@ export class AzureAuthenticationHelper {
             tl.debug('Agent.TempDirectory not set; skipping AZURE_CONFIG_DIR isolation');
         }
 
-        await loginAzureRM(connectedService);
-
-        // Track certificate path for cleanup if using certificate-based auth
-        const authScheme: string = tl.getEndpointAuthorizationScheme(connectedService, true);
-        if (authScheme.toLowerCase() === 'serviceprincipal') {
-            const authType: string = tl.getEndpointAuthorizationParameter(connectedService, 'authenticationType', true);
-            if (authType === 'spnCertificate') {
-                this.cliPasswordPath = path.join(
-                    tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'),
-                    'spnCert.pem'
-                );
-            }
-        }
+        // Keep the returned credential files until after the last az command; see logoutAzure.
+        this.loginCredentials = await loginAzureRM(connectedService);
 
         this.sessionLoggedIn = true;
     }
 
     public logoutAzure(): void {
         try {
-            // Clean up certificate file if created
-            if (this.cliPasswordPath) {
-                tl.debug('Removing spn certificate file');
-                try {
-                    tl.rmRF(this.cliPasswordPath);
-                } catch (err) {
-                    // Cleanup must not fail an otherwise-successful task.
-                    tl.warning(tl.loc('FailedToRemoveCertificate', err.message));
-                }
-            }
-
             // Logout of Azure if logged in
             if (this.sessionLoggedIn) {
                 tl.debug('Logging out from Azure CLI');
@@ -60,6 +37,11 @@ export class AzureAuthenticationHelper {
                     tl.warning(tl.loc('FailedToLogout', err.message));
                 }
             }
+
+            // Azure CLI reads the certificate on every command, so remove login credential
+            // files only after the last az call. The helper never throws.
+            cleanupAzureRMLoginCredentials(this.loginCredentials);
+            this.loginCredentials = undefined;
         } finally {
             // Must run AFTER `az account clear` so it still sees the per-invocation
             // profile. Removing it earlier would unset AZURE_CONFIG_DIR and cause `az`

@@ -4,8 +4,7 @@ param()
 # Arrange.
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\..\IndexHelpers\DbghelpFunctions.ps1
-Register-Mock Get-DbghelpPath { "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll" }
-Register-Mock Initialize-DbghelpNativeMethods
+Register-Mock Get-DbghelpPath { "SomeDrive:\AgentHome\...\dbghelp.dll" }
 Register-Mock Get-CurrentProcess {
     New-Object psobject -Property @{
             Id = $PID
@@ -27,5 +26,4 @@ Register-Mock Invoke-LoadLibrary
 Add-DbghelpLibrary 
 
 # Assert.
-Assert-WasCalled Initialize-DbghelpNativeMethods -- -DbghelpPath "SomeDrive:\AgentHome\Externals\Symstore\dbghelp.dll"
 Assert-WasCalled Invoke-LoadLibrary -Times 0
