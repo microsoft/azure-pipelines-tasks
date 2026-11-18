@@ -432,16 +432,7 @@ function executeWithRetriesImplementation(operationName: string, operation: () =
     operation().then((result) => {
         resolve(result);
     }).catch((error) => {
-        if (error && error.nonRetryable) {
-            if (errorDisplayMode == ErrorDisplayMode.ShowError) {
-                tl.error(tl.loc("OperationFailed", operationName, error));
-            }
-            else if (errorDisplayMode == ErrorDisplayMode.ShowWarning) {
-                tl.warning(tl.loc("OperationFailed", operationName, error));
-            }
-            reject(error);
-        }
-        else if (currentRetryCount <= 0) {
+        if ((error && error.nonRetryable) || currentRetryCount <= 0) {
             if (errorDisplayMode == ErrorDisplayMode.ShowError) {
                 tl.error(tl.loc("OperationFailed", operationName, error));
             }
