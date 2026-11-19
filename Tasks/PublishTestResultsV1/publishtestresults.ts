@@ -17,13 +17,17 @@ tl.debug('config: ' + config);
 tl.debug('testRunTitle: ' + testRunTitle);
 tl.debug('publishRunAttachments: ' + publishRunAttachments);
 
-let matchingTestResultsFiles = ffl.findFiles(testResultsFiles, false, tl.getVariable('System.DefaultWorkingDirectory'));
+let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
+let matchingTestResultsFiles = process.platform === 'win32' ?
+  ffl.findWindowsFiles(testResultsFiles, workingDirectory) :
+  ffl.findFiles(testResultsFiles, false, workingDirectory);
 if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 }
 else{
   let tp = new tl.TestPublisher(testRunner);
-  tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments);
+  tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments,
+    process.platform === 'win32' ? 'VSTS - PTR' : undefined);
 }
 
 tl.setResult(tl.TaskResult.Succeeded, '');

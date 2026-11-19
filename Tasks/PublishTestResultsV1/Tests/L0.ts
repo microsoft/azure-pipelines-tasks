@@ -1,5 +1,6 @@
 import Q = require('q');
 import assert = require('assert');
+import cp = require('child_process');
 import fs = require('fs');
 import os = require('os');
 import path = require('path');
@@ -42,51 +43,64 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         done();
     });
 
-    it('Finds an explicitly named result file containing glob characters', () => {
+    it('Preserves literal Windows result paths, including missing paths and semicolons', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-results-'));
         const resultFile = path.join(tempDir, 'results[1].xml');
+        const missingFile = path.join(tempDir, 'missing;results.xml');
         fs.writeFileSync(resultFile, '');
 
         try {
-            assert.deepStrictEqual(ff.findFiles(resultFile), [posixFormat(resultFile)]);
+            assert.deepStrictEqual(ff.findWindowsFiles(resultFile, tempDir), [resultFile]);
+            assert.deepStrictEqual(ff.findWindowsFiles(missingFile, tempDir), [missingFile]);
         } finally {
             fs.unlinkSync(resultFile);
             fs.rmdirSync(tempDir);
         }
     });
 
-    it('Matches wildcard result files under a working directory containing glob characters', () => {
+    it('Matches Windows wildcard result files under a working directory containing glob characters', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-[1]-'));
         const resultFile = path.join(tempDir, 'test-result.xml');
         fs.writeFileSync(resultFile, '');
 
         try {
-            assert.deepStrictEqual(ff.findFiles('**/test-*.xml', false, tempDir), [posixFormat(resultFile)]);
+            assert.deepStrictEqual(ff.findWindowsFiles('**/test-*.xml', tempDir), [resultFile]);
         } finally {
             fs.unlinkSync(resultFile);
             fs.rmdirSync(tempDir);
         }
     });
 
-    it('Matches result files case-insensitively on Windows', () => {
+    it('Matches result files case-insensitively on Windows', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-case-'));
         const resultFile = path.join(tempDir, 'test-result.xml');
         fs.writeFileSync(resultFile, '');
 
         try {
-            const result = ff.findFiles('TEST-*.xml', false, tempDir);
-            if (process.platform === 'win32') {
-                assert.deepStrictEqual(result, [posixFormat(resultFile)]);
-            } else {
-                assert.deepStrictEqual(result, []);
-            }
+            assert.deepStrictEqual(ff.findWindowsFiles('TEST-*.XML', tempDir), [resultFile]);
         } finally {
             fs.unlinkSync(resultFile);
             fs.rmdirSync(tempDir);
         }
     });
 
-    it('Includes symbolic links to result files', function () {
+    it('Includes symbolic links to Windows result files', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-symlink-'));
         const resultFile = path.join(tempDir, 'test-result.xml');
         const linkedResultFile = path.join(tempDir, 'linked-result.xml');
@@ -103,8 +117,8 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
                 throw err;
             }
 
-            const result = ff.findFiles('*.xml', false, tempDir);
-            assert(result.indexOf(posixFormat(linkedResultFile)) >= 0, 'linked result file should be included');
+            const result = ff.findWindowsFiles('*.xml', tempDir);
+            assert(result.indexOf(linkedResultFile) >= 0, 'linked result file should be included');
         } finally {
             if (fs.existsSync(linkedResultFile)) {
                 fs.unlinkSync(linkedResultFile);
@@ -112,6 +126,151 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
             fs.unlinkSync(resultFile);
             fs.rmdirSync(tempDir);
         }
+    });
+
+    it('Uses PowerShell wildcard syntax for Windows result paths', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-[1]-'));
+        const semiDir = path.join(tempDir, 'semi;dir');
+        const subDir = path.join(tempDir, 'SubDir');
+        const nestedDir = path.join(subDir, 'SubSubDir');
+        const files = [
+            path.join(tempDir, 'report[1]-literal.xml'),
+            path.join(tempDir, 'report1-literal.xml'),
+            path.join(tempDir, 'report{1..2}-literal.xml'),
+            path.join(tempDir, '.dot-result.xml'),
+            path.join(tempDir, 'ignore-result.xml'),
+            path.join(semiDir, 'test-semi.xml'),
+            path.join(subDir, 'match.xml'),
+            path.join(nestedDir, 'match.xml')
+        ];
+        fs.mkdirSync(semiDir);
+        fs.mkdirSync(subDir);
+        fs.mkdirSync(nestedDir);
+        files.forEach(file => fs.writeFileSync(file, ''));
+
+        try {
+            assert.deepStrictEqual(ff.findWindowsFiles('report[1]*.xml', tempDir), [files[0]]);
+            assert.deepStrictEqual(ff.findWindowsFiles('report{1..2}*.xml', tempDir), [files[2]]);
+            assert.deepStrictEqual(ff.findWindowsFiles('semi;;dir\\*.xml', tempDir), [files[5]]);
+            assert.deepStrictEqual(ff.findWindowsFiles('Sub**match.xml', tempDir), [files[6], files[7]].sort());
+            assert(ff.findWindowsFiles('*.XML', tempDir).indexOf(files[3]) >= 0, 'dot-prefixed file should be included');
+
+            const pattern = '+:' + path.join(tempDir, '**', '*.xml') + ';-:' + path.join(tempDir, '**', 'ignore*.xml');
+            assert.deepStrictEqual(ff.findWindowsFiles(pattern, tempDir), files.filter(file => file !== files[4]).sort());
+        } finally {
+            files.forEach(file => fs.unlinkSync(file));
+            fs.rmdirSync(nestedDir);
+            fs.rmdirSync(subDir);
+            fs.rmdirSync(semiDir);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Follows Windows directory junctions when matching recursive result paths', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-junction-'));
+        const source = path.join(tempDir, 'source');
+        const nested = path.join(source, 'nested');
+        const link = path.join(tempDir, 'linked');
+        const resultFile = path.join(nested, 'test-result.xml');
+        fs.mkdirSync(source);
+        fs.mkdirSync(nested);
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            try {
+                fs.symlinkSync(source, link, 'junction');
+            } catch (err) {
+                if (err.code === 'EPERM' || err.code === 'EACCES' || err.code === 'ENOSYS' || err.code === 'ENOTSUP') {
+                    this.skip();
+                    return;
+                }
+                throw err;
+            }
+
+            const expected = [resultFile, path.join(link, 'nested', 'test-result.xml')].sort();
+            assert.deepStrictEqual(ff.findWindowsFiles('**\\test-*.xml', tempDir), expected);
+        } finally {
+            if (fs.existsSync(link)) {
+                fs.rmdirSync(link);
+            }
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(nested);
+            fs.rmdirSync(source);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Matches Windows results while skipping broken symbolic links', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-broken-link-'));
+        const resultFile = path.join(tempDir, 'valid.xml');
+        const brokenLink = path.join(tempDir, 'broken.xml');
+        const brokenJunction = path.join(tempDir, 'broken-dir.xml');
+        let linkCreated = false;
+        let junctionCreated = false;
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            try {
+                fs.symlinkSync(path.join(tempDir, 'missing.xml'), brokenLink, 'file');
+                linkCreated = true;
+                fs.symlinkSync(path.join(tempDir, 'missing-dir'), brokenJunction, 'junction');
+                junctionCreated = true;
+            } catch (err) {
+                if (err.code === 'EPERM' || err.code === 'EACCES' || err.code === 'ENOSYS' || err.code === 'ENOTSUP') {
+                    this.skip();
+                    return;
+                }
+                throw err;
+            }
+
+            assert.deepStrictEqual(ff.findWindowsFiles('valid*.xml', tempDir), [resultFile]);
+            assert.deepStrictEqual(ff.findWindowsFiles('broken*.xml', tempDir), []);
+        } finally {
+            if (junctionCreated) {
+                fs.rmdirSync(brokenJunction);
+            }
+            if (linkCreated) {
+                fs.unlinkSync(brokenLink);
+            }
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Publishes literal Windows paths safely with the legacy test run system', function () {
+        if (process.platform !== 'win32') {
+            this.skip();
+        }
+
+        const injected = '\n##vso[task.setvariable variable=PTR_INJECTED;]true';
+        const resultFile = path.join(data, 'missing;results.xml');
+        const env = Object.assign({}, process.env);
+        Object.keys(env).filter(key => key.indexOf('INPUT_') === 0).forEach(key => delete env[key]);
+        env.INPUT_TESTRUNNER = 'JUnit';
+        env.INPUT_TESTRESULTSFILES = resultFile + injected;
+        env.SYSTEM_DEFAULTWORKINGDIRECTORY = data;
+
+        const child = cp.spawnSync(process.execPath, [path.join(__dirname, '..', 'publishtestresults.js')], {
+            env: env,
+            encoding: 'utf8'
+        });
+        assert.strictEqual(child.status, 0, child.stderr);
+        assert(!/^##vso\[task\.setvariable/m.test(child.stdout), 'file input should not inject logging commands');
+        assert(child.stdout.indexOf('resultFiles=' + resultFile.replace(';', '%3B') +
+            '%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue;') >= 0, 'literal file input should be escaped');
+        assert(child.stdout.indexOf('testRunSystem=VSTS - PTR;') >= 0, 'Windows should retain the PowerShell test run system');
     });
 
     it('Search multiple patterns', (done) => {
@@ -255,6 +414,7 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         assert(tr.succeeded, 'task should have succeeded');
         assert(!/^##vso\[task\.setvariable/m.test(tr.stdout), 'user input should not inject logging commands: ' + tr.stdout);
         assert(tr.stdout.indexOf('platform=x64%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue%0A;') >= 0, 'platform should be escaped: ' + tr.stdout);
+        assert(tr.stdout.indexOf('config=Release%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue%0A;') >= 0, 'configuration should be escaped: ' + tr.stdout);
         assert(tr.stdout.indexOf('runTitle=Title%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue%0A;') >= 0, 'runTitle should be escaped: ' + tr.stdout);
         done();
     });
