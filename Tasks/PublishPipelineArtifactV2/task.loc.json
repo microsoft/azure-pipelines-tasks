@@ -1,0 +1,98 @@
+{
+  "id": "ECDC45F6-832D-4AD9-B52B-EE49E94659BE",
+  "name": "PublishPipelineArtifact",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/publish-pipeline-artifact",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "category": "Utility",
+  "author": "Microsoft Corporation",
+  "version": {
+    "Major": 2,
+    "Minor": 283,
+    "Patch": 0
+  },
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": true
+    }
+  ],
+  "demands": [],
+  "preview": false,
+  "minimumAgentVersion": "4.248.0",
+  "inputs": [
+    {
+      "name": "path",
+      "aliases": [
+        "targetPath"
+      ],
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.path",
+      "defaultValue": "$(Pipeline.Workspace)",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.path"
+    },
+    {
+      "name": "artifactName",
+      "aliases": [
+        "artifact"
+      ],
+      "type": "string",
+      "label": "ms-resource:loc.input.label.artifactName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.artifactName"
+    },
+    {
+      "name": "properties",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.properties",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.properties"
+    },
+    {
+      "name": "domainId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.domainId",
+      "defaultValue": "",
+      "required": false,
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.domainId"
+    },
+    {
+      "name": "region",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.region",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "domainId == ''",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.region"
+    },
+    {
+      "name": "durability",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.durability",
+      "defaultValue": "",
+      "required": false,
+      "visibleRule": "region != ''",
+      "groupName": "advanced",
+      "helpMarkDown": "ms-resource:loc.input.help.durability"
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "execution": {
+    "Node20_1": {
+      "target": "publish.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
+      "target": "publish.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {}
+}
