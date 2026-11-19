@@ -9,7 +9,12 @@ param()
 . $PSScriptRoot\Initialize-LoggingCommandInjection.ps1
 
 $applicationPackagePath = "$PSScriptRoot\data\DiffPkgAssets\AppPkg"
-$tempDirectory = Join-Path $env:TEMP "sf-diff-package-injection-$([guid]::NewGuid().ToString('N'))"
+# New-Item reports a short (8.3) TEMP path, as used on hosted agents, in its long form. The product returns what
+# New-Item reports, so the expected paths are derived from the same form. The folder is only created to learn that
+# form; it is removed again at once and created by the product.
+$tempDirectory = (New-Item -ItemType Directory `
+    -Path (Join-Path $env:TEMP "sf-diff-package-injection-$([guid]::NewGuid().ToString('N'))")).FullName
+Remove-Item -LiteralPath $tempDirectory -Force -ErrorAction SilentlyContinue
 $diffPackagePath = Join-Path $tempDirectory 'DiffPackage'
 $applicationName = 'AppName'
 $injection = '##vso[task.setvariable variable=INJECTED]x'

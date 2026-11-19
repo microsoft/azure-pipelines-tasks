@@ -98,6 +98,12 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Diff package message neutralizes logging commands in cluster-provided text', done => {
         psr.run(path.join(__dirname, 'Create-DiffPackage.LoggingCommandInjection.ps1'), done);
     });
+    it('Application type registration neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Register-ServiceFabricApplicationTypeAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Force remove message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Remove-ServiceFabricApplicationAction.LoggingCommandInjection.ps1'), done);
+    });
     it('Task restricts logging commands and sanitizes cluster-provided output', done => {
         psr.run(path.join(__dirname, 'Task.LoggingCommandInjection.Guards.ps1'), done);
     });

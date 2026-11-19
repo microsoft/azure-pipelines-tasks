@@ -46,6 +46,9 @@
     }
 }
 
+# Cluster-provided text that this file writes to the log is sanitized with -VsoCommandMode blockAndTelemetry. It is
+# not controlled by the pipeline feature described in Tasks\Common\ExternalOutputSanitizer\README.md, which only
+# selects the mode for displayed filenames.
 . "$PSScriptRoot\..\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
 
 function Get-NamesFromApplicationManifest
@@ -558,7 +561,9 @@ function Register-ServiceFabricApplicationTypeAction
         throw
     }
 
-    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+    # The registered application type is read back from the cluster and is not written to the log.
+    $null = Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName `
+        -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -774,7 +779,9 @@ function Remove-ServiceFabricApplicationAction
     }
     catch [System.TimeoutException]
     {
-        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $ApplicationName)
+        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout `
+            -ArgumentList (Protect-ExternalOutput -InputObject $ApplicationName `
+                -Source remote -VsoCommandMode blockAndTelemetry))
         $removeAction = { Remove-ServiceFabricApplication -ApplicationName $ApplicationName -Force -ForceRemove }
         Invoke-ActionWithDefaultRetries -Action $removeAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `

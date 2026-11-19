@@ -251,6 +251,11 @@ $locStringSinks = @(
         File = 'Create-DiffPackage.psm1'
         Key = 'DIFFPKG_CreatingDiffPackageForService'
         ProtectedArguments = @(1)
+    },
+    @{
+        File = 'ServiceFabricSDK\Utilities.ps1'
+        Key = 'SFSDK_PerformingForceRemoveOnTimeout'
+        ProtectedArguments = @(0)
     }
 )
 
