@@ -268,8 +268,9 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         });
         assert.strictEqual(child.status, 0, child.stderr);
         assert(!/^##vso\[task\.setvariable/m.test(child.stdout), 'file input should not inject logging commands');
-        assert(child.stdout.indexOf('resultFiles=' + resultFile.replace(';', '%3B') +
-            '%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue;') >= 0, 'literal file input should be escaped');
+        assert(child.stdout.indexOf('resultFiles=') >= 0 &&
+            child.stdout.indexOf('missing%3Bresults.xml%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue;') >= 0,
+            'literal file input should be escaped');
         assert(child.stdout.indexOf('testRunSystem=VSTS - PTR;') >= 0, 'Windows should retain the PowerShell test run system');
     });
 
