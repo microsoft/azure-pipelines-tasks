@@ -1,5 +1,7 @@
 import Q = require('q');
 import assert = require('assert');
+import fs = require('fs');
+import os = require('os');
 import path = require('path');
 const ff = require(path.join(__dirname, '..', 'find-files-legacy.js'));
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
@@ -17,12 +19,99 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
     after(function () {
     });
 
+    it('Selects the Node handlers without the PowerShell handler in both task manifests', (done) => {
+        const manifests = [
+            JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'task.json'), 'utf8')),
+            JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'task.loc.json'), 'utf8'))
+        ];
+
+        manifests.forEach(manifest => {
+            assert.strictEqual(manifest.execution.PowerShell, undefined, 'PowerShell handler should not be declared');
+            assert(manifest.execution.Node10, 'Node10 handler should be declared');
+            assert(manifest.execution.Node16, 'Node16 handler should be declared');
+            assert(manifest.execution.Node20_1, 'Node20_1 handler should be declared');
+        });
+        done();
+    });
+
     it('Search simple pattern', (done) => {
         let test = ff.findFiles(path.join(data, '*.log'));
         assert(test.length === 2);
         assert(test[0] === posixFormat(path.join(data, 'a.log')));
         assert(test[1] === posixFormat(path.join(data, 'b.log')));
         done();
+    });
+
+    it('Finds an explicitly named result file containing glob characters', () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-results-'));
+        const resultFile = path.join(tempDir, 'results[1].xml');
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            assert.deepStrictEqual(ff.findFiles(resultFile), [posixFormat(resultFile)]);
+        } finally {
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Matches wildcard result files under a working directory containing glob characters', () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-[1]-'));
+        const resultFile = path.join(tempDir, 'test-result.xml');
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            assert.deepStrictEqual(ff.findFiles('**/test-*.xml', false, tempDir), [posixFormat(resultFile)]);
+        } finally {
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Matches result files case-insensitively on Windows', () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-case-'));
+        const resultFile = path.join(tempDir, 'test-result.xml');
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            const result = ff.findFiles('TEST-*.xml', false, tempDir);
+            if (process.platform === 'win32') {
+                assert.deepStrictEqual(result, [posixFormat(resultFile)]);
+            } else {
+                assert.deepStrictEqual(result, []);
+            }
+        } finally {
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
+    it('Includes symbolic links to result files', function () {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-symlink-'));
+        const resultFile = path.join(tempDir, 'test-result.xml');
+        const linkedResultFile = path.join(tempDir, 'linked-result.xml');
+        fs.writeFileSync(resultFile, '');
+
+        try {
+            try {
+                fs.symlinkSync(resultFile, linkedResultFile, 'file');
+            } catch (err) {
+                if (err.code === 'EPERM' || err.code === 'EACCES' || err.code === 'ENOSYS' || err.code === 'ENOTSUP') {
+                    this.skip();
+                    return;
+                }
+                throw err;
+            }
+
+            const result = ff.findFiles('*.xml', false, tempDir);
+            assert(result.indexOf(posixFormat(linkedResultFile)) >= 0, 'linked result file should be included');
+        } finally {
+            if (fs.existsSync(linkedResultFile)) {
+                fs.unlinkSync(linkedResultFile);
+            }
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
     });
 
     it('Search multiple patterns', (done) => {

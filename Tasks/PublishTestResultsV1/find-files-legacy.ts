@@ -18,13 +18,25 @@ export function findFiles(pattern: any, includeDir: boolean, cwd?: string): stri
         patterns = pattern;
     }
 
-    let searchPattern = extractPattern(patterns, baseDir);
-    let globPattern: string[] = searchPattern.includePatterns;
+    let searchPattern = extractPattern(patterns);
+    let globOptions = { nocase: process.platform === 'win32' };
+    let result: string[] = [];
 
-    searchPattern.excludePatterns.forEach(p => globPattern.push('!' + p));
-    tl.debug('Glob pattern: ' + JSON.stringify(globPattern));
+    searchPattern.includePatterns.forEach(p => {
+        let literalPath = getExistingPath(p, baseDir);
+        result = result.concat(literalPath ? [literalPath] : findGlobMatches(p, baseDir, globOptions));
+    });
 
-    let result = globule.find(globPattern);
+    searchPattern.excludePatterns.forEach(p => {
+        let literalPath = getExistingPath(p, baseDir);
+        if (literalPath) {
+            result = result.filter(file => !pathsEqual(file, literalPath));
+        } else {
+            result = result.filter(file => !matchesPattern(p, file, baseDir, globOptions));
+        }
+    });
+
+    result = result.filter((file, index) => result.indexOf(file) === index);
     tl.debug('Glob result length: ' + result.length);
     if (!includeDir) {
         return result.filter(isFile);
@@ -33,13 +45,7 @@ export function findFiles(pattern: any, includeDir: boolean, cwd?: string): stri
     return result;
 }
 
-function appendCwd(filterPattern: string[], cwd: string): string[] {
-    let result: string[] = [];
-    filterPattern.forEach(p => result.push(path.isAbsolute(p) ? p : path.join(cwd, p)));
-    return result;
-}
-
-function extractPattern(patterns: string[], cwd: string): any {
+function extractPattern(patterns: string[]): any {
     let includePatterns: string[] = [];
     let excludePatterns: string[] = [];
 
@@ -64,9 +70,75 @@ function extractPattern(patterns: string[], cwd: string): any {
 
     tl.debug('Include patterns length: ' + includePatterns.length + ' Exclude patterns length: ' + excludePatterns.length);
     return {
-        includePatterns: appendCwd(includePatterns, cwd),
-        excludePatterns: appendCwd(excludePatterns, cwd)
+        includePatterns: includePatterns,
+        excludePatterns: excludePatterns
     };
+}
+
+function findGlobMatches(pattern: string, cwd: string, options: any): string[] {
+    let searchLocation = getSearchLocation(pattern, cwd);
+    return searchLocation.pattern ?
+        globule.find(searchLocation.pattern, { cwd: searchLocation.directory, prefixBase: true, nocase: options.nocase }) :
+        [];
+}
+
+function matchesPattern(pattern: string, filePath: string, cwd: string, options: any): boolean {
+    let searchLocation = getSearchLocation(pattern, cwd);
+    let matchPath = path.relative(searchLocation.directory, filePath);
+
+    return globule.isMatch(
+        searchLocation.pattern,
+        normalizePath(matchPath),
+        options);
+}
+
+function getSearchLocation(pattern: string, cwd: string): { directory: string; pattern: string } {
+    let isAbsolute = path.isAbsolute(pattern);
+    let root = isAbsolute ? path.parse(pattern).root : '';
+    let searchDirectory = isAbsolute ? root : cwd;
+    let segments = normalizePath(isAbsolute ? pattern.substr(root.length) : pattern)
+        .split('/')
+        .filter(segment => segment.length > 0);
+    let segmentIndex = 0;
+
+    while (segmentIndex < segments.length) {
+        let segment = segments[segmentIndex];
+        if (segment === '.') {
+            segmentIndex++;
+            continue;
+        }
+
+        try {
+            let candidate = path.resolve(searchDirectory, segment);
+            if (!fs.statSync(candidate).isDirectory()) {
+                break;
+            }
+            searchDirectory = candidate;
+            segmentIndex++;
+        } catch (err) {
+            break;
+        }
+    }
+
+    return {
+        directory: searchDirectory,
+        pattern: segments.slice(segmentIndex).join('/')
+    };
+}
+
+function getExistingPath(pattern: string, cwd: string): string {
+    let filePath = path.isAbsolute(pattern) ? pattern : path.resolve(cwd, pattern);
+    return fs.existsSync(filePath) ? normalizePath(filePath) : null;
+}
+
+function normalizePath(filePath: string): string {
+    return filePath.replace(/[\\/]/g, '/');
+}
+
+function pathsEqual(left: string, right: string): boolean {
+    return process.platform === 'win32' ?
+        left.toLowerCase() === right.toLowerCase() :
+        left === right;
 }
 
 function isNullOrWhitespace(input) {
@@ -78,7 +150,7 @@ function isNullOrWhitespace(input) {
 
 function isFile(path: string): boolean {
     try {
-        return fs.lstatSync(path).isFile();
+        return fs.statSync(path).isFile();
     } catch (err) {
         return true;
     }
