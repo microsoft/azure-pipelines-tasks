@@ -4,11 +4,12 @@ import * as tl from "azure-pipelines-task-lib/task";
 import ContainerConnection from "azure-pipelines-tasks-docker-common/containerconnection";
 import * as utils from "./utils";
 import * as Q from 'q';
-import { createSanitizedExecOptions } from "azure-pipelines-tasks-docker-common/dockercommandutils";
+import { createSanitizedExecOptions, sanitizeDockerOutput } from "azure-pipelines-tasks-docker-common/dockercommandutils";
 
 const useDockerSkipRedundantTagFeature = "UseDockerSkipRedundantTag";
+const sanitizeDockerTagLogOutputFeature = "DockerTagSanitizeLogOutput";
 
-function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean, shouldSkipRedundantTag: boolean): Q.Promise<void> {
+function dockerTag(connection: ContainerConnection, sourceImage: string, targetImage: string, qualifyImageName: boolean, qualifySourceImageName: boolean, shouldSkipRedundantTag: boolean, shouldSanitizeLogOutput: boolean): Q.Promise<void> {
     let command = connection.createCommand();
     command.arg("tag");
     if (qualifyImageName) {
@@ -20,7 +21,12 @@ function dockerTag(connection: ContainerConnection, sourceImage: string, targetI
 
     // Skip only when the feature flag is enabled and source/target are identical.
     if (shouldSkipRedundantTag && sourceImage === targetImage) {
-        console.log(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sourceImage}`);
+        if (!shouldSanitizeLogOutput) {
+            console.log(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sourceImage}`);
+            return Q.resolve();
+        }
+
+        console.log(`Skipping tag because ${useDockerSkipRedundantTagFeature} is enabled and source/target are identical: ${sanitizeDockerOutput(sourceImage)}`);
         return Q.resolve();
     }
 
@@ -42,13 +48,14 @@ export function run(connection: ContainerConnection): Q.Promise<void> {
     var qualifyImageName = tl.getBoolInput("qualifyImageName");
     const qualifySourceImageName = tl.getBoolInput("qualifySourceImageName");
     const shouldSkipRedundantTag = tl.getPipelineFeature(useDockerSkipRedundantTagFeature);
+    const shouldSanitizeLogOutput = tl.getPipelineFeature(sanitizeDockerTagLogOutputFeature);
     let additionalImageTags = tl.getDelimitedInput("arguments", "\n");
     let imageMappings = utils.getImageMappings(connection, imageNames, additionalImageTags);
 
     let firstMapping = imageMappings.shift();
-    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag);
+    let promise = dockerTag(connection, firstMapping.sourceImageName, firstMapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput);
     imageMappings.forEach(mapping => {
-        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag));
+        promise = promise.then(() => dockerTag(connection, mapping.sourceImageName, mapping.targetImageName, qualifyImageName, qualifySourceImageName, shouldSkipRedundantTag, shouldSanitizeLogOutput));
     });
 
     return promise;
