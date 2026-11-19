@@ -33,9 +33,11 @@ const m2DirPath = path.join(userHomeDir, '.m2');
 const settingsXmlPath = path.join(m2DirPath, 'settings.xml');
 
 // Ensure BOTH HOME and USERPROFILE environment variables are set for the task
-// The task checks tl.osType() which is mocked, so set both to be safe
-process.env.USERPROFILE = userHomeDir;
-process.env.HOME = userHomeDir;
+// The task checks tl.osType() which is mocked, so set both to be safe.
+// homeEnvOverride simulates a queue-time HOME/USERPROFILE override from a pipeline variable.
+const homeEnvOverride = process.env[TestEnvVars.homeEnvOverride];
+process.env.USERPROFILE = homeEnvOverride || userHomeDir;
+process.env.HOME = homeEnvOverride || userHomeDir;
 
 // Read configuration from environment variables
 const artifactsFeeds = process.env[TestEnvVars.artifactsFeeds] || '';
@@ -51,7 +53,22 @@ const wifShouldFail = process.env[TestEnvVars.wifShouldFail] === 'true';
 const osType = process.env[TestEnvVars.osType] || 'Windows NT';
 const settingsXmlMode = parseInt(process.env[TestEnvVars.settingsXmlMode] || '644', 8);
 const chmodShouldFail = process.env[TestEnvVars.chmodShouldFail] === 'true';
+const userInfoShouldFail = process.env[TestEnvVars.userInfoShouldFail] === 'true';
+const accountHomeDir = process.env[TestEnvVars.accountHomeDir] || userHomeDir;
 
+// The task resolves the home directory from the OS account, not from HOME/USERPROFILE.
+{
+    const realOs = require('os');
+    tr.registerMock('os', {
+        ...realOs,
+        userInfo: () => {
+            if (userInfoShouldFail) {
+                throw new Error('ENOENT: no passwd entry');
+            }
+            return { ...realOs.userInfo(), homedir: accountHomeDir };
+        }
+    });
+}
 // Suppress debug output in tests — SYSTEM_DEBUG=true is set globally by make.js
 // for the test-runner process but should not be inherited by the task child process.
 // Only propagate it if a test explicitly requests it via TestEnvVars.
@@ -281,13 +298,19 @@ tr.setAnswers({
 
 if (!osType.match(/^Win/)) {
     const fs = require('fs');
+    // directoryAlias makes one directory report another's identity, simulating a bind mount.
+    const directoryAlias = process.env[TestEnvVars.directoryAlias];
+    const directoryAliasTarget = process.env[TestEnvVars.directoryAliasTarget];
     tr.registerMock('fs', {
         ...fs,
-        statSync: (filePath: string) => {
+        statSync: (filePath: string, options?: any) => {
             if (filePath === settingsXmlPath) {
                 return { mode: settingsXmlMode };
             }
-            return fs.statSync(filePath);
+            if (directoryAlias && directoryAliasTarget && filePath === directoryAlias) {
+                return fs.statSync(directoryAliasTarget, options);
+            }
+            return fs.statSync(filePath, options);
         },
         chmodSync: (filePath: string, mode: number) => {
             if (chmodShouldFail) {
