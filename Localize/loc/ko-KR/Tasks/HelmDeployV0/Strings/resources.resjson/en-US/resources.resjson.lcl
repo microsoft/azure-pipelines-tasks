@@ -864,6 +864,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidChartReference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The chart reference '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option. Set a valid chart name or repository value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[차트 참조 '%s'이(가) '-'로 시작하므로 Helm 자체 명령줄 파서가 옵션으로 잘못 해석할 수 있습니다. 유효한 차트 이름 또는 리포지토리 값을 설정하세요.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.]]></Val>
@@ -923,6 +932,15 @@
           <Val><![CDATA[Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Helm 명령 출력으로 설정되지 않은 출력 변수가 지원되는 최대 길이를 초과했습니다. 출력 길이: %s, 지원되는 최대 길이: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.OverrideValuesContainOptionLikeText" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An overrideValues entry contains text that looks like a command-line option. The entry is passed to Helm as part of the --set value and is not interpreted as an option.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[overrideValues 항목에는 명령줄 옵션처럼 보이는 텍스트가 포함되어 있습니다. 이 항목은 --set 값의 일부로 Helm에 전달되므로 옵션으로 해석되지 않습니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

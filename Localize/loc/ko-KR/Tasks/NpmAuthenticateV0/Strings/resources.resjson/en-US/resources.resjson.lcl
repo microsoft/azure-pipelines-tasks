@@ -234,6 +234,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_WifFeedUrlNotVerified" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The feedUrl input cannot be used with the workload identity service connection: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[feedUrl 입력은 워크로드 ID 서비스 연결과 함께 사용할 수 없습니다: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
@@ -300,11 +309,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.Info_SkippingNonHttpsWifRegistry" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.Info_SkippingUnverifiedWifRegistry" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Skipping WIF authentication for non-HTTPS registry: %s]]></Val>
+          <Val><![CDATA[Skipping WIF authentication for registry %s because it is not an Azure Artifacts feed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[HTTPS가 아닌 레지스트리에 대해 WIF 인증을 건너뛰는 중: %s]]></Val>
+            <Val><![CDATA[레지스트리 %s이(가) Azure Artifacts 피드가 아니므로 WIF 인증을 건너뜁니다.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

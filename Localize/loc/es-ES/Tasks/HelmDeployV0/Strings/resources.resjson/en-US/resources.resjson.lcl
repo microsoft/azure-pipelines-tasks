@@ -864,6 +864,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidChartReference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The chart reference '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option. Set a valid chart name or repository value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La referencia de gráfico "%s" comienza con "-", que el propio analizador de línea de comandos de Helm podría interpretar incorrectamente como una opción. Establezca un nombre de gráfico o un valor de repositorio válidos.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.]]></Val>
@@ -923,6 +932,15 @@
           <Val><![CDATA[Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[La variable de salida no establecida como salida del comando de Helm superó la longitud máxima admitida. Longitud de salida: %s. Longitud máxima admitida: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.OverrideValuesContainOptionLikeText" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An overrideValues entry contains text that looks like a command-line option. The entry is passed to Helm as part of the --set value and is not interpreted as an option.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Una entrada de overrideValues contiene texto que parece una opción de línea de comandos. La entrada se pasa a Helm como parte del valor --set y no se interpreta como una opción.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
