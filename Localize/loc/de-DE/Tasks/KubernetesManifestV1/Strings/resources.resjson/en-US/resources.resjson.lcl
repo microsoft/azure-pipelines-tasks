@@ -784,6 +784,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidManifestObjectToken" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The manifest field '%s' is empty or contains whitespace, quotes, control characters, or starts with '-', which could be misinterpreted as a kubectl option. Use a valid Kubernetes object name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Das Manifestfeld '%s' ist leer oder enthält Leerzeichen, Anführungszeichen, Steuerzeichen oder beginnt mit "-", was als kubectl-Option fehlinterpretiert werden könnte. Verwenden Sie einen gültigen Kubernetes-Objektnamen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidPercentage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid value for percentage.]]></Val>
@@ -807,6 +816,15 @@
           <Val><![CDATA[Reject action works only with strategy: canary]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Ablehnungsaktion funktioniert nur mit Strategie: Canary]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Der aufgelöste Release-Name „%s“ beginnt mit „-“; der Befehlszeilenparser von Helm könnte dies als Option und nicht als Release-Namen interpretieren. Geben Sie eine gültige Eingabe für „releaseName“ an.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

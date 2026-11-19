@@ -441,6 +441,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidSqlFilePath" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La ruta de acceso del archivo de script SQL contiene caracteres no admitidos (comillas, punto y coma o saltos de línea). Cambie el nombre del archivo o use un patrón de archivo diferente. Ruta de acceso: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.LinuxMysqlClientMissingError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[MySQL client is missing on the Linux agent machine. Please install it by running 'sudo apt-get install mysql-client'.]]></Val>
