@@ -160,14 +160,48 @@ export class PackageFile {
     }
 
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-        return new Promise<void>(function(resolve, reject) {
-            tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-            tl.debug(`Using extract-zip package for extracting archive`);
-            extract(zipLocation, { dir: unzipLocation }).then(() => {
-                resolve();
-            }).catch((error) => {
-                reject(error);
+        tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
+        tl.debug(`Using extract-zip package for extracting archive`);
+        if (tl.getPipelineFeature('DownloadPackage.DisableZipEntryValidation')) {
+            return extract(zipLocation, { dir: unzipLocation });
+        }
+
+        fs.mkdirSync(unzipLocation, { recursive: true });
+        const root = fs.realpathSync(unzipLocation);
+        const links: string[] = [];
+        const assertContained = (linkPath: string) => {
+            let relative = '..';
+            try {
+                relative = path.relative(root, fs.realpathSync(linkPath));
+            } catch { }
+            if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
+                throw new Error(tl.loc("InvalidArchiveEntryLink", path.relative(root, linkPath)));
+            }
+        };
+
+        try {
+            await extract(zipLocation, {
+                dir: unzipLocation,
+                onEntry: entry => {
+                    const entryPath = path.join(root, entry.fileName);
+                    let isLink = false;
+                    try {
+                        isLink = fs.lstatSync(entryPath).isSymbolicLink();
+                    } catch { }
+                    if (isLink) {
+                        assertContained(entryPath);
+                    }
+                    if (((entry.externalFileAttributes >>> 16) & 0xF000) === 0xA000) {
+                        links.push(entryPath);
+                    }
+                }
             });
-        });
+            links.forEach(assertContained);
+        } catch (error) {
+            links.forEach(linkPath => {
+                try { fs.unlinkSync(linkPath); } catch { }
+            });
+            throw error;
+        }
     }
 }
