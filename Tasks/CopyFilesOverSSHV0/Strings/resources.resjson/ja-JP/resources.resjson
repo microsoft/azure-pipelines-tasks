@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "リモート マシン上に %s が存在するかどうかを確認しています。",
   "loc.messages.PathExists": "リモート マシンに %s が存在します",
   "loc.messages.PathNotExists": "リモート マシンに %s が存在しません",
-  "loc.messages.UploadFolderFailed": "フォルダー %s をリモート コンピューター上の %s にアップロードできませんでした。%s。"
+  "loc.messages.UploadFolderFailed": "フォルダー %s をリモート コンピューター上の %s にアップロードできませんでした。%s。",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }

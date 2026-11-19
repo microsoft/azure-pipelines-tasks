@@ -55,6 +55,7 @@
   "loc.messages.AzureMysqlTaskParameterCannotBeEmpty": "Azure MySQL 작업 매개 변수는 null일 수 없습니다.",
   "loc.messages.ToolPathCannotBeNull": "도구 경로는 null일 수 없습니다.",
   "loc.messages.SqlExecutionException": "SQL 실행 예외가 발생했습니다. SQL 스크립트를 확인하세요. 오류: %s.",
+  "loc.messages.InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
   "loc.messages.AzureEndpointCannotBeNull": "잘못된 구독 이름입니다. Azure 서비스 연결은 null일 수 없습니다.",
   "loc.messages.CallbackCannotBeNull": "콜백은 null일 수 없습니다.",
   "loc.messages.UnableToCreateDatabaseException": "데이터베이스를 만들 수 없습니다.",

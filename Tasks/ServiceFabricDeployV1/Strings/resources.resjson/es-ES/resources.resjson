@@ -87,6 +87,8 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Debe reemplazarse la configuración de actualización o especificarse un perfil de publicación en la tarea de Azure Pipelines.",
   "loc.messages.UnsupportedARMAuthScheme": "El esquema de autenticación \"{0}\" no se admite para el punto de conexión ARM.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Esquema de autenticación \"{0}\" no admitido para el registro de contenedor de Azure.",
+  "loc.messages.RegistryAuthorityMismatch": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.",
+  "loc.messages.RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
   "loc.messages.SFSDK_InvalidManifestPathSegment": "Valor de {0} no válido '{1}' encontró en el paquete de aplicación. Este valor se usa como nombre de carpeta al compilar una ruta de acceso de archivo a partir del paquete de aplicación, por lo que debe ser un nombre simple: no puede estar vacío, no puede contener un separador de ruta de acceso o un segmento de ruta de acceso relativo, no puede ser una ruta de acceso absoluta ni terminar con un carácter final '.' o ' ' que Windows normalizaría.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} no es un paquete de aplicación de Service Fabric válido.",
   "loc.messages.SFSDK_PackageValidationFailed": "No se pudo llevar a cabo la validación del paquete: {0}",

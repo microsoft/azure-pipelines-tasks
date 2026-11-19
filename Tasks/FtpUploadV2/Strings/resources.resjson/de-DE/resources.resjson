@@ -41,6 +41,8 @@
   "loc.messages.FTPNoHostSpecified": "Die URL des FTP-Servers muss einen Hostnamen enthalten.",
   "loc.messages.FTPNoProtocolSpecified": "Die URL des FTP-Servers muss mit ftp:// oder ftps:// beginnen.",
   "loc.messages.NoFilesFound": "Es wurden keine Dateien zum Upload gefunden.",
+  "loc.messages.RemoteFileContainsBackslash": "File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.",
+  "loc.messages.RemoteFileEscapesRemotePath": "File name '%s' would be uploaded outside the remote directory '%s'.",
   "loc.messages.UploadRemoteDir": "Die Dateien werden in das Remoteverzeichnis hochgeladen: %s",
   "loc.messages.UploadSucceedMsg": "FTP-Upload erfolgreich: %s",
   "loc.messages.UploadSucceedRes": "FTP-Upload erfolgreich",

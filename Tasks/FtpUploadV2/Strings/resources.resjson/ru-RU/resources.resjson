@@ -41,6 +41,8 @@
   "loc.messages.FTPNoHostSpecified": "В URL-адресе FTP-сервера должно быть указано имя узла.",
   "loc.messages.FTPNoProtocolSpecified": "URL-адрес FTP-сервера должен начинаться с \"ftp://\" или \"ftps://\"",
   "loc.messages.NoFilesFound": "Не удалось найти файлы для отправки",
+  "loc.messages.RemoteFileContainsBackslash": "File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.",
+  "loc.messages.RemoteFileEscapesRemotePath": "File name '%s' would be uploaded outside the remote directory '%s'.",
   "loc.messages.UploadRemoteDir": "отправка файлов в удаленный каталог: %s",
   "loc.messages.UploadSucceedMsg": "Отправка по FTP успешно завершена: %s",
   "loc.messages.UploadSucceedRes": "Отправка по FTP успешно завершена.",

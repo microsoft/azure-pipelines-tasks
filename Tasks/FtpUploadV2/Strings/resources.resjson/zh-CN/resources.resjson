@@ -41,6 +41,8 @@
   "loc.messages.FTPNoHostSpecified": "FTP 服务器 URL 必需包括主机名",
   "loc.messages.FTPNoProtocolSpecified": "FTP 服务器 URL 必需以 ftp:// 或 ftps:// 开头",
   "loc.messages.NoFilesFound": "找不到任何要上传的文件",
+  "loc.messages.RemoteFileContainsBackslash": "File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.",
+  "loc.messages.RemoteFileEscapesRemotePath": "File name '%s' would be uploaded outside the remote directory '%s'.",
   "loc.messages.UploadRemoteDir": "正在将文件上传到远程目录: %s",
   "loc.messages.UploadSucceedMsg": "FTP 已成功上传 %s",
   "loc.messages.UploadSucceedRes": "FTP 已成功上传",

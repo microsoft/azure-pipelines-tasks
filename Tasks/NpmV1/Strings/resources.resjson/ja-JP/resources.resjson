@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "プロジェクト .npmrc を復元しています",
   "loc.messages.WorkingDirectoryNotDirectory": "作業ディレクトリを有効なディレクトリに変更してください",
   "loc.messages.NGCommon_AreaNotFoundInSps": "'%s' [%s] 領域を特定できません。この領域を含むサービスは、ご利用の地域では提供されません。",
-  "loc.messages.UnsupportedServiceConnectionAuth": "サービス接続では、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。"
+  "loc.messages.UnsupportedServiceConnectionAuth": "サービス接続で、サポートされている認証方法が使用されていません。個人用アクセス トークン ベースの認証でサービス接続を使用してください。",
+  "loc.messages.PackagingCollectionUrlInvalid": "Npm.PackagingCollectionUrl 変数は、有効な URL ではありません。",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "Npm.PackagingCollectionUrl 変数では、http または https を使用する必要があります。",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "Npm.PackagingCollectionUrl 変数に資格情報を含めることはできません。",
+  "loc.messages.PackagingCollectionUrlMismatch": "Npm.PackagingCollectionUrl 変数はコレクション URI と一致しません。"
 }

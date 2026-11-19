@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "Восстанавливается файл NPMRC проекта",
   "loc.messages.WorkingDirectoryNotDirectory": "Измените рабочий каталог на допустимый",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Не удается найти область \"%s\" [%s]. Возможно, служба, содержащая эту область, недоступна в вашем регионе.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "Подключение к службе не использует поддерживаемый метод проверки подлинности. Используйте сервисное соединение с проверкой подлинности на основе токена личного доступа."
+  "loc.messages.UnsupportedServiceConnectionAuth": "Подключение службы не использует поддерживаемый метод проверки подлинности. Используйте подключение службы с проверкой подлинности на основе личного маркера доступа.",
+  "loc.messages.PackagingCollectionUrlInvalid": "Переменная Npm.PackagingCollectionUrl не является допустимым URL-адресом.",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "Переменная Npm.PackagingCollectionUrl должна использовать http или https.",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "Переменная Npm.PackagingCollectionUrl не должна содержать учетные данные.",
+  "loc.messages.PackagingCollectionUrlMismatch": "Переменная Npm.PackagingCollectionUrl не совпадает с URI коллекции."
 }

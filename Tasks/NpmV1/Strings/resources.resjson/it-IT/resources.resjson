@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "Ripristino del file di progetto con estensione npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Sostituire la directory di lavoro con una directory valida",
   "loc.messages.NGCommon_AreaNotFoundInSps": "L'area '%s' [%s] non è stata trovata. Il servizio che contiene tale area potrebbe non essere disponibile nell'area geografica corrente.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "La connessione al servizio non utilizza un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale."
+  "loc.messages.UnsupportedServiceConnectionAuth": "La connessione al servizio non usa un metodo di autenticazione supportato. Usare una connessione al servizio con autenticazione basata su token di accesso personale.",
+  "loc.messages.PackagingCollectionUrlInvalid": "La variabile Npm.PackagingCollectionUrl non è un URL valido.",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "La variabile Npm.PackagingCollectionUrl deve usare http o https.",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "La variabile Npm.PackagingCollectionUrl non deve contenere credenziali.",
+  "loc.messages.PackagingCollectionUrlMismatch": "La variabile Npm.PackagingCollectionUrl non corrisponde all'URI della raccolta."
 }

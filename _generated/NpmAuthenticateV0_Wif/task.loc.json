@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 283,
-    "Patch": 3
+    "Minor": 284,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -148,7 +148,7 @@
     "Debug_EndpointProbeFailed": "ms-resource:loc.messages.Debug_EndpointProbeFailed"
   },
   "_buildConfigMapping": {
-    "Default": "0.283.2",
-    "wif_242": "0.283.3"
+    "Default": "0.284.0",
+    "wif_242": "0.284.1"
   }
 }

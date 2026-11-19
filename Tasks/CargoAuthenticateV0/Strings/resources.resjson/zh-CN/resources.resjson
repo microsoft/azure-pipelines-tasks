@@ -24,7 +24,7 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "无法从服务连接 %s 获取联合凭据。",
   "loc.messages.MissingRegistryNameOrServiceConnection": "注册表名称和服务连接都需要设置，不能为空。",
   "loc.messages.RegistryNotFound": "注册表名称输入 \"%s\" 不对应 config.toml 中的任何注册表",
-  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
-  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
+  "loc.messages.RegistryEnvKeyCollision": "注册表“%s”映射到同一个 Cargo 环境变量“%s”。请重命名其中一个注册表，以避免凭据混淆。",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "正在跳过注册表“%s”，因为其索引 URL“%s”未托管在 Azure DevOps 中。",
+  "loc.messages.RegistryFeedVerificationFailed": "注册表源 URL 验证失败；正在跳过此注册表的身份验证。"
 }

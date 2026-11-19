@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "원격 머신에 %s이(가) 있는지 확인하는 중입니다.",
   "loc.messages.PathExists": "%s이(가) 원격 머신에 있습니다.",
   "loc.messages.PathNotExists": "%s이(가) 원격 머신에 없습니다.",
-  "loc.messages.UploadFolderFailed": "원격 컴퓨터의 %s 폴더를 %s에 업로드하지 못했습니다. %s."
+  "loc.messages.UploadFolderFailed": "원격 컴퓨터의 %s 폴더를 %s에 업로드하지 못했습니다. %s.",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }

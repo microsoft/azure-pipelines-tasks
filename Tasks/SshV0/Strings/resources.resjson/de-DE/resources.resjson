@@ -37,5 +37,5 @@
   "loc.messages.SettingUpSshConnection": "Es wird versucht, eine SSH-Verbindung mit \"%s@%s:%s\" einzurichten.",
   "loc.messages.SshConnectionSuccessful": "Verbindung erfolgreich hergestellt.",
   "loc.messages.UseDefaultPort": "Port 22 wird als Standardeinstellung für SSH verwendet, da kein Port angegeben wurde.",
-  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen umgekehrten Schrägstrich (\\), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Maskieren Sie Sonderzeichen mit dem Maskierungszeichen der Ziel-Shell: dem umgekehrten Schrägstrich (\\) für Bash oder dem Backtick (`) für PowerShell. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787"
 }
