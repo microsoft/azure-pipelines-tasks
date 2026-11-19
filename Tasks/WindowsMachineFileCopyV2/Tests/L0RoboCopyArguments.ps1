@@ -86,6 +86,10 @@ try
     function global:Get-VstsPipelineFeature {
         param([string]$FeatureName)
 
+        if ($FeatureName -eq 'EnableWindowsMachineFileCopyMachineNamesSanitization') {
+            return $false
+        }
+
         $global:featureLookupCallCount++
         return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
     }

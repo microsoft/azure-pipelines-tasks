@@ -52,6 +52,9 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Filters cleanup and copy output without changing Robocopy exit-code handling', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyOutput.ps1'), done);
         });
+        it('Neutralizes ##vso[ markers in MachineNames only when the sanitization feature is enabled', (done) => {
+            psr.run(path.join(__dirname, 'L0MachineNamesVsoSanitization.ps1'), done);
+        });
     }
     else {
         console.warn('Cannot run tests for WindowsMachineFileCopy on Non-Windows Platform');
