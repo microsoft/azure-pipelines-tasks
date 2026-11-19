@@ -775,9 +775,8 @@ function Remove-ServiceFabricApplicationAction
     }
     catch [System.TimeoutException]
     {
-        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout `
-            -ArgumentList (Protect-ExternalOutput -InputObject $ApplicationName `
-                -Source remote -VsoCommandMode blockAndTelemetry))
+        $displayApplicationName = Protect-ExternalOutput -InputObject $ApplicationName -Source remote -VsoCommandMode blockAndTelemetry
+        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $displayApplicationName)
         $removeAction = { Remove-ServiceFabricApplication -ApplicationName $ApplicationName -Force -ForceRemove }
         Invoke-ActionWithDefaultRetries -Action $removeAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `

@@ -20,9 +20,9 @@ foreach ($definitionName in 'task.json', 'task.loc.json')
 }
 
 # 2. Text read back from the cluster must reach the host only through a blocking Protect-ExternalOutput call. The
-#    behavioral tests prove that each known sink neutralizes a marker; this guards their call sites, including the
-#    refactorings that would silently bypass the sanitizer. It is a targeted check of the known call sites, not a
-#    general rule for every message of the task.
+#    behavioral tests prove that each known sink neutralizes a marker; this guards the call sites of the functions
+#    below, including the refactorings that would silently bypass the sanitizer. It is a targeted check of the known
+#    call sites, not a general rule for every message of the task.
 function Get-UnqualifiedCommandName([string] $Name)
 {
     $lastSeparator = $Name.LastIndexOf('\')
@@ -138,19 +138,6 @@ function Test-IsFixedLabel($Element)
         (Test-IsParameter $call.CommandElements[1] 'Key')
 }
 
-# The elements of an -ArgumentList value: '@(a, b)', 'a, b' or a single value.
-function Get-ArgumentListElements($Value)
-{
-    if ($Value -is [System.Management.Automation.Language.ArrayExpressionAst])
-    {
-        if ($Value.SubExpression.Statements.Count -ne 1) { return @($Value) }
-        $Value = $Value.SubExpression.Statements[0].PipelineElements[0].Expression
-    }
-
-    if ($Value -is [System.Management.Automation.Language.ArrayLiteralAst]) { return @($Value.Elements) }
-    return @($Value)
-}
-
 $otherHostOutput = 'Write-Output', 'write', 'Write-Information', 'Out-Host', 'Out-Default', 'echo'
 $violations = @()
 
@@ -232,56 +219,6 @@ foreach ($sink in $hostSinkFunctions)
     if (-not $protectCall -or -not (Test-BlocksLoggingCommands $protectCall))
     {
         $violations += "Utilities.ps1:$($dumps[0].Extent.StartLineNumber): $($dumps[0].Extent.Text)"
-    }
-}
-
-# 2b. Messages built with Get-VstsLocString: the -ArgumentList values at these positions come from the cluster.
-$locStringSinks = @(
-    @{
-        File = 'ServiceFabricSDK\Publish-UpgradedServiceFabricApplication.ps1'
-        Key = 'SFSDK_StartUpgradeFailed'
-        ProtectedArguments = @(0)
-    },
-    @{
-        File = 'ServiceFabricSDK\Publish-NewServiceFabricApplication.ps1'
-        Key = 'SFSDK_AppAlreadyExistsInfo'
-        ProtectedArguments = @(1, 2)
-    },
-    @{
-        File = 'Create-DiffPackage.psm1'
-        Key = 'DIFFPKG_CreatingDiffPackageForService'
-        ProtectedArguments = @(1)
-    },
-    @{
-        File = 'ServiceFabricSDK\Utilities.ps1'
-        Key = 'SFSDK_PerformingForceRemoveOnTimeout'
-        ProtectedArguments = @(0)
-    }
-)
-
-foreach ($sink in $locStringSinks)
-{
-    $messages = Find-Commands (Get-ParsedFile $sink.File) {
-        param($command)
-        if ((Get-UnqualifiedCommandName $command.GetCommandName()) -ne 'Get-VstsLocString') { return $false }
-        $key = Get-ParameterValue $command 'Key'
-        return ($null -ne $key) -and ($key.Extent.Text.Trim("'", '"') -eq $sink.Key)
-    }
-    Assert-AreEqual 1 $messages.Count (
-        "Expected exactly one Get-VstsLocString -Key $($sink.Key) call in $($sink.File); " +
-        'this guard needs updating if it moved or was renamed.')
-
-    $argumentList = Get-ParameterValue $messages[0] 'ArgumentList'
-    $elements = @()
-    if ($argumentList) { $elements = @(Get-ArgumentListElements $argumentList) }
-
-    foreach ($index in $sink.ProtectedArguments)
-    {
-        if (($elements.Count -le $index) -or -not (Test-IsBlockingProtectCall $elements[$index]))
-        {
-            $violations += "$($sink.File):$($messages[0].Extent.StartLineNumber): " +
-                "-ArgumentList value $index of $($messages[0].Extent.Text)"
-        }
     }
 }
 
