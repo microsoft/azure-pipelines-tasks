@@ -46,9 +46,6 @@
     }
 }
 
-# Cluster-provided text that this file writes to the log is sanitized with -VsoCommandMode blockAndTelemetry. It is
-# not controlled by the pipeline feature described in Tasks\Common\ExternalOutputSanitizer\README.md, which only
-# selects the mode for displayed filenames.
 . "$PSScriptRoot\..\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
 
 function Get-NamesFromApplicationManifest
@@ -561,7 +558,6 @@ function Register-ServiceFabricApplicationTypeAction
         throw
     }
 
-    # The registered application type is read back from the cluster and is not written to the log.
     $null = Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName `
         -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
 }
