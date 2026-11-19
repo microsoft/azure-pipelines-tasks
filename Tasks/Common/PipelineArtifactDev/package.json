@@ -1,0 +1,17 @@
+{
+  "name": "pipeline-artifact-dev-common",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shared orchestration for test-only local ArtifactTool tasks.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT",
+  "dependencies": {
+    "azure-devops-node-api": "^17.0.1",
+    "azure-pipelines-task-lib": "^5.281.1",
+    "@types/node": "^24.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

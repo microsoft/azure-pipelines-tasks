@@ -1,0 +1,22 @@
+{
+  "loc.friendlyName": "Publish Pipeline Artifacts (dev only)",
+  "loc.helpMarkDown": "Uses a trusted local ArtifactTool executable in the normal task target, including containers. Does not download tools or invoke agent plug-ins.",
+  "loc.description": "Test-only Node replacement using an explicit local ArtifactTool build. Not for production.",
+  "loc.instanceNameFormat": "Publish Pipeline Artifact (development)",
+  "loc.input.label.artifactToolPath": "Local development ArtifactTool executable",
+  "loc.input.help.artifactToolPath": "Absolute executable path visible inside the task target. Must be a trusted development build with pipeline artifact metadata and pattern support. No tool download or PATH lookup is performed.",
+  "loc.input.label.path": "File or directory path",
+  "loc.input.help.path": "File or directory to publish; relative paths use System.DefaultWorkingDirectory. Wildcards are not supported.",
+  "loc.input.label.artifactName": "Artifact name",
+  "loc.input.help.artifactName": "Defaults to the normalized job identifier. Strict artifact name validation is always enabled in this development task.",
+  "loc.input.label.artifactType": "Publish location",
+  "loc.input.label.fileSharePath": "File share path",
+  "loc.input.help.fileSharePath": "Windows-only share accessible to the normal task target, not implicitly to the host.",
+  "loc.input.label.parallel": "Parallel copy",
+  "loc.input.label.parallelCount": "Parallel count",
+  "loc.input.help.parallelCount": "Copy parallelism from 1 to 128; out-of-range values are clamped with a warning.",
+  "loc.input.label.properties": "Custom properties",
+  "loc.input.help.properties": "JSON object of strings with user- prefixed keys.",
+  "loc.messages.DevelopmentOnly": "Development-only task: invoking a trusted local ArtifactTool build. Production tasks and YAML shortcuts are unchanged.",
+  "loc.messages.TaskFailed": "Artifact task failed: %s"
+}
