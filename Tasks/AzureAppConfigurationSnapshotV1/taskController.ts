@@ -4,6 +4,7 @@ import { RestError } from "@azure/core-rest-pipeline";
 import { TaskParameters } from './taskParameters';
 import { AppConfigurationError, getErrorMessage } from "./errors";
 import { Utils } from './utils';
+import { format } from "util";
 
 export class TaskController {
     private _taskParameters: TaskParameters;
@@ -24,11 +25,11 @@ export class TaskController {
 
     public async createSnapshot(): Promise<void> {
         console.log(tl.loc("SnapshotTaskIsStartingUp"));
-        console.log(tl.loc("AzureSubscriptionTitle"), this._taskParameters.endpoint.subscriptionName);
-        console.log(tl.loc("AzureAppConfigurationEndpointTitle"), this._taskParameters.configStoreUrl);
-        console.log(tl.loc("SnapshotNameTitle"), this._taskParameters.snapshotName);
+        tl.writeExternalOutput(`${tl.loc("AzureSubscriptionTitle")} ${this._taskParameters.endpoint.subscriptionName}\n`, { source: "remote" });
+        tl.writeExternalOutput(`${tl.loc("AzureAppConfigurationEndpointTitle")} ${this._taskParameters.configStoreUrl}\n`, { source: "repository" });
+        tl.writeExternalOutput(`${tl.loc("SnapshotNameTitle")} ${this._taskParameters.snapshotName}\n`, { source: "repository" });
         console.log(tl.loc("CompositionTypeTitle"), this._taskParameters.compositionType);
-        console.log(tl.loc("FiltersTitle"), this._taskParameters.filters);
+        tl.writeExternalOutput(format(tl.loc("FiltersTitle"), this._taskParameters.filters) + "\n", { source: "repository" });
 
         try {
             const createdSnapshot: CreateSnapshotResponse = await this._client.beginCreateSnapshotAndWait({
@@ -39,7 +40,7 @@ export class TaskController {
                 tags: this._taskParameters.tags
             });
 
-            console.log(tl.loc("SnapshotCreatedSuccessfully", createdSnapshot.name, new Date(createdSnapshot.createdOn), createdSnapshot.itemCount, createdSnapshot.sizeInBytes, createdSnapshot.status));
+            tl.writeExternalOutput(tl.loc("SnapshotCreatedSuccessfully", createdSnapshot.name, new Date(createdSnapshot.createdOn), createdSnapshot.itemCount, createdSnapshot.sizeInBytes, createdSnapshot.status) + "\n", { source: "remote" });
         }
         catch (error: any) {
             if (error instanceof RestError) {
