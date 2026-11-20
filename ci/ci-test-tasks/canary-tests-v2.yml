@@ -59,8 +59,29 @@ jobs:
       npm run build
     displayName: 'Build test pipelines runner'
 
-  - script: |
-      echo "Tasks to test: $(tasks)"
-      node --no-deprecation ./ci/ci-test-tasks/test-and-verify-v2 $(System.AccessToken) $(ADOUrl) $(System.TeamProject) $(tasks)
+  - task: AzureCLI@3
     displayName: 'Run test pipelines and verify results'
-    failOnStderr: true
+    inputs:
+      connectionType: azureDevOps
+      azureDevOpsServiceConnection: 'QueueBuild-SC'
+      keepAzSessionActive: true
+      scriptType: pscore
+      scriptLocation: inlineScript
+      failOnStandardError: true
+      inlineScript: |
+        $canaryToken = az account get-access-token `
+          --resource 499b84ac-1321-427f-aa17-267ca6975798 `
+          --query accessToken --output tsv --only-show-errors
+        if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($canaryToken)) {
+          throw 'Failed to obtain the canary build service connection token.'
+        }
+        $canaryToken = $canaryToken.Trim()
+        Write-Host "##vso[task.setsecret]$canaryToken"
+        $env:CANARY_BUILDS_ACCESS_TOKEN = $canaryToken
+        Write-Host "Tasks to test: $env:CANARY_TASKS"
+        node --no-deprecation ./ci/ci-test-tasks/test-and-verify-v2 $env:CANARY_ADO_URL $env:CANARY_PROJECT $env:CANARY_TASKS
+        exit $LASTEXITCODE
+    env:
+      CANARY_ADO_URL: $(ADOUrl)
+      CANARY_PROJECT: $(System.TeamProject)
+      CANARY_TASKS: $(tasks)
