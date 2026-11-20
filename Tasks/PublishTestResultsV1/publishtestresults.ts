@@ -21,13 +21,34 @@ let workingDirectory = tl.getVariable('System.DefaultWorkingDirectory');
 let matchingTestResultsFiles = process.platform === 'win32' ?
   ffl.findWindowsFiles(testResultsFiles, workingDirectory) :
   ffl.findFiles(testResultsFiles, false, workingDirectory);
+let taskResult = tl.TaskResult.Succeeded;
+let taskResultMessage = '';
 if(!matchingTestResultsFiles || matchingTestResultsFiles.length == 0) {
   tl.warning('No test result files matching ' + testResultsFiles + ' were found.');
 }
 else{
-  let tp = new tl.TestPublisher(testRunner);
-  tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments,
-    process.platform === 'win32' ? 'VSTS - PTR' : undefined);
+  let hasCommaPath = matchingTestResultsFiles.some(file => file.indexOf(',') >= 0);
+  let supportsStructuredResultFiles = (tl.getVariable('Agent.Features.ResultsPublishStructuredFiles') || '').toLowerCase() === 'true';
+  if (hasCommaPath && !supportsStructuredResultFiles) {
+    taskResult = tl.TaskResult.Failed;
+    taskResultMessage = 'Publishing test results from paths containing commas requires an updated Azure Pipelines agent.';
+  } else if (hasCommaPath) {
+    tl.command('results.publish', {
+      type: testRunner,
+      mergeResults: mergeResults,
+      platform: platform,
+      config: config,
+      runTitle: testRunTitle,
+      publishRunAttachments: publishRunAttachments,
+      resultFiles: matchingTestResultsFiles.join(','),
+      resultFilesJson: JSON.stringify(matchingTestResultsFiles),
+      testRunSystem: process.platform === 'win32' ? 'VSTS - PTR' : 'VSTSTask'
+    }, '');
+  } else {
+    let tp = new tl.TestPublisher(testRunner);
+    tp.publish(matchingTestResultsFiles, mergeResults, platform, config, testRunTitle, publishRunAttachments,
+      process.platform === 'win32' ? 'VSTS - PTR' : undefined);
+  }
 }
 
-tl.setResult(tl.TaskResult.Succeeded, '');
+tl.setResult(taskResult, taskResultMessage);

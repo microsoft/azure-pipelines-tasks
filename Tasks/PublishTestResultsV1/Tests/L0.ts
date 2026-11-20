@@ -274,6 +274,45 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         assert(child.stdout.indexOf('testRunSystem=VSTS - PTR;') >= 0, 'Windows should retain the PowerShell test run system');
     });
 
+    it('Requires structured agent support and safely publishes comma-containing result paths', function () {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ptr-comma-results-'));
+        const resultFile = path.join(tempDir, 'test,results.xml');
+        fs.writeFileSync(resultFile, '');
+
+        const env = Object.assign({}, process.env);
+        Object.keys(env).filter(key => key.indexOf('INPUT_') === 0).forEach(key => delete env[key]);
+        env.INPUT_TESTRUNNER = 'JUnit';
+        env.INPUT_TESTRESULTSFILES = resultFile;
+        env.INPUT_TESTRUNTITLE = 'Comma path\n##vso[task.setvariable variable=PTR_INJECTED;]true';
+        env.SYSTEM_DEFAULTWORKINGDIRECTORY = tempDir;
+        delete env.AGENT_FEATURES_RESULTSPUBLISHSTRUCTUREDFILES;
+
+        try {
+            const oldAgent = cp.spawnSync(process.execPath, [path.join(__dirname, '..', 'publishtestresults.js')], {
+                env: env,
+                encoding: 'utf8'
+            });
+            assert.strictEqual(oldAgent.status, 0, oldAgent.stderr);
+            assert(oldAgent.stdout.indexOf('requires an updated Azure Pipelines agent') >= 0, 'older agents should fail clearly');
+            assert(/^##vso\[task\.complete result=Failed;/m.test(oldAgent.stdout), 'older agents should report a failed task result');
+            assert(!/^##vso\[task\.complete result=Succeeded;/m.test(oldAgent.stdout), 'older agents must not overwrite the failure with success');
+            assert(!/^##vso\[results\.publish/m.test(oldAgent.stdout), 'older agents must not silently lose comma-containing paths');
+
+            env.AGENT_FEATURES_RESULTSPUBLISHSTRUCTUREDFILES = 'true';
+            const currentAgent = cp.spawnSync(process.execPath, [path.join(__dirname, '..', 'publishtestresults.js')], {
+                env: env,
+                encoding: 'utf8'
+            });
+            assert.strictEqual(currentAgent.status, 0, currentAgent.stderr);
+            assert(currentAgent.stdout.indexOf('resultFilesJson=' + JSON.stringify([resultFile]).replace(/\]/g, '%5D') + ';') >= 0,
+                'structured paths should be emitted as a JSON array');
+            assert(!/^##vso\[task\.setvariable/m.test(currentAgent.stdout), 'user input must not inject logging commands');
+        } finally {
+            fs.unlinkSync(resultFile);
+            fs.rmdirSync(tempDir);
+        }
+    });
+
     it('Search multiple patterns', (done) => {
         let test = ff.findFiles([path.join(data, '*.log'), path.join(data, '*.txt')]);
         assert(test.length === 4);
