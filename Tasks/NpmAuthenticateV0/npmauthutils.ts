@@ -12,6 +12,7 @@ import * as ini from 'ini';
 import * as pkgLocationUtils from 'azure-pipelines-tasks-packaging-common/locationUtilities';
 import { resolveServiceEndpointCredential, NpmrcCredential } from './npmrcCredential';
 import { emitTelemetry } from 'azure-pipelines-tasks-artifacts-common/telemetry';
+import { NpmrcBackupRootDirectoryName, NpmrcBackupRootTaskVariable } from './npmrcBackupManager';
 
 export function writeRepositoryOutput(message: string): void {
     tl.writeExternalOutput(message + os.EOL, { source: 'repository' });
@@ -188,7 +189,7 @@ export function initializeBackupDirectory(): string {
     let lastError: Error;
     for (let i = 0; i < candidateDirectories.length; i++) {
         try {
-            tempPath = path.join(candidateDirectories[i], 'npmAuthenticateBackup');
+            tempPath = path.join(candidateDirectories[i], NpmrcBackupRootDirectoryName);
             tl.mkdirP(tempPath);
             backupDirectory = fs.mkdtempSync(tempPath + path.sep);
             if (i > 0) {
@@ -205,6 +206,7 @@ export function initializeBackupDirectory(): string {
 
     tl.setVariable('SAVE_NPMRC_PATH', backupDirectory, false);
     tl.setVariable('NPM_AUTHENTICATE_TEMP_DIRECTORY', tempPath, false);
+    tl.setTaskVariable(NpmrcBackupRootTaskVariable, tempPath);
     return backupDirectory;
 }
 

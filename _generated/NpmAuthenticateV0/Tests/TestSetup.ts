@@ -30,6 +30,9 @@ if (process.env[TestEnvVars.existingEndpoints]) {
     process.env['EXISTING_ENDPOINTS'] = process.env[TestEnvVars.existingEndpoints];
 }
 process.env['AGENT_BUILDDIRECTORY'] = os.tmpdir();
+if (process.env[TestEnvVars.npmAuthTempDirectory]) {
+    process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'] = process.env[TestEnvVars.npmAuthTempDirectory];
+}
 
 // Pre-create SAVE_NPMRC_PATH to avoid mkdtempSync issues in mock mode
 const _saveNpmrcBase = path.join(os.tmpdir(), 'npmAuthenticate');
@@ -37,7 +40,7 @@ if (!fs.existsSync(_saveNpmrcBase)) {
     fs.mkdirSync(_saveNpmrcBase, { recursive: true });
 }
 const _saveNpmrcPath = fs.mkdtempSync(_saveNpmrcBase + path.sep);
-process.env['SAVE_NPMRC_PATH'] = _saveNpmrcPath;
+process.env['SAVE_NPMRC_PATH'] = process.env[TestEnvVars.saveNpmrcPath] || _saveNpmrcPath;
 
 // SYSTEMVSSCONNECTION for resolveInternalFeedCredentials
 process.env['ENDPOINT_AUTH_PARAMETER_SYSTEMVSSCONNECTION_ACCESSTOKEN'] = TestData.systemAccessToken;

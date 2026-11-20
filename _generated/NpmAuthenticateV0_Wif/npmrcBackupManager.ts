@@ -9,6 +9,46 @@ export interface FileIdentity {
 }
 
 export const NpmrcFileIdentityTaskVariable = 'NPM_AUTHENTICATE_FILE_IDENTITY';
+export const NpmrcBackupRootTaskVariable = 'NPM_AUTHENTICATE_BACKUP_ROOT';
+export const NpmrcBackupRootDirectoryName = 'npmAuthenticateBackup';
+
+export function getTrustedBackupRootDirectory(): string | undefined {
+    const backupRootDirectory = tl.getTaskVariable(NpmrcBackupRootTaskVariable);
+    if (!backupRootDirectory) {
+        return undefined;
+    }
+
+    const expectedDirectories = [tl.getVariable('Agent.HomeDirectory'), tl.getVariable('Agent.TempDirectory')]
+        .filter((directory) => !!directory)
+        .map((directory) => path.resolve(directory, NpmrcBackupRootDirectoryName));
+    const normalizedBackupRoot = path.resolve(backupRootDirectory);
+    const expectedDirectory = expectedDirectories.find((directory) =>
+        process.platform === 'win32'
+            ? directory.toLowerCase() === normalizedBackupRoot.toLowerCase()
+            : directory === normalizedBackupRoot);
+    if (!expectedDirectory) {
+        tl.warning(tl.loc('Warning_NpmrcBackupCleanupSkipped'));
+        return undefined;
+    }
+
+    let stats: fs.Stats;
+    try {
+        stats = fs.lstatSync(expectedDirectory);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return undefined;
+        }
+        tl.warning(tl.loc('Warning_NpmrcBackupCleanupSkipped'));
+        return undefined;
+    }
+
+    if (!stats.isDirectory() || stats.isSymbolicLink()) {
+        tl.warning(tl.loc('Warning_NpmrcBackupCleanupSkipped'));
+        return undefined;
+    }
+
+    return expectedDirectory;
+}
 
 // Tracks which .npmrc files have been backed up so that npmauthcleanup can
 // restore them. The first snapshot per file is kept; subsequent calls validate

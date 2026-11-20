@@ -26,10 +26,13 @@ export class TestHelpers {
         Object.values(TestEnvVars).forEach(v => delete process.env[v]);
         delete process.env['SYSTEM_ACCESSTOKEN'];
         delete process.env['AGENT_BUILDDIRECTORY'];
+        delete process.env['AGENT_HOMEDIRECTORY'];
+        delete process.env['AGENT_TEMPDIRECTORY'];
         delete process.env['SYSTEM_DEBUG'];
         delete process.env['SAVE_NPMRC_PATH'];
         delete process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'];
         delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'];
+        delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_BACKUP_ROOT'];
         delete process.env['EXISTING_ENDPOINTS'];
     }
 
@@ -37,10 +40,13 @@ export class TestHelpers {
         Object.values(TestEnvVars).forEach(v => delete process.env[v]);
         delete process.env['SYSTEM_ACCESSTOKEN'];
         delete process.env['AGENT_BUILDDIRECTORY'];
+        delete process.env['AGENT_HOMEDIRECTORY'];
+        delete process.env['AGENT_TEMPDIRECTORY'];
         delete process.env['SYSTEM_DEBUG'];
         delete process.env['SAVE_NPMRC_PATH'];
         delete process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'];
         delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_FILE_IDENTITY'];
+        delete process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_BACKUP_ROOT'];
         delete process.env['EXISTING_ENDPOINTS'];
         for (const dir of this._tempDirs) {
             try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}

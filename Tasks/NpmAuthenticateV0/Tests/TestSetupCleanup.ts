@@ -21,19 +21,32 @@ const tempDirectory = process.env[TestEnvVars.cleanupTempDirectory] || '';
 if (tempDirectory) {
     process.env['NPM_AUTHENTICATE_TEMP_DIRECTORY'] = tempDirectory;
 }
+const taskTempDirectory = process.env[TestEnvVars.cleanupTaskTempDirectory] || '';
+if (taskTempDirectory) {
+    process.env['VSTS_TASKVARIABLE_NPM_AUTHENTICATE_BACKUP_ROOT'] = taskTempDirectory;
+}
+const agentHomeDirectory = process.env[TestEnvVars.cleanupAgentHomeDirectory] || '';
+if (agentHomeDirectory) {
+    process.env['AGENT_HOMEDIRECTORY'] = agentHomeDirectory;
+}
+const agentTempDirectory = process.env[TestEnvVars.cleanupAgentTempDirectory] || '';
+if (agentTempDirectory) {
+    process.env['AGENT_TEMPDIRECTORY'] = agentTempDirectory;
+}
 
 const indexFilePath = saveNpmrcPath ? path.join(saveNpmrcPath, 'index.json') : '';
 const indexShouldExist = process.env[TestEnvVars.cleanupIndexShouldExist] !== 'false';
 const npmrcShouldExist = process.env[TestEnvVars.cleanupNpmrcShouldExist] !== 'false';
-const tempDirExists   = process.env[TestEnvVars.cleanupTempDirExists] === 'true';
 
 const existAnswers: { [key: string]: boolean } = {};
 if (indexFilePath) { existAnswers[indexFilePath] = indexShouldExist; }
 if (npmrcPath)     { existAnswers[npmrcPath]     = npmrcShouldExist; }
-if (tempDirectory) { existAnswers[tempDirectory] = tempDirExists;    }
 
 const rmRFAnswers: { [key: string]: { success: boolean } } = {};
-if (tempDirectory) { rmRFAnswers[tempDirectory] = { success: true }; }
+if (taskTempDirectory) {
+    rmRFAnswers[taskTempDirectory] = { success: true };
+    rmRFAnswers[path.resolve(taskTempDirectory)] = { success: true };
+}
 
 const answers: ma.TaskLibAnswers = {
     which: {},

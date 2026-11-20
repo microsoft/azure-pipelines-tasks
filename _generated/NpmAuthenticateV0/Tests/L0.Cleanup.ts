@@ -275,18 +275,119 @@ describe('NpmAuthenticate L0 - Cleanup', function () {
         // After restoreBackedUpFile runs, it deletes "0", leaving only index.json.
         const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
         const saveDir   = createSaveDir(npmrcPath);
-        const tempDir   = TestHelpers.createTempDir('npm-auth-temp-');
+        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
+        const tempDir = path.join(agentHomeDirectory, 'npmAuthenticateBackup');
+        fs.mkdirSync(tempDir);
 
         // Act
         const tr = await TestHelpers.runTestWithEnv({
             [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
             [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
             [TestEnvVars.cleanupTempDirectory]: tempDir,
-            [TestEnvVars.cleanupTempDirExists]: 'true'
+            [TestEnvVars.cleanupTaskTempDirectory]: tempDir,
+            [TestEnvVars.cleanupAgentHomeDirectory]: agentHomeDirectory
         }, 'TestSetupCleanup.js');
 
         // Assert
         TestHelpers.assertSuccess(tr);
         TestHelpers.assertOutputContains(tr, 'loc_mock_RevertedChangesToNpmrc');
+        TestHelpers.assertOutputContains(tr, `rmRF ${tempDir}`);
+    });
+
+    it('does not remove a queue-time temp directory without a task-owned path', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir   = createSaveDir(npmrcPath);
+        const victimDir = TestHelpers.createTempDir('npm-auth-victim-');
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTempDirectory]: victimDir,
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'loc_mock_RevertedChangesToNpmrc');
+        TestHelpers.assertOutputNotContains(tr, 'rmRF ');
+    });
+
+    it('does not remove a symlinked backup root', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir = createSaveDir(npmrcPath);
+        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
+        const targetDirectory = TestHelpers.createTempDir('npm-auth-target-');
+        const backupRoot = path.join(agentHomeDirectory, 'npmAuthenticateBackup');
+        fs.symlinkSync(targetDirectory, backupRoot, process.platform === 'win32' ? 'junction' : 'dir');
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTaskTempDirectory]: backupRoot,
+            [TestEnvVars.cleanupAgentHomeDirectory]: agentHomeDirectory
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputNotContains(tr, 'rmRF ');
+    });
+
+    it('uses the trusted backup path rather than a symlink and parent traversal', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir = createSaveDir(npmrcPath);
+        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
+        const otherDirectory = TestHelpers.createTempDir('npm-auth-other-');
+        const nestedDirectory = path.join(otherDirectory, 'nested');
+        fs.mkdirSync(nestedDirectory);
+        const linkPath = path.join(agentHomeDirectory, 'alias');
+        fs.symlinkSync(nestedDirectory, linkPath, process.platform === 'win32' ? 'junction' : 'dir');
+        const backupRoot = path.join(agentHomeDirectory, 'npmAuthenticateBackup');
+        fs.mkdirSync(backupRoot);
+        fs.mkdirSync(path.join(otherDirectory, 'npmAuthenticateBackup'));
+        const spoofedPath = `${linkPath}${path.sep}..${path.sep}npmAuthenticateBackup`;
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTaskTempDirectory]: spoofedPath,
+            [TestEnvVars.cleanupAgentHomeDirectory]: agentHomeDirectory
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, `rmRF ${backupRoot}`);
+        TestHelpers.assertOutputNotContains(tr, `rmRF ${spoofedPath}`);
+    });
+
+    it('cleans up a backup root under Agent.TempDirectory', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir = createSaveDir(npmrcPath);
+        const agentTempDirectory = TestHelpers.createTempDir('npm-auth-temp-');
+        const backupRoot = path.join(agentTempDirectory, 'npmAuthenticateBackup');
+        fs.mkdirSync(backupRoot);
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTaskTempDirectory]: backupRoot,
+            [TestEnvVars.cleanupAgentTempDirectory]: agentTempDirectory
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, `rmRF ${backupRoot}`);
+    });
+
+    it('does not remove a spoofed task variable path', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc('modified-by-task');
+        const saveDir = createSaveDir(npmrcPath);
+        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
+        const victimDir = TestHelpers.createTempDir('npm-auth-victim-');
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.cleanupNpmrcPath]: npmrcPath,
+            [TestEnvVars.cleanupSaveNpmrcPath]: saveDir,
+            [TestEnvVars.cleanupTaskTempDirectory]: victimDir,
+            [TestEnvVars.cleanupAgentHomeDirectory]: agentHomeDirectory
+        }, 'TestSetupCleanup.js');
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(tr, 'loc_mock_Warning_NpmrcBackupCleanupSkipped');
+        TestHelpers.assertOutputNotContains(tr, `rmRF ${victimDir}`);
     });
 });

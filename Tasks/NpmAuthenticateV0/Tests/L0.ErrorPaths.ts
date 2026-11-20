@@ -20,6 +20,24 @@ describe('NpmAuthenticate L0 - Error Paths', function () {
         TestHelpers.assertOutputContains(tr, `${TestData.telemetryPrefix}Packaging.NpmAuthenticateV0`);
     });
 
+    it('does not remove a spoofed backup root when the task fails', async () => {
+        const npmrcPath = TestHelpers.createTempNpmrc(`registry=${TestData.internalRegistryUrl}`);
+        const invalidSavePath = TestHelpers.createTempNpmrc('not a directory');
+        const agentHomeDirectory = TestHelpers.createTempDir('npm-auth-home-');
+        const victimDir = TestHelpers.createTempDir('npm-auth-victim-');
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath,
+            [TestEnvVars.saveNpmrcPath]: invalidSavePath,
+            [TestEnvVars.npmAuthTempDirectory]: victimDir,
+            [TestEnvVars.npmAuthTaskTempDirectory]: victimDir,
+            AGENT_HOMEDIRECTORY: agentHomeDirectory
+        });
+
+        TestHelpers.assertFailure(tr);
+        TestHelpers.assertOutputNotContains(tr, `rmRF ${victimDir}`);
+    });
+
     it('falls back to bearer auth when HTTP probe fails', async () => {
         // When isEndpointInternal throws a network error, the endpoint should
         // be treated as external (bearer _authToken, not basic VssToken)
