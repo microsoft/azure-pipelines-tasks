@@ -86,6 +86,38 @@ try
     Assert-AreEqual 'a##_vso[task.complete result=Failed;]' $result.Machines[1]
     Assert-AreEqual 'host2' $result.Machines[2]
 
+    # Flag on: every occurrence is neutralized, in one name and across a list where every entry is malicious.
+    $result = Invoke-Task -MachineNames 'a##vso[x]b##vso[y]' -FlagEnabled $true
+    Assert-AreEqual 1 $result.Machines.Count
+    Assert-AreEqual 'a##_vso[x]b##_vso[y]' $result.Machines[0]
+
+    $result = Invoke-Task -MachineNames "##vso[a], x`n##VSO[b], ###vso[c]" -FlagEnabled $true
+    Assert-AreEqual 3 $result.Machines.Count
+    Assert-AreEqual '##_vso[a]' $result.Machines[0]
+    Assert-AreEqual "x`n##_vso[b]" $result.Machines[1]
+    Assert-AreEqual '##_vso[c]' $result.Machines[2]
+    Assert-NoVsoCommandLine $result.Lines
+
+    # Flag on: a lone carriage return as the line separator is covered too.
+    $result = Invoke-Task -MachineNames "127.0.0.1:1`r$payload" -FlagEnabled $true
+    Assert-AreEqual 1 $result.Machines.Count
+    Assert-AreEqual "127.0.0.1:1`r##_vso[task.setvariable variable=BASH_ENV]`$(printf PROOF_EXEC >&2)" $result.Machines[0]
+    Assert-NoVsoCommandLine $result.Lines
+
+    # Flag on: near-misses without a full #+vso[ marker pass through unchanged.
+    $result = Invoke-Task -MachineNames 'host##vso-test, vso[x], a_vso[b], host#vso' -FlagEnabled $true
+    Assert-AreEqual 4 $result.Machines.Count
+    Assert-AreEqual 'host##vso-test' $result.Machines[0]
+    Assert-AreEqual 'vso[x]' $result.Machines[1]
+    Assert-AreEqual 'a_vso[b]' $result.Machines[2]
+    Assert-AreEqual 'host#vso' $result.Machines[3]
+
+    # Flag on: already-sanitized input is not changed again.
+    $result = Invoke-Task -MachineNames 'host##_vso[x], ##_vso[task.complete result=Failed;]' -FlagEnabled $true
+    Assert-AreEqual 2 $result.Machines.Count
+    Assert-AreEqual 'host##_vso[x]' $result.Machines[0]
+    Assert-AreEqual '##_vso[task.complete result=Failed;]' $result.Machines[1]
+
     # Flag on: ordinary host names, FQDNs, IPs and ports pass through unchanged (trimmed, empties dropped).
     $result = Invoke-Task -MachineNames " host1 , host2.contoso.com:5986,,10.0.0.1:5985 ,[::1]:5986 " -FlagEnabled $true
     Assert-AreEqual 4 $result.Machines.Count

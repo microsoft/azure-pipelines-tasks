@@ -57,7 +57,6 @@ try
     Validate-SourcePath $sourcePath
     Validate-DestinationPath $targetPath $machineNames
 
-    # Neutralize the ##vso[ logging-command marker so machine names echoed to stdout cannot forge agent commands.
     $machines = $machineNames.split(',') | ForEach-Object {
         if ($_ -and $_.trim()) {
             if ($enableWindowsMachineFileCopyVsoSanitization) {
