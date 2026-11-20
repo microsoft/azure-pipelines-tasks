@@ -234,6 +234,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_WifFeedUrlNotVerified" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The feedUrl input cannot be used with the workload identity service connection: %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Non è possibile usare l'input feedUrl con la connessione al servizio per l'identità del carico di lavoro: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.FailedToGetServiceConnectionAuth" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to get federated credentials from service connection: %s.]]></Val>
@@ -300,11 +309,11 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
-      <Item ItemId=";loc.messages.Info_SkippingNonHttpsWifRegistry" ItemType="0" PsrId="306" Leaf="true">
+      <Item ItemId=";loc.messages.Info_SkippingUnverifiedWifRegistry" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Skipping WIF authentication for non-HTTPS registry: %s]]></Val>
+          <Val><![CDATA[Skipping WIF authentication for registry %s because it is not an Azure Artifacts feed.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Autenticazione WIF ignorata per il registro non HTTPS: %s]]></Val>
+            <Val><![CDATA[L'autenticazione WIF verrà ignorata per il registro %s perché non è un feed di Azure Artifacts.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

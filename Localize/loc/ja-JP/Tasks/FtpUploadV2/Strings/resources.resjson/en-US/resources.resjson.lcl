@@ -390,6 +390,9 @@
       <Item ItemId=";loc.messages.RemoteFileContainsBackslash" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ファイル名 '%s' にバックスラッシュが含まれています。このエージェントのオペレーティング システムからのアップロードでは、バックスラッシュはサポートされていません。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
