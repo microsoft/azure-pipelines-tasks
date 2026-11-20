@@ -104,6 +104,9 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Force remove message neutralizes logging commands in cluster-provided text', done => {
         psr.run(path.join(__dirname, 'Remove-ServiceFabricApplicationAction.LoggingCommandInjection.ps1'), done);
     });
+    it('Azure Active Directory settings neutralize logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Get-AadSecurityToken.LoggingCommandInjection.ps1'), done);
+    });
     it('Task restricts logging commands and sanitizes cluster-provided output', done => {
         psr.run(path.join(__dirname, 'Task.LoggingCommandInjection.Guards.ps1'), done);
     });
