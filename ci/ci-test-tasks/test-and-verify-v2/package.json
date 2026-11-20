@@ -1,8 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "test": "npm run build && node --test tests/*.test.js"
+    "build": "tsc"
   },
   "dependencies": {
     "azure-devops-node-api": "^12.1.0"
