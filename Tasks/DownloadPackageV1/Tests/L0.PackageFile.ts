@@ -220,6 +220,38 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             assert.throws(() => fs.lstatSync(path.join(destination, 'pivot')), { code: 'ENOENT' });
         });
 
+        it('rejects writes through a UNC link before writing outside on Windows', async function () {
+            if (process.platform !== 'win32') {
+                this.skip();
+            }
+            const drive = path.parse(outside).root;
+            const uncOutside = `\\\\localhost\\${drive[0]}$\\${outside.slice(drive.length)}`;
+            if (!fs.existsSync(uncOutside)) {
+                this.skip();
+            }
+            writePackageArchive([
+                { name: 'pivot', content: uncOutside, mode: 0o120777 },
+                { name: 'pivot/target.txt', content: 'unexpected write' }
+            ]);
+            const pf = new PackageFile(true, destination, 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+
+            assert.strictEqual(fs.existsSync(path.join(outside, 'target.txt')), false);
+            assert.throws(() => fs.lstatSync(path.join(destination, 'pivot')), { code: 'ENOENT' });
+        });
+
+        it('preserves an existing file when a symbolic link entry fails', async () => {
+            const existingFile = path.join(destination, 'pivot');
+            fs.writeFileSync(existingFile, 'existing contents');
+            writePackageArchive([{ name: 'pivot', content: outside, mode: 0o120777 }]);
+            const pf = new PackageFile(true, destination, 'package.nupkg');
+
+            await assert.rejects(() => pf.process());
+
+            assert.strictEqual(fs.readFileSync(existingFile, 'utf8'), 'existing contents');
+        });
+
         it('allows internal file and directory links', async () => {
             writePackageArchive([
                 { name: 'lib/target.txt', content: 'package contents' },
