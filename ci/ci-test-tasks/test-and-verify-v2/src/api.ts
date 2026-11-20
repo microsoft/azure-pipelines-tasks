@@ -1,5 +1,6 @@
-import { WebApi, getPersonalAccessTokenHandler } from 'azure-devops-node-api';
+import { WebApi } from 'azure-devops-node-api';
 import { IBuildApi } from 'azure-devops-node-api/BuildApi';
+import { getServiceConnectionHandler } from './auth';
 
 class API {
     public readonly tasks: string[];
@@ -9,25 +10,21 @@ class API {
     private buildApi: IBuildApi | null = null;
 
     constructor(argv: string[]) {
-        const authToken = argv[2];
-        if (!authToken) {
-            throw new Error('Auth token is not provided');
-        }
-        const adoUrl = argv[3];
+        const authHandler = getServiceConnectionHandler(process.env.CANARY_BUILDS_ACCESS_TOKEN || '');
+        const adoUrl = argv[2];
         if (!adoUrl) {
             throw new Error('ADO url is not provided');
         }
-        this.projectName = argv[4];
+        this.projectName = argv[3];
         if (!this.projectName) {
             throw new Error('Project name is not provided');
         }
-        const TaskArg = argv[5];
+        const TaskArg = argv[4];
         if (!TaskArg) {
             throw new Error('Task list is not provided');
         }
 
         this.tasks = TaskArg.split(',');
-        const authHandler = getPersonalAccessTokenHandler(authToken);
         this.webApi = new WebApi(adoUrl, authHandler);
     }
 
