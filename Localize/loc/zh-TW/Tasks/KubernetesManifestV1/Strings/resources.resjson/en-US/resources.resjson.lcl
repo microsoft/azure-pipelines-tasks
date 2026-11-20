@@ -784,6 +784,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidManifestObjectToken" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The manifest field '%s' is empty or contains whitespace, quotes, control characters, or starts with '-', which could be misinterpreted as a kubectl option. Use a valid Kubernetes object name.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[manifest 欄位 '%s' 為空白，或包含空白字元、引號或控制字元，或以 '-' 開頭，因此可能會被誤解為 kubectl 選項。請使用有效的 Kubernetes 物件名稱。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidPercentage" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid value for percentage.]]></Val>
@@ -807,6 +816,15 @@
           <Val><![CDATA[Reject action works only with strategy: canary]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[拒絕動作僅適用於策略: canary]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[版本名稱 '%s' 以 '-' 開頭，Helm 自身的命令列剖析器可能會將其誤判為選項，而非版本名稱。請設定有效的 'releaseName' 輸入。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

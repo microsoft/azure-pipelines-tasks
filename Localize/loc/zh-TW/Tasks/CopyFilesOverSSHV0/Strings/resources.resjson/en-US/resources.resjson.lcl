@@ -510,6 +510,9 @@
       <Item ItemId=";loc.messages.TargetPathContainsBackslash" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[檔案名稱 '%s' 包含反斜線，從此代理程式的作業系統複製檔案時不支援反斜線。]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

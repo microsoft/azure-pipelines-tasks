@@ -765,6 +765,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.RegistryAuthorityCheckDisabled" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[ServiceFabricDeploy.DisableRegistryAuthorityCheck 功能旗標已停用登錄授權單位檢查。系統會像舊版一樣，將登錄認證套用至應用程式套件中的任何映像。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.RegistryAuthorityMismatch" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[程式碼套件 '{1}' 的映像 '{0}' 未裝載於所選登錄認證的容器登錄中。登錄認證只會套用至其所屬登錄中的映像。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.SFSDK_AppAlreadyExistsError" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[An application with name '{0}' already exists, its type is '{1}' and version is '{2}'. You must first remove the existing application before a new application can be deployed or provide a new name for the application.]]></Val>

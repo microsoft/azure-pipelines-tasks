@@ -864,6 +864,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.InvalidChartReference" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The chart reference '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option. Set a valid chart name or repository value.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[图表引用“%s”以 "-" 开头，Helm 自身的命令行分析器可能会将其误解为选项。请设置有效的图表名称或存储库值。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.InvalidReleaseName" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.]]></Val>
@@ -923,6 +932,15 @@
           <Val><![CDATA[Output variable not set as Helm command output exceeded the maximum supported length. Output length: %s, Maximum supported length: %s]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[未设置为 Helm 命令输出的输出变量超出了支持的最大长度。输出长度: %s，支持的最大长度: %s]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.OverrideValuesContainOptionLikeText" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An overrideValues entry contains text that looks like a command-line option. The entry is passed to Helm as part of the --set value and is not interpreted as an option.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[overrideValues 条目包含看起来像命令行选项的文本。该条目作为 --set 值的一部分传递给 Helm，不会被解释为选项。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
