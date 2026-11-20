@@ -281,6 +281,19 @@ describe('DownloadPackageV1 L0 Suite - PackageFile Unit Behavior', function () {
             assert.throws(() => fs.lstatSync(path.join(destination, 'pivot')), { code: 'ENOENT' });
         });
 
+        it('removes an outside link created beneath an internal directory link', async () => {
+            writePackageArchive([
+                { name: 'real/seed.txt', content: 'package contents' },
+                { name: 'alias', content: 'real', mode: 0o120777 },
+                { name: 'alias/escape', content: outside, mode: 0o120777 }
+            ]);
+            const pf = new PackageFile(true, destination, 'package.nupkg');
+
+            await assert.rejects(() => pf.process(), /InvalidArchiveEntryLink/);
+
+            assert.throws(() => fs.lstatSync(path.join(destination, 'real', 'escape')), { code: 'ENOENT' });
+        });
+
         it('restores outside-link extraction when the rollback feature is enabled', async () => {
             disableZipEntryValidation = true;
             writePackageArchive([{ name: 'link', content: outside, mode: 0o120777 }]);

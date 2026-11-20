@@ -208,7 +208,7 @@ export class PackageFile {
             });
             links.forEach(assertContained);
         } catch (error) {
-            links.forEach(linkPath => {
+            links.reverse().forEach(linkPath => {
                 try {
                     if (fs.lstatSync(linkPath).isSymbolicLink()) {
                         fs.unlinkSync(linkPath);
