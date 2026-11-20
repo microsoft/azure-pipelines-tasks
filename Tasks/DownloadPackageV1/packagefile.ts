@@ -173,7 +173,12 @@ export class PackageFile {
             let relative = '..';
             try {
                 relative = path.relative(root, fs.realpathSync(linkPath));
-            } catch { }
+            } catch (error) {
+                const code = (error as NodeJS.ErrnoException).code;
+                if (code !== 'ENOENT' && code !== 'ELOOP') {
+                    throw error;
+                }
+            }
             if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
                 throw new Error(tl.loc("InvalidArchiveEntryLink", path.relative(root, linkPath)));
             }
@@ -184,14 +189,19 @@ export class PackageFile {
                 dir: unzipLocation,
                 onEntry: entry => {
                     const entryPath = path.join(root, entry.fileName);
-                    let isLink = false;
+                    assertContained(path.dirname(entryPath));
+                    let existing: fs.Stats | undefined;
                     try {
-                        isLink = fs.lstatSync(entryPath).isSymbolicLink();
-                    } catch { }
-                    if (isLink) {
+                        existing = fs.lstatSync(entryPath);
+                    } catch (error) {
+                        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+                            throw error;
+                        }
+                    }
+                    if (existing && existing.isSymbolicLink()) {
                         assertContained(entryPath);
                     }
-                    if (((entry.externalFileAttributes >>> 16) & 0xF000) === 0xA000) {
+                    if (!existing && ((entry.externalFileAttributes >>> 16) & 0xF000) === 0xA000) {
                         links.push(entryPath);
                     }
                 }
@@ -199,7 +209,15 @@ export class PackageFile {
             links.forEach(assertContained);
         } catch (error) {
             links.forEach(linkPath => {
-                try { fs.unlinkSync(linkPath); } catch { }
+                try {
+                    if (fs.lstatSync(linkPath).isSymbolicLink()) {
+                        fs.unlinkSync(linkPath);
+                    }
+                } catch (cleanupError) {
+                    if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') {
+                        throw cleanupError;
+                    }
+                }
             });
             throw error;
         }
