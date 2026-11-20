@@ -31,7 +31,7 @@ describe('SqlServerDacpacDeploymentOnMachineGroupV0 Suite', function () {
 
 describe('SqlDacpacDeploymentOnMachineGroupV0 - Security Functions Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
-
+    console.log("Don't push me, delete this code");
     before((done) => {
         if (psm.testSupported()) {
             psr = new psm.PSRunner();
