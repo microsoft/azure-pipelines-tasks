@@ -3,6 +3,7 @@ import fs = require("fs");
 import os = require("os");
 import path = require("path");
 import tl = require("azure-pipelines-task-lib");
+import ttm = require("azure-pipelines-task-lib/mock-test");
 
 import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "../operations/sanitize";
 import { detectFileEncoding, readFileContentsAsText } from "../operations/FileEncoding";
@@ -15,6 +16,64 @@ export function runSanitizeTests() {
     it('Should leave ordinary output names unchanged', () => {
         assert.strictEqual(sanitizeForLoggingCommand('armOut.storageName'), 'armOut.storageName');
         assert.strictEqual(sanitizeForLoggingCommand('armOut.storage_Account-1'), 'armOut.storage_Account-1');
+    });
+
+    describe('Resource name diagnostics', () => {
+        async function runDiagnostics(feature: string | undefined, resourceGroupName: string, deploymentName: string): Promise<ttm.MockTestRunner> {
+            const settings: { [name: string]: string | undefined } = {
+                csmFile: 'CSM.json',
+                csmParametersFile: 'CSM.json',
+                deploymentOutputs: undefined,
+                ARM_LOG_TEST_RESOURCE_GROUP_NAME: resourceGroupName,
+                ARM_LOG_TEST_DEPLOYMENT_NAME: deploymentName,
+                DISTRIBUTEDTASK_TASKS_AZURERESOURCEGROUPSANITIZELOGOUTPUT: feature
+            };
+            const originalValues = Object.keys(settings).map(name => [name, process.env[name]]);
+            try {
+                for (const name of Object.keys(settings)) {
+                    if (settings[name] === undefined) {
+                        delete process.env[name];
+                    } else {
+                        process.env[name] = settings[name];
+                    }
+                }
+                const runner = new ttm.MockTestRunner(path.join(__dirname, 'createOrUpdate.js'));
+                runner.nodePath = process.execPath;
+                await runner.runAsync();
+                return runner;
+            } finally {
+                for (const [name, value] of originalValues) {
+                    if (value === undefined) {
+                        delete process.env[name];
+                    } else {
+                        process.env[name] = value;
+                    }
+                }
+            }
+        }
+
+        for (const feature of [undefined, 'false', 'true']) {
+            it(`Should gate resource-group and deployment-name diagnostics with flag=${feature}`, async () => {
+                const group = 'rg\n##vso[example.resource]value';
+                const deployment = 'deploy####vso[example.deployment]value';
+                const runner = await runDiagnostics(feature, group, deployment);
+                assert(runner.succeeded, 'deployment should succeed');
+                assert(runner.stdout.includes('loc_mock_CreateTemplateDeploymentSucceeded'), 'deployment should reach the mock Azure client');
+                const expectedGroup = feature === 'true' ? 'rg #vso[example.resource]value' : group;
+                const expectedDeployment = feature === 'true' ? 'deploy#vso[example.deployment]value' : deployment;
+                assert(runner.stdout.includes(`loc_mock_CheckResourceGroupExistence ${expectedGroup}`));
+                assert.strictEqual(runner.stdout.split(`loc_mock_LogDeploymentName ${expectedDeployment}`).length - 1, 2);
+                const injected = parseAgentCommands(runner.stdout).filter(command => command.area === 'example');
+                assert.strictEqual(injected.length, feature === 'true' ? 0 : 3);
+            });
+        }
+
+        it('Should preserve ordinary resource and deployment names when enabled', async () => {
+            const runner = await runDiagnostics('true', 'my-rg.01_test(prod)', 'deployment-01');
+            assert(runner.succeeded, 'deployment should succeed');
+            assert(runner.stdout.includes('loc_mock_CheckResourceGroupExistence my-rg.01_test(prod)'));
+            assert(runner.stdout.includes('loc_mock_LogDeploymentName deployment-01'));
+        });
     });
 
     it('Should neutralize a newline-delimited injection payload', () => {

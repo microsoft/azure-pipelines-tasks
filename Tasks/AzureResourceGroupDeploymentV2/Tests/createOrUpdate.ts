@@ -7,7 +7,10 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("action", "Create Or Update Resource Group");
 tr.setInput("ConnectedServiceName", "AzureRM");
-tr.setInput("resourceGroupName", "dummy");
+tr.setInput("resourceGroupName", process.env["ARM_LOG_TEST_RESOURCE_GROUP_NAME"] || "dummy");
+if (process.env["ARM_LOG_TEST_DEPLOYMENT_NAME"] !== undefined) {
+    tr.setInput("deploymentName", process.env["ARM_LOG_TEST_DEPLOYMENT_NAME"]);
+}
 tr.setInput("location", "West US");
 tr.setInput("templateLocation", "Linked artifact")
 tr.setInput("csmFile", process.env["csmFile"]);
