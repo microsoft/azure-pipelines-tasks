@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as taskLibInternal from 'azure-pipelines-task-lib/internal';
 
 let globule = require('globule');
 
@@ -31,6 +32,89 @@ export function findFiles(pattern: any, includeDir: boolean, cwd?: string): stri
     }
 
     return result;
+}
+
+// Preserve the task-lib legacy pattern rules without letting broken symlinks abort the search.
+export function findWindowsFiles(pattern: string, cwd?: string): string[] {
+    if (pattern.indexOf('*') < 0 && pattern.indexOf('?') < 0) {
+        return [pattern];
+    }
+
+    let baseDir = isNullOrWhitespace(cwd) ? process.cwd() : cwd;
+    let includePatterns: string[] = [];
+    let excludePatterns: RegExp[] = [];
+
+    pattern.replace(/;;/g, '\0').split(';').forEach(filter => {
+        if (!filter) {
+            return;
+        }
+
+        filter = filter.replace(/\0/g, ';');
+        let exclude = filter.indexOf('-:') === 0;
+        if (exclude || filter.indexOf('+:') === 0) {
+            filter = filter.substr(2);
+        }
+        if (filter.endsWith('/') || filter.endsWith('\\')) {
+            throw new Error(tl.loc('LIB_InvalidPattern', filter));
+        }
+        if (!path.isAbsolute(filter)) {
+            filter = path.join(baseDir, filter);
+            if (filter.endsWith('\\')) {
+                filter = filter.substr(0, filter.length - 1);
+            }
+        }
+
+        if (exclude) {
+            excludePatterns.push(taskLibInternal._legacyFindFiles_convertPatternToRegExp(filter));
+        } else {
+            includePatterns.push(filter);
+        }
+    });
+
+    let matches = new Set<string>();
+    includePatterns.forEach(filter => {
+        let star = filter.indexOf('*');
+        let question = filter.indexOf('?');
+        let wildcard = star < 0 ? question : question < 0 ? star : Math.min(star, question);
+        let findPath = taskLibInternal._getDirectoryName(wildcard < 0 ? filter : filter.substr(0, wildcard));
+        if (!findPath) {
+            return;
+        }
+
+        let expression = taskLibInternal._legacyFindFiles_convertPatternToRegExp(filter);
+        let files = tl.find(findPath, {
+            allowBrokenSymbolicLinks: true,
+            followSpecifiedSymbolicLink: true,
+            followSymbolicLinks: true,
+            skipMissingFiles: false
+        });
+        files.forEach(file => {
+            let normalizedFile = file.replace(/\\/g, '/');
+            if (!expression.test(normalizedFile) || excludePatterns.some(exclude => exclude.test(normalizedFile))) {
+                return;
+            }
+
+            let stats: fs.Stats;
+            try {
+                stats = fs.statSync(file);
+            } catch (err) {
+                if (err.code !== 'ENOENT') {
+                    throw err;
+                }
+                stats = fs.lstatSync(file);
+                if (!stats.isSymbolicLink()) {
+                    throw err;
+                }
+                tl.warning('Skipping broken symbolic link: ' + file);
+                return;
+            }
+            if (!stats.isDirectory()) {
+                matches.add(file);
+            }
+        });
+    });
+
+    return Array.from(matches).sort();
 }
 
 function appendCwd(filterPattern: string[], cwd: string): string[] {
