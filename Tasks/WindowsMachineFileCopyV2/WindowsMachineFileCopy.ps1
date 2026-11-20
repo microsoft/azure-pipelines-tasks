@@ -24,6 +24,7 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 $enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
+$enableWindowsMachineFileCopyVsoSanitization = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyMachineNamesSanitization'
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
@@ -56,7 +57,16 @@ try
     Validate-SourcePath $sourcePath
     Validate-DestinationPath $targetPath $machineNames
 
-    $machines = $machineNames.split(',') | ForEach-Object { if ($_ -and $_.trim()) { $_.trim() } }
+    $machines = $machineNames.split(',') | ForEach-Object {
+        if ($_ -and $_.trim()) {
+            if ($enableWindowsMachineFileCopyVsoSanitization) {
+                ($_.trim() -replace '(?i)#+vso\[', '##_vso[')
+            }
+            else {
+                $_.trim()
+            }
+        }
+    }
 
     $secureAdminPassword = ConvertTo-SecureString $adminPassword -AsPlainText -Force
     $machineCredential = New-Object System.Net.NetworkCredential ($adminUserName, $secureAdminPassword)
