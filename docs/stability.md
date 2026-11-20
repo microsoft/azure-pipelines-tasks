@@ -40,6 +40,25 @@
   - L1 validation of tests: Runs real tools, no server, no agent.  Note: external contributors can run L0 / L1 for PRs. 
   - Scenario teams (Packaging, Java, etc...) should have L2 tests (E2E).  Build created L2 tests
 
+### Canary pipeline authentication
+
+The PR and scheduled canary pipelines in `ci/ci-test-tasks` use `AzureCLI@3`.
+Before enabling them, create the Azure DevOps workload identity service connection
+`QueueBuild-SC` in `canarytest/PipelineTasks` and authorize both parent pipelines to use it.
+Its identity needs permission to read definitions and builds, queue child builds,
+update build tags, and retry failed jobs in the child pipelines.
+
+The runner receives the masked Azure DevOps bearer token through
+`CANARY_BUILDS_ACCESS_TOKEN`, not a command-line argument or `System.AccessToken`.
+It runs inside the authenticated AzureCLI step with `keepAzSessionActive: true` and
+refreshes expiring tokens through Azure CLI so that long-running canary jobs can
+continue polling and retrying builds.
+AzureCLI@3 passes its separate federated login token to `az login` as a command-line
+argument; it is masked in pipeline logs but can be visible to processes on the agent.
+Its command-line arguments are now the organization URL, project name, and comma-separated
+task list. Run its authentication tests with
+`npm test --prefix ci/ci-test-tasks/test-and-verify-v2`.
+
 ## Agent
 
 ### Problems
