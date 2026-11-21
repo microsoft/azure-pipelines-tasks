@@ -48,36 +48,31 @@ export class dotNetExe {
         this.setConsoleCodePage();
         this.setUpConnectedServiceEnvironmentVariables();
 
-        try {
-            switch (this.command) {
-                case "build":
-                case "publish":
-                case "run":
-                    await this.executeBasicCommand();
-                    break;
-                case "custom":
-                    this.command = tl.getInput("custom", true);
-                    await this.executeBasicCommand();
-                    break;
-                case "test":
-                    await this.executeTestCommand();
-                    break;
-                case "restore":
-                    this.logRestoreStartUpVariables();
-                    await restoreCommand.run();
-                    break;
-                case "pack":
-                    await packCommand.run();
-                    break;
-                case "push":
-                    await pushCommand.run();
-                    break;
-                default:
-                    throw tl.loc("Error_CommandNotRecognized", this.command);
-            }
-        }
-        finally {
-            console.log(tl.loc('Net5Update'));
+        switch (this.command) {
+            case "build":
+            case "publish":
+            case "run":
+                await this.executeBasicCommand();
+                break;
+            case "custom":
+                this.command = tl.getInput("custom", true);
+                await this.executeBasicCommand();
+                break;
+            case "test":
+                await this.executeTestCommand();
+                break;
+            case "restore":
+                this.logRestoreStartUpVariables();
+                await restoreCommand.run();
+                break;
+            case "pack":
+                await packCommand.run();
+                break;
+            case "push":
+                await pushCommand.run();
+                break;
+            default:
+                throw tl.loc("Error_CommandNotRecognized", this.command);
         }
     }
 
@@ -95,8 +90,6 @@ export class dotNetExe {
 
     private async executeBasicCommand() {
         var dotnetPath = tl.which("dotnet", true);
-
-        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
 
         this.extractOutputArgument();
 
@@ -139,9 +132,6 @@ export class dotNetExe {
             }
         }
         if (failedProjects.length > 0) {
-            if (this.command === 'build' || this.command === 'publish' || this.command === 'run') {
-                tl.warning(tl.loc('Net5NugetVersionCompat'));
-            }
             throw tl.loc("dotnetCommandFailed", failedProjects);
         }
     }
@@ -228,7 +218,6 @@ export class dotNetExe {
 
     private async executeTestCommand(): Promise<void> {
         const dotnetPath = tl.which('dotnet', true);
-        console.log(tl.loc('DeprecatedDotnet2_2_And_3_0'));
         const enablePublishTestResults: boolean = tl.getBoolInput('publishTestResults', false) || false;
         const resultsDirectory = tl.getVariable('Agent.TempDirectory');
         const isMTP: boolean = !tl.getPipelineFeature('DisableDotnetConfigDetection') && this.getIsMicrosoftTestingPlatform();
@@ -289,7 +278,6 @@ export class dotNetExe {
             this.publishTestResults(resultsDirectory);
         }
         if (failedProjects.length > 0) {
-            tl.warning(tl.loc('Net5NugetVersionCompat'));
             throw tl.loc('dotnetCommandFailed', failedProjects);
         }
     }
