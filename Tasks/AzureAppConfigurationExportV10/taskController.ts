@@ -43,8 +43,8 @@ export class TaskController {
 
     public async downloadKeyValue(): Promise<tl.TaskResult> {
         console.log(tl.loc("AzureAppConfigurationTaskIsStartingUp")); 
-        console.log(tl.loc("AzureSubscriptionTitle"), this._taskparameters.endpoint.subscriptionName);
-        console.log(tl.loc("AppConfigurationEndpointTitle"), this._taskparameters.configStoreUrl);
+        tl.writeExternalOutput(`${tl.loc("AzureSubscriptionTitle")} ${this._taskparameters.endpoint.subscriptionName}\n`, { source: "remote" });
+        tl.writeExternalOutput(`${tl.loc("AppConfigurationEndpointTitle")} ${this._taskparameters.configStoreUrl}\n`, { source: "repository" });
         console.log(tl.loc("SelectionModeTitle"), SelectionMode[this._taskparameters.selectionMode]);
 
         if (this._taskparameters.selectionMode == SelectionMode.Default) {
