@@ -8,6 +8,7 @@ class API {
     private readonly projectName: string;
     private readonly webApi: WebApi;
     private buildApi: IBuildApi | null = null;
+    //public readonly isNodeCompatible: boolean;
 
     constructor(argv: string[]) {
         const authHandler = getServiceConnectionHandler(process.env.CANARY_BUILDS_ACCESS_TOKEN || '');
@@ -26,6 +27,8 @@ class API {
 
         this.tasks = TaskArg.split(',');
         this.webApi = new WebApi(adoUrl, authHandler);
+
+        //this.isNodeCompatible = argv[6] === 'true';
     }
 
     public async getDefinitions() {
