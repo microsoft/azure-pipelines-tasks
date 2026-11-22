@@ -35,6 +35,7 @@ try
     Register-Mock Get-ResourceFQDNTagKey { return 'FQDN' }
     Register-Mock Get-SanitizerCallStatus { return $false }
     Register-Mock Get-SanitizerActivateStatus { return $false }
+    Register-Mock Test-LegacyCommandOptIn { return $global:legacyOptIn }
 
     function global:Invoke-Command {
         param([scriptblock]$ScriptBlock, [object[]]$ArgumentList)
@@ -75,6 +76,7 @@ try
     foreach($featureEnabled in @('false', 'true'))
     {
         $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = $featureEnabled
+        $global:legacyOptIn = $featureEnabled -eq 'false'
         Reset-ImportModuleMockCallHistory
 
         & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments "" -cleanTargetBeforeCopy "false"
@@ -92,6 +94,8 @@ finally
     Unregister-Mock Get-ResourceFQDNTagKey
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Test-LegacyCommandOptIn
+    Remove-Variable -Name legacyOptIn -Scope Global -ErrorAction SilentlyContinue
 
     foreach($testFunctionName in $testFunctionNames)
     {

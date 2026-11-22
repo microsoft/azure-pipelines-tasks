@@ -7,7 +7,7 @@ param (
     [string]$cleanTargetBeforeCopy,
     $additionalArguments,
     [string]$useSanitizerActivate,
-    [bool]$enableWindowsMachineFileCopyArgumentsHardening,
+    [bool]$enableWindowsMachineFileCopyArgumentsHardening = $true,
     [string]$scriptRoot,
     [bool]$enableLegacyWindowsMachineFileCopyNetUseCommand = $false
     )

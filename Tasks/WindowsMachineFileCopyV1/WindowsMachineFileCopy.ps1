@@ -46,9 +46,15 @@ $useSanitizerActivate = Get-SanitizerActivateStatus
 # own Get-TaskVariable function of the same name and break Get-VstsPipelineFeature (it calls
 # Get-TaskVariable internally). Forcing VstsTaskSdk back in ensures its function wins the name collision.
 Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force -ArgumentList @{ NonInteractive = $true }
-$enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
+# Hardened unless the agent owner opts into legacy handling (machine level).
+$enableWindowsMachineFileCopyArgumentsHardening = (Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening') -or -not (Test-LegacyCommandOptIn)
 
-$enableLegacyWindowsMachineFileCopyNetUseCommand = Get-VstsPipelineFeature -FeatureName 'EnableLegacyWindowsMachineFileCopyNetUseCommand'
+$enableLegacyWindowsMachineFileCopyNetUseCommand = (-not $enableWindowsMachineFileCopyArgumentsHardening) -and (Get-VstsPipelineFeature -FeatureName 'EnableLegacyWindowsMachineFileCopyNetUseCommand')
+
+if (-not $enableWindowsMachineFileCopyArgumentsHardening)
+{
+    Write-Warning 'Legacy command handling is enabled on this agent (AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND).'
+}
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"

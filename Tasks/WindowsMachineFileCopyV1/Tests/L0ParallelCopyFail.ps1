@@ -13,14 +13,16 @@ Register-Mock Get-EnvironmentProperty { return $validMachineName2 } -ParametersE
 
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
+Register-Mock Test-LegacyCommandOptIn { return $global:legacyOptIn }
+Register-Mock Get-VstsPipelineFeature { return $false } -ParametersEvaluator { $FeatureName -eq 'EnableWindowsMachineFileCopyArgumentsHardening' }
+Register-Mock Get-VstsPipelineFeature { return $global:netUseFeature } -ParametersEvaluator { $FeatureName -eq 'EnableLegacyWindowsMachineFileCopyNetUseCommand' }
 
 Register-Mock Receive-Job { }  -ParametersEvaluator { $Id -eq 1 }
 Register-Mock Receive-Job { throw "Copy to one or more machines failed." }  -ParametersEvaluator { $Id -eq 2 }
 
 #Start-Job Register-Mocks
-Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator{$ArgumentList -contains $validResource1.Name }
-Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator{$ArgumentList -contains $validResource1Duplicate.Name -and $ArgumentList -contains $environmentWinRMHttpPortForDuplicateResource }
-Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator{$ArgumentList -contains $validResource2.Name }
+Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator{$ArgumentList[0] -eq $validResource1.Name }
+Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator{$ArgumentList[0] -eq $validResource2.Name }
 
 #Get-Job Register-Mocks
 Register-Mock Get-Job { return $testJobs }
@@ -36,6 +38,27 @@ Register-Mock Register-Environment { return GetEnvironmentWithStandardProvider $
 #Import-Module Register-Mocks
 Register-Mock Import-Module { }
 
-Assert-Throws {
-    & "$copyFilesToMachinesPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $false -copyFilesInParallel $true
-} -MessagePattern "Copy to one or more machines failed."
+try
+{
+    $expectedTaskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+    $global:legacyOptIn = $false
+    $global:netUseFeature = $true
+    Assert-Throws {
+        & "$copyFilesToMachinesPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $false -copyFilesInParallel $true
+    } -MessagePattern "Copy to one or more machines failed."
+
+    Assert-WasCalled Start-Job -Times 2 -ParametersEvaluator { $ArgumentList[7] -is [bool] -and $ArgumentList[7] -and $ArgumentList[9] -is [bool] -and -not $ArgumentList[9] }
+
+    $testJobs.Clear()
+    $global:legacyOptIn = $true
+    Assert-Throws {
+        & "$copyFilesToMachinesPath" -environmentName $EnvironmentNameForFailedJob -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $false -copyFilesInParallel $true
+    } -MessagePattern "Copy to one or more machines failed."
+
+    Assert-WasCalled Start-Job -Times 2 -ParametersEvaluator { $ArgumentList[7] -is [bool] -and -not $ArgumentList[7] -and $ArgumentList[9] -is [bool] -and $ArgumentList[9] }
+    Assert-WasCalled Start-Job -Times 4 -ParametersEvaluator { [IO.Path]::GetFullPath([string]$ArgumentList[8]) -eq $expectedTaskRoot }
+}
+finally
+{
+    Remove-Variable -Name legacyOptIn, netUseFeature -Scope Global -ErrorAction SilentlyContinue
+}

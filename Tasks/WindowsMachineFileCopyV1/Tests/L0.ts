@@ -59,8 +59,12 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Throw error if job fails for resource in Parallel Copy', (done) => {
            psr.run(path.join(__dirname, 'L0ParallelCopyFail.ps1'), done);
         });
-        it('Uses legacy and structured Robocopy arguments based on pipeline feature state', (done) => {
+        it('Uses structured Robocopy arguments unless the agent-level compatibility opt-in is set', function (done) {
+            this.timeout(60000);
             psr.run(path.join(__dirname, 'L0RoboCopyArguments.ps1'), done);
+        });
+        it('Reads the compatibility opt-in from machine scope', (done) => {
+            psr.run(path.join(__dirname, 'L0LegacyCommandOptIn.ps1'), done);
         });
         it('Round-trips sanitized Robocopy arguments without altering any token', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyArgumentsRoundTrip.ps1'), done);

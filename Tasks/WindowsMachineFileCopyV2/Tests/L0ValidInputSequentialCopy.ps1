@@ -17,7 +17,24 @@ Register-Mock Get-VstsInput { return $false } -ParametersEvaluator{ $Name -eq  "
 
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
+Register-Mock Test-LegacyCommandOptIn { return $global:legacyOptIn }
+Register-Mock Get-VstsPipelineFeature { return $false } -ParametersEvaluator { $FeatureName -eq 'EnableWindowsMachineFileCopyArgumentsHardening' }
 
-& "$copyFilesToMachinesPath"
+try
+{
+    $expectedTaskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+    $global:legacyOptIn = $false
+    & "$copyFilesToMachinesPath"
 
-Assert-WasCalled Invoke-Command -Times 1
+    Assert-WasCalled Invoke-Command -Times 1 -ParametersEvaluator { $ArgumentList[8] -is [bool] -and $ArgumentList[8] }
+
+    $global:legacyOptIn = $true
+    & "$copyFilesToMachinesPath"
+
+    Assert-WasCalled Invoke-Command -Times 1 -ParametersEvaluator { $ArgumentList[8] -is [bool] -and -not $ArgumentList[8] }
+    Assert-WasCalled Invoke-Command -Times 2 -ParametersEvaluator { [IO.Path]::GetFullPath([string]$ArgumentList[6]) -eq $expectedTaskRoot }
+}
+finally
+{
+    Remove-Variable -Name legacyOptIn -Scope Global -ErrorAction SilentlyContinue
+}

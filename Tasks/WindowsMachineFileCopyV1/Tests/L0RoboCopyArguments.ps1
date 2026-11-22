@@ -5,7 +5,7 @@ param()
 
 $previousSanitizerSetting = [Environment]::GetEnvironmentVariable('AZP_75787_ENABLE_NEW_LOGIC', 'Process')
 $previousHardeningSetting = [Environment]::GetEnvironmentVariable('DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING', 'Process')
-$testFunctionNames = @('Get-VstsPipelineFeature', 'Test-Path', 'Invoke-Expression', 'robocopy', 'Get-LocalizedString')
+$testFunctionNames = @('Get-VstsPipelineFeature', 'Test-Path', 'Invoke-Expression', 'robocopy', 'Get-LocalizedString', 'Get-ChildItem', 'Remove-Item')
 $previousTestFunctions = @{}
 foreach($testFunctionName in $testFunctionNames)
 {
@@ -15,7 +15,7 @@ foreach($testFunctionName in $testFunctionNames)
         $previousTestFunctions[$testFunctionName] = $previousTestFunction.ScriptBlock
     }
 }
-$testVariableNames = @('robocopyInvocations', 'copyJobInvocations', 'invokeExpressionCommands', 'featureLookupCallCount', 'useSanitizerCall', 'useSanitizerActivate')
+$testVariableNames = @('robocopyInvocations', 'copyJobInvocations', 'invokeExpressionCommands', 'featureLookupCallCount', 'useSanitizerCall', 'useSanitizerActivate', 'legacyOptIn', 'netUseFlag', 'additionalArgumentsInput', 'sanitizerResult', 'sourceIsFile')
 $previousTestVariables = @{}
 foreach($testVariableName in $testVariableNames)
 {
@@ -31,6 +31,11 @@ $global:invokeExpressionCommands = New-Object System.Collections.Generic.List[st
 $global:featureLookupCallCount = 0
 $global:useSanitizerCall = $true
 $global:useSanitizerActivate = $true
+$global:legacyOptIn = $false
+$global:netUseFlag = $false
+$global:additionalArgumentsInput = '/XF "C:\folder with spaces\file.txt"'
+$global:sanitizerResult = @('/XF', 'C:\folder with spaces\file.txt')
+$global:sourceIsFile = $false
 
 try
 {
@@ -45,7 +50,8 @@ try
     Register-Mock Get-ResourceFQDNTagKey { return 'FQDN' }
     Register-Mock Get-SanitizerCallStatus { return $global:useSanitizerCall }
     Register-Mock Get-SanitizerActivateStatus { return $global:useSanitizerActivate }
-    Register-Mock Protect-ScriptArguments { return @('/XF', 'C:\folder with spaces\file.txt') }
+    Register-Mock Test-LegacyCommandOptIn { return $global:legacyOptIn }
+    Register-Mock Protect-ScriptArguments { return $global:sanitizerResult }
     Register-Mock Invoke-Command {
         param([scriptblock]$ScriptBlock, [object[]]$ArgumentList)
 
@@ -71,7 +77,12 @@ try
             return $false
         }
 
-        return $PathType -ne 'Leaf'
+        if ($PathType -eq 'Leaf')
+        {
+            return $global:sourceIsFile
+        }
+
+        return $true
     }
     function global:Get-LocalizedString {
         param([string]$Key)
@@ -87,12 +98,19 @@ try
             return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
         }
 
+        if ($FeatureName -eq 'EnableLegacyWindowsMachineFileCopyNetUseCommand')
+        {
+            return $global:netUseFlag
+        }
+
         return $false
     }
     function global:robocopy {
         $global:robocopyInvocations.Add(@($args))
         $global:LASTEXITCODE = 0
     }
+    function global:Get-ChildItem { }
+    function global:Remove-Item { }
     function global:Invoke-Expression {
         param([string]$Command)
 
@@ -103,18 +121,24 @@ try
     $filePath = 'C:\folder with spaces\file.txt'
     $legacyArguments = "/XF $filePath"
     $testCases = @(
-        [PSCustomObject]@{ FeatureEnabled = "false"; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') },
-        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
-        [PSCustomObject]@{ FeatureEnabled = "true"; UseSanitizerCall = $false; UseSanitizerActivate = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) }
+        [PSCustomObject]@{ FeatureEnabled = "false"; LegacyOptIn = $true; ExpectedHardening = $false; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = $legacyArguments; ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $true; ExpectedRoboCopyArguments = @('/COPY:DAT /E /XF C:\folder with spaces\file.txt') },
+        [PSCustomObject]@{ FeatureEnabled = "false"; LegacyOptIn = $false; ExpectedHardening = $true; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "false"; LegacyOptIn = $false; ExpectedHardening = $true; UseSanitizerCall = $false; UseSanitizerActivate = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "true"; LegacyOptIn = $false; ExpectedHardening = $true; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "true"; LegacyOptIn = $false; ExpectedHardening = $true; UseSanitizerCall = $false; UseSanitizerActivate = $false; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "true"; LegacyOptIn = $true; ExpectedHardening = $true; UseSanitizerCall = $true; UseSanitizerActivate = $true; ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false;         ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) },
+        [PSCustomObject]@{ FeatureEnabled = "false"; LegacyOptIn = $false; ExpectedHardening = $true; UseSanitizerCall = $true; UseSanitizerActivate = $false; SanitizerResult = @('/XF', 'SANITIZER-OUTPUT'); ExpectedFeatureLookupCalls = 1; ExpectedArguments = @('/XF', $filePath); ExpectedUsesInvokeExpression = $false; ExpectedNestedArgument = $false; ExpectedRoboCopyArguments = @('/COPY:DAT', '/E', '/XF', $filePath) }
     )
     foreach($testCase in $testCases)
     {
         $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = $testCase.FeatureEnabled
+        $global:legacyOptIn = $testCase.LegacyOptIn
         $global:featureLookupCallCount = 0
         $global:useSanitizerCall = $testCase.UseSanitizerCall
         $global:useSanitizerActivate = $testCase.UseSanitizerActivate
+        $global:sanitizerResult = if ($testCase.SanitizerResult) { $testCase.SanitizerResult } else { @('/XF', $filePath) }
 
-        & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments '/XF "C:\folder with spaces\file.txt"' -cleanTargetBeforeCopy "false"
+        & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments $global:additionalArgumentsInput -cleanTargetBeforeCopy "false"
 
         $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
         Assert-AreEqual $testCase.ExpectedFeatureLookupCalls $global:featureLookupCallCount
@@ -135,7 +159,7 @@ try
             Assert-AreEqual $expectedAdditionalArguments[$i] $actualAdditionalArguments[$i]
         }
         Assert-AreEqual $testCase.UseSanitizerActivate $copyJobInvocation.Arguments[6]
-        Assert-AreEqual ([System.Convert]::ToBoolean($testCase.FeatureEnabled)) $copyJobInvocation.Arguments[7]
+        Assert-AreEqual $testCase.ExpectedHardening $copyJobInvocation.Arguments[7]
 
         $invokeExpressionCommandCount = $global:invokeExpressionCommands.Count
         $copyJobArguments = $copyJobInvocation.Arguments
@@ -160,6 +184,14 @@ try
             Assert-AreEqual $true ($command.Contains('/XF C:\folder with spaces\file.txt'))
         }
         Assert-AreEqual $testCase.ExpectedNestedArgument (($robocopyInvocation | Where-Object { $_ -is [array] }).Count -gt 0)
+        Assert-AreEqual 'C:\source' $robocopyInvocation[0]
+        Assert-AreEqual 'C:\target' $robocopyInvocation[1]
+        Assert-AreEqual '' $robocopyInvocation[2]
+        if (-not $testCase.ExpectedNestedArgument)
+        {
+            # <source> <destination> <files to copy, empty for a directory source> then the fixed and additional arguments.
+            Assert-AreEqual ($testCase.ExpectedRoboCopyArguments.Count + 3) $robocopyInvocation.Count
+        }
         foreach($expectedArgument in $testCase.ExpectedRoboCopyArguments)
         {
             Assert-AreEqual $true ($robocopyValues -contains $expectedArgument)
@@ -178,6 +210,133 @@ try
     Assert-AreEqual $true (($global:invokeExpressionCommands.Count - $invokeExpressionCommandCount) -gt 0)
     $legacyCommand = $global:invokeExpressionCommands[$global:invokeExpressionCommands.Count - 1]
     Assert-AreEqual $true ($legacyCommand.Contains('/XF C:\folder with spaces\file.txt'))
+    $legacyInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual 'C:\source' $legacyInvocation[0]
+    Assert-AreEqual 'C:\target' $legacyInvocation[1]
+    Assert-AreEqual '' $legacyInvocation[2]
+
+    $global:additionalArgumentsInput = '/XF "C:\a b\c.txt" $env:WMFC_SAMPLE'
+    $global:useSanitizerCall = $false
+    $global:useSanitizerActivate = $false
+    $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = "false"
+    $env:WMFC_SAMPLE = 'sample-value'
+    foreach($legacyOptIn in @($false, $true))
+    {
+        $global:legacyOptIn = $legacyOptIn
+
+        $warnings = @(& $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments $global:additionalArgumentsInput -cleanTargetBeforeCopy "false" 3>&1 | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+        Assert-AreEqual ([int]$legacyOptIn) $warnings.Count
+        if ($legacyOptIn)
+        {
+            Assert-AreEqual $true ($warnings[0].Message -like '*Legacy command handling is enabled*')
+        }
+
+        $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
+        $copyJobArguments = $copyJobInvocation.Arguments
+        & $copyJobInvocation.ScriptBlock @copyJobArguments
+
+        $normalInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+        Assert-AreEqual 'C:\source' $normalInvocation[0]
+        Assert-AreEqual 'C:\target' $normalInvocation[1]
+        Assert-AreEqual '' $normalInvocation[2]
+        Assert-AreEqual $true (@($normalInvocation | ForEach-Object { $_ }) -contains 'C:\a b\c.txt')
+        if ($legacyOptIn)
+        {
+            Assert-AreEqual $true (@($normalInvocation | ForEach-Object { $_ }) -contains 'sample-value')
+            $legacyJobArguments = $copyJobArguments
+        }
+        else
+        {
+            Assert-AreEqual $true (@($normalInvocation) -contains '$env:WMFC_SAMPLE')
+            $hardenedArguments = $copyJobArguments
+        }
+    }
+
+    # Omitting the hardening argument must give the hardened behavior.
+    $a = $hardenedArguments
+    & $copyJobInvocation.ScriptBlock -fqdn $a[0] -sourcePath $a[1] -targetPath $a[2] -credential $a[3] -cleanTargetBeforeCopy $a[4] -additionalArguments $a[5] -useSanitizerActivate $a[6] -scriptRoot $a[8] -enableLegacyWindowsMachineFileCopyNetUseCommand $a[9]
+    $defaultInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual $true (@($defaultInvocation) -contains '$env:WMFC_SAMPLE')
+
+    & $copyJobInvocation.ScriptBlock -fqdn $a[0] -sourcePath $a[1] -targetPath $a[2] -credential $a[3] -cleanTargetBeforeCopy 'true' -additionalArguments $a[5] -useSanitizerActivate $a[6] -scriptRoot $a[8] -enableLegacyWindowsMachineFileCopyNetUseCommand $a[9]
+    $cleanInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual $true (@($cleanInvocation) -contains '/MIR')
+    Assert-AreEqual $false (@($cleanInvocation) -contains '/E')
+    Assert-AreEqual $true (@($cleanInvocation) -contains '$env:WMFC_SAMPLE')
+
+    $legacyCleanArguments = $legacyJobArguments.Clone()
+    $legacyCleanArguments[4] = 'true'
+    & $copyJobInvocation.ScriptBlock @legacyCleanArguments
+    $legacyCleanInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual $true (@($legacyCleanInvocation | ForEach-Object { $_ }) -contains '/MIR')
+    Assert-AreEqual $false (@($legacyCleanInvocation | ForEach-Object { $_ }) -contains '/E')
+
+    # No warning when the feature forces hardening, even with the machine-level setting.
+    $global:legacyOptIn = $true
+    $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = 'true'
+    $warnings = @(& $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments $global:additionalArgumentsInput -cleanTargetBeforeCopy "false" 3>&1 | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+    Assert-AreEqual 0 $warnings.Count
+    $global:legacyOptIn = $false
+    $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = 'false'
+
+    # Empty input leaves only the fixed arguments; a single-file source copies that file without /E.
+    foreach($emptyValue in @('', '   ', $null))
+    {
+        & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments $emptyValue -cleanTargetBeforeCopy "false"
+
+        $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
+        $copyJobArguments = $copyJobInvocation.Arguments
+        & $copyJobInvocation.ScriptBlock @copyJobArguments
+
+        $emptyInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+        Assert-AreEqual 5 $emptyInvocation.Count
+        Assert-AreEqual '/COPY:DAT' $emptyInvocation[3]
+        Assert-AreEqual '/E' $emptyInvocation[4]
+    }
+
+    $global:sourceIsFile = $true
+    & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source\file.txt" -targetPath "C:\target" -additionalArguments '/XF x' -cleanTargetBeforeCopy "false"
+    $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
+    $copyJobArguments = $copyJobInvocation.Arguments
+    & $copyJobInvocation.ScriptBlock @copyJobArguments
+    $fileInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual 6 $fileInvocation.Count
+    Assert-AreEqual 'C:\source' $fileInvocation[0]
+    Assert-AreEqual 'C:\target' $fileInvocation[1]
+    Assert-AreEqual 'file.txt' $fileInvocation[2]
+    Assert-AreEqual '/COPY:DAT' $fileInvocation[3]
+    Assert-AreEqual '/XF' $fileInvocation[4]
+    Assert-AreEqual 'x' $fileInvocation[5]
+
+    $global:legacyOptIn = $true
+    & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source\file.txt" -targetPath "C:\target" -additionalArguments '/XF x' -cleanTargetBeforeCopy "false" 3>$null
+    $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
+    $copyJobArguments = $copyJobInvocation.Arguments
+    & $copyJobInvocation.ScriptBlock @copyJobArguments
+    $legacyFileInvocation = $global:robocopyInvocations[$global:robocopyInvocations.Count - 1]
+    Assert-AreEqual 'file.txt' $legacyFileInvocation[2]
+    Assert-AreEqual $false (@($legacyFileInvocation | ForEach-Object { $_ }) -contains '/E')
+    $global:legacyOptIn = $false
+    $global:sourceIsFile = $false
+
+    $global:additionalArgumentsInput = ''
+    foreach($case in @(
+        @{ Feature = 'false'; NetUse = $true; OptIn = $false },
+        @{ Feature = 'false'; NetUse = $true; OptIn = $true },
+        @{ Feature = 'false'; NetUse = $false; OptIn = $true },
+        @{ Feature = 'true'; NetUse = $true; OptIn = $true }))
+    {
+        $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING = $case.Feature
+        $global:netUseFlag = $case.NetUse
+        $global:legacyOptIn = $case.OptIn
+
+        & $PSScriptRoot\..\WindowsMachineFileCopy.ps1 -environmentName "" -adminUserName "user" -adminPassword "password" -sourcePath "C:\source" -targetPath "C:\target" -additionalArguments $global:additionalArgumentsInput -cleanTargetBeforeCopy "false"
+
+        $copyJobInvocation = $global:copyJobInvocations[$global:copyJobInvocations.Count - 1]
+        $hardened = ($case.Feature -eq 'true') -or -not $case.OptIn
+        Assert-AreEqual $hardened $copyJobInvocation.Arguments[7]
+        Assert-AreEqual ($case.NetUse -and -not $hardened) $copyJobInvocation.Arguments[9]
+    }
 }
 finally
 {
@@ -186,6 +345,7 @@ finally
     Unregister-Mock Get-ResourceFQDNTagKey
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Test-LegacyCommandOptIn
     Unregister-Mock Protect-ScriptArguments
 
     foreach($testFunctionName in $testFunctionNames)
@@ -213,4 +373,5 @@ finally
     }
     [Environment]::SetEnvironmentVariable('AZP_75787_ENABLE_NEW_LOGIC', $previousSanitizerSetting, 'Process')
     [Environment]::SetEnvironmentVariable('DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING', $previousHardeningSetting, 'Process')
+    [Environment]::SetEnvironmentVariable('WMFC_SAMPLE', $null, 'Process')
 }

@@ -37,6 +37,7 @@ try
     Register-Mock Get-VstsInput { return $global:copyFilesInParallel } -ParametersEvaluator { $Name -eq "CopyFilesInParallel" }
     Register-Mock Get-SanitizerCallStatus { return $false }
     Register-Mock Get-SanitizerActivateStatus { return $false }
+    Register-Mock Test-LegacyCommandOptIn { return $false }
     Register-Mock Invoke-Command {
         param([scriptblock]$ScriptBlock, [object[]]$ArgumentList)
 
@@ -171,6 +172,7 @@ finally
     Unregister-Mock Invoke-Command
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Test-LegacyCommandOptIn
     Unregister-Mock Start-Job
     Unregister-Mock Get-Job
     Unregister-Mock Start-Sleep

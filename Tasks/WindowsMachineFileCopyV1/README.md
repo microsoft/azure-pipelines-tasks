@@ -2,6 +2,12 @@
 ### Overview
 The task is used to copy application files and other artifacts that are required to install the application on Windows Machines like PowerShell scripts, PowerShell-DSC modules etc. The task provides the ability to copy files to Windows Machines. The tasks uses RoboCopy, the command-line utility built for fast copying of data.
 
+### Additional arguments
+
+Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax in the value, such as `$env:NAME`, `;`, `&`, redirection or pipes, is not interpreted: Robocopy treats those words as file names (file filters, or exclusions after `/XF` or `/XD`), so the copy may include no files, include files you meant to exclude, or keep retrying. Remove such syntax; use pipeline variables (`$(Var)`) to pass values and Robocopy's own options (for example `/LOG:` or `/NFL /NDL /NJH /NJS /NP`) for output control. Backtick escapes and `$` inside quotes are not interpreted either: remove backticks and write `$` as it is. Do not end a quoted path with a backslash.
+
+To keep the previous command-line handling on a specific agent (PowerShell syntax in the inputs is then expanded), set the machine-level environment variable `AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND` to `true`, for example `setx /M AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND true`. Only the machine-level setting counts; a user-level or process-level variable does not. It applies to every pipeline that runs on the agent. The `EnableLegacyWindowsMachineFileCopyNetUseCommand` compatibility feature applies only together with this setting, and not when `EnableWindowsMachineFileCopyArgumentsHardening` is on. `EnableWindowsMachineFileCopyArgumentsHardening` takes precedence over the setting.
+
 ### The different parameters of the task are explained below:
 
 *	**Source**: The source of the files. As described above using pre-defined system variables like $(Build.Repository.LocalPath) make it easy to specify the location of the build on the Build Automation Agent machine. The variables resolve to the working folder on the agent machine, when the task is run on it. Wild cards like **\*.zip are not supported.

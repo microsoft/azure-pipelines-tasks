@@ -13,7 +13,7 @@ param (
     $additionalArguments,
     [string]$scriptRoot,
     [string]$useSanitizerActivate,
-    [bool]$enableWindowsMachineFileCopyArgumentsHardening
+    [bool]$enableWindowsMachineFileCopyArgumentsHardening = $true
     )
     Import-Module "$scriptRoot\ps_modules\VstsTaskSdk" -ArgumentList @{ NonInteractive = $true }
     Import-VstsLocStrings -LiteralPath $scriptRoot/Task.json
