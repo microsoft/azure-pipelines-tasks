@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
+import os = require('os');
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
@@ -78,7 +79,7 @@ async function run() {
                 }
                 else {
                     scheme = schemes[0];
-                    console.log(tl.loc('SchemeSelected', scheme));
+                    tl.writeExternalOutput(tl.loc('SchemeSelected', scheme) + os.EOL, { source: 'repository' });
                 }
             }
             catch (err) {
