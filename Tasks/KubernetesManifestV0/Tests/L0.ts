@@ -554,6 +554,20 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Kustomize bake should filter logging commands from the kustomization path', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const kustomizationPath = 'kustomizationPath\n##vso[task.logissue type=error]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kustomize';
+        process.env[shared.TestEnvVars.kustomizationPath] = kustomizationPath;
+        process.env.KubectlMinorVersion = '14';
+        tr.run();
+        assert(tr.succeeded, 'task should have succeeded');
+        assert.equal(tr.errorIssues.length, 0, 'the injected logging command should not be processed');
+        done();
+    });
+
     it('Kustomize bake should pass with image substituition', (done: Mocha.Done) => {
         const tp = path.join(__dirname, 'TestSetup.js');
         const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
