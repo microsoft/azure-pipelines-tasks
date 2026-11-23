@@ -14,6 +14,8 @@ param()
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
 . $PSScriptRoot\MockHelper.ps1
+. $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 
 $azureFileCopyPath = "$PSScriptRoot\..\AzureFileCopy.ps1"
 

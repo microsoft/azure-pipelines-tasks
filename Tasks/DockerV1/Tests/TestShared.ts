@@ -14,7 +14,8 @@ export let TestEnvVars = {
     arguments: "__arguments__",
     qualifySourceImageName: "__qualifySourceImageName__",
     addBaseImageData: "addBaseImageData",
-    useDockerSkipRedundantTagFeatureFlag: "DISTRIBUTEDTASK_TASKS_USEDOCKERSKIPREDUNDANTTAG"
+    useDockerSkipRedundantTagFeatureFlag: "DISTRIBUTEDTASK_TASKS_USEDOCKERSKIPREDUNDANTTAG",
+    sanitizeDockerTagLogOutputFeatureFlag: "DISTRIBUTEDTASK_TASKS_DOCKERTAGSANITIZELOGOUTPUT"
 };
 
 export let OperatingSystems = {

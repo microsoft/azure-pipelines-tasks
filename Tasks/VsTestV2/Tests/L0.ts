@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib';
 import * as fs from 'fs';
 import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
+import { sanitizeForLoggingCommand } from '../sanitize';
 
 describe('VsTest Suite', function() {
     this.timeout(90000);
@@ -174,6 +175,23 @@ function makeTestConfig(vsTestVersion: string = '17.0'): any {
 function loadVersionfinder() {
     return require('../versionfinder') as typeof import('../versionfinder');
 }
+
+describe('VsTestV2 sanitizeForLoggingCommand', function() {
+    it('neutralizes logging commands without changing ordinary selector text', function() {
+        const sourceFilter = '**\\*Tests.dll,##vso[task.setvariable variable=marker;]value,##VSO[task.debug]message,##[warning]message';
+
+        assert.strictEqual(
+            sanitizeForLoggingCommand(sourceFilter),
+            '**\\*Tests.dll,##_vso[task.setvariable variable=marker;]value,##_vso[task.debug]message,##_[warning]message'
+        );
+    });
+
+    it('preserves multiline selectors that do not contain logging commands', function() {
+        const sourceFilter = '**\\*Tests.dll\n!**\\obj\\**';
+
+        assert.strictEqual(sanitizeForLoggingCommand(sourceFilter), sourceFilter);
+    });
+});
 
 describe('VsTestV2 – versionfinder.ts (PowerShell Get-ItemProperty change)', function() {
     this.timeout(10000);

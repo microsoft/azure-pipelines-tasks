@@ -129,30 +129,35 @@ export async function unzip(zipLocation: string, unzipLocation: string): Promise
                 reject(error);
             });
         } else {
-            var unzipper = new extractZip(zipLocation);
-            unzipper.on('error', err => {
-                return reject(tl.loc("ExtractionFailed", err))
-            });
-            unzipper.on('extract', log => {
-                tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
-                return resolve();
-            });
+            const extractArchive = () => {
+                const unzipper = new extractZip(zipLocation);
+                unzipper.on('error', err => {
+                    return reject(tl.loc("ExtractionFailed", err))
+                });
+                unzipper.on('extract', log => {
+                    tl.debug('Extracted ' + zipLocation + ' to ' + unzipLocation + ' successfully');
+                    return resolve();
+                });
+                unzipper.extract({
+                    path: unzipLocation
+                });
+            };
             if (!skipZipEntryValidation) {
-                unzipper.on('list', (files: string[]) => {
+                const zipLister = new extractZip(zipLocation);
+                zipLister.on('error', err => {
+                    return reject(tl.loc("ExtractionFailed", err))
+                });
+                zipLister.on('list', (files: string[]) => {
                     const invalidEntry = findEntryOutsideRoot(unzipLocation, files);
                     if (invalidEntry !== undefined) {
                         return reject(new Error(tl.loc("ZipEntryOutsideTargetDirectory", invalidEntry)));
                     }
 
-                    unzipper.extract({
-                        path: unzipLocation
-                    });
+                    extractArchive();
                 });
-                unzipper.list();
+                zipLister.list();
             } else {
-                unzipper.extract({
-                    path: unzipLocation
-                });
+                extractArchive();
             }
         }
     });

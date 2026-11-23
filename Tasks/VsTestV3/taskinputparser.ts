@@ -8,6 +8,7 @@ import * as ci from './cieventlogger';
 import * as versionFinder from './versionfinder';
 import { AreaCodes, ResultMessages } from './constants';
 import * as uuid from 'uuid';
+import { sanitizeForLoggingCommand } from './sanitize';
 const regedit = require('regedit');
 
 export function getvsTestConfigurations() {
@@ -301,7 +302,7 @@ function getTestSelectorBasedInputs(testConfiguration: models.TestConfigurations
         case 'testassemblies':
             console.log(tl.loc('testSelectorInput', tl.loc('testAssembliesSelector')));
             testConfiguration.sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-            console.log(tl.loc('testAssemblyFilterInput', testConfiguration.sourceFilter));
+            console.log(tl.loc('testAssemblyFilterInput', sanitizeForLoggingCommand(testConfiguration.sourceFilter.toString())));
 
             testConfiguration.testcaseFilter = tl.getInput('testFiltercriteria');
             console.log(tl.loc('testFilterCriteriaInput', testConfiguration.testcaseFilter));

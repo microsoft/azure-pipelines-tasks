@@ -17,8 +17,8 @@
   ],
   "version": {
     "Major": 1,
-    "Minor": 283,
-    "Patch": 0
+    "Minor": 284,
+    "Patch": 1
   },
   "demands": [
     "Cmd"
@@ -391,6 +391,14 @@
       "visibleRule": "configureDockerSettings = true && registryCredentials = UsernamePassword"
     }
   ],
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "execution": {
     "PowerShell3": {
       "target": "deploy.ps1"
@@ -421,6 +429,8 @@
     "PublishProfileRequiredUpgrade": "ms-resource:loc.messages.PublishProfileRequiredUpgrade",
     "UnsupportedARMAuthScheme": "ms-resource:loc.messages.UnsupportedARMAuthScheme",
     "UnsupportedContainerRegistryAuthScheme": "ms-resource:loc.messages.UnsupportedContainerRegistryAuthScheme",
+    "RegistryAuthorityMismatch": "ms-resource:loc.messages.RegistryAuthorityMismatch",
+    "RegistryAuthorityCheckDisabled": "ms-resource:loc.messages.RegistryAuthorityCheckDisabled",
     "SFSDK_InvalidManifestPathSegment": "ms-resource:loc.messages.SFSDK_InvalidManifestPathSegment",
     "SFSDK_InvalidSFPackage": "ms-resource:loc.messages.SFSDK_InvalidSFPackage",
     "SFSDK_PackageValidationFailed": "ms-resource:loc.messages.SFSDK_PackageValidationFailed",

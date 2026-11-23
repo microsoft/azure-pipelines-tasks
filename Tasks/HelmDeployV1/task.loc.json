@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 283,
+    "Minor": 284,
     "Patch": 0
   },
   "demands": [],
@@ -580,6 +580,8 @@
     "SkipDownloadSecureFiles": "ms-resource:loc.messages.SkipDownloadSecureFiles",
     "FileNotFound": "ms-resource:loc.messages.FileNotFound",
     "InvalidReleaseName": "ms-resource:loc.messages.InvalidReleaseName",
+    "InvalidChartReference": "ms-resource:loc.messages.InvalidChartReference",
+    "OverrideValuesContainOptionLikeText": "ms-resource:loc.messages.OverrideValuesContainOptionLikeText",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "ExpiredServicePrincipal": "ms-resource:loc.messages.ExpiredServicePrincipal",
     "SaveSupportedInHelmsV3Only": "ms-resource:loc.messages.SaveSupportedInHelmsV3Only",
