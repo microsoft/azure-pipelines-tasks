@@ -1,5 +1,6 @@
 "use strict";
 
+import * as os from 'os';
 import tl = require('azure-pipelines-task-lib/task');
 import helmcli from "./../helmcli";
 import * as helmutil from "./../utils";
@@ -91,7 +92,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
             helmCli.addSingleArgument("--version");
             helmCli.addSingleArgument(version);
         } else {
-            console.log("The given version " + version + " is not valid. Running the helm install command with latest version");
+            tl.writeExternalOutput("The given version " + version + " is not valid. Running the helm install command with latest version" + os.EOL, { source: 'repository' });
         }
     }
 }

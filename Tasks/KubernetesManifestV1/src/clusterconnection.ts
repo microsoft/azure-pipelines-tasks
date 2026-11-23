@@ -1,6 +1,7 @@
 "use strict";
 
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
@@ -63,7 +64,7 @@ export default class ClusterConnection {
     // open kubernetes connection
     public async open() {
         var connectionType = tl.getInput("connectionType", true);
-        console.log("Connection type: " + connectionType);
+        tl.writeExternalOutput("Connection type: " + connectionType + os.EOL, { source: 'repository' });
         if (connectionType === "None") {
             return this.initialize();
         }
