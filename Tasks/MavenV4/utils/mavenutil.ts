@@ -78,7 +78,6 @@ function mavenSettingsJsonInsertServer (json: any, serverJson:any) {
 }
 
 export function mergeCredentialsIntoSettingsXml(settingsXmlFile:string, repositories:any): Q.Promise<any> {
-    tl.debug('merging server credentials into settings.xml file=' + settingsXmlFile);
     if (repositories) {
         let insertServer = function(json) {
             for (let repository of repositories) {
@@ -143,7 +142,7 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
     return convertXmlStringToJson(pomContents).then(async function (pomJson) {
         let repos:RepositoryInfo[] = [];
         if (!pomJson) {
-            tl.debug('Incomplete pom: ' + pomJson);
+            tl.debug('Incomplete pom');
             return Q.resolve(repos);
         }
         const collectionUrl = tl.getVariable("System.TeamFoundationCollectionUri");
@@ -198,7 +197,6 @@ export async function collectFeedRepositories(pomContents:string): Promise<any> 
                                 (isTrusted(collectionUrlParsed, repoUrlParsed) ||
                                 isTrusted(packageUrlParsed, repoUrlParsed) ||
                                 packagingLocation.PackagingUris.some(uri => isTrusted(parseUrl(uri), repoUrlParsed)))) {
-                            tl.debug('using credentials for url: ' + repoUrl);
                             repos.push({
                                 id: (repo.id && repo.id instanceof Array)
                                     ? repo.id[0]
