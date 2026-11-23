@@ -83,6 +83,33 @@ describe('ServiceFabricDeploy Suite', function () {
     it('Docker settings only apply credentials to images of the selected registry', done => {
         psr.run(path.join(__dirname, 'DockerSettingsRejectsForeignRegistryImage.ps1'), done);
     });
+    it('Upgrade monitoring neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Wait-ServiceFabricApplicationUpgradeAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Health dumps neutralize logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Trace-ServiceFabricHealth.LoggingCommandInjection.ps1'), done);
+    });
+    it('Upgrade failure message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Publish-UpgradedServiceFabricApplication.LoggingCommandInjection.ps1'), done);
+    });
+    it('Existing application message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Publish-NewServiceFabricApplication.LoggingCommandInjection.ps1'), done);
+    });
+    it('Diff package message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Create-DiffPackage.LoggingCommandInjection.ps1'), done);
+    });
+    it('Application type registration neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Register-ServiceFabricApplicationTypeAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Force remove message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Remove-ServiceFabricApplicationAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Azure Active Directory settings neutralize logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Get-AadSecurityToken.LoggingCommandInjection.ps1'), done);
+    });
+    it('Task restricts logging commands and sanitizes cluster-provided output', done => {
+        psr.run(path.join(__dirname, 'Task.LoggingCommandInjection.Guards.ps1'), done);
+    });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);
     });
