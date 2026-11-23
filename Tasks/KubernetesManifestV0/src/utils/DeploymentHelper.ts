@@ -163,7 +163,7 @@ export function updateResourceObjects(filePaths: string[], imagePullSecrets: str
             }
         });
     });
-    tl.debug('New K8s objects after addin imagePullSecrets are :' + JSON.stringify(newObjectsList));
+    tl.debug(`Prepared ${newObjectsList.length} Kubernetes resource objects for manifest serialization.`);
     const newFilePaths = fileHelper.writeObjectsToFile(newObjectsList);
     return newFilePaths;
 }
