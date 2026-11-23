@@ -97,7 +97,6 @@ export function mergeCredentialsIntoSettingsXml(settingsXmlFile:string, reposito
                 tl.debug('inserting: ' + JSON.stringify(serverJson));
                 mavenSettingsJsonInsertServer(json, serverJson);
             }
-            tl.debug('complete json: ' + JSON.stringify(json));
             return writeJsonAsSettingsFile(settingsXmlFile, json);
         };
         return readXmlFileAsJson(settingsXmlFile).then(insertServer)
