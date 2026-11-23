@@ -185,8 +185,8 @@ export async function executeJestCommand(jestPath: string, argument: string): Pr
     return await jest.exec(<tr.IExecOptions>{ cwd: "" });
 }
 
-export async function executeJestTest(jestPath: string, testName: string, useStructuredArguments: boolean): Promise<number> {
+export async function executeJestTest(jestPath: string, testName: string): Promise<number> {
     let jest: tr.ToolRunner = tl.tool(jestPath);
-    utils.setJestTestRunnerArguments(jest, testName, useStructuredArguments);
+    utils.setJestTestRunnerArguments(jest, testName);
     return await jest.exec(<tr.IExecOptions>{ cwd: "" });
 }

@@ -6,7 +6,6 @@ const tl = require('azure-pipelines-task-lib/task');
 import { TestPlanData } from '../testPlanData';
 import { newAutomatedTestsFlow } from '../Automated Flow/automatedFlow';
 import * as utils from '../Common/utils';
-import * as constants from '../Common/constants';
 import { JestTestExecutor } from '../Automated Flow/TestExecutors/JestTestExecutor';
 import { testInvoker } from '../OldAutomatedFlow/automatedTestInvoker';
 
@@ -96,11 +95,11 @@ describe('AzureTestPlan Suite', function () {
         assert.strictEqual(result.errorMessage, 'ErrorFailTaskOnNoAutomatedTestsFound');
     });
 
-    it('should keep the Jest test name in one argument when structured arguments are enabled', function () {
+    it('should keep a quote-injected Jest test name in one argument', function () {
         const testName = 'benign" --showConfig --testNamePattern="benign';
         const runner = tl.tool('npx');
 
-        utils.setJestTestRunnerArguments(runner, testName, true);
+        utils.setJestTestRunnerArguments(runner, testName);
 
         assert.deepStrictEqual(runner.args, [
             'jest',
@@ -117,7 +116,7 @@ describe('AzureTestPlan Suite', function () {
         for (const testName of testNames) {
             const runner = tl.tool('npx');
 
-            utils.setJestTestRunnerArguments(runner, testName, true);
+            utils.setJestTestRunnerArguments(runner, testName);
 
             assert.deepStrictEqual(runner.args, [
                 'jest',
@@ -133,7 +132,7 @@ describe('AzureTestPlan Suite', function () {
         const testName = 'benign" --showConfig --testNamePattern="benign';
         const runner = tl.tool('npx');
 
-        utils.setJestTestRunnerArguments(runner, ` \t${testName}\t `, true);
+        utils.setJestTestRunnerArguments(runner, ` \t${testName}\t `);
 
         assert.deepStrictEqual(runner.args, [
             'jest',
@@ -144,30 +143,35 @@ describe('AzureTestPlan Suite', function () {
         ]);
     });
 
-    it('should preserve legacy Jest command parsing when structured arguments are disabled', function () {
+    it('should pass a plain Jest test name as a single testNamePattern argument', function () {
         const runner = tl.tool('npx');
 
-        utils.setJestTestRunnerArguments(runner, 'adds numbers', false);
+        utils.setJestTestRunnerArguments(runner, 'adds numbers');
 
         assert.deepStrictEqual(runner.args, [
             'jest',
             '--ci',
             '--reporters=default',
             '--reporters=jest-junit',
-            '-t',
-            'adds numbers',
+            '--testNamePattern=adds numbers',
         ]);
     });
 
-    it('should resolve the feature flag once in the new Jest flow', async function () {
+    it('should keep module-loading Jest options inside the test name argument', function () {
+        const testName = 'x" --globalSetup=./evil.js --setupFiles ./evil.js -t "x';
+        const runner = tl.tool('npx');
+
+        utils.setJestTestRunnerArguments(runner, testName);
+
+        assert.strictEqual(runner.args.length, 5);
+        assert.strictEqual(runner.args[4], `--testNamePattern=${testName}`);
+        assert(!runner.args.some(arg => arg.startsWith('--globalSetup') || arg.startsWith('--setupFiles') || arg === '-t'));
+    });
+
+    it('should always use structured Jest arguments in the new Jest flow', async function () {
         const testName = 'benign" --showConfig --testNamePattern="benign';
-        let featureFlagCalls = 0;
         const runners = [];
-        tl.getPipelineFeature = (featureFlag: string) => {
-            featureFlagCalls++;
-            assert.strictEqual(featureFlag, constants.STRUCTURED_JEST_ARGUMENTS_FIX_FEATURE);
-            return true;
-        };
+        tl.getPipelineFeature = () => false;
         tl.tool = (toolPath: string) => {
             const runner = originalTool(toolPath);
             runner.execAsync = async () => 0;
@@ -180,7 +184,6 @@ describe('AzureTestPlan Suite', function () {
         const result = await executor.executeTests([testName, 'second test'], {});
 
         assert.strictEqual(result.returnCode, 0);
-        assert.strictEqual(featureFlagCalls, 1);
         assert.strictEqual(runners.length, 2);
         assert.deepStrictEqual(runners[0].args, [
             'jest',
@@ -189,18 +192,20 @@ describe('AzureTestPlan Suite', function () {
             '--reporters=jest-junit',
             `--testNamePattern=${testName}`,
         ]);
+        assert.deepStrictEqual(runners[1].args, [
+            'jest',
+            '--ci',
+            '--reporters=default',
+            '--reporters=jest-junit',
+            '--testNamePattern=second test',
+        ]);
     });
 
-    it('should resolve the feature flag once through the legacy Jest dispatcher', async function () {
+    it('should always use structured Jest arguments through the legacy Jest dispatcher', async function () {
         const testName = 'benign" --showConfig --testNamePattern="benign';
-        let featureFlagCalls = 0;
         const runners = [];
         tl.getInput = (key: string) => key === 'testLanguageInput' ? 'Jest' : null;
-        tl.getPipelineFeature = (featureFlag: string) => {
-            featureFlagCalls++;
-            assert.strictEqual(featureFlag, constants.STRUCTURED_JEST_ARGUMENTS_FIX_FEATURE);
-            return true;
-        };
+        tl.getPipelineFeature = () => false;
         tl.which = (tool: string) => tool;
         tl.tool = (toolPath: string) => {
             const runner = originalTool(toolPath);
@@ -212,7 +217,6 @@ describe('AzureTestPlan Suite', function () {
         const result = await testInvoker([testName, 'second test'], {});
 
         assert.strictEqual(result, 0);
-        assert.strictEqual(featureFlagCalls, 1);
         assert.strictEqual(runners.length, 3);
         assert.deepStrictEqual(runners[1].args, [
             'jest',
@@ -221,8 +225,15 @@ describe('AzureTestPlan Suite', function () {
             '--reporters=jest-junit',
             `--testNamePattern=${testName}`,
         ]);
+        assert.deepStrictEqual(runners[2].args, [
+            'jest',
+            '--ci',
+            '--reporters=default',
+            '--reporters=jest-junit',
+            '--testNamePattern=second test',
+        ]);
     });
-
+    
     it('should neutralize logging commands in selector diagnostic output', async function () {
         const selector = 'manualTests\n##vso[task.setvariable variable=marker;]value';
         const previousSelector = process.env['__testSelector__'];

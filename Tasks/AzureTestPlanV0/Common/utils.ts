@@ -73,18 +73,15 @@ export function separateJestTestName(inputString) {
     }
 }
 
-export function setJestTestRunnerArguments(jestRunner: tr.ToolRunner, testName: string, useStructuredArguments: boolean): void {
-    if (useStructuredArguments) {
-        jestRunner.arg([
-            'jest',
-            '--ci',
-            '--reporters=default',
-            '--reporters=jest-junit',
-            `--testNamePattern=${testName.trim()}`,
-        ]);
-    } else {
-        jestRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${testName}"`);
-    }
+// The test name comes from Test Case metadata, so it must stay a single argument and never be re-tokenized.
+export function setJestTestRunnerArguments(jestRunner: tr.ToolRunner, testName: string): void {
+    jestRunner.arg([
+        'jest',
+        '--ci',
+        '--reporters=default',
+        '--reporters=jest-junit',
+        `--testNamePattern=${testName.trim()}`,
+    ]);
 }
 
 /*  
