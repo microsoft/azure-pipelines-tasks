@@ -16,6 +16,8 @@
   "demands": [],
   "preview": true,
   "minimumAgentVersion": "2.159.2",
+  "deprecated": true,
+  "deprecationMessage": "The CacheBeta@1 task is deprecated and will no longer receive updates.",
   "inputs": [
     {
       "name": "key",
