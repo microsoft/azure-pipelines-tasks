@@ -152,7 +152,11 @@ function New-DiffPackage
                 Write-Host (Get-VstsLocString -Key DIFFPKG_ServiceIsNotChanged -ArgumentList @($localServiceManifestName, $ApplicationName, $clusterServiceManifest.Version, $ConnectedServiceEndpoint.Url))
                 continue
             }
-            Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @($localServiceManifestName, $clusterServiceManifest.Version, $localServiceManifestVersion))
+            $displayClusterServiceVersion = Protect-ExternalOutput -InputObject $clusterServiceManifest.Version -Source remote -VsoCommandMode blockAndTelemetry
+            Write-Host (Get-VstsLocString -Key DIFFPKG_CreatingDiffPackageForService -ArgumentList @(
+                $localServiceManifestName,
+                $displayClusterServiceVersion,
+                $localServiceManifestVersion))
 
             $diffServicePkgPath = New-Item -ItemType Directory -Path $diffServicePkgPath -Force
 

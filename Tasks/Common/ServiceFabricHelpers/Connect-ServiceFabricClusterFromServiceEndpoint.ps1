@@ -1,3 +1,6 @@
+# This module cannot see functions that the script importing it has loaded, so it loads the sanitizer itself.
+. "$PSScriptRoot\..\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
 # Function that can be mocked by tests
 function Create-Object
 {
@@ -29,11 +32,14 @@ function Get-AadSecurityToken
     $global:operationId = $SF_Operations.ConnectClusterMetadata
     $connectResult = Connect-ServiceFabricClusterAction -ClusterConnectionParameters $connectionParametersWithGetMetadata
     $authority = $connectResult.AzureActiveDirectoryMetadata.Authority
-    Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $authority)
+    $displayAuthority = Protect-ExternalOutput -InputObject $authority -Source remote -VsoCommandMode blockAndTelemetry
+    Write-Host (Get-VstsLocString -Key AadAuthority -ArgumentList $displayAuthority)
     $clusterApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClusterApplication
-    Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $clusterApplicationId)
+    $displayClusterApplicationId = Protect-ExternalOutput -InputObject $clusterApplicationId -Source remote -VsoCommandMode blockAndTelemetry
+    Write-Host (Get-VstsLocString -Key ClusterAppId -ArgumentList $displayClusterApplicationId)
     $clientApplicationId = $connectResult.AzureActiveDirectoryMetadata.ClientApplication
-    Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $clientApplicationId)
+    $displayClientApplicationId = Protect-ExternalOutput -InputObject $clientApplicationId -Source remote -VsoCommandMode blockAndTelemetry
+    Write-Host (Get-VstsLocString -Key ClientAppId -ArgumentList $displayClientApplicationId)
 
     # MSAL flag
     $useMSAL = $false
