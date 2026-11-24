@@ -114,6 +114,60 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeInAgentFolder" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is inside the agent folder '%s', so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境 ('%s') のホーム ディレクトリはエージェント フォルダー '%s' 内にあるため、資格情報はそこに書き込まれません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeNotAbsolute" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is not an absolute path, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境 ('%s') のホーム ディレクトリは絶対パスではないため、資格情報はそこに書き込まれません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeNotOwned" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') isn't owned by the current user, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境から取得したホーム ディレクトリ ('%s') は現在のユーザーが所有していないため、そこには資格情報を書き込みません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeSymlink" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Maven settings path '%s' under the home directory from the environment is a symbolic link, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境から取得したホーム ディレクトリの下にある Maven 設定パス '%s' はシンボリック リンクであるため、そこには資格情報を書き込みません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeUnreadable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to inspect the home directory from the environment ('%s'): %s. Credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境から取得したホーム ディレクトリ ('%s') を検査できません: %s。そこには資格情報を書き込みません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeWritableByOthers" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is writable by other users, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[環境 ('%s') のホーム ディレクトリは他のユーザーが書き込み可能であるため、資格情報はそこに書き込まれません。ホーム ディレクトリを持つアカウントとしてエージェントを実行するか、代わりに Maven タスクのフィード認証を使用します。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_InvalidServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The service connection for %s is invalid.]]></Val>
@@ -195,6 +249,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_AccountHomeLookupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine the account home directory: %s. Falling back to the home directory from the environment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アカウントのホーム ディレクトリを特定できません: %s。環境から取得したホーム ディレクトリに切り替えます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_AccountHomeUnusable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The account home directory '%s' is not usable. Falling back to the home directory from the environment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[アカウントのホーム ディレクトリ '%s' は使用できません。環境から取得したホーム ディレクトリに切り替えます。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_ChmodFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.]]></Val>
@@ -204,11 +276,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_FallbackHomeJavaCompat" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Writing credentials to %s. Java 18 and earlier don't read Maven settings from this location when the account has no usable home directory. If authentication fails, pass '-s %s' to Maven.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[資格情報を %s に書き込んでいます。アカウントに使用可能なホーム ディレクトリがない場合、Java 18 以前ではこの場所から Maven 設定を読み取りません。認証に失敗した場合は、'-s %s' を Maven に渡してください。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_FeedEntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository '%s' already exists in the users settings.xml file.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[フィードまたはリポジトリ '%s' の設定がユーザーの settings.xml ファイルに既に存在しています。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_HomeEnvVarIgnored" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The %s environment variable differs from the account home directory and was ignored. Using %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[%s 環境変数がアカウントのホーム ディレクトリと異なるため、無視されました。%s を使用します。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
