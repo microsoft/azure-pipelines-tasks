@@ -73,7 +73,11 @@ export class MysqlClient implements ISqlClient {
     private async _executeSqlScript(argument: string): Promise<number> {
         let defer = Q.defer<number>();
         task.debug('Started execution of mysql script');
-        task.exec(this._toolPath, Utility.argStringToArray(argument)).then((resultCode)=>{
+        // mysql's own stdout/stderr (query results, and any error text raised by a
+        // trigger or stored procedure the connected principal does not own) is
+        // untrusted output from the task's perspective; filter it so a logging-command
+        // marker embedded in that output can never reach the agent's command parser.
+        task.exec(this._toolPath, Utility.argStringToArray(argument), { externalOutput: { source: 'childProcess' } }).then((resultCode)=>{
             task.debug('Script execution on mysql server result: '+ resultCode);
             if(resultCode === 0){
                 defer.resolve(resultCode);
