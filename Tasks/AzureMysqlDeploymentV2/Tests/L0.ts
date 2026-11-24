@@ -199,6 +199,7 @@ describe('AzureMySqlDeployment V2 Suite', function() {
         assert(tr.stdOutContained('fileExecFileNotFound passed.'), 'Should have printed: fileExecFileNotFound passed.');
         assert(tr.stdOutContained('fileExecSpawnError passed.'), 'Should have printed: fileExecSpawnError passed.');
         assert(tr.stdOutContained('fileExecStreamError passed.'), 'Should have printed: fileExecStreamError passed.');
+        assert(tr.stdOutContained('fileExecNeutralizesVsoMarkerInOutput passed.'), 'Should have printed: fileExecNeutralizesVsoMarkerInOutput passed.');
     });
 
 });

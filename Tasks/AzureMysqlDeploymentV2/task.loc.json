@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 2,
-    "Minor": 283,
-    "Patch": 1
+    "Minor": 284,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -187,6 +187,11 @@
       "resultTemplate": "{ \"Value\" : \"{{{properties.fullyQualifiedDomainName}}}\", \"DisplayValue\" : \"{{{properties.fullyQualifiedDomainName}}}\" }"
     }
   ],
+  "restrictions": {
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node16": {
