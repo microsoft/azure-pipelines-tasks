@@ -52,8 +52,10 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
     if (createPullSecretCommand) {
         const deleteSecretCommand = commandHelper.getDeleteSecretCommand(pullSecretName, namespace);
         // while deleting, error is thrown if the secret is not present. Ignore the error.
-        commandHelper.execCommand(deleteSecretCommand, { failOnStdErr: false, ignoreReturnCode: true} as tr.IExecOptions, true);
-        commandHelper.execCommand(createPullSecretCommand);
+        // kubectl's own output here is not expected to reflect untrusted repo content, but it is
+        // still sanitized for defense-in-depth consistency with the other execCommand() call sites.
+        commandHelper.execCommand(deleteSecretCommand, { failOnStdErr: false, ignoreReturnCode: true, externalOutput: { source: 'childProcess' } } as tr.IExecOptions, true);
+        commandHelper.execCommand(createPullSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
         const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
         kubectl.annotate('secret', pullSecretName, KubernetesConstants.pipelineAnnotations);
     }
