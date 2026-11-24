@@ -114,6 +114,60 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeInAgentFolder" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is inside the agent folder '%s', so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El directorio principal del entorno ("%s") está dentro de la carpeta del agente "%s", por lo que las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeNotAbsolute" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is not an absolute path, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El directorio principal del entorno ("%s") no es una ruta de acceso absoluta, por lo que las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeNotOwned" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') isn't owned by the current user, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[El directorio principal del entorno ("%s") no pertenece al usuario actual, por lo que las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeSymlink" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The Maven settings path '%s' under the home directory from the environment is a symbolic link, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La ruta de configuración de Maven "%s" del directorio principal del entorno es un vínculo simbólico, por lo que las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeUnreadable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to inspect the home directory from the environment ('%s'): %s. Credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se pudo inspeccionar el directorio principal del entorno ("%s"): %s. Las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Error_FallbackHomeWritableByOthers" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The home directory from the environment ('%s') is writable by other users, so credentials won't be written there. Run the agent as an account that has a home directory, or use the Maven task's feed authentication instead.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Otros usuarios pueden escribir en el directorio principal del entorno ("%s"), por lo que las credenciales no se escribirán allí. Ejecute el agente con una cuenta que tenga un directorio principal o use la autenticación de la fuente de la tarea de Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Error_InvalidServiceConnection" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The service connection for %s is invalid.]]></Val>
@@ -195,6 +249,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_AccountHomeLookupFailed" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unable to determine the account home directory: %s. Falling back to the home directory from the environment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se puede determinar el directorio principal de la cuenta: %s. Revirtiendo al directorio principal desde el entorno.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_AccountHomeUnusable" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The account home directory '%s' is not usable. Falling back to the home directory from the environment.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[No se puede usar el '%s' del directorio principal de la cuenta. Revirtiendo al directorio principal desde el entorno.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_ChmodFailed" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Unable to set restrictive permissions on %s (mode %s): %s. Continuing without tightened permissions.]]></Val>
@@ -204,11 +276,29 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.messages.Warning_FallbackHomeJavaCompat" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Writing credentials to %s. Java 18 and earlier don't read Maven settings from this location when the account has no usable home directory. If authentication fails, pass '-s %s' to Maven.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Escribiendo credenciales en %s. Java 18 y las versiones anteriores no leen la configuración de Maven de esta ubicación cuando la cuenta no tiene un directorio principal utilizable. Si se produce un error en la autenticación, pase "-s %s" a Maven.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.messages.Warning_FeedEntryAlreadyExists" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The settings for the feed or repository '%s' already exists in the users settings.xml file.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[La configuración de la fuente o el repositorio "%s" ya existe en el archivo settings.xml de los usuarios.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.Warning_HomeEnvVarIgnored" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The %s environment variable differs from the account home directory and was ignored. Using %s.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La variable de entorno %s difiere del directorio principal de la cuenta y se omitió. Usando %s.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
