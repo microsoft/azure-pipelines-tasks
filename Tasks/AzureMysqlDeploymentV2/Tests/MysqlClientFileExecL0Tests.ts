@@ -13,12 +13,12 @@ const SQL_FILE_PATH = path.join(os.tmpdir(), 'test_azure_mysql_deploy.sql');
  * Creates a mock spawn function that returns a fake child process.
  * The mock process provides real stdout/stderr PassThrough streams (mirroring
  * production's `stdio: ['pipe', 'pipe', 'pipe']`), optionally writes
- * `stderrOutput` to stderr, drains stdin (so the pipe completes), ends
- * stdout/stderr (mirroring Node's real "stdio streams end before 'close'"
- * contract), then emits either 'close' with the given exit code, or 'error'
- * with the given error.
+ * `stdoutOutput`/`stderrOutput` to the respective stream, drains stdin (so the
+ * pipe completes), ends stdout/stderr (mirroring Node's real "stdio streams end
+ * before 'close'" contract), then emits either 'close' with the given exit
+ * code, or 'error' with the given error.
  */
-function createMockSpawnFn(exitCode: number, emitError?: Error, stderrOutput?: string): SpawnFn {
+function createMockSpawnFn(exitCode: number, emitError?: Error, stderrOutput?: string, stdoutOutput?: string): SpawnFn {
     return ((cmd: string, args: string[], opts: any) => {
         const proc = new EventEmitter() as any;
         proc.stdin = new PassThrough();
@@ -34,6 +34,9 @@ function createMockSpawnFn(exitCode: number, emitError?: Error, stderrOutput?: s
             // Drain stdin so the pipe from createReadStream completes, then close.
             proc.stdin.resume();
             proc.stdin.on('end', () => {
+                if (stdoutOutput) {
+                    proc.stdout.write(stdoutOutput);
+                }
                 if (stderrOutput) {
                     proc.stderr.write(stderrOutput);
                 }
@@ -79,7 +82,10 @@ export class MysqlClientFileExecL0Tests {
         await MysqlClientFileExecL0Tests.fileExecFileNotFound();
         await MysqlClientFileExecL0Tests.fileExecSpawnError();
         await MysqlClientFileExecL0Tests.fileExecStreamError();
-        await MysqlClientFileExecL0Tests.fileExecNeutralizesVsoMarkerInOutput();
+        await MysqlClientFileExecL0Tests.fileExecNeutralizesVsoMarkerInStdoutOnSuccess();
+        await MysqlClientFileExecL0Tests.fileExecNeutralizesVsoMarkerInStdoutOnFailure();
+        await MysqlClientFileExecL0Tests.fileExecNeutralizesVsoMarkerInStderrOnSuccess();
+        await MysqlClientFileExecL0Tests.fileExecNeutralizesVsoMarkerInStderrOnFailure();
     }
 
     /**
@@ -205,47 +211,95 @@ export class MysqlClientFileExecL0Tests {
     }
 
     /**
-     * A "##vso[" marker embedded in untrusted mysql output (e.g. error text raised by a
-     * trigger/procedure under a lower-privileged database principal's control) must be
-     * neutralized to "##_vso[" before it reaches the task host's own stdout/stderr - it
-     * must never reach the agent's command parser intact. This must hold regardless of
-     * whether the mysql invocation itself succeeds or fails.
+     * Shared assertion for the four marker-neutralization scenarios below: writes a
+     * "##vso[" marker to the given stream (stdout - a query-result row; or stderr - e.g.
+     * SIGNAL/error text raised by a trigger/procedure under a lower-privileged database
+     * principal's control), drives executeSqlCommand() to the given exit code, and asserts
+     * both that the marker reached the task host only in its neutralized "##_vso[" form,
+     * and that the promise resolved/rejected as expected for that exit code. Exercising
+     * both streams and both outcomes matters: a regression that dropped only the stdout
+     * filter (or only the success-path filter) would otherwise go undetected.
      */
-    public static async fileExecNeutralizesVsoMarkerInOutput() {
+    private static async _assertVsoMarkerNeutralized(stream: 'stdout' | 'stderr', exitCode: number, testName: string): Promise<void> {
         const marker = '##vso[task.setvariable variable=PWNED]INJECTED_BY_TRIGGER';
         const neutralized = '##_vso[task.setvariable variable=PWNED]INJECTED_BY_TRIGGER';
-        const originalStderrWrite = process.stderr.write.bind(process.stderr);
-        let capturedStderr = '';
-        (process.stderr as any).write = (chunk: any) => {
-            capturedStderr += chunk.toString();
+        const target = stream === 'stdout' ? process.stdout : process.stderr;
+        const originalWrite = target.write.bind(target);
+        let captured = '';
+        (target as any).write = (chunk: any) => {
+            captured += chunk.toString();
             return true;
         };
+        let resolved = false;
+        let rejection: Error | undefined;
         try {
             fs.writeFileSync(SQL_FILE_PATH, 'SELECT 1;');
+            const spawnFn = stream === 'stdout'
+                ? createMockSpawnFn(exitCode, undefined, undefined, marker + '\n')
+                : createMockSpawnFn(exitCode, undefined, marker + '\n');
             const client = new MysqlClient(
                 MysqlClientFileExecL0Tests.params,
                 'DEMO_MYSQL_SERVER',
                 '/usr/local/bin/mysql',
-                createMockSpawnFn(1, undefined, marker + '\n')
+                spawnFn
             );
             try {
                 await client.executeSqlCommand();
+                resolved = true;
             } catch (error) {
-                // A non-zero mysql exit is expected here; output filtering is what's under test.
+                rejection = error;
             }
-            // Give the piped Transform stream a turn to flush before asserting.
+            // Give the piped Transform stream a turn to flush before restoring the real stream.
             await new Promise((resolve) => setImmediate(resolve));
-            if (capturedStderr.includes(marker)) {
-                tl.setResult(tl.TaskResult.Failed, 'fileExecNeutralizesVsoMarkerInOutput: raw vso marker reached stderr unfiltered.');
-            } else if (!capturedStderr.includes(neutralized)) {
-                tl.setResult(tl.TaskResult.Failed, 'fileExecNeutralizesVsoMarkerInOutput: neutralized marker not found in stderr: ' + capturedStderr);
-            } else {
-                tl.setResult(tl.TaskResult.Succeeded, 'fileExecNeutralizesVsoMarkerInOutput passed.');
-            }
         } finally {
-            (process.stderr as any).write = originalStderrWrite;
+            // Restore the real stream BEFORE reporting the verdict below: tl.setResult()'s own
+            // "##vso[task.complete]" message is written to process.stdout, and when `stream` is
+            // 'stdout' that write must reach the real stream, not this capture buffer, or the
+            // test's own pass/fail signal would be silently swallowed.
+            (target as any).write = originalWrite;
             cleanupFile(SQL_FILE_PATH);
         }
+        if (exitCode === 0 && !resolved) {
+            tl.setResult(tl.TaskResult.Failed, testName + ': expected executeSqlCommand to resolve on exit code 0, but it rejected: ' + rejection?.message);
+        } else if (exitCode !== 0 && resolved) {
+            tl.setResult(tl.TaskResult.Failed, testName + ': expected executeSqlCommand to reject on exit code ' + exitCode + ', but it resolved.');
+        } else if (captured.includes(marker)) {
+            tl.setResult(tl.TaskResult.Failed, testName + ': raw vso marker reached ' + stream + ' unfiltered.');
+        } else if (!captured.includes(neutralized)) {
+            tl.setResult(tl.TaskResult.Failed, testName + ': neutralized marker not found in ' + stream + ': ' + captured);
+        } else {
+            tl.setResult(tl.TaskResult.Succeeded, testName + ' passed.');
+        }
+    }
+
+    /**
+     * Query-result data (e.g. a SELECT returning attacker-influenced row content) is the
+     * realistic carrier for a stdout marker, reaching the task on the successful-exit path.
+     */
+    public static async fileExecNeutralizesVsoMarkerInStdoutOnSuccess() {
+        await MysqlClientFileExecL0Tests._assertVsoMarkerNeutralized('stdout', 0, 'fileExecNeutralizesVsoMarkerInStdoutOnSuccess');
+    }
+
+    /**
+     * mysql can still emit partial result data to stdout before failing outright.
+     */
+    public static async fileExecNeutralizesVsoMarkerInStdoutOnFailure() {
+        await MysqlClientFileExecL0Tests._assertVsoMarkerNeutralized('stdout', 1, 'fileExecNeutralizesVsoMarkerInStdoutOnFailure');
+    }
+
+    /**
+     * mysql can write warnings to stderr even when the overall invocation still succeeds.
+     */
+    public static async fileExecNeutralizesVsoMarkerInStderrOnSuccess() {
+        await MysqlClientFileExecL0Tests._assertVsoMarkerNeutralized('stderr', 0, 'fileExecNeutralizesVsoMarkerInStderrOnSuccess');
+    }
+
+    /**
+     * SIGNAL/error text raised by a trigger or stored procedure is the realistic carrier
+     * for a stderr marker, reaching the task on the failing-exit path.
+     */
+    public static async fileExecNeutralizesVsoMarkerInStderrOnFailure() {
+        await MysqlClientFileExecL0Tests._assertVsoMarkerNeutralized('stderr', 1, 'fileExecNeutralizesVsoMarkerInStderrOnFailure');
     }
 }
 
