@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 281,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -218,6 +218,8 @@
     "FTPNoHostSpecified": "ms-resource:loc.messages.FTPNoHostSpecified",
     "FTPNoProtocolSpecified": "ms-resource:loc.messages.FTPNoProtocolSpecified",
     "NoFilesFound": "ms-resource:loc.messages.NoFilesFound",
+    "RemoteFileContainsBackslash": "ms-resource:loc.messages.RemoteFileContainsBackslash",
+    "RemoteFileEscapesRemotePath": "ms-resource:loc.messages.RemoteFileEscapesRemotePath",
     "UploadRemoteDir": "ms-resource:loc.messages.UploadRemoteDir",
     "UploadSucceedMsg": "ms-resource:loc.messages.UploadSucceedMsg",
     "UploadSucceedRes": "ms-resource:loc.messages.UploadSucceedRes",

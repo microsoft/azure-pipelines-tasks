@@ -50,7 +50,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
 
     // *************************************************** Nuget Org Tests ******************************************************
 
-    it('Get latest pre-release version cache hit', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -64,7 +64,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
@@ -75,10 +75,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache miss and download success', (done: MochaDone) => {
+    it('Get latest pre-release version cache miss and download success', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -92,7 +91,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -106,10 +105,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version listing failed but a stable version found in cache', (done: MochaDone) => {
+    it('Get latest pre-release version listing failed but a stable version found in cache', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -124,7 +122,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\17.5.0`;
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -136,10 +134,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version listing failed but no stable version found in cache', (done: MochaDone) => {
+    it('Get latest pre-release version listing failed but no stable version found in cache', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -153,7 +150,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.expectedTestPlatformVersion] = 'x';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length !== 0 || tr.errorIssues.length, 'should have written to stderr');
@@ -165,10 +162,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
-        done();
     });
 
-    it('Get latest pre-release version cache miss and download failed but fallback cache hit', (done: MochaDone) => {
+    it('Get latest pre-release version cache miss and download failed but fallback cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -183,7 +179,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\17.5.0`;
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -197,10 +193,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolSecondCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolSecondCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache miss and download failed and fallback cache miss', (done: MochaDone) => {
+    it('Get latest pre-release version cache miss and download failed and fallback cache miss', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -214,7 +209,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.downloadPackageReturnCode] = '1';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length !== 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -230,10 +225,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
-        done();
     });
 
-    it('Get latest stable version cache hit', (done: MochaDone) => {
+    it('Get latest stable version cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -247,7 +241,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.succeeded, `Task should have succeeded`);
@@ -258,10 +252,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest stable version listing empty and cache hit', (done: MochaDone) => {
+    it('Get latest stable version listing empty and cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -276,7 +269,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesOutput] = '';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -288,10 +281,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`), `Should have set variable to ${process.env[testConstants.findLocalToolFirstCallReturnValue]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get specific version cache hit', (done: MochaDone) => {
+    it('Get specific version cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -304,7 +296,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.findLocalToolFirstCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -314,10 +306,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get specific version cache miss and download success', (done: MochaDone) => {
+    it('Get specific version cache miss and download success', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -330,7 +321,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -342,12 +333,11 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
     // ***************************************************** Custom Feed Tests *************************************************************
 
-    it('Get latest pre-release version cache hit from custom feed no password', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit from custom feed no password', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -364,7 +354,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -376,10 +366,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache hit from custom feed and password provided', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit from custom feed and password provided', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -399,7 +388,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -411,10 +400,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache hit from custom feed username and password provided', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit from custom feed username and password provided', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -435,7 +423,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -449,10 +437,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Deleted file ${process.env[testConstants.configFile]}`), `Should have cleaned up the temp config file.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache miss and download success for custom feed with password', (done: MochaDone) => {
+    it('Get latest pre-release version cache miss and download success for custom feed with password', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -472,7 +459,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.downloadPackageReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -486,10 +473,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache hit from custom feed, password provided but writing config fails', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit from custom feed, password provided but writing config fails', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -510,7 +496,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.writeNugetConfigReturnCode] = '1';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length !== 0 || tr.errorIssues.length, 'should have written to stderr');
@@ -520,10 +506,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Cache hit for ${process.env[testConstants.expectedTestPlatformVersion]}`), `Expected a cache hit.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get latest pre-release version cache hit from custom feed, password provided but writing config fails and fallback cache lookup fails', (done: MochaDone) => {
+    it('Get latest pre-release version cache hit from custom feed, password provided but writing config fails and fallback cache lookup fails', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -543,7 +528,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.writeNugetConfigReturnCode] = '1';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length !== 0 || tr.errorIssues.length, 'should have written to stderr');
@@ -554,12 +539,11 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
-        done();
     });
 
     // ***************************************************** Network Share Tests *************************************************************
 
-    it('Get specified package from path provided from network share cache hit', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache hit', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -574,7 +558,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -584,10 +568,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get specified package from path provided from network share cache miss and copy successful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss and copy successful', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -601,7 +584,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -611,10 +594,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get specified package from path provided from network share cache miss share and copy unsuccessful but fallback cache lookup successful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss share and copy unsuccessful but fallback cache lookup successful', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -631,7 +613,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.findLocalToolSecondCallReturnValue] = `VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}`;
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -641,10 +623,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained(`Set variable VsTestToolsInstallerInstalledToolLocation value to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`), `Should have set variable to VsTest\\${process.env[testConstants.expectedTestPlatformVersion]}.`);
         assert(tr.stdOutContained('InstallationSuccessful'));
 
-        done();
     });
 
-    it('Get specified package from path provided from network share cache miss and copy unsuccessful and fallback cache lookup unsuccessful', (done: MochaDone) => {
+    it('Get specified package from path provided from network share cache miss and copy unsuccessful and fallback cache lookup unsuccessful', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -659,7 +640,7 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.downloadPackageReturnCode] = '1';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
@@ -670,10 +651,9 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         assert(tr.stdOutContained('NoPackageFoundInCache'), `Should warn no stable package found in cache`);
         assert(tr.stdOutContained('FailedToAcquireTestPlatform'), `Should fail with failed to acquire test platform`);
 
-        done();
     });
 
-    it('Get specified package from path provided from network share invalid filename', (done: MochaDone) => {
+    it('Get specified package from path provided from network share invalid filename', async () => {
 
         // Setup the mock runner
         const tp = path.join(__dirname, 'TestSetup.js');
@@ -687,13 +667,12 @@ describe('VsTestPlatformToolInstaller Suite', function() {
         process.env[testConstants.listPackagesReturnCode] = '0';
 
         // Start the run
-        tr.run();
+        await tr.runAsync();
 
         // Asserts
         assert(tr.stderr.length === 0 || tr.errorIssues.length, 'should not have written to stderr');
         assert(tr.failed, `Task should have failed`);
         assert(tr.stdOutContained(`UnexpectedFileName`));
 
-        done();
     });
 });

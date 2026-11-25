@@ -14,7 +14,7 @@
   <CodePackage Name="Code" Version="1.0.0">
     <EntryPoint>
       <ContainerHost>
-        <ImageName>image1</ImageName>
+        <ImageName>myregistry.azurecr.io/image1</ImageName>
       </ContainerHost>
     </EntryPoint>
   </CodePackage>

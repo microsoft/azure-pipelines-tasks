@@ -16,13 +16,14 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 0
+    "Minor": 283,
+    "Patch": 1
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
   "groups": [],
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The MysqlDeploymentOnMachineGroup@1 task is deprecated",
   "inputs": [
     {
@@ -124,6 +125,7 @@
     "MysqlTaskParameterCannotBeEmpty": "ms-resource:loc.messages.MysqlTaskParameterCannotBeEmpty",
     "ToolPathCannotBeNull": "ms-resource:loc.messages.ToolPathCannotBeNull",
     "SqlExecutionException": "ms-resource:loc.messages.SqlExecutionException",
+    "InvalidSqlFilePath": "ms-resource:loc.messages.InvalidSqlFilePath",
     "CallbackCannotBeNull": "ms-resource:loc.messages.CallbackCannotBeNull",
     "UnableToCreateDatabaseException": "ms-resource:loc.messages.UnableToCreateDatabaseException",
     "WindowMysqlClientMissingError": "ms-resource:loc.messages.WindowMysqlClientMissingError",

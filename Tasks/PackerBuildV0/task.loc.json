@@ -14,7 +14,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [],
@@ -45,6 +45,7 @@
     }
   ],
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The PackerBuild@0 task is deprecated, please use a newer version of the PackerBuild task to take advantage of latest features e.g. Workload identity federation (see https://aka.ms/azdo-rm-workload-identity-tasks)",
   "inputs": [
     {

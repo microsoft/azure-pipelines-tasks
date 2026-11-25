@@ -3,6 +3,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as  path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as yaml from 'js-yaml';
 import * as  helmutility from 'azure-pipelines-tasks-kubernetes-common/helmutility';
 import { v4 as uuidV4 } from 'uuid';
@@ -42,7 +43,7 @@ class HelmRenderEngine extends RenderEngine {
             fs.chmodSync(kubeconfigPath, '600');
         const helmPath = await helmutility.getHelm();
         const helmCommand = new Helm(helmPath, TaskParameters.namespace);
-        const helmReleaseName = tl.getInput('releaseName', false);
+        const helmReleaseName = utils.validateReleaseName(tl.getInput('releaseName', false));
         const result = helmCommand.template(helmReleaseName, tl.getPathInput('helmChart', true), tl.getDelimitedInput('overrideFiles', '\n'), this.getOverrideValues());
         if (result.stderr) {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
@@ -60,8 +61,8 @@ class HelmRenderEngine extends RenderEngine {
         const overrideValues = [];
         overridesInput.forEach(arg => {
             const overrideInput = arg.split(':');
-            const overrideName = overrideInput[0];
-            const overrideValue = overrideInput.slice(1).join(':');
+            const overrideName = utils.escapeHelmSetToken(overrideInput[0]);
+            const overrideValue = utils.escapeHelmSetToken(overrideInput.slice(1).join(':'), true);
             overrideValues.push({
                 name: overrideName,
                 value: overrideValue
@@ -102,8 +103,9 @@ class KustomizeRenderEngine extends RenderEngine {
         const kubectlPath = await utils.getKubectl();
         this.validateKustomize(kubectlPath);
         const command = tl.tool(kubectlPath);
-        console.log(`[command] ${kubectlPath} kustomize ${tl.getPathInput('kustomizationPath')}`);
-        command.arg(['kustomize', tl.getPathInput('kustomizationPath')]);
+        const kustomizationPath = tl.getPathInput('kustomizationPath');
+        tl.writeExternalOutput(`[command] ${kubectlPath} kustomize ${kustomizationPath}` + os.EOL, { source: 'repository' });
+        command.arg(['kustomize', kustomizationPath]);
 
         const result = command.execSync({ silent: true } as IExecOptions);
         if (result.stderr) {

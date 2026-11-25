@@ -1,5 +1,6 @@
 import assert = require('assert');
 import tl = require('azure-pipelines-task-lib/task');
+import * as childProcess from 'child_process';
 import { validateScriptArgs, ArgsSanitizingError, isPowerShellArgumentAstSafe, isAstProbeResultSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
@@ -12,6 +13,7 @@ export const runValidateScriptArgsTests = () => {
         // (e.g. a pwsh-less macOS agent). The fail-closed negatives below are interpreter-independent.
         if (tl.which('pwsh', false) || tl.which('powershell', false)) {
             assert(isPowerShellArgumentAstSafe('-Tags @{ env = "prod"; port = 8080 }'));
+            assert(isPowerShellArgumentAstSafe("-Json '[]'"));
         }
         assert(!isPowerShellArgumentAstSafe('@{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }'));
         assert(!isPowerShellArgumentAstSafe('@{ k = [System.Net.Dns]::MachineName }'));
@@ -51,6 +53,155 @@ export const runValidateScriptArgsTests = () => {
             originalEnvValues.delete(envName);
         });
     };
+
+    describe('PowerShell AST probe diagnostics', () => {
+        const secret = 'SensitiveArgumentValue';
+        const env = [
+            'AZP_75787_ENABLE_NEW_LOGIC=true',
+            'AZP_75787_ENABLE_COLLECT=true',
+            'DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS=true',
+            'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true',
+            'AGENT_VERSION=2.999.0'
+        ];
+        let originalSpawn: PropertyDescriptor;
+        let originalWrite: typeof process.stdout.write;
+        let output: string;
+        let calls: number;
+
+        beforeEach(() => {
+            setEnv(env);
+            originalSpawn = Object.getOwnPropertyDescriptor(childProcess, 'spawnSync')!;
+            originalWrite = process.stdout.write;
+            output = '';
+            calls = 0;
+            process.stdout.write = (chunk: string | Uint8Array): boolean => {
+                output += chunk.toString();
+                return true;
+            };
+        });
+
+        afterEach(() => {
+            Object.defineProperty(childProcess, 'spawnSync', originalSpawn);
+            process.stdout.write = originalWrite;
+            clearEnv(env);
+        });
+
+        const mockProbe = (status: number | null, code?: string, signal: NodeJS.Signals | null = null) => {
+            Object.defineProperty(childProcess, 'spawnSync', {
+                ...originalSpawn,
+                value: (_file: string, _args: string[], options: childProcess.SpawnSyncOptionsWithStringEncoding) => {
+                    calls++;
+                    assert.strictEqual(options.timeout, 10000);
+                    return {
+                        status, signal,
+                        error: code ? Object.assign(new Error(secret), { code }) : undefined,
+                        stdout: secret, stderr: secret
+                    };
+                }
+            });
+        };
+        const telemetryEvents = (): Array<Record<string, unknown>> => output.split(/\r?\n/)
+            .filter(line => line.startsWith('##vso[telemetry.publish'))
+            .map(line => JSON.parse(line.slice(line.indexOf(']') + 1)));
+
+        it('keeps safe quoted JSON accepted without adding success telemetry', () => {
+            mockProbe(0);
+            assert.doesNotThrow(() => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'));
+            assert.strictEqual(calls, 1);
+            assert.deepStrictEqual(telemetryEvents(), []);
+        });
+
+        it('reports a timeout clearly and adds process details to existing failure telemetry', () => {
+            mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+            assert.throws(
+                () => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'),
+                (err: Error) => err instanceof ArgsSanitizingError
+                    && /validation timed out/.test(err.message)
+                    && /script was not run/.test(err.message)
+                    && !err.message.includes(secret)
+            );
+            const events = telemetryEvents();
+            assert.strictEqual(events.length, 1);
+            assert.strictEqual(events[0].astBackstopRejected, true);
+            assert.strictEqual(events[0].astProbeErrorCode, 'ETIMEDOUT');
+            assert.strictEqual(events[0].astProbeExitCode, null);
+            assert.strictEqual(events[0].astProbeSignal, 'SIGTERM');
+            assert.strictEqual(events[0].astProbeTimeoutMs, 10000);
+            assert.ok(typeof events[0].astProbeDurationMs === 'number' && events[0].astProbeDurationMs >= 0);
+            assert.ok(!JSON.stringify(events).includes(secret));
+        });
+
+        for (const value of ['false', undefined]) {
+            it(`preserves the existing timeout rejection and telemetry when diagnostics are ${value ?? 'unset'}`, () => {
+                if (value === undefined) {
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
+                } else {
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
+                }
+                mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+                assert.throws(
+                    () => validateScriptArgs("-Json '[]'", 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                        && !/validation timed out/.test(err.message)
+                );
+                assert.strictEqual(calls, 1);
+                const events = telemetryEvents();
+                assert.strictEqual(events.length, 1);
+                assert.strictEqual(events[0].astBackstopRejected, true);
+                assert.ok(!Object.keys(events[0]).some(key => key.startsWith('astProbe')));
+            });
+
+            it(`does not report probe diagnostics through a supplied callback when the flag is ${value ?? 'unset'}`, () => {
+                if (value === undefined) {
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
+                } else {
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
+                }
+                mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+                let reported = false;
+                assert.strictEqual(isPowerShellArgumentAstSafe("-Json '[]'", undefined, () => {
+                    reported = true;
+                }), false);
+                assert.strictEqual(calls, 1);
+                assert.strictEqual(reported, false);
+            });
+        }
+
+        for (const gate of ['AZP_75787_ENABLE_NEW_LOGIC', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION']) {
+            it(`does not activate AST validation when ${gate} is off`, () => {
+                process.env[gate] = 'false';
+                mockProbe(null, 'ETIMEDOUT');
+                assert.doesNotThrow(() => validateScriptArgs("-Json '[]'", 'pscore'));
+                assert.strictEqual(calls, 0);
+                assert.deepStrictEqual(telemetryEvents(), []);
+            });
+        }
+
+        const failures: [number | null, string | undefined][] = [[null, 'ENOENT'], [3, undefined]];
+        for (const [status, code] of failures) {
+            it(`preserves non-timeout rejection and records its process result (${status}, ${code})`, () => {
+                mockProbe(status, code);
+                assert.throws(
+                    () => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                );
+                const events = telemetryEvents();
+                assert.strictEqual(events.length, 1);
+                assert.strictEqual(events[0].astProbeErrorCode, code);
+                assert.strictEqual(events[0].astProbeExitCode, status);
+                assert.ok(!JSON.stringify(events).includes(secret));
+            });
+        }
+
+        it('keeps the timeout message when telemetry collection is disabled', () => {
+            process.env.AZP_75787_ENABLE_COLLECT = 'false';
+            mockProbe(null, 'ETIMEDOUT');
+            assert.throws(() => validateScriptArgs("-Json '[]'", 'pscore'), /validation timed out/);
+            assert.deepStrictEqual(telemetryEvents(), []);
+        });
+    });
 
     const notThrowTestSuites: [string, string, string, string[]][] = [
         ['Handles empty line (bash)', '', 'bash', []],

@@ -14,7 +14,7 @@ setEnvVariables();
 tr.setInput('testPlan', '1');
 tr.setInput('testConfiguration', '10');
 tr.setInput('testSuite', '2');
-tr.setInput('testSelector', 'manualTests');
+tr.setInput('testSelector', process.env['__testSelector__'] || 'manualTests');
 
 
 const tl = require('azure-pipelines-task-lib/mock-task');

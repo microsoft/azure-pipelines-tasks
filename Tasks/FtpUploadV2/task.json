@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 281,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "FTP Upload: $(rootFolder)",
@@ -218,6 +218,8 @@
     "FTPNoHostSpecified": "The FTP server URL must include a host name",
     "FTPNoProtocolSpecified": "The FTP server URL must begin with ftp:// or ftps://",
     "NoFilesFound": "Could not find any files to upload",
+    "RemoteFileContainsBackslash": "File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.",
+    "RemoteFileEscapesRemotePath": "File name '%s' would be uploaded outside the remote directory '%s'.",
     "UploadRemoteDir": "uploading files to remote directory: %s",
     "UploadSucceedMsg": "FTP upload successful %s",
     "UploadSucceedRes": "FTP upload successful",

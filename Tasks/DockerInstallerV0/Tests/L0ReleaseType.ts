@@ -4,7 +4,13 @@ import fs = require('fs');
 import os = require('os');
 import path = require('path');
 
-const testCase: { releaseType: string; cached: boolean; platform: string; featureValue?: string } = JSON.parse(process.env['DOCKER_INSTALLER_TEST_CASE']);
+const testCase: {
+    releaseType: string;
+    cached: boolean;
+    platform: string;
+    featureValue?: string;
+    failure?: 'download' | 'verify' | 'telemetry';
+} = JSON.parse(process.env['DOCKER_INSTALLER_TEST_CASE']);
 const tr = new tmrm.TaskMockRunner(path.join(__dirname, '..', 'src', 'dockertoolinstaller.js'));
 tr.setInput('dockerVersion', '28.5.2');
 tr.setInput('releaseType', testCase.releaseType);
@@ -27,7 +33,7 @@ const answers: ma.TaskLibAnswers = {
     },
     exec: {
         [`${dockerPath} --version`]: {
-            code: 0,
+            code: testCase.failure === 'verify' ? 1 : 0,
             stdout: 'Docker version 28.5.2, build mock'
         }
     },
@@ -51,6 +57,9 @@ tr.registerMock('azure-pipelines-tool-lib/tool', {
     },
     downloadTool: async function(url: string) {
         console.log(`downloadTool: ${url}`);
+        if (testCase.failure === 'download') {
+            throw new Error('Mock download failure');
+        }
         return path.join(__dirname, 'docker-archive');
     },
     extractTar: async function() {
@@ -74,5 +83,13 @@ tr.registerMock('fs', {
         console.log(`chmodSync: ${filePath}`);
     }
 });
+
+if (testCase.failure === 'telemetry') {
+    tr.registerMockExport('command', function(command: string) {
+        if (command === 'telemetry.publish') {
+            throw new Error('Mock telemetry failure');
+        }
+    });
+}
 
 tr.run();

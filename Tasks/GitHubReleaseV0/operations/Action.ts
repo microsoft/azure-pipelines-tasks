@@ -188,19 +188,19 @@ export class Action {
 
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
-            console.log(tl.loc("UploadingAsset", asset));
+            Utility.logRepositoryMessage(tl.loc("UploadingAsset", asset));
 
             let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
             tl.debug("Upload asset response: " + JSON.stringify(uploadResponse));
             
             if (uploadResponse.statusCode === 201) {
-                console.log(tl.loc("UploadAssetSuccess", asset));
+                Utility.logRepositoryMessage(tl.loc("UploadAssetSuccess", asset));
             }
             else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === this._alreadyExistErrorCode) {
                 
                 if (assetUploadMode === AssetUploadMode.replace) {
-                    console.log(tl.loc("DuplicateAssetFound", asset));
-                    console.log(tl.loc("DeletingDuplicateAsset", asset));
+                    Utility.logRepositoryMessage(tl.loc("DuplicateAssetFound", asset));
+                    Utility.logRepositoryMessage(tl.loc("DeletingDuplicateAsset", asset));
 
                     const fileName = path.basename(asset);
 
@@ -213,7 +213,7 @@ export class Action {
                     }
                 }
                 else {
-                    console.log(tl.loc("SkipDuplicateAssetFound", asset));
+                    Utility.logRepositoryMessage(tl.loc("SkipDuplicateAssetFound", asset));
                 }
             }
             else {

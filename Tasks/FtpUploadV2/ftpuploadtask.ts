@@ -5,6 +5,7 @@ import * as os from "os";
 import * as path from "path";
 import * as url from "url";
 import { MatchOptions } from "azure-pipelines-task-lib/task";
+import { resolveRemoteFilePath } from "./ftputils";
 
 interface FtpOptions {
     // url
@@ -369,13 +370,11 @@ async function run() {
 
         for (const file of files) {
             tl.debugExternalOutput("file: " + file, { source: "repository" });
-            let remoteFile: string = ftpOptions.preservePaths
-                ? path.join(
-                    ftpOptions.remotePath,
-                    file.substring(ftpOptions.rootFolder.length)
-                )
-                : path.join(ftpOptions.remotePath, path.basename(file));
+            const relativePath: string = ftpOptions.preservePaths
+                ? file.substring(ftpOptions.rootFolder.length)
+                : path.basename(file);
 
+            let remoteFile: string = resolveRemoteFilePath(ftpOptions.remotePath, relativePath);
             remoteFile = remoteFile.replace(/\\/gi, "/"); // always use forward slashes
             tl.debugExternalOutput("remoteFile: " + remoteFile, { source: "repository" });
 

@@ -5,16 +5,15 @@ function Add-DbghelpLibrary {
     Trace-VstsEnteringInvocation $MyInvocation
     
     $dbghelpPath = Get-DbghelpPath
-    Initialize-DbghelpNativeMethods -DbghelpPath $dbghelpPath
     
-    [bool]$isExpectedLibraryLoaded = $false
+    [bool]$isLoaded = $false
     foreach ($module in (Get-CurrentProcess).Modules) {
         if ($module.ModuleName -eq 'dbghelp.dll') {
-            if ([string]::Equals($module.FileName, $dbghelpPath, [System.StringComparison]::OrdinalIgnoreCase)) {
-                $isExpectedLibraryLoaded = $true
+            $isLoaded = $true
+            if ($module.FileName -eq $dbghelpPath) {
                 Write-Verbose "Module dbghelp.dll is already loaded from the expected file path: $dbghelpPath"
             } else {
-                Write-Verbose (Get-VstsLocString -Key UnexpectedDbghelpdllExpected0Actual1 -ArgumentList $dbghelpPath, $module.FileName)
+                Write-Warning (Get-VstsLocString -Key UnexpectedDbghelpdllExpected0Actual1 -ArgumentList $dbghelpPath, $module.FileName)
             }
 
             # Don't short-circuit the loop. The module could be loaded more
@@ -22,7 +21,7 @@ function Add-DbghelpLibrary {
         }
     }
 
-    if (!$isExpectedLibraryLoaded) {
+    if (!$isLoaded) {
         $hModule = Invoke-LoadLibrary -LiteralPath $dbghelpPath
         if ($hModule -eq [System.IntPtr]::Zero) {
             $errorCode = Get-LastWin32Error
@@ -188,20 +187,9 @@ function Invoke-LoadLibrary {
 ########################################
 # Types.
 ########################################
-function Initialize-DbghelpNativeMethods {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory = $true)]
-        [string]$DbghelpPath)
-
-    # If the type has already been loaded once, then it is not loaded again.
-    if ("IndexHelpers.Dbghelp.NativeMethods" -as [type]) {
-        return
-    }
-
-    Write-Verbose "Adding dbghelp native wrappers for: $DbghelpPath"
-    $dbghelpLiteralPath = $DbghelpPath.Replace('"', '""')
-    $typeDefinition = @'
+# If the type has already been loaded once, then it is not loaded again.
+Write-Verbose "Adding dbghelp native wrappers."
+Add-Type -Debug:$false -TypeDefinition @'
 namespace IndexHelpers.Dbghelp
 {
     using System;
@@ -216,10 +204,10 @@ namespace IndexHelpers.Dbghelp
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr LoadLibrary(string dllToLoad);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool SymCleanup(IntPtr hProcess);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymEnumSourceFilesW")]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymEnumSourceFilesW")]
         public static extern bool SymEnumSourceFiles(
             IntPtr hProcess,
             ulong ModeBase,
@@ -246,16 +234,16 @@ namespace IndexHelpers.Dbghelp
             return SymEnumSourceFiles(hProcess, ModeBase, null, enumSourceFilesCallBack, IntPtr.Zero);
         }
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymGetModuleInfoW64")]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymGetModuleInfoW64")]
         public static extern bool SymGetModuleInfo64(
             IntPtr hProcess,
             ulong dwAddr,
             ref IMAGEHLP_MODULE64 ModuleInfo);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymInitializeW")]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymInitializeW")]
         public static extern bool SymInitialize(IntPtr hProcess, string UserSearchPath, bool fInvadeProcess);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymLoadModuleExW")]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymLoadModuleExW")]
         public static extern ulong SymLoadModuleEx(
             IntPtr hProcess,
             SafeFileHandle hFile,
@@ -266,10 +254,10 @@ namespace IndexHelpers.Dbghelp
             IntPtr Data,
             uint Flags);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern SymOptions SymSetOptions(SymOptions SymOptions);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymSrvGetFileIndexesW")]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode, EntryPoint = "SymSrvGetFileIndexesW")]
         public static extern bool SymSrvGetFileIndexes(
             string file,
             ref Guid Id,
@@ -277,7 +265,7 @@ namespace IndexHelpers.Dbghelp
             ref uint Val2,
             uint Flags);
 
-        [DllImport(@"__DBGHELP_DLL_PATH__", SetLastError = true, CharSet = CharSet.Unicode)]
+        [DllImport("dbghelp.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern bool SymUnloadModule64(
             IntPtr hProcess,
             ulong BaseOfDll);
@@ -373,6 +361,3 @@ namespace IndexHelpers.Dbghelp
     }
 }
 '@
-
-    Add-Type -Debug:$false -TypeDefinition $typeDefinition.Replace('__DBGHELP_DLL_PATH__', $dbghelpLiteralPath)
-}

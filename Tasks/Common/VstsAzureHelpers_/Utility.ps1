@@ -364,12 +364,12 @@ function ConvertTo-Pfx {
         [System.IO.File]::WriteAllText($pfxPasswordFilePath, $pfxFilePassword, [System.Text.Encoding]::ASCII)
     }
     if(-not $featureFlags.useOpenssLatestVersion) {
-        $openSSLExePath = "$PSScriptRoot\opensslv3.4.2\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.4.2\openssl.cnf"
-    }
-    else{
         $openSSLExePath = "$PSScriptRoot\opensslv3.5.8\openssl.exe"
         $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.8\openssl.cnf"
+    }
+    else{
+        $openSSLExePath = "$PSScriptRoot\opensslv3.5.9\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\opensslv3.5.9\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version

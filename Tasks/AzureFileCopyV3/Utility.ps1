@@ -121,6 +121,26 @@ function ThrowError
     throw "$errorMessage $helpMessage"
 }
 
+$script:consoleOutputSanitizationFixEnabled = $false
+
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
+    }
+}
+
 function Upload-FilesToAzureContainer
 {
     param([string][Parameter(Mandatory=$true)]$sourcePath,
@@ -140,7 +160,7 @@ function Upload-FilesToAzureContainer
 
     try
     {
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         $resolvedSourcePath = $sourcePath
 
@@ -171,21 +191,33 @@ function Upload-FilesToAzureContainer
 
         if ($useSourcePathHardening) {
             $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $splitArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$rawContainerURL`" /@:`"$responseFile`" $splitArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$rawContainerURL /@:$responseFile @splitArguments
+            }
         } elseif ($useSanitizerActivate) {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"
-            & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & azcopy /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $sanitizedArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation /Source:$resolvedSourcePath /Dest:$containerURL /@:$responseFile $sanitizedArguments
+            }
         } else {
-            Write-Output "##[command] & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"))
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" /Source:`"$resolvedSourcePath`" /Dest:`"$containerURL`" /@:`"$responseFile`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadToBlobCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadToBlobCommand
+            }
         }
 
         if($LASTEXITCODE -eq 0)
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
         else
         {
@@ -949,8 +981,22 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString'"
+    $disableTargetPathHardening = Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.DisableTargetPathHardening'
+    if (-not $disableTargetPathHardening)
+    {
+        # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
+        $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+        $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+        $escapedContainerSasToken = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerSasToken)
+        $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+        $escapedAzCopyToolFileNamesString = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($azCopyToolFileNamesString)
+        $escapedAzCopyToolFileContentsString = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($azCopyToolFileContentsString)
+        $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -containerSasToken '$escapedContainerSasToken' -additionalArguments '$escapedAdditionalArguments' -azCopyToolFileNamesString '$escapedAzCopyToolFileNamesString' -azCopyToolFileContentsString '$escapedAzCopyToolFileContentsString'"
+    }
+    else
+    {
+        $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -containerSasToken '$containerSasToken' -additionalArguments '$additionalArguments' -azCopyToolFileNamesString '$azCopyToolFileNamesString' -azCopyToolFileContentsString '$azCopyToolFileContentsString' -disableTargetPathHardening"
+    }
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -966,10 +1012,15 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
+    }
+
+    # Rollback preserves the original parser dependency: only SourcePath parsing needs it.
+    if (!$disableTargetPathHardening -or $useSourcePathHardening)
+    {
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
         if(!$splitAdditionalArgumentsFunctionInfo)
         {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
         }
         $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }

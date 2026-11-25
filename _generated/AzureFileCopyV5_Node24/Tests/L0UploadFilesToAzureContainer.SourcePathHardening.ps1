@@ -23,6 +23,7 @@ param()
 # legacy behavior) and is NOT created when hardening is ON (proves the fix).
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 . $PSScriptRoot\..\..\Common\Sanitizer\ArgumentsSanitizer.ps1
 

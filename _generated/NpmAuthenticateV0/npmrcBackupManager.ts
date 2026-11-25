@@ -68,7 +68,8 @@ export class NpmrcBackupManager {
         if (expectedDigest) {
             const actualDigest = crypto.createHash('sha256').update(backupContents).digest('hex');
             if (actualDigest !== expectedDigest) {
-                throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
+                tl.warning(tl.loc('Warning_NpmrcBackupIntegrityMismatch', npmrcPath));
+                return false;
             }
         }
 
@@ -76,7 +77,8 @@ export class NpmrcBackupManager {
         const expectedIdentity = trustedIdentity || this.identities[npmrcPath];
         if (!destinationStats.isFile()
             || (expectedIdentity && !this.hasIdentity(destinationStats, expectedIdentity))) {
-            throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
+            tl.warning(tl.loc('Warning_NpmrcRestoreSkipped', npmrcPath));
+            return false;
         }
 
         const destinationHandle = fs.openSync(npmrcPath, 'r+');
@@ -85,7 +87,8 @@ export class NpmrcBackupManager {
             if (!openedStats.isFile()
                 || !this.hasIdentity(openedStats, this.getIdentity(destinationStats))
                 || (expectedIdentity && !this.hasIdentity(openedStats, expectedIdentity))) {
-                throw new Error(tl.loc('NpmrcChangedSinceBackup', npmrcPath));
+                tl.warning(tl.loc('Warning_NpmrcRestoreSkipped', npmrcPath));
+                return false;
             }
 
             fs.ftruncateSync(destinationHandle, 0);

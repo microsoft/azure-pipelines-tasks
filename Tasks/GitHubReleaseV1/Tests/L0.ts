@@ -226,9 +226,13 @@ describe('GitHubRelease repository output filtering', function() {
     }
 
     for (const uploadMode of ['success', 'skip', 'replace']) {
-        for (const featureValue of ['false', 'true']) {
+        for (const featureValue of [undefined, 'false', 'true']) {
             it(`filters ${uploadMode} asset logs with the dynamic flag ${featureValue}`, async () => {
-                process.env[featureVariable] = featureValue;
+                if (featureValue === undefined) {
+                    delete process.env[featureVariable];
+                } else {
+                    process.env[featureVariable] = featureValue;
+                }
                 const uploadedPaths: string[] = [];
                 Release.prototype.uploadReleaseAsset = async (token, filePath, uploadUrl) => {
                     uploadedPaths.push(filePath);
@@ -244,13 +248,20 @@ describe('GitHubRelease repository output filtering', function() {
                 assert(uploadedPaths.every(filePath => filePath === asset), 'upload must receive the original path');
                 assert.strictEqual(path.basename(uploadedPaths[0]), 'asset.bin');
                 assert.strictEqual(deletions, uploadMode === 'replace' ? 1 : 0);
-                assert.strictEqual(output.includes('##vso['), featureValue === 'false');
-                assert(output.includes(featureValue === 'true' ? '##_vso[task.setvariable' : '##vso[task.setvariable'));
+                const blocked = featureValue === 'true';
+                assert.strictEqual(output.includes('##vso['), !blocked);
+                assert(output.includes(blocked ? '##_vso[task.setvariable' : '##vso[task.setvariable'));
                 const events = telemetry.split('\n').filter(line => line.includes('"commandName":"task.setvariable"'));
                 assert.strictEqual(events.length, uploadMode === 'replace' ? 5 : 2, 'every asset-path log must pass through the filter');
             });
         }
     }
+
+    it('preserves ordinary diagnostics', () => {
+        Utility.logRepositoryMessage('Uploading ordinary asset.bin');
+        assert.strictEqual(output, 'Uploading ordinary asset.bin\n');
+        assert(!telemetry.includes('telemetry.publish'), 'ordinary output must not emit external-output telemetry');
+    });
 
     it('preserves a committed and cloned LF path while blocking upload-log commands', async function() {
         if (process.platform !== 'linux') {

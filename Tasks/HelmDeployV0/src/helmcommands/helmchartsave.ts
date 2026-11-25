@@ -12,7 +12,7 @@ export async function addArguments(helmCli: helmcli): Promise<void> {
     helmCli.addArgument("save");
 
     var chartPath = tl.getInput("chartPathForACR", true);
-    helmCli.addArgument(chartPath);
+    helmCli.addSingleArgument(chartPath);
 
-    helmCli.addArgument(helmutil.getHelmPathForACR());
+    helmCli.addSingleArgument(helmutil.getHelmPathForACR());
 }

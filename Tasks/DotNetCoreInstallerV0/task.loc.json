@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 0
   },
   "satisfies": [
     "DotNetCore"
@@ -22,6 +22,7 @@
   "demands": [],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "deprecationMessage": "The DotNetCoreInstaller@0 task is deprecated, please use the UseDotNet task",
   "inputs": [
     {

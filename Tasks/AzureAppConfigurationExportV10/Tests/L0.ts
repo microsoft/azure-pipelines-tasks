@@ -1,6 +1,259 @@
 import * as assert from 'assert';
 import path = require('path');
 import { MockTestRunner } from 'azure-pipelines-task-lib/mock-test';
+import * as tl from 'azure-pipelines-task-lib/task';
+import { createHttpHeaders, HttpClient } from '@azure/core-rest-pipeline';
+import { SecretClient } from '@azure/keyvault-secrets';
+import { ApplicationTokenCredentials } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-common';
+import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
+import { ConnectedServiceCredential } from '../connectedServiceCredentials';
+import { KeyVaultClient } from '../keyVaultClient';
+import { AzureEnvironments, KeyVaultHostNameSuffix } from '../constants';
+import { ArgumentError, ArgumentNullError } from '../errors';
+
+describe("Key Vault reference URL validation", function() {
+    const originalGetSecret = SecretClient.prototype.getSecret;
+    let requestCount: number;
+
+    before(() => {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
+    beforeEach(() => {
+        requestCount = 0;
+        SecretClient.prototype.getSecret = async function(name) {
+            requestCount++;
+            assert.strictEqual(name, 'sample');
+            return {
+                name,
+                value: 'secret value',
+                properties: { id: 'secret-id', vaultUrl: this.vaultUrl, name }
+            };
+        };
+    });
+
+    afterEach(() => {
+        SecretClient.prototype.getSecret = originalGetSecret;
+    });
+
+    function createClient(environment: string): KeyVaultClient {
+        const endpoint: AzureEndpoint = {
+            subscriptionName: 'subscription',
+            tenantID: 'tenant',
+            environmentAuthorityUrl: 'https://login.microsoftonline.com/',
+            url: 'https://management.azure.com/',
+            environment,
+            activeDirectoryResourceID: 'https://management.azure.com/',
+            applicationTokenCredentials: undefined
+        };
+        return new KeyVaultClient(endpoint);
+    }
+
+    const clouds = [
+        { environment: AzureEnvironments.AzurePublicCloud, suffix: KeyVaultHostNameSuffix.AzurePublicCloud },
+        { environment: AzureEnvironments.AzureChina, suffix: KeyVaultHostNameSuffix.AzureChina },
+        { environment: AzureEnvironments.AzureGovernment, suffix: KeyVaultHostNameSuffix.AzureGovernment }
+    ];
+
+    for (const cloud of clouds) {
+        for (const secretUrl of [
+            `https://my-vault.${cloud.suffix}/secrets/sample`,
+            `https://my-vault.${cloud.suffix}/secrets/sample/version`,
+            `https://MY-VAULT.${cloud.suffix.toUpperCase()}:443/secrets/sample`
+        ]) {
+            it(`Accepts ${secretUrl}`, async () => {
+                const secret = await createClient(cloud.environment).getSecret({
+                    key: 'reference',
+                    isReadOnly: false,
+                    value: { secretId: secretUrl }
+                });
+                assert.deepStrictEqual(secret, { value: 'secret value', id: 'secret-id' });
+                assert.strictEqual(requestCount, 1);
+            });
+        }
+
+        for (const secretUrl of [
+            `https://callback.example\\reference.${cloud.suffix}/reference.${cloud.suffix}/version`,
+            `https://callback.example\\\\reference.${cloud.suffix}/reference.${cloud.suffix}/version`,
+            `https://not${cloud.suffix}/secrets/sample`,
+            `https://${cloud.suffix}/secrets/sample`,
+            `https://my-vault.${cloud.suffix}.example/secrets/sample`,
+            `https://my-vault.${cloud.suffix}@callback.example/secrets/sample`,
+            `https://user@my-vault.${cloud.suffix}/secrets/sample`,
+            `https://user:password@my-vault.${cloud.suffix}/secrets/sample`,
+            `https://my-vault.${cloud.suffix}:8443/secrets/sample`,
+            `http://my-vault.${cloud.suffix}/secrets/sample`,
+            `ftp://my-vault.${cloud.suffix}/secrets/sample`,
+            ...clouds.filter(other => other !== cloud)
+                .map(other => `https://my-vault.${other.suffix}/secrets/sample`),
+            'not a URL',
+            ''
+        ]) {
+            it(`Rejects ${secretUrl} in ${cloud.environment} before requesting a secret`, async () => {
+                await assert.rejects(() => createClient(cloud.environment).getSecret({
+                    key: 'reference',
+                    isReadOnly: false,
+                    value: { secretId: secretUrl }
+                }), ArgumentError);
+                assert.strictEqual(requestCount, 0);
+            });
+        }
+    }
+
+    it("Preserves the null secret URL error", async () => {
+        await assert.rejects(() => createClient(AzureEnvironments.AzurePublicCloud).getSecret({
+            key: 'reference',
+            isReadOnly: false,
+            value: { secretId: null }
+        }), ArgumentNullError);
+        assert.strictEqual(requestCount, 0);
+    });
+});
+
+describe("Key Vault credential scope validation", function() {
+    const armAudience = 'https://management.azure.com/';
+    const keyVaultAudiences = [
+        `https://${KeyVaultHostNameSuffix.AzurePublicCloud}`,
+        `https://${KeyVaultHostNameSuffix.AzureChina}`,
+        `https://${KeyVaultHostNameSuffix.AzureGovernment}`
+    ];
+    const otherAudience = 'https://other.example';
+    const testToken = 'test-token';
+    const invalidScopeMessage = 'The requested token scope does not match the configured service audience.';
+    let endpoint: AzureEndpoint;
+    let tokenRequests: number;
+    let authorizationHeaders: (string | undefined)[];
+
+    before(() => {
+        tl.setResourcePath(path.join(__dirname, '..', 'task.json'));
+    });
+
+    beforeEach(() => {
+        tokenRequests = 0;
+        authorizationHeaders = [];
+        endpoint = {
+            subscriptionName: 'subscription',
+            tenantID: 'tenant',
+            environmentAuthorityUrl: 'https://login.microsoftonline.com/',
+            url: armAudience,
+            environment: AzureEnvironments.AzurePublicCloud,
+            activeDirectoryResourceID: armAudience,
+            applicationTokenCredentials: new ApplicationTokenCredentials(
+                'connection', 'client', 'tenant', undefined, armAudience,
+                'https://login.microsoftonline.com/', armAudience, false, 'WorkloadIdentityFederation'
+            )
+        };
+        endpoint.applicationTokenCredentials.getToken = async (force) => {
+            tokenRequests++;
+            assert.strictEqual(force, true);
+            return testToken;
+        };
+    });
+
+    function createHttpClient(responseBody: object, challenge: string): HttpClient {
+        return {
+            async sendRequest(request) {
+                authorizationHeaders.push(request.headers.get('authorization'));
+                if (authorizationHeaders.length === 1) {
+                    return {
+                        request,
+                        status: 401,
+                        headers: createHttpHeaders({
+                            'www-authenticate': `Bearer authorization="https://login.microsoftonline.com/tenant", ${challenge}`
+                        })
+                    };
+                }
+                return {
+                    request,
+                    status: 200,
+                    headers: createHttpHeaders({ 'content-type': 'application/json' }),
+                    bodyAsText: JSON.stringify(responseBody)
+                };
+            }
+        };
+    }
+
+    it("Accepts Key Vault scope names as strings or single-element arrays", async () => {
+        const scopeNames = ['.default', 'user_impersonation'];
+        for (const audience of keyVaultAudiences) {
+            const credential = new ConnectedServiceCredential(endpoint, audience);
+            for (const scopeName of scopeNames) {
+                const scope = `${audience}/${scopeName}`;
+                for (const scopes of [scope, [scope]]) {
+                    const token = await credential.getToken(scopes);
+                    assert.strictEqual(token.token, testToken);
+                    assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, audience);
+                }
+            }
+        }
+        assert.strictEqual(tokenRequests, keyVaultAudiences.length * scopeNames.length * 2);
+    });
+
+    it("Rejects invalid Key Vault scopes before requesting a token or changing the resource", async () => {
+        const credential = new ConnectedServiceCredential(endpoint, keyVaultAudiences[0]);
+        const expectedScope = `${keyVaultAudiences[0]}/.default`;
+        const otherScope = `${otherAudience}/.default`;
+        const invalidScopes: (string | string[])[] = [
+            undefined, null, '', [], [''],
+            otherScope, [otherScope],
+            [expectedScope, otherScope], [otherScope, expectedScope], [expectedScope, expectedScope],
+            keyVaultAudiences[0], `${keyVaultAudiences[1]}/.default`,
+            'http://vault.azure.net/.default', 'https://vault.azure.net.example/.default'
+        ];
+        for (const scopes of invalidScopes) {
+            await assert.rejects(
+                () => credential.getToken(scopes),
+                (error: Error) => error.constructor === Error && error.message === invalidScopeMessage,
+                `Scope input: ${JSON.stringify(scopes)}`
+            );
+            assert.strictEqual(tokenRequests, 0);
+            assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, armAudience);
+        }
+    });
+
+    for (const audience of keyVaultAudiences) {
+        it(`Accepts the Key Vault SDK challenge for ${audience}`, async () => {
+            const vaultUrl = audience.replace('https://', 'https://my-vault.');
+            const credential = new ConnectedServiceCredential(endpoint, audience);
+            const client = new SecretClient(vaultUrl, credential, {
+                retryOptions: { maxRetries: 0 },
+                httpClient: createHttpClient({
+                    value: 'secret value',
+                    id: `${vaultUrl}/secrets/sample/version`
+                }, `resource="${audience}"`)
+            });
+
+            const secret = await client.getSecret('sample');
+
+            assert.strictEqual(secret.value, 'secret value');
+            assert.deepStrictEqual(authorizationHeaders, [undefined, `Bearer ${testToken}`]);
+            assert.strictEqual(tokenRequests, 1);
+            assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, audience);
+        });
+    }
+
+    for (const challenge of [
+        `resource="${otherAudience}"`,
+        `scope="${otherAudience}/user_impersonation"`
+    ]) {
+        it(`Rejects the Key Vault SDK challenge ${challenge} without obtaining or sending a token`, async () => {
+            const credential = new ConnectedServiceCredential(endpoint, keyVaultAudiences[0]);
+            const client = new SecretClient('https://callback.other.example', credential, {
+                retryOptions: { maxRetries: 0 },
+                httpClient: createHttpClient({}, challenge)
+            });
+
+            await assert.rejects(
+                () => client.getSecret('sample'),
+                (error: Error) => error.constructor === Error && error.message === invalidScopeMessage
+            );
+            assert.deepStrictEqual(authorizationHeaders, [undefined]);
+            assert.strictEqual(tokenRequests, 0);
+            assert.strictEqual(endpoint.applicationTokenCredentials.activeDirectoryResourceId, armAudience);
+        });
+    }
+
+});
 
 describe("Export task configuration settings test", function(){
     this.timeout(30000);

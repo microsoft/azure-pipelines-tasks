@@ -16,7 +16,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 1
   },
   "demands": [],
@@ -226,6 +226,7 @@
     "AzureMysqlTaskParameterCannotBeEmpty": "The Azure MySQL task parameter cannot be null.",
     "ToolPathCannotBeNull": "Tool path cannot be null.",
     "SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+    "InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
     "AzureEndpointCannotBeNull": "Invalid subscription name. The Azure service connection cannot be null.",
     "CallbackCannotBeNull": "The callback cannot be null.",
     "UnableToCreateDatabaseException": "Unable to create database.",

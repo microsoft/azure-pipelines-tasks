@@ -292,33 +292,39 @@ function completeBuild(
   return new Promise<BuildResult>(resolve => {
     const interval = setInterval(
       async () => {
-        const buildStatus = await fetchBuildStatus(pipelineBuild);
-        const statusText = buildStatus.status ? buildStatuses[buildStatus.status] : 'Unknown';
-        console.log(`State of the ${stringifiedBuild}: "${statusText}(${buildStatus.status})"`);
+        try {
+          const buildStatus = await fetchBuildStatus(pipelineBuild);
+          const statusText = buildStatus.status ? buildStatuses[buildStatus.status] : 'Unknown';
+          console.log(`State of the ${stringifiedBuild}: "${statusText}(${buildStatus.status})"`);
 
-        if (buildStatus.status !== 2) { // completed
-          if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
-            clearInterval(interval);
+          if (buildStatus.status !== 2) { // completed
+            if (++intervalAmount * intervalInSeconds >= buildTimeoutInSeconds) {
+              clearInterval(interval);
 
-            resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+              resolve({ result: 'Timeout', message: `Timeout to complete the ${stringifiedBuild} exceeded` });
+            }
+
+            return;
           }
 
-          return;
-        }
+          const result = buildResultCode[buildStatus.result!];
 
-        const result = buildResultCode[buildStatus.result!];
+          if (
+            result !== buildResultEnum.Succeeded &&
+            result !== buildResultEnum.PartiallySucceeded &&
+            retryCount < maxRetries
+          ) {
+            console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
+            await retryFailedJobsInBuild(pipelineBuild);
+          } else {
+            clearInterval(interval);
 
-        if (
-          result !== buildResultEnum.Succeeded &&
-          result !== buildResultEnum.PartiallySucceeded &&
-          retryCount < maxRetries
-        ) {
-          console.log(`Retrying failed jobs in ${stringifiedBuild}. Retry count: ${++retryCount} out of ${maxRetries}`);
-          await retryFailedJobsInBuild(pipelineBuild);
-        } else {
+            resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
+          }
+        } catch (error) {
           clearInterval(interval);
-
-          resolve({ result, message: `The ${stringifiedBuild} completed with result "${result}"` });
+          const message = error instanceof Error ? error.message : String(error);
+          resolve({ result: buildResultEnum.Failed, message: `Failed to monitor ${stringifiedBuild}: ${message}` });
         }
       },
 

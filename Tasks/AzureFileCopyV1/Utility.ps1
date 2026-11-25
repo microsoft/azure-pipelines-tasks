@@ -253,6 +253,26 @@ function ThrowError
     throw "$errorMessage $helpMessage"
 }
 
+$script:consoleOutputSanitizationFixEnabled = $false
+
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
+    }
+}
+
 function Upload-FilesToAzureContainer
 {
     param([string][Parameter(Mandatory=$true)]$sourcePath,
@@ -269,14 +289,21 @@ function Upload-FilesToAzureContainer
     $storageAccountName = $storageAccountName.Trim()
     try
     {
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         if(-not [string]::IsNullOrWhiteSpace($blobStorageEndpoint))
         {
             $blobStorageURI = $blobStorageEndpoint+$containerName+"/"+$blobPrefix
         }
 
-        Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
+        if ($script:consoleOutputSanitizationFixEnabled)
+        {
+            Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI | ConvertTo-SafeConsoleText
+        }
+        else
+        {
+            Copy-FilesToAzureBlob -SourcePathLocation $sourcePath -StorageAccountName $storageAccountName -ContainerName $containerName -BlobPrefix $blobPrefix -StorageAccountKey $storageKey -AzCopyLocation $azCopyLocation -AdditionalArguments $additionalArguments -BlobStorageURI $blobStorageURI
+        }
     }
     catch
     {
@@ -315,7 +342,7 @@ function Upload-FilesToAzureContainer
         }
         elseif ($uploadResponse.Status -eq "Succeeded")
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
     }
 }
@@ -1167,7 +1194,7 @@ function Copy-FilesToAzureVMsFromStorageContainer
     }
 
     # if no error thrown, copy successfully succeeded
-    Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $resourceGroupName)
+    Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $resourceGroupName))
 }
 
 function Validate-CustomScriptExecutionStatus

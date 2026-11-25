@@ -162,10 +162,7 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
                 throw error;
             }
 
-            assert.throws(
-                () => manager.restoreBackedUpFile(npmrcPath),
-                /no longer the same regular file/
-            );
+            assert.strictEqual(manager.restoreBackedUpFile(npmrcPath), false);
             assert.strictEqual(fs.lstatSync(npmrcPath).isSymbolicLink(), true);
             assert.strictEqual(fs.readFileSync(targetPath, 'utf8'), 'host-only\n');
             assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
@@ -175,7 +172,7 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
         }
     });
 
-    it('rejects a replacement regular file with a different identity when restoring', function () {
+    it('skips a replacement regular file with a different identity when restoring', function () {
         const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
         const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
         try {
@@ -192,12 +189,74 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
                 fs.statSync(npmrcPath, { bigint: true }).ino,
                 fs.statSync(path.join(sourceDir, 'original.npmrc'), { bigint: true }).ino
             );
-            assert.throws(
-                () => manager.restoreBackedUpFile(npmrcPath),
-                /no longer the same regular file/
-            );
+            assert.strictEqual(manager.restoreBackedUpFile(npmrcPath), false);
             assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');
             assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
+    it('skips a replacement made between inspection and opening and closes the handle', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        const nodeFs = require('fs');
+        const originalOpenSync = nodeFs.openSync;
+        const originalCloseSync = nodeFs.closeSync;
+        let destinationHandle: number;
+        let destinationClosed = false;
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'original\n');
+            const manager = new NpmrcBackupManager(root);
+            const identity = manager.ensureBackedUp(npmrcPath);
+            nodeFs.openSync = (filePath: string, flags: string) => {
+                if (filePath === npmrcPath && flags === 'r+') {
+                    fs.renameSync(npmrcPath, npmrcPath + '.old');
+                    nodeFs.openSync = originalOpenSync;
+                    fs.writeFileSync(npmrcPath, 'replacement\n');
+                }
+                const handle = originalOpenSync(filePath, flags);
+                if (filePath === npmrcPath && flags === 'r+') {
+                    destinationHandle = handle;
+                }
+                return handle;
+            };
+            nodeFs.closeSync = (handle: number) => {
+                if (handle === destinationHandle) {
+                    destinationClosed = true;
+                }
+                return originalCloseSync(handle);
+            };
+
+            assert.strictEqual(manager.restoreBackedUpFile(npmrcPath, identity), false);
+            assert.strictEqual(destinationClosed, true);
+            assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');
+            assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
+        } finally {
+            nodeFs.openSync = originalOpenSync;
+            nodeFs.closeSync = originalCloseSync;
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(sourceDir, { recursive: true, force: true });
+        }
+    });
+
+    it('still rejects reauthentication of a replacement file after skipped restoration', function () {
+        const root = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-bak-'));
+        const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'npmauth-src-'));
+        try {
+            const npmrcPath = path.join(sourceDir, '.npmrc');
+            fs.writeFileSync(npmrcPath, 'original\n');
+            const manager = new NpmrcBackupManager(root);
+            const identity = manager.ensureBackedUp(npmrcPath);
+            fs.renameSync(npmrcPath, npmrcPath + '.old');
+            fs.writeFileSync(npmrcPath, 'replacement\n');
+
+            assert.strictEqual(manager.restoreBackedUpFile(npmrcPath, identity), false);
+            const laterManager = NpmrcBackupManager.fromBackupDirectory(root);
+            assert.throws(() => laterManager.ensureBackedUp(npmrcPath), /no longer the same regular file/);
+            assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');
         } finally {
             fs.rmSync(root, { recursive: true, force: true });
             fs.rmSync(sourceDir, { recursive: true, force: true });
@@ -255,10 +314,7 @@ describe('NpmAuthenticateV0 Unit - npmrcBackupManager', function () {
             fs.writeFileSync(indexPath, JSON.stringify(index), 'utf8');
 
             const cleanupManager = NpmrcBackupManager.fromBackupDirectory(root);
-            assert.throws(
-                () => cleanupManager.restoreBackedUpFile(npmrcPath, trustedIdentity),
-                /no longer the same regular file/
-            );
+            assert.strictEqual(cleanupManager.restoreBackedUpFile(npmrcPath, trustedIdentity), false);
             assert.strictEqual(fs.readFileSync(npmrcPath, 'utf8'), 'replacement\n');
             assert.strictEqual(fs.readFileSync(path.join(root, '0'), 'utf8'), 'original\n');
         } finally {

@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 282,
-    "Patch": 7
+    "Minor": 283,
+    "Patch": 1
   },
   "runsOn": [
     "Agent",
@@ -94,7 +94,7 @@
     "RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
   },
   "_buildConfigMapping": {
-    "Default": "0.282.6",
-    "wif_242": "0.282.7"
+    "Default": "0.283.0",
+    "wif_242": "0.283.1"
   }
 }

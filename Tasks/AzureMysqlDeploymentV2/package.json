@@ -20,11 +20,11 @@
   "homepage": "https://github.com/Microsoft/azure-pipelines-tasks#readme",
   "dependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/node": "^20.3.1",
+    "@types/node": "^24.10.0",
     "@types/q": "1.0.7",
     "agent-base": "^6.0.2",
     "azure-pipelines-task-lib": "^5.281.0",
-    "azure-pipelines-tasks-azure-arm-rest": "^3.281.0",
+    "azure-pipelines-tasks-azure-arm-rest": "^3.283.0",
     "azure-pipelines-tasks-webdeployment-common": "^4.282.0",
     "compress-commons": "1.1.0",
     "crc32-stream": "1.0.0",
@@ -37,7 +37,7 @@
     "zip-stream": "1.1.0"
   },
   "devDependencies": {
-    "typescript": "5.1.6"
+    "typescript": "^5.7.2"
   },
   "overrides": {
     "follow-redirects": "1.15.11"

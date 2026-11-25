@@ -17,8 +17,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 281,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "2.206.1",
@@ -199,6 +199,8 @@
     "CheckingPathExistance": "Checking if %s on the remote machine exists.",
     "PathExists": "%s exists on the remote machine",
     "PathNotExists": "%s doesn't exist on the remote machine",
-    "UploadFolderFailed": "Failed to upload folder %s to %s on remote machine. %s."
+    "UploadFolderFailed": "Failed to upload folder %s to %s on remote machine. %s.",
+    "TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+    "TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
   }
 }

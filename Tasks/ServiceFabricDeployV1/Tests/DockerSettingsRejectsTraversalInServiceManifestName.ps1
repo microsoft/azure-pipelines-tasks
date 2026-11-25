@@ -61,6 +61,7 @@ $regKeyObj = @{
 Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft\Service Fabric SDK" -Name FabricSDKPSModulePath
 
 Register-Mock Get-ApplicationNameFromApplicationParameterFile { $appName } -- "$PSScriptRoot\data\ApplicationParameters.xml"
+Register-Mock Get-ApplicationParametersFromApplicationParameterFile { @{} } -- "$PSScriptRoot\data\ApplicationParameters.xml"
 
 Register-Mock Publish-NewServiceFabricApplication {}
 

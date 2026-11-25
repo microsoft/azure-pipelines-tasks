@@ -5,6 +5,15 @@ import fs = require('fs');
 
 export class Utility {
 
+    public static logRepositoryMessage(message: string): void {
+        tl.writeExternalOutput(message + "\n", {
+            source: 'repository',
+            vsoCommandMode: tl.getPipelineFeature('EnableVsoCommandBlockingRMTasks')
+                ? 'blockAndTelemetry'
+                : 'telemetryOnly'
+        });
+    }
+
     public static getGithubEndPointToken(githubEndpoint: string): string {
         const githubEndpointObject = tl.getEndpointAuthorization(githubEndpoint, false);
         let githubEndpointToken: string = null;
