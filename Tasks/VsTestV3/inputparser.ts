@@ -8,6 +8,7 @@ import { AreaCodes, DistributionTypes } from './constants';
 import * as idc from './inputdatacontract';
 import * as Q from "q";
 import * as isUncPath from 'is-unc-path';
+import { sanitizeForLoggingCommand } from './sanitize';
 const regedit = require('regedit');
 
 let serverBasedRun = false;
@@ -261,7 +262,7 @@ function getTestPlatformSettings(inputDataContract : idc.InputDataContract) : id
     } else {
         // hydra: should it be full path or directory above?
         inputDataContract.VsTestConsolePath = tl.getInput('vsTestLocation');
-        console.log(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath));
+        console.log(sanitizeForLoggingCommand(tl.loc('vstestLocationSpecified', 'vstest.console.exe', inputDataContract.VsTestConsolePath)));
         if (inputDataContract.VsTestConsolePath.endsWith('vstest.console.exe')) {
             inputDataContract.VsTestConsolePath = path.dirname(inputDataContract.VsTestConsolePath);
         }
