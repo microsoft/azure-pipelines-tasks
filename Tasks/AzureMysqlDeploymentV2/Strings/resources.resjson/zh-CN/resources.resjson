@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "使用指定模式未找到任何包",
   "loc.messages.FirewallRuleNameCannotBeNull": "防火墙规则名称不能为 null。",
   "loc.messages.SqlFileNotFound": "在以下路径中找不到 SQL 文件: %s",
-  "loc.messages.InvalidDatabaseName": "数据库名称“%s”无效。只允许使用字母数字字符、下划线、连字符和美元符号。"
+  "loc.messages.InvalidDatabaseName": "数据库名称“%s”无效。只允许使用字母数字字符、下划线、连字符和美元符号。",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "不允许使用其他 MySQL 选项 '%s'。启用强化后，--binary-mode 由任务管理，无法通过 SqlAdditionalArguments 进行配置。"
 }

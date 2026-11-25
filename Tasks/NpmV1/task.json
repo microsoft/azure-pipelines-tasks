@@ -9,8 +9,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
-    "Patch": 2
+    "Minor": 283,
+    "Patch": 0
   },
   "runsOn": [
     "Agent",
@@ -225,6 +225,6 @@
     "PackagingCollectionUrlInvalid": "The Npm.PackagingCollectionUrl variable is not a valid URL.",
     "PackagingCollectionUrlUnsupportedScheme": "The Npm.PackagingCollectionUrl variable must use http or https.",
     "PackagingCollectionUrlHasCredentials": "The Npm.PackagingCollectionUrl variable must not contain credentials.",
-        "PackagingCollectionUrlMismatch": "The Npm.PackagingCollectionUrl variable does not match the collection URI."
-      }
+    "PackagingCollectionUrlMismatch": "The Npm.PackagingCollectionUrl variable does not match the collection URI."
+  }
 }

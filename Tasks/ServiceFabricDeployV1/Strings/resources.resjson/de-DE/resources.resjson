@@ -87,6 +87,8 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Die Upgradeeinstellungen müssen überschrieben werden, oder es muss ein Veröffentlichungsprofil in der Azure Pipelines-Aufgabe angegeben werden.",
   "loc.messages.UnsupportedARMAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für ARM-Endpunkt.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Nicht unterstütztes Authentifizierungsschema \"{0}\" für Azure Container Registry.",
+  "loc.messages.RegistryAuthorityMismatch": "The image '{0}' of code package '{1}' is not hosted on the container registry of the selected registry credentials. Registry credentials are only applied to images from the registry they belong to.",
+  "loc.messages.RegistryAuthorityCheckDisabled": "The registry authority check is disabled by the ServiceFabricDeploy.DisableRegistryAuthorityCheck feature flag. Registry credentials will be applied to any image in the application package, as in earlier versions.",
   "loc.messages.SFSDK_InvalidManifestPathSegment": "Im Anwendungspaket '{1}' ein ungültiger {0}-Wert gefunden. Dieser Wert wird beim Erstellen eines Dateipfads aus dem Anwendungspaket als Ordnername verwendet und muss daher ein einfacher Name sein: Er darf nicht leer sein, kein Pfadtrennzeichen oder relatives Pfadsegment enthalten, kein absoluter Pfad sein oder mit einem nachgestellten Zeichen \".\" oder \" \" enden, das Windows normalisieren würde.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} ist kein gültiges Service Fabric-Anwendungspaket.",
   "loc.messages.SFSDK_PackageValidationFailed": "Fehler bei der Überprüfung für das Paket: {0}",

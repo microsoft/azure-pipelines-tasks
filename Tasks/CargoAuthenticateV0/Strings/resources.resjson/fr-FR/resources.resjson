@@ -24,7 +24,7 @@
   "loc.messages.FailedToGetServiceConnectionAuth": "Impossible d'obtenir les informations d'identification fédérées à partir de la connexion au service : %s.",
   "loc.messages.MissingRegistryNameOrServiceConnection": "Le nom du registre et la connexion au service doivent être définis et ne peuvent pas être vides.",
   "loc.messages.RegistryNotFound": "Les noms de registre saisis « %s » ne correspondent à aucun registre dans config.toml",
-  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
-  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
-  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
+  "loc.messages.RegistryEnvKeyCollision": "Les registres '%s' mapper à la même variable d’environnement de chargement '%s'. Renommez l’un des registres pour éviter toute ambiguïté sur les informations d’identification.",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "La '%s' de registre est ignorée, car son URL d’index '%s' n’est pas hébergée dans Azure DevOps.",
+  "loc.messages.RegistryFeedVerificationFailed": "Échec de la vérification de l’URL du flux du registre ; authentification ignorée pour ce registre."
 }

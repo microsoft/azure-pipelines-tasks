@@ -79,7 +79,7 @@
   "loc.messages.ExpiredServicePrincipal": "無法擷取 Azure 的存取權杖。請驗證使用的服務主體是否有效且未過期。",
   "loc.messages.ScriptArgsSanitized": "偵測到引數中可能無法由殼層正確執行的字元。請使用反單引號 (') 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787",
   "loc.messages.ScriptArgsSanitizedBash": "偵測到引數中可能無法由殼層正確執行的字元。請使用反斜線 (\\) 逸出特殊字元。如需詳細資訊，請參閱: https://aka.ms/ado/75787",
-  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
-  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
-  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
+  "loc.messages.InvalidWindowsCustomScript": "受保護的 Windows 叫用在自訂指令碼目錄內需要相對的 .ps1 指令碼。",
+  "loc.messages.WindowsScriptPayloadTooLarge": "UTF-8 Windows 自訂指令碼承載超過 1 MiB 限制。",
+  "loc.messages.WindowsScriptCleanupFailed": "無法移除暫存的 Windows 自訂指令碼檔案。請先移除工作暫存檔案，再重新使用代理程式。"
 }

@@ -105,5 +105,7 @@
   "loc.messages.InvalidTimeoutValue": "Ungültiger Wert für Timeout. Geben Sie eine gültige Zahl ein.",
   "loc.messages.RolloutStatusTimedout": "Fehler beim Überprüfen des Rolloutstatus.",
   "loc.messages.EnvironmentLink": "Weitere Informationen finden Sie hier: %s",
-  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s"
+  "loc.messages.KubeloginFailed": "Fehler bei der Kubelogin-Authentifizierung. Ausnahme: %s",
+  "loc.messages.InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input.",
+  "loc.messages.InvalidManifestObjectToken": "The manifest field '%s' is empty or contains whitespace, quotes, control characters, or starts with '-', which could be misinterpreted as a kubectl option. Use a valid Kubernetes object name."
 }

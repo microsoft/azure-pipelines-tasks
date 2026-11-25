@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Non è stato trovato alcun pacchetto con il criterio specificato",
   "loc.messages.FirewallRuleNameCannotBeNull": "Il nome della regola del firewall non può essere Null.",
   "loc.messages.SqlFileNotFound": "File non trovato nel percorso: %s",
-  "loc.messages.InvalidDatabaseName": "Nome del database '%s' non valido. Sono consentiti solo caratteri alfanumerici, caratteri di sottolineatura, trattini e segni del dollaro."
+  "loc.messages.InvalidDatabaseName": "Nome del database '%s' non valido. Sono consentiti solo caratteri alfanumerici, caratteri di sottolineatura, trattini e segni del dollaro.",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "L'opzione MySQL aggiuntiva \"%s\" non è consentita. Quando è abilitata la protezione avanzata, --binary-mode viene gestito dall'attività e non può essere configurato tramite SqlAdditionalArguments."
 }

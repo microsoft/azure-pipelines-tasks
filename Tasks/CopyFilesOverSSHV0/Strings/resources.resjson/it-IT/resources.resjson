@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "Verifica dell'esistenza di %s nel computer remoto.",
   "loc.messages.PathExists": "%s è presente nel computer remoto",
   "loc.messages.PathNotExists": "%s non è presente nel computer remoto",
-  "loc.messages.UploadFolderFailed": "Non è possibile caricare la cartella %s in %s nel computer remoto. %s."
+  "loc.messages.UploadFolderFailed": "Non è possibile caricare la cartella %s in %s nel computer remoto. %s.",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }
