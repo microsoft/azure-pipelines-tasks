@@ -12,14 +12,16 @@ describe('Manifest logging safety', function () {
     let writes: string[];
     let failWrite: boolean;
     let renderType: string;
+    let manifestContents: string;
 
     beforeEach(() => {
         diagnostics = [];
         writes = [];
         failWrite = false;
+        manifestContents = manifest;
         mocker.enable({ useCleanCache: true, warnOnUnregistered: false });
         mocker.registerMock('fs', Object.assign({}, fs, {
-            readFileSync: (filePath, options) => filePath === 'manifest.yaml' ? Buffer.from(manifest) : fs.readFileSync(filePath, options),
+            readFileSync: (filePath, options) => filePath === 'manifest.yaml' ? Buffer.from(manifestContents) : fs.readFileSync(filePath, options),
             writeFileSync: (_filePath: string, content: string) => {
                 if (failWrite) {
                     throw Object.assign(new Error("ENOSPC: no space left on device, open 'probe-file'"), { code: 'ENOSPC', path: 'probe-file' });
@@ -72,6 +74,23 @@ describe('Manifest logging safety', function () {
         assert.deepStrictEqual(writes.map(value => JSON.parse(value)), [resource]);
         assert(diagnostics.some(value => value.indexOf('Prepared 1 Kubernetes resource objects') === 0));
         assertSafeDiagnostics();
+    });
+
+    it('rejects a mixed manifest containing a cyclic resource before writing any resources', async () => {
+        manifestContents = [
+            manifest,
+            '---',
+            'apiVersion: v1',
+            'kind: ConfigMap',
+            'metadata:',
+            '  name: cyclic-resource',
+            'data: &loop',
+            '  again: *loop'
+        ].join('\n');
+        const helper = await import('../src/utils/DeploymentHelper');
+        assert.throws(() => helper.updateResourceObjects(['manifest.yaml'], [], []), TypeError);
+        assert.deepStrictEqual(writes, []);
+        assert.deepStrictEqual(diagnostics, []);
     });
 
     it('omits invalid resources and manifest content while retaining filesystem errors', async () => {
