@@ -26,7 +26,7 @@ export function runSanitizeTests() {
                 deploymentOutputs: undefined,
                 ARM_LOG_TEST_RESOURCE_GROUP_NAME: resourceGroupName,
                 ARM_LOG_TEST_DEPLOYMENT_NAME: deploymentName,
-                DISTRIBUTEDTASK_TASKS_AZURERESOURCEGROUPSANITIZELOGOUTPUT: feature
+                DISTRIBUTEDTASK_TASKS_AZURERESOURCEGROUPDISABLESANITIZELOGOUTPUT: feature
             };
             const originalValues = Object.keys(settings).map(name => [name, process.env[name]]);
             try {
@@ -59,17 +59,18 @@ export function runSanitizeTests() {
                 const runner = await runDiagnostics(feature, group, deployment);
                 assert(runner.succeeded, 'deployment should succeed');
                 assert(runner.stdout.includes('loc_mock_CreateTemplateDeploymentSucceeded'), 'deployment should reach the mock Azure client');
-                const expectedGroup = feature === 'true' ? 'rg #vso[example.resource]value' : group;
-                const expectedDeployment = feature === 'true' ? 'deploy#vso[example.deployment]value' : deployment;
+                const sanitized = feature !== 'true';
+                const expectedGroup = sanitized ? 'rg #vso[example.resource]value' : group;
+                const expectedDeployment = sanitized ? 'deploy#vso[example.deployment]value' : deployment;
                 assert(runner.stdout.includes(`loc_mock_CheckResourceGroupExistence ${expectedGroup}`));
                 assert.strictEqual(runner.stdout.split(`loc_mock_LogDeploymentName ${expectedDeployment}`).length - 1, 2);
                 const injected = parseAgentCommands(runner.stdout).filter(command => command.area === 'example');
-                assert.strictEqual(injected.length, feature === 'true' ? 0 : 3);
+                assert.strictEqual(injected.length, sanitized ? 0 : 3);
             });
         }
 
-        it('Should preserve ordinary resource and deployment names when enabled', async () => {
-            const runner = await runDiagnostics('true', 'my-rg.01_test(prod)', 'deployment-01');
+        it('Should preserve ordinary resource and deployment names by default', async () => {
+            const runner = await runDiagnostics(undefined, 'my-rg.01_test(prod)', 'deployment-01');
             assert(runner.succeeded, 'deployment should succeed');
             assert(runner.stdout.includes('loc_mock_CheckResourceGroupExistence my-rg.01_test(prod)'));
             assert(runner.stdout.includes('loc_mock_LogDeploymentName deployment-01'));

@@ -4,7 +4,7 @@ import tl = require("azure-pipelines-task-lib/task");
 // Raw delimiters corrupted the command while tokens were unescaped by the agent. The safe
 // command escapes the leading '%' first, so those tokens now remain literal.
 const legacyChangingPattern = /[;\]\r\n]|%(?:3B|5D|0D|0A|AZP25)/;
-const sanitizeLogOutputEnabled = tl.getPipelineFeature("AzureResourceGroupSanitizeLogOutput");
+const sanitizeLogOutputDisabled = tl.getPipelineFeature("AzureResourceGroupDisableSanitizeLogOutput");
 
 /**
  * Reports whether a variable name was truncated, corrupted, or decoded by the legacy
@@ -49,5 +49,5 @@ export function sanitizeForLoggingCommand(value: string | null | undefined): str
 }
 
 export function sanitizeAzureResourceNameForLog(value: string): string {
-    return sanitizeLogOutputEnabled ? sanitizeForLoggingCommand(value) : value;
+    return sanitizeLogOutputDisabled ? value : sanitizeForLoggingCommand(value);
 }
