@@ -79,7 +79,7 @@
   "loc.messages.ExpiredServicePrincipal": "Azure のアクセス トークンをフェッチできませんでした。使用されているサービス プリンシパルが有効であり、有効期限が切れていないことを確認してください。",
   "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。バックティック (`) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787",
   "loc.messages.ScriptArgsSanitizedBash": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787",
-  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
-  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
-  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
+  "loc.messages.InvalidWindowsCustomScript": "保護された Windows の呼び出しには、カスタム スクリプト ディレクトリ内の相対 .ps1 スクリプトが必要です。",
+  "loc.messages.WindowsScriptPayloadTooLarge": "UTF-8 の Windows カスタム スクリプト ペイロードが 1 MiB の上限を超えています。",
+  "loc.messages.WindowsScriptCleanupFailed": "一時 Windows カスタム スクリプト ファイルを削除できませんでした。エージェントを再利用する前に、タスク ステージング ファイルを削除してください。"
 }

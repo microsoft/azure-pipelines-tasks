@@ -55,6 +55,7 @@
   "loc.messages.AzureMysqlTaskParameterCannotBeEmpty": "Azure MySQL タスク パラメーターを null 値にすることはできません。",
   "loc.messages.ToolPathCannotBeNull": "ツール パスを null にすることはできません。",
   "loc.messages.SqlExecutionException": "SQL 実行の例外が発生しました。SQL スクリプトをご確認ください。エラー: %s。",
+  "loc.messages.InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
   "loc.messages.AzureEndpointCannotBeNull": "無効なサブスクリプション名。Azure サービス接続を null 値にすることはできません。",
   "loc.messages.CallbackCannotBeNull": "コールバックを null にすることはできません。",
   "loc.messages.UnableToCreateDatabaseException": "データベースを作成できません。",

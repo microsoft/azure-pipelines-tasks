@@ -79,7 +79,7 @@
   "loc.messages.ExpiredServicePrincipal": "No se pudo capturar el token de acceso de Azure. Compruebe que la entidad de servicio usada es válida y no ha expirado.",
   "loc.messages.ScriptArgsSanitized": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de los caracteres especiales mediante el acento grave ('). Puede encontrar más información aquí: https://aka.ms/ado/75787",
   "loc.messages.ScriptArgsSanitizedBash": "Se detectaron caracteres en argumentos que el shell no puede ejecutar correctamente. Escape de caracteres especiales con barra diagonal inversa (\\). Puede obtener más información aquí: https://aka.ms/ado/75787",
-  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
-  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
-  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
+  "loc.messages.InvalidWindowsCustomScript": "La invocación protegida de Windows requiere un script .ps1 relativo dentro del directorio de scripts personalizados.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "La carga útil del script personalizado de Windows en UTF-8 supera el límite de 1 MiB.",
+  "loc.messages.WindowsScriptCleanupFailed": "No se pueden eliminar los archivos temporales del script personalizado de Windows. Elimine los archivos de almacenamiento provisional de la tarea antes de volver a usar el agente."
 }

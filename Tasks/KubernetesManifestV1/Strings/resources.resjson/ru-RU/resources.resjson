@@ -105,5 +105,7 @@
   "loc.messages.InvalidTimeoutValue": "Недопустимое значение времени ожидания. Введите допустимое число.",
   "loc.messages.RolloutStatusTimedout": "Сбой проверки состояния выпуска.",
   "loc.messages.EnvironmentLink": "Дополнительные сведения: %s",
-  "loc.messages.KubeloginFailed": "Сбой проверки подлинности Kubelogin. Исключение: %s"
+  "loc.messages.KubeloginFailed": "Сбой проверки подлинности Kubelogin. Исключение: %s",
+  "loc.messages.InvalidReleaseName": "The release name '%s' starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input.",
+  "loc.messages.InvalidManifestObjectToken": "The manifest field '%s' is empty or contains whitespace, quotes, control characters, or starts with '-', which could be misinterpreted as a kubectl option. Use a valid Kubernetes object name."
 }

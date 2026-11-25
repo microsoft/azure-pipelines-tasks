@@ -41,6 +41,8 @@
   "loc.messages.FTPNoHostSpecified": "FTP サーバーの URL には、ホスト名を含める必要があります",
   "loc.messages.FTPNoProtocolSpecified": "FTP サーバーの URL は、ftp:// または ftps:// で始める必要があります",
   "loc.messages.NoFilesFound": "アップロード対象のファイルが見つかりませんでした",
+  "loc.messages.RemoteFileContainsBackslash": "File name '%s' contains a backslash, which is not supported when uploading from this agent's operating system.",
+  "loc.messages.RemoteFileEscapesRemotePath": "File name '%s' would be uploaded outside the remote directory '%s'.",
   "loc.messages.UploadRemoteDir": "リモート ディレクトリにファイルをアップロードしています: %s",
   "loc.messages.UploadSucceedMsg": "FTP が正常にアップロードされました %s",
   "loc.messages.UploadSucceedRes": "FTP が正常にアップロードされました",
