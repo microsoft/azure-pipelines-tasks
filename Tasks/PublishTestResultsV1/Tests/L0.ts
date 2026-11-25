@@ -158,6 +158,18 @@ describe('PublishTestResultsV1 Find files legacy suite', function () {
         done();
     });
 
+    it('Escapes user-provided values in the results.publish logging command', function (done: Mocha.Done) {
+        const testPath = path.join(__dirname, 'L0EscapesLoggingCommandProperties.js')
+        const tr: MockTestRunner = new MockTestRunner(testPath);
+        tr.run();
+
+        assert(tr.succeeded, 'task should have succeeded');
+        assert(!/^##vso\[task\.setvariable/m.test(tr.stdout), 'user input should not inject logging commands: ' + tr.stdout);
+        assert(tr.stdout.indexOf('platform=x64%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue%0A;') >= 0, 'platform should be escaped: ' + tr.stdout);
+        assert(tr.stdout.indexOf('runTitle=Title%0A##vso[task.setvariable variable=PTR_INJECTED%3B%5Dtrue%0A;') >= 0, 'runTitle should be escaped: ' + tr.stdout);
+        done();
+    });
+
     it('Publish test results when test result files input is not provided', function (done: Mocha.Done) {
         const testPath = path.join(__dirname, 'L0InputIsNotProvided.js')
         const tr: MockTestRunner = new MockTestRunner(testPath);

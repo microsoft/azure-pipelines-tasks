@@ -13,8 +13,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
-    "Patch": 0
+    "Minor": 284,
+    "Patch": 1
   },
   "deprecated": true,
   "deprecationMessage": "The PublishTestResults@1 task is deprecated. Please use the latest version of the PublishTestResults task (PublishTestResults@2 or later).",
@@ -96,14 +96,6 @@
   ],
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishTestResults.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node10": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
