@@ -1,4 +1,4 @@
-> **ℹ️ Note**: While Node 20 is currently supported, we recommend migrating to **Node 24** for the latest features and long-term support. See [migrateNode24.md](migrateNode24.md) for the Node 24 migration guide.
+> **ℹ️ Note**: **Node 20** is already end of support and will be removed in April 2027, we recommend migrating to **Node 24** for the latest features and long-term support. See [migrateNode24.md](migrateNode24.md) for the Node 24 migration guide. [Learn More](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/nodejs-runners?view=azure-devops)
 
 ## Table of content
 
