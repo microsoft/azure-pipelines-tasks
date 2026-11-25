@@ -68,5 +68,6 @@
   "loc.messages.Nopackagefoundwithspecifiedpattern": "Package introuvable avec le modèle spécifié",
   "loc.messages.FirewallRuleNameCannotBeNull": "Le nom de la règle de pare-feu ne doit pas avoir une valeur null.",
   "loc.messages.SqlFileNotFound": "Fichier SQL introuvable dans le chemin d’accès : %s",
-  "loc.messages.InvalidDatabaseName": "Nom de base de données « %s » incorrect. Seuls les caractères alphanumériques, les traits de soulignement, les traits d’union et les signes de dollar sont autorisés."
+  "loc.messages.InvalidDatabaseName": "Nom de base de données « %s » incorrect. Seuls les caractères alphanumériques, les traits de soulignement, les traits d’union et les signes de dollar sont autorisés.",
+  "loc.messages.SqlAdditionalArgumentNotAllowed": "The additional MySQL option '%s' is not allowed. When hardening is enabled, --binary-mode is managed by the task and cannot be configured through SqlAdditionalArguments."
 }

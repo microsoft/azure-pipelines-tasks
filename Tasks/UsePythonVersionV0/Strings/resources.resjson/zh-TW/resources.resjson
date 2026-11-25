@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "若要下載 python 版本，應提供 GitHub 權杖。否則，您可能會達到 GitHub 匿名下載限制。",
   "loc.messages.DownloadNotFound": "在 Python 版本登錄中找不到符合規格 %s (%s)的 Python。請注意，只有 Github Actions python 版本資訊清單 (https://github.com/actions/python-versions/blob/main/versions-manifest.json) 中所列的系統適合下載 Python 正式發行前小眾測試版。此外，不支援 Proxy。",
   "loc.messages.ManifestDownloadFailed": "無法從 Github Actions Python 登錄 (https://github.com/actions/python-versions)下載 Python 版本資訊清單。不正確 GitHub 權杖可能導致此問題。",
-  "loc.messages.DownloadFailed": "無法從 Github Actions python 登錄 (https://github.com/actions/python-versions) 下載 Python。錯誤: %s"
+  "loc.messages.DownloadFailed": "無法從 Github Actions python 登錄 (https://github.com/actions/python-versions) 下載 Python。錯誤: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

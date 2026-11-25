@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "如果要下载 python 版本，应提供 GitHub 令牌。否则，可能会达到 GitHub 匿名下载限制。",
   "loc.messages.DownloadNotFound": "在 python-versions 注册表中找不到与规范 %s (%s)匹配的 Python。请注意，只有 Github Actions python 版本清单(https://github.com/actions/python-versions/blob/main/versions-manifest.json)中列出的系统适合下载 python 外部测试版。此外，不支持代理。",
   "loc.messages.ManifestDownloadFailed": "无法从 Github Actions python 注册表(https://github.com/actions/python-versions)下载 Python 版本清单。无效的 GitHub 令牌可能会导致此问题。",
-  "loc.messages.DownloadFailed": "无法从 Github Actions python 注册表(https://github.com/actions/python-versions)下载 Python。错误: %s"
+  "loc.messages.DownloadFailed": "无法从 Github Actions python 注册表(https://github.com/actions/python-versions)下载 Python。错误: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

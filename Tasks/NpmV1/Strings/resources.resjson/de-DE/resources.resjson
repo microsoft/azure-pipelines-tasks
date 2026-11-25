@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "Projekt-NPMRC wird wiederhergestellt",
   "loc.messages.WorkingDirectoryNotDirectory": "Ändern Sie Ihr Arbeitsverzeichnis in ein gültiges Verzeichnis.",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Der Bereich \"%s\" [%s] wurde nicht gefunden. Der Dienst, der diesen Bereich enthält, ist ggf. in Ihrer Region nicht verfügbar.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "Die Dienstverbindung verwendet keine unterstützte Authentifizierungsmethode. Verwenden Sie eine Dienstverbindung mit der auf persönlichen Zugriffstoken basierenden Authentifizierung."
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with     personal access token based auth.",
+  "loc.messages.PackagingCollectionUrlInvalid": "The Npm.PackagingCollectionUrl variable is not a valid URL.",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "The Npm.PackagingCollectionUrl variable must use http or https.",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "The Npm.PackagingCollectionUrl variable must not contain credentials.",
+  "loc.messages.PackagingCollectionUrlMismatch": "The Npm.PackagingCollectionUrl variable does not match the collection URI."
 }

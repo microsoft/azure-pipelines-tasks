@@ -29,5 +29,6 @@
   "loc.messages.MissingGithubToken": "Python リリースをダウンロードする場合は、GitHub トークンを指定する必要があります。それ以外の場合は、GitHub 匿名ダウンロードの制限に達する可能性があります。",
   "loc.messages.DownloadNotFound": "python-versions レジストリに Python の一致する仕様 %s (%s) が見つかりませんでした。GitHub Actions Python バージョン マニフェスト (https://github.com/actions/python-versions/blob/main/versions-manifest.json) に記載されているシステムのみが、Python On-flight のダウンロードに適することに注意してください。また、プロキシはサポートされていません。",
   "loc.messages.ManifestDownloadFailed": "GitHub Actions Python レジストリ (https://github.com/actions/python-versions) から Python バージョン マニフェストをダウンロードできませんでした。無効な GitHub トークンが原因である可能性があります。",
-  "loc.messages.DownloadFailed": "Github Actions Python レジストリ (https://github.com/actions/python-versions) から Python をダウンロードできませんでした。エラー: %s"
+  "loc.messages.DownloadFailed": "Github Actions Python レジストリ (https://github.com/actions/python-versions) から Python をダウンロードできませんでした。エラー: %s",
+  "loc.messages.InvalidArchitecture": "Invalid architecture: %s. Allowed values are x86, x64, arm64."
 }

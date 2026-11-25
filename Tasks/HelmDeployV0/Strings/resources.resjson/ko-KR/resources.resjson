@@ -101,6 +101,7 @@
   "loc.messages.SkipDeleteSecureFiles": "작업에서 TLS를 사용할 수 없습니다. 인증서 삭제를 건너뜁니다.",
   "loc.messages.SkipDownloadSecureFiles": "작업에서 TLS를 사용할 수 없습니다. 인증서 다운로드를 건너뜁니다.",
   "loc.messages.FileNotFound": "%s에 파일에 없습니다.",
+  "loc.messages.InvalidReleaseName": "The resolved release name '%s' is empty or starts with '-', which Helm's own command-line parser could misinterpret as an option instead of the release name. Set a valid 'releaseName' input, or ensure the value used for the implicit release-name fallback (e.g. the pipeline's build number) is not empty and does not start with '-'. The installed Helm version validates the remaining release-name rules when the command runs.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes 서비스 연결 정보를 찾을 수 없습니다.",
   "loc.messages.ExpiredServicePrincipal": "Azure의 액세스 토큰을 페치할 수 없습니다. 사용한 서비스 주체가 유효하고 만료되지 않았는지 확인하세요.",
   "loc.messages.SaveSupportedInHelmsV3Only": "Helms V3에서만 Azure Container Registry에 차트를 저장할 수 있습니다.",
