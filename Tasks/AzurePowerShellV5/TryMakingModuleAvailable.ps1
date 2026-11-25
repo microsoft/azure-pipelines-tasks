@@ -42,7 +42,7 @@ try {
         return
     }
 
-    Write-Host "Az version $targetVersion not avaiable locally on the agent. Downloading dynamically."
+    Write-Host "Az version $targetVersion not available locally on the agent. Downloading it dynamically."
 
     try {
         Write-Verbose "Getting versions manifest from GHRelease."
