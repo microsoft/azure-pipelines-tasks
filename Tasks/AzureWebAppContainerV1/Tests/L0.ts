@@ -4,6 +4,7 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 import tl = require('azure-pipelines-task-lib');
 var ltx = require('ltx');
 import fs = require('fs');
+import childProcess = require('child_process');
 
 var AppServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service.js");
 var KuduServiceTests = require("../node_modules/azure-pipelines-tasks-azure-arm-rest/Tests/L0-azure-arm-app-service-kudu-tests.js");
@@ -26,6 +27,16 @@ describe('AzureWebAppDeployment Suite', function() {
     AppServiceTests.AzureAppServiceMockTests(5000);
     KuduServiceTests.KuduServiceTests(5000);
     ResourcesTests.ResourcesTests(5000); 
+
+    ['undefined', 'off', 'on', 'writer-error', 'reader-error'].forEach(mode => {
+        it(`AzureWebAppContainer external output ${mode} mode`, () => {
+            childProcess.execFileSync(process.execPath, [path.join(__dirname, 'L0ExternalOutput.js'), mode], {
+                env: { ...process.env },
+                encoding: 'utf8',
+                stdio: ['ignore', 'pipe', 'pipe']
+            });
+        });
+    });
 
     it('Validate operations.ParameterParserUtility.parse()', async () => {
         let tp = path.join(__dirname, 'L0ParameterParserUtility.js');
