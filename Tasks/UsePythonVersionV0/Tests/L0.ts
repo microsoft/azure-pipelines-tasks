@@ -128,6 +128,38 @@ describe('UsePythonVersion L0 Suite', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
+    it('selects x64 free-threaded architecture passed as input', async function () {
+        const testFile = path.join(__dirname, 'L0SelectsX64FreeThreadedArchitecture.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(didSetVariable(testRunner, 'pythonLocation', 'x64FreeThreadedToolPath'));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('selects arm64 free-threaded architecture passed as input', async function () {
+        const testFile = path.join(__dirname, 'L0SelectsArm64FreeThreadedArchitecture.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(didSetVariable(testRunner, 'pythonLocation', 'arm64FreeThreadedToolPath'));
+        assert.strictEqual(testRunner.stderr.length, 0, 'should not have written to stderr');
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('rejects an unsupported architecture', async function () {
+        const testFile = path.join(__dirname, 'L0RejectsInvalidArchitecture.js');
+        const testRunner = new MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(testRunner.createdErrorIssue('loc_mock_InvalidArchitecture x64-invalid'));
+        assert(testRunner.failed, 'task should have failed');
+    });
+
     it('finds PyPy2', async function () {
         const testFile = path.join(__dirname, 'L0PyPy2.js');
         const testRunner = new MockTestRunner(testFile);
