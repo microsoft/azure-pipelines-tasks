@@ -51,5 +51,8 @@ describe('ServiceFabricPowerShell Suite', function () {
         it('throws when invalid script path', (done) => {
             psr.run(path.join(__dirname, 'ThrowsWhenInvalidScriptPath.ps1'), done);
         })
+        it('passes script arguments as values', (done) => {
+            psr.run(path.join(__dirname, 'PassesScriptArgumentsAsValues.ps1'), done);
+        })
     }
 });

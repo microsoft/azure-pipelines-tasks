@@ -69,3 +69,4 @@ Register-Mock Get-ItemProperty { $regKeyObj } -- -Path "HKLM:\SOFTWARE\Microsoft
 
 Microsoft.PowerShell.Core\Import-Module "$PSScriptRoot\..\ps_modules\TlsHelper_"
 Register-Mock Write-VstsTaskError
+Register-Mock Get-SanitizerActivateStatus { [bool]$global:testToggleEnabled }

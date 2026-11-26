@@ -4,6 +4,7 @@ Trace-VstsEnteringInvocation $MyInvocation
 Import-VstsLocStrings "$PSScriptRoot\Task.json"
 
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+. $PSScriptRoot\ScriptArgumentList.ps1
 
 # Get inputs.
 $serviceConnectionName = Get-VstsInput -Name serviceConnectionName -Require
@@ -43,6 +44,9 @@ if ($scriptType -ne "InlineScript" -or $sanitizeInlineScriptArguments) {
         -PipelineFeatureFlagName 'EnableServiceFabricPowerShellArgumentsSanitization'
 }
 
+$useScriptArgumentList = [bool](Get-SanitizerActivateStatus) -and
+    [bool](Get-VstsPipelineFeature -FeatureName 'EnableServiceFabricPowerShellArgumentListInvocation')
+
 $certificate = $null
 try
 {
@@ -72,6 +76,19 @@ try
     }
 
     $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
+    if ($useScriptArgumentList)
+    {
+        $scriptArgumentList = ConvertTo-ScriptArgumentList -ScriptPath $scriptPath -ScriptArguments $scriptArguments
+        $scriptNamedArguments = $scriptArgumentList.Named
+        $scriptPositionalArguments = $scriptArgumentList.Positional
+        Remove-Variable -Name scriptArgumentList
+        $scriptBlock = { & $scriptPath @scriptNamedArguments @scriptPositionalArguments }
+    }
+    else
+    {
+        $scriptBlock = [scriptblock]::Create($scriptCommand)
+    }
+
     Remove-Variable -Name scriptArguments
 
     # Remove all commands imported from VstsTaskSdk, other than Out-Default.
@@ -80,6 +97,7 @@ try
         Where-Object {
         ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
         ($_.Name -eq 'Invoke-VstsTaskScript') -or
+        ($_.Name -eq 'ConvertTo-ScriptArgumentList') -or
         ($_.ModuleName -eq 'ServiceFabricHelpers' )
     } |
         Remove-Item
@@ -97,10 +115,10 @@ try
     # 2) The task result needs to be set to failed if an error record is encountered.
     #    As mentioned above, the requirement to handle this is an implication of changing
     #    the error action preference.
-    ([scriptblock]::Create($scriptCommand)) |
+    $scriptBlock |
         ForEach-Object {
-        Remove-Variable -Name scriptCommand
-        Write-Host "##[command]$_"
+        Write-Host "##[command]$scriptCommand"
+        Remove-Variable -Name scriptCommand, scriptBlock
         . $_ 2>&1
     } |
         ForEach-Object {
