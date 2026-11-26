@@ -292,4 +292,62 @@ describe('CommandHelper - untrusted output sanitization', function () {
             assert.strictEqual(warnings.length, 1, 'the error should be warned, not thrown, matching the pre-PR discard-the-result behavior');
         });
     });
+
+    // Covers the gap found when re-auditing which of the 9 child processes a deploy spawns are
+    // actually flag-gated: kubernetes-common@2.281.1's Kubectl.execute() only filters the LIVE
+    // console stream, not the RETURNED result.stdout/stderr that
+    // KubernetesManifestUtility.checkManifestStability() passes straight into its own, unpatched
+    // checkForErrors(). wrapKubectlForOutputSanitization() closes that gap locally for the three
+    // methods checkManifestStability() actually calls (checkRolloutStatus/getResource/describe).
+    describe('wrapKubectlForOutputSanitization (shared Kubectl helper return-value sanitization)', () => {
+        // A minimal stand-in for the shared Kubectl class - only the three methods
+        // checkManifestStability() calls need to exist for this test's purposes.
+        function fakeKubectl(results: Partial<Record<'checkRolloutStatus' | 'getResource' | 'describe', Partial<tr.IExecSyncResult>>>): any {
+            const kubectl: any = {};
+            for (const method of ['checkRolloutStatus', 'getResource', 'describe'] as const) {
+                const r = results[method] ?? {};
+                kubectl[method] = () => ({ stdout: r.stdout ?? '', stderr: r.stderr ?? '', code: r.code ?? 0, error: r.error ?? null });
+            }
+            return kubectl;
+        }
+
+        it('returns the same kubectl instance unchanged (no sanitization) when the flag is off', () => {
+            setSanitizationEnabled(false);
+            const kubectl = fakeKubectl({ checkRolloutStatus: { stdout: MARKER, code: 0 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            assert.strictEqual(wrapped, kubectl, 'the same instance must be returned unchanged when the flag is off');
+            assert.strictEqual(wrapped.checkRolloutStatus('deployment', 'foo').stdout, MARKER, 'output must stay raw when the flag is off');
+        });
+
+        it('sanitizes the returned result of checkRolloutStatus/getResource/describe when the flag is on', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({
+                checkRolloutStatus: { stdout: MARKER, code: 0 },
+                getResource: { stdout: MARKER, code: 0 },
+                describe: { stdout: MARKER, code: 0 }
+            });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            assert.strictEqual(wrapped.checkRolloutStatus('deployment', 'foo').stdout, NEUTRALIZED);
+            assert.strictEqual(wrapped.getResource('pod', 'foo').stdout, NEUTRALIZED);
+            assert.strictEqual(wrapped.describe('pod', 'foo').stdout, NEUTRALIZED);
+        });
+
+        it('logs the diagnostic line (without the raw marker) when the shared Kubectl helper neutralizes a marker', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({ getResource: { stdout: MARKER, code: 0 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            wrapped.getResource('pod', 'foo');
+            assert.strictEqual(consoleLogs.length, 1);
+            assert(consoleLogs[0].includes('neutralized'));
+            assert(!consoleLogs[0].includes('##vso['));
+        });
+
+        it('hands back a sanitized stderr so the dependency\'s own checkForErrors() cannot leak a raw marker on a non-zero exit code', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({ checkRolloutStatus: { stderr: MARKER, code: 1 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            const result = wrapped.checkRolloutStatus('deployment', 'foo');
+            assert.strictEqual(result.stderr, NEUTRALIZED, 'the result handed back to the caller (and then to the dependency\'s checkForErrors) must already be sanitized');
+        });
+    });
 });

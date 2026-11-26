@@ -92,7 +92,12 @@ function annotateKubernetesResources(commandHelper: CommandHelper, resourcesYaml
 }
 
 async function checkManifestStability(commandHelper: CommandHelper, resources: Resource[]) {
-    const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
+    // checkManifestStability() internally calls kubectl.checkRolloutStatus()/getResource() to
+    // poll rollout/pod/service status, which are manifest-controlled (resource names/output are
+    // not guaranteed trusted). Wrap the instance so those RETURNED results stay under the same
+    // EnableOutputSanitization flag as every other command here, closing a gap the shared
+    // Kubectl helper's own (unconditional, live-stream-only) sanitization does not cover.
+    const kubectl = commandHelper.wrapKubectlForOutputSanitization(new Kubectl(commandHelper.kubectlPath, namespace));
     await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
 }
 
