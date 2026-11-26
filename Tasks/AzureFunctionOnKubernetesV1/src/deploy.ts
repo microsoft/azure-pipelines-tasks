@@ -58,9 +58,13 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
         // Built and run via commandHelper.execCommand (instead of the shared Kubectl helper's
         // annotate()) so this call stays under the same EnableOutputSanitization flag as every
         // other command here, rather than relying on the common package's own unconditional
-        // sanitization.
+        // sanitization. warnIfError=true preserves the original kubectl.annotate() call's
+        // fire-and-forget semantics (its result was previously discarded entirely, e.g. a
+        // re-deploy hitting an already-annotated secret without --overwrite would error but never
+        // fail the task) - execCommand() always runs checkForErrors(), so without warnIfError=true
+        // this would newly fail the task on a case that was previously silently ignored.
         const annotateSecretCommand = commandHelper.getAnnotateSecretCommand(pullSecretName, namespace, KubernetesConstants.pipelineAnnotations);
-        commandHelper.execCommand(annotateSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
+        commandHelper.execCommand(annotateSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions, true);
     }
     else {
         // no secret created if no Docker login is found. Case when user wants to use a public image.
