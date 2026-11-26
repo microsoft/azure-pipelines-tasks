@@ -511,6 +511,31 @@ describe('Kubernetes Manifests Suite', function () {
         done();
     });
 
+    it('Kompose bake should filter logging commands from the docker-compose file path', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const dockerComposeFilePath = 'dockerComposeFilePath\n##vso[task.complete result=Failed]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        tr.run();
+        assert(tr.succeeded, 'the injected task.complete command should not be processed as a real agent command');
+        done();
+    });
+
+    it('Kompose bake should NOT filter logging commands when the sanitization rollback flag is enabled (documents legacy vulnerable behavior)', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const dockerComposeFilePath = 'dockerComposeFilePath\n##vso[task.complete result=Failed]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        process.env[shared.TestEnvVars.komposeBakeDisableLogSanitizationFeatureFlag] = 'true';
+        tr.run();
+        assert(!tr.succeeded, 'with sanitization disabled, the injected task.complete command is processed as a real agent command');
+        done();
+    });
+
     it('Run should successfully add image pull secrets to a cron job', (done: Mocha.Done) => {
         const testFile = path.join(__dirname, './manifests/', 'cronjob.yaml');
         const cronJobFile = fs.readFileSync(testFile).toString();

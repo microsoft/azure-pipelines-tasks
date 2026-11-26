@@ -17,6 +17,8 @@ import * as utils from '../utils/utilities';
 import * as DeploymentHelper from '../utils/DeploymentHelper';
 import * as TaskInputParameters from '../models/TaskInputParameters';
 
+const komposeBakeDisableLogSanitizationFeature = 'KubernetesManifestKomposeBakeDisableLogSanitization';
+
 abstract class RenderEngine {
     public bake: () => Promise<any>;
     protected getTemplatePath = () => {
@@ -87,8 +89,18 @@ class KomposeRenderEngine extends RenderEngine {
         }
         const tool = tl.tool(path);
         const pathToBakedManifest = this.getTemplatePath();
-        tool.arg(['convert', '-f', dockerComposeFilePath, '-o', pathToBakedManifest]);
-        const result = tool.execSync();
+        const komposeArgs = ['convert', '-f', dockerComposeFilePath, '-o', pathToBakedManifest];
+        tool.arg(komposeArgs);
+
+        const disableLogSanitization = tl.getPipelineFeature(komposeBakeDisableLogSanitizationFeature);
+        let result;
+        if (disableLogSanitization) {
+            result = tool.execSync();
+        } else {
+            tl.writeExternalOutput(`[command] ${path} ${komposeArgs.join(' ')}` + os.EOL, { source: 'repository' });
+            result = tool.execSync({ silent: true } as IExecOptions);
+        }
+
         if (result.code !== 0 || result.error) {
             throw result.error;
         }

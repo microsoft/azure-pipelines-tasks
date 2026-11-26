@@ -149,6 +149,7 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
         'code': 0,
         stdout: 'Kubernetes files created'
     };
+    a.checkPath[process.env[shared.TestEnvVars.dockerComposeFile]] = true;
 }
 
 const helmVersionCommand = 'helm version --short';
