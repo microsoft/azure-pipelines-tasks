@@ -270,5 +270,26 @@ describe('CommandHelper - untrusted output sanitization', function () {
             );
             assert.strictEqual(result.stdout, NEUTRALIZED);
         });
+
+        // Regression guard for createImagePullSecret()'s annotateSecretCommand call in deploy.ts.
+        // Before this PR, kubectl.annotate('secret', ...) was fire-and-forget: its result was
+        // discarded entirely, so a redeploy hitting an already-annotated secret (kubectl exits
+        // non-zero without --overwrite) never failed the task. Routing this call through
+        // execCommand() without warnIfError=true would have newly thrown in that case, since
+        // execCommand() always runs checkForErrors(). warnIfError=true restores the original
+        // silently-ignored behavior while still sanitizing the (now-neutralized) output.
+        it('does not throw for the annotate-secret call-site option shape (externalOutput + warnIfError) on a non-zero exit code, preserving original fire-and-forget behavior', () => {
+            const command = fakeCommand({ stdout: MARKER, stderr: 'secret already has a value, must use --overwrite', code: 1 });
+            let result: tr.IExecSyncResult;
+            assert.doesNotThrow(() => {
+                result = commandHelper.execCommand(
+                    command,
+                    { externalOutput: { source: 'childProcess' } } as tr.IExecOptions,
+                    true
+                );
+            });
+            assert.strictEqual(result.stdout, NEUTRALIZED);
+            assert.strictEqual(warnings.length, 1, 'the error should be warned, not thrown, matching the pre-PR discard-the-result behavior');
+        });
     });
 });
