@@ -146,7 +146,8 @@ describe("HelmDeployV1 Suite", function () {
         process.env[shared.TestEnvVars.command] = shared.Commands.install;
         process.env[shared.TestEnvVars.chartType] = shared.ChartTypes.Name;
         process.env[shared.TestEnvVars.chartName] = shared.testChartName;
-        process.env[shared.TestEnvVars.version] = "abcd";
+        const invalidVersion = "abcd\n##vso[task.logissue type=error]injected";
+        process.env[shared.TestEnvVars.version] = invalidVersion;
         process.env[shared.TestEnvVars.failOnStderr] = "false";
         process.env[shared.TestEnvVars.publishPipelineMetadata] = "true";
         process.env[shared.isHelmV3orHigher] = "true";
@@ -154,7 +155,12 @@ describe("HelmDeployV1 Suite", function () {
         await tr.runAsync();
         assert(tr.stdout.indexOf("v3") != -1, "Helm version 3 should have been installed");
         assert(tr.stdout.indexOf("STATUS: deployed") != -1, "Release should have been created");
-        assert(tr.stdout.indexOf("The given version " + process.env[shared.TestEnvVars.version] + " is not valid. Running the helm install command with latest version") != -1, "Version should not have been accepted");
+        assert(tr.stdout.indexOf("The given version abcd") != -1
+            && tr.stdout.indexOf("is not valid. Running the helm install command with latest version") != -1,
+            "Version should not have been accepted");
+        assert(tr.stdout.indexOf("##_vso[task.logissue type=error]injected") != -1, "logging commands in the invalid version should be neutralized");
+        assert(!tr.stdout.split(/\r?\n/).some(line => line.startsWith("##vso[task.logissue type=error]injected")), "the invalid version should not emit an executable logging command");
+        assert.equal(tr.errorIssues.length, 0, "the injected logging command should not be processed");
         assert(tr.stdout.indexOf(`DeploymentDetailsApiResponse: {"mockKey":"mockValue"}`) != -1, "Web response should have been received for pushing metadata to evidence store");
         assert(tr.succeeded, "task should have succeeded");
     });

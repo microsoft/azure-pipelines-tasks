@@ -18,6 +18,14 @@ Package deployment diagnostics use task-lib external-output handling with
 `telemetryOnly` when true. An unset or false feature keeps blocking enabled.
 Only diagnostic text is filtered; file selection and deployment paths are unchanged.
 
+## Publish profile debug logging
+
+The pipeline feature `EnablePublishProfileLogRedaction` limits the `Publish Profile`
+debug log to `WebPublishMethod`, `MSDeployServiceURL`, `DeployIisAppPath`, and
+`UserName`. Other fields, including passwords and nested database settings, are
+omitted from this log; deployment still receives the full profile. An unset or
+false feature preserves legacy logging.
+
 ## Contact Information
 
 Please report a problem at [Developer Community Forum](https://developercommunity.visualstudio.com/spaces/21/index.html) if you are facing problems in making this task work.  You can also share feedback about the task like, what more functionality should be added to the task, what other tasks you would like to have, at the same place.
