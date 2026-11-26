@@ -2,6 +2,7 @@ import path = require('path');
 import tl = require('azure-pipelines-task-lib/task');
 import sign = require('azure-pipelines-tasks-ios-signing-common/ios-signing-common');
 import utils = require('./xcodeutils');
+import os = require('os');
 import * as telemetry from 'azure-pipelines-tasks-utility-common/telemetry';
 
 import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
@@ -78,7 +79,7 @@ async function run() {
                 }
                 else {
                     scheme = schemes[0];
-                    console.log(tl.loc('SchemeSelected', scheme));
+                    tl.writeExternalOutput(tl.loc('SchemeSelected', scheme) + os.EOL, { source: 'repository' });
                 }
             }
             catch (err) {
@@ -269,7 +270,7 @@ async function run() {
         });
 
         try {
-            await xcb.exec();
+            await xcb.exec(utils.getXcodebuildExecOptions());
         } catch (err) {
             if (buildOnlyDeviceErrorFound) {
                 // Tell the user they need to change Destination platform to fix this build error.
@@ -335,7 +336,7 @@ async function run() {
                 xcodeArchive.pipeExecOutputToTool(xcPrettyTool, logFile);
                 utils.setTaskState('XCODEBUILD_ARCHIVE_LOG', logFile);
             }
-            await xcodeArchive.exec();
+            await xcodeArchive.exec(utils.getXcodebuildExecOptions());
 
             let archiveFolders: string[] = tl.findMatch(archiveFolderRoot, '**/*.xcarchive', { allowBrokenSymbolicLinks: false, followSpecifiedSymbolicLink: false, followSymbolicLinks: false });
             if (archiveFolders && archiveFolders.length > 0) {
@@ -489,7 +490,7 @@ async function run() {
                         xcodeExport.pipeExecOutputToTool(xcPrettyTool, logFile);
                         utils.setTaskState('XCODEBUILD_EXPORT_LOG', logFile);
                     }
-                    await xcodeExport.exec();
+                    await xcodeExport.exec(utils.getXcodebuildExecOptions());
                 }
             }
         }
