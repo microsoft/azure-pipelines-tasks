@@ -34,7 +34,9 @@ if ($scriptArguments -match '[\r\n]')
 # No-op unless BOTH the org-level "Enable shell tasks arguments validation"
 # toggle and the per-task pipeline feature flag are enabled.
 # See https://aka.ms/ado/75787 and Tasks/Common/Sanitizer/Invoke-ScriptArgumentSanitization.ps1.
-if ($scriptType -ne "InlineScript") {
+$sanitizeInlineScriptArguments = [bool](Get-VstsPipelineFeature -FeatureName 'EnableServiceFabricPowerShellInlineScriptArgumentsSanitization')
+
+if ($scriptType -ne "InlineScript" -or $sanitizeInlineScriptArguments) {
     Invoke-ScriptArgumentSanitization `
         -InputArgs $scriptArguments `
         -TaskName 'ServiceFabricPowerShellV1' `

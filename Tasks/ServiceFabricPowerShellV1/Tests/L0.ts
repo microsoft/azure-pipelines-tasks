@@ -36,6 +36,9 @@ describe('ServiceFabricPowerShell Suite', function () {
         it('validates inline script flow', (done) => {
             psr.run(path.join(__dirname, 'ValidateInlineScriptFlow.ps1'), done);
         })
+        it('sanitizes inline script arguments', (done) => {
+            psr.run(path.join(__dirname, 'SanitizesInlineScriptArguments.ps1'), done);
+        })
         it('redirects errors', (done) => {
             psr.run(path.join(__dirname, 'RedirectsErrors.ps1'), done);
         })
