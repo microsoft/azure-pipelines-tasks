@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 279,
+    "Minor": 283,
     "Patch": 0
   },
   "deprecated": true,
@@ -96,14 +96,6 @@
   ],
   "instanceNameFormat": "Publish Test Results $(testResultsFiles)",
   "execution": {
-    "PowerShell": {
-      "target": "$(currentDirectory)\\PublishTestResults.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)",
-      "platforms": [
-        "windows"
-      ]
-    },
     "Node10": {
       "target": "publishtestresults.js",
       "argumentFormat": ""
