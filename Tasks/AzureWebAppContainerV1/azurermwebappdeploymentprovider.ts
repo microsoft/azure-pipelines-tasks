@@ -9,6 +9,7 @@ import { SiteContainersDeploymentUtility } from './operations/SiteContainersDepl
 import { KuduServiceUtility } from './operations/KuduServiceUtility';
 import { addReleaseAnnotation } from './operations/ReleaseAnnotationUtility';
 import { TaskParameters } from './taskparameters';
+import { logExternalOutput } from './ExternalOutput';
 
 export class AzureRmWebAppDeploymentProvider{
     protected taskParams:TaskParameters;
@@ -66,7 +67,7 @@ export class AzureRmWebAppDeploymentProvider{
         }
         
         let appServiceApplicationUrl: string = await this.appServiceUtility.getApplicationURL();
-        console.log(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
+        logExternalOutput(tl.loc('AppServiceApplicationURL', appServiceApplicationUrl));
         tl.setVariable('AppServiceApplicationUrl', appServiceApplicationUrl);
     }
 }
