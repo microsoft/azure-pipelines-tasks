@@ -87,6 +87,10 @@ try
     function global:Get-VstsPipelineFeature {
         param([string]$FeatureName)
 
+        if ($FeatureName -eq 'DisableWindowsMachineFileCopyMachineNamesSanitization') {
+            return $false
+        }
+
         return [System.Convert]::ToBoolean($env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING)
     }
     function global:robocopy {
