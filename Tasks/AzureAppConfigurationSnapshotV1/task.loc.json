@@ -9,11 +9,13 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 282,
+    "Minor": 283,
     "Patch": 0
   },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "minimumAgentVersion": "2.144.0",
+  "deprecated": true,
+  "deprecationMessage": "The AzureAppConfigurationSnapshot@1 task is deprecated",
   "inputs": [
     {
       "name": "ConnectedServiceName",
