@@ -24,7 +24,7 @@ Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 $enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
-$enableWindowsMachineFileCopyVsoSanitization = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyMachineNamesSanitization'
+$disableWindowsMachineFileCopyVsoSanitization = Get-VstsPipelineFeature -FeatureName 'DisableWindowsMachineFileCopyMachineNamesSanitization'
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
@@ -57,14 +57,13 @@ try
     Validate-SourcePath $sourcePath
     Validate-DestinationPath $targetPath $machineNames
 
-    # Only $machines (split/trimmed) is sanitized below.
     $machines = $machineNames.split(',') | ForEach-Object {
         if ($_ -and $_.trim()) {
-            if ($enableWindowsMachineFileCopyVsoSanitization) {
-                ($_.trim() -replace '(?i)#+vso\[', '##_vso[')
+            if ($disableWindowsMachineFileCopyVsoSanitization) {
+                $_.trim()
             }
             else {
-                $_.trim()
+                ($_.trim() -replace '(?i)#+vso\[', '##_vso[')
             }
         }
     }

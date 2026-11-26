@@ -19,7 +19,8 @@ try
     function global:Get-VstsPipelineFeature {
         param([string]$FeatureName)
 
-        return ($FeatureName -eq 'EnableWindowsMachineFileCopyMachineNamesSanitization') -and $global:sanitizationFlag
+        # DisableWindowsMachineFileCopyMachineNamesSanitization is a kill switch: sanitization runs unless it is explicitly turned on.
+        return ($FeatureName -eq 'DisableWindowsMachineFileCopyMachineNamesSanitization') -and (-not $global:sanitizationFlag)
     }
 
     Unregister-Mock Get-VstsInput
