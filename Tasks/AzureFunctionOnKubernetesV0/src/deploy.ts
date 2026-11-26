@@ -9,7 +9,6 @@ import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common/kubec
 import * as FileHelper from './utils/fileHelper';
 import * as KubernetesConstants from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
 import * as KubernetesManifestUtility from 'azure-pipelines-tasks-kubernetes-common/kubernetesmanifestutility';
-import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);
@@ -55,8 +54,12 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
         // still sanitized for defense-in-depth consistency with the other execCommand() call sites.
         commandHelper.execCommand(deleteSecretCommand, { failOnStdErr: false, ignoreReturnCode: true, externalOutput: { source: 'childProcess' } } as tr.IExecOptions, true);
         commandHelper.execCommand(createPullSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
-        const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
-        kubectl.annotate('secret', pullSecretName, KubernetesConstants.pipelineAnnotations);
+        // Built and run via commandHelper.execCommand (instead of the shared Kubectl helper's
+        // annotate()) so this call stays under the same EnableOutputSanitization flag as every
+        // other command here, rather than relying on the common package's own unconditional
+        // sanitization.
+        const annotateSecretCommand = commandHelper.getAnnotateSecretCommand(pullSecretName, namespace, KubernetesConstants.pipelineAnnotations);
+        commandHelper.execCommand(annotateSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
     }
     else {
         // no secret created if no Docker login is found. Case when user wants to use a public image.
@@ -76,9 +79,12 @@ function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnec
 function annotateKubernetesResources(commandHelper: CommandHelper, resourcesYaml: string) {
     const funcKubernetesTemplatesPath = FileHelper.getFuncKubernetesYamlPath();
     FileHelper.writeContentToFile(funcKubernetesTemplatesPath, resourcesYaml);
-    const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
-    const annotateResults = kubectl.annotateFiles(funcKubernetesTemplatesPath, KubernetesConstants.pipelineAnnotations, true);
-    CommonUtils.checkForErrors([annotateResults]);
+    // Built and run via commandHelper.execCommand (instead of the shared Kubectl helper's
+    // annotateFiles()) so this call stays under the same EnableOutputSanitization flag as every
+    // other command here, rather than relying on the common package's own unconditional
+    // sanitization. execCommand() already calls checkForErrors() internally.
+    const annotateFilesCommand = commandHelper.getAnnotateResourceFileCommand(funcKubernetesTemplatesPath, namespace, KubernetesConstants.pipelineAnnotations);
+    commandHelper.execCommand(annotateFilesCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
 }
 
 async function checkManifestStability(commandHelper: CommandHelper, resources: Resource[]) {

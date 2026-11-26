@@ -7,9 +7,13 @@ import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 import { DockerConnection } from "../dockerConnection";
 
 // Feature flag gating the untrusted build-output sanitization fix. Default is OFF (legacy
-// behavior) so existing pipelines are unaffected until the org/pipeline explicitly opts in by
-// setting this variable (e.g. in pipeline YAML `variables:` or org/project settings) to 'true'.
-const ENABLE_OUTPUT_SANITIZATION_VARIABLE = 'AzureFunctionOnKubernetes.EnableOutputSanitization';
+// behavior). This is a server-controlled pipeline feature (DistributedTask.Tasks.<name>,
+// resolved via tl.getPipelineFeature()) that Microsoft ramps centrally per org/collection via
+// Config Change - it is NOT a pipeline-author-set variable. The matching server-side
+// registration (DistributedTaskFeatures.cs + FeatureAvailability servicing XML) is tracked as a
+// separate follow-up to land after this PR merges and the rollout plan is finalized; until that
+// registration exists, tl.getPipelineFeature() simply returns false (legacy behavior).
+const ENABLE_OUTPUT_SANITIZATION_FEATURE = 'AzureFunctionOnKubernetes.EnableOutputSanitization';
 
 export class CommandHelper {
     private funcPath: string;
@@ -23,7 +27,7 @@ export class CommandHelper {
     }
 
     private isOutputSanitizationEnabled(): boolean {
-        return (tl.getVariable(ENABLE_OUTPUT_SANITIZATION_VARIABLE) || '').toLowerCase() === 'true';
+        return tl.getPipelineFeature(ENABLE_OUTPUT_SANITIZATION_FEATURE);
     }
 
     public execCommand(command: any, options?: tr.IExecOptions, warnIfError?: boolean) {
@@ -39,19 +43,34 @@ export class CommandHelper {
             return legacyResult;
         }
 
-        const result: tr.IExecSyncResult = command.execSync(options);
+        // Default externalOutput to a childProcess-sourced sanitization unless the caller
+        // explicitly overrides it (including explicitly opting out), so a future call site can't
+        // accidentally skip sanitization by simply forgetting to pass the option.
+        const sanitizedOptions: tr.IExecOptions = { externalOutput: { source: 'childProcess' }, ...(options as any) } as tr.IExecOptions;
+        const result: tr.IExecSyncResult = command.execSync(sanitizedOptions);
         // externalOutput on execSync only filters the live/displayed output stream - the
         // stdout/stderr returned here are NOT filtered by task-lib. Since this text can come from
         // an untrusted child process (e.g. a Docker/func build of repo content), it must be
         // explicitly sanitized before it is surfaced via tl.warning()/thrown errors, otherwise an
         // attacker can smuggle logging commands (##vso[...]) through checkForErrors()/tl.setResult().
-        const externalOutputOptions = (options as any)?.externalOutput as eom.ExternalOutputOptions;
+        const externalOutputOptions = (sanitizedOptions as any)?.externalOutput as eom.ExternalOutputOptions;
         if (externalOutputOptions && result) {
-            if (result.stdout) {
-                result.stdout = eom.filterExternalOutput(result.stdout, externalOutputOptions).toString('utf8');
+            let neutralized = false;
+            for (const stream of ['stdout', 'stderr'] as const) {
+                const raw = result[stream];
+                if (raw) {
+                    const clean = eom.filterExternalOutput(raw, externalOutputOptions).toString('utf8');
+                    neutralized = neutralized || clean !== raw;
+                    result[stream] = clean;
+                }
             }
-            if (result.stderr) {
-                result.stderr = eom.filterExternalOutput(result.stderr, externalOutputOptions).toString('utf8');
+            if (neutralized) {
+                // Make the effect diagnosable: a pipeline that relies on a legitimate ##vso[...]
+                // command embedded in func/Docker/kubectl output (e.g. a Dockerfile RUN step that
+                // sets a variable for a later task) would otherwise silently stop working with no
+                // explanation once this flag is on. Deliberately do not include the raw marker
+                // text itself, so this message can't be used to smuggle a command.
+                console.log('Logging-command markers in the output of an external tool were neutralized (AzureFunctionOnKubernetes.EnableOutputSanitization is on).');
             }
         }
         CommonUtils.checkForErrors([result], warnIfError);
@@ -95,6 +114,32 @@ export class CommandHelper {
         if (namespace) {
             command.arg(['--namespace', namespace]);
         }
+
+        return command;
+    }
+
+    // Builds the same command the shared Kubectl helper's annotate('secret', ...) would have run,
+    // but constructed locally so it is routed through execCommand() and stays under
+    // EnableOutputSanitization flag control instead of the common package's own (unconditional)
+    // sanitization.
+    public getAnnotateSecretCommand(secretName: string, namespace: string, annotations: string[]): tr.ToolRunner {
+        const command = tl.tool(this.kubectlPath);
+        command.arg(['annotate', 'secret', secretName]);
+        command.arg(annotations);
+        command.arg(['--namespace', namespace || 'default']);
+
+        return command;
+    }
+
+    // Builds the same command the shared Kubectl helper's annotateFiles(..., overwrite=true)
+    // would have run, but constructed locally for the same flag-control reason as
+    // getAnnotateSecretCommand() above.
+    public getAnnotateResourceFileCommand(filePath: string, namespace: string, annotations: string[]): tr.ToolRunner {
+        const command = tl.tool(this.kubectlPath);
+        command.arg(['annotate', '-f', filePath]);
+        command.arg(annotations);
+        command.arg('--overwrite');
+        command.arg(['--namespace', namespace || 'default']);
 
         return command;
     }
