@@ -2,7 +2,7 @@ import tl = require('azure-pipelines-task-lib/task');
 const readline = require('readline');
 const fs = require('fs');
 
-import { ToolRunner } from 'azure-pipelines-task-lib/toolrunner';
+import { ToolRunner, IExecOptions } from 'azure-pipelines-task-lib/toolrunner';
 import * as semver from 'semver';
 
 // These fallback paths are checked if a XCODE_N_DEVELOPER_DIR environment variable is not found.
@@ -273,4 +273,13 @@ export function getDefaultSimulator(platform: string, xcodeVersion: string): str
 export function getXcodeFileName(xcodeDeveloperDir: string): string {
     const xcodeFileName: string = xcodeDeveloperDir.split('/').find(item => item.includes('.app'));
     return xcodeFileName || 'unknown Xcode filename';
+}
+
+// Filters raw xcodebuild output so it can't be used to inject VSO logging commands.
+export function getXcodebuildExecOptions(): IExecOptions {
+    return {
+        externalOutput: {
+            source: 'childProcess'
+        }
+    };
 }
