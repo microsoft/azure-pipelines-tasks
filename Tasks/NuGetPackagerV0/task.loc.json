@@ -9,7 +9,7 @@
   "author": "Lawrence Gripper",
   "version": {
     "Major": 0,
-    "Minor": 279,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [
@@ -17,6 +17,7 @@
   ],
   "minimumAgentVersion": "1.83.0",
   "deprecated": true,
+  "retiredDate": "2026-11-24",
   "removalDate": "2024-01-31",
   "deprecationMessage": "The NuGetPackager@0 (NuGet packager) task has been deprecated and will soon be retired. Use the NuGetCommand@2 task instead.",
   "groups": [
