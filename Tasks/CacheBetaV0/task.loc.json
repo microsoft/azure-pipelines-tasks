@@ -17,6 +17,7 @@
   "preview": true,
   "minimumAgentVersion": "2.159.2",
   "deprecated": true,
+  "removalDate": "2027-03-31",
   "deprecationMessage": "The CacheBeta@0 task is deprecated, please use the latest version of the CacheBeta task",
   "inputs": [
     {
