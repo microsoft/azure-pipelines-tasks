@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "在路徑 %s 中找不到 Buildctl 可執行檔",
   "loc.messages.FileContentSynced": "檔案內容已同步到磁碟。內容為 %s。",
   "loc.messages.VerifyBuildctlInstallation": "正在驗證 Buildctl 安裝...",
-  "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "正在將 Docker 設定寫入暫存檔案。檔案路徑: %s，Docker 設定: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "因為未指定任何存放庫，所以未將任何標籤新增至組建映像。"
 }

@@ -57,11 +57,20 @@ describe('AzurePowerShell Suite', function () {
         it('Get-LatestModule returns the latest available module', (done) => {
             psr.run(path.join(__dirname, 'Utility.Get-LatestModule.ps1'), done);
         })
+        it('bounds module version validation and uses local-only discovery', (done) => {
+            psr.run(path.join(__dirname, 'Utility.ModuleVersionValidation.ps1'), done);
+        });
         it('Update-PSModulePathForHostedAgent updated psmodulepath correctly', (done) => {
             psr.run(path.join(__dirname, 'Utility.UpdatePSModulePathForHostedAgentWorksCorrectly.ps1'), done);
         })
         it('does not leak access token into generated script', (done) => {
             psr.run(path.join(__dirname, 'TokenNotLeakedToScript.ps1'), done);
+        })
+        it('does not expose credential variables to the customer script', (done) => {
+            psr.run(path.join(__dirname, 'CredentialVariablesNotLeakedToScript.ps1'), done);
+        })
+        it('removes child-process certificate when customer script fails', (done) => {
+            psr.run(path.join(__dirname, 'RemovesChildProcessCertificate.ps1'), done);
         })
         it('cleans up temp script after execution', (done) => {
             psr.run(path.join(__dirname, 'CleansUpTempScript.ps1'), done);

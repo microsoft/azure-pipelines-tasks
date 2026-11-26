@@ -1,6 +1,7 @@
 "use strict";
 
 import * as path from "path";
+import * as os from "os";
 import * as util from "util";
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tr from "azure-pipelines-task-lib/toolrunner";
@@ -42,7 +43,10 @@ export default class PackerHost implements definitions.IPackerHost {
 
         var options = <any>{
             outStream: new utils.StringWritable({ decodeStrings: false }, outputExtractorFunc),
-            errStream: new utils.StringWritable({ decodeStrings: false })
+            errStream: new utils.StringWritable({ decodeStrings: false }),
+            externalOutput: {
+                source: "childProcess"
+            }
         };
 
         return command.exec(options);
@@ -62,7 +66,7 @@ export default class PackerHost implements definitions.IPackerHost {
             tl.mkdirP(this._stagingDirectory);    
         }
 
-        console.log(tl.loc("CreatedStagingDirectory", this._stagingDirectory));
+        tl.writeExternalOutput(tl.loc("CreatedStagingDirectory", this._stagingDirectory) + os.EOL, { source: "repository" });
         return this._stagingDirectory;
     }
 
@@ -115,7 +119,7 @@ export default class PackerHost implements definitions.IPackerHost {
     private async _getPackerPath(): Promise<string> {
         var installedPackerPath = tl.which("packer", false);
         var installedPackerVersion = this._getPackerVersion(installedPackerPath);
-        console.log(tl.loc("InstalledPackerVersion", installedPackerVersion));
+        tl.writeExternalOutput(tl.loc("InstalledPackerVersion", installedPackerVersion) + os.EOL, { source: "childProcess" });
         var packerVersionString = constants.CurrentSupportedPackerVersionString;
         var explicitPackerVersion : boolean= false ;
 
@@ -126,15 +130,15 @@ export default class PackerHost implements definitions.IPackerHost {
 
         if(explicitPackerVersion || !installedPackerVersion || utils.isGreaterVersion(utils.PackerVersion.convertFromString(packerVersionString), utils.PackerVersion.convertFromString(installedPackerVersion))) {
             if(explicitPackerVersion){
-                console.log(tl.loc("InstallExplicitPackerVersion", packerVersionString))
+                tl.writeExternalOutput(tl.loc("InstallExplicitPackerVersion", packerVersionString) + os.EOL, { source: "repository" });
             } else {
-                console.log(tl.loc("DownloadingPackerRequired", packerVersionString, packerVersionString));
+                tl.writeExternalOutput(tl.loc("DownloadingPackerRequired", packerVersionString, packerVersionString) + os.EOL, { source: "repository" });
             }
             var downloadPath = path.join(this.getStagingDirectory(), "packer.zip");
             var packerDownloadUrl = util.format(constants.PackerDownloadUrlFormat, packerVersionString, packerVersionString, this._getPackerZipNamePrefix());
             tl.debug("Downloading packer from url: " + packerDownloadUrl);
             await utils.download(packerDownloadUrl, downloadPath);
-            console.log(tl.loc("DownloadingPackerCompleted", downloadPath));
+            tl.writeExternalOutput(tl.loc("DownloadingPackerCompleted", downloadPath) + os.EOL, { source: "repository" });
             
             var extractedPackerLocation = path.join(this.getStagingDirectory(), "packer");
             await utils.unzip(downloadPath, extractedPackerLocation);
@@ -144,7 +148,7 @@ export default class PackerHost implements definitions.IPackerHost {
                 var packerPath = path.join(extractedPackerLocation, "packer");
             }
 
-            console.log(tl.loc("ExtractingPackerCompleted", packerPath));
+            tl.writeExternalOutput(tl.loc("ExtractingPackerCompleted", packerPath) + os.EOL, { source: "repository" });
             await this._waitForPackerExecutable(packerPath);         
             return packerPath;
         } else {
@@ -156,7 +160,11 @@ export default class PackerHost implements definitions.IPackerHost {
         if(!!packerPath && tl.exist(packerPath)) {
             // if failed to get version, do not fail task
             try {
-                const machineReadableVersion = tl.tool(packerPath).arg("-machine-readable").arg("--version").execSync().stdout;
+                const machineReadableVersion = tl.tool(packerPath).arg("-machine-readable").arg("--version").execSync({
+                    externalOutput: {
+                        source: "childProcess"
+                    }
+                }).stdout;
                 const versionFirstLine = machineReadableVersion.split('\n')[0].split(',');
                 const versionLastElement = versionFirstLine[versionFirstLine.length - 1];
                 return versionLastElement;
@@ -171,7 +179,11 @@ export default class PackerHost implements definitions.IPackerHost {
             var iterationCount = 0;
             do{
                 // query version to check if packer executable is ready
-                var result = tl.tool(packerPath).arg("--version").execSync();
+                var result = tl.tool(packerPath).arg("--version").execSync({
+                    externalOutput: {
+                        source: "childProcess"
+                    }
+                });
                 if(result.code != 0 && result.error && result.error.message.indexOf("EBUSY") != -1){
                     iterationCount++;
                     console.log(tl.loc("PackerToolBusy"));

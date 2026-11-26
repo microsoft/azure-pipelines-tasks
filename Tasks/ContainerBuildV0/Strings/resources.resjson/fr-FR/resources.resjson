@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "Exécutable Buildctl introuvable dans le chemin %s",
   "loc.messages.FileContentSynced": "Synchronisation effectuée du contenu du fichier sur le disque. Le contenu est %s.",
   "loc.messages.VerifyBuildctlInstallation": "Vérification de l'installation de Buildctl...",
-  "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s"
+  "loc.messages.WritingDockerConfigToTempFile": "Écriture de la configuration Docker dans le fichier temporaire. Chemin de fichier : %s. Configuration Docker : %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "Impossible d’ajouter des étiquettes à l’image générée, car aucun référentiel n’est spécifié."
 }

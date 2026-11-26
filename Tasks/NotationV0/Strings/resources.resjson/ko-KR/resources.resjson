@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "신뢰 저장소에 인증서를 추가하지 못함: %s.",
   "loc.messages.FailedToGetWorkloadIdToken": "워크로드 ID 토큰을 가져오지 못함: %s.",
   "loc.messages.FailedToImportTrustPolicy": "트러스트 정책을 가져오지 못함: %s.",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "신뢰 저장소를 나열하지 못했습니다.",
   "loc.messages.FailedToShowTrustPolicy": "신뢰 정책을 표시하지 못했습니다.",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Docker 작업에서 아티팩트 참조를 가져오려고 합니다.",

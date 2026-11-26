@@ -2,5 +2,8 @@
   "loc.messages.InstallDotNetCoreForPublishing": "이 작업을 실행하려면 dotnet core를 설치하세요.",
   "loc.messages.ErrorWhilePublishing": "검사를 게시하는 동안 오류가 발생했습니다. ",
   "loc.messages.UpgradeAgentMessage": "에이전트 버전을 업그레이드 하세요. v2.115.0 이상이 필요합니다. https://github.com/Microsoft/vsts-agent/releases",
-  "loc.messages.NoInputFiles": "입력 파일을 제공하지 않았습니다."
+  "loc.messages.NoInputFiles": "입력 파일을 제공하지 않았습니다.",
+  "loc.messages.InvalidCoverageWorkingDirectory": "검사 게시자 작업 디렉터리가 없거나 디렉터리가 아닙니다. %s",
+  "loc.messages.NoTrustedCoverageSourceDirectories": "원본 경로 포함 기능이 활성화되어 있지만, 신뢰할 수 있는 원본 디렉터리가 구성되지 않았습니다. pathToSources 또는 작업 영역 디렉터리를 제공하세요.",
+  "loc.messages.CoveragePublisherExecutionFailed": "적용 범위 게시자 실행이 실패함: %s"
 }

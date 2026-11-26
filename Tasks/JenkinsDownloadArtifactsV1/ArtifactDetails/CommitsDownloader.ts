@@ -7,6 +7,7 @@ import url = require('url');
 
 import {ArtifactDetailsDownloaderBase} from "./ArtifactDetailsDownloaderBase"
 import {JenkinsRestClient, JenkinsJobDetails} from "./JenkinsRestClient"
+import { JenkinsOutput } from '../JenkinsOutput';
 
 var handlebars = require('handlebars');
 
@@ -59,11 +60,11 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         try {
             var result = template(JSON.parse(commits));
         } catch(error) {
-            console.log(tl.loc("GetCommitMessagesFailed", error, commits));
+            JenkinsOutput.log(tl.loc("GetCommitMessagesFailed", error, commits));
             throw error;
         }
 
-        tl.debug(`Commit messages: ${result}`);
+        JenkinsOutput.debug(`Commit messages: ${result}`);
         return result.split(',');
     }
 
@@ -106,7 +107,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
         const commitsUrl: string = `${jenkinsJobDetails.multiBranchPipelineUrlInfix}/${jenkinsJobDetails.buildId}/api/json?tree=number,result,actions[remoteUrls],changeSet[kind,items[commitId,date,msg,author[fullName]]]`;
 
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitTemplate, null).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
+            JenkinsOutput.debug(`Downloaded commits: ${commitsResult}`);
 
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
@@ -125,7 +126,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
 
         tl.debug(`Downloading commits from startIndex ${startIndex} and endIndex ${endIndex}`);
         this.jenkinsClient.DownloadJsonContent(commitsUrl, CommitsTemplate, {'buildParameter': buildParameter}).then((commitsResult) => {
-            tl.debug(`Downloaded commits: ${commitsResult}`);
+            JenkinsOutput.debug(`Downloaded commits: ${commitsResult}`);
             
             var commits: string = this.TransformCommits(commitsResult);
             defer.resolve(commits);
@@ -175,14 +176,14 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 var commitMessages = JSON.parse(commits);
 
                 commitMessages.forEach((commit) => {
-                    tl.debug('Normalizing url' + commit.DisplayUri);
+                    JenkinsOutput.debug('Normalizing url' + commit.DisplayUri);
                     commit.DisplayUri = this.TransformCommitUrl(commit.DisplayUri);
                 });
 
                 return JSON.stringify(commitMessages);
 
             } catch (error) {
-                console.log(tl.loc("CannotParseCommits", commits, error));
+                JenkinsOutput.log(tl.loc("CannotParseCommits", commits, error));
                 throw error;
             }
         }
@@ -198,10 +199,10 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
                 commitUrl = commitUrl.replace('/commit/', '/commits/')
             }
         } catch (error) {
-            tl.debug(`Error while parsing the commit url ${commitUrl}`);
+            JenkinsOutput.debug(`Error while parsing the commit url ${commitUrl}`);
         }
 
-        tl.debug(`Translated url ${commitUrl} after fixing the query path based on the provider`);
+        JenkinsOutput.debug(`Translated url ${commitUrl} after fixing the query path based on the provider`);
         return commitUrl;
     }
 
@@ -224,7 +225,7 @@ export class CommitsDownloader extends ArtifactDetailsDownloaderBase {
             }
         }
 
-        tl.debug(`Translated url ${commitUrl} to ${result}`);
+        JenkinsOutput.debug(`Translated url ${commitUrl} to ${result}`);
         return result;
     }
 

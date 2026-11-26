@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "無法新增憑證以信任存放區： %s。",
   "loc.messages.FailedToGetWorkloadIdToken": "無法取得工作負載識別權杖： %s。",
   "loc.messages.FailedToImportTrustPolicy": "無法匯入信任原則： %s。",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "無法列出信任存放區。",
   "loc.messages.FailedToShowTrustPolicy": "無法顯示信任原則。",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "嘗試從 Docker 工作取得成品參考。",

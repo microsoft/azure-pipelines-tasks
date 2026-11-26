@@ -1,3 +1,5 @@
+import assert from 'assert';
+import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { TestEnvVars } from './TestConstants';
@@ -41,5 +43,36 @@ describe('NpmAuthenticate L0 - Input Validation', function () {
         // Assert
         TestHelpers.assertFailure(tr, 'Task should fail when the .npmrc file is missing');
         TestHelpers.assertOutputContains(tr, 'NpmrcDoesNotExist');
+    });
+
+    it('neutralizes logging commands in repository-controlled paths', async () => {
+        const marker = '##vso[task.setvariable variable=unexpected;]injected';
+        const npmrcPath = TestHelpers.createTempNpmrc('', `npm-auth-${marker}-`);
+
+        const tr = await TestHelpers.runTestWithEnv({
+            [TestEnvVars.npmrcPath]: npmrcPath
+        });
+
+        TestHelpers.assertSuccess(tr);
+        const outputLines = tr.stdout.split(/\r?\n/);
+        const repositoryOutput = outputLines.find(line => line.includes('AuthenticatingThisNpmrc'));
+        assert(repositoryOutput, 'Expected the task to display the .npmrc path');
+        assert(repositoryOutput.includes('##_vso[task.setvariable variable=unexpected;]injected'));
+        assert(!outputLines.some(line => line.startsWith(marker)), 'Logging command must not begin an output line');
+    });
+
+    it('restricts commands and only allows task-owned variables', function () {
+        const task = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'task.json'), 'utf8'));
+
+        assert.deepStrictEqual(task.restrictions, {
+            commands: { mode: 'restricted' },
+            settableVariables: {
+                allowed: [
+                    'SAVE_NPMRC_PATH',
+                    'NPM_AUTHENTICATE_TEMP_DIRECTORY',
+                    'EXISTING_ENDPOINTS'
+                ]
+            }
+        });
     });
 });

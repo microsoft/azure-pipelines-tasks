@@ -243,6 +243,10 @@ function Publish-UpgradedServiceFabricApplication
         return
     }
 
+    # Validated here rather than where the image store path is built, so that a crafted manifest is
+    # rejected before the upgrade touches the cluster.
+    Assert-ValidImageStorePathSegment -Name $names.ApplicationTypeName
+
     # If ApplicationName is not specified on command line get application name from Application parameter file.
     if (!$ApplicationName)
     {
@@ -415,7 +419,8 @@ function Publish-UpgradedServiceFabricApplication
         }
         catch
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed -ArgumentList $_.Exception.Message)
+            $displayErrorMessage = Protect-ExternalOutput -InputObject $_.Exception.Message -Source remote -VsoCommandMode blockAndTelemetry
+            Write-Host (Get-VstsLocString -Key SFSDK_StartUpgradeFailed -ArgumentList $displayErrorMessage)
             try
             {
                 if (!$ApplicationTypeAlreadyRegistered)

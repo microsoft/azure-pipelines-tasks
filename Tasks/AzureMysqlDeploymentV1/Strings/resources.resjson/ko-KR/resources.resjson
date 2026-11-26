@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "작업 종료 후 규칙 삭제",
   "loc.input.help.DeleteFirewallRule": "선택하면, 해당 Azure Database for MySQL에 대해 추가된 자동화 에이전트의 IP 주소 예외가 제거됩니다.",
   "loc.messages.ARGD_ConstructorFailed": "초기화 중 작업에 실패했습니다. 오류: %s.",
+  "loc.messages.InvalidDatabaseName": "데이터베이스 이름 '%s'이(가) 잘못되었습니다. 영숫자, 밑줄, 하이픈 및 달러 기호만 허용됩니다.",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "방화벽 규칙 이름은 null일 수 없습니다.",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "방화벽 주소는 null일 수 없습니다.",
   "loc.messages.StartIpAddressCannotBeEmpty": "방화벽 규칙의 시작 IP 주소는 null일 수 없습니다.",

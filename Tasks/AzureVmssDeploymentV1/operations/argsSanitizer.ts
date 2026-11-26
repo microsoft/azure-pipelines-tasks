@@ -4,23 +4,44 @@
 //   AZP_75787_ENABLE_NEW_LOGIC_LOG  -> warn on disallowed characters (audit)
 //   AZP_75787_ENABLE_COLLECT        -> emit telemetry only
 //
-// The sanitizer is dispatched per scriptType so that allowlists and pre-
-// expansion match the target shell the custom script runs in on the VMSS:
-//   * bash         -> BashV3 allowlist (a-zA-Z0-9 _'"-=/:.*+%) and $VAR /
-//                     ${VAR} expansion of process env (catches value-
-//                     injected secrets like VAR=";rm -rf /").
-//   * pscore / ps  -> PowerShellV2 allowlist (adds \n , ~ ? # and backtick
-//                     escaping, plus $true/$false via lookahead) and
-//                     $env:VAR / ${env:VAR} expansion. The allowlist also
-//                     accepts the PowerShell *data* constructors `@ { } [ ]`
-//                     (hashtable, splatting, array, indexing). The execution
-//                     primitives that turn data into code (`$( )`, `;`, `&`,
-//                     `|`, `` ` `` outside the escape position) remain blocked.
+// The protected Windows path requires the old and new task feature gates.
+// It transports arguments as data and validates their syntax on the target.
+// Legacy activation/audit/telemetry behavior is retained when the fix is off.
 
 import tl = require('azure-pipelines-task-lib/task');
 import { sanitizeArgs } from 'azure-pipelines-tasks-utility-common/argsSanitizer';
 import { emitTelemetry } from 'azure-pipelines-tasks-utility-common/telemetry';
 import { IssueSource } from 'azure-pipelines-task-lib/internal';
+
+export const VmssWindowsArgumentDataTransportFixEnabled = 'VmssWindowsArgumentDataTransportFixEnabled';
+
+export interface ScriptArgsPolicy {
+    scriptType: string;
+    isPowerShell: boolean;
+    legacyValidationEnabled: boolean;
+    protectedWindows: boolean;
+    activate: boolean;
+    audit: boolean;
+    telemetry: boolean;
+}
+
+export function resolveScriptArgsPolicy(scriptType: string): ScriptArgsPolicy {
+    const normalizedType = (scriptType || '').toLowerCase();
+    const isPowerShell = normalizedType === 'ps' || normalizedType === 'pscore';
+    const legacyValidationEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
+    // Additive rollout: the old gate remains required; activation does not weaken protected mode.
+    const protectedWindows = isPowerShell && legacyValidationEnabled
+        && tl.getPipelineFeature(VmssWindowsArgumentDataTransportFixEnabled);
+    return {
+        scriptType: normalizedType,
+        isPowerShell,
+        legacyValidationEnabled,
+        protectedWindows,
+        activate: protectedWindows || tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
+        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
+        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
+    };
+}
 
 export class ArgsSanitizingError extends Error {
     constructor(message: string) {
@@ -37,13 +58,14 @@ export class ArgsSanitizingError extends Error {
 export function tryValidateScriptArgs(
     inputArguments: string,
     scriptType: string,
-    validator: (args: string, type: string) => void = validateScriptArgs
-): void {
-    if (!tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation')) {
-        return;
+    validator: (args: string, type: string, policy: ScriptArgsPolicy) => void = validateScriptArgs
+): ScriptArgsPolicy {
+    const policy = resolveScriptArgsPolicy(scriptType);
+    if (!policy.legacyValidationEnabled) {
+        return policy;
     }
     try {
-        validator(inputArguments, scriptType);
+        validator(inputArguments, scriptType, policy);
     } catch (err) {
         const e = err as { name?: string; message?: string };
         tl.debug(`validateScriptArgs threw: ${e?.message ?? err}`);
@@ -59,14 +81,15 @@ export function tryValidateScriptArgs(
         }
         throw err;
     }
+    return policy;
 }
 
-export function validateScriptArgs(inputArguments: string, scriptType: string): void {
-    const featureFlags = {
-        audit: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC_LOG'),
-        activate: tl.getBoolFeatureFlag('AZP_75787_ENABLE_NEW_LOGIC'),
-        telemetry: tl.getBoolFeatureFlag('AZP_75787_ENABLE_COLLECT')
-    };
+export function validateScriptArgs(
+    inputArguments: string,
+    scriptType: string,
+    featureFlags: ScriptArgsPolicy = resolveScriptArgsPolicy(scriptType)
+): void {
+    const isVmssWindowsArgumentDataTransportFixEnabled = featureFlags.protectedWindows;
 
     if (!(featureFlags.activate || featureFlags.audit || featureFlags.telemetry)) {
         return;
@@ -78,8 +101,8 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
 
     tl.debug('Validating script args...');
 
-    const normalizedScriptType = (scriptType || '').toLowerCase();
-    const isPowerShell = normalizedScriptType === 'pscore' || normalizedScriptType === 'ps';
+    const normalizedScriptType = featureFlags.scriptType;
+    const isPowerShell = featureFlags.isPowerShell;
 
     // No env expansion: the custom script runs on the remote VMSS VM, so expanding $env:/$VAR
     // against the agent's environment is the wrong context and only risks false-positive blocks.
@@ -89,12 +112,14 @@ export function validateScriptArgs(inputArguments: string, scriptType: string): 
     const [sanitizedArgs, sanitizerTelemetry] = isPowerShell
         ? sanitizeArgs(inputArguments, {
             // PowerShell allowlist: word chars + \ ` _ ' " - = / : . * , + ~ ? % #
-            // plus the data constructors @ { } [ ] (hashtable, splatting, array, indexing).
-            // Backtick is PowerShell's escape symbol; (?!true|false) lets $True / $false pass.
+            // Constructor punctuation also requires target AST validation.
+            // The hardened exception is limited to dollar-prefixed constant words.
             // CR/LF are rejected unconditionally below; the (?<!`) lookbehind can't guarantee it.
             // Execution primitives $( ) ; & | remain blocked.
             argsSplitSymbols: '``',
-            saniziteRegExp: new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
+            saniziteRegExp: isVmssWindowsArgumentDataTransportFixEnabled
+                ? new RegExp("(?<!`)(\\$(?!true\\b|false\\b|null\\b)|[^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]$])", 'ig')
+                : new RegExp("(?<!`)([^\\w\\\\` _'\"\\-=\\/:\\.*,+~?%#@{}\\[\\]])(?!true|false)", 'ig')
         })
         : sanitizeArgs(inputArguments, {
             // BashV3 allowlist (also used for batch and unknown scriptType).

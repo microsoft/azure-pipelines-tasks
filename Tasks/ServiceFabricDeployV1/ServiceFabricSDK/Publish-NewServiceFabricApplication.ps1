@@ -164,6 +164,10 @@
         return
     }
 
+    # Validated here rather than where the image store path is built, so that a crafted manifest is
+    # rejected before any application is removed from the cluster under OverwriteBehavior 'Always'.
+    Assert-ValidImageStorePathSegment -Name $names.ApplicationTypeName
+
     if ($Action.Equals("Register") -or $Action.Equals("RegisterAndCreate"))
     {
         # Apply OverwriteBehavior if an applciation with same name already exists.
@@ -197,7 +201,12 @@
 
             if ($removeApp)
             {
-                Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @($ApplicationName, $app.ApplicationTypeName, $app.ApplicationTypeVersion))
+                $displayApplicationTypeName = Protect-ExternalOutput -InputObject $app.ApplicationTypeName -Source remote -VsoCommandMode blockAndTelemetry
+                $displayApplicationTypeVersion = Protect-ExternalOutput -InputObject $app.ApplicationTypeVersion -Source remote -VsoCommandMode blockAndTelemetry
+                Write-Host (Get-VstsLocString -Key SFSDK_AppAlreadyExistsInfo -ArgumentList @(
+                    $ApplicationName,
+                    $displayApplicationTypeName,
+                    $displayApplicationTypeVersion))
                 Remove-ServiceFabricApplicationAction -ApplicationName $($app.ApplicationName)
 
                 if ($OverwriteBehavior.Equals("Always"))

@@ -114,7 +114,7 @@ try
         $copyJobArguments = $copyJobInvocation.Arguments
         Reset-ImportModuleMockCallHistory
         & $copyJobInvocation.ScriptBlock @copyJobArguments
-        Assert-WasCalled Import-Module -ArgumentsEvaluator { $args.Count -eq 2 -and $args[0] -eq (Join-Path (Split-Path $PSScriptRoot -Parent) 'ps_modules\VstsTaskSdk') -and $args[1] -eq '-Force' }
+        Assert-WasCalled Import-Module -ArgumentsEvaluator { $args[0] -eq (Join-Path (Split-Path $PSScriptRoot -Parent) 'ps_modules\VstsTaskSdk') -and $args -contains '-Force' }
 
         $robocopyInvocation = @($global:robocopyInvocations[$global:robocopyInvocations.Count - 1])
         $actualTokens = @($robocopyInvocation | Select-Object -Skip $fixedArgumentCount)

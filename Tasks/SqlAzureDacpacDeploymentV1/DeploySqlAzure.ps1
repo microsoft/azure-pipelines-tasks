@@ -35,6 +35,7 @@ $ErrorActionPreference = 'Stop'
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
 Import-Module $PSScriptRoot\ps_modules\VstsAzureRestHelpers_
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
+Import-Module $PSScriptRoot\ps_modules\ExternalOutputSanitizer
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json

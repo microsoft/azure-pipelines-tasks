@@ -17,9 +17,105 @@ describe('Docker Compose Suite', function() {
         delete process.env["__qualifyImageNames__"];
         delete process.env["__additionalDockerComposeFiles__"];
         delete process.env["__composeFilePath__"];
+        delete process.env["__nopIfNoDockerComposeFile__"];
+        delete process.env["__useMissingFileMessageFallback__"];
+        delete process.env["__omitComposeFile__"];
+        delete process.env["__failMissingFileFormatter__"];
+        delete process.env["__failMissingFileLog__"];
         delete process.env["__dockerComposeCommand__"];
         delete process.env["__arguments__"];
         delete process.env["__dockerComposePath__"];
+    });
+
+    [
+        { name: 'undefined', value: undefined, fallback: false },
+        { name: 'off', value: 'false', fallback: false },
+        { name: 'on', value: 'true', fallback: true }
+    ].forEach(flag => {
+        [
+            { name: 'ordinary text', value: 'missing-compose.yml', expected: 'missing-compose.yml' },
+            { name: 'LF separators', value: 'missing-compose.yml\n##vso[example]value', expected: 'missing-compose.yml\n#vso[example]value' },
+            { name: 'CRLF separators', value: 'missing-compose.yml\r\n##vso[example]value', expected: 'missing-compose.yml\r\n#vso[example]value' }
+        ].forEach(testCase => {
+            it(`Reports the optional missing file with ${testCase.name} and message fallback ${flag.name}`, async () => {
+                const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
+                const tr = new ttm.MockTestRunner(path.join(__dirname, runner));
+                tr.nodePath = process.execPath;
+                process.env["__nopIfNoDockerComposeFile__"] = "true";
+                process.env["__composeFilePath__"] = testCase.value;
+                if (flag.value !== undefined) {
+                    process.env["__useMissingFileMessageFallback__"] = flag.value;
+                }
+                if (flag.fallback) {
+                    process.env["__failMissingFileFormatter__"] = "true";
+                }
+
+                await tr.runAsync();
+
+                assert(tr.succeeded, 'the optional missing file should not fail the task');
+                assert.strictEqual(tr.stderr, '', 'the optional missing file should not write an error');
+                assert(tr.stdout.indexOf('##vso[task.complete result=Succeeded;]') !== -1,
+                    'the task should report successful completion');
+                assert.strictEqual(tr.invokedToolCount, 0, 'the optional missing file should not invoke a tool');
+                const lines = tr.stdout.split(/\r?\n/);
+                const diagnostics = lines.filter(line => line.startsWith('No Docker Compose file'));
+                assert(lines.every(line => {
+                    const marker = line.indexOf('##vso[example]');
+                    return marker === -1 || line.indexOf('##vso[') < marker;
+                }), 'the example marker should not be emitted as a separate command');
+                const message = flag.fallback ? "No Docker Compose file was found; skipping."
+                    : `No Docker Compose file matching ${testCase.expected} was found.`;
+                assert.deepStrictEqual(diagnostics, [message.split(/\r?\n/)[0]],
+                    'the diagnostic should appear exactly once in both modes');
+                assert(tr.stdout.indexOf(message) !== -1,
+                    'the diagnostic should use the processed path or a fixed fallback');
+            });
+        });
+
+        it(`Requires the Compose file input with message fallback ${flag.name}`, async () => {
+            const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
+            const tr = new ttm.MockTestRunner(path.join(__dirname, runner));
+            tr.nodePath = process.execPath;
+            process.env["__nopIfNoDockerComposeFile__"] = "true";
+            process.env["__omitComposeFile__"] = "true";
+            if (flag.value !== undefined) {
+                process.env["__useMissingFileMessageFallback__"] = flag.value;
+            }
+
+            await tr.runAsync();
+
+            assert(tr.errorIssues.some(issue => /Input required|LIB_InputRequired/.test(issue) && issue.indexOf('dockerComposeFile') !== -1),
+                'an absent required input should retain its existing error');
+            assert(tr.failed && tr.stdout.indexOf('##vso[task.complete result=Failed;]') !== -1,
+                'an absent required input should report failed completion');
+            assert(tr.stdout.indexOf('##vso[task.complete result=Succeeded;]') === -1,
+                'an absent required input should not become a successful no-op');
+            assert.strictEqual(tr.invokedToolCount, 0, 'an absent required input should not invoke a tool');
+        });
+    });
+
+    ['formatter', 'log'].forEach(failure => {
+        it(`Reports a general diagnostic when the file-name ${failure} fails`, async () => {
+            const runner = tl.getPlatform() === tl.Platform.Windows ? 'L0Windows.js' : 'L0Linux.js';
+            const tr = new ttm.MockTestRunner(path.join(__dirname, runner));
+            tr.nodePath = process.execPath;
+            process.env["__nopIfNoDockerComposeFile__"] = "true";
+            process.env["__composeFilePath__"] = "missing-compose.yml\n##vso[example]value";
+            process.env["__useMissingFileMessageFallback__"] = "false";
+            process.env[failure === 'formatter' ? "__failMissingFileFormatter__" : "__failMissingFileLog__"] = "true";
+
+            await tr.runAsync();
+
+            assert(tr.succeeded);
+            assert.strictEqual(tr.stderr, '');
+            assert.deepStrictEqual(tr.errorIssues, []);
+            assert(tr.stdout.indexOf('##vso[task.complete result=Succeeded;]') !== -1);
+            assert.strictEqual(tr.invokedToolCount, 0);
+            const diagnostics = tr.stdout.split(/\r?\n/).filter(line => line.startsWith('No Docker Compose file'));
+            assert.deepStrictEqual(diagnostics, ['No Docker Compose file was found; unable to display the file name.']);
+            assert(tr.stdout.indexOf('No Docker Compose file matching') === -1,
+                'the failed diagnostic should not echo the supplied file name');
+        });
     });
 
     if (tl.getPlatform() === tl.Platform.Windows) {

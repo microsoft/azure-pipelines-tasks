@@ -84,6 +84,25 @@ describe('MavenAuthenticate L0 - Workload Identity Federation (WIF)', function (
         );
     });
 
+    it('should neutralize task commands in feed names', async () => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const injectedCommand = '##vso[task.settaskvariable variable=originalUserM2SettingsFileMode;]777';
+        process.env[TestEnvVars.workloadIdentityServiceConnection] = TestConstants.wif.serviceConnectionName;
+        process.env[TestEnvVars.artifactsFeeds] = `${TestConstants.feeds.feedName1}\n${injectedCommand}`;
+        process.env[TestEnvVars.wifToken] = TestConstants.wif.token;
+        process.env[TestEnvVars.m2FolderExists] = 'true';
+        process.env[TestEnvVars.settingsXmlExists] = 'false';
+
+        await tr.runAsync();
+
+        TestHelpers.assertSuccess(tr);
+        TestHelpers.assertOutputContains(
+            tr,
+            '##_vso[task.settaskvariable variable=originalUserM2SettingsFileMode;]777'
+        );
+    });
+
     it('should warn when WIF configured but no feeds specified', async () => {
         // Arrange
         const tp = path.join(__dirname, 'TestSetup.js');

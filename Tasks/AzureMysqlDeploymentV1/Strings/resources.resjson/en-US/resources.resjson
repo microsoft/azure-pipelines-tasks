@@ -55,6 +55,7 @@
   "loc.messages.AzureMysqlTaskParameterCannotBeEmpty": "The Azure MySQL task parameter cannot be null.",
   "loc.messages.ToolPathCannotBeNull": "Tool path cannot be null.",
   "loc.messages.SqlExecutionException": "A SQL execution exception occurred. Please check the SQL script. Error: %s .",
+  "loc.messages.InvalidSqlFilePath": "The SQL script file path contains unsupported characters (quotes, semicolons, or line breaks). Rename the file or use a different file pattern. Path: %s",
   "loc.messages.AzureEndpointCannotBeNull": "Invalid subscription name. The Azure service connection cannot be null.",
   "loc.messages.CallbackCannotBeNull": "The callback cannot be null.",
   "loc.messages.UnableToCreateDatabaseException": "Unable to create database.",

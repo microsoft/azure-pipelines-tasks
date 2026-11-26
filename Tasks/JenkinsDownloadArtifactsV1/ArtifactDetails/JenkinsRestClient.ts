@@ -1,6 +1,7 @@
 import * as Q from 'q';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as handlers from "artifact-engine/Providers/typed-rest-client/Handlers"
+import { JenkinsOutput } from '../JenkinsOutput';
 
 import { 
     HttpClient, 
@@ -10,6 +11,19 @@ import {
 import { IRequestOptions as IHttpRequestOptions } from "artifact-engine/Providers/typed-rest-client/Interfaces";
 
 var handlebars = require('handlebars');
+var taskJson = require('../task.json');
+
+function hasUnsupportedControlChars(text: string): boolean {
+    return /[\u0000-\u001f]/.test(text);
+}
+
+function escapeJsonStringContent(text: string): string {
+    return JSON.stringify(text).slice(1, -1);
+}
+
+function encodeUrlPathSegments(text: string): string {
+    return text.split('/').map(encodeURIComponent).join('/');
+}
 
 export class JenkinsJobDetails {
     jobName: string;
@@ -121,7 +135,7 @@ export class JenkinsRestClient {
         handlebars.registerHelper('containsInArray', function(array, value, options) {
             if (!!array) {
                 for(let i = 0, len = array.length; i < len; i++) {
-                    tl.debug(`checking ${array[i]} ${value}`);
+                    JenkinsOutput.debug(`checking ${array[i]} ${value}`);
                     if (!!array[i] && array[i].indexOf(value) > -1) {
                         return options.fn(this);
                     }
@@ -178,6 +192,132 @@ export class JenkinsRestClient {
 
             return result;
         });
+
+        const artifactPathEncodingFeature = JenkinsRestClient.ArtifactPathEncodingFeature;
+        const artifactPathAuditFeature = JenkinsRestClient.ArtifactPathAuditFeature;
+        let auditEmitted = false;
+        let encodingEnabled = false;
+        let auditEnabled = false;
+        let auditState: {
+            hasQuote: boolean;
+            hasBackslash: boolean;
+            hasControlChar: boolean;
+            hasUrlSpecialChar: boolean;
+            hasEncodingError: boolean;
+        };
+
+        function resetAuditState(): void {
+            encodingEnabled = tl.getPipelineFeature(artifactPathEncodingFeature);
+            auditEnabled = tl.getPipelineFeature(artifactPathAuditFeature);
+            auditState = {
+                hasQuote: false,
+                hasBackslash: false,
+                hasControlChar: false,
+                hasUrlSpecialChar: false,
+                hasEncodingError: false
+            };
+        }
+
+        function publishAuditSummary(inspectionComplete: boolean): void {
+            if (auditEmitted || !auditState) {
+                return;
+            }
+            auditEmitted = true;
+            const modified = auditState.hasQuote
+                || auditState.hasBackslash
+                || auditState.hasControlChar
+                || auditState.hasUrlSpecialChar
+                || auditState.hasEncodingError;
+            const decision = (encodingEnabled && auditState.hasEncodingError)
+                ? 'rejected'
+                : (!modified ? 'unchanged' : (encodingEnabled ? 'encoded' : 'wouldEncode'));
+            const payload = Object.assign({
+                hostType: (tl.getVariable('SYSTEM.HOSTTYPE') || '').toLowerCase(),
+                jobid: tl.getVariable('SYSTEM.JOBID'),
+                version: taskJson.version,
+                encodingEnabled,
+                auditEnabled,
+                decision,
+                inspectionComplete
+            }, auditState);
+            console.log(`##vso[telemetry.publish area=JenkinsDownloadArtifacts;feature=artifactPathEncodingAudit]${JSON.stringify(payload)}`);
+        }
+
+        handlebars.registerHelper('jsonEscape', function (value: any, options: any) {
+            if (!auditState || (options && options.data && options.data.first)) {
+                resetAuditState();
+            }
+            if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
+                return value;
+            }
+
+            const text = value == null ? '' : String(value);
+            const hasControlChar = hasUnsupportedControlChars(text);
+            const jsonEscaped = escapeJsonStringContent(text);
+            try {
+                if (text.indexOf('"') !== -1) {
+                    auditState.hasQuote = true;
+                }
+                if (text.indexOf('\\') !== -1) {
+                    auditState.hasBackslash = true;
+                }
+                if (hasControlChar) {
+                    auditState.hasControlChar = true;
+                    auditState.hasEncodingError = true;
+                }
+                if (encodingEnabled && hasControlChar) {
+                    publishAuditSummary(false);
+                }
+            } catch {
+                // Telemetry collection must never interrupt artifact resolution.
+            }
+
+            if (encodingEnabled && hasControlChar) {
+                throw new SyntaxError('Control characters are not supported in Jenkins artifact paths.');
+            }
+
+            return encodingEnabled ? jsonEscaped : value;
+        });
+
+        handlebars.registerHelper('encodeArtifactPath', function (value: any, options: any) {
+            if (!auditState) {
+                resetAuditState();
+            }
+            if (!encodingEnabled && (!auditEnabled || auditEmitted)) {
+                return value;
+            }
+
+            const text = value == null ? '' : String(value);
+            let urlEncoded: string | undefined;
+            let encodeError: Error | undefined;
+            try {
+                urlEncoded = encodeUrlPathSegments(text);
+            } catch (err) {
+                encodeError = err as Error;
+            }
+
+            try {
+                if (encodeError) {
+                    auditState.hasEncodingError = true;
+                }
+                if (encodeError || urlEncoded !== text) {
+                    auditState.hasUrlSpecialChar = true;
+                }
+                if (encodingEnabled && encodeError) {
+                    publishAuditSummary(false);
+                } else if (options && options.data && options.data.last) {
+                    publishAuditSummary(true);
+                }
+            } catch {
+                // Telemetry emission must never interrupt artifact resolution.
+            }
+
+            if (encodingEnabled && encodeError) {
+                throw encodeError;
+            }
+
+            return encodingEnabled ? escapeJsonStringContent(urlEncoded!) : value;
+        });
     }
 
     private GetClient(): HttpClient {
@@ -216,7 +356,7 @@ export class JenkinsRestClient {
         tl.debug(`RetryLimit set to ${retryLimit}`);
 
         let requestUrl: string = `${endpointUrl}${jobUrlInfix}/${urlPath}`;
-        console.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
+        JenkinsOutput.log(tl.loc("DownloadingContentFromJenkinsServer", requestUrl, strictSSL));
 
         let httpClient: HttpClient = this.GetClient();
         this.ExecuteWithRetries("DownloadJsonContent", () => this.DownloadJsonContentWithRetries(httpClient, requestUrl, handlebarSource, additionalHandlebarContext), retryLimit).then((result) => {
@@ -234,7 +374,7 @@ export class JenkinsRestClient {
         httpClient.get(requestUrl).then((response: HttpClientResponse) => {
             response.readBody().then((body: string) => {
                 if (!!body && response.message.statusCode === 200)  {
-                    tl.debug(`Content received from server ${body}`);
+                    JenkinsOutput.debug(`Content received from server ${body}`);
                     let jsonResult;
 
                     try {
@@ -254,7 +394,7 @@ export class JenkinsRestClient {
                                 let template = handlebars.compile(handlebarSource);
                                 if (additionalHandlebarContext) {
                                     for (let key in additionalHandlebarContext) {
-                                        tl.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
+                                        JenkinsOutput.debug(`Adding additional context {${key} --> ${additionalHandlebarContext[key]}} to the original context`)
                                             jsonResult[key] = additionalHandlebarContext[key];
                                         };
                                 }
@@ -278,7 +418,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        JenkinsOutput.debug(body);
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));
@@ -300,7 +440,7 @@ export class JenkinsRestClient {
         tl.debug("Trying to get job type");
 
         this.DownloadJsonContent(jobTypeApiUrlSuffix, handlerbarSource, null).then((result) => {
-            console.log(tl.loc("FoundJobType", result));
+            JenkinsOutput.log(tl.loc("FoundJobType", result));
             defer.resolve(result.trim());
         }, (error) => {
             console.log(tl.loc("CannotFindJobType"));
@@ -327,7 +467,7 @@ export class JenkinsRestClient {
 
                 let isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
-                tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+                JenkinsOutput.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
                 // if its multibranch pipeline extract the branch name and buildId from the buildNumber input
                 if (isMultibranchPipeline && !!buildIdStr && buildIdStr.indexOf(JenkinsRestClient.JenkinsBranchPathSeparator) != -1) {
                     tl.debug(`Extracting branchName and buildId from selected version`);
@@ -342,7 +482,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
+                    JenkinsOutput.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
             });
@@ -364,7 +504,7 @@ export class JenkinsRestClient {
             let handlerbarSource = "{{lastSuccessfulBuild.id}}";
             const isMultibranchPipeline = jobType.toLowerCase() === JenkinsJobTypes.MultiBranchPipeline.toLowerCase();
 
-            tl.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
+            JenkinsOutput.debug(`Found Jenkins Job type ${jobType} and isMultibranchPipeline ${isMultibranchPipeline}`);
             if (isMultibranchPipeline) {
                 jenkinsTreeParameter = "jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]"
                 handlerbarSource = "{{#with (selectMaxOf jobs 'lastSuccessfulBuild.timestamp') as |job|}}{ \"branchName\": \"{{job.name}}\", \"buildId\": \"{{job.lastSuccessfulBuild.id}}\" }{{/with}}"
@@ -381,7 +521,7 @@ export class JenkinsRestClient {
                         let jsonResult = JSON.parse(result);
                         branchName = jsonResult["branchName"];
                         buildId = parseInt(jsonResult["buildId"]);
-                        tl.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
+                        JenkinsOutput.debug(`Found branchName: ${branchName}, buildId: ${buildId}`);
                     } catch(error) {
                         defer.reject(new Error(tl.loc("CouldNotGetLastSuccessfulBuildNumber", error)));
                     }
@@ -395,7 +535,7 @@ export class JenkinsRestClient {
                 }
                 else {
                     let jobDetail = new JenkinsJobDetails(jobName, buildId, jobType, branchName);
-                    tl.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
+                    JenkinsOutput.debug(`Found Jenkins job details jobName:${jobDetail.jobName}, jobType:${jobDetail.jobType}, buildId:${jobDetail.buildId}, IsMultiBranchPipeline:${jobDetail.isMultiBranchPipeline}, MultiBranchPipelineName:${jobDetail.multiBranchPipelineName}`);
                     defer.resolve(jobDetail);
                 }
 
@@ -405,7 +545,7 @@ export class JenkinsRestClient {
 
         });
 
-        console.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
+        JenkinsOutput.log(tl.loc('GetArtifactsFromLastSuccessfulBuild', jobName));
 
         return defer.promise;
     }
@@ -435,7 +575,7 @@ export class JenkinsRestClient {
                     }
 
                     if (body) {
-                        tl.debug(body);
+                        JenkinsOutput.debug(body);
                     }
 
                     defer.reject(new Error(tl.loc('ServerCallFailed')));
@@ -491,4 +631,6 @@ export class JenkinsRestClient {
     }
 
     public static JenkinsBranchPathSeparator: string = "/";
+    public static ArtifactPathEncodingFeature: string = "EnableJenkinsArtifactPathEncoding";
+    public static ArtifactPathAuditFeature: string = "EnableJenkinsArtifactPathAudit";
 }

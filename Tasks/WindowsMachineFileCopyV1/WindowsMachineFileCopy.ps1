@@ -22,7 +22,11 @@ Write-Verbose "additionalArguments = $additionalArguments"
 Write-Verbose "copyFilesInParallel = $copyFilesInParallel"
 Write-Verbose "cleanTargetBeforeCopy = $cleanTargetBeforeCopy"
 
-Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk
+# Import VstsTaskSdk with NonInteractive, as the PowerShell3 handler does. This task runs on the
+# legacy PowerShell host, which does not implement Read-Host; without NonInteractive, looking up a
+# variable that is not set (e.g. Get-VstsPipelineFeature for an unset feature) prompts through
+# Read-Host and writes a "The method or operation is not implemented." error that fails the task.
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -ArgumentList @{ NonInteractive = $true }
 
 . $PSScriptRoot/RoboCopyJob.ps1
 . $PSScriptRoot/Utility.ps1
@@ -41,8 +45,10 @@ $useSanitizerActivate = Get-SanitizerActivateStatus
 # module imported above also exports a cmdlet named Get-TaskVariable, which can shadow VstsTaskSdk's
 # own Get-TaskVariable function of the same name and break Get-VstsPipelineFeature (it calls
 # Get-TaskVariable internally). Forcing VstsTaskSdk back in ensures its function wins the name collision.
-Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force
+Import-Module $PSScriptRoot/ps_modules/VstsTaskSdk -Force -ArgumentList @{ NonInteractive = $true }
 $enableWindowsMachineFileCopyArgumentsHardening = Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening'
+
+$enableLegacyWindowsMachineFileCopyNetUseCommand = Get-VstsPipelineFeature -FeatureName 'EnableLegacyWindowsMachineFileCopyNetUseCommand'
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV1"
@@ -78,7 +84,7 @@ if([string]::IsNullOrWhiteSpace($environmentName))
 
     Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $targetPath)
     Copy-OnLocalMachine -sourcePath $sourcePath -targetPath $targetPath -adminUserName $adminUserName -adminPassword $adminPassword `
-                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening -scriptRoot $PSScriptRoot
+                        -cleanTargetBeforeCopy $cleanTargetBeforeCopy -additionalArguments $additionalArguments -useSanitizerActivate $useSanitizerActivate -enableWindowsMachineFileCopyArgumentsHardening $enableWindowsMachineFileCopyArgumentsHardening -scriptRoot $PSScriptRoot -enableLegacyWindowsMachineFileCopyNetUseCommand $enableLegacyWindowsMachineFileCopyNetUseCommand
     Write-Verbose "Files copied to destination successfully."
 }
 else
@@ -112,7 +118,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
+            Invoke-Command -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot, $enableLegacyWindowsMachineFileCopyNetUseCommand
         } 
     }
     else
@@ -127,7 +133,7 @@ else
 
             Write-Output (Get-LocalizedString -Key "Copy started for - '{0}'" -ArgumentList $machine)
 
-            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot
+            $job = Start-Job -ScriptBlock $CopyJob -ArgumentList $machine, $sourcePath, $targetPath, $resourceProperties.credential, $cleanTargetBeforeCopy, $additionalArguments, $useSanitizerActivate, $enableWindowsMachineFileCopyArgumentsHardening, $PSScriptRoot, $enableLegacyWindowsMachineFileCopyNetUseCommand
 
             $Jobs.Add($job.Id, $resourceProperties)
         }        

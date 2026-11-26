@@ -61,9 +61,17 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.Internal.psm1"
 Import-Module "$PSScriptRoot\DeploymentUtilities\Microsoft.TeamFoundation.DistributedTask.Task.Deployment.dll"
 
+# Sanitizer (imported here, ahead of its normal spot below, because Utility.ps1
+# needs Get-ConsoleOutputSanitizationFeatureFlag from it immediately after being dot-sourced)
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# External output sanitization (shared across AzureFileCopy V1-V6)
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyJob.ps1"
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 # DRY-RUN of the ##vso[ command-injection fix (ICM 31000000640794).
 # Instead of sanitizing ##vso[ commands from remote machine output, this only publishes telemetry
@@ -171,6 +179,7 @@ if ($featureFlags.retireAzureRM)
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 Initialize-Azure
 
 # Enabling detailed logging only when system.debug is true
@@ -183,8 +192,7 @@ if ($enableDetailedLoggingString -ne "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
+# Sanitizer (module already imported above, ahead of the Utility.ps1 dot-source)
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 
@@ -197,7 +205,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try
     {
         # Importing required version of azure cmdlets according to azureps installed on machine
@@ -269,7 +276,11 @@ try {
         if(-not [string]::IsNullOrEmpty($outputStorageURI))
         {
             $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName
-            Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageURI -Value $storageAccountContainerURI
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            }
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
@@ -282,7 +293,11 @@ try {
                 $storageContainerSaSToken = New-AzureStorageContainerSASToken -Container $containerName -Context $storageContext -Permission r -ExpiryTime (Get-Date).AddHours($defaultSasTokenTimeOutInHours)
             }
 
-            Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageContainerSASToken -Value $storageContainerSasToken
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            }
         }
 
         Remove-EndpointSecrets
@@ -333,5 +348,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $connectionType -ErrorAction SilentlyContinue
 }

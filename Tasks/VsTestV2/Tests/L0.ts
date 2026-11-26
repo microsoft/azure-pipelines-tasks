@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import * as tl from 'azure-pipelines-task-lib';
 import * as fs from 'fs';
 import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
+import { sanitizeForLoggingCommand } from '../sanitize';
 
 describe('VsTest Suite', function() {
     this.timeout(90000);
@@ -174,6 +175,151 @@ function makeTestConfig(vsTestVersion: string = '17.0'): any {
 function loadVersionfinder() {
     return require('../versionfinder') as typeof import('../versionfinder');
 }
+
+describe('VsTestV2 sanitizeForLoggingCommand', function() {
+    it('neutralizes logging commands without changing ordinary selector text', function() {
+        const sourceFilter = '**\\*Tests.dll,##vso[task.setvariable variable=marker;]value,##VSO[task.debug]message,##[warning]message';
+
+        assert.strictEqual(
+            sanitizeForLoggingCommand(sourceFilter),
+            '**\\*Tests.dll,##_vso[task.setvariable variable=marker;]value,##_vso[task.debug]message,##_[warning]message'
+        );
+    });
+
+    it('preserves multiline selectors that do not contain logging commands', function() {
+        const sourceFilter = '**\\*Tests.dll\n!**\\obj\\**';
+
+        assert.strictEqual(sanitizeForLoggingCommand(sourceFilter), sourceFilter);
+    });
+});
+
+function makeLocationDiagnosticTlMock(vsTestLocation: string) {
+    const inputs: { [name: string]: string } = {
+        testSelector: 'testAssemblies',
+        searchFolder: 'C:\\Sources',
+        resultsFolder: 'TestResults',
+        vstestLocationMethod: 'location',
+        vsTestLocation
+    };
+
+    return {
+        getInput: function(name: string) { return inputs[name]; },
+        getBoolInput: function(_name: string) { return false; },
+        getPathInput: function(_name: string) { return undefined; },
+        getDelimitedInput: function(_name: string) { return ['**\\*Tests.dll']; },
+        filePathSupplied: function(_name: string) { return false; },
+        getVariable: function(name: string) { return name === 'Agent.TempDirectory' ? 'C:\\AgentTemp' : undefined; },
+        setVariable: function(_name: string, _value: string) {},
+        getEndpointAuthorization: function(_id: string, _optional: boolean) { return { parameters: {} }; },
+        debug: function(_msg: string) {},
+        warning: function(_msg: string) {},
+        loc: function(key: string, ...args: any[]) {
+            return args.length ? `${key}:${args.join(',')}` : key;
+        }
+    };
+}
+
+function makeLocationDiagnosticHelpersMock() {
+    return {
+        Helper: {
+            isNullOrWhitespace: function(s: string) {
+                return s === null || s === undefined || s.replace(/\s/g, '').length < 1;
+            },
+            isNullEmptyOrUndefined: function(s: string) { return s === null || s === undefined || s === ''; },
+            pathExistsAsDirectory: function(_p: string) { return true; },
+            stringToBool: function(_s: string) { return false; },
+            isDebugEnabled: function() { return false; },
+            isToolsInstallerFlow: function(_config: any) { return false; },
+            GetTempFolder: function() { return 'C:\\AgentTemp'; },
+            GenerateTempFile: function(fileName: string) { return `C:\\AgentTemp\\${fileName}`; }
+        },
+        Constants: {
+            vsTestLocationString: 'location',
+            vsTestVersionString: 'version'
+        }
+    };
+}
+
+function captureConsoleLog(action: () => void): string[] {
+    const lines: string[] = [];
+    const originalLog = console.log;
+    console.log = (...args: any[]) => { lines.push(args.join(' ')); };
+    try {
+        action();
+    } finally {
+        console.log = originalLog;
+    }
+    return lines;
+}
+
+describe('VsTestV2 location diagnostics', function() {
+    this.timeout(10000);
+
+    // Inert markers: shaped like logging commands, but they do not name real commands.
+    // They begin new output lines (LF and CRLF) and also appear mid-line.
+    const vsTestLocation = 'C:\\Tools\\testplatform\n##vso[inert.marker]one\r\n##VSO[inert.marker]two ##[inert]three';
+    const sanitizedDiagnostic = 'vstestLocationSpecified:vstest.console.exe,C:\\Tools\\testplatform\n##_vso[inert.marker]one\r\n##_vso[inert.marker]two ##_[inert]three';
+
+    before(function() {
+        libMocker.enable({ useCleanCache: true, warnOnUnregistered: false });
+    });
+
+    after(function() {
+        libMocker.disable();
+    });
+
+    beforeEach(function() {
+        libMocker.registerMock('azure-pipelines-task-lib/task', makeLocationDiagnosticTlMock(vsTestLocation));
+        libMocker.registerMock('azure-pipelines-task-lib/toolrunner', {});
+        libMocker.registerMock('./helpers', makeLocationDiagnosticHelpersMock());
+        libMocker.registerMock('./cieventlogger', { publishEvent: function() {}, publishTelemetry: function() {} });
+        libMocker.registerMock('./versionfinder', {
+            getVsTestRunnerDetails: function(config: any) {
+                config.vsTestVersionDetails = { isResponseFileSupported: function() { return false; } };
+            }
+        });
+        libMocker.registerMock('regedit', mockRegedit);
+    });
+
+    afterEach(function() {
+        libMocker.deregisterAll();
+        libMocker.resetCache();
+    });
+
+    function locationDiagnostics(lines: string[]): string[] {
+        return lines.filter(line => line.startsWith('vstestLocationSpecified:'));
+    }
+
+    function unneutralizedLoggingCommands(lines: string[]): string[] {
+        return lines.filter(line => /##vso\[|##\[/i.test(line));
+    }
+
+    it('sanitizes the inputparser diagnostic and keeps the tool path', function() {
+        const inputParser = require('../inputparser') as typeof import('../inputparser');
+        let inputDataContract: any;
+
+        const output = captureConsoleLog(() => {
+            inputDataContract = inputParser.parseInputsForNonDistributedTestRun();
+        });
+
+        assert.deepStrictEqual(locationDiagnostics(output), [sanitizedDiagnostic]);
+        assert.deepStrictEqual(unneutralizedLoggingCommands(output), []);
+        assert.strictEqual(inputDataContract.VsTestConsolePath, vsTestLocation);
+    });
+
+    it('sanitizes the taskinputparser diagnostic and keeps the tool path', function() {
+        const taskInputParser = require('../taskinputparser') as typeof import('../taskinputparser');
+        let vsTestConfiguration: any;
+
+        const output = captureConsoleLog(() => {
+            vsTestConfiguration = taskInputParser.getvsTestConfigurations();
+        });
+
+        assert.deepStrictEqual(locationDiagnostics(output), [sanitizedDiagnostic]);
+        assert.deepStrictEqual(unneutralizedLoggingCommands(output), []);
+        assert.strictEqual(vsTestConfiguration.vsTestLocation, vsTestLocation);
+    });
+});
 
 describe('VsTestV2 – versionfinder.ts (PowerShell Get-ItemProperty change)', function() {
     this.timeout(10000);

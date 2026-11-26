@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "Gibt an, wie lange (in Millisekunden) auf den Abschluss des SSH-Handshakes gewartet wird.",
   "loc.input.label.interactiveKeyboardAuthentication": "Verwenden der interaktiven Tastaturauthentifizierung",
   "loc.input.help.interactiveKeyboardAuthentication": "Verwenden Sie diesen Wert, wenn PasswordAuthentication auf dem Zielcomputer deaktiviert ist.",
+  "loc.input.label.enableRemoteVsoCommands": "Protokollierungsbefehle aus der Remoteausgabe zulassen",
+  "loc.input.help.enableRemoteVsoCommands": "Wenn FALSE (Standard) ist, werden ##vso[...] Zeilen in der Remoteausgabe neutralisiert (als Text ausgegeben, nicht ausgeführt). Legen Sie TRUE nur fest, wenn Sie der Remoteausgabe vertrauen und sich darauf verlassen, dass sie Protokollierungsbefehle ausgibt.",
   "loc.messages.ConnectionFailed": "Fehler beim Herstellen einer Verbindung mit dem Remotecomputer. Überprüfen Sie die SSH-Dienstverbindungsdetails. Fehler: %s.",
   "loc.messages.FailedToWriteScript": "Fehler beim Schreiben des Skripts auf den Datenträger: %s",
   "loc.messages.RemoteCmdExecutionErr": "Fehler des Befehls auf dem Remotecomputer.",

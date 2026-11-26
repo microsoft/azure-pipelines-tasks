@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": "使用 .npmrc 中的登錄",
   "loc.messages.PublishRegistry": "正在發行至登錄: %s",
   "loc.messages.UsingRegistry": "使用登錄: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "正在新增登錄 %s 的驗證",
   "loc.messages.FoundLocalRegistries": "在此組織/集合中找到 %d 個登錄",
   "loc.messages.ForcePackagingUrl": "封裝集合 URL 會強制前往: %s",

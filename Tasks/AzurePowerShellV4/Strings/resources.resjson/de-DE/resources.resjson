@@ -35,6 +35,7 @@
   "loc.messages.GeneratingScript": "Skript wird erstellt.",
   "loc.messages.JS_FormattedCommand": "Formatierter Befehl: %s",
   "loc.messages.InvalidScriptArguments0": "Ungültige Skriptargumente \"{0}\". Zeilenumbrüche sind unzulässig.",
+  "loc.messages.ScriptArgsSanitized": "Erkannte Zeichen in Argumenten, die von der Shell möglicherweise nicht ordnungsgemäß ausgeführt werden. Verwenden Sie einen umgekehrten Schrägstrich (\\), um Sonderzeichen mit Escapezeichen zu versehen. Weitere Informationen finden Sie hier: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "Ungültiger Skriptpfad \"{0}\". Es wurden ungültige Pfadzeichen angegeben.",
   "loc.messages.InvalidAzurePsVersion": "Die angegebene Azure PowerShell-Version \"{0}\" weist nicht das richtige Format auf. Überprüfen Sie das Format. Ein Beispiel für das richtige Format ist etwa 1.0.1.",
   "loc.messages.JS_ExitCode": "PowerShell wurde beendet mit dem Code \"%s\".",

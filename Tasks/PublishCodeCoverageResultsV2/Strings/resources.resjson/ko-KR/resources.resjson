@@ -9,6 +9,8 @@
   "loc.input.help.pathToSources": "검사 XML 보고서에 소스 파일의 절대 경로가 없는 경우 소스 파일의 경로가 필요합니다. 예를 들어 JaCoCo 보고서에서는 절대 경로를 사용하지 않으므로, Java 앱에 대한 JaCoCo 검사를 게시할 때의 패턴은 '$(System.DefaultWorkingDirectory)/MyApp/src/main/java/'와 비슷합니다.<br />Docker 컨테이너에서 테스트를 실행하는 경우에도 이러한 입력이 필요합니다. 이 입력은 호스트에 있는 소스 파일의 절대 경로를 가리켜야 합니다. 예: '$(System.DefaultWorkingDirectory)/MyApp/'",
   "loc.input.label.failIfCoverageEmpty": "코드 검사 결과가 없는 경우 실패",
   "loc.input.help.failIfCoverageEmpty": "코드 검사에서 게시할 결과를 생성하지 않은 경우 작업에 실패합니다.",
+  "loc.input.label.publishHtmlReport": "HTML 보고서 게시",
+  "loc.input.help.publishHtmlReport": "HTML 코드 검사 보고서를 게시합니다. HTML 보고서 생성 및 게시를 건너뛰려면 이 옵션을 사용하지 않도록 설정합니다.",
   "loc.messages.FoundNMatchesForPattern": "%s개의 결과가 패턴 %s과(와) 일치합니다.",
   "loc.messages.NoCodeCoverage": "게시할 코드 검사 결과가 없습니다."
 }

@@ -13,7 +13,6 @@ import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import { setAzureCloudBasedOnServiceEndpoint, loginAzureRM } from 'azure-pipelines-tasks-azure-arm-rest/azCliUtility';
 import { v4 as uuidv4 } from "uuid";
 
-var cpExec = util.promisify(require('child_process').exec);
 var hm = require("typed-rest-client/HttpClient");
 
 let proxyUrl: string = tl.getVariable("agent.proxyurl");
@@ -481,21 +480,9 @@ class Utils {
 
     private static async getAzureCliVersion(azureCliPath?: string): Promise<string> {
         let azcliversion: string = "" ;
-        if (!azureCliPath) {
-            const {error, stdout, stderr } = await cpExec('az version');
-            if(error && error.code !== 0){
-                throw new Error(tl.loc("FailedToFetchAzureCLIVersion", stderr));
-            }else{
-                try{
-                    azcliversion = JSON.parse(stdout)["azure-cli"]
-                }catch(err){
-                    throw new Error(tl.loc("FailedToFetchAzureCLIVersion", err));
-                }
-            }
-            return azcliversion;
-        }
-
-        const result: IExecSyncResult = tl.execSync(azureCliPath, "version");
+        // Route through tl.execSync (instead of a raw child_process call) for both the resolved
+        // and legacy "az" invocations, so the agent's own tool-resolution/mocking applies consistently.
+        const result: IExecSyncResult = tl.execSync(azureCliPath || "az", "version");
         if(result && result.code !== 0){
             throw new Error(tl.loc("FailedToFetchAzureCLIVersion", result.stderr));
         }else{

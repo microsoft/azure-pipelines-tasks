@@ -3,6 +3,9 @@
         "InstallDotNetCoreForPublishing": "Please install dotnet core to run this task.",
         "ErrorWhilePublishing": "Error occured while publishing coverage: ",
         "UpgradeAgentMessage": "Please upgrade your agent version. Required v2.115.0 or greater. https://github.com/Microsoft/vsts-agent/releases",
-        "NoInputFiles": "No input files were provided."
+        "NoInputFiles": "No input files were provided.",
+        "InvalidCoverageWorkingDirectory": "Coverage publisher working directory does not exist or is not a directory: %s",
+        "NoTrustedCoverageSourceDirectories": "Source-path containment is enabled, but no trusted source directories are configured. Provide pathToSources or a workspace directory.",
+        "CoveragePublisherExecutionFailed": "Coverage publisher execution failed: %s"
     }
 }

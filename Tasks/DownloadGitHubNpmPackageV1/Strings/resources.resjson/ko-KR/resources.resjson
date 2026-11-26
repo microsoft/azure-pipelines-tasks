@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": ".npmrc의 레지스트리 사용 중",
   "loc.messages.PublishRegistry": "레지스트리에 게시 중: %s",
   "loc.messages.UsingRegistry": "레지스트리 사용 중: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "레지스트리에 대한 인증 추가: %s",
   "loc.messages.FoundLocalRegistries": "이 조직/컬렉션에서 레지스트리 %d개를 찾았습니다.",
   "loc.messages.ForcePackagingUrl": "강제로 다음 위치에 컬렉션 URL 패키지 중: %s",

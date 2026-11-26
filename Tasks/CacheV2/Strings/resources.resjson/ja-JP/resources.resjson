@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "キャッシュのヒット変数",
   "loc.input.help.cacheHitVar": "キャッシュが復元されたとき (つまりキャッシュ ヒット) に 'true' に設定される変数。それ以外の場合は 'false' に設定されます。",
   "loc.input.label.restoreKeys": "追加の復元キーのプレフィックス",
-  "loc.input.help.restoreKeys": "主キーがない場合に使用される追加の復元キーのプレフィックス。これは、キーのプレフィックスの改行で区切られた一覧です。"
+  "loc.input.help.restoreKeys": "主キーがない場合に使用される追加の復元キーのプレフィックス。これは、キーのプレフィックスの改行で区切られた一覧です。",
+  "loc.input.label.saveOnPartialSuccess": "一部成功時にキャッシュを保存する",
+  "loc.input.help.saveOnPartialSuccess": "true に設定すると、ジョブの状態が 'Succeeded' に加えて 'SucceededWithIssues' (部分的に成功) の場合でも、キャッシュ エントリが保存されます。既定では、キャッシュはジョブが成功した場合にのみ保存されます。"
 }

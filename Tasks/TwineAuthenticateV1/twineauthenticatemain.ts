@@ -7,7 +7,8 @@ import * as auth from "./authentication";
 import * as utils from "./utilities";
 
 #if WIF
-import { getFederatedWorkloadIdentityCredentials, getFeedTenantId } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils"
+import { getFederatedWorkloadIdentityCredentialsForFeed } from "azure-pipelines-tasks-artifacts-common/EntraWifUserServiceConnectionUtils"
+import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 #endif
 
  // tslint:disable-next-line:max-classes-per-file
@@ -56,34 +57,29 @@ async function main(): Promise<void> {
         const feedUrl = tl.getInput("feedUrl");
 
         if (entraWifServiceConnectionName && feedUrl) {
-            let parsedFeedUrl: URL;
-            try {
-                parsedFeedUrl = new URL(feedUrl);
-            } catch {
-                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
+            const credentials = await getFederatedWorkloadIdentityCredentialsForFeed(
+                entraWifServiceConnectionName,
+                feedUrl,
+                ProtocolType.PyPi);
+            if (!credentials) {
+                throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
             }
-            if (parsedFeedUrl.protocol !== 'https:') {
-                throw new Error(tl.loc("Error_WifFeedMustUseHttps"));
-            }
-            const urlPieces = parsedFeedUrl.pathname.split('/');
+
+            const urlPieces = credentials.feedUrl.pathname.split('/');
             let feedName = '';
             urlPieces[urlPieces.length - 1] === '' ? feedName = urlPieces[urlPieces.length - 4] : feedName = urlPieces[urlPieces.length - 3];
 
-            const feedTenant = await getFeedTenantId(parsedFeedUrl.href);
-            const token = await getFederatedWorkloadIdentityCredentials(entraWifServiceConnectionName, feedTenant);
-
-            if (token) {
-                tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName));
-                const header = `[distutils]${os.EOL}index-servers=${feedName}`;
-                const wifRepo = new Repository(feedName, parsedFeedUrl.href, entraWifServiceConnectionName, token);
-                fs.writeFileSync(pypircPath, header + os.EOL + os.EOL + wifRepo.toString());
-                federatedFeedSuccessCount++;
-                setPypircEnvVar(pypircPath);
-                console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
-            }
-            else {
-                throw new Error(tl.loc("Error_FailedToGetServiceConnectionAuth", entraWifServiceConnectionName));
-            }
+            tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName));
+            const header = `[distutils]${os.EOL}index-servers=${feedName}`;
+            const wifRepo = new Repository(
+                feedName,
+                credentials.feedUrl.href,
+                entraWifServiceConnectionName,
+                credentials.accessToken);
+            fs.writeFileSync(pypircPath, header + os.EOL + os.EOL + wifRepo.toString());
+            federatedFeedSuccessCount++;
+            setPypircEnvVar(pypircPath);
+            console.log(tl.loc("Info_SuccessAddingAuth", internalFeedSuccessCount, externalFeedSuccessCount, federatedFeedSuccessCount));
 
             return;
         }
@@ -128,7 +124,7 @@ function formPypircFormatFromData(authInfoSet: Set<auth.AuthInfo>): string {
     }
 
     feedNames.forEach(feedName =>
-        console.log(tl.loc("Info_AddingAuthForRegistry", feedName)))
+        tl.debug(tl.loc("Info_AddingAuthForRegistry", feedName)))
     let header = `[distutils]${os.EOL}index-servers=${feedNames.join(" ")}`;
 
     let repositories = authInfo.map(entry =>

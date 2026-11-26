@@ -3,6 +3,7 @@ import { IContainerHandlerConfig } from './HandlerConfigs';
 import { IRequestOptions } from 'typed-rest-client';
 import { WebProvider, FilesystemProvider } from 'artifact-engine/Providers';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as os from 'os';
 
 /**
  * Handler for download artifact from related container resource.
@@ -26,7 +27,7 @@ export class DownloadHandlerContainer extends DownloadHandler {
      * @returns {WebProvider} Configured Web Provider
     */
     protected getSourceProvider(): WebProvider {
-        console.log(tl.loc('DownloadingContainerResource', this.config.artifactInfo.resource.data));
+        tl.writeExternalOutput(tl.loc('DownloadingContainerResource', this.config.artifactInfo.resource.data) + os.EOL, { source: 'remote' });
         const containerParts: Array<string> = this.config.artifactInfo.resource.data.split('/');
 
         if (containerParts.length < 3) {
@@ -44,7 +45,7 @@ export class DownloadHandlerContainer extends DownloadHandler {
 
         const variables = {};
         const itemsUrl: string = `${this.config.endpointUrl}/_apis/resources/Containers/${containerId}?itemPath=${encodeURIComponent(containerPath)}&isShallow=true&api-version=4.1-preview.4`;
-        console.log(tl.loc('DownloadArtifacts', this.config.artifactInfo.name, itemsUrl));
+        tl.writeExternalOutput(tl.loc('DownloadArtifacts', this.config.artifactInfo.name, itemsUrl) + os.EOL, { source: 'remote' });
 
         const preferRedirect = this.config.preferRedirect;
         if (preferRedirect) {

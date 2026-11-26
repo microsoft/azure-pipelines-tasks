@@ -66,6 +66,25 @@ describe('PublishBuildArtifactsV1 Suite', function () {
             assert(testRunner.stdout.search(/artifact.associate/gi) >= 0, 'should associate artifact.');
         });
 
+        it('filters a logging command embedded in a robocopy-reported filename', async () => {
+            const testPath: string = path.join(__dirname, 'L0FiltersLoggingCommandFromRobocopyOutput.js');
+            const testRunner = new MockTestRunner(testPath);
+
+            await testRunner.runAsync();
+
+            assert(!testRunner.stderr, 'should not have written to stderr. error: ' + testRunner.stderr);
+            assert(testRunner.succeeded, 'task should have succeeded');
+            assert(
+                testRunner.stdout.indexOf('##_vso[task.setvariable variable=injected]unsafe') >= 0,
+                'the logging command should be neutralized (rewritten to ##_vso[) in the log'
+            );
+            assert(
+                testRunner.stdout.indexOf('##vso[task.setvariable variable=injected]unsafe') < 0,
+                'the raw, unneutralized logging command must never reach the log'
+            );
+            assert(testRunner.stdout.search(/artifact.associate/gi) >= 0, 'should still associate artifact.');
+        });
+
         it('fails if robocopy fails', async () => {
             const testPath: string = path.join(__dirname, 'L0FailsIfRobocopyFails.js');
             const testRunner = new MockTestRunner(testPath);

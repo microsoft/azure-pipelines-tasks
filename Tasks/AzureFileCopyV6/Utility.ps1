@@ -6,7 +6,7 @@ $jobId = $env:SYSTEM_JOBID;
 
 $featureFlags = @{
     retireAzureRM  = [System.Convert]::ToBoolean($env:RETIRE_AZURERM_POWERSHELL_MODULE)
-    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseOpensslv3.4.2'
+    useOpenssLatestVersion = Get-VstsPipelineFeature -FeatureName 'UseLatestOpensslVstsAzureHelpers'
 }
 
 function Get-AzureCmdletsVersion
@@ -152,12 +152,12 @@ function ConvertTo-Pfx {
     }
 
     if (-not $featureFlags.useOpenssLatestVersion) {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv4\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.8\openssl.cnf"
     }
     else {
-        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.exe"
-        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.4.2\openssl.cnf"
+        $openSSLExePath = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.exe"
+        $env:OPENSSL_CONF = "$PSScriptRoot\ps_modules\VstsAzureHelpers_\opensslv3.5.9\openssl.cnf"
     }
     try {
         $versionOutput = & $openSSLExePath version
@@ -172,6 +172,50 @@ function ConvertTo-Pfx {
     Invoke-VstsTool -FileName $openSSLExePath -Arguments $openSSLArgs -RequireExitCodeZero
 
     return $pfxFilePath, $pfxFilePassword
+}
+
+$script:consoleOutputSanitizationFixEnabled = $false
+$script:azCopySpnDirectAuthFixEnabled = $false
+
+# Get-ConsoleOutputSanitizationFeatureFlag now lives in the shared Sanitizer module
+# (Tasks/Common/Sanitizer/ArgumentsSanitizer.ps1), alongside Get-SourcePathHardeningFeatureFlag,
+# instead of being duplicated per AzureFileCopy version.
+
+function ConvertTo-SafeConsoleText
+{
+    param([Parameter(ValueFromPipeline = $true)][AllowEmptyString()][string]$Text)
+
+    process
+    {
+        # Delegates to the shared ExternalOutputSanitizer module (Protect-ExternalOutput) so
+        # agent command marker neutralization is defined in exactly one place across tasks.
+        # The existing on/off gate is preserved by mapping it to blockOnly/disabled.
+        $vsoCommandMode = if ($script:consoleOutputSanitizationFixEnabled) { 'blockOnly' } else { 'disabled' }
+        $Text | Protect-ExternalOutput -Source childProcess -VsoCommandMode $vsoCommandMode
+    }
+}
+
+function Get-AzCopySpnDirectAuthFeatureFlag
+{
+    # Dynamic pipeline task feature flag: reads the DistributedTask.Tasks.<FeatureName> task
+    # variable via the SDK's Get-VstsPipelineFeature cmdlet. No server-side FeatureAvailability
+    # registration is required; rollout is controlled via Set-PipelineComponentsFeatureFlag.ps1.
+    #
+    # AzCopy's PSCRED auto-login type spawns a separate process that re-reads the Az PowerShell
+    # context from disk. On agents where Az context autosave is disabled/Process-scoped (so the
+    # context is never persisted), that spawned process cannot retrieve a token and the copy
+    # fails. When this flag is enabled, AzCopy is instead handed the service principal
+    # credentials directly (AZCOPY_AUTO_LOGIN_TYPE=SPN) so no shared/persisted Az context is
+    # required.
+    try
+    {
+        return (Get-VstsPipelineFeature -FeatureName 'AzureFileCopy.AzCopySpnDirectAuthFixEnabled' -ErrorAction Stop) -eq $true
+    }
+    catch
+    {
+        Write-Warning 'Failed to read the AzureFileCopy.AzCopySpnDirectAuthFixEnabled feature flag. Defaulting to disabled.'
+        return $false
+    }
 }
 
 function Upload-FilesToAzureContainer
@@ -191,6 +235,24 @@ function Upload-FilesToAzureContainer
           [bool]$useSourcePathHardening = $false
     )
 
+    # AzCopy SPN direct-auth environment variables. Captured up-front so they can be restored
+    # (or removed, if previously unset) once this invocation completes, regardless of success or
+    # failure -- this prevents a prior run's credentials (e.g. a leftover cert path) from leaking
+    # into, or being left behind for, a different auth mode or a different task invocation.
+    $azCopySpnEnvVarNames = @(
+        'AZCOPY_ACTIVE_DIRECTORY_ENDPOINT',
+        'AZCOPY_AUTO_LOGIN_TYPE',
+        'AZCOPY_TENANT_ID',
+        'AZCOPY_SPA_APPLICATION_ID',
+        'AZCOPY_SPA_CERT_PATH',
+        'AZCOPY_SPA_CERT_PASSWORD',
+        'AZCOPY_SPA_CLIENT_SECRET'
+    )
+    $azCopySpnEnvVarSnapshot = @{}
+    foreach ($envVarName in $azCopySpnEnvVarNames) {
+        $azCopySpnEnvVarSnapshot[$envVarName] = [System.Environment]::GetEnvironmentVariable($envVarName)
+    }
+
     try
     {
         $aadAuthorityUrl = "https://login.microsoftonline.com/"
@@ -204,16 +266,48 @@ function Upload-FilesToAzureContainer
 
         if ($endPoint.Auth.Scheme -eq 'ServicePrincipal') {
             try {
+                $azCopySpnDirectAuthFixEnabled = $script:azCopySpnDirectAuthFixEnabled
+
                 if($endPoint.Auth.Parameters.AuthenticationType -eq 'SPNCertificate') {
                     $pemFileContent = $endPoint.Auth.Parameters.ServicePrincipalCertificate
                     $pfxFilePath, $pfxFilePassword = ConvertTo-Pfx -pemFileContent $pemFileContent
 
-                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
-                    $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                    if ($azCopySpnDirectAuthFixEnabled) {
+                        # Direct SPN auth: AzCopy authenticates with the certificate credentials
+                        # itself and does not depend on a persisted/shared Az PowerShell context.
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_ACTIVE_DIRECTORY_ENDPOINT = $aadAuthorityUrl
+                        $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
+                        $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
+                        $env:AZCOPY_SPA_CERT_PATH = $pfxFilePath
+                        $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                        # No client secret is used for certificate auth; clear it so a value left
+                        # behind by a prior key-auth run cannot be picked up instead.
+                        Remove-Item Env:\AZCOPY_SPA_CLIENT_SECRET -ErrorAction SilentlyContinue
+                    }
+                    else {
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
+                        $env:AZCOPY_SPA_CERT_PASSWORD = $pfxFilePassword
+                    }
                 }
                 else {
-                    $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
-                    $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                    if ($azCopySpnDirectAuthFixEnabled) {
+                        # Direct SPN auth: AzCopy authenticates with the client secret itself and
+                        # does not depend on a persisted/shared Az PowerShell context.
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "SPN"
+                        $env:AZCOPY_ACTIVE_DIRECTORY_ENDPOINT = $aadAuthorityUrl
+                        $env:AZCOPY_TENANT_ID = $endPoint.Auth.Parameters.TenantId
+                        $env:AZCOPY_SPA_APPLICATION_ID = $endPoint.Auth.Parameters.ServicePrincipalId
+                        $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                        # A certificate path/password inherited from a prior certificate-auth run
+                        # would otherwise take priority over the client secret in AzCopy.
+                        Remove-Item Env:\AZCOPY_SPA_CERT_PATH -ErrorAction SilentlyContinue
+                        Remove-Item Env:\AZCOPY_SPA_CERT_PASSWORD -ErrorAction SilentlyContinue
+                    }
+                    else {
+                        $env:AZCOPY_AUTO_LOGIN_TYPE = "PSCRED"
+                        $env:AZCOPY_SPA_CLIENT_SECRET = $endPoint.Auth.Parameters.ServicePrincipalKey
+                    }
                 }
             }
             catch {
@@ -230,7 +324,7 @@ function Upload-FilesToAzureContainer
             throw (Get-VstsLocString -Key UnsupportedAuthScheme -ArgumentList $endPoint.Auth.Scheme)
         }
 
-        Write-Output (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFilesStorageAccount" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
 
         $blobPrefix = $blobPrefix.Trim()
         $trailingChars = [regex]::Escape("/") + '+$'
@@ -244,35 +338,55 @@ function Upload-FilesToAzureContainer
         {
 
             if ($useSourcePathHardening) {
-                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"
-                & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$rawContainerURL`" --recursive=true"))
+                if ($script:consoleOutputSanitizationFixEnabled) {
+                    & $azCopyExeLocation rm $rawContainerURL --recursive=true | ConvertTo-SafeConsoleText
+                } else {
+                    & $azCopyExeLocation rm $rawContainerURL --recursive=true
+                }
             } else {
-                Write-Output "##[command] & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
+                Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"))
                 $cleanToBlobCommand = "& `"$azCopyExeLocation`" rm `"$containerURL`" --recursive=true"
-                Invoke-Expression $cleanToBlobCommand
+                if ($script:consoleOutputSanitizationFixEnabled) {
+                    Invoke-Expression $cleanToBlobCommand | ConvertTo-SafeConsoleText
+                } else {
+                    Invoke-Expression $cleanToBlobCommand
+                }
             }
 
         }
         if ($useSourcePathHardening) {
             $splitArguments = @(Split-AdditionalArguments -additionalArguments $additionalArguments)
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"
-            & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$rawContainerURL`" $splitArguments"))
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments | ConvertTo-SafeConsoleText
+            } else {
+                & $azCopyExeLocation copy $sourcePath $rawContainerURL @splitArguments
+            }
         } elseif ($useSanitizerActivate) {
             # Splitting arguments on space, but not on space inside quotes
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"))
             $uploadCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $sanitizedArguments"
-            Invoke-Expression $uploadCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadCommand
+            }
         } else {
 
-            Write-Output "##[command] & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"
+            Write-Output ("##[command]" + (ConvertTo-SafeConsoleText -Text " & `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`"  $additionalArguments"))
             $uploadToBlobCommand = "& `"$azCopyExeLocation`" copy `"$sourcePath`" `"$containerURL`" $additionalArguments"
-            Invoke-Expression $uploadToBlobCommand
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Invoke-Expression $uploadToBlobCommand | ConvertTo-SafeConsoleText
+            } else {
+                Invoke-Expression $uploadToBlobCommand
+            }
         }
 
         if($LASTEXITCODE -eq 0)
         {
-            Write-Output (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix)
+            Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_UploadFileSuccessful" -ArgumentList $sourcePath, $storageAccountName, $containerName, $blobPrefix))
         }
         else
         {
@@ -299,6 +413,11 @@ function Upload-FilesToAzureContainer
         Import-Module "$PSScriptRoot\ps_modules\VstsAzureHelpers_"
         Remove-EndpointSecrets
 
+        # Restore the AzCopy SPN environment variables to their pre-call state (or remove them if
+        # they were unset) so credentials/config from this call never leak into a later one.
+        foreach ($envVarName in $azCopySpnEnvVarNames) {
+            [System.Environment]::SetEnvironmentVariable($envVarName, $azCopySpnEnvVarSnapshot[$envVarName])
+        }
     }
 }
 
@@ -1018,8 +1137,27 @@ function Copy-FilesToAzureVMsFromStorageContainer
 
     $inlineScriptText = $fileCopyJobScript.ToString()
 
-    # script block arguments
-    $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments'"
+    try
+    {
+        $disableTargetPathHardening = (Get-VstsPipelineFeature -FeatureName 'AzureFileCopyV6.DisableTargetPathHardening' -ErrorAction Stop) -eq $true
+    }
+    catch
+    {
+        Write-Warning 'Failed to read the AzureFileCopyV6.DisableTargetPathHardening feature flag. Defaulting to disabled.'
+        $disableTargetPathHardening = $false
+    }
+    if (-not $disableTargetPathHardening)
+    {
+        # PowerShell accepts typographic single quotes too, so ASCII-only escaping is insufficient.
+        $escapedContainerURL = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($containerURL)
+        $escapedTargetPath = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($targetPath)
+        $escapedAdditionalArguments = [System.Management.Automation.Language.CodeGeneration]::EscapeSingleQuotedStringContent($additionalArguments)
+        $scriptBlockArgs = " -containerURL '$escapedContainerURL' -targetPath '$escapedTargetPath' -additionalArguments '$escapedAdditionalArguments'"
+    }
+    else
+    {
+        $scriptBlockArgs = " -containerURL '$containerURL' -targetPath '$targetPath' -additionalArguments '$additionalArguments' -disableTargetPathHardening"
+    }
     if($cleanTargetBeforeCopy)
     {
         $scriptBlockArgs += " -CleanTargetBeforeCopy"
@@ -1035,14 +1173,19 @@ function Copy-FilesToAzureVMsFromStorageContainer
     if($useSourcePathHardening)
     {
         $scriptBlockArgs += " -useSourcePathHardening"
+    }
+
+    # Rollback preserves the original parser dependency: only SourcePath hardening needs it.
+    if (!$disableTargetPathHardening -or $useSourcePathHardening)
+    {
         $splitAdditionalArgumentsFunctionInfo = Get-Item -Path function:Split-AdditionalArguments -ErrorAction SilentlyContinue
         if(!$splitAdditionalArgumentsFunctionInfo)
         {
-            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported before enabling useSourcePathHardening."
+            throw "Split-AdditionalArguments function was not found. Ensure the Sanitizer module is imported."
         }
         $inlineScriptText = $inlineScriptText.Replace('# Split-AdditionalArguments-Placeholder', $splitAdditionalArgumentsFunctionInfo.ScriptBlock.ToString())
     }
-    
+
     $remoteScriptJobArguments = @{
         inline = $true;
         inlineScript = $inlineScriptText;

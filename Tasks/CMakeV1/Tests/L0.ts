@@ -42,4 +42,18 @@ describe('CMake Suite', function () {
         assert(runner.stdOutContained(expectedErr), 'should have said: ' + expectedErr);
         assert.strictEqual(runner.invokedToolCount, 0, 'should exit before running CMake');
     })
+
+    it('escapes a trailing backslash when running inside shell', function () {
+        if (process.platform === 'win32') {
+            return this.skip();
+        }
+        const testPath = path.join(__dirname, 'L0RunInsideShellBackslash.js');
+        const runner: MockTestRunner = new MockTestRunner(testPath);
+
+        return runner.runAsync().then(() => {
+            assert(runner.ran('/usr/local/bin/cmake .. -DFOO=bar\\\\ -DBAR=p\\$HOME'), 'it should have escaped the trailing backslash and preserved the escaped dollar sign');
+            assert(runner.invokedToolCount == 1, 'should have only run cmake');
+            assert(runner.succeeded, 'task should have succeeded');
+        });
+    })
 });

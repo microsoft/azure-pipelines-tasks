@@ -91,6 +91,8 @@
   "loc.messages.DownloadStableVersionFailed": "無法從 %s 下載 kubernetes 穩定版本檔案。回到 %s",
   "loc.messages.UsingLatestStableVersion": "版本規格輸入中指定的版本 1.7 無效。請改用最新穩定版本。查看正確的版本 https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.NotAValidVersion": "不是有效的版本，可用的版本為: %s",
+  "loc.messages.InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+  "loc.messages.InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
   "loc.messages.ConfigurationFileNotFound": "找不到相符於 %s 的組態檔。",
   "loc.messages.KubernetesServiceConnectionNotFound": "找不到 Kubernetes 服務連線詳細資料。",
   "loc.messages.OutputVariableDataSizeExceeded": "因為 kubectl 命令輸出超過了支援的長度上限，所以未設定輸出變數。輸出長度: %s，支援的長度上限: %s",

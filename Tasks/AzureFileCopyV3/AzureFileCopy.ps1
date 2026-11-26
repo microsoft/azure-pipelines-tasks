@@ -66,13 +66,23 @@ Import-Module $PSScriptRoot\ps_modules\RemoteDeployer
 
 # Initialize Azure.
 Import-Module $PSScriptRoot\ps_modules\VstsAzureHelpers_
+try {
 
 # Import the loc strings.
 Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 
 # Load all dependent files for execution
 . "$PSScriptRoot\AzureFileCopyRemoteJob.ps1"
+
+# Sanitizer (imported here, ahead of its normal spot below, because Utility.ps1
+# needs Get-ConsoleOutputSanitizationFeatureFlag from it immediately after being dot-sourced)
+Import-Module $PSScriptRoot\ps_modules\Sanitizer
+
+# External output sanitization (shared across AzureFileCopy V1-V6)
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 . "$PSScriptRoot\Utility.ps1"
+$script:consoleOutputSanitizationFixEnabled = Get-ConsoleOutputSanitizationFeatureFlag
 
 $endpoint = Get-VstsEndpoint -Name $connectedServiceName -Require
 $vstsEndpoint = Get-VstsEndpoint -Name SystemVssConnection -Require
@@ -101,8 +111,7 @@ $enableDetailedLogging = ($env:system_debug -eq "true")
 # Telemetry
 Import-Module $PSScriptRoot\ps_modules\TelemetryHelper
 
-# Sanitizer
-Import-Module $PSScriptRoot\ps_modules\Sanitizer
+# Sanitizer (module already imported above, ahead of the Utility.ps1 dot-source)
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
 $useSourcePathHardening = Get-SourcePathHardeningFeatureFlag
@@ -124,7 +133,6 @@ if ($useSanitizerActivate) {
 }
 
 #### MAIN EXECUTION OF AZURE FILE COPY TASK BEGINS HERE ####
-try {
     try
     {
         # Importing required version of azure cmdlets according to azureps installed on machine
@@ -227,12 +235,20 @@ try {
         if(-not [string]::IsNullOrEmpty($outputStorageURI))
         {
             $storageAccountContainerURI = $storageContext.BlobEndPoint + $containerName + "/"
-            Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageURI -Value $storageAccountContainerURI
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageURI;]$storageAccountContainerURI"
+            }
         }
         if(-not [string]::IsNullOrEmpty($outputStorageContainerSASToken))
         {
             $storageContainerSaSToken = Generate-AzureStorageContainerSASToken -containerName $containerName -storageContext $storageContext -tokenTimeOutInMinutes $sasTokenTimeOutInMinutes
-            Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            if ($script:consoleOutputSanitizationFixEnabled) {
+                Write-VstsSetVariable -Name $outputStorageContainerSASToken -Value $storageContainerSasToken
+            } else {
+                Write-Host "##vso[task.setvariable variable=$outputStorageContainerSASToken;]$storageContainerSasToken"
+            }
         }
 
         Remove-EndpointSecrets
@@ -282,7 +298,7 @@ try {
                                                 -useSanitizerActivate $useSanitizerActivate `
                                                 -useSourcePathHardening $useSourcePathHardening
 
-        Write-Output (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName)
+        Write-Output (ConvertTo-SafeConsoleText -Text (Get-VstsLocString -Key "AFC_CopySuccessful" -ArgumentList $sourcePath, $environmentName))
     }
     catch
     {
@@ -300,5 +316,6 @@ try {
     }
 }
 finally {
+    Remove-EndpointSecrets
     Disconnect-AzureAndClearContext -authScheme $endpoint.Auth.Scheme -ErrorAction SilentlyContinue
 }

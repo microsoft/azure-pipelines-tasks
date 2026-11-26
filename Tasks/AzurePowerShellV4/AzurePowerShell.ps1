@@ -113,6 +113,7 @@ try
 }
 finally {
     if (!$success) {
+        Remove-EndpointSecrets
         Write-VstsTaskError "Initializing Az module failed: For troubleshooting, refer: $troubleshoot"
     }
 }
@@ -238,6 +239,7 @@ try {
         Remove-Variable -Name scriptPath
         Remove-Variable -Name scriptInline
         Remove-Variable -Name scriptArguments
+        Remove-Variable -Name endpoint, vstsEndpoint, vstsAccessToken, encryptedToken -ErrorAction SilentlyContinue
 
         # Remove all commands imported from VstsTaskSdk, other than Out-Default.
         # Remove all commands imported from VstsAzureHelpers_.

@@ -197,9 +197,9 @@ describe('TwineAuthenticate L0 Suite - Authentication', function () {
                 'Should have feed section header matching the feed name'
             );
 
-            // Repository URL comes from the mock (getPackagingRouteUrl returns https://vsts/packagesource/<feedId>)
+            // Repository URL comes from the mocked collection packaging route.
             assert(
-                fileContent.includes(`repository=https://vsts/packagesource/${testConstants.TestData.singleFeed}`),
+                fileContent.includes(`repository=https://dev.azure.com/testorg/_packaging/${testConstants.TestData.singleFeed}/pypi/upload/`),
                 'repository= should contain the feed URL from the location mock'
             );
 

@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "等候 SSH 交握完成所需的時間 (毫秒)。",
   "loc.input.label.interactiveKeyboardAuthentication": "使用互動式鍵盤驗證",
   "loc.input.help.interactiveKeyboardAuthentication": "若目標電腦上已停用 PasswordAuthentication，請使用此值",
+  "loc.input.label.enableRemoteVsoCommands": "允許遠端輸出的記錄命令",
+  "loc.input.help.enableRemoteVsoCommands": "當為 false (預設) 時，遠端輸出中的 ##vso[...] 行會被中和處理 (只會以文字列印，不會執行)。只有在您信任遠端輸出並依賴遠端輸出記錄命令時，才設定為 true。",
   "loc.messages.ConnectionFailed": "無法連線到遠端電腦。請驗證 SSH 服務連線的詳細資料。錯誤: %s。",
   "loc.messages.FailedToWriteScript": "無法將指令碼寫入磁碟: %s",
   "loc.messages.RemoteCmdExecutionErr": "命令在遠端電腦上發生錯誤而失敗。",

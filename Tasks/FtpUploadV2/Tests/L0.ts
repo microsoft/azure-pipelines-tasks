@@ -3,6 +3,10 @@ import assert = require('assert');
 import path = require('path');
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
+// Direct unit tests for resolveRemoteFilePath live in their own file; require it here so the
+// suite registers under this L0.js entry (the harness only runs _build/Tests/L0.js).
+require('./L0ResolveRemoteFilePathTests');
+
 describe('FtpUploadV2 Suite', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT!) || 20000);
 
@@ -113,6 +117,17 @@ describe('FtpUploadV2 Suite', function () {
 
         await tr.runAsync();
         console.info(tr.stdout);
+        assert(tr.stdOutContained('ftp greeting ##_vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response output should be filtered');
+        assert(tr.stdOutContained('ftp logger ##_vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromFile]unsafe'), 'repository filename output should be filtered');
+        assert(tr.stdOutContained('##_vso[task.setvariable variable=fromRemotePath]unsafe'), 'remote path output should be filtered');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=fromGreeting]unsafe'), 'FTP response command should be neutralized');
+        assert(!tr.stdOutContained('##vso[task.setvariable variable=fromLogger]unsafe'), 'FTP debug command should be neutralized');
+        assert(!tr.stdOutContained('searching for files using: 2 filePatterns: **,##vso[task.setvariable variable=fromPattern]unsafe'), 'repository pattern log should not contain an executable command');
+        assert(!tr.stdOutContained('file: rootFolder/##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe'), 'repository filename candidate log should not contain an executable command');
+        assert(!tr.stdOutContained('file: rootFolder\\##vso[task.setvariable variable=fromPattern]unsafe##vso[task.setvariable variable=fromFile]unsafe'), 'repository filename upload log should not contain an executable command');
+        assert(!tr.stdOutContained('loc_mock_CleanRemoteDir /upload/##vso[task.setvariable variable=fromRemotePath]unsafe'), 'remote path log should not contain an executable command');
         assert(tr.succeeded, 'task should succeed');
     });
 });

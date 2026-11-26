@@ -10,7 +10,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 279,
+    "Minor": 283,
     "Patch": 0
   },
   "runsOn": [
@@ -85,9 +85,28 @@
       "argumentFormat": ""
     }
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": [
+        "ARTIFACTS_GRADLE_AUTH_CI_PLUGIN_REPO",
+        "ARTIFACTS_GRADLE_AUTH_CONFIG",
+        "ARTIFACTS_GRADLE_AUTH_INIT_SCRIPT_IDENTITY"
+      ]
+    }
+  },
   "messages": {
+    "Error_CiProviderChecksumMismatch": "ms-resource:loc.messages.Error_CiProviderChecksumMismatch",
+    "Error_InvalidCiProviderRelease": "ms-resource:loc.messages.Error_InvalidCiProviderRelease",
+    "Error_AgentTempUnavailable": "ms-resource:loc.messages.Error_AgentTempUnavailable",
+    "Error_InvalidJobIdentity": "ms-resource:loc.messages.Error_InvalidJobIdentity",
+    "Error_UnsafeJobPath": "ms-resource:loc.messages.Error_UnsafeJobPath",
+    "Error_UnownedJobResource": "ms-resource:loc.messages.Error_UnownedJobResource",
     "Error_CouldNotDetermineVersion": "ms-resource:loc.messages.Error_CouldNotDetermineVersion",
     "Error_CouldNotResolveCiJar": "ms-resource:loc.messages.Error_CouldNotResolveCiJar",
+    "Error_InvalidPluginVersion": "ms-resource:loc.messages.Error_InvalidPluginVersion",
     "Error_NoBuildFilesOrRepoUrls": "ms-resource:loc.messages.Error_NoBuildFilesOrRepoUrls",
     "Error_NoCiJarFound": "ms-resource:loc.messages.Error_NoCiJarFound",
     "Info_AuthConfigWritten": "ms-resource:loc.messages.Info_AuthConfigWritten",
@@ -97,7 +116,7 @@
     "Info_CiJarResolved": "ms-resource:loc.messages.Info_CiJarResolved",
     "Info_DiscoveredFeed": "ms-resource:loc.messages.Info_DiscoveredFeed",
     "Info_DynamicVersionDetected": "ms-resource:loc.messages.Info_DynamicVersionDetected",
-    "Info_EnvVarSet": "ms-resource:loc.messages.Info_EnvVarSet",
+    "Info_EnvVarsSet": "ms-resource:loc.messages.Info_EnvVarsSet",
     "Info_FeedResourceTenant": "ms-resource:loc.messages.Info_FeedResourceTenant",
     "Info_InitScriptWritten": "ms-resource:loc.messages.Info_InitScriptWritten",
     "Info_MavenRepoLaidOut": "ms-resource:loc.messages.Info_MavenRepoLaidOut",
@@ -106,17 +125,16 @@
     "Info_PluginVersionFromFile": "ms-resource:loc.messages.Info_PluginVersionFromFile",
     "Info_PluginVersionFromInput": "ms-resource:loc.messages.Info_PluginVersionFromInput",
     "Info_PostExecDeletedInitScript": "ms-resource:loc.messages.Info_PostExecDeletedInitScript",
-    "Info_PostExecDeletedTempDir": "ms-resource:loc.messages.Info_PostExecDeletedTempDir",
     "Info_PostExecUnsetVars": "ms-resource:loc.messages.Info_PostExecUnsetVars",
     "Info_SuccessResult": "ms-resource:loc.messages.Info_SuccessResult",
     "Info_SynthesizedVersion": "ms-resource:loc.messages.Info_SynthesizedVersion",
     "Warning_BuildFileNotFound": "ms-resource:loc.messages.Warning_BuildFileNotFound",
     "Warning_CorruptAuthConfig": "ms-resource:loc.messages.Warning_CorruptAuthConfig",
     "Warning_CouldNotDetermineResourceTenant": "ms-resource:loc.messages.Warning_CouldNotDetermineResourceTenant",
+    "Warning_InvalidRepositoryUrlSkipped": "ms-resource:loc.messages.Warning_InvalidRepositoryUrlSkipped",
     "Warning_MissingSystemVariable": "ms-resource:loc.messages.Warning_MissingSystemVariable",
     "Warning_NoFeedsFound": "ms-resource:loc.messages.Warning_NoFeedsFound",
     "Warning_NoServiceConnection": "ms-resource:loc.messages.Warning_NoServiceConnection",
-    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed",
-    "Warning_RepositoryUrlNotAzureArtifacts": "ms-resource:loc.messages.Warning_RepositoryUrlNotAzureArtifacts"
+    "Warning_PostExecCleanupFailed": "ms-resource:loc.messages.Warning_PostExecCleanupFailed"
   }
 }

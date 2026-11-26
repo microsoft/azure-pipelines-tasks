@@ -9,6 +9,7 @@ import * as ci from './cieventlogger';
 import { TestSelectorInvoker } from './testselectorinvoker';
 import { writeFileSync } from 'fs';
 import * as uuid from 'uuid';
+import { sanitizeForLoggingCommand } from './sanitize';
 
 const testSelector = new TestSelectorInvoker();
 
@@ -91,7 +92,7 @@ export class DistributedTest {
     private createTestSourcesFile(): string {
         try {
             let sourceFilter = tl.getDelimitedInput('testAssemblyVer2', '\n', true);
-            console.log(tl.loc('UserProvidedSourceFilter', sourceFilter.toString()));
+            console.log(tl.loc('UserProvidedSourceFilter', sanitizeForLoggingCommand(sourceFilter.toString())));
 
             if (this.inputDataContract.TestSelectionSettings.TestSelectionType.toLowerCase() !== 'testassemblies') {
                 sourceFilter = ['**\\*', '!**\\obj\\**'];
@@ -114,11 +115,12 @@ export class DistributedTest {
 
             tl.debug('Files matching count :' + filesMatching.length);
             if (filesMatching.length === 0) {
-                tl.warning(tl.loc('noTestSourcesFound', sourceFilter.toString()));
+                const sourceFilterForLogging = sanitizeForLoggingCommand(sourceFilter.toString());
+                tl.warning(tl.loc('noTestSourcesFound', sourceFilterForLogging));
                 if (this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.ActionOnThresholdNotMet.toLowerCase() === 'fail') {
                     throw new Error(tl.loc('minTestsNotExecuted', this.inputDataContract.TestReportingSettings.ExecutionStatusSettings.MinimumExecutedTestsExpected));
                 } else {
-                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', sourceFilter.toString()), true);
+                    tl.setResult(tl.TaskResult.Succeeded, tl.loc('noTestSourcesFound', sourceFilterForLogging), true);
                     process.exit(0);
                 }
             }

@@ -56,5 +56,7 @@
   "loc.messages.CheckingPathExistance": "Checking if %s on the remote machine exists.",
   "loc.messages.PathExists": "%s exists on the remote machine",
   "loc.messages.PathNotExists": "%s doesn't exist on the remote machine",
-  "loc.messages.UploadFolderFailed": "Failed to upload folder %s to %s on remote machine. %s."
+  "loc.messages.UploadFolderFailed": "Failed to upload folder %s to %s on remote machine. %s.",
+  "loc.messages.TargetPathContainsBackslash": "File name '%s' contains a backslash, which is not supported when copying from this agent's operating system.",
+  "loc.messages.TargetPathEscapesTargetFolder": "File name '%s' would be copied outside the target folder '%s'."
 }

@@ -10,6 +10,7 @@ import BlobService = require('azp-tasks-az-blobstorage-provider/blobservice');
 import compress = require('azure-pipelines-tasks-utility-common/compressutility');
 import AzureVmssTaskParameters from "../models/AzureVmssTaskParameters";
 import { tryValidateScriptArgs } from './argsSanitizer';
+import { prepareWindowsInvoker, removeWindowsInvoker } from './windowsInvoker';
 import utils = require("./Utils")
 
 
@@ -85,12 +86,18 @@ export default class VirtualMachineScaleSet {
                     typeHandlerVersion: extensionMetadata.typeHandlerVersion,
                     autoUpgradeMinorVersion: true,
                     settings: {
-                        "commandToExecute": customScriptInfo.command,
-                        "fileUris": customScriptInfo.blobUris
+                        ...(customScriptInfo.safeWindowsInvoker ? {} : {
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris
+                        })
                     },
                     protectedSettings: {
                         "storageAccountName": customScriptInfo.storageAccount.name,
-                        "storageAccountKey": customScriptInfo.storageAccount.primaryAccessKey
+                        "storageAccountKey": customScriptInfo.storageAccount.primaryAccessKey,
+                        ...(customScriptInfo.safeWindowsInvoker ? {
+                            commandToExecute: customScriptInfo.command,
+                            fileUris: customScriptInfo.blobUris
+                        } : {})
                     }
                 }
             };
@@ -112,12 +119,18 @@ export default class VirtualMachineScaleSet {
         let customScriptInfo: CustomScriptsInfo = this._createCustomScriptInvoker(osType, archiveInfo);
 
         // upload custom script directory to blob storage
+        let uploadFailed = false;
         try {
             var storageArmClient = new armStorage.StorageManagementClient(this.taskParameters.credentials, this.taskParameters.subscriptionId);
             customScriptInfo.storageAccount = await this._getStorageAccountDetails();
             customScriptInfo.blobUris = await this._uploadCustomScriptsToBlobService(customScriptInfo);
         } catch (error) {
+            uploadFailed = true;
             throw tl.loc("UploadingToStorageBlobsFailed", error.message ? error.message : error);
+        } finally {
+            if (customScriptInfo.safeWindowsInvoker) {
+                removeWindowsInvoker(customScriptInfo.localDirPath, uploadFailed);
+            }
         }
 
         return customScriptInfo;
@@ -135,15 +148,19 @@ export default class VirtualMachineScaleSet {
             archiveFile = archiveInfo.fileName
         }
 
+        const argsPolicy = tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
+
+        if (argsPolicy.protectedWindows) {
+            const invoker = prepareWindowsInvoker(this.taskParameters.customScriptsDirectory,
+                this.taskParameters.customScript, this.taskParameters.customScriptArguments,
+                archiveInfo ? archiveInfo.filePath : undefined);
+            tl.debug("Invoker command: " + invoker.command);
+            return <CustomScriptsInfo>{ ...invoker, safeWindowsInvoker: true };
+        }
         let blobsPefixPath = this._getBlobsPrefixPath();
 
-        // Validate user-provided arguments with the shared WI-75787 sanitizer for the
-        // target shell (ps for Windows, bash for Linux). Fails closed on injection when
-        // AZP_75787_ENABLE_NEW_LOGIC is set and the EnableVmssCustomScriptArgsValidation gate is on.
-        tryValidateScriptArgs(this.taskParameters.customScriptArguments, osType === "Windows" ? 'ps' : 'bash');
-
         // WI-75787: our own backtick escaping doubles/backslashes the sanitizer-trusted escape and revives it at the Invoke-Expression/eval sink, so pass args verbatim when the gate is on.
-        const sanitizerEnabled = tl.getPipelineFeature('EnableVmssCustomScriptArgsValidation');
+        const sanitizerEnabled = argsPolicy.legacyValidationEnabled;
 
         if (osType === "Windows") {
             // escape powershell special characters. This is needed as this script will be executed in a powershell session
@@ -368,6 +385,7 @@ class CustomScriptsInfo {
     public storageAccount: StorageAccountInfo;
     public blobUris: string[];
     public blobsPrefixPath: string;
+    public safeWindowsInvoker?: boolean;
 }
 
 class ArchiveInfo {

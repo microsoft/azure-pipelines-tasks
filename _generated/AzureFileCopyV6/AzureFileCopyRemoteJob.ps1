@@ -6,7 +6,8 @@ $AzureFileCopyRemoteJob = {
         [switch]$CleanTargetBeforeCopy,
         [switch]$EnableDetailedLogging,
         [switch]$useSanitizerActivate,
-        [switch]$useSourcePathHardening
+        [switch]$useSourcePathHardening,
+        [switch]$disableTargetPathHardening
     )
 
     function Write-DetailLogs
@@ -25,6 +26,19 @@ $AzureFileCopyRemoteJob = {
     function Split-AdditionalArguments
     {
         # Split-AdditionalArguments-Placeholder
+    }
+
+    # Replaces only $env:NAME and ${env:NAME} with the value of that environment variable (an unset
+    # variable becomes an empty string). It is a single pass: the value is never expanded again, and
+    # nothing else in the text is evaluated. The "env:" keyword is matched case-insensitively
+    # (e.g. $env:NAME, $Env:NAME, $ENV:NAME, ${ENV:NAME}) to match PowerShell's native behavior.
+    function Expand-EnvironmentReferences
+    {
+        param([string]$text)
+
+        return [regex]::Replace($text,
+            '(?i)\$(?:env:(?<n>[A-Za-z_][A-Za-z0-9_]*)|\{env:(?<n>[^}]+)\})',
+            { param($m) [string][Environment]::GetEnvironmentVariable($m.Groups['n'].Value) })
     }
 
     try
@@ -114,6 +128,18 @@ $AzureFileCopyRemoteJob = {
             $sanitizedArguments = [regex]::Split($additionalArguments, ' (?=(?:[^"]|"[^"]*")*$)')
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $sanitizedArguments"
             & azcopy copy "$containerURL/*" "$targetPath" $sanitizedArguments
+        } elseif (-not $disableTargetPathHardening) {
+            # New secure default (rollback not engaged). TargetPath, ContainerURL and the additional arguments
+            # reach azcopy as data: the arguments are split into a list by a parser that evaluates nothing,
+            # and the call below is constant text that only references that list by name, so no value is
+            # ever re-parsed as PowerShell. Only $env:NAME and ${env:NAME} are expanded (in the target path
+            # and in each argument); azcopy options themselves, including quoted values, work as before.
+            $expandedTargetPath = Expand-EnvironmentReferences $targetPath
+            [string[]]$argumentTokens = @(@(Split-AdditionalArguments -additionalArguments $additionalArguments) |
+                ForEach-Object { Expand-EnvironmentReferences $_ })
+            [string[]]$azCopyArguments = @('copy', "$containerURL/*", $expandedTargetPath) + $argumentTokens
+            Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$expandedTargetPath`" $argumentTokens"
+            & azcopy @azCopyArguments
         } else {
             Write-DetailLogs "##[command] & azcopy copy `"$containerURL`" `"$targetPath`" $additionalArguments"
             $azCopyCommand = "& azcopy copy `"$containerURL/*`" `"$targetPath`" $additionalArguments"

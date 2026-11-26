@@ -1,5 +1,6 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import { Color, colorize, Logger, LoggingMessageConfig, ErrorMessageConfig } from "@azure/bicep-deploy-common";
+import * as os from "os";
+import { Color, colorize, ExternalOutputOptions, Logger, LoggingMessageConfig, ErrorMessageConfig } from "@azure/bicep-deploy-common";
 
 const logWarningRaw = (message: string) => tl.warning(message);
 const logErrorRaw = (message: string) => tl.error(message);
@@ -9,6 +10,28 @@ export class TaskLogger implements Logger {
     debug = (message: string) => tl.debug(message);
     logInfoRaw = (message: string) => console.log(message);
     logInfo = (message: string) => this.logInfoRaw(colorize(message, Color.Blue));
+    logExternalOutput = (message: string, options: ExternalOutputOptions): void => {
+        const taskOptions: tl.ExternalOutputOptions = { source: options.source };
+
+        switch (options.level) {
+            case "info":
+                tl.writeExternalOutput(message + os.EOL, taskOptions);
+                break;
+            case "debug":
+                tl.debugExternalOutput(message, taskOptions);
+                break;
+            case "warning":
+                tl.warningExternalOutput(message, taskOptions);
+                break;
+            case "error":
+                tl.errorExternalOutput(message, taskOptions);
+                break;
+            default: {
+                const exhaustiveCheck: never = options.level;
+                return exhaustiveCheck;
+            }
+        }
+    };
     logWarning = (message: string) => logWarningRaw(colorize(message, Color.Yellow));
     logError = (message: string) => logErrorRaw(colorize(message, Color.Red));
 }
@@ -23,6 +46,10 @@ export const createLoggingMessageConfig = (): LoggingMessageConfig => ({
         tl.loc('BicepCacheHit', version, path),
     bicepDownloading: (version: string) =>
         tl.loc('BicepDownloading', version),
+    bicepVersionResolvedFromConfigChain: (version: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionResolvedFromConfigChain', version, constraint, configPath),
+    bicepVersionConstraintCouldNotBeChecked: (requestedVersion: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionConstraintCouldNotBeChecked', requestedVersion, constraint, configPath),
     requestFailedCorrelation: (correlationId: string | null) =>
         tl.loc('RequestFailedCorrelation', correlationId),
     filesIgnoredForDelete: tl.loc('FilesIgnoredForDelete'),
@@ -71,6 +98,26 @@ export const createErrorMessageConfig = (): ErrorMessageConfig => ({
     // Bicep cache errors
     failedToResolveBicepVersion: (url: string) =>
         tl.loc('FailedToResolveBicepVersion', url),
+    configFileNotFound: (configPath: string) =>
+        tl.loc('ConfigFileNotFound', configPath),
+    configChainCycleDetected: (configPath: string) =>
+        tl.loc('ConfigChainCycleDetected', configPath),
+    configChainTooDeep: (maxDepth: number) =>
+        tl.loc('ConfigChainTooDeep', maxDepth),
+    configChainAbsoluteExtendsPath: (extendsValue: string, configPath: string) =>
+        tl.loc('ConfigChainAbsoluteExtendsPath', extendsValue, configPath),
+    invalidConfigExtendsValue: (configPath: string) =>
+        tl.loc('InvalidConfigExtendsValue', configPath),
+    invalidBicepVersionConstraintType: (configPath: string) =>
+        tl.loc('InvalidBicepVersionConstraintType', configPath),
+    unparsableBicepVersionConstraint: (versionValue: string, configPath: string) =>
+        tl.loc('UnparsableBicepVersionConstraint', versionValue, configPath),
+    unsatisfiableBicepVersionConstraint: (versionValue: string, configPath: string) =>
+        tl.loc('UnsatisfiableBicepVersionConstraint', versionValue, configPath),
+    bicepVersionConflictsWithConfigChain: (requestedVersion: string, constraint: string, configPath: string) =>
+        tl.loc('BicepVersionConflictsWithConfigChain', requestedVersion, constraint, configPath),
+    noReleaseSatisfiesBicepVersionConstraint: (constraint: string, configPath: string) =>
+        tl.loc('NoReleaseSatisfiesBicepVersionConstraint', constraint, configPath),
     
     // WhatIf errors
     invalidChangeType: (changeType: string) => 

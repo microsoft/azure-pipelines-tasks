@@ -17,7 +17,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 0,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 0
   },
   "demands": [],
@@ -199,6 +199,8 @@
     "CheckingPathExistance": "ms-resource:loc.messages.CheckingPathExistance",
     "PathExists": "ms-resource:loc.messages.PathExists",
     "PathNotExists": "ms-resource:loc.messages.PathNotExists",
-    "UploadFolderFailed": "ms-resource:loc.messages.UploadFolderFailed"
+    "UploadFolderFailed": "ms-resource:loc.messages.UploadFolderFailed",
+    "TargetPathContainsBackslash": "ms-resource:loc.messages.TargetPathContainsBackslash",
+    "TargetPathEscapesTargetFolder": "ms-resource:loc.messages.TargetPathEscapesTargetFolder"
   }
 }

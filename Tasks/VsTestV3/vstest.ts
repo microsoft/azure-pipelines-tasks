@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import * as process from 'process';
 import { isFeatureFlagEnabled } from './runvstest';
+import { sanitizeForLoggingCommand } from './sanitize';
 
 const runSettingsExt = '.runsettings';
 const testSettingsExt = '.testsettings';
@@ -27,7 +28,6 @@ let resultsDirectory = null;
 
 export function startTest() {
     try {
-        console.log(tl.loc('runTestsLocally', 'vstest.console.exe'));
         console.log('========================================================');
         try {
             vstestConfig = taskInputParser.getvsTestConfigurations();
@@ -53,7 +53,7 @@ export function startTest() {
         if (!testAssemblyFiles || testAssemblyFiles.length === 0) {
             uploadVstestDiagFile();
             console.log('##vso[task.logissue type=warning;code=002004;]');
-            tl.warning(tl.loc('NoMatchingTestAssemblies', vstestConfig.sourceFilter));
+            tl.warning(tl.loc('NoMatchingTestAssemblies', sanitizeForLoggingCommand(vstestConfig.sourceFilter.toString())));
             return;
         }
 

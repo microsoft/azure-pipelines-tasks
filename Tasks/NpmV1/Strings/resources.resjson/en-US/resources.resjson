@@ -53,5 +53,9 @@
   "loc.messages.RestoringProjectNpmrc": "Restoring project .npmrc",
   "loc.messages.WorkingDirectoryNotDirectory": "Please change your working directory to a valid directory",
   "loc.messages.NGCommon_AreaNotFoundInSps": "Unable to locate the '%s' [%s] area. The service containing that area may not be available in your region.",
-  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with personal access token based auth."
+  "loc.messages.UnsupportedServiceConnectionAuth": "The service connection does not use a supported authentication method. Please use a service connection with     personal access token based auth.",
+  "loc.messages.PackagingCollectionUrlInvalid": "The Npm.PackagingCollectionUrl variable is not a valid URL.",
+  "loc.messages.PackagingCollectionUrlUnsupportedScheme": "The Npm.PackagingCollectionUrl variable must use http or https.",
+  "loc.messages.PackagingCollectionUrlHasCredentials": "The Npm.PackagingCollectionUrl variable must not contain credentials.",
+  "loc.messages.PackagingCollectionUrlMismatch": "The Npm.PackagingCollectionUrl variable does not match the collection URI."
 }

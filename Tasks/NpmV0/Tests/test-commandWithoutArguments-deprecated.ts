@@ -23,7 +23,7 @@ let root = path.join(process.env['INPUT_CWD'], "node_modules");
 
 var execResult: ma.TaskLibAnswerExecResult = {
     code: 0,
-    stdout: root,
+    stdout: root + "\n##vso[task.setvariable variable=NODE_OPTIONS]--require=malicious.js",
     stderr: ""
 };
 

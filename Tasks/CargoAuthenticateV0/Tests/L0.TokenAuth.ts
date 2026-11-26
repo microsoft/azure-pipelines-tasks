@@ -107,8 +107,8 @@ describe('CargoAuthenticate L0 Suite - Token Authentication (crates.io)', functi
             
             // Assert
             assert(tr.failed, 'Task should fail when Token connection has invalid URL');
-            assert(tr.errorIssues.length > 0 || tr.stderr.length > 0,
-                'Should have error about invalid URL');
+            assert(tr.errorIssues.some(e => e.indexOf('loc_mock_Error_InvalidServiceConnection') >= 0),
+                'Should report the localized invalid service connection error');
         });
     });
 });

@@ -52,6 +52,7 @@
   "loc.messages.FailedToAddCertToTrustStore": "信頼ストア %s に証明書を追加できませんでした。",
   "loc.messages.FailedToGetWorkloadIdToken": "ワークロード ID トークンを取得できませんでした: %s。",
   "loc.messages.FailedToImportTrustPolicy": "信頼ポリシーをインポートできませんでした: %s。",
+  "loc.messages.FailedToRemoveCredentialFile": "Failed to remove the temporary credential file.",
   "loc.messages.FailedToListTrustStore": "信頼ストアを一覧表示できませんでした。",
   "loc.messages.FailedToShowTrustPolicy": "信頼ポリシーを表示できませんでした。",
   "loc.messages.TryToGetArtifactRefsFromDockerTask": "Docker タスクから成果物参照を取得してみてください。",

@@ -1,4 +1,7 @@
-﻿function Update-PackageVersion
+﻿. "$PSScriptRoot\Assert-ValidManifestPathSegment.ps1"
+. "$PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
+function Update-PackageVersion
 {
     [CmdletBinding()]
     [OutputType([string])]
@@ -53,7 +56,7 @@
 
         if (!$UpdateAllVersions)
         {
-            Write-Host "$LogIndent$(Get-VstsLocString -Key SearchingPackage -ArgumentList $packageName)"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key SearchingPackage -ArgumentList $packageName)" -Source 'repository')
             $LogIndent += "".PadLeft(2)
 
             # Check the previous build for a matching package and search for changes
@@ -68,13 +71,14 @@
                 if ((!$ReplaceVersion -and !$oldPackageXml.Version.StartsWith($versionPrefix)) -or !(Test-XmlEqual $oldPackageXml $NewPackageXml))
                 {
                     # The package has changed because the xml in the manifest changed
-                    Write-Host "$LogIndent$(Get-VstsLocString -Key PackageManifestChanged -ArgumentList $packageName)"
+                    Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key PackageManifestChanged -ArgumentList $packageName)" -Source 'repository')
                     $updatePackageVersion = $true
                 }
 
                 if ($LogAllChanges -or !$updatePackageVersion)
                 {
                     # Search the package files for differences (Unless the user doesn't want to log all changes and we already know the package xml changed)
+                    Assert-ValidManifestPathSegment -Name $packageName -ElementDescription "$($NewPackageXml.LocalName)/@Name"
                     $newPackagePath = Join-Path $NewPackageRoot $packageName
                     $oldPackagePath = Join-Path $OldPackageRoot $packageName
 
@@ -91,13 +95,13 @@
                 if ($updatePackageVersion)
                 {
                     $NewPackageXml.Version = $newVersion
-                    Write-Host "$LogIndent$(Get-VstsLocString -Key UpdatedPackageVerisonFromPrevious -ArgumentList @($ServiceName,$packageName,$oldPackageXml.Version,$newVersion))"
+                    Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key UpdatedPackageVerisonFromPrevious -ArgumentList @($ServiceName,$packageName,$oldPackageXml.Version,$newVersion))" -Source 'repository')
                 }
             }
             else
             {
                 # Failed to find package in previous build. Fall back to force-updating the version.
-                Write-Host "$LogIndent$(Get-VstsLocString -Key NewPackage)"
+                Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key NewPackage)" -Source 'repository')
                 $UpdateAllVersions = $true
             }
         }
@@ -105,7 +109,7 @@
         if ($UpdateAllVersions)
         {
             # Force update package version
-            Write-Host "$LogIndent$(Get-VstsLocString -Key UpdatedPackageVerison -ArgumentList @($ServiceName,$packageName,$newVersion))"
+            Write-Host (Protect-ExternalOutput -InputObject "$LogIndent$(Get-VstsLocString -Key UpdatedPackageVerison -ArgumentList @($ServiceName,$packageName,$newVersion))" -Source 'repository')
             $NewPackageXml.Version = $newVersion
         }
 

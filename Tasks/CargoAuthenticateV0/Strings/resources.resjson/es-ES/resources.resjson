@@ -3,14 +3,14 @@
   "loc.helpMarkDown": "",
   "loc.description": "Tarea de autenticación para el cliente de carga usado para instalar la distribución de cajas de carga",
   "loc.instanceNameFormat": "autenticación de carga $(configFile)",
-  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
-  "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere registryNames. Se omiten todas las demás entradas.",
-  "loc.input.label.registryNames": "Nombres del Registro de config.toml",
-  "loc.input.help.registryNames": "Lista separada por comas de los nombres del Registro especificados en config.toml para autenticarse. Si se establece, se requiere workloadIdentityServiceConnection. Se omiten todas las demás entradas. No es compatible con cargoServiceConnections.",
   "loc.input.label.configFile": "archivo config.toml para autenticar",
   "loc.input.help.configFile": "Ruta de acceso al archivo config.toml que especifica los registros con los que quiere trabajar. Seleccione el archivo, no la carpeta. Por ejemplo, \"/.cargo/config.toml\".",
   "loc.input.label.cargoServiceConnections": "Credenciales para registros fuera de esta organización o colección",
   "loc.input.help.cargoServiceConnections": "Credenciales que deben usarse para registros externos que están en el archivo config.toml del proyecto. Para registros en esta organización o colección, deje este valor en blanco; se usarán automáticamente las credenciales de la compilación.",
+  "loc.input.label.workloadIdentityServiceConnection": "Conexión de servicio de \"Azure DevOps\"",
+  "loc.input.help.workloadIdentityServiceConnection": "Si se establece, se requiere feedUrl. Se omiten todas las demás entradas.",
+  "loc.input.label.registryNames": "Nombres del Registro de config.toml",
+  "loc.input.help.registryNames": "Lista separada por comas de los nombres del Registro especificados en config.toml para autenticarse. Si se establece, se requiere workloadIdentityServiceConnection. Se omiten todas las demás entradas. No es compatible con cargoServiceConnections.",
   "loc.messages.FailedToAddAuthentication": "No se pudo agregar la autenticación",
   "loc.messages.ConfigTomlNotToml": "El archivo que ha seleccionado para autenticar (%s) no es un archivo .toml válido.",
   "loc.messages.ConfigTomlDoesNotExist": "El archivo config.toml que ha seleccionado en %s no existe actualmente.",
@@ -23,5 +23,8 @@
   "loc.messages.AuthTelemetry": "%s fuentes internas autenticadas, %s repositorios externos y %s conexiones de servicio federado",
   "loc.messages.FailedToGetServiceConnectionAuth": "No se pueden obtener las credenciales federadas de la conexión de servicio: %s.",
   "loc.messages.MissingRegistryNameOrServiceConnection": "El nombre del Registro y la conexión de servicio deben establecerse y no pueden estar vacíos.",
-  "loc.messages.RegistryNotFound": "La entrada de nombres del Registro ''%s'' no corresponde a ningún registro de config.toml"
+  "loc.messages.RegistryNotFound": "La entrada de nombres del Registro ''%s'' no corresponde a ningún registro de config.toml",
+  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
+  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
 }

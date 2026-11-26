@@ -19,5 +19,8 @@
   "loc.messages.AuthTelemetry": "Authenticated %s internal feeds, %s external repos, and %s federated service connections",
   "loc.messages.FailedToGetServiceConnectionAuth": "Unable to get federated credentials from service connection: %s.",
   "loc.messages.MissingRegistryNameOrServiceConnection": "Both registry name and service connection need to be set and cannot be empty.",
-  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml"
+  "loc.messages.RegistryNotFound": "The registry names input '%s' does not correspond any registry in config.toml",
+  "loc.messages.RegistryEnvKeyCollision": "Registries '%s' map to the same Cargo environment variable '%s'. Rename one of the registries to avoid credential ambiguity.",
+  "loc.messages.SkippingNonAzureDevOpsRegistry": "Skipping registry '%s' because its index URL '%s' is not hosted in Azure DevOps.",
+  "loc.messages.RegistryFeedVerificationFailed": "Registry feed URL verification failed; skipping authentication for this registry."
 }

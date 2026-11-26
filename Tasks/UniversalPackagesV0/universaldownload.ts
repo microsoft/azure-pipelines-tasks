@@ -123,7 +123,9 @@ function downloadPackageUsingArtifactTool(downloadDir: string, options: artifact
         command.push("--project", options.projectId);
     }
 
-    console.log(tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId, options.projectId));
+    tl.writeExternalOutput(
+        tl.loc("Info_Downloading", options.packageName, options.packageVersion, options.feedId, options.projectId) + "\n",
+        { source: "repository", vsoCommandMode: "blockOnly" });
     const execResult: IExecSyncResult = artifactToolRunner.runArtifactTool(options.artifactToolPath, command, execOptions);
     if (execResult.code === 0) {
         return;

@@ -1,3 +1,5 @@
+. $PSScriptRoot\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
+
 function Get-SinglePathOfType
 {
     Param (
@@ -47,7 +49,13 @@ function Get-SinglePathOfType
     else
     {
         Assert-VstsPath -LiteralPath $path -PathType $PathType
-        Write-Host (Get-VstsLocString -Key FoundPath -ArgumentList $path)
+        # The packaged SDK predates Get-VstsPipelineFeature; read the same pipeline variable.
+        $vsoCommandMode = if (Get-VstsTaskVariable -Name 'DistributedTask.Tasks.EnableVsoCommandBlockingRMTasks' -AsBool) {
+            'blockAndTelemetry'
+        } else {
+            'telemetryOnly'
+        }
+        Write-Host (Get-VstsLocString -Key FoundPath -ArgumentList (Protect-ExternalOutput -InputObject $path -Source repository -VsoCommandMode $vsoCommandMode))
     }
 
     return $path

@@ -35,6 +35,7 @@
   "loc.messages.GeneratingScript": "スクリプトを生成しています。",
   "loc.messages.JS_FormattedCommand": "フォーマット後のコマンド: %s",
   "loc.messages.InvalidScriptArguments0": "スクリプトの引数 '{0}' が無効です。改行は使用できません。",
+  "loc.messages.ScriptArgsSanitized": "シェルによって正しく実行されない可能性のある引数の文字が検出されました。円記号 (\\) を使用して特殊文字をエスケープしてください。詳細についてはこちら: https://aka.ms/ado/75787",
   "loc.messages.InvalidScriptPath0": "スクリプト パス '{0}' が無効です。無効なパス文字が指定されました。",
   "loc.messages.InvalidAzurePsVersion": "指定した Azure PowerShell バージョン '{0}' は、形式が正しくありません。形式をご確認ください。正しい形式の例は、1.0.1 です",
   "loc.messages.JS_ExitCode": "PowerShell がコード '%s' で終了しました。",

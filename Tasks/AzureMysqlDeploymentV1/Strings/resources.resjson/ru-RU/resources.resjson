@@ -33,6 +33,7 @@
   "loc.input.label.DeleteFirewallRule": "Удалить правило после завершения задачи",
   "loc.input.help.DeleteFirewallRule": "При выборе этого параметра исключение, добавленное для IP-адресов агента автоматизации, будет удалено для соответствующей Базы данных Azure для MySQL.",
   "loc.messages.ARGD_ConstructorFailed": "Сбой при инициализации задачи. Ошибка: %s.",
+  "loc.messages.InvalidDatabaseName": "Недопустимое имя базы данных \"%s\". Допускаются только буквенно-цифровые символы, знаки подчеркивания и дефисы.",
   "loc.messages.FirewallRuleNameCannotBeEmpty": "Имя правила брандмауэра не может иметь значение NULL.",
   "loc.messages.FirewallAddressRangeCannotBeEmpty": "Адрес брандмауэра не может иметь значение NULL.",
   "loc.messages.StartIpAddressCannotBeEmpty": "Начальный IP-адрес правила брандмауэра не может иметь значение NULL.",

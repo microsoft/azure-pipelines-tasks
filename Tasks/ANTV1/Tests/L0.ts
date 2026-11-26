@@ -141,6 +141,9 @@ describe('ANT Suite', function () {
         assert(runner.stdout.search(/##vso\[results.publish\]/) < 0, 'publish test results should have not got called.');
         assert(runner.stderr.length == 0, 'should not have written to stderr');
         assert(runner.stdOutContained('NoTestResults'), 'should have warned about lack of test results');
+        assert(runner.stdOutContained('**/InvalidTestFilter-*.xml'), 'should preserve the unmatched test pattern');
+        assert(!runner.stdOutContained('feature=ExternalOutputVsoCommand;'),
+            'An ordinary unmatched pattern should not produce command telemetry');
         assert(runner.succeeded, 'task should have succeeded');
     })
 
@@ -151,4 +154,38 @@ describe('ANT Suite', function () {
 
         assert(runner.stdout.search(/##vso\[results.publish type=JUnit;mergeResults=true;publishRunAttachments=true;resultFiles=\/user\/build\/fun\/test-123.xml;\]/) >= 0);
     })
+
+    const patternSeparators = [' ', '\n', '\r\n'];
+    patternSeparators.forEach(separator => {
+        it(`neutralizes logging commands without telemetry in unmatched test patterns with ${JSON.stringify(separator)}`, async () => {
+            const pattern = '**/InvalidTestFilter-*.xml' + separator +
+                '##vso[task.setvariable variable=AntDiagnosticMarker;]unexpected' + separator +
+                '##vso[task.setvariable variable=AntOtherDiagnosticMarker;]unexpected';
+            const previousPattern = process.env['ANT_TEST_RESULTS_PATTERN'];
+            process.env['ANT_TEST_RESULTS_PATTERN'] = pattern;
+
+            try {
+                const testPath = path.join(__dirname, 'L0NoMatchingTestResults.js');
+                const runner = new MockTestRunner(testPath);
+                await runner.runAsync();
+
+                assert(runner.succeeded, 'No matching test results should not fail the task');
+                assert(runner.stdOutContained(pattern.replace(/##vso\[/g, '##_vso[')),
+                    'The diagnostic should display all command markers as neutralized text');
+                assert(!runner.stdout.split(/\r?\n/).some(line => {
+                    const command = /##vso\[([^\s\]]+)/.exec(line);
+                    return command && command[1] === 'task.setvariable';
+                }), 'The diagnostic should not emit a variable-setting logging command');
+                const telemetry = runner.stdout.split(/\r?\n/).filter(line =>
+                    line.startsWith('##vso[telemetry.publish area=TaskLib;feature=ExternalOutputVsoCommand;]'));
+                assert.strictEqual(telemetry.length, 0, 'Block-only diagnostics should not produce command telemetry');
+            } finally {
+                if (previousPattern === undefined) {
+                    delete process.env['ANT_TEST_RESULTS_PATTERN'];
+                } else {
+                    process.env['ANT_TEST_RESULTS_PATTERN'] = previousPattern;
+                }
+            }
+        });
+    });
 });

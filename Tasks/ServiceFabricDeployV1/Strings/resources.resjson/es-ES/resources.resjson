@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Debe reemplazarse la configuración de actualización o especificarse un perfil de publicación en la tarea de Azure Pipelines.",
   "loc.messages.UnsupportedARMAuthScheme": "El esquema de autenticación \"{0}\" no se admite para el punto de conexión ARM.",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "Esquema de autenticación \"{0}\" no admitido para el registro de contenedor de Azure.",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "Valor de {0} no válido '{1}' encontró en el paquete de aplicación. Este valor se usa como nombre de carpeta al compilar una ruta de acceso de archivo a partir del paquete de aplicación, por lo que debe ser un nombre simple: no puede estar vacío, no puede contener un separador de ruta de acceso o un segmento de ruta de acceso relativo, no puede ser una ruta de acceso absoluta ni terminar con un carácter final '.' o ' ' que Windows normalizaría.",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} no es un paquete de aplicación de Service Fabric válido.",
   "loc.messages.SFSDK_PackageValidationFailed": "No se pudo llevar a cabo la validación del paquete: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "No se puede comprobar la conexión de servicio con el clúster de Service Fabric.",

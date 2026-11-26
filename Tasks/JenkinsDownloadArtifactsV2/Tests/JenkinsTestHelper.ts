@@ -1,4 +1,6 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import { ArtifactEngineOptions } from 'artifact-engine/Engine';
+import { IArtifactProvider } from 'artifact-engine/Models';
 
 export interface ExpectedResult {
     returnCode: number;
@@ -10,7 +12,7 @@ export function RegisterHttpClientMock(tr: tmrm.TaskMockRunner, getResultCallbac
     // setting retry value to zero as we don't want the test to hang up
     process.env['VSTS_HTTP_RETRY'] = "0"
 
-    tr.registerMock("artifact-engine/Providers/typed-rest-client/HttpClient", {
+    tr.registerMock("typed-rest-client/HttpClient", {
         HttpClient: function(name, handlers, options) {
             return {
                 get: function(url) {
@@ -58,12 +60,16 @@ export function GetErrorExpectedResult(returnCode?: number, result?: string): Ex
     };
 }
 
-export function RegisterArtifactEngineMock(tr: tmrm.TaskMockRunner)
+export function RegisterArtifactEngineMock(tr: tmrm.TaskMockRunner, onProcessItems?: (options: ArtifactEngineOptions, source: IArtifactProvider) => void)
 {
     tr.registerMock("artifact-engine/Engine", { 
         ArtifactEngine: function() {
             return { 
-                processItems: function(A,B,C) {},
+                processItems: function(A,B,C) {
+                    if (onProcessItems) {
+                        onProcessItems(C, A);
+                    }
+                },
             }
         },
         ArtifactEngineOptions: function() {

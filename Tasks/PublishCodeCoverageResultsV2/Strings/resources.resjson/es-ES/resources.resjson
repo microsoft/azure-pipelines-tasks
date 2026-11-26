@@ -9,6 +9,8 @@
   "loc.input.help.pathToSources": "Se requiere la ruta de acceso a los archivos de código fuente cuando los informes XML de cobertura no contienen la ruta de acceso absoluta a dichos archivos. Por ejemplo, los informes de JaCoCo no usan rutas de acceso absolutas y, al publicar la cobertura de JaCoCo para las aplicaciones Java, el patrón sería similar a \"$(System.DefaultWorkingDirectory)/MyApp/src/main/java/\". <br />También se necesita esta entrada si las pruebas se ejecutan en un contenedor Docker. La entrada debe apuntar a una ruta de acceso absoluta a los archivos de código fuente en el host. Por ejemplo, \"$(System.DefaultWorkingDirectory)/MyApp/\".",
   "loc.input.label.failIfCoverageEmpty": "Error si faltan los resultados de cobertura de código",
   "loc.input.help.failIfCoverageEmpty": "Error de tarea si la cobertura de código no produjo resultados para publicar.",
+  "loc.input.label.publishHtmlReport": "Publicar informe HTML",
+  "loc.input.help.publishHtmlReport": "Publica un informe de cobertura de código HTML. Deshabilite esta opción para omitir la generación y publicación del informe HTML.",
   "loc.messages.FoundNMatchesForPattern": "Se encontraron %s resultados coincidentes con el patrón: %s",
   "loc.messages.NoCodeCoverage": "No se encontraron resultados de cobertura de código para publicar."
 }

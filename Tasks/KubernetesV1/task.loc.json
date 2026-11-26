@@ -13,7 +13,7 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 280,
+    "Minor": 283,
     "Patch": 1
   },
   "demands": [],
@@ -454,9 +454,6 @@
     "Node16": {
       "target": "src//kubernetes.js"
     },
-    "Node10": {
-      "target": "src//kubernetes.js"
-    },
     "Node20_1": {
       "target": "src//kubernetes.js",
       "argumentFormat": ""
@@ -484,6 +481,8 @@
     "DownloadStableVersionFailed": "ms-resource:loc.messages.DownloadStableVersionFailed",
     "UsingLatestStableVersion": "ms-resource:loc.messages.UsingLatestStableVersion",
     "NotAValidVersion": "ms-resource:loc.messages.NotAValidVersion",
+    "InvalidKubectlVersion": "ms-resource:loc.messages.InvalidKubectlVersion",
+    "InvalidStableKubectlVersion": "ms-resource:loc.messages.InvalidStableKubectlVersion",
     "ConfigurationFileNotFound": "ms-resource:loc.messages.ConfigurationFileNotFound",
     "KubernetesServiceConnectionNotFound": "ms-resource:loc.messages.KubernetesServiceConnectionNotFound",
     "OutputVariableDataSizeExceeded": "ms-resource:loc.messages.OutputVariableDataSizeExceeded",

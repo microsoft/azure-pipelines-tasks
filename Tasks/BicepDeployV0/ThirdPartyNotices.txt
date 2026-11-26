@@ -8,23 +8,23 @@ This Azure DevOps extension (BicepDeployV0) is based on or incorporates material
 2.	@azure/arm-resources (https://github.com/Azure/azure-sdk-for-js)
 3.	@azure/arm-resourcesdeploymentstacks (https://github.com/Azure/azure-sdk-for-js)
 4.	@azure/bicep-deploy-common (https://github.com/Azure/bicep-deploy)
-5.	@azure/core-auth (https://github.com/Azure/azure-sdk-for-js)
-6.	@azure/core-client (https://github.com/Azure/azure-sdk-for-js)
-7.	@azure/core-lro (https://github.com/Azure/azure-sdk-for-js)
-8.	@azure/core-paging (https://github.com/Azure/azure-sdk-for-js)
-9.	@azure/core-rest-pipeline (https://github.com/Azure/azure-sdk-for-js)
-10.	@azure/core-tracing (https://github.com/Azure/azure-sdk-for-js)
-11.	@azure/core-util (https://github.com/Azure/azure-sdk-for-js)
-12.	@azure/identity (https://github.com/Azure/azure-sdk-for-js)
-13.	@azure/logger (https://github.com/Azure/azure-sdk-for-js)
-14.	@azure/msal-browser (https://github.com/AzureAD/microsoft-authentication-library-for-js)
-15.	@azure/msal-common (https://github.com/AzureAD/microsoft-authentication-library-for-js)
-16.	@azure/msal-node (https://github.com/AzureAD/microsoft-authentication-library-for-js)
-17.	@nodelib/fs.scandir (https://github.com/nodelib/nodelib)
-18.	@nodelib/fs.stat (https://github.com/nodelib/nodelib)
-19.	@nodelib/fs.walk (https://github.com/nodelib/nodelib)
-20.	@typespec/ts-http-runtime (https://github.com/Azure/azure-sdk-for-js)
-21.	adm-zip (https://github.com/cthackers/adm-zip)
+5.	@azure/bicep-rpc-client (https://github.com/Azure/bicep-deploy)
+6.	@azure/core-auth (https://github.com/Azure/azure-sdk-for-js)
+7.	@azure/core-client (https://github.com/Azure/azure-sdk-for-js)
+8.	@azure/core-lro (https://github.com/Azure/azure-sdk-for-js)
+9.	@azure/core-paging (https://github.com/Azure/azure-sdk-for-js)
+10.	@azure/core-rest-pipeline (https://github.com/Azure/azure-sdk-for-js)
+11.	@azure/core-tracing (https://github.com/Azure/azure-sdk-for-js)
+12.	@azure/core-util (https://github.com/Azure/azure-sdk-for-js)
+13.	@azure/identity (https://github.com/Azure/azure-sdk-for-js)
+14.	@azure/logger (https://github.com/Azure/azure-sdk-for-js)
+15.	@azure/msal-browser (https://github.com/AzureAD/microsoft-authentication-library-for-js)
+16.	@azure/msal-common (https://github.com/AzureAD/microsoft-authentication-library-for-js)
+17.	@azure/msal-node (https://github.com/AzureAD/microsoft-authentication-library-for-js)
+18.	@nodelib/fs.scandir (https://github.com/nodelib/nodelib)
+19.	@nodelib/fs.stat (https://github.com/nodelib/nodelib)
+20.	@nodelib/fs.walk (https://github.com/nodelib/nodelib)
+21.	@typespec/ts-http-runtime (https://github.com/Azure/azure-sdk-for-js)
 22.	agent-base (https://github.com/TooTallNate/proxy-agents)
 23.	async-mutex (https://github.com/DirtyHairy/async-mutex)
 24.	azure-devops-node-api (https://github.com/Microsoft/azure-devops-node-api)
@@ -32,56 +32,56 @@ This Azure DevOps extension (BicepDeployV0) is based on or incorporates material
 26.	azure-pipelines-tasks-azure-arm-rest (https://github.com/microsoft/azure-pipelines-tasks-common-packages)
 27.	azure-pipelines-tool-lib (https://github.com/microsoft/azure-pipelines-tool-lib)
 28.	balanced-match (https://github.com/juliangruber/balanced-match)
-29.	bicep-node (https://github.com/anthony-c-martin/bicep-node)
-30.	brace-expansion (https://github.com/juliangruber/brace-expansion)
-31.	braces (https://github.com/micromatch/braces)
-32.	buffer-equal-constant-time (https://github.com/goinstant/buffer-equal-constant-time)
-33.	bundle-name (https://github.com/sindresorhus/bundle-name)
-34.	call-bind-apply-helpers (https://github.com/ljharb/call-bind-apply-helpers)
-35.	call-bound (https://github.com/ljharb/call-bound)
-36.	concat-map (https://github.com/substack/node-concat-map)
-37.	cross-spawn (https://github.com/moxystudio/node-cross-spawn)
-38.	debug (https://github.com/debug-js/debug)
-39.	default-browser (https://github.com/sindresorhus/default-browser)
-40.	default-browser-id (https://github.com/sindresorhus/default-browser-id)
-41.	define-lazy-prop (https://github.com/sindresorhus/define-lazy-prop)
-42.	des.js (https://github.com/indutny/des.js)
-43.	dunder-proto (https://github.com/es-shims/dunder-proto)
-44.	ecdsa-sig-formatter (https://github.com/Brightspace/node-ecdsa-sig-formatter)
-45.	es-define-property (https://github.com/ljharb/es-define-property)
-46.	es-errors (https://github.com/ljharb/es-errors)
-47.	es-object-atoms (https://github.com/ljharb/es-object-atoms)
-48.	execa (https://github.com/sindresorhus/execa)
-49.	fast-glob (https://github.com/mrmlnc/fast-glob)
-50.	fastq (https://github.com/mcollina/fastq)
-51.	fill-range (https://github.com/jonschlinkert/fill-range)
-52.	follow-redirects (https://github.com/follow-redirects/follow-redirects)
-53.	fs.realpath (https://github.com/isaacs/fs.realpath)
-54.	function-bind (https://github.com/Raynos/function-bind)
-55.	get-intrinsic (https://github.com/ljharb/get-intrinsic)
-56.	get-proto (https://github.com/ljharb/get-proto)
-57.	get-stream (https://github.com/sindresorhus/get-stream)
-58.	glob (https://github.com/isaacs/node-glob)
-59.	glob-parent (https://github.com/gulpjs/glob-parent)
-60.	gopd (https://github.com/ljharb/gopd)
-61.	has-symbols (https://github.com/inspect-js/has-symbols)
-62.	hasown (https://github.com/inspect-js/hasOwn)
-63.	http-proxy-agent (https://github.com/TooTallNate/proxy-agents)
-64.	https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent)
-65.	human-signals (https://github.com/ehmicky/human-signals)
-66.	inflight (https://github.com/npm/inflight)
-67.	inherits (https://github.com/isaacs/inherits)
-68.	interpret (https://github.com/gulpjs/interpret)
-69.	is-core-module (https://github.com/inspect-js/is-core-module)
-70.	is-docker (https://github.com/sindresorhus/is-docker)
-71.	is-extglob (https://github.com/jonschlinkert/is-extglob)
-72.	is-glob (https://github.com/micromatch/is-glob)
-73.	is-inside-container (https://github.com/sindresorhus/is-inside-container)
-74.	is-number (https://github.com/jonschlinkert/is-number)
-75.	is-stream (https://github.com/sindresorhus/is-stream)
-76.	is-wsl (https://github.com/sindresorhus/is-wsl)
-77.	isexe (https://github.com/isaacs/isexe)
-78.	js-md4 (https://github.com/emn178/js-md4)
+29.	brace-expansion (https://github.com/juliangruber/brace-expansion)
+30.	braces (https://github.com/micromatch/braces)
+31.	buffer-equal-constant-time (https://github.com/goinstant/buffer-equal-constant-time)
+32.	bundle-name (https://github.com/sindresorhus/bundle-name)
+33.	call-bind-apply-helpers (https://github.com/ljharb/call-bind-apply-helpers)
+34.	call-bound (https://github.com/ljharb/call-bound)
+35.	concat-map (https://github.com/substack/node-concat-map)
+36.	cross-spawn (https://github.com/moxystudio/node-cross-spawn)
+37.	debug (https://github.com/debug-js/debug)
+38.	default-browser (https://github.com/sindresorhus/default-browser)
+39.	default-browser-id (https://github.com/sindresorhus/default-browser-id)
+40.	define-lazy-prop (https://github.com/sindresorhus/define-lazy-prop)
+41.	des.js (https://github.com/indutny/des.js)
+42.	dunder-proto (https://github.com/es-shims/dunder-proto)
+43.	ecdsa-sig-formatter (https://github.com/Brightspace/node-ecdsa-sig-formatter)
+44.	es-define-property (https://github.com/ljharb/es-define-property)
+45.	es-errors (https://github.com/ljharb/es-errors)
+46.	es-object-atoms (https://github.com/ljharb/es-object-atoms)
+47.	execa (https://github.com/sindresorhus/execa)
+48.	fast-glob (https://github.com/mrmlnc/fast-glob)
+49.	fastq (https://github.com/mcollina/fastq)
+50.	fill-range (https://github.com/jonschlinkert/fill-range)
+51.	follow-redirects (https://github.com/follow-redirects/follow-redirects)
+52.	fs.realpath (https://github.com/isaacs/fs.realpath)
+53.	function-bind (https://github.com/Raynos/function-bind)
+54.	get-intrinsic (https://github.com/ljharb/get-intrinsic)
+55.	get-proto (https://github.com/ljharb/get-proto)
+56.	get-stream (https://github.com/sindresorhus/get-stream)
+57.	glob (https://github.com/isaacs/node-glob)
+58.	glob-parent (https://github.com/gulpjs/glob-parent)
+59.	gopd (https://github.com/ljharb/gopd)
+60.	has-symbols (https://github.com/inspect-js/has-symbols)
+61.	hasown (https://github.com/inspect-js/hasOwn)
+62.	http-proxy-agent (https://github.com/TooTallNate/proxy-agents)
+63.	https-proxy-agent (https://github.com/TooTallNate/node-https-proxy-agent)
+64.	human-signals (https://github.com/ehmicky/human-signals)
+65.	inflight (https://github.com/npm/inflight)
+66.	inherits (https://github.com/isaacs/inherits)
+67.	interpret (https://github.com/gulpjs/interpret)
+68.	is-core-module (https://github.com/inspect-js/is-core-module)
+69.	is-docker (https://github.com/sindresorhus/is-docker)
+70.	is-extglob (https://github.com/jonschlinkert/is-extglob)
+71.	is-glob (https://github.com/micromatch/is-glob)
+72.	is-inside-container (https://github.com/sindresorhus/is-inside-container)
+73.	is-number (https://github.com/jonschlinkert/is-number)
+74.	is-stream (https://github.com/sindresorhus/is-stream)
+75.	is-wsl (https://github.com/sindresorhus/is-wsl)
+76.	isexe (https://github.com/isaacs/isexe)
+77.	js-md4 (https://github.com/emn178/js-md4)
+78.	jsonc-parser (https://github.com/microsoft/node-jsonc-parser)
 79.	jsonwebtoken (https://github.com/auth0/node-jsonwebtoken)
 80.	jwa (https://github.com/brianloveswords/node-jwa)
 81.	jws (https://github.com/brianloveswords/node-jws)
@@ -251,6 +251,32 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF @azure/bicep-deploy-common NOTICES, INFORMATION, AND LICENSE
+
+%% @azure/bicep-rpc-client NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+MIT License
+
+Copyright (c) Microsoft Corporation.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE
+=========================================
+END OF @azure/bicep-rpc-client NOTICES, INFORMATION, AND LICENSE
 
 %% @azure/core-auth NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -668,32 +694,6 @@ SOFTWARE.
 =========================================
 END OF @typespec/ts-http-runtime NOTICES, INFORMATION, AND LICENSE
 
-%% adm-zip NOTICES, INFORMATION, AND LICENSE BEGIN HERE
-=========================================
-MIT License
-
-Copyright (c) 2012 Another-D-Mention Software and other contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-=========================================
-END OF adm-zip NOTICES, INFORMATION, AND LICENSE
-
 %% agent-base NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
 (The MIT License)
@@ -864,32 +864,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 =========================================
 END OF balanced-match NOTICES, INFORMATION, AND LICENSE
-
-%% bicep-node NOTICES, INFORMATION, AND LICENSE BEGIN HERE
-=========================================
-MIT License
-
-Copyright (c) 2023 Anthony Martin
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-=========================================
-END OF bicep-node NOTICES, INFORMATION, AND LICENSE
 
 %% brace-expansion NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================
@@ -2351,6 +2325,32 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 =========================================
 END OF js-md4 NOTICES, INFORMATION, AND LICENSE
+
+%% jsonc-parser NOTICES, INFORMATION, AND LICENSE BEGIN HERE
+=========================================
+The MIT License (MIT)
+
+Copyright (c) Microsoft
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+=========================================
+END OF jsonc-parser NOTICES, INFORMATION, AND LICENSE
 
 %% jsonwebtoken NOTICES, INFORMATION, AND LICENSE BEGIN HERE
 =========================================

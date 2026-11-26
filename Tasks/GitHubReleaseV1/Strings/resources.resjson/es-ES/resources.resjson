@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "No se puede cargar \"%s\" porque es un directorio. Especifique un archivo.",
   "loc.messages.SearchingFileMatchingPattern": "Buscando archivos que coincidan con \"%s\".",
   "loc.messages.IssuesFetchError": "Error al capturar las incidencias. No se puede generar el registro de cambios.",
+  "loc.messages.NonBlockingIssuesFetchError": "Se encontraron errores de GraphQL de captura de problemas sin bloqueo: %s",
   "loc.messages.NoIssuesLinkedError": "No hay ninguna incidencia vinculada a los \"commits\" en la diferencia de \"commits\" especificada.",
   "loc.messages.LabelsSyntaxError": "Error al analizar las etiquetas. Para ver la sintaxis YAML, consulte https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "Atributo ChangeLogType no válido: %s. Solo se permiten las opciones \"commitBased\" o \"issueBased\". Para ver la sintaxis de YAML, consulte https://aka.ms/AA3m1bq",

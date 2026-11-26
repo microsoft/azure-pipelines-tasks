@@ -52,7 +52,7 @@ describe('PipAuthenticate L0 Suite - Workload Identity Federation', function () 
             assert(pipIndexUrl && pipIndexUrl.indexOf(testConstants.TestData.wifServiceConnection) >= 0,
                 'PIP_INDEX_URL should contain WIF service connection name as username');
             
-            TestHelpers.assertOutputContains(tr, 'Mock WIF: getFederatedWorkloadIdentityCredentials',
+            TestHelpers.assertOutputContains(tr, 'Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed',
                 'Should call WIF authentication method');
             TestHelpers.assertOutputContains(tr, 'Successfully added auth for feed',
                 'Should log message about successfully adding federated feed auth');

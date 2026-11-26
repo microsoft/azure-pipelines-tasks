@@ -24,8 +24,9 @@ export class TestHelpers {
         delete process.env['__throwTelemetryError__'];
         delete process.env['__mockConfigContent__'];
         delete process.env['__configFileExists__'];
+        delete process.env['__configFileReadError__'];
         delete process.env['__mockServiceConnections__'];
-        delete process.env['__packagingLocationShouldFail__'];
+        delete process.env['__feedVerificationShouldFail__'];
     }
 
     /**

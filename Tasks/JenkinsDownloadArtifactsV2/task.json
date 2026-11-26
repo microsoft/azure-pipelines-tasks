@@ -18,8 +18,8 @@
   "demands": [],
   "version": {
     "Major": 2,
-    "Minor": 280,
-    "Patch": 1
+    "Minor": 283,
+    "Patch": 3
   },
   "groups": [
     {
@@ -111,7 +111,7 @@
       "defaultValue": "**",
       "required": false,
       "groupName": "advanced",
-      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p>",
+      "helpMarkDown": "Specify files to be downloaded as multi line minimatch pattern. [More Information](https://aka.ms/minimatchexamples) <p>The default pattern (\\*\\*) will download all files across all artifacts produced by the Jenkins job. To download all files within artifact drop use drop/**.</p><p>For artifacts downloaded directly from Jenkins, patterns are case-insensitive on Windows, follow the destination filesystem's case sensitivity on macOS, and are case-sensitive on Linux.</p>",
       "properties": {
         "rows": "3",
         "resizable": "true"
@@ -274,10 +274,6 @@
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
     },
-    "Node10": {
-      "target": "jenkinsdownloadartifacts.js",
-      "argumentFormat": ""
-    },
     "Node20_1": {
       "target": "jenkinsdownloadartifacts.js",
       "argumentFormat": ""
@@ -381,7 +377,8 @@
     "NoAssociatedArtifacts": "No associated artifacts found",
     "OperationFailed": "Failed in %s with error: %s",
     "RetryingOperation": "Error: in %s, retrying the operation => retries pending: %s",
-    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired."
+    "ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
+    "ZipEntryOutsideTargetDirectory": "Archive entry '%s' resolves outside of the target directory."
   },
   "minimumAgentVersion": "2.144.0"
 }

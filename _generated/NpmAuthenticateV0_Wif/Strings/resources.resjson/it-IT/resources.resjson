@@ -14,6 +14,9 @@
   "loc.messages.FoundBuildCredentials": "Sono state trovate le credenziali di compilazione",
   "loc.messages.ServiceEndpointNotDefined": "Non è stato possibile trovare la connessione al servizio. Assicurarsi che la connessione al servizio selezionata sia ancora esistente.",
   "loc.messages.NpmrcNotNpmrc": "Il file selezionato per l'autenticazione (%s) non è un file con estensione npmrc valido.",
+  "loc.messages.NpmrcMustBeRegularFile": "Il file .npmrc in %s deve essere un file normale e non può essere un collegamento simbolico.",
+  "loc.messages.NpmrcChangedSinceBackup": "Il file .npmrc in %s non è più lo stesso file normale di cui è stato eseguito il backup. Rifiuto del ripristino.",
+  "loc.messages.UnableToWriteFileContents": "Non è possibile scrivere il contenuto di %s.",
   "loc.messages.ServiceEndpointUrlNotDefined": "Non è stato possibile trovare l'URL per la connessione al servizio. Assicurarsi che la connessione al servizio sia correttamente configurata.",
   "loc.messages.SavingFile": "Salvataggio del file %s",
   "loc.messages.RestoringFile": "Ripristino del file %s",
@@ -39,6 +42,10 @@
   "loc.messages.Info_ApplyingWifToAllRegistries": "Nessun feedUrl specificato. Applicazione delle credenziali WIF a tutti i registri %d in .npmrc.",
   "loc.messages.Error_UnsupportedAuthScheme": "Schema di autenticazione '%s' non supportato per la connessione al servizio. Gli schemi supportati sono 'Token' e 'UsernamePassword'.",
   "loc.messages.Warning_NpmrcFileNotFound": "File npmrc non trovato: %s",
+  "loc.messages.Warning_HomeDirectoryNotWritable": "Could not use Agent.HomeDirectory for the npmAuthenticate backup (%s). Falling back to Agent.TempDirectory, which may be writable by job containers.",
+  "loc.messages.Error_NoWritableBackupDirectory": "Unable to determine a writable npmAuthenticate backup directory.",
+  "loc.messages.Info_SkippingNonHttpsWifRegistry": "Autenticazione WIF ignorata per il registro non HTTPS: %s",
+  "loc.messages.Error_MixedRegistrySchemes": "Non è possibile autenticare i registri in '%s' che combinano URL HTTPS e non HTTPS. Le credenziali npm non sono associate allo schema. Usare HTTPS per tutti i registri su questo host e questa porta.",
   "loc.messages.Debug_EndpointProbeTimedOut": "Timeout di isEndpointInternal dopo %dms.",
   "loc.messages.Debug_EndpointProbeFailed": "Controllo di isEndpointInternal non riuscito: %s"
 }

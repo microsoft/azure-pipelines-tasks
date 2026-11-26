@@ -6,6 +6,7 @@ let taskPath = path.join(__dirname, '..', 'azurermwebappdeployment.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('ConnectedServiceName', 'AzureRMSpn');
 tr.setInput('WebAppName', 'mytestapp');
+tr.setInput('WebAppKind', 'webApp');
 tr.setInput('Package', 'webAppPkg.zip');
 tr.setInput('UseWebDeploy', 'true');
 tr.setInput('XmlTransformation', 'true');
@@ -47,6 +48,9 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     },
     "osType": {
         "osType": "Windows"
+    },
+    "getPlatform": {
+        "getPlatform": 0
     },
     "checkPath": {
         "cmd": true,
@@ -105,8 +109,6 @@ let a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
     }
 };
 
-import mockTask = require('azure-pipelines-task-lib/mock-task');
-var kuduDeploymentLog = require('azurerest-common/kududeploymentstatusutility.js');
 var msDeployUtility = require('azure-pipelines-tasks-webdeployment-common/msdeployutility.js'); 
 tr.registerMock('./msdeployutility.js', {
     getMSDeployCmdArgs : msDeployUtility.getMSDeployCmdArgs,
@@ -115,6 +117,75 @@ tr.registerMock('./msdeployutility.js', {
         return msDeployFullPath;
     }
 }); 
+
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-endpoint', {
+    AzureRMEndpoint: class {
+        public async getEndpoint() {
+            return {};
+        }
+    }
+});
+
+tr.registerMock('azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service', {
+    AzureAppService: class {
+        public getSlot() {
+            return undefined;
+        }
+    }
+});
+
+tr.registerMock('azure-pipelines-tasks-webdeployment-common/deployusingmsdeploy', {
+    DeployUsingMSDeploy: async function () {
+    }
+});
+
+tr.registerMock('./operations/AzureResourceFilterUtility', {
+    AzureResourceFilterUtility: {
+        getResourceGroupName: async function () {
+            return 'foobar';
+        }
+    }
+});
+
+tr.registerMock('./operations/AzureAppServiceUtility', {
+    AzureAppServiceUtility: class {
+        public async pingApplication() {
+        }
+
+        public async getKuduService() {
+            return {};
+        }
+
+        public async getWebDeployPublishingProfile() {
+            return {
+                publishUrl: 'mytestappKuduUrl',
+                msdeploySite: 'mytestapp',
+                userName: '$mytestapp',
+                userPWD: 'mytestappPwd'
+            };
+        }
+
+        public async isSitePublishingCredentialsEnabled() {
+            return true;
+        }
+
+        public async updateScmTypeAndConfigurationDetails() {
+        }
+    }
+});
+
+tr.registerMock('./operations/KuduServiceUtility', {
+    KuduServiceUtility: class {
+        public async updateDeploymentStatus() {
+            return undefined;
+        }
+    }
+});
+
+tr.registerMock('./operations/ReleaseAnnotationUtility', {
+    addReleaseAnnotation: async function () {
+    }
+});
 
 tr.registerMock('azurerest-common/azurerestutility.js', {
     getAzureRMWebAppPublishProfile: function(SPN, webAppName, resourceGroupName, deployToSlotFlag, slotName) {
@@ -160,10 +231,6 @@ tr.registerMock('azurerest-common/azurerestutility.js', {
         else {
             console.log('Failed to update history to kudu');
         }
-        var webAppPublishKuduUrl = publishingProfile.publishUrl;
-        var requestDetails = kuduDeploymentLog.getUpdateHistoryRequest(webAppPublishKuduUrl, isDeploymentSuccess);
-        requestDetails["requestBody"].author = 'author';
-        console.log("kudu log requestBody is:" + JSON.stringify(requestDetails["requestBody"]));
     },
     getResourceGroupName: function (SPN, webAppName) {
         return "foobar";
@@ -206,7 +273,7 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/ziputility.js', {
     }
 });
 
-tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
+tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility', {
     isInputPkgIsFolder: function() {
         return false;    
     },
@@ -235,6 +302,13 @@ tr.registerMock('azure-pipelines-tasks-webdeployment-common/utility.js', {
 
 var fs = require('fs');
 tr.registerMock('fs', {
+    ...fs,
+    readFileSync: function (filePath) {
+        if (filePath === "C:\\tempFolder\\web.Release.config") {
+            return Buffer.from('<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"><appSettings xdt:Transform="SetAttributes" /></configuration>');
+        }
+        return fs.readFileSync(filePath);
+    },
     createWriteStream: function (filePath, options) {
         return { 
             "isWriteStreamObj": true,
@@ -244,8 +318,6 @@ tr.registerMock('fs', {
             "end" : () => { return true }
         };
     },
-    ReadStream: fs.ReadStream,
-    WriteStream: fs.WriteStream,
     openSync: function (fd, options) {
         return true;
     },

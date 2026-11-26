@@ -5,6 +5,7 @@ import { Resources } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-resour
 import { AzureEndpoint } from 'azure-pipelines-tasks-azure-arm-rest/azureModels';
 import { SiteContainer } from 'azure-pipelines-tasks-azure-arm-rest/SiteContainer';
 import { PackageUtility } from 'azure-pipelines-tasks-webdeployment-common/packageUtility';
+import { logExternalOutput } from './ExternalOutput';
 
 const osTypeMap = new Map([
     [ 'app,container,xenon', 'Windows' ],
@@ -28,7 +29,7 @@ export class TaskParametersUtility {
         }
 
         taskParameters.azureEndpoint = await new AzureRMEndpoint(taskParameters.connectedServiceName).getEndpoint();
-        console.log(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
+        logExternalOutput(tl.loc('GotconnectiondetailsforazureRMWebApp0', taskParameters.WebAppName));
 
         if(taskParameters.AppSettings && taskParameters.AppSettings !== null)
         {
@@ -96,16 +97,16 @@ export class TaskParametersUtility {
         }
 
         if(imageName && !isMultiLineImages && tl.stats(multicontainerConfigFile).isDirectory()) {
-            console.log(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
+            logExternalOutput(tl.loc("SingleContainerDeployment", taskParameters.WebAppName));
         }
 
         if(tl.stats(multicontainerConfigFile).isFile()) {
             isMultiContainer = true;
             if(imageName) {
-                console.log(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
+                logExternalOutput(tl.loc("MultiContainerDeploymentWithTransformation", taskParameters.WebAppName));
             }
             else {
-                console.log(tl.loc("MultiContainerDeploymentWithoutTransformation", taskParameters.WebAppName));
+                logExternalOutput(tl.loc("MultiContainerDeploymentWithoutTransformation", taskParameters.WebAppName));
             }
         }
         else if (isMultiLineImages) {

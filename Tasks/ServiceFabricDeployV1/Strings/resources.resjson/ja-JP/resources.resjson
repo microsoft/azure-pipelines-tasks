@@ -87,6 +87,7 @@
   "loc.messages.PublishProfileRequiredUpgrade": "Azure Pipelines タスクにおいて、アップグレード設定を上書きするか、または公開プロファイルを指定する必要があります。",
   "loc.messages.UnsupportedARMAuthScheme": "'{0}' は ARM エンドポイントではサポートされていない認証スキームです。",
   "loc.messages.UnsupportedContainerRegistryAuthScheme": "'{0}' は Azure コンテナー レジストリではサポートされていない認証スキームです。",
+  "loc.messages.SFSDK_InvalidManifestPathSegment": "アプリケーション パッケージで無効な {0} 値 '{1}' 見つかりました。この値は、アプリケーション パッケージからファイル パスを構築するときにフォルダー名として使用されるため、単純な名前にする必要があります。空にしたり、パスの区切り記号や相対パス セグメントを含めたり、絶対パスにしたり、末尾に '.' または ' ' 文字を付けたりすることはできません。",
   "loc.messages.SFSDK_InvalidSFPackage": "{0} は有効な Service Fabric アプリケーション パッケージではありません。",
   "loc.messages.SFSDK_PackageValidationFailed": "パッケージの検証に失敗しました: {0}",
   "loc.messages.SFSDK_UnableToVerifyClusterConnection": "Service Fabric クラスターへのサービス接続を確認できません。",

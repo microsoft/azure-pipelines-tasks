@@ -13,6 +13,11 @@ export class JestTestExecutor implements ITestExecutor {
     toolRunnerPath: string;
     toolRunner: ToolRunner;
 
+    constructor(
+        private readonly isFeatureFlagEnabled: (featureFlag: string) => boolean | Promise<boolean> = tl.getPipelineFeature
+    ) {
+    }
+
     /*
     * Setup the test executor
     */
@@ -48,6 +53,7 @@ export class JestTestExecutor implements ITestExecutor {
         let operationResult: IOperationResult = { returnCode: 0, errorMessage: '' };
         let executionTimer = new SimpleTimer(constants.AUTOMATED_EXECUTION);
         let i = 0;
+        const useStructuredJestArguments = await this.isFeatureFlagEnabled(constants.STRUCTURED_JEST_ARGUMENTS_FIX_FEATURE);
         executionTimer.start();
 
         for (let test of testsToBeExecuted) {
@@ -55,8 +61,8 @@ export class JestTestExecutor implements ITestExecutor {
             try {
                 let reportName: string = `TEST-Jest${i}-junit.xml`;
                 tl.setVariable('JEST_JUNIT_OUTPUT_NAME', reportName);
-                tl.debug("Executing jest test with args :" + `jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
-                this.toolRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${test}"`);
+                tl.debug(`Executing Jest test: ${test}`);
+                utils.setJestTestRunnerArguments(this.toolRunner, test, useStructuredJestArguments);
                 operationResult.returnCode = await this.toolRunner.execAsync();
             } catch (error) {
                 if(operationResult.errorMessage === '') {

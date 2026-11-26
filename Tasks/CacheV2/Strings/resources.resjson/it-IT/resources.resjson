@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "Variabile per riscontro nella cache",
   "loc.input.help.cacheHitVar": "Variabile da impostare su 'true' quando viene ripristinata la cache, ovvero un riscontro nella cache; in caso contrario deve essere impostata su 'false'.",
   "loc.input.label.restoreKeys": "Prefissi di chiavi di ripristino aggiuntive",
-  "loc.input.help.restoreKeys": "Prefissi di chiavi di ripristino aggiuntive usati se la chiave primaria non è presente. Può essere un elenco di prefissi di chiave delimitati da caratteri di nuova riga."
+  "loc.input.help.restoreKeys": "Prefissi di chiavi di ripristino aggiuntive usati se la chiave primaria non è presente. Può essere un elenco di prefissi di chiave delimitati da caratteri di nuova riga.",
+  "loc.input.label.saveOnPartialSuccess": "Salva cache in caso di esito positivo parziale",
+  "loc.input.help.saveOnPartialSuccess": "Se questa opzione è impostata su true, la voce della cache viene salvata anche quando lo stato del processo è 'SucceededWithIssues' (esito positivo parziale), oltre a 'Succeeded'. Per impostazione predefinita, la cache viene salvata solo quando il processo ha esito positivo."
 }

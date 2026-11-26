@@ -91,6 +91,8 @@
   "loc.messages.DownloadStableVersionFailed": "Не удается скачать файл стабильной версии kubernetes с %s. Возврат к %s",
   "loc.messages.UsingLatestStableVersion": "В спецификации версии указана недопустимая версия 1.7. Вместо нее будет использована последняя стабильная версия. Проверьте правильность версий на странице https://github.com/kubernetes/kubernetes/releases",
   "loc.messages.NotAValidVersion": "Не является допустимой версией, доступные версии: %s",
+  "loc.messages.InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+  "loc.messages.InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
   "loc.messages.ConfigurationFileNotFound": "Файл конфигурации, соответствующий %s, не найден.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Сведения о подключении к службе Kubernetes не найдены.",
   "loc.messages.OutputVariableDataSizeExceeded": "Выходная переменная не задана, так как для выходных данных команды kubectl превышена максимально поддерживаемая длина. Длина выходных данных: %s, максимально поддерживаемая длина: %s",

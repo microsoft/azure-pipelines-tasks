@@ -46,6 +46,8 @@
     }
 }
 
+. "$PSScriptRoot\..\ps_modules\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1"
+
 function Get-NamesFromApplicationManifest
 {
     <#
@@ -86,6 +88,44 @@ function Get-NamesFromApplicationManifest
     }
 
     Write-Output (New-Object psobject -Property $h)
+}
+
+# Shared by every caller that builds a file path from a name taken out of an untrusted application/service
+# manifest: ApplicationTypeName (used as the package's path inside the cluster image store),
+# ServiceManifestRef/@ServiceManifestName and CodePackage/ConfigPackage/DataPackage @Name (used as folder
+# names while building the diff package and while reading the docker/container settings from the service
+# manifest). Service Fabric only ever emits a simple name in these positions, but the manifest is only as
+# trustworthy as whatever produced the application package, so a name such as '..\..\x', 'C:\x' or
+# '\\server\share\x' would escape the folder the value is supposed to stay inside of. Windows also silently
+# strips a trailing '.' or ' ' off a path segment outside of the '\\?\' long-path form - eg 'MyApp. ' resolves
+# to 'MyApp', '...' to the parent directory, and '.. ' to '..' - so those must be rejected too, even though
+# none of them fail the checks above on their own.
+function Assert-ValidManifestPathSegment
+{
+    param(
+        [string] $Name,
+        [string] $ElementDescription
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Name) -or
+        $Name -eq '.' -or
+        $Name -eq '..' -or
+        $Name.IndexOfAny([char[]]@('\', '/')) -ne -1 -or
+        $Name.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1 -or
+        [System.IO.Path]::IsPathRooted($Name) -or
+        $Name.TrimEnd('.', ' ') -ne $Name)
+    {
+        throw (Get-VstsLocString -Key SFSDK_InvalidManifestPathSegment -ArgumentList @($ElementDescription, $Name))
+    }
+}
+
+function Assert-ValidImageStorePathSegment
+{
+    param(
+        [string] $Name
+    )
+
+    Assert-ValidManifestPathSegment -Name $Name -ElementDescription 'ApplicationTypeName'
 }
 
 function Get-ImageStoreConnectionStringFromClusterManifest
@@ -301,7 +341,9 @@ function Wait-ServiceFabricApplicationUpgradeAction
             [object]$LastUpgradeStatus
         )
         $upgradeStatus = Get-ServiceFabricApplicationUpgrade -ApplicationName $ApplicationName
-        Write-Host (Get-VstsLocString -Key SFSDK_CurrentUpgradeState) $upgradeStatus.UpgradeState
+        Write-Host (Get-VstsLocString -Key SFSDK_CurrentUpgradeState) `
+            (Protect-ExternalOutput -InputObject $upgradeStatus.UpgradeState `
+                -Source remote -VsoCommandMode blockAndTelemetry)
 
         $currentDomainWiseUpgradeStatus = Get-DomainUpgradeStatus -UpgradeDomainsStatus $upgradeStatus.UpgradeDomainsStatus
         $lastDomainWiseUpgradeStatus = ""
@@ -312,7 +354,9 @@ function Wait-ServiceFabricApplicationUpgradeAction
 
         if (($currentDomainWiseUpgradeStatus -ne $lastDomainWiseUpgradeStatus) -and ($currentDomainWiseUpgradeStatus -ne ""))
         {
-            Write-Host (Get-VstsLocString -Key SFSDK_DomainUpgradeStatus) $currentDomainWiseUpgradeStatus
+            Write-Host (Get-VstsLocString -Key SFSDK_DomainUpgradeStatus) `
+                (Protect-ExternalOutput -InputObject $currentDomainWiseUpgradeStatus `
+                    -Source remote -VsoCommandMode blockAndTelemetry)
         }
 
         # unhealthy evaluations to be printed.
@@ -327,7 +371,8 @@ function Wait-ServiceFabricApplicationUpgradeAction
 
             if (($currentUnhealthyEvaluation -ne $lastUnhealthyEvaluation) -and ($currentUnhealthyEvaluation -ne ""))
             {
-                Write-Host $currentUnhealthyEvaluation.Trim()
+                Write-Host (Protect-ExternalOutput -InputObject $currentUnhealthyEvaluation.Trim() `
+                    -Source remote -VsoCommandMode blockAndTelemetry)
             }
         }
 
@@ -513,7 +558,8 @@ function Register-ServiceFabricApplicationTypeAction
         throw
     }
 
-    Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
+    $null = Wait-ServiceFabricApplicationTypeRegistrationStatus -ApplicationTypeName $ApplicationTypeName `
+        -ApplicationTypeVersion $ApplicationTypeVersion -TimeoutSec $TimeoutSec
 }
 
 function Get-ServiceFabricApplicationTypeAction
@@ -729,7 +775,8 @@ function Remove-ServiceFabricApplicationAction
     }
     catch [System.TimeoutException]
     {
-        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $ApplicationName)
+        $displayApplicationName = Protect-ExternalOutput -InputObject $ApplicationName -Source remote -VsoCommandMode blockAndTelemetry
+        Write-Host (Get-VstsLocString -Key SFSDK_PerformingForceRemoveOnTimeout -ArgumentList $displayApplicationName)
         $removeAction = { Remove-ServiceFabricApplication -ApplicationName $ApplicationName -Force -ForceRemove }
         Invoke-ActionWithDefaultRetries -Action $removeAction `
             -RetryMessage (Get-VstsLocString -Key SFSDK_RetryingRemoveApplication) `
@@ -886,7 +933,9 @@ function Trace-ServiceFabricClusterHealth
     try
     {
         Write-Host (Get-VstsLocString -Key SFSDK_ClusterHealth)
-        Get-ServiceFabricClusterHealth
+        Write-Host (Protect-ExternalOutput `
+            -InputObject (Get-ServiceFabricClusterHealth | Out-String).TrimEnd() `
+            -Source remote -VsoCommandMode blockAndTelemetry)
     }
     catch
     {}
@@ -902,7 +951,9 @@ function Trace-ServiceFabricApplicationHealth
     try
     {
         Write-Host (Get-VstsLocString -Key SFSDK_ApplicationHealth)
-        Get-ServiceFabricApplicationHealth -ApplicationName $ApplicationName
+        Write-Host (Protect-ExternalOutput `
+            -InputObject (Get-ServiceFabricApplicationHealth -ApplicationName $ApplicationName | Out-String).TrimEnd() `
+            -Source remote -VsoCommandMode blockAndTelemetry)
     }
     catch
     {

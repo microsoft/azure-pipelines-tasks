@@ -91,6 +91,8 @@
   "loc.messages.DownloadStableVersionFailed": "%s에서 안정적인 버전의 Kubernetes 파일을 다운로드할 수 없습니다. %s(으)로 대체합니다.",
   "loc.messages.UsingLatestStableVersion": "잘못된 버전 1.7이 버전 사양 입력에 지정되었습니다. 안정적인 최신 버전을 대신 사용합니다. https://github.com/kubernetes/kubernetes/releases에서 올바른 버전을 확인하세요.",
   "loc.messages.NotAValidVersion": "버전이 잘못되었습니다. 사용 가능한 버전은 %s입니다.",
+  "loc.messages.InvalidKubectlVersion": "The kubectl version is not valid. Specify a semantic version such as 1.31.0 or v1.31.0. A version range such as 1.x.0 is supported only when a matching version is already in the agent's tool cache.",
+  "loc.messages.InvalidStableKubectlVersion": "The latest stable kubectl version could not be determined because stable.txt does not contain a valid semantic version.",
   "loc.messages.ConfigurationFileNotFound": "%s과(와) 일치하는 구성 파일이 없습니다.",
   "loc.messages.KubernetesServiceConnectionNotFound": "Kubernetes 서비스 연결 정보를 찾을 수 없습니다.",
   "loc.messages.OutputVariableDataSizeExceeded": "kubectl 명령 출력으로 설정되지 않은 출력 변수가 지원되는 최대 길이를 초과했습니다. 출력 길이: %s, 지원되는 최대 길이: %s",

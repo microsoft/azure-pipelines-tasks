@@ -6,6 +6,7 @@ import os = require("os");
 import { getHandlerFromToken, WebApi } from "azure-devops-node-api";
 import { ITaskApi } from "azure-devops-node-api/TaskApi";
 import { createPerInvocationAzureConfigDir, removePerInvocationAzureConfigDir } from "./src/AzureCliConfigDir";
+import { createServicePrincipalCertificate, removeServicePrincipalCertificate } from "./src/AzureCliCredentialFile";
 
 const nodeVersion = parseInt(process.version.split('.')[0].replace('v', ''));
 if (nodeVersion > 16) {
@@ -25,6 +26,11 @@ export class azureclitask {
 
     public static async runMain() {
         var toolExecutionError = null;
+        this.isAzureCLICredentialFileIsolationEnabled = tl.getPipelineFeature('AzureCLICredentialFileIsolationEnabled');
+        if (this.isAzureCLICredentialFileIsolationEnabled) {
+            this.cliPasswordPath = null;
+            this.cliCredentialDirectory = null;
+        }
         try {
             var tool;
             if (os.type() != "Windows_NT") {
@@ -113,7 +119,11 @@ export class azureclitask {
                 this.deleteFile(scriptPath);
             }
 
-            if (this.cliPasswordPath) {
+            if (this.isAzureCLICredentialFileIsolationEnabled) {
+                removeServicePrincipalCertificate(this.cliPasswordPath, this.cliCredentialDirectory);
+                this.cliPasswordPath = null;
+                this.cliCredentialDirectory = null;
+            } else if (this.cliPasswordPath) {
                 tl.debug('Removing spn certificate file');
                 tl.rmRF(this.cliPasswordPath);
             }
@@ -169,6 +179,8 @@ export class azureclitask {
 
     private static isLoggedIn: boolean = false;
     private static cliPasswordPath: string = null;
+    private static cliCredentialDirectory: string = null;
+    private static isAzureCLICredentialFileIsolationEnabled: boolean = false;
     private static azCliConfigPath: string = null;
     private static servicePrincipalId: string = null;
     private static servicePrincipalKey: string = null;
@@ -191,8 +203,14 @@ export class azureclitask {
             if (authType == "spnCertificate") {
                 tl.debug('certificate based endpoint');
                 let certificateContent: string = tl.getEndpointAuthorizationParameter(connectedService, "servicePrincipalCertificate", false);
-                cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
-                fs.writeFileSync(cliPassword, certificateContent);
+                if (this.isAzureCLICredentialFileIsolationEnabled) {
+                    const certificate = createServicePrincipalCertificate(tl.getVariable('Agent.TempDirectory'), certificateContent);
+                    cliPassword = certificate.certificatePath;
+                    this.cliCredentialDirectory = certificate.directoryPath;
+                } else {
+                    cliPassword = path.join(tl.getVariable('Agent.TempDirectory') || tl.getVariable('system.DefaultWorkingDirectory'), 'spnCert.pem');
+                    fs.writeFileSync(cliPassword, certificateContent);
+                }
                 this.cliPasswordPath = cliPassword;
             }
             else {

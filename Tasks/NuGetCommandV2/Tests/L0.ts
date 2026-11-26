@@ -1,5 +1,6 @@
 import * as assert from 'node:assert';
 import * as path from 'node:path';
+import * as stream from 'node:stream';
 
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
@@ -7,7 +8,11 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 describe('NuGet external output filtering', function () {
     it('blocks PATH manipulation through a crafted nuspec path', () => {
         const maliciousPath = 'repo/package.nuspec\n##vso[task.setvariable variable=PATH]/tmp/attacker';
-        const filteredPath = tl.filterExternalOutput(maliciousPath, { source: 'repository' }).toString('utf8');
+        const sink = new stream.PassThrough();
+        let filteredPath = '';
+        sink.on('data', chunk => { filteredPath += chunk.toString('utf8'); });
+
+        tl.writeExternalOutput(maliciousPath, { source: 'repository', destination: sink });
 
         assert.strictEqual(filteredPath, 'repo/package.nuspec\n##_vso[task.setvariable variable=PATH]/tmp/attacker');
         assert.ok(!filteredPath.includes('##vso['));

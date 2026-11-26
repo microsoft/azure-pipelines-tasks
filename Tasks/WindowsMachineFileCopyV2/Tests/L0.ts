@@ -1,10 +1,6 @@
 /// <reference path="../../../definitions/mocha.d.ts"/>
 /// <reference path="../../../definitions/node.d.ts"/>
-/// <reference path="../../../definitions/Q.d.ts"/>
 
-
-import Q = require('q');
-import assert = require('assert');
 import path = require('path');
 
 var psm = require('../../../Tests/lib/psRunner');
@@ -45,13 +41,16 @@ describe('WindowsMachineFileCopy Suite', function () {
             psr.run(path.join(__dirname, 'L0ValidInputParallelCopy.ps1'), done);
         });
         it('Throw error if job fails for resource in Parallel Copy', (done) => {
-           psr.run(path.join(__dirname, 'L0ParallelCopyFail.ps1'), done);
+            psr.run(path.join(__dirname, 'L0ParallelCopyFail.ps1'), done);
         });
         it('Uses legacy and structured Robocopy arguments based on pipeline feature state', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyArguments.ps1'), done);
         });
         it('Round-trips sanitized Robocopy arguments without altering any token', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyArgumentsRoundTrip.ps1'), done);
+        });
+        it('Filters cleanup and copy output without changing Robocopy exit-code handling', (done) => {
+            psr.run(path.join(__dirname, 'L0RoboCopyOutput.ps1'), done);
         });
     }
     else {

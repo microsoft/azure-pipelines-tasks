@@ -143,7 +143,25 @@ export const runValidateScriptArgsTests = () => {
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
         ['pscore: lone LF inert when newline FF off (enforce on) - deployed parity',
             '-Foo bar\nWrite-Host x', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']]
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
+        ['batch: %VAR% inert when percent-expansion FF off (enforce on) - deployed parity',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=false']],
+        ['batch: %VAR% does not throw in collect mode (percent FF on; measurement ring)',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_COLLECT=true', 'AZP_75787_ENABLE_NEW_LOGIC=false', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: %VAR% warns but does not throw in audit mode (percent FF on)',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'AZP_75787_ENABLE_NEW_LOGIC=false', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: clean args without % pass with the percent feature on',
+            'deploy prod -v 2', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['bash: % stays allowed with the percent feature on (batch-only ring)',
+            'a %b% c', 'bash',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['pscore: % stays allowed with the percent feature on (batch-only ring)',
+            '-Threshold 80%', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {
@@ -224,7 +242,13 @@ export const runValidateScriptArgsTests = () => {
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']]
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['batch: %VAR% percent-expansion blocked under the percent feature',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: unrecognized scriptType also reaches the cmd.exe sink and is blocked',
+            'x %SYSTEM_ACCESSTOKEN%', 'cmd',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of throwTestSuites) {
@@ -303,6 +327,55 @@ export const runValidateScriptArgsTests = () => {
             } finally {
                 clearEnv(env);
             }
+        });
+
+        it('percent rejection does not expose the variable name', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`deploy %${SECRET}%`, 'batch', {
+                        taskName: 'AzureCLIV3',
+                        percentMessageLocKey: 'BatchPercentSignNotAllowed'
+                    }),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes('BatchPercentSignNotAllowed')
+                        && err.message.includes("'%'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+    });
+
+    describe('Batch percent detection in audit and collect modes', () => {
+        let originalWrite: typeof process.stdout.write;
+        let captured: string;
+        const start = () => {
+            captured = '';
+            originalWrite = process.stdout.write.bind(process.stdout);
+            (process.stdout.write as any) = (c: string | Buffer, ...a: any[]): boolean => { captured += c.toString(); return originalWrite(c, ...a); };
+        };
+        const stop = () => { process.stdout.write = originalWrite; };
+
+        it('collect mode emits batchPercentDetected telemetry (no throw)', () => {
+            const env = ['AZP_75787_ENABLE_COLLECT=true', 'AGENT_VERSION=2.999.0', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env); start();
+            try {
+                assert.doesNotThrow(() => validateScriptArgs('deploy %BUILD_TAG%', 'batch'));
+            } finally { stop(); clearEnv(env); }
+            assert.ok(captured.indexOf('##vso[telemetry.publish') >= 0, 'telemetry should be emitted');
+            assert.ok(captured.indexOf('batchPercentDetected') >= 0, 'telemetry should include batchPercentDetected');
+        });
+
+        it('audit mode warns, does not throw', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env); start();
+            try {
+                assert.doesNotThrow(() => validateScriptArgs('deploy %BUILD_TAG%', 'batch'));
+            } finally { stop(); clearEnv(env); }
+            assert.ok(/##vso\[task.issue type=warning/.test(captured), 'audit mode should warn');
         });
     });
 

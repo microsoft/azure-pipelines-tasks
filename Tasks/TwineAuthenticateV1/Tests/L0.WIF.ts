@@ -56,7 +56,7 @@ describe('TwineAuthenticate L0 Suite - Workload Identity Federation', function (
             assert(fileContent.indexOf(testConstants.TestData.wifToken) >= 0,
                 '.pypirc should contain WIF token');
             
-            TestHelpers.assertOutputContains(tr, 'Mock WIF: getFederatedWorkloadIdentityCredentials',
+            TestHelpers.assertOutputContains(tr, 'Mock WIF: getFederatedWorkloadIdentityCredentialsForFeed',
                 'Should call WIF authentication method');
         });
 

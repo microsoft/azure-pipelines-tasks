@@ -202,7 +202,7 @@ export default class Util {
         address: registryAuthenticationToken.getLoginServerUrl()
       });
     }
-    tl.setVariable(Constants.fileNameDockerCredential, JSON.stringify(credentials));
+    tl.setVariable(Constants.fileNameDockerCredential, JSON.stringify(credentials), true);
   }
 
   public static readDockerCredentials(): any[] {

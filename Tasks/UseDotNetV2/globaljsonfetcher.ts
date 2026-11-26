@@ -2,6 +2,7 @@
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as fileSystem from "fs";
 import * as JSON5 from 'json5';
+import * as os from "os";
 import { VersionInfo } from "./models";
 import { DotNetCoreVersionFetcher } from "./versionfetcher";
 import { applyRollForwardPolicy, validRollForwardPolicies } from "./versionutilities";
@@ -51,11 +52,11 @@ export class globalJsonFetcher {
                             channelSpec = resolvedSpec;
                         }
                     }
-                    console.log(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, matchingSpec || channelSpec));
+                    tl.writeExternalOutput(tl.loc("ApplyingRollForwardPolicy", entry.rollForward, entry.version, matchingSpec || channelSpec) + os.EOL, { source : "repository" });
                 }
 
                 var versionInfo = await versionFetcher.getVersionInfo(channelSpec, null, "sdk", false, matchingSpec);
-                console.log(tl.loc("ResolvedVersionFromGlobalJson", versionInfo.getVersion(), entry.version, entry.rollForward || "disable"));
+                tl.writeExternalOutput(tl.loc("ResolvedVersionFromGlobalJson", versionInfo.getVersion(), entry.version, entry.rollForward || "disable") + os.EOL, { source : "repository" });
                 versionInformation.push(versionInfo);
             }
         }
@@ -72,7 +73,7 @@ export class globalJsonFetcher {
         return filePathsToGlobalJson.map(path => {
             var content = this.readGlobalJson(path);
             if (content != null) {
-                console.log(tl.loc("GlobalJsonSdkVersion", content.sdk.version, path));
+                tl.writeExternalOutput(tl.loc("GlobalJsonSdkVersion", content.sdk.version, path) + os.EOL, { source : "repository" });
                 return {
                     version: content.sdk.version,
                     rollForward: content.sdk.rollForward

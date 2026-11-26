@@ -9,10 +9,24 @@ import * as util from "util";
 
 const uuidV4 = require('uuid/v4');
 const dockerToolName = "docker";
+const allowedReleaseTypes: ReadonlyArray<string> = ["stable", "edge", "test", "nightly"];
 const isWindows = os.type().match(/^Win/);
 const dockerToolNameWithExtension = dockerToolName + getExecutableExtension();
 
 export async function downloadDocker(version: string, releaseType: string): Promise<string> {
+    const isDockerInstallerV0ReleaseTypeValidationFixEnabled =
+        tl.getPipelineFeature('DockerInstallerV0ReleaseTypeValidationFixEnabled');
+    if (isDockerInstallerV0ReleaseTypeValidationFixEnabled) {
+        if (allowedReleaseTypes.indexOf(releaseType) === -1) {
+            emitValidationTelemetry('rejected', 'invalidReleaseType');
+            throw new Error(tl.loc("InvalidReleaseType", allowedReleaseTypes.join(", ")));
+        }
+        if (isWindows && releaseType === "nightly") {
+            emitValidationTelemetry('rejected', 'nightlyUnsupported');
+            throw new Error(tl.loc("NightlyNotSupportedOnWindows"));
+        }
+        emitValidationTelemetry('accepted');
+    }
 
     //docker does not follow strict semversion and has leading zeros in versions <10
     var cleanVersion = version.replace(/(0+)([1-9]+)/, "$2");
@@ -45,6 +59,27 @@ export async function downloadDocker(version: string, releaseType: string): Prom
 
     fs.chmodSync(Dockerpath, "755");
     return Dockerpath;
+}
+
+function emitValidationTelemetry(
+    decision: 'accepted' | 'rejected',
+    reason: 'none' | 'invalidReleaseType' | 'nightlyUnsupported' = 'none'
+): void {
+    try {
+        tl.command('telemetry.publish', {
+            area: 'TaskHub',
+            feature: 'DockerInstallerV0ReleaseTypeValidation'
+        }, JSON.stringify({
+            schemaVersion: 1,
+            validationEnabled: true,
+            platform: os.type(),
+            event: 'validation',
+            decision,
+            reason
+        }));
+    } catch {
+        tl.debug('Unable to publish DockerInstallerV0 release-type validation telemetry.');
+    }
 }
 
 function findDocker(rootFolder: string) {

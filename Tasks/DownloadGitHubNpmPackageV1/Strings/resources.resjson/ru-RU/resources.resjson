@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": "Используются реестры в NPMRC",
   "loc.messages.PublishRegistry": "Публикация в реестре: %s",
   "loc.messages.UsingRegistry": "Используется реестр: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "Добавление проверки подлинности для реестра: %s",
   "loc.messages.FoundLocalRegistries": "Найдено реестров в этой организации или коллекции: %d",
   "loc.messages.ForcePackagingUrl": "Принудительная упаковка URL-адреса коллекции: %s",

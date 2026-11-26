@@ -66,6 +66,9 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Update-ServiceVersions) service version prefix changed', (done) => {
             psr.run(path.join(__dirname, 'Update-ServiceVersions.VersionPrefixChanged.ps1'), done);
         })
+        it('(Update-ServiceVersions) rejects path traversal in service manifest name', (done) => {
+            psr.run(path.join(__dirname, 'Update-ServiceVersions.InvalidServiceName.ps1'), done);
+        })
         it('(Update-PackageVersion) no changes', (done) => {
             psr.run(path.join(__dirname, 'Update-PackageVersion.NoChanges.ps1'), done);
         })
@@ -105,6 +108,9 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         it('(Find-FileChanges) only the first change is logged', (done) => {
             psr.run(path.join(__dirname, 'Find-FileChanges.LogOnlyFirst.ps1'), done);
         })
+        it('(Update-PackageVersion) rejects path traversal in package name', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.InvalidPackageName.ps1'), done);
+        })
         it('(Update-DockerImageSettings.psm1) test untagged Docker image settings with names file', done => {
             psr.run(path.join(__dirname, 'Test-UntaggedDockerImageSettingsWithNames.ps1'), done);
         })
@@ -122,6 +128,36 @@ describe('ServiceFabricUpdateManifests Suite', function () {
         })
         it('(Update-DockerImageSettings.psm1) test ambiguous tagged Docker image settings without names file', done => {
             psr.run(path.join(__dirname, 'Test-AmbiguousTaggedDockerImageSettingsWithoutNames.ps1'), done);
+        })
+        it('(Update-DockerImageSettings.psm1) rejects path traversal in service manifest name', done => {
+            psr.run(path.join(__dirname, 'Test-DockerImageSettings.InvalidServiceName.ps1'), done);
+        })
+        it('(Update-ApplicationVersions) neutralizes logging commands in logged manifest, path and input values', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.LoggingCommandInjection.ps1'), done);
+        })
+        it('(Update-ApplicationVersions) neutralizes logging commands in logged previous build values', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.LoggingCommandInjection.PreviousBuild.ps1'), done);
+        })
+        it('(Update-ApplicationVersions) neutralizes logging commands in the could-not-find-subpath warning', (done) => {
+            psr.run(path.join(__dirname, 'Update-ApplicationVersions.LoggingCommandInjection.CouldNotFindSubPath.ps1'), done);
+        })
+        it('(Assert-ValidManifestPathSegment) neutralizes logging commands in its thrown message', (done) => {
+            psr.run(path.join(__dirname, 'Assert-ValidManifestPathSegment.LoggingCommandInjection.ps1'), done);
+        })
+        it('(Update-ServiceVersions) neutralizes logging commands in logged values', (done) => {
+            psr.run(path.join(__dirname, 'Update-ServiceVersions.LoggingCommandInjection.ps1'), done);
+        })
+        it('(Update-PackageVersion) neutralizes logging commands in logged values', (done) => {
+            psr.run(path.join(__dirname, 'Update-PackageVersion.LoggingCommandInjection.ps1'), done);
+        })
+        it('(Find-FileChanges) neutralizes logging commands in logged file names', (done) => {
+            psr.run(path.join(__dirname, 'Find-FileChanges.LoggingCommandInjection.ps1'), done);
+        })
+        it('(Get-VstsBuild) neutralizes logging commands in logged build values', (done) => {
+            psr.run(path.join(__dirname, 'Get-VstsBuild.LoggingCommandInjection.ps1'), done);
+        })
+        it('task definition restricts logging commands and every Write-Host is protected', (done) => {
+            psr.run(path.join(__dirname, 'Task.LoggingCommandInjection.Guards.ps1'), done);
         })
     }
 });

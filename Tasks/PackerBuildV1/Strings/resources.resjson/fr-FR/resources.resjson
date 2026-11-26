@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer a été correctement extrait dans le chemin suivant : %s.",
   "loc.messages.CreatedStagingDirectory": "Répertoire de préproduction créé pour la conservation des ressources binaires et des modèles de l'outil Packer : %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Impossible de supprimer le répertoire de préproduction %s. Effectuez la suppression manuellement.",
+  "loc.messages.CouldNotDeleteTempFile": "Impossible de supprimer le fichier de variables temporaires %s. Veuillez effectuer la suppression manuellement.",
   "loc.messages.InstalledPackerVersion": "La version installée de Packer est %s.",
   "loc.messages.PackerToolBusy": "Packer semble occupé. Nouvelle tentative dans 1 seconde...",
   "loc.messages.ResolvingDeployPackageInput": "Résolution du chemin du package de déploiement.",

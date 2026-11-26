@@ -20,5 +20,6 @@
   "loc.messages.BuildctlNotFoundInFolder": "路径 %s 中找不到 Buildctl 可执行文件",
   "loc.messages.FileContentSynced": "文件内容已同步到磁盘。内容为 %s。",
   "loc.messages.VerifyBuildctlInstallation": "正在验证 Buildctl 安装…",
-  "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s"
+  "loc.messages.WritingDockerConfigToTempFile": "正在将 Docker 配置写入临时文件。文件路径: %s，Docker 配置: %s",
+  "loc.messages.NotAddingAnyTagsToBuild": "未将任何标记添加到已生成的映像，因为未指定任何存储库。"
 }

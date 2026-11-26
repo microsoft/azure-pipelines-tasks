@@ -11,9 +11,17 @@ export class FirewallOperations {
 
     private _azureMysqManagementClient: AzureMysqlFlexibleServerManagementClient;
     private _firewallName: string;
+    private _ruleAdded: boolean = false;
 
     constructor(azureCredentials: ApplicationTokenCredentials, subscriptionId: string) {
         this._azureMysqManagementClient = new AzureMysqlFlexibleServerManagementClient(azureCredentials, subscriptionId);
+    }
+
+    /**
+     * Whether a firewall rule was successfully created by this instance, regardless of whether a later step subsequently threw. 
+     */
+    public isFirewallRuleAdded(): boolean {
+        return this._ruleAdded;
     }
 
     /**
@@ -94,6 +102,7 @@ export class FirewallOperations {
         const firewallAddressRange: FirewallAddressRange = new FirewallAddressRange(startIpAddress, endIpAddress);
         const firewallRule: FirewallRule = new FirewallRule(this._firewallName, firewallAddressRange);
         await this.addFirewallRule(serverName, firewallRule, resourceGroupName);
+        this._ruleAdded = true;
         task.debug('Firewall configuration name added : ' + this._firewallName);
     }
 

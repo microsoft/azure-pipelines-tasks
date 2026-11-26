@@ -1,6 +1,7 @@
 import { getPackagingRouteUrl } from "azure-pipelines-tasks-artifacts-common/connectionDataUtils";
 import { ProtocolType } from "azure-pipelines-tasks-artifacts-common/protocols";
 import { getPackagingServiceConnections } from "azure-pipelines-tasks-artifacts-common/serviceConnectionUtils";
+import { verifyAzureArtifactsFeedUrl } from "azure-pipelines-tasks-artifacts-common/feedUrlUtils";
 import { getProjectScopedFeed } from "azure-pipelines-tasks-artifacts-common/stringUtils";
 import { emitTelemetry } from "azure-pipelines-tasks-artifacts-common/telemetry";
 import { getSystemAccessToken } from "azure-pipelines-tasks-artifacts-common/webapi";
@@ -38,7 +39,8 @@ async function main(): Promise<void> {
                     pypiSimpleApiLocationId,
                     feed.feedId,
                     feed.projectId);
-                const pipUri = utils.addCredentialsToUri("build", localAccessToken, feedUri);
+                const verifiedFeedUri = await verifyAzureArtifactsFeedUrl(feedUri, ProtocolType.PyPi);
+                const pipUri = utils.addCredentialsToUri("build", localAccessToken, verifiedFeedUri.href);
                 internalAndExternalEndpoints.push(pipUri);
             }
         }

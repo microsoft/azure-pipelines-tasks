@@ -27,6 +27,9 @@ describe('AzureFileCopy Suite', function () {
     });
 
     if (psm.testSupported()) {
+        it('Validate console output safety', (done) => {
+            psr.run(path.join(__dirname, 'L0ConsoleOutput.ps1'), done);
+        });
         it('Validate AzureFileCopy.Utility Get-AzureUtility', (done) => {
             psr.run(path.join(__dirname, 'L0GetAzureUtility.ps1'), done);
         });
@@ -119,6 +122,21 @@ describe('AzureFileCopy Suite', function () {
         });
         it('Validate Copy-FilesToAzureVMsFromStorageContainer SourcePath hardening combined with the sanitizer preserves quoted values', (done) => {
             psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.SourcePathHardening.SanitizerCombined.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer TargetPath escaping neutralizes ASCII and typographic single quotes', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.TargetPathEscaping.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer legacy path (feature flags off) passes TargetPath as data and keeps $env: expansion', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.LegacyTargetPath.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer additionalArguments escaping neutralizes ASCII and typographic single quotes', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.AdditionalArgumentsEscaping.ps1'), done);
+        });
+        it('Validate Copy-FilesToAzureVMsFromStorageContainer generated arguments survive the real remote runner', (done) => {
+            psr.run(path.join(__dirname, 'L0CopyFilesToAzureVMsFromStorageContainer.RemoteRunner.ps1'), done);
+        });
+        it('Validate Upload-FilesToAzureContainer direct-SPN-auth AzCopy env vars use the endpoint authority and do not leak between cert/secret auth', (done) => {
+            psr.run(path.join(__dirname, 'L0UploadFilesToAzureContainer.AzCopySpnDirectAuth.ps1'), done);
         });
     }   
 });

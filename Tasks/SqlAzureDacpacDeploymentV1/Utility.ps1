@@ -288,7 +288,7 @@ function Execute-Command {
             Write-Error $_
         }
         else {
-            Write-Host $_
+            $_ | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | Write-Host
         }
     }
 
@@ -323,7 +323,7 @@ function Execute-CommandV2 {
             Write-Error $_
         }
         else {
-            Write-Host $_
+            $_ | Out-String -Stream | Protect-ExternalOutput -Source 'remote' | Write-Host
         }
     }
 

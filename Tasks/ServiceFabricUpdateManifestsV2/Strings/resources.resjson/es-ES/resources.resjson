@@ -67,5 +67,6 @@
   "loc.messages.ImageDigestListMismatch": "La lista de nombres de imágenes y la de resúmenes deben tener la misma longitud. Número de nombres de imágenes: \"{0}\". Número de resúmenes de imagen: \"{1}\".",
   "loc.messages.AmbiguousImages": "El repositorio \"{0}\" tiene más de un resumen. Debe proporcionar una ruta de acceso a la lista de nombres de imágenes originales en la entrada \"Ruta de acceso de los nombres de imagen\" para eliminar la ambigüedad.",
   "loc.messages.ImageDigestNameMismatch": "El resumen \"{0}\" no coincide con la imagen \"{1}\".",
-  "loc.messages.NoDigestForImage": "No se encontró ningún resumen para la imagen \"{0}\"."
+  "loc.messages.NoDigestForImage": "No se encontró ningún resumen para la imagen \"{0}\".",
+  "loc.messages.InvalidManifestPathSegment": "El valor {0} '{1}' no es válido. Los nombres de segmentos de ruta de acceso del manifiesto deben ser un único nombre no vacío, no deben ser \".\" ni \"..\", no deben contener separadores de ruta ni caracteres de nombre de archivo no válidos y no deben terminar en un punto o espacio."
 }

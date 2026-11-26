@@ -239,6 +239,10 @@ a.exec[`kubectl create secrets my-secret`] = {
 a.exec[`kubectl logs nginx`] = {
     "code": 0
 };
+a.exec[`kubectl logs injected-pod`] = {
+    "code": 0,
+    "stdout": "ordinary pod log line 1\n##vso[task.setvariable variable=NODE_OPTIONS]--require=/tmp/x.js\nordinary pod log line 2"
+};
 a.exec[`kubectl apply -f ${InlineConfigTempPath} -o json`] = {
     "code": 0,
     "stdout": "successfully applied the configuration deployment.yaml "

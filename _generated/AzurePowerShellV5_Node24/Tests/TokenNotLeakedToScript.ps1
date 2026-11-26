@@ -47,6 +47,13 @@ Assert-AreEqual $true ($scriptContent -like '*CoreAz.ps1*') "Script should refer
 Assert-AreEqual $true ($scriptContent -like '*$env:__VSTS_ACCESS_TOKEN*') "Script should use env var for token"
 Assert-AreEqual $false ($scriptContent -like '*eyJfakeTokenForTesting123456789*') "Script must not contain literal token value"
 Assert-AreEqual $true ($scriptContent -like '*$env:__VSTS_ACCESS_TOKEN = $null*') "Script should clear env var before user code"
+Assert-AreEqual $true ($scriptContent -match '(?s)try\s*\{.*CoreAz\.ps1.*finally\s*\{.*Remove-EndpointSecrets') "Script should clean endpoint secrets in a finalizer surrounding CoreAz and user code"
+$credentialCleanup = 'Remove-Variable -Name endpoint, endpointObject, connectedServiceNameARM, vstsAccessToken, encryptedToken -ErrorAction SilentlyContinue'
+$coreAzIndex = $scriptContent.IndexOf('CoreAz.ps1')
+$credentialCleanupIndex = $scriptContent.IndexOf($credentialCleanup)
+$customerScriptIndex = $scriptContent.IndexOf('PerformsBasicFlow_TargetScript.ps1')
+Assert-AreEqual $true ($credentialCleanupIndex -ge 0) "Script should remove credential variables before user code"
+Assert-AreEqual $true ($coreAzIndex -lt $credentialCleanupIndex -and $credentialCleanupIndex -lt $customerScriptIndex) "Credential cleanup should run after CoreAz and before user code"
 
 # Cleanup.
 $env:Agent_TempDirectory = $null

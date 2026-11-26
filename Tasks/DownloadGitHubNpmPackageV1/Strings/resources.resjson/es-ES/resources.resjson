@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": "Usando los registros de .npmrc",
   "loc.messages.PublishRegistry": "Publicando en el registro %s",
   "loc.messages.UsingRegistry": "Usando el registro %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "Agregando autenticación para el registro: %s",
   "loc.messages.FoundLocalRegistries": "Se encontraron %d registros en esta organización o colección",
   "loc.messages.ForcePackagingUrl": "Dirección URL de empaquetado de la colección forzada a: %s",

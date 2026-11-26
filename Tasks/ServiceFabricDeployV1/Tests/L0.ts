@@ -4,12 +4,20 @@
 
 import Q = require('q');
 import assert = require('assert');
+import fs = require('fs');
 var psm = require('../../../Tests/lib/psRunner');
 import path = require('path');
 var psr = null;
 
 describe('ServiceFabricDeploy Suite', function () {
   this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+
+  it('packages the shared output modes without changing the default', () => {
+    const packaged = fs.readFileSync(path.join(__dirname, '../ps_modules/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+    const shared = fs.readFileSync(path.join(__dirname, '../../Common/ExternalOutputSanitizer/ExternalOutputSanitizer.ps1'), 'utf8');
+    assert.strictEqual(packaged, shared);
+    assert(packaged.includes("[string] $VsoCommandMode = 'blockOnly'"));
+  });
 
   before(done => {
     if (psm.testSupported()) {
@@ -27,6 +35,9 @@ describe('ServiceFabricDeploy Suite', function () {
   });
 
   if (psm.testSupported()) {
+    it('formats filename diagnostics without changing paths', done => {
+        psr.run(path.join(__dirname, 'FilenameDiagnostics.ps1'), done);
+    });
     it('AAD deploy', done => {
         psr.run(path.join(__dirname, 'AadDeploy.ps1'), done);
     });
@@ -47,6 +58,57 @@ describe('ServiceFabricDeploy Suite', function () {
     });
     it('Deploy with diff pkg', done => {
         psr.run(path.join(__dirname, 'CreateDiffPkg.ps1'), done);
+    });
+    it('Diff pkg rejects path traversal in package name', done => {
+        psr.run(path.join(__dirname, 'CreateDiffPkgRejectsTraversalInPackageName.ps1'), done);
+    });
+    it('Diff pkg rejects path traversal in service manifest name', done => {
+        psr.run(path.join(__dirname, 'CreateDiffPkgRejectsTraversalInServiceManifestName.ps1'), done);
+    });
+    it('Publish new rejects path traversal in application type name', done => {
+        psr.run(path.join(__dirname, 'PublishNewRejectsTraversalInApplicationTypeName.ps1'), done);
+    });
+    it('Publish new allows valid application type name', done => {
+        psr.run(path.join(__dirname, 'PublishNewAllowsValidApplicationTypeName.ps1'), done);
+    });
+    it('Publish upgrade rejects path traversal in application type name', done => {
+        psr.run(path.join(__dirname, 'PublishUpgradeRejectsTraversalInApplicationTypeName.ps1'), done);
+    });
+    it('Assert-ValidManifestPathSegment rejects Windows-normalized trailing dot/space names', done => {
+        psr.run(path.join(__dirname, 'AssertValidManifestPathSegmentRejectsWindowsNormalizedNames.ps1'), done);
+    });
+    it('Docker settings rejects path traversal in service manifest name', done => {
+        psr.run(path.join(__dirname, 'DockerSettingsRejectsTraversalInServiceManifestName.ps1'), done);
+    });
+    it('Docker settings only apply credentials to images of the selected registry', done => {
+        psr.run(path.join(__dirname, 'DockerSettingsRejectsForeignRegistryImage.ps1'), done);
+    });
+    it('Upgrade monitoring neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Wait-ServiceFabricApplicationUpgradeAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Health dumps neutralize logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Trace-ServiceFabricHealth.LoggingCommandInjection.ps1'), done);
+    });
+    it('Upgrade failure message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Publish-UpgradedServiceFabricApplication.LoggingCommandInjection.ps1'), done);
+    });
+    it('Existing application message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Publish-NewServiceFabricApplication.LoggingCommandInjection.ps1'), done);
+    });
+    it('Diff package message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Create-DiffPackage.LoggingCommandInjection.ps1'), done);
+    });
+    it('Application type registration neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Register-ServiceFabricApplicationTypeAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Force remove message neutralizes logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Remove-ServiceFabricApplicationAction.LoggingCommandInjection.ps1'), done);
+    });
+    it('Azure Active Directory settings neutralize logging commands in cluster-provided text', done => {
+        psr.run(path.join(__dirname, 'Get-AadSecurityToken.LoggingCommandInjection.ps1'), done);
+    });
+    it('Task restricts logging commands and sanitizes cluster-provided output', done => {
+        psr.run(path.join(__dirname, 'Task.LoggingCommandInjection.Guards.ps1'), done);
     });
     it('Copy application package should retry', done => {
         psr.run(path.join(__dirname, 'CopyApplicationPackageShouldRetry.ps1'), done);

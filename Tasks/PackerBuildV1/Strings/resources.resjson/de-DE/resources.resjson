@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer erfolgreich extrahiert von Pfad: %s.",
   "loc.messages.CreatedStagingDirectory": "Stagingverzeichnis zum Beibehalten von Packer-Binärdateien und Vorlagen erstellt: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Stagingverzeichnis %s konnte nicht gelöscht werden. Löschen Sie es manuell.",
+  "loc.messages.CouldNotDeleteTempFile": "Die Datei mit den temporären Variablen %s konnte nicht gelöscht werden. Löschen Sie es manuell.",
   "loc.messages.InstalledPackerVersion": "Die derzeit installierte Packer-Version ist %s.",
   "loc.messages.PackerToolBusy": "Das Packer-Tool ist anscheinend ausgelastet. Erneuter Versuch nach 1 Sekunde...",
   "loc.messages.ResolvingDeployPackageInput": "Bereitstellungspaketpfad wird aufgelöst.",

@@ -4,14 +4,26 @@ const rewiremock = require('rewiremock/node');
 import * as path from 'path';
 import { createDeploymentMockRunner } from './utils';
 
+const desiredExternalValue =
+  'before\n##vso[task.setvariable variable=externalValue]desired\nafter';
+
 // Mock deploymentWhatIf to return successful what-if result
 const mockDeploymentWhatIf = async () => {
   return {
-    status: 'Succeeded',
-    properties: {
-      changes: [],
-      provisioningState: 'Succeeded'
-    }
+    changes: [
+      {
+        resourceId:
+          '/subscriptions/mockSub/resourceGroups/mockRg/providers/Microsoft.Storage/storageAccounts/mockStorage',
+        changeType: 'Modify',
+        delta: [
+          {
+            path: 'tags',
+            propertyChangeType: 'Create',
+            after: { reviewMarker: desiredExternalValue }
+          }
+        ]
+      }
+    ]
   };
 };
 

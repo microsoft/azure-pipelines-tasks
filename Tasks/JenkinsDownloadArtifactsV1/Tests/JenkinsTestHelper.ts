@@ -1,4 +1,6 @@
 import tmrm = require('azure-pipelines-task-lib/mock-run');
+import { ArtifactEngineOptions } from 'artifact-engine/Engine';
+import { IArtifactProvider } from 'artifact-engine/Models';
 
 export interface ExpectedResult {
     returnCode: number;
@@ -58,12 +60,16 @@ export function GetErrorExpectedResult(returnCode?: number, result?: string): Ex
     };
 }
 
-export function RegisterArtifactEngineMock(tr: tmrm.TaskMockRunner)
+export function RegisterArtifactEngineMock(tr: tmrm.TaskMockRunner, onProcessItems?: (options: ArtifactEngineOptions, source: IArtifactProvider) => void)
 {
     tr.registerMock("artifact-engine/Engine", { 
         ArtifactEngine: function() {
             return { 
-                processItems: function(A,B,C) {},
+                processItems: function(A,B,C) {
+                    if (onProcessItems) {
+                        onProcessItems(C, A);
+                    }
+                },
             }
         },
         ArtifactEngineOptions: function() {

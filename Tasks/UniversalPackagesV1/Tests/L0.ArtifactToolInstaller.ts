@@ -40,7 +40,7 @@ describe('UniversalPackagesV1 - Artifact Tool Installer (Pre-Job)', function () 
         it('skips installation if artifact tool is already cached', async () => {
             const tr = await runTestWithEnv('./testRunner.js', {
                 ...PRE_JOB_ENV,
-                'UPACK_ARTIFACTTOOL_PATH': TEST_CONSTANTS.ARTIFACT_TOOL_PATH,
+                'VSTS_TASKVARIABLE_UPACK_ARTIFACTTOOL_PATH': TEST_CONSTANTS.ARTIFACT_TOOL_PATH,
             });
 
             assert(tr.succeeded, 'Task should have succeeded');

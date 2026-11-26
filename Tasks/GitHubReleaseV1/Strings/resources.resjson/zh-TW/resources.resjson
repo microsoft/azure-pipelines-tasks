@@ -121,6 +121,7 @@
   "loc.messages.PatternIsADirectory": "因為 '%s' 是目錄，所以無法予以上傳。請指定檔案。",
   "loc.messages.SearchingFileMatchingPattern": "正在搜尋符合 '%s' 的檔案。",
   "loc.messages.IssuesFetchError": "擷取問題時發生錯誤。無法產生變更記錄。",
+  "loc.messages.NonBlockingIssuesFetchError": "發生非封鎖性問題擷取 GraphQL 錯誤: %s",
   "loc.messages.NoIssuesLinkedError": "沒有任何問題連結到指定認可 Diff 中的認可。",
   "loc.messages.LabelsSyntaxError": "剖析標籤時發生錯誤。如需 yaml 語法，請參閱: https://aka.ms/AA3m1bq",
   "loc.messages.InvalidChangeLogTypeAttribute": "ChangeLogType 屬性無效: %s。僅允許 'commitBased' 或 'issueBased' 選項。如需 yaml 語法，請參閱: https://aka.ms/AA3m1bq",

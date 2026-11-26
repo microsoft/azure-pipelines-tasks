@@ -3,10 +3,14 @@ param()
 
 . $PSScriptRoot\..\..\..\Tests\lib\Initialize-Test.ps1
 . $PSScriptRoot\MockVariable.ps1
+. $PSScriptRoot\..\..\Common\ExternalOutputSanitizer\ExternalOutputSanitizer.ps1
 . $PSScriptRoot\..\Utility.ps1
 
 $invalidInputStorageAccount = "invalidInputStorageAccount"
 $exceptionMessage = "Exception thrown"
+$cleanupCallCount = 0
+
+function global:Remove-EndpointSecrets { $script:cleanupCallCount++ }
 
 Register-Mock Write-Telemetry { }
 Register-Mock Test-Path { return $true } -ParametersEvaluator { $Path -eq "c:\foo\bar" }
@@ -22,6 +26,7 @@ Assert-Throws {
                                 -containerSasToken $validSasToken
 } -MessagePattern "*ServicePrincipalError*"
 
+Assert-AreEqual 1 $cleanupCallCount "Certificate secrets should be removed after a failed AzCopy login"
 Unregister-Mock Invoke-Expression
 
 # Test 2 "Should throw and delete container if destination azureVM"
@@ -35,3 +40,4 @@ Assert-Throws {
 } -MessagePattern "*AFC_UploadContainerStorageAccount*invalidInputStorageAccount*"
 
 Assert-WasCalled Remove-AzureContainer -Times 1
+Assert-AreEqual 2 $cleanupCallCount "Certificate secrets should be removed after a failed AzCopy upload"

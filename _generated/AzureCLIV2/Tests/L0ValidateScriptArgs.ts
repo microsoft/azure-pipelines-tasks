@@ -1,5 +1,6 @@
 import assert = require('assert');
 import tl = require('azure-pipelines-task-lib/task');
+import * as childProcess from 'child_process';
 import { validateScriptArgs, ArgsSanitizingError, isPowerShellArgumentAstSafe, isAstProbeResultSafe } from 'azure-pipelines-tasks-args-sanitizer/argsSanitizer';
 
 // Tests cover the AZP_75787_* feature-flag triplet shared with BashV3 and the
@@ -12,6 +13,7 @@ export const runValidateScriptArgsTests = () => {
         // (e.g. a pwsh-less macOS agent). The fail-closed negatives below are interpreter-independent.
         if (tl.which('pwsh', false) || tl.which('powershell', false)) {
             assert(isPowerShellArgumentAstSafe('-Tags @{ env = "prod"; port = 8080 }'));
+            assert(isPowerShellArgumentAstSafe("-Json '[]'"));
         }
         assert(!isPowerShellArgumentAstSafe('@{ k = New-Item -Path C:\\evil.txt -ItemType File -Force }'));
         assert(!isPowerShellArgumentAstSafe('@{ k = [System.Net.Dns]::MachineName }'));
@@ -51,6 +53,155 @@ export const runValidateScriptArgsTests = () => {
             originalEnvValues.delete(envName);
         });
     };
+
+    describe('PowerShell AST probe diagnostics', () => {
+        const secret = 'SensitiveArgumentValue';
+        const env = [
+            'AZP_75787_ENABLE_NEW_LOGIC=true',
+            'AZP_75787_ENABLE_COLLECT=true',
+            'DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS=true',
+            'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION=true',
+            'AGENT_VERSION=2.999.0'
+        ];
+        let originalSpawn: PropertyDescriptor;
+        let originalWrite: typeof process.stdout.write;
+        let output: string;
+        let calls: number;
+
+        beforeEach(() => {
+            setEnv(env);
+            originalSpawn = Object.getOwnPropertyDescriptor(childProcess, 'spawnSync')!;
+            originalWrite = process.stdout.write;
+            output = '';
+            calls = 0;
+            process.stdout.write = (chunk: string | Uint8Array): boolean => {
+                output += chunk.toString();
+                return true;
+            };
+        });
+
+        afterEach(() => {
+            Object.defineProperty(childProcess, 'spawnSync', originalSpawn);
+            process.stdout.write = originalWrite;
+            clearEnv(env);
+        });
+
+        const mockProbe = (status: number | null, code?: string, signal: NodeJS.Signals | null = null) => {
+            Object.defineProperty(childProcess, 'spawnSync', {
+                ...originalSpawn,
+                value: (_file: string, _args: string[], options: childProcess.SpawnSyncOptionsWithStringEncoding) => {
+                    calls++;
+                    assert.strictEqual(options.timeout, 10000);
+                    return {
+                        status, signal,
+                        error: code ? Object.assign(new Error(secret), { code }) : undefined,
+                        stdout: secret, stderr: secret
+                    };
+                }
+            });
+        };
+        const telemetryEvents = (): Array<Record<string, unknown>> => output.split(/\r?\n/)
+            .filter(line => line.startsWith('##vso[telemetry.publish'))
+            .map(line => JSON.parse(line.slice(line.indexOf(']') + 1)));
+
+        it('keeps safe quoted JSON accepted without adding success telemetry', () => {
+            mockProbe(0);
+            assert.doesNotThrow(() => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'));
+            assert.strictEqual(calls, 1);
+            assert.deepStrictEqual(telemetryEvents(), []);
+        });
+
+        it('reports a timeout clearly and adds process details to existing failure telemetry', () => {
+            mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+            assert.throws(
+                () => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'),
+                (err: Error) => err instanceof ArgsSanitizingError
+                    && /validation timed out/.test(err.message)
+                    && /script was not run/.test(err.message)
+                    && !err.message.includes(secret)
+            );
+            const events = telemetryEvents();
+            assert.strictEqual(events.length, 1);
+            assert.strictEqual(events[0].astBackstopRejected, true);
+            assert.strictEqual(events[0].astProbeErrorCode, 'ETIMEDOUT');
+            assert.strictEqual(events[0].astProbeExitCode, null);
+            assert.strictEqual(events[0].astProbeSignal, 'SIGTERM');
+            assert.strictEqual(events[0].astProbeTimeoutMs, 10000);
+            assert.ok(typeof events[0].astProbeDurationMs === 'number' && events[0].astProbeDurationMs >= 0);
+            assert.ok(!JSON.stringify(events).includes(secret));
+        });
+
+        for (const value of ['false', undefined]) {
+            it(`preserves the existing timeout rejection and telemetry when diagnostics are ${value ?? 'unset'}`, () => {
+                if (value === undefined) {
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
+                } else {
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
+                }
+                mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+                assert.throws(
+                    () => validateScriptArgs("-Json '[]'", 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                        && !/validation timed out/.test(err.message)
+                );
+                assert.strictEqual(calls, 1);
+                const events = telemetryEvents();
+                assert.strictEqual(events.length, 1);
+                assert.strictEqual(events[0].astBackstopRejected, true);
+                assert.ok(!Object.keys(events[0]).some(key => key.startsWith('astProbe')));
+            });
+
+            it(`does not report probe diagnostics through a supplied callback when the flag is ${value ?? 'unset'}`, () => {
+                if (value === undefined) {
+                    delete process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS;
+                } else {
+                    process.env.DISTRIBUTEDTASK_TASKS_AZPENABLEASTPROBEDIAGNOSTICS = value;
+                }
+                mockProbe(null, 'ETIMEDOUT', 'SIGTERM');
+                let reported = false;
+                assert.strictEqual(isPowerShellArgumentAstSafe("-Json '[]'", undefined, () => {
+                    reported = true;
+                }), false);
+                assert.strictEqual(calls, 1);
+                assert.strictEqual(reported, false);
+            });
+        }
+
+        for (const gate of ['AZP_75787_ENABLE_NEW_LOGIC', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSEXPRESSIONVALIDATION']) {
+            it(`does not activate AST validation when ${gate} is off`, () => {
+                process.env[gate] = 'false';
+                mockProbe(null, 'ETIMEDOUT');
+                assert.doesNotThrow(() => validateScriptArgs("-Json '[]'", 'pscore'));
+                assert.strictEqual(calls, 0);
+                assert.deepStrictEqual(telemetryEvents(), []);
+            });
+        }
+
+        const failures: [number | null, string | undefined][] = [[null, 'ENOENT'], [3, undefined]];
+        for (const [status, code] of failures) {
+            it(`preserves non-timeout rejection and records its process result (${status}, ${code})`, () => {
+                mockProbe(status, code);
+                assert.throws(
+                    () => validateScriptArgs(`-Json '[]' -Token ${secret}`, 'pscore'),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && /PowerShell expression that would be evaluated/.test(err.message)
+                );
+                const events = telemetryEvents();
+                assert.strictEqual(events.length, 1);
+                assert.strictEqual(events[0].astProbeErrorCode, code);
+                assert.strictEqual(events[0].astProbeExitCode, status);
+                assert.ok(!JSON.stringify(events).includes(secret));
+            });
+        }
+
+        it('keeps the timeout message when telemetry collection is disabled', () => {
+            process.env.AZP_75787_ENABLE_COLLECT = 'false';
+            mockProbe(null, 'ETIMEDOUT');
+            assert.throws(() => validateScriptArgs("-Json '[]'", 'pscore'), /validation timed out/);
+            assert.deepStrictEqual(telemetryEvents(), []);
+        });
+    });
 
     const notThrowTestSuites: [string, string, string, string[]][] = [
         ['Handles empty line (bash)', '', 'bash', []],
@@ -143,7 +294,25 @@ export const runValidateScriptArgsTests = () => {
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
         ['pscore: lone LF inert when newline FF off (enforce on) - deployed parity',
             '-Foo bar\nWrite-Host x', 'pscore',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']]
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=false']],
+        ['batch: %VAR% inert when percent-expansion FF off (enforce on) - deployed parity',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=false']],
+        ['batch: %VAR% does not throw in collect mode (percent FF on; measurement ring)',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_COLLECT=true', 'AZP_75787_ENABLE_NEW_LOGIC=false', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: %VAR% warns but does not throw in audit mode (percent FF on)',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'AZP_75787_ENABLE_NEW_LOGIC=false', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: clean args without % pass with the percent feature on',
+            'deploy prod -v 2', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['bash: % stays allowed with the percent feature on (batch-only ring)',
+            'a %b% c', 'bash',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['pscore: % stays allowed with the percent feature on (batch-only ring)',
+            '-Threshold 80%', 'pscore',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of notThrowTestSuites) {
@@ -224,7 +393,13 @@ export const runValidateScriptArgsTests = () => {
             ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSNEWLINEVALIDATION=true']],
         ['batch: dangerous symbols in literal, FF on',
             'test & whoami', 'batch',
-            ['AZP_75787_ENABLE_NEW_LOGIC=true']]
+            ['AZP_75787_ENABLE_NEW_LOGIC=true']],
+        ['batch: %VAR% percent-expansion blocked under the percent feature',
+            'deploy %BUILD_TAG%', 'batch',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']],
+        ['batch: unrecognized scriptType also reaches the cmd.exe sink and is blocked',
+            'x %SYSTEM_ACCESSTOKEN%', 'cmd',
+            ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true']]
     ];
 
     for (const [testName, inputArguments, scriptType, envVariables] of throwTestSuites) {
@@ -303,6 +478,55 @@ export const runValidateScriptArgsTests = () => {
             } finally {
                 clearEnv(env);
             }
+        });
+
+        it('percent rejection does not expose the variable name', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env);
+            try {
+                assert.throws(
+                    () => validateScriptArgs(`deploy %${SECRET}%`, 'batch', {
+                        taskName: 'AzureCLIV2',
+                        percentMessageLocKey: 'BatchPercentSignNotAllowed'
+                    }),
+                    (err: Error) => err instanceof ArgsSanitizingError
+                        && err.message.includes('BatchPercentSignNotAllowed')
+                        && err.message.includes("'%'")
+                        && !err.message.includes(SECRET)
+                );
+            } finally {
+                clearEnv(env);
+            }
+        });
+    });
+
+    describe('Batch percent detection in audit and collect modes', () => {
+        let originalWrite: typeof process.stdout.write;
+        let captured: string;
+        const start = () => {
+            captured = '';
+            originalWrite = process.stdout.write.bind(process.stdout);
+            (process.stdout.write as any) = (c: string | Buffer, ...a: any[]): boolean => { captured += c.toString(); return originalWrite(c, ...a); };
+        };
+        const stop = () => { process.stdout.write = originalWrite; };
+
+        it('collect mode emits batchPercentDetected telemetry (no throw)', () => {
+            const env = ['AZP_75787_ENABLE_COLLECT=true', 'AGENT_VERSION=2.999.0', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env); start();
+            try {
+                assert.doesNotThrow(() => validateScriptArgs('deploy %BUILD_TAG%', 'batch'));
+            } finally { stop(); clearEnv(env); }
+            assert.ok(captured.indexOf('##vso[telemetry.publish') >= 0, 'telemetry should be emitted');
+            assert.ok(captured.indexOf('batchPercentDetected') >= 0, 'telemetry should include batchPercentDetected');
+        });
+
+        it('audit mode warns, does not throw', () => {
+            const env = ['AZP_75787_ENABLE_NEW_LOGIC_LOG=true', 'DISTRIBUTEDTASK_TASKS_ENABLESCRIPTARGUMENTSPERCENTEXPANSIONVALIDATION=true'];
+            setEnv(env); start();
+            try {
+                assert.doesNotThrow(() => validateScriptArgs('deploy %BUILD_TAG%', 'batch'));
+            } finally { stop(); clearEnv(env); }
+            assert.ok(/##vso\[task.issue type=warning/.test(captured), 'audit mode should warn');
         });
     });
 

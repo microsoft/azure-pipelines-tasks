@@ -170,7 +170,7 @@ try
             Assert-AreEqual $true ($normalInvocationValues -contains $expectedArgument)
         }
 
-        Assert-AreEqual $testCase.ExpectedFeatureLookupCalls $global:featureLookupCallCount
+        Assert-AreEqual ($testCase.ExpectedFeatureLookupCalls + 1) $global:featureLookupCallCount
     }
 }
 finally

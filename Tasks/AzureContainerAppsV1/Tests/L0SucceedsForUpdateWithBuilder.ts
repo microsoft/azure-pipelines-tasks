@@ -120,6 +120,9 @@ tmr.registerMock('./src/Utility', {
             },
             isNullOrEmpty(str: string): boolean {
                 return str === null || str === undefined || str === "";
+            },
+            getExternalOutputOptions(disableTelemetry: boolean) {
+                return { source: 'childProcess' };
             }
         };
     }

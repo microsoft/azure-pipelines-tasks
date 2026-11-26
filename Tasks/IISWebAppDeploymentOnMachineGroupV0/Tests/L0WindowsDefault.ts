@@ -1,6 +1,7 @@
 import ma = require('azure-pipelines-task-lib/mock-answer');
 import tmrm = require('azure-pipelines-task-lib/mock-run');
 import path = require('path');
+import { EventEmitter } from 'events';
 
 let taskPath = path.join(__dirname, '..', 'deployiiswebapp.js');
 let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
@@ -84,6 +85,38 @@ tr.registerMock('fs', {
         return true;
     }
 });
+
+if (process.env['DISTRIBUTEDTASK_TASKS_SECUREMSDEPLOYCOMMANDEXECUTION'] === 'true' &&
+    process.env['DISTRIBUTEDTASK_TASKS_WEBDEPLOYMENTCOMPATIBILITYFIXENABLED'] === 'true') {
+    const childProcess = require('child_process');
+    tr.registerMock('child_process', {
+        ...childProcess,
+        spawn: function (toolPath, args, options) {
+            console.log('secure-msdeploy-spawn:' + toolPath);
+            console.log('secure-msdeploy-options:' + JSON.stringify(options));
+
+            const child: any = new EventEmitter();
+            child.stdout = new EventEmitter();
+            child.stderr = new EventEmitter();
+            process.nextTick(() => child.emit('close', 0, null));
+            return child;
+        },
+        spawnSync: function () {
+            console.log('8.3 fallback invoked');
+            throw new Error('8.3 fallback must not be used');
+        }
+    });
+
+    tr.registerMock('path', {
+        ...path,
+        join: function (...parts: string[]) {
+            if (parts[parts.length - 1] === 'msdeploy.exe' && parts.indexOf('MSDeploy3.6') >= 0) {
+                return 'C:\\Program Files\\IIS\\Microsoft Web Deploy V3\\msdeploy.exe';
+            }
+            return path.join(...parts);
+        }
+    });
+}
 
 tr.setAnswers(a);
 tr.run();

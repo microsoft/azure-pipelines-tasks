@@ -1,15 +1,15 @@
 import * as path from 'path';
 
-import {IExecSyncResult} from 'azure-pipelines-task-lib/toolrunner';
+import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 import * as tl from 'azure-pipelines-task-lib/task';
+import * as util from 'azure-pipelines-tasks-packaging-common/util';
 
 import * as npminstall from './npminstall';
-import * as util from 'azure-pipelines-tasks-packaging-common/util';
 
 async function main(): Promise<void> {
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     await _logNpmStartupVariables();
-    npminstall.run();
+    await npminstall.run();
 }
 
 async function _logNpmStartupVariables() {

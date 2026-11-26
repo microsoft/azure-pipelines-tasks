@@ -7,7 +7,6 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as models from 'artifact-engine/Models';
 import * as engine from 'artifact-engine/Engine';
 import * as providers from 'artifact-engine/Providers';
-import * as webHandlers from 'artifact-engine/Providers/typed-rest-client/Handlers';
 
 var taskJson = require('./task.json');
 

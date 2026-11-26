@@ -40,7 +40,7 @@ export class Action {
                 console.log(tl.loc("CreateReleaseSuccess", response.body[GitHubAttributes.htmlUrl]));
             }
             catch (error) {
-                console.log(tl.loc("CreateReleaseFailed", error.message));
+                Utility.logRepositoryMessage(tl.loc("CreateReleaseFailed", error.message));
 
                 try {
                     // If upload asets fail, then delete the release
@@ -170,19 +170,19 @@ export class Action {
     }
 
     private async _uploadAssetsForGivenPattern(githubEndpointToken: string, repositoryName: string, uploadUrl: string, existingAssets: any[], pattern: string, assetUploadMode: string): Promise<void> {
-        console.log(tl.loc("SearchingFileMatchingPattern", pattern));
+        Utility.logRepositoryMessage(tl.loc("SearchingFileMatchingPattern", pattern));
 
         let assets: string[] = Utility.getUploadAssets(pattern) || [];
 
         if (Utility.isPatternADirectory(assets, pattern)) {
-            console.log(tl.loc("PatternIsADirectory", pattern));
+            Utility.logRepositoryMessage(tl.loc("PatternIsADirectory", pattern));
             return;
         }
 
         assets = assets.filter(asset => Utility.isFile(asset));
 
         if (assets.length === 0) {
-            console.log(tl.loc("NoFileFoundMatchingPattern", pattern));
+            Utility.logRepositoryMessage(tl.loc("NoFileFoundMatchingPattern", pattern));
             return;
         }
 
@@ -190,19 +190,19 @@ export class Action {
 
         for (let index = 0; index < assets.length; index++) {
             const asset = assets[index];
-            console.log(tl.loc("UploadingAsset", asset));
+            Utility.logRepositoryMessage(tl.loc("UploadingAsset", asset));
 
             let uploadResponse = await new Release().uploadReleaseAsset(githubEndpointToken, asset, uploadUrl);
             tl.debug("Upload asset response: " + JSON.stringify(uploadResponse));
 
             if (uploadResponse.statusCode === 201) {
-                console.log(tl.loc("UploadAssetSuccess", asset));
+                Utility.logRepositoryMessage(tl.loc("UploadAssetSuccess", asset));
             }
             else if (uploadResponse.statusCode === 422 && uploadResponse.body.errors && uploadResponse.body.errors.length > 0 && uploadResponse.body.errors[0].code === this._alreadyExistErrorCode) {
 
                 if (assetUploadMode === AssetUploadMode.replace) {
-                    console.log(tl.loc("DuplicateAssetFound", asset));
-                    console.log(tl.loc("DeletingDuplicateAsset", asset));
+                    Utility.logRepositoryMessage(tl.loc("DuplicateAssetFound", asset));
+                    Utility.logRepositoryMessage(tl.loc("DeletingDuplicateAsset", asset));
 
                     const fileName = path.basename(asset);
 
@@ -215,7 +215,7 @@ export class Action {
                     }
                 }
                 else {
-                    console.log(tl.loc("SkipDuplicateAssetFound", asset));
+                    Utility.logRepositoryMessage(tl.loc("SkipDuplicateAssetFound", asset));
                 }
             }
             else {

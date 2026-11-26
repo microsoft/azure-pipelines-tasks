@@ -1,6 +1,10 @@
 {
     "common": [
         {
+            "module": "../Common/ExternalOutputSanitizer",
+            "type": "ps"
+        },
+        {
             "module": "../Common/VstsAzureHelpers_",
             "type": "ps"
         },

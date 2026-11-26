@@ -65,6 +65,18 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Round-trips sanitized Robocopy arguments without altering any token', (done) => {
             psr.run(path.join(__dirname, 'L0RoboCopyArgumentsRoundTrip.ps1'), done);
         });
+        it('Imports VstsTaskSdk non-interactively so unset variables never prompt through Read-Host', (done) => {
+            psr.run(path.join(__dirname, 'L0VstsTaskSdkNonInteractiveImport.ps1'), done);
+        });
+        it('Does not execute a crafted AdminUserName as code when mapping the net use share, unless the legacy rollback feature is on', (done) => {
+            psr.run(path.join(__dirname, 'L0NetUseCommandInjection.ps1'), done);
+        });
+        it('Passes the resource FQDN to the net-use mapping and robocopy invocation as literal data', (done) => {
+            psr.run(path.join(__dirname, 'L0TreatsResourceFqdnAsData.ps1'), done);
+        });
+        it('Preserves argument boundaries when invoking net.exe for the use-mapping and cleanup commands', (done) => {
+            psr.run(path.join(__dirname, 'L0NetUseArgumentBoundaries.ps1'), done);
+        });
     }
     else {
         console.warn('Cannot run tests for WindowsMachineFileCopy on Non-Windows Platform');

@@ -12,30 +12,126 @@ export class PackageFile {
 
     // file will be downloaded here
     private initialLocation: string;
+    private rootLocation: string;
+    private filename: string;
 
     // file will be extracted to this location
     private finalLocation: string;
     private extractFile: boolean;
 
     constructor(extract: boolean, destination: string, filename: string) {
-        this.finalLocation = destination;
+        this.finalLocation = path.resolve(destination);
         this.extractFile = extract;
+        this.filename = filename;
 
         if (extract) {
-            this.initialLocation = path.resolve(tl.getVariable('Agent.TempDirectory'), filename);
+            this.rootLocation = path.resolve(tl.getVariable('Agent.TempDirectory'));
         } else {
-            this.initialLocation = path.resolve(destination, filename);
+            this.rootLocation = path.resolve(destination);
         }
+
+        this.initialLocation = this.resolveContainedPath(filename);
     }
 
     public async process(): Promise<void> {
         if (this.extractFile) {
+            this.validateNoLinks();
+            this.validateExtractionDestination();
             return this.extract();
         }
     }
 
+    public removeExisting(): void {
+        this.validateNoLinks();
+        tl.rmRF(this.initialLocation);
+    }
+
+    public writeContent(content: string): Promise<void> {
+        this.validateNoLinks();
+
+        return new Promise<void>((resolve, reject) => {
+            fs.writeFile(this.initialLocation, content, error => {
+                if (error) {
+                    return reject(error);
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    public createWriteStream(): fs.WriteStream {
+        this.validateNoLinks();
+        return fs.createWriteStream(this.initialLocation);
+    }
+
     get downloadPath() {
         return this.initialLocation;
+    }
+
+    private validateNoLinks(): void {
+        if (!this.extractFile) {
+            this.validateExtractionDestination();
+        }
+
+        const relativePath = path.relative(this.rootLocation, this.initialLocation);
+        let currentPath = this.rootLocation;
+
+        for (const segment of relativePath.split(path.sep).filter(Boolean)) {
+            currentPath = path.join(currentPath, segment);
+
+            if (!this.validatePathIsNotLink(currentPath, "InvalidPackageFileLink", this.filename)) {
+                return;
+            }
+        }
+    }
+
+    // Only the destination itself is checked; links above it are legitimate agent configuration.
+    private validateExtractionDestination(): void {
+        this.validatePathIsNotLink(this.finalLocation, "InvalidPackageDestinationLink", this.finalLocation);
+    }
+
+    private validatePathIsNotLink(
+        pathToValidate: string,
+        errorKey: string,
+        errorValue: string
+    ): boolean {
+        try {
+            if (fs.lstatSync(pathToValidate).isSymbolicLink()) {
+                throw new Error(tl.loc(errorKey, errorValue));
+            }
+
+            return true;
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+                return false;
+            }
+
+            throw error;
+        }
+    }
+
+    private resolveContainedPath(filename: string): string {
+        const hasParentSegment = filename.split(/[\\/]+/).includes("..");
+        const hasWindowsRoot = path.win32.parse(filename).root !== "";
+
+        if (!filename || path.posix.isAbsolute(filename) || hasWindowsRoot || hasParentSegment) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        const resolvedPath = path.resolve(this.rootLocation, filename);
+        const relativePath = path.relative(this.rootLocation, resolvedPath);
+        const escapesRoot =
+            !relativePath ||
+            relativePath === ".." ||
+            relativePath.startsWith(`..${path.sep}`) ||
+            path.isAbsolute(relativePath);
+
+        if (escapesRoot) {
+            throw new Error(tl.loc("InvalidPackageFilePath", filename));
+        }
+
+        return resolvedPath;
     }
 
     private async extract(): Promise<void> {
@@ -64,14 +160,66 @@ export class PackageFile {
     }
 
     private async unzip(zipLocation: string, unzipLocation: string): Promise<void> {
-        return new Promise<void>(function(resolve, reject) {
-            tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
-            tl.debug(`Using extract-zip package for extracting archive`);
-            extract(zipLocation, { dir: unzipLocation }).then(() => {
-                resolve();
-            }).catch((error) => {
-                reject(error);
+        tl.debug("Extracting " + zipLocation + " to " + unzipLocation);
+        tl.debug(`Using extract-zip package for extracting archive`);
+        if (tl.getPipelineFeature('DownloadPackage.DisableZipEntryValidation')) {
+            return extract(zipLocation, { dir: unzipLocation });
+        }
+
+        fs.mkdirSync(unzipLocation, { recursive: true });
+        const root = fs.realpathSync(unzipLocation);
+        const links: string[] = [];
+        const assertContained = (linkPath: string) => {
+            let relative = '..';
+            try {
+                relative = path.relative(root, fs.realpathSync(linkPath));
+            } catch (error) {
+                const code = (error as NodeJS.ErrnoException).code;
+                if (code !== 'ENOENT' && code !== 'ELOOP') {
+                    throw error;
+                }
+            }
+            if (relative === '..' || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) {
+                throw new Error(tl.loc("InvalidArchiveEntryLink", path.relative(root, linkPath)));
+            }
+        };
+
+        try {
+            await extract(zipLocation, {
+                dir: unzipLocation,
+                onEntry: entry => {
+                    const entryPath = path.join(root, entry.fileName);
+                    assertContained(path.dirname(entryPath));
+                    let existing: fs.Stats | undefined;
+                    try {
+                        existing = fs.lstatSync(entryPath);
+                    } catch (error) {
+                        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+                            throw error;
+                        }
+                    }
+                    if (existing && existing.isSymbolicLink()) {
+                        assertContained(entryPath);
+                    }
+                    if (!existing && ((entry.externalFileAttributes >>> 16) & 0xF000) === 0xA000) {
+                        links.push(entryPath);
+                    }
+                }
             });
-        });
+            links.forEach(assertContained);
+        } catch (error) {
+            links.reverse().forEach(linkPath => {
+                try {
+                    if (fs.lstatSync(linkPath).isSymbolicLink()) {
+                        fs.unlinkSync(linkPath);
+                    }
+                } catch (cleanupError) {
+                    if ((cleanupError as NodeJS.ErrnoException).code !== 'ENOENT') {
+                        throw cleanupError;
+                    }
+                }
+            });
+            throw error;
+        }
     }
 }

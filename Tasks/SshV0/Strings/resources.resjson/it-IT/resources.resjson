@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "Indica per quanto tempo (in millisecondi) attendere il completamento dell'handshake SSH.",
   "loc.input.label.interactiveKeyboardAuthentication": "Usa l'autenticazione tramite tastiera interattiva",
   "loc.input.help.interactiveKeyboardAuthentication": "Usa questo valore se PasswordAuthentication è disabilitato nel computer di destinazione",
+  "loc.input.label.enableRemoteVsoCommands": "Consenti i comandi di registrazione dall'output remoto",
+  "loc.input.help.enableRemoteVsoCommands": "Quando è false (impostazione predefinita), le righe ##vso[...] nell'output remoto vengono neutralizzate (stampate come testo, non eseguite). Impostare true solo se l'output remoto è considerato affidabile e si fa affidamento su di esso per emettere comandi di registrazione.",
   "loc.messages.ConnectionFailed": "Non è stato possibile connettersi al computer remoto. Verificare i dettagli della connessione al servizio SSH. Errore: %s.",
   "loc.messages.FailedToWriteScript": "Non è stato possibile scrivere lo script sul disco: %s",
   "loc.messages.RemoteCmdExecutionErr": "Il comando non è riuscito e si sono verificati errori nel computer remoto.",

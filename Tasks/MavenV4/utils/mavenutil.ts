@@ -265,6 +265,9 @@ export function getExecOptions(): tr.IExecOptions {
     env[accessTokenEnvSetting] = getAuthenticationToken();
     return <tr.IExecOptions> {
         env: env,
+        externalOutput: {
+            source: 'childProcess'
+        }
     };
 }
 

@@ -78,5 +78,8 @@
   "loc.messages.CouldNotFetchAccessTokenforMSIStatusCode": "Could not fetch access token for Managed Service Principal. Status code: %s, status message: %s",
   "loc.messages.ExpiredServicePrincipal": "Could not fetch access token for Azure. Verify if the Service Principal used is valid and not expired.",
   "loc.messages.ScriptArgsSanitized": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backtick (`). More information is available here: https://aka.ms/ado/75787",
-  "loc.messages.ScriptArgsSanitizedBash": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787"
+  "loc.messages.ScriptArgsSanitizedBash": "Detected characters in arguments that may not be executed correctly by the shell. Please escape special characters using backslash (\\). More information is available here: https://aka.ms/ado/75787",
+  "loc.messages.InvalidWindowsCustomScript": "Protected Windows invocation requires a relative .ps1 script inside the custom script directory.",
+  "loc.messages.WindowsScriptPayloadTooLarge": "The UTF-8 Windows custom script payload exceeds the 1 MiB limit.",
+  "loc.messages.WindowsScriptCleanupFailed": "Could not remove temporary Windows custom script files. Remove the task staging files before reusing the agent."
 }

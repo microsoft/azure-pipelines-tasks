@@ -3,10 +3,10 @@
 
 import tl = require('azure-pipelines-task-lib/task');
 import fs = require('fs');
+import os = require('os');
 import path = require('path');
 import shell = require('shelljs');
 import Q = require('q');
-import os = require('os');
 import util = require('./util');
 
 import { Job } from './job';
@@ -58,7 +58,7 @@ export class TaskOptions {
     constructor() {
         this.serverEndpoint = tl.getInput('serverEndpoint', true);
         this.serverEndpointUrl = tl.getEndpointUrl(this.serverEndpoint, false);
-        tl.debug('serverEndpointUrl=' + this.serverEndpointUrl);
+        tl.debugExternalOutput('serverEndpointUrl=' + this.serverEndpointUrl, { source: 'remote' });
         this.serverEndpointAuth = tl.getEndpointAuthorization(this.serverEndpoint, false);
         this.username = this.serverEndpointAuth['parameters']['username'];
         this.password = this.serverEndpointAuth['parameters']['password'];
@@ -84,11 +84,11 @@ export class TaskOptions {
         this.failOnUnstableResult = tl.getBoolInput('failOnUnstableResult', false);
 
         this.jobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, util.convertJobName(this.jobName)) + ((this.parameterizedJob) ? '/buildWithParameters?delay=0sec' : '/build?delay=0sec');
-        tl.debug('jobQueueUrl=' + this.jobQueueUrl);
+        tl.debugExternalOutput('jobQueueUrl=' + this.jobQueueUrl, { source: 'remote' });
         this.teamJobQueueUrl = util.addUrlSegment(this.serverEndpointUrl, '/team-build/' + ((this.parameterizedJob) ? 'buildWithParameters/' : 'build/') + this.jobName + '?delay=0sec');
-        tl.debug('teamJobQueueUrl=' + this.teamJobQueueUrl);
+        tl.debugExternalOutput('teamJobQueueUrl=' + this.teamJobQueueUrl, { source: 'remote' });
         this.teamPluginUrl = util.addUrlSegment(this.serverEndpointUrl, '/pluginManager/available');
-        tl.debug('teamPluginUrl=' + this.teamPluginUrl);
+        tl.debugExternalOutput('teamPluginUrl=' + this.teamPluginUrl, { source: 'remote' });
 
         this.teamBuildPluginAvailable = false;
         // 'Build.StagingDirectory' is available during build.
@@ -129,14 +129,14 @@ async function doWork() {
         let message: string;
         if (e instanceof util.HttpError) {
             message = e.message;
-            console.error(e.fullMessage);
-            console.error(e.body);
+            tl.writeExternalOutput(e.fullMessage + os.EOL, { source: 'remote', destination: process.stderr });
+            tl.writeExternalOutput(String(e.body) + os.EOL, { source: 'remote', destination: process.stderr });
         } else if (e instanceof Error) {
             message = e.message;
-            console.error(e);
+            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
         } else {
             message = e;
-            console.error(e);
+            tl.writeExternalOutput(String(e) + os.EOL, { source: 'remote', destination: process.stderr });
         }
         tl.setResult(tl.TaskResult.Failed, message);
     }

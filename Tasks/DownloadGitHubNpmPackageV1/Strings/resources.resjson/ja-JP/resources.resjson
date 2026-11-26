@@ -27,6 +27,8 @@
   "loc.messages.UseNpmrc": ".npmrc 内のレジストリを使用しています",
   "loc.messages.PublishRegistry": "レジストリに発行しています: %s",
   "loc.messages.UsingRegistry": "次のレジストリを使用しています: %s",
+  "loc.messages.Error_InvalidNpmPackageName": "Package name must be a valid scoped npm package name.",
+  "loc.messages.Error_InvalidNpmPackageVersion": "Package version must be a registry version, range, or tag.",
   "loc.messages.AddingAuthRegistry": "次のレジストリに権限を追加しています: %s",
   "loc.messages.FoundLocalRegistries": "この組織/コレクションに %d 個のレジストリが見つかりました",
   "loc.messages.ForcePackagingUrl": "コレクション URL を %s に強制してパッケージ化しています",

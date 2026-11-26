@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "Packer успешно извлечен по следующему пути: %s.",
   "loc.messages.CreatedStagingDirectory": "Создан каталог временного размещения для двоичных файлов и шаблонов Packer: %s.",
   "loc.messages.CouldNotDeleteStagingDirectory": "Не удалось удалить каталог временного размещения %s. Удалите его вручную.",
+  "loc.messages.CouldNotDeleteTempFile": "Не удалось удалить файл временных переменных %s. Удалите его вручную.",
   "loc.messages.InstalledPackerVersion": "Версия текущего установленного Packer: %s.",
   "loc.messages.PackerToolBusy": "Средство Packer, кажется, занято. Повторная попытка будет выполнена через 1 секунду...",
   "loc.messages.ResolvingDeployPackageInput": "Разрешается путь развертывания пакета.",

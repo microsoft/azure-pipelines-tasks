@@ -26,6 +26,8 @@
   "loc.input.help.readyTimeout": "Durée (en millisecondes) d'attente de la fin de l'établissement d'une liaison SSH.",
   "loc.input.label.interactiveKeyboardAuthentication": "Utiliser l’authentification interactive au clavier",
   "loc.input.help.interactiveKeyboardAuthentication": "Utiliser cette valeur si PasswordAuthentication est désactivé sur la machine cible",
+  "loc.input.label.enableRemoteVsoCommands": "Autoriser les commandes de journalisation à partir d’une sortie distante",
+  "loc.input.help.enableRemoteVsoCommands": "Quand la valeur est false (par défaut), les lignes ##vso[...] de la sortie distante sont neutralisées (affichées sous forme de texte, et non exécutées). Définissez la valeur true uniquement si vous faites confiance à la sortie distante et si vous comptez sur elle pour émettre des commandes de journalisation.",
   "loc.messages.ConnectionFailed": "Échec de la connexion à la machine distante. Vérifiez les détails de la connexion de service SSH. Erreur : %s.",
   "loc.messages.FailedToWriteScript": "Échec de l'écriture du script sur le disque : %s",
   "loc.messages.RemoteCmdExecutionErr": "Échec de la commande : erreurs sur la machine distante.",

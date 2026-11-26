@@ -84,6 +84,7 @@
   "loc.messages.ExtractingPackerCompleted": "從下列路徑擷取 Packer 成功: %s.",
   "loc.messages.CreatedStagingDirectory": "已建立用以保存 Packer 二進位檔與範本的暫存目錄: %s。",
   "loc.messages.CouldNotDeleteStagingDirectory": "無法刪除暫存目錄 %s。請手動刪除。",
+  "loc.messages.CouldNotDeleteTempFile": "無法刪除暫存變數檔案 %s。請手動刪除。",
   "loc.messages.InstalledPackerVersion": "目前安裝的 Packer 版本為 %s。",
   "loc.messages.PackerToolBusy": "Packer 工具似乎忙碌中。將於 1 秒後重試...",
   "loc.messages.ResolvingDeployPackageInput": "正在解析部署套件路徑。",

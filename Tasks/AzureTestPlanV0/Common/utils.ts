@@ -73,6 +73,20 @@ export function separateJestTestName(inputString) {
     }
 }
 
+export function setJestTestRunnerArguments(jestRunner: tr.ToolRunner, testName: string, useStructuredArguments: boolean): void {
+    if (useStructuredArguments) {
+        jestRunner.arg([
+            'jest',
+            '--ci',
+            '--reporters=default',
+            '--reporters=jest-junit',
+            `--testNamePattern=${testName.trim()}`,
+        ]);
+    } else {
+        jestRunner.line(`jest --ci --reporters=default --reporters=jest-junit -t "${testName}"`);
+    }
+}
+
 /*  
     Extracts and returns the substring after the last dot ('.') in the input string i.e. the test name that will be used in grep argument.
     For example, inputString: "tests/test.spec.ts.testName" will return "testName".

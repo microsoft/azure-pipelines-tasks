@@ -10,5 +10,7 @@
   "loc.input.label.cacheHitVar": "Cachetreffervariable",
   "loc.input.help.cacheHitVar": "Die Variable ist auf TRUE festgelegt, wenn der Cache wiederhergestellt wird (bei einem Cachetreffer), andernfalls erfolgt eine Festlegung auf FALSE.",
   "loc.input.label.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel",
-  "loc.input.help.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel, die verwendet werden, wenn der primäre Schlüssel fehlt. Dies kann eine durch Zeilenvorschubzeichen getrennte Liste mit Schlüsselpräfixen sein."
+  "loc.input.help.restoreKeys": "Zusätzliche Präfixe für Wiederherstellungsschlüssel, die verwendet werden, wenn der primäre Schlüssel fehlt. Dies kann eine durch Zeilenvorschubzeichen getrennte Liste mit Schlüsselpräfixen sein.",
+  "loc.input.label.saveOnPartialSuccess": "Cache bei Teilerfolg speichern",
+  "loc.input.help.saveOnPartialSuccess": "Wenn dieser Wert auf „true“ gesetzt ist, wird der Cacheeintrag auch dann gespeichert, wenn der Auftragsstatus „Erfolgreich mit Problemen“ (teilweiser Erfolg) lautet, und nicht nur bei „Erfolgreich“. Standardmäßig wird der Cache nur gespeichert, wenn der Auftrag erfolgreich abgeschlossen wird."
 }

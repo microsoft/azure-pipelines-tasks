@@ -1,6 +1,12 @@
 import assert = require("assert");
+import fs = require("fs");
+import os = require("os");
+import path = require("path");
+import tl = require("azure-pipelines-task-lib");
 
 import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "../operations/sanitize";
+import { detectFileEncoding, readFileContentsAsText } from "../operations/FileEncoding";
+import { parseAgentCommands } from "./agentCommandParser";
 
 // Unit tests for sanitizeForLoggingCommand - prevents ##vso[ logging-command injection
 // through ARM deployment output names and values that reach the build log.
@@ -113,5 +119,74 @@ export function runSanitizeTests() {
         assert.strictEqual(wasTruncatedByLegacyCommandFormat(null), false);
         assert.strictEqual(wasTruncatedByLegacyCommandFormat(undefined), false);
         assert.strictEqual(wasTruncatedByLegacyCommandFormat(''), false);
+    });
+
+    describe('File encoding diagnostics', () => {
+        before(() => tl.setResourcePath(path.join(__dirname, '../task.json')));
+
+        function captureDiagnostics(action: () => void): string[] {
+            const messages: string[] = [];
+            const originalLog = console.log;
+            try {
+                console.log = (message: string) => { messages.push(message); };
+                action();
+            } finally {
+                console.log = originalLog;
+            }
+            return messages;
+        }
+
+        it('Should preserve ordinary file diagnostics', () => {
+            const fileName = 'C:\\templates\\deployment file[1];%25.json';
+            const messages = captureDiagnostics(() => {
+                assert.strictEqual(detectFileEncoding(fileName, Buffer.from('{}  ')).type, 'utf-8');
+            });
+            assert.deepStrictEqual(messages, [tl.loc('DetectedFileEncoding', fileName, 'utf-8')]);
+        });
+
+        const fileNames = [
+            'file##vso[diagnostic.example]sample.json',
+            'file####vso[diagnostic.example]sample.json',
+            'file##VSO[diagnostic.example]sample.json',
+            'file##[section]sample.json',
+            'file\r\n##vso[diagnostic.example]sample.json',
+            'file##\nvso[diagnostic.example]sample.json',
+            'file##vso[diagnostic.first]a##vso[diagnostic.second]b.json'
+        ];
+        fileNames.forEach((fileName, index) => {
+            it(`Should keep special file diagnostic ${index + 1} as single-line text`, () => {
+                const messages = captureDiagnostics(() => {
+                    assert.strictEqual(detectFileEncoding(fileName, Buffer.from('{}  ')).type, 'utf-8');
+                });
+                assert.strictEqual(messages.length, 1);
+                assert.strictEqual(parseAgentCommands(messages[0]).length, 0);
+                assert.ok(!/##vso\[|##\[|[\r\n]/i.test(messages[0]));
+                assert.ok(messages[0].includes('sample.json') || messages[0].includes('b.json'));
+            });
+        });
+
+        for (const encoding of ['utf-8', 'utf-16le']) {
+            it(`Should read the original filename and preserve ${encoding} contents`, () => {
+                const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'arm-file-diagnostics-'));
+                const fileName = path.join(directory, 'file##vso[diagnostic.example]sample.json');
+                const contents = '{"parameters":{"sample":{"value":"unchanged"}}}';
+                try {
+                    const buffer = encoding === 'utf-8'
+                        ? Buffer.from(contents, 'utf8')
+                        : Buffer.from('\ufeff' + contents, 'utf16le');
+                    fs.writeFileSync(fileName, buffer);
+                    const messages = captureDiagnostics(() => {
+                        assert.strictEqual(readFileContentsAsText(fileName), contents);
+                    });
+                    assert.strictEqual(messages.length, 1);
+                    assert.strictEqual(parseAgentCommands(messages[0]).length, 0);
+                } finally {
+                    if (fs.existsSync(fileName)) {
+                        fs.unlinkSync(fileName);
+                    }
+                    fs.rmdirSync(directory);
+                }
+            });
+        }
     });
 }

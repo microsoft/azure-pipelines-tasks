@@ -1,18 +1,34 @@
 import * as constants from './constants';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as path from 'path';
-import { NpmrcBackupManager } from './npmrcBackupManager';
+import { FileIdentity, NpmrcBackupManager, NpmrcFileIdentityTaskVariable } from './npmrcBackupManager';
+import { emitNpmConfigTelemetry, writeRepositoryOutput } from './npmauthutils';
 
 async function run() {
+    emitNpmConfigTelemetry(constants.NpmConfigTelemetryPhase.PostJob);
     tl.setResourcePath(path.join(__dirname, 'task.json'));
     const npmrcPath = tl.getVariable("SAVE_NPMRC_PATH");
     const workingFilePath = tl.getInput(constants.NpmAuthenticateTaskInput.WorkingFile);
     const indexFile = npmrcPath && path.join(npmrcPath, 'index.json');
     if (indexFile && tl.exist(indexFile) && tl.exist(workingFilePath)) {
         const backupManager = NpmrcBackupManager.fromBackupDirectory(npmrcPath);
-        const restored = backupManager.restoreBackedUpFile(workingFilePath);
+        const serializedIdentity = tl.getTaskVariable(NpmrcFileIdentityTaskVariable);
+        let trustedIdentity: FileIdentity;
+        try {
+            trustedIdentity = serializedIdentity && JSON.parse(serializedIdentity);
+        } catch {
+            tl.warning(tl.loc('Warning_NpmrcIdentityUnavailable', workingFilePath));
+            return;
+        }
+        if (!trustedIdentity
+            || typeof trustedIdentity.device !== 'string'
+            || typeof trustedIdentity.inode !== 'string') {
+            tl.warning(tl.loc('Warning_NpmrcIdentityUnavailable', workingFilePath));
+            return;
+        }
+        const restored = backupManager.restoreBackedUpFile(workingFilePath, trustedIdentity);
         if (restored) {
-            console.log(tl.loc("RevertedChangesToNpmrc", workingFilePath));
+            writeRepositoryOutput(tl.loc("RevertedChangesToNpmrc", workingFilePath));
         }
         const tempDirectoryPath = tl.getVariable("NPM_AUTHENTICATE_TEMP_DIRECTORY");
         if (tl.exist(tempDirectoryPath) && backupManager.isOnlyIndexFileRemaining()) {
@@ -20,7 +36,9 @@ async function run() {
         }
     }
     else {
-        console.log(tl.loc("NoIndexJsonFile"));
+        writeRepositoryOutput(tl.loc("NoIndexJsonFile"));
     }
 }
-run();
+run().catch(error => {
+    tl.setResult(tl.TaskResult.Failed, error.message);
+});
