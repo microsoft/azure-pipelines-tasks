@@ -19,14 +19,17 @@ export function runSanitizeTests() {
     });
 
     describe('Resource name diagnostics', () => {
-        async function runDiagnostics(feature: string | undefined, resourceGroupName: string, deploymentName: string): Promise<ttm.MockTestRunner> {
+        async function runDiagnostics(feature: string | undefined, resourceGroupName: string, deploymentName: string, extraSettings: { [name: string]: string | undefined } = {}): Promise<ttm.MockTestRunner> {
             const settings: { [name: string]: string | undefined } = {
                 csmFile: 'CSM.json',
                 csmParametersFile: 'CSM.json',
                 deploymentOutputs: undefined,
                 ARM_LOG_TEST_RESOURCE_GROUP_NAME: resourceGroupName,
                 ARM_LOG_TEST_DEPLOYMENT_NAME: deploymentName,
-                DISTRIBUTEDTASK_TASKS_AZURERESOURCEGROUPDISABLESANITIZELOGOUTPUT: feature
+                DISTRIBUTEDTASK_TASKS_AZURERESOURCEGROUPDISABLESANITIZELOGOUTPUT: feature,
+                ARM_LOG_TEST_DEPLOYMENT_ERROR_STATUS: undefined,
+                ARM_LOG_TEST_AUTH_SCHEME: undefined,
+                ...extraSettings
             };
             const originalValues = Object.keys(settings).map(name => [name, process.env[name]]);
             try {
@@ -67,6 +70,32 @@ export function runSanitizeTests() {
                 const injected = parseAgentCommands(runner.stdout).filter(command => command.area === 'example');
                 assert.strictEqual(injected.length, sanitized ? 0 : 3);
             });
+        }
+
+        const failureCases = [
+            { name: 'portal link', status: '500', scheme: undefined, message: 'loc_mock_FindMoreDeploymentDetailsAzurePortal' },
+            { name: 'managed identity role assignment', status: '403', scheme: 'ManagedServiceIdentity', message: 'loc_mock_ManagedServiceIdentityDetails' }
+        ];
+        for (const failure of failureCases) {
+            for (const feature of [undefined, 'true']) {
+                it(`Should gate the ${failure.name} error with flag=${feature}`, async () => {
+                    const group = 'rg\n##vso[example.resource]value';
+                    const deployment = 'deploy####vso[example.deployment]value';
+                    const runner = await runDiagnostics(feature, group, deployment, {
+                        ARM_LOG_TEST_DEPLOYMENT_ERROR_STATUS: failure.status,
+                        ARM_LOG_TEST_AUTH_SCHEME: failure.scheme
+                    });
+                    assert(runner.failed, 'deployment should fail');
+                    const issue = runner.errorIssues.find(message => message.includes(failure.message));
+                    assert(issue, `expected ${failure.message} error. STDOUT: ${runner.stdout}`);
+                    if (feature === 'true') {
+                        assert(issue.includes(group), 'the flag should restore the previous output');
+                    } else {
+                        assert(!/##vso\[|[\r\n]/i.test(issue), 'the error must not carry a live logging command');
+                        assert(issue.includes('rg #vso[example.resource]value'));
+                    }
+                });
+            }
         }
 
         it('Should preserve ordinary resource and deployment names by default', async () => {

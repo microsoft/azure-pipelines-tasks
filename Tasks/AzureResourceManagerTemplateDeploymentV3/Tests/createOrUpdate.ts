@@ -36,7 +36,7 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
-process.env["ENDPOINT_AUTH_SCHEME_AzureRM"] = "serviceprincipal";
+process.env["ENDPOINT_AUTH_SCHEME_AzureRM"] = process.env["ARM_LOG_TEST_AUTH_SCHEME"] || "serviceprincipal";
 process.env["ENDPOINT_AUTH_PARAMETER_AzureRM_AUTHENTICATIONTYPE"] = "key";
 const useResolvedAzureCliPath = process.env["TEST_USE_RESOLVED_AZURE_CLI_PATH_FEATURE_DISABLED"] !== "true";
 if (!useResolvedAzureCliPath) {
