@@ -11,6 +11,8 @@ $previousSanitizationFlag = Get-Variable -Name sanitizationFlag -Scope Global -E
 $previousInvocations = Get-Variable -Name copyJobInvocations -Scope Global -ErrorAction SilentlyContinue
 $global:sanitizationFlag = $false
 $global:copyJobInvocations = New-Object System.Collections.Generic.List[object]
+$global:parallelJobInvocations = New-Object System.Collections.Generic.List[object]
+$global:parallelTestJobs = New-Object System.Collections.Generic.List[object]
 
 try
 {
@@ -24,13 +26,14 @@ try
     Unregister-Mock Invoke-Command
 
     $global:machineNamesInput = $null
+    $global:copyFilesInParallel = $false
     Register-Mock Get-VstsInput { return $global:machineNamesInput } -ParametersEvaluator { $Name -eq "MachineNames" }
     Register-Mock Get-VstsInput { return "UserName" } -ParametersEvaluator { $Name -eq "AdminUserName" }
     Register-Mock Get-VstsInput { return $password } -ParametersEvaluator { $Name -eq "AdminPassword" }
     Register-Mock Get-VstsInput { return $validSourcePackage } -ParametersEvaluator { $Name -eq "SourcePath" }
     Register-Mock Get-VstsInput { return $validApplicationPath } -ParametersEvaluator { $Name -eq "TargetPath" }
     Register-Mock Get-VstsInput { return $true } -ParametersEvaluator { $Name -eq "CleanTargetBeforeCopy" }
-    Register-Mock Get-VstsInput { return $false } -ParametersEvaluator { $Name -eq "CopyFilesInParallel" }
+    Register-Mock Get-VstsInput { return $global:copyFilesInParallel } -ParametersEvaluator { $Name -eq "CopyFilesInParallel" }
     Register-Mock Get-SanitizerCallStatus { return $false }
     Register-Mock Get-SanitizerActivateStatus { return $false }
     Register-Mock Invoke-Command {
@@ -135,6 +138,31 @@ try
     Assert-AreEqual 2 $result.Machines.Count
     Assert-AreEqual 'host1' $result.Machines[0]
     Assert-AreEqual 'host2.contoso.com:5986' $result.Machines[1]
+
+    # Flag on: the parallel (Start-Job) branch also receives the sanitized machine names.
+    $global:copyFilesInParallel = $true
+    Register-Mock Start-Job {
+        param($ScriptBlock, $ArgumentList)
+
+        $global:parallelJobInvocations.Add($ArgumentList[0])
+        $job = [PSCustomObject]@{ Id = $global:parallelTestJobs.Count + 1; State = "Completed" }
+        $global:parallelTestJobs.Add($job)
+        return $job
+    }
+    Register-Mock Get-Job { return $global:parallelTestJobs.ToArray() }
+    Register-Mock Start-Sleep { }
+    Register-Mock Receive-Job { }
+    Register-Mock Remove-Job { param($Job) $global:parallelTestJobs.Remove($Job) | Out-Null }
+
+    $global:parallelJobInvocations.Clear()
+    $global:parallelTestJobs.Clear()
+    $global:sanitizationFlag = $true
+    $global:machineNamesInput = "host1, a##vso[task.complete result=Failed;]"
+    & "$copyFilesToMachinesPath"
+
+    Assert-AreEqual 2 $global:parallelJobInvocations.Count
+    Assert-AreEqual 'host1' $global:parallelJobInvocations[0]
+    Assert-AreEqual 'a##_vso[task.complete result=Failed;]' $global:parallelJobInvocations[1]
 }
 finally
 {
@@ -142,6 +170,11 @@ finally
     Unregister-Mock Invoke-Command
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Start-Job
+    Unregister-Mock Get-Job
+    Unregister-Mock Start-Sleep
+    Unregister-Mock Receive-Job
+    Unregister-Mock Remove-Job
 
     if ($previousFeatureFunction)
     {
@@ -158,4 +191,7 @@ finally
         else { Remove-Variable -Name $state[0] -Scope Global -ErrorAction SilentlyContinue }
     }
     Remove-Variable -Name machineNamesInput -Scope Global -ErrorAction SilentlyContinue
+    Remove-Variable -Name copyFilesInParallel -Scope Global -ErrorAction SilentlyContinue
+    Remove-Variable -Name parallelJobInvocations -Scope Global -ErrorAction SilentlyContinue
+    Remove-Variable -Name parallelTestJobs -Scope Global -ErrorAction SilentlyContinue
 }

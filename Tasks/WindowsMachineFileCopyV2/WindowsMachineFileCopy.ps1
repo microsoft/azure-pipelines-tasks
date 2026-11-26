@@ -57,6 +57,7 @@ try
     Validate-SourcePath $sourcePath
     Validate-DestinationPath $targetPath $machineNames
 
+    # Only $machines (split/trimmed) is sanitized below.
     $machines = $machineNames.split(',') | ForEach-Object {
         if ($_ -and $_.trim()) {
             if ($enableWindowsMachineFileCopyVsoSanitization) {
