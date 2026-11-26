@@ -5,6 +5,7 @@ var zipUtility = require('azure-pipelines-tasks-webdeployment-common/ziputility'
 import { Kudu, sanitizeKuduLogForConsole } from 'azure-pipelines-tasks-azure-arm-rest/azure-arm-app-service-kudu';
 import { AzureDeployPackageArtifactAlias, KUDU_DEPLOYMENT_CONSTANTS } from 'azure-pipelines-tasks-azure-arm-rest/constants';
 import webClient = require('azure-pipelines-tasks-azure-arm-rest/webClient');
+import { logExternalOutput } from '../ExternalOutput';
 
 const physicalRootPath: string = '/site/wwwroot';
 const deploymentFolder: string = 'site/deployments';
@@ -86,7 +87,7 @@ export class KuduServiceUtility {
                 await this._appOfflineKuduService(physicalPath, false);
             }
 
-            console.log(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath));
+            logExternalOutput(tl.loc("Successfullydeployedpackageusingkuduserviceat", packagePath, physicalPath));
         }
         catch(error) {
             tl.error(tl.loc('PackageDeploymentFailed'));
@@ -201,7 +202,7 @@ export class KuduServiceUtility {
                 await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
             }
             else {
-                console.log(tl.loc('DeployLogsURL', kuduDeploymentDetails.log_url));
+                logExternalOutput(tl.loc('DeployLogsURL', kuduDeploymentDetails.log_url));
             }
         }
         catch(error) {
@@ -220,7 +221,7 @@ export class KuduServiceUtility {
 
         var deploymentLogs = await this._appServiceKuduService.getDeploymentLogs(log_url);
         for(var deploymentLog of deploymentLogs) {
-            console.log(sanitizeKuduLogForConsole(`${deploymentLog.message}`, 'AzureWebAppContainer'));
+            logExternalOutput(sanitizeKuduLogForConsole(`${deploymentLog.message}`, 'AzureWebAppContainer'));
             if(deploymentLog.details_url) {
                 await this._printZipDeployLogs(deploymentLog.details_url);
             }
@@ -238,7 +239,7 @@ export class KuduServiceUtility {
 
         if(stdoutLog) {
             console.log(tl.loc('stdoutFromScript'));
-            console.log(sanitizeKuduLogForConsole(stdoutLog, 'AzureWebAppContainer'));
+            logExternalOutput(sanitizeKuduLogForConsole(stdoutLog, 'AzureWebAppContainer'));
         }
         if(stderrLog) {
             console.log(tl.loc('stderrFromScript'));
@@ -248,7 +249,7 @@ export class KuduServiceUtility {
                 throw Error(tl.loc('ScriptExecutionOnKuduFailed', scriptReturnCode, sanitizedStderrLog));
             }
             else {
-                console.log(sanitizedStderrLog);
+                logExternalOutput(sanitizedStderrLog);
             }
         }
     }
