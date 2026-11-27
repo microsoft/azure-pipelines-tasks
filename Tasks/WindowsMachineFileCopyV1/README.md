@@ -2,6 +2,12 @@
 ### Overview
 The task is used to copy application files and other artifacts that are required to install the application on Windows Machines like PowerShell scripts, PowerShell-DSC modules etc. The task provides the ability to copy files to Windows Machines. The tasks uses RoboCopy, the command-line utility built for fast copying of data.
 
+### Additional arguments
+
+Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax is not interpreted: `$env:NAME`, subexpressions, backticks, `;`, `|`, `&`, redirection and comma lists such as `/XF a, b` reach Robocopy as plain words, usually file names, so the copy can skip files, copy the wrong files, or keep retrying. Use pipeline variables (`$(Var)`) for values and Robocopy options (for example `/LOG:`) for output. Do not end a quoted path with a backslash.
+
+Where the server does not set the `EnableWindowsMachineFileCopyArgumentsHardening` feature (Azure DevOps Server), a pipeline can keep the previous handling for now by setting the variable `DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening` to `false`. Where the server sets it (Azure DevOps Services), the server value is used. The `EnableLegacyWindowsMachineFileCopyNetUseCommand` feature applies only when the previous handling is used.
+
 ### The different parameters of the task are explained below:
 
 *	**Source**: The source of the files. As described above using pre-defined system variables like $(Build.Repository.LocalPath) make it easy to specify the location of the build on the Build Automation Agent machine. The variables resolve to the working folder on the agent machine, when the task is run on it. Wild cards like **\*.zip are not supported.

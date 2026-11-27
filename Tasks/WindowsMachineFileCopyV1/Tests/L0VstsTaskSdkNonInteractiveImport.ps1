@@ -35,6 +35,7 @@ try
     Register-Mock Get-ResourceFQDNTagKey { return 'FQDN' }
     Register-Mock Get-SanitizerCallStatus { return $false }
     Register-Mock Get-SanitizerActivateStatus { return $false }
+    Register-Mock Get-VstsTaskVariable { return $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING }
 
     function global:Invoke-Command {
         param([scriptblock]$ScriptBlock, [object[]]$ArgumentList)
@@ -92,6 +93,7 @@ finally
     Unregister-Mock Get-ResourceFQDNTagKey
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Get-VstsTaskVariable
 
     foreach($testFunctionName in $testFunctionNames)
     {

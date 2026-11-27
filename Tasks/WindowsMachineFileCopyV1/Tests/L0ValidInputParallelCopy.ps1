@@ -16,10 +16,12 @@ Register-Mock Get-EnvironmentProperty { return $validMachineName2 } -ParametersE
 
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
+Register-Mock Get-VstsTaskVariable { return $global:hardeningFeature } -ParametersEvaluator { $Name -eq 'DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening' }
+Register-Mock Get-VstsPipelineFeature { return $global:netUseFeature } -ParametersEvaluator { $FeatureName -eq 'EnableLegacyWindowsMachineFileCopyNetUseCommand' }
 
 #Start-Job Register-Mocks
-Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator{$ArgumentList -contains $validResource1.Name }
-Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator{$ArgumentList -contains $validResource2.Name }
+Register-Mock Start-Job { $testJobs.Add($Job1); return $job1} -ParametersEvaluator{$ArgumentList[0] -eq $validResource1.Name }
+Register-Mock Start-Job { $testJobs.Add($Job2); return $job2} -ParametersEvaluator{$ArgumentList[0] -eq $validResource2.Name }
 
 #Get-Job Register-Mocks
 Register-Mock Get-Job { return $testJobs }
@@ -36,5 +38,23 @@ Register-Mock Remove-Job { $testJobs.RemoveAt(0) }
 #Import-Module Register-Mocks
 Register-Mock Import-Module { }
 
-#should not throw error
-& "$copyFilesToMachinesPath" -environmentName $validEnvironmentName -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $true -copyFilesInParallel $true
+try
+{
+    $expectedTaskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+    $global:hardeningFeature = $null
+    $global:netUseFeature = $true
+    & "$copyFilesToMachinesPath" -environmentName $validEnvironmentName -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $true -copyFilesInParallel $true
+
+    Assert-WasCalled Start-Job -Times 2 -ParametersEvaluator { $ArgumentList[7] -is [bool] -and $ArgumentList[7] -and $ArgumentList[9] -is [bool] -and -not $ArgumentList[9] }
+
+    $testJobs.Clear()
+    $global:hardeningFeature = 'False'
+    & "$copyFilesToMachinesPath" -environmentName $validEnvironmentName -machineNames $validMachineNames -sourcePath $validSourcePackage -targetPath $validApplicationPath -cleanTargetBeforeCopy $true -copyFilesInParallel $true
+
+    Assert-WasCalled Start-Job -Times 2 -ParametersEvaluator { $ArgumentList[7] -is [bool] -and -not $ArgumentList[7] -and $ArgumentList[9] -is [bool] -and $ArgumentList[9] }
+    Assert-WasCalled Start-Job -Times 4 -ParametersEvaluator { [IO.Path]::GetFullPath([string]$ArgumentList[8]) -eq $expectedTaskRoot }
+}
+finally
+{
+    Remove-Variable -Name hardeningFeature, netUseFeature -Scope Global -ErrorAction SilentlyContinue
+}

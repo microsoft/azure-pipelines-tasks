@@ -100,7 +100,7 @@ function Copy-OnLocalMachine(
     [string] $cleanTargetBeforeCopy,
     [object] $additionalArguments,
     [bool] $useSanitizerActivate = $false,
-    [bool] $enableWindowsMachineFileCopyArgumentsHardening = $false,
+    [bool] $enableWindowsMachineFileCopyArgumentsHardening = $true,
     [string] $scriptRoot = "",
     [bool] $enableLegacyWindowsMachineFileCopyNetUseCommand = $false
     )

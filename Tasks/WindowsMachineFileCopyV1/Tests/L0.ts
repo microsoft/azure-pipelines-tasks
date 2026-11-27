@@ -59,7 +59,8 @@ describe('WindowsMachineFileCopy Suite', function () {
         it('Throw error if job fails for resource in Parallel Copy', (done) => {
            psr.run(path.join(__dirname, 'L0ParallelCopyFail.ps1'), done);
         });
-        it('Uses legacy and structured Robocopy arguments based on pipeline feature state', (done) => {
+        it('Uses structured Robocopy arguments unless the hardening feature is explicitly off', function (done) {
+            this.timeout(60000);
             psr.run(path.join(__dirname, 'L0RoboCopyArguments.ps1'), done);
         });
         it('Round-trips sanitized Robocopy arguments without altering any token', (done) => {

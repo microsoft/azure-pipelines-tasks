@@ -47,6 +47,7 @@ try
     Register-Mock Import-Module { }
     Register-Mock Get-SanitizerCallStatus { return $true }
     Register-Mock Get-SanitizerActivateStatus { return $true }
+    Register-Mock Get-VstsTaskVariable { return $env:DISTRIBUTEDTASK_TASKS_ENABLEWINDOWSMACHINEFILECOPYARGUMENTSHARDENING }
     Register-Mock Protect-ScriptArguments { return $global:sanitizedTokens }
     Register-Mock Get-VstsInput { return "machine" } -ParametersEvaluator { $Name -eq "MachineNames" }
     Register-Mock Get-VstsInput { return "user" } -ParametersEvaluator { $Name -eq "AdminUserName" }
@@ -161,6 +162,7 @@ finally
     Unregister-Mock Invoke-Command
     Unregister-Mock Get-SanitizerCallStatus
     Unregister-Mock Get-SanitizerActivateStatus
+    Unregister-Mock Get-VstsTaskVariable
     Unregister-Mock Protect-ScriptArguments
 
     foreach($testFunctionName in $testFunctionNames)
