@@ -90,26 +90,6 @@ function Validate-DestinationPath(
     }
 }
 
-function Get-MachineEnvironmentVariable
-{
-    param([string] $name)
-
-    return [Environment]::GetEnvironmentVariable($name, 'Machine')
-}
-
-# Intentionally read from the machine-level environment.
-function Test-LegacyCommandOptIn
-{
-    try
-    {
-        return (Get-MachineEnvironmentVariable 'AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND') -eq 'true'
-    }
-    catch
-    {
-        return $false
-    }
-}
-
 # $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 # $adminUserName, $adminPassword
 function Copy-OnLocalMachine(

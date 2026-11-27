@@ -13,7 +13,7 @@ Register-Mock Get-EnvironmentProperty { return $validResources } -ParametersEval
 Register-Mock Get-EnvironmentResources { return $resourceFailForCopy } -ParametersEvaluator {$EnvironmentName -eq $invalidEnvironmentNameForFailCopy}
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
-Register-Mock Test-LegacyCommandOptIn { return $false }
+Register-Mock Get-VstsTaskVariable
 
 Unregister-Mock Invoke-Command
 Register-Mock Invoke-Command { throw "$FailedCopyError" }

@@ -17,7 +17,7 @@ Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "C
 
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
-Register-Mock Test-LegacyCommandOptIn { return $false }
+Register-Mock Get-VstsTaskVariable
 
 Register-Mock Get-EnvironmentResources { return $validResources } -ParametersEvaluator {$EnvironmentName -eq $validEnvironmentName}
 

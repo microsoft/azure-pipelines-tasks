@@ -57,26 +57,6 @@ function Copy-OnLocalMachine(
     Invoke-Command -ScriptBlock $CopyJob -ArgumentList "", $sourcePath, $targetPath, $credential, $cleanTargetBeforeCopy, $additionalArguments
 }
 
-function Get-MachineEnvironmentVariable
-{
-    param([string] $name)
-
-    return [Environment]::GetEnvironmentVariable($name, 'Machine')
-}
-
-# Intentionally read from the machine-level environment.
-function Test-LegacyCommandOptIn
-{
-    try
-    {
-        return (Get-MachineEnvironmentVariable 'AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND') -eq 'true'
-    }
-    catch
-    {
-        return $false
-    }
-}
-
 function Try-CleanupPSDrive (
 	[string] $path
 	)

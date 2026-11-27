@@ -23,8 +23,7 @@ Register-Mock Get-VstsInput { return $true } -ParametersEvaluator{ $Name -eq  "C
 
 Register-Mock Get-SanitizerCallStatus { return $false }
 Register-Mock Get-SanitizerActivateStatus { return $false }
-Register-Mock Test-LegacyCommandOptIn { return $global:legacyOptIn }
-Register-Mock Get-VstsPipelineFeature { return $false } -ParametersEvaluator { $FeatureName -eq 'EnableWindowsMachineFileCopyArgumentsHardening' }
+Register-Mock Get-VstsTaskVariable { return $global:hardeningFeature } -ParametersEvaluator { $Name -eq 'DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening' }
 
 Register-Mock Receive-Job { }  -ParametersEvaluator { $Id -eq 1 }
 Register-Mock Receive-Job { throw "Copy to one or more machines failed." }  -ParametersEvaluator { $Id -eq 2 }
@@ -51,7 +50,7 @@ Register-Mock Import-Module { }
 try
 {
     $expectedTaskRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-    $global:legacyOptIn = $false
+    $global:hardeningFeature = $null
     Assert-Throws {
         & "$copyFilesToMachinesPath"
     } -MessagePattern "Copy to one or more machines failed."
@@ -59,7 +58,7 @@ try
     Assert-WasCalled Start-Job -Times 2 -ParametersEvaluator { $ArgumentList[8] -is [bool] -and $ArgumentList[8] }
 
     $testJobs.Clear()
-    $global:legacyOptIn = $true
+    $global:hardeningFeature = 'False'
     Assert-Throws {
         & "$copyFilesToMachinesPath"
     } -MessagePattern "Copy to one or more machines failed."
@@ -69,5 +68,5 @@ try
 }
 finally
 {
-    Remove-Variable -Name legacyOptIn -Scope Global -ErrorAction SilentlyContinue
+    Remove-Variable -Name hardeningFeature -Scope Global -ErrorAction SilentlyContinue
 }

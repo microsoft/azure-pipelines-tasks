@@ -23,14 +23,9 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
-# Hardened unless the agent owner opts into legacy handling (machine level).
-$enableWindowsMachineFileCopyArgumentsHardening = (Get-VstsPipelineFeature -FeatureName 'EnableWindowsMachineFileCopyArgumentsHardening') -or -not (Test-LegacyCommandOptIn)
+# Hardened unless the feature is explicitly off; it is unset where the server does not send it.
+$enableWindowsMachineFileCopyArgumentsHardening = (Get-VstsTaskVariable -Name 'DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening') -ne 'false'
 $disableWindowsMachineFileCopyVsoSanitization = Get-VstsPipelineFeature -FeatureName 'DisableWindowsMachineFileCopyMachineNamesSanitization'
-
-if (-not $enableWindowsMachineFileCopyArgumentsHardening)
-{
-    Write-Warning 'Legacy command handling is enabled on this agent (AZP_WINDOWSMACHINEFILECOPY_LEGACY_COMMAND).'
-}
 
 if ($useSanitizerCall) {
     $sanitizedArguments = Protect-ScriptArguments -InputArgs $additionalArguments -TaskName "WindowsMachineFileCopyV2"
