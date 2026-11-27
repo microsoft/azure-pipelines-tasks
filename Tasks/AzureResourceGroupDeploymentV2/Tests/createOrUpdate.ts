@@ -7,7 +7,10 @@ let tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput("action", "Create Or Update Resource Group");
 tr.setInput("ConnectedServiceName", "AzureRM");
-tr.setInput("resourceGroupName", "dummy");
+tr.setInput("resourceGroupName", process.env["ARM_LOG_TEST_RESOURCE_GROUP_NAME"] || "dummy");
+if (process.env["ARM_LOG_TEST_DEPLOYMENT_NAME"] !== undefined) {
+    tr.setInput("deploymentName", process.env["ARM_LOG_TEST_DEPLOYMENT_NAME"]);
+}
 tr.setInput("location", "West US");
 tr.setInput("templateLocation", "Linked artifact")
 tr.setInput("csmFile", process.env["csmFile"]);
@@ -31,6 +34,9 @@ process.env["ENDPOINT_DATA_AzureRM_SUBSCRIPTIONNAME"] = "sName";
 process.env["ENDPOINT_URL_AzureRM"] = "https://management.azure.com/";
 process.env["ENDPOINT_DATA_AzureRM_ENVIRONMENTAUTHORITYURL"] = "https://login.windows.net/";
 process.env["ENDPOINT_DATA_AzureRM_ACTIVEDIRECTORYSERVICEENDPOINTRESOURCEID"] = "https://management.azure.com";
+if (process.env["ARM_LOG_TEST_AUTH_SCHEME"]) {
+    process.env["ENDPOINT_AUTH_SCHEME_AzureRM"] = process.env["ARM_LOG_TEST_AUTH_SCHEME"];
+}
 
 var CSMJson = path.join(__dirname, "CSM.json");
 var CSMwithComments = path.join(__dirname, "CSMwithComments.json");

@@ -3,7 +3,7 @@ import tl = require("azure-pipelines-task-lib/task");
 import armDeployTaskParameters = require("../models/TaskParameters");
 import armResource = require("azure-pipelines-tasks-azure-arm-rest/AzureServiceClientBase");
 import utils = require("./Utils");
-import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
+import { sanitizeAzureResourceNameForLog, sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
 import { canEmitSafeOutputVariables } from "./agentCompatibility";
 import { sleepFor } from 'azure-pipelines-tasks-azure-arm-rest/webClient';
 import { DeploymentParameters } from "./DeploymentParameters";
@@ -62,7 +62,7 @@ export class DeploymentScopeBase {
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);
-                console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+                console.log(tl.loc("LogDeploymentName", sanitizeAzureResourceNameForLog(this.taskParameters.deploymentName)));
                 this.armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                     if (error) {
                         if(this.taskParameters.deploymentScope === "Resource Group" && error.code == "ResourceGroupNotFound" && retryCount > 0){
@@ -122,14 +122,14 @@ export class DeploymentScopeBase {
         if(!!error && error.statusCode == 403) {
             if(this.taskParameters.authScheme == "ServicePrincipal") {
                 if(this.taskParameters.deploymentScope == "Resource Group") {
-                    tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+                    tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
                 } else if(this.taskParameters.deploymentScope == "Subscription") {
                     tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.subscriptionId));
                 } else if(this.taskParameters.deploymentScope == "Management Group") {
                     tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.managementGroupId));    
                 }
             } else if(this.taskParameters.authScheme == "ManagedServiceIdentity") {
-                tl.error(tl.loc("ManagedServiceIdentityDetails", this.taskParameters.resourceGroupName));    
+                tl.error(tl.loc("ManagedServiceIdentityDetails", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
             }
         }
     }
@@ -149,7 +149,7 @@ export class DeploymentScopeBase {
         if((this.taskParameters.deploymentScope == "Resource Group" || this.taskParameters.deploymentScope == "Subscription") && (!!error && (error.statusCode < 400 || error.statusCode >= 500))) {
             let url = this.getAzurePortalDeploymentURL();
             if(url != null) {
-                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", sanitizeAzureResourceNameForLog(url)));
             }
         }
     }
@@ -181,7 +181,7 @@ export class DeploymentScopeBase {
                 this.deploymentParameters.properties["mode"] = "Incremental";
             }
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || utils.createDeploymentName(this.taskParameters);
-            console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+            console.log(tl.loc("LogDeploymentName", sanitizeAzureResourceNameForLog(this.taskParameters.deploymentName)));
             this.armClient.deployments.validate(this.taskParameters.deploymentName, this.deploymentParameters, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
