@@ -4,6 +4,7 @@ import deployAzureRG = require("../models/DeployAzureRG");
 import tl = require("azure-pipelines-task-lib/task")
 import az = require("azure-pipelines-tasks-azure-arm-rest/azureModels");
 import utils = require("./Utils");
+import { sanitizeAzureResourceNameForLog } from "./sanitize";
 
 export class NetworkInterface {
     Name: string;
@@ -189,7 +190,7 @@ export class AzureUtil {
         return new Promise<any>((resolve, reject) => {
             this.computeClient.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, virtualMachines, request, response) => {
                 if (error) {
-                    return reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    return reject(tl.loc("VM_ListFetchFailed", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName), utils.getError(error)));
                 }
                 tl.debug("Virtual Machines details: " + JSON.stringify(virtualMachines));
                 this.vmDetails = virtualMachines;
