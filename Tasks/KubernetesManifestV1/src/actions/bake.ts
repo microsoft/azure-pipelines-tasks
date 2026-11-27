@@ -49,10 +49,10 @@ class HelmRenderEngine extends RenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
-        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);
+        tl.debug('Helm rendering completed; generated manifest file written.');
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     }
 
@@ -112,10 +112,10 @@ class KustomizeRenderEngine extends RenderEngine {
             tl.setResult(tl.TaskResult.Failed, result.stderr);
             return;
         }
-        tl.debug(result.stdout);
         const pathToBakedManifest = this.getTemplatePath();
         fs.writeFileSync(pathToBakedManifest, result.stdout);
         this.updateImages(pathToBakedManifest);
+        tl.debug('Kustomize rendering completed; generated manifest file written.');
         tl.setVariable('manifestsBundle', pathToBakedManifest);
     };
 

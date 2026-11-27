@@ -9,6 +9,7 @@ import { updateImagePullSecrets, updateImageDetails } from '../src/utils/Kuberne
 import * as yaml from 'js-yaml';
 import './L0HelmSetArguments';
 import './L0ManifestObjectToken';
+import './L0ManifestLogging';
 import { IExecSyncResult } from 'azure-pipelines-task-lib/toolrunner';
 
 describe('Kubernetes Manifests Suite', function () {

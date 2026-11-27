@@ -10,7 +10,7 @@ import winRM = require("./WinRMExtensionHelper");
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
 import { PowerShellParameters, NameValuePair } from "./ParameterParser";
 import utils = require("./Utils");
-import { sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
+import { sanitizeAzureResourceNameForLog, sanitizeForLoggingCommand, wasTruncatedByLegacyCommandFormat } from "./sanitize";
 import { canEmitSafeOutputVariables } from "./agentCompatibility";
 import fileEncoding = require('./FileEncoding');
 import { ParametersFileObject, TemplateObject, ParameterValue } from "../models/Types";
@@ -144,12 +144,12 @@ export class ResourceGroup {
             var extDelPromise = this.deploymentGroupExtensionHelper.deleteExtensionFromResourceGroup();
             var deleteRG = (val) => {
                 var armClient = new armResource.ResourceManagementClient(this.taskParameters.credentials, this.taskParameters.resourceGroupName, this.taskParameters.subscriptionId);
-                console.log(tl.loc("DeletingResourceGroup", this.taskParameters.resourceGroupName));
+                console.log(tl.loc("DeletingResourceGroup", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
                 armClient.resourceGroup.deleteMethod((error, result, request, response) => {
                     if (error) {
-                        return reject(tl.loc("CouldNotDeletedResourceGroup", this.taskParameters.resourceGroupName, utils.getError(error)));
+                        return reject(tl.loc("CouldNotDeletedResourceGroup", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName), utils.getError(error)));
                     }
-                    console.log(tl.loc("DeletedResourceGroup", this.taskParameters.resourceGroupName));
+                    console.log(tl.loc("DeletedResourceGroup", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
                     resolve();
                 });
             }
@@ -267,7 +267,7 @@ export class ResourceGroup {
     }
 
     private checkResourceGroupExistence(armClient: armResource.ResourceManagementClient): Promise<boolean> {
-        console.log(tl.loc("CheckResourceGroupExistence", this.taskParameters.resourceGroupName));
+        console.log(tl.loc("CheckResourceGroupExistence", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
         return new Promise<boolean>((resolve, reject) => {
             armClient.resourceGroup.checkExistence((error, exists, request, response) => {
                 if (error) {
@@ -351,7 +351,7 @@ export class ResourceGroup {
 
     private createResourceGroup(armClient: armResource.ResourceManagementClient): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            console.log(tl.loc("CreatingNewRG", this.taskParameters.resourceGroupName));
+            console.log(tl.loc("CreatingNewRG", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
             armClient.resourceGroup.createOrUpdate({ "name": this.taskParameters.resourceGroupName, "location": this.taskParameters.location }, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("ResourceGroupCreationFailed", utils.getError(error)));
@@ -514,7 +514,7 @@ export class ResourceGroup {
                 deployment.properties["mode"] = "Incremental";
             }
             this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
-            console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+            console.log(tl.loc("LogDeploymentName", sanitizeAzureResourceNameForLog(this.taskParameters.deploymentName)));
             armClient.deployments.validate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                 if (error) {
                     return reject(tl.loc("CreateTemplateDeploymentValidationFailed", utils.getError(error)));
@@ -547,7 +547,7 @@ export class ResourceGroup {
             console.log(tl.loc("StartingDeployment"));
             return new Promise<void>((resolve, reject) => {
                 this.taskParameters.deploymentName = this.taskParameters.deploymentName || this.createDeploymentName();
-                console.log(tl.loc("LogDeploymentName", this.taskParameters.deploymentName));
+                console.log(tl.loc("LogDeploymentName", sanitizeAzureResourceNameForLog(this.taskParameters.deploymentName)));
                 armClient.deployments.createOrUpdate(this.taskParameters.deploymentName, deployment, (error, result, request, response) => {
                     if (error) {
                         if(error.code == "ResourceGroupNotFound" && retryCount > 0){
@@ -606,9 +606,9 @@ export class ResourceGroup {
     private printServicePrincipalRoleAssignmentError(error: any) {
         if(!!error && error.statusCode == 403) {
             if(this.taskParameters.authScheme == "ServicePrincipal") {
-                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, this.taskParameters.resourceGroupName));
+                tl.error(tl.loc("ServicePrincipalRoleAssignmentDetails", this._spnName, sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
             } else if(this.taskParameters.authScheme == "ManagedServiceIdentity") {
-                tl.error(tl.loc("ManagedServiceIdentityDetails", this.taskParameters.resourceGroupName));    
+                tl.error(tl.loc("ManagedServiceIdentityDetails", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
             }
         }
     }
@@ -628,7 +628,7 @@ export class ResourceGroup {
         if(!!error && (error.statusCode < 400 || error.statusCode >= 500)) {
             let url = this.getAzurePortalDeploymentURL();
             if(url != null) {
-                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", this.getAzurePortalDeploymentURL()));    
+                tl.error(tl.loc("FindMoreDeploymentDetailsAzurePortal", sanitizeAzureResourceNameForLog(url)));
             }
         }
     }
