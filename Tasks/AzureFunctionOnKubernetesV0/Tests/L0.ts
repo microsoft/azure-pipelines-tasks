@@ -1,6 +1,9 @@
 import fs = require('fs');
 import assert = require('assert');
 import path = require('path');
+import * as tl from 'azure-pipelines-task-lib/task';
+import * as tr from 'azure-pipelines-task-lib/toolrunner';
+import { CommandHelper } from '../src/utils/commandHelper';
 
 describe('AzureFunctionOnKubernetesV1 Suite', function () {
     before(() => {
@@ -12,5 +15,318 @@ describe('AzureFunctionOnKubernetesV1 Suite', function () {
     it('Does a basic hello world test', function(done: Mocha.Done) {
         // TODO - add real tests
         done();
+    });
+});
+
+// Covers the untrusted func/Docker/kubectl build-output sanitization fix gated behind
+// AzureFunctionOnKubernetes.EnableOutputSanitization (see commandHelper.ts/deploy.ts) - both the
+// flag-off legacy path and the flag-on enforcement path, including the create/delete-secret
+// call-site shape that was initially missed and later added for consistency.
+describe('CommandHelper - untrusted output sanitization', function () {
+    const ENABLE_OUTPUT_SANITIZATION_FEATURE = 'AzureFunctionOnKubernetes.EnableOutputSanitization';
+    const MARKER = '##vso[task.setvariable variable=PWNED]evil';
+    const NEUTRALIZED = '##_vso[task.setvariable variable=PWNED]evil';
+
+    let originalWhich: typeof tl.which;
+    let originalWarning: typeof tl.warning;
+    let originalConsoleLog: typeof console.log;
+    let originalGetPipelineFeature: typeof tl.getPipelineFeature;
+    let commandHelper: CommandHelper;
+    let warnings: string[];
+    let consoleLogs: string[];
+    let requestedFeatureNames: string[];
+
+    // The flag is a server-controlled pipeline feature (DistributedTask.Tasks.<name>, ramped via
+    // Config Change), resolved through tl.getPipelineFeature() - not a pipeline variable. Mock it
+    // directly rather than tl.setVariable(), and record which feature name was queried so we can
+    // assert commandHelper asks for the exact name the server-side registration will use.
+    function setSanitizationEnabled(enabled: boolean) {
+        (tl as any).getPipelineFeature = (featureName: string) => {
+            requestedFeatureNames.push(featureName);
+            return enabled;
+        };
+    }
+
+    // Builds a fake ToolRunner-shaped command so execSync() is fully under test control,
+    // without needing func/kubectl actually installed on the test agent.
+    function fakeCommand(
+        result: Partial<tr.IExecSyncResult>,
+        capture?: { options?: any }
+    ): tr.ToolRunner {
+        return ({
+            execSync: (options?: any) => {
+                if (capture) {
+                    capture.options = options;
+                }
+                return {
+                    stdout: result.stdout ?? '',
+                    stderr: result.stderr ?? '',
+                    code: result.code ?? 0,
+                    error: result.error ?? null
+                };
+            }
+        } as any) as tr.ToolRunner;
+    }
+
+    before(() => {
+        originalWhich = tl.which;
+        // Avoid depending on func/kubectl being installed on the test agent.
+        (tl as any).which = (tool: string) => tool;
+        commandHelper = new CommandHelper();
+    });
+
+    after(() => {
+        (tl as any).which = originalWhich;
+    });
+
+    beforeEach(() => {
+        warnings = [];
+        originalWarning = tl.warning;
+        (tl as any).warning = (msg: string) => { warnings.push(msg); };
+        consoleLogs = [];
+        originalConsoleLog = console.log;
+        console.log = (msg?: any) => { consoleLogs.push(String(msg)); };
+        requestedFeatureNames = [];
+        originalGetPipelineFeature = tl.getPipelineFeature;
+        setSanitizationEnabled(false); // default off, matching the real unregistered-feature default
+    });
+
+    afterEach(() => {
+        (tl as any).warning = originalWarning;
+        console.log = originalConsoleLog;
+        (tl as any).getPipelineFeature = originalGetPipelineFeature;
+    });
+
+    describe('flag never set / explicitly off (legacy default behavior)', () => {
+        it('does not touch markers in stdout when the feature is off (never registered or explicitly disabled), even if externalOutput is (mistakenly) passed', () => {
+            setSanitizationEnabled(false);
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            const result = commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } } as any);
+            assert.strictEqual(result.stdout, MARKER, 'stdout must stay byte-for-byte unchanged when the flag is off');
+        });
+
+        it('strips externalOutput before calling execSync, preserving all other options unchanged', () => {
+            setSanitizationEnabled(false);
+            const capture: { options?: any } = {};
+            const command = fakeCommand({ stdout: MARKER, code: 0 }, capture);
+            commandHelper.execCommand(command, { cwd: '/tmp', externalOutput: { source: 'childProcess' } } as any);
+            assert.strictEqual(capture.options.externalOutput, undefined);
+            assert.strictEqual(capture.options.cwd, '/tmp');
+        });
+
+        it('warns with the raw/untouched text on a successful exit code with stderr present', () => {
+            setSanitizationEnabled(false);
+            const command = fakeCommand({ stderr: MARKER, code: 0 });
+            commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } } as any);
+            assert.strictEqual(warnings.length, 1);
+            assert.strictEqual(warnings[0], MARKER);
+        });
+
+        it('throws using the original (unsanitized) message on a non-zero exit code without warnIfError', () => {
+            setSanitizationEnabled(false);
+            const command = fakeCommand({ stderr: MARKER, code: 1 });
+            assert.throws(
+                () => commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } } as any),
+                (err: Error) => err.message === MARKER
+            );
+        });
+    });
+
+    describe('flag on (sanitization enforced)', () => {
+        beforeEach(() => setSanitizationEnabled(true));
+
+        it('neutralizes a ##vso[...] marker in stdout', () => {
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            const result = commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(result.stdout, NEUTRALIZED);
+        });
+
+        it('passes externalOutput through to execSync unchanged (live stream is also filtered by task-lib)', () => {
+            const capture: { options?: any } = {};
+            const command = fakeCommand({ stdout: MARKER, code: 0 }, capture);
+            commandHelper.execCommand(command, { cwd: '/tmp', externalOutput: { source: 'childProcess' } });
+            assert.deepStrictEqual(capture.options.externalOutput, { source: 'childProcess' });
+            assert.strictEqual(capture.options.cwd, '/tmp');
+        });
+
+        it('leaves plain, marker-free output completely unchanged', () => {
+            const plain = 'Deploying function app...\nDeployment succeeded.';
+            const command = fakeCommand({ stdout: plain, code: 0 });
+            const result = commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(result.stdout, plain);
+        });
+
+        it('logs one diagnostic line (without the raw marker text) when a marker was neutralized', () => {
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(consoleLogs.length, 1, 'exactly one diagnostic line should be logged');
+            assert(consoleLogs[0].includes('neutralized'), 'the diagnostic line should explain what happened');
+            assert(!consoleLogs[0].includes('##vso['), 'the diagnostic line must never contain a raw marker');
+        });
+
+        it('does not log a diagnostic line when output has no markers to neutralize', () => {
+            const plain = 'Deploying function app...\nDeployment succeeded.';
+            const command = fakeCommand({ stdout: plain, code: 0 });
+            commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(consoleLogs.length, 0, 'no diagnostic line should be logged when nothing was neutralized');
+        });
+
+        it('neutralizes multiple markers appearing in the same output', () => {
+            const multi = `${MARKER}\nsome text\n${MARKER}`;
+            const expected = `${NEUTRALIZED}\nsome text\n${NEUTRALIZED}`;
+            const command = fakeCommand({ stdout: multi, code: 0 });
+            const result = commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(result.stdout, expected);
+        });
+
+        it('does not touch a different-case near-miss (exact "##vso[" byte match only, mirroring the agent parser)', () => {
+            const nearMiss = '##VSO[task.setvariable variable=PWNED]evil';
+            const command = fakeCommand({ stdout: nearMiss, code: 0 });
+            const result = commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(result.stdout, nearMiss);
+        });
+
+        it('does not crash when stdout/stderr are empty strings', () => {
+            const command = fakeCommand({ stdout: '', stderr: '', code: 0 });
+            assert.doesNotThrow(() => commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } }));
+        });
+
+        it('sanitizes by default (safe-by-default) when no externalOutput option is provided at all', () => {
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            const result = commandHelper.execCommand(command);
+            assert.strictEqual(result.stdout, NEUTRALIZED, 'omitting externalOutput must not silently disable sanitization');
+        });
+
+        it('defaults externalOutput to { source: "childProcess" } on execSync when the caller omits it', () => {
+            const capture: { options?: any } = {};
+            const command = fakeCommand({ stdout: MARKER, code: 0 }, capture);
+            commandHelper.execCommand(command, { cwd: '/tmp' } as any);
+            assert.deepStrictEqual(capture.options.externalOutput, { source: 'childProcess' });
+            assert.strictEqual(capture.options.cwd, '/tmp');
+        });
+
+        it('queries the exact feature name the server-side registration will use', () => {
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert(
+                requestedFeatureNames.includes(ENABLE_OUTPUT_SANITIZATION_FEATURE),
+                'commandHelper must query tl.getPipelineFeature() with the documented feature name'
+            );
+        });
+
+        it('ensures tl.warning() receives the SANITIZED stderr text on a successful exit code', () => {
+            const command = fakeCommand({ stderr: MARKER, code: 0 });
+            commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } });
+            assert.strictEqual(warnings.length, 1);
+            assert.strictEqual(warnings[0], NEUTRALIZED, 'the injected command must never reach tl.warning() unsanitized');
+        });
+
+        it('throws using the SANITIZED stderr text on a non-zero exit code without warnIfError', () => {
+            const command = fakeCommand({ stderr: MARKER, code: 1 });
+            assert.throws(
+                () => commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } }),
+                (err: Error) => err.message === NEUTRALIZED
+            );
+        });
+
+        it('warns with the sanitized text instead of throwing when warnIfError=true, even on a non-zero exit code', () => {
+            const command = fakeCommand({ stderr: MARKER, code: 1 });
+            assert.doesNotThrow(() =>
+                commandHelper.execCommand(command, { externalOutput: { source: 'childProcess' } }, /* warnIfError */ true)
+            );
+            assert.strictEqual(warnings.length, 1);
+            assert.strictEqual(warnings[0], NEUTRALIZED);
+        });
+
+        // Mirrors the exact call-site option shape used by createImagePullSecret() in deploy.ts for
+        // the kubectl create/delete-secret commands - the gap this fix closed.
+        it('sanitizes output for the create/delete-secret call-site option shape (failOnStdErr + ignoreReturnCode + externalOutput)', () => {
+            const command = fakeCommand({ stdout: MARKER, code: 0 });
+            const result = commandHelper.execCommand(
+                command,
+                { failOnStdErr: false, ignoreReturnCode: true, externalOutput: { source: 'childProcess' } } as any,
+                true
+            );
+            assert.strictEqual(result.stdout, NEUTRALIZED);
+        });
+
+        // Regression guard for createImagePullSecret()'s annotateSecretCommand call in deploy.ts.
+        // Before this PR, kubectl.annotate('secret', ...) was fire-and-forget: its result was
+        // discarded entirely, so a redeploy hitting an already-annotated secret (kubectl exits
+        // non-zero without --overwrite) never failed the task. Routing this call through
+        // execCommand() without warnIfError=true would have newly thrown in that case, since
+        // execCommand() always runs checkForErrors(). warnIfError=true restores the original
+        // silently-ignored behavior while still sanitizing the (now-neutralized) output.
+        it('does not throw for the annotate-secret call-site option shape (externalOutput + warnIfError) on a non-zero exit code, preserving original fire-and-forget behavior', () => {
+            const command = fakeCommand({ stdout: MARKER, stderr: 'secret already has a value, must use --overwrite', code: 1 });
+            let result: tr.IExecSyncResult;
+            assert.doesNotThrow(() => {
+                result = commandHelper.execCommand(
+                    command,
+                    { externalOutput: { source: 'childProcess' } } as tr.IExecOptions,
+                    true
+                );
+            });
+            assert.strictEqual(result.stdout, NEUTRALIZED);
+            assert.strictEqual(warnings.length, 1, 'the error should be warned, not thrown, matching the pre-PR discard-the-result behavior');
+        });
+    });
+
+    // Covers the gap found when re-auditing which of the 9 child processes a deploy spawns are
+    // actually flag-gated: kubernetes-common@2.281.1's Kubectl.execute() only filters the LIVE
+    // console stream, not the RETURNED result.stdout/stderr that
+    // KubernetesManifestUtility.checkManifestStability() passes straight into its own, unpatched
+    // checkForErrors(). wrapKubectlForOutputSanitization() closes that gap locally for the three
+    // methods checkManifestStability() actually calls (checkRolloutStatus/getResource/describe).
+    describe('wrapKubectlForOutputSanitization (shared Kubectl helper return-value sanitization)', () => {
+        // A minimal stand-in for the shared Kubectl class - only the three methods
+        // checkManifestStability() calls need to exist for this test's purposes.
+        function fakeKubectl(results: Partial<Record<'checkRolloutStatus' | 'getResource' | 'describe', Partial<tr.IExecSyncResult>>>): any {
+            const kubectl: any = {};
+            for (const method of ['checkRolloutStatus', 'getResource', 'describe'] as const) {
+                const r = results[method] ?? {};
+                kubectl[method] = () => ({ stdout: r.stdout ?? '', stderr: r.stderr ?? '', code: r.code ?? 0, error: r.error ?? null });
+            }
+            return kubectl;
+        }
+
+        it('returns the same kubectl instance unchanged (no sanitization) when the flag is off', () => {
+            setSanitizationEnabled(false);
+            const kubectl = fakeKubectl({ checkRolloutStatus: { stdout: MARKER, code: 0 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            assert.strictEqual(wrapped, kubectl, 'the same instance must be returned unchanged when the flag is off');
+            assert.strictEqual(wrapped.checkRolloutStatus('deployment', 'foo').stdout, MARKER, 'output must stay raw when the flag is off');
+        });
+
+        it('sanitizes the returned result of checkRolloutStatus/getResource/describe when the flag is on', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({
+                checkRolloutStatus: { stdout: MARKER, code: 0 },
+                getResource: { stdout: MARKER, code: 0 },
+                describe: { stdout: MARKER, code: 0 }
+            });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            assert.strictEqual(wrapped.checkRolloutStatus('deployment', 'foo').stdout, NEUTRALIZED);
+            assert.strictEqual(wrapped.getResource('pod', 'foo').stdout, NEUTRALIZED);
+            assert.strictEqual(wrapped.describe('pod', 'foo').stdout, NEUTRALIZED);
+        });
+
+        it('logs the diagnostic line (without the raw marker) when the shared Kubectl helper neutralizes a marker', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({ getResource: { stdout: MARKER, code: 0 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            wrapped.getResource('pod', 'foo');
+            assert.strictEqual(consoleLogs.length, 1);
+            assert(consoleLogs[0].includes('neutralized'));
+            assert(!consoleLogs[0].includes('##vso['));
+        });
+
+        it('hands back a sanitized stderr so the dependency\'s own checkForErrors() cannot leak a raw marker on a non-zero exit code', () => {
+            setSanitizationEnabled(true);
+            const kubectl = fakeKubectl({ checkRolloutStatus: { stderr: MARKER, code: 1 } });
+            const wrapped = commandHelper.wrapKubectlForOutputSanitization(kubectl);
+            const result = wrapped.checkRolloutStatus('deployment', 'foo');
+            assert.strictEqual(result.stderr, NEUTRALIZED, 'the result handed back to the caller (and then to the dependency\'s checkForErrors) must already be sanitized');
+        });
     });
 });

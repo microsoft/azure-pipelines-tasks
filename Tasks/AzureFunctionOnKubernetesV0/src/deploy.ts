@@ -9,7 +9,6 @@ import { Kubectl, Resource } from 'azure-pipelines-tasks-kubernetes-common/kubec
 import * as FileHelper from './utils/fileHelper';
 import * as KubernetesConstants from 'azure-pipelines-tasks-kubernetes-common/kubernetesconstants';
 import * as KubernetesManifestUtility from 'azure-pipelines-tasks-kubernetes-common/kubernetesmanifestutility';
-import * as CommonUtils from 'azure-pipelines-tasks-kubernetes-common/utility';
 
 const secretName = tl.getInput('secretName');
 const appName = tl.getInput('appName', true);
@@ -51,10 +50,20 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
     if (createPullSecretCommand) {
         const deleteSecretCommand = commandHelper.getDeleteSecretCommand(pullSecretName, namespace);
         // while deleting, error is thrown if the secret is not present. Ignore the error.
-        commandHelper.execCommand(deleteSecretCommand, { failOnStdErr: false, ignoreReturnCode: true} as tr.IExecOptions, true);
-        commandHelper.execCommand(createPullSecretCommand);
-        const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
-        kubectl.annotate('secret', pullSecretName, KubernetesConstants.pipelineAnnotations);
+        // kubectl's own output here is not expected to reflect untrusted repo content, but it is
+        // still sanitized for defense-in-depth consistency with the other execCommand() call sites.
+        commandHelper.execCommand(deleteSecretCommand, { failOnStdErr: false, ignoreReturnCode: true, externalOutput: { source: 'childProcess' } } as tr.IExecOptions, true);
+        commandHelper.execCommand(createPullSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
+        // Built and run via commandHelper.execCommand (instead of the shared Kubectl helper's
+        // annotate()) so this call stays under the same EnableOutputSanitization flag as every
+        // other command here, rather than relying on the common package's own unconditional
+        // sanitization. warnIfError=true preserves the original kubectl.annotate() call's
+        // fire-and-forget semantics (its result was previously discarded entirely, e.g. a
+        // re-deploy hitting an already-annotated secret without --overwrite would error but never
+        // fail the task) - execCommand() always runs checkForErrors(), so without warnIfError=true
+        // this would newly fail the task on a case that was previously silently ignored.
+        const annotateSecretCommand = commandHelper.getAnnotateSecretCommand(pullSecretName, namespace, KubernetesConstants.pipelineAnnotations);
+        commandHelper.execCommand(annotateSecretCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions, true);
     }
     else {
         // no secret created if no Docker login is found. Case when user wants to use a public image.
@@ -66,19 +75,29 @@ function createImagePullSecret(commandHelper: CommandHelper): string {
 
 function funcDeploy(commandHelper: CommandHelper, dockerConnection: DockerConnection, pullSecretName: string) {
     const funcDeployCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, args);
-    commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir } as tr.IExecOptions);
+    // 'func kubernetes deploy' builds the user's Dockerfile/repo content. Its output is untrusted
+    // and must not be allowed to inject logging commands (##vso[...]) into the agent.
+    commandHelper.execCommand(funcDeployCommand, { cwd: funcRootDir, externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
 }
 
 function annotateKubernetesResources(commandHelper: CommandHelper, resourcesYaml: string) {
     const funcKubernetesTemplatesPath = FileHelper.getFuncKubernetesYamlPath();
     FileHelper.writeContentToFile(funcKubernetesTemplatesPath, resourcesYaml);
-    const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
-    const annotateResults = kubectl.annotateFiles(funcKubernetesTemplatesPath, KubernetesConstants.pipelineAnnotations, true);
-    CommonUtils.checkForErrors([annotateResults]);
+    // Built and run via commandHelper.execCommand (instead of the shared Kubectl helper's
+    // annotateFiles()) so this call stays under the same EnableOutputSanitization flag as every
+    // other command here, rather than relying on the common package's own unconditional
+    // sanitization. execCommand() already calls checkForErrors() internally.
+    const annotateFilesCommand = commandHelper.getAnnotateResourceFileCommand(funcKubernetesTemplatesPath, namespace, KubernetesConstants.pipelineAnnotations);
+    commandHelper.execCommand(annotateFilesCommand, { externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
 }
 
 async function checkManifestStability(commandHelper: CommandHelper, resources: Resource[]) {
-    const kubectl = new Kubectl(commandHelper.kubectlPath, namespace);
+    // checkManifestStability() internally calls kubectl.checkRolloutStatus()/getResource() to
+    // poll rollout/pod/service status, which are manifest-controlled (resource names/output are
+    // not guaranteed trusted). Wrap the instance so those RETURNED results stay under the same
+    // EnableOutputSanitization flag as every other command here, closing a gap the shared
+    // Kubectl helper's own (unconditional, live-stream-only) sanitization does not cover.
+    const kubectl = commandHelper.wrapKubectlForOutputSanitization(new Kubectl(commandHelper.kubectlPath, namespace));
     await KubernetesManifestUtility.checkManifestStability(kubectl, resources);
 }
 
@@ -86,7 +105,8 @@ function getKubernetesResourcesYaml(commandHelper: CommandHelper, dockerConnecti
     let resourcesYaml = null;
     const argsWithDryRun = args ? args.concat(' --dry-run') : '--dry-run';
     const funcDeployDryRunCommand = commandHelper.getFuncDeployCommand(dockerConnection, secretName, appName, namespace, dockerHubNamespace, pullSecretName, argsWithDryRun);
-    const result: tr.IExecSyncResult = commandHelper.execCommand(funcDeployDryRunCommand, { cwd: funcRootDir } as tr.IExecOptions);
+    // Same untrusted build output concern as funcDeploy() above.
+    const result: tr.IExecSyncResult = commandHelper.execCommand(funcDeployDryRunCommand, { cwd: funcRootDir, externalOutput: { source: 'childProcess' } } as tr.IExecOptions);
     resourcesYaml = result.stdout;
 
     return resourcesYaml;
