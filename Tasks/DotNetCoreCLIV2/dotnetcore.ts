@@ -3,6 +3,7 @@ import tr = require("azure-pipelines-task-lib/toolrunner");
 import path = require("path");
 import fs = require("fs");
 import ltx = require("ltx");
+import os = require("os");
 import * as JSON5 from 'json5';
 var archiver = require('archiver');
 var uuidV4 = require('uuid/v4');
@@ -172,7 +173,7 @@ export class dotNetExe {
         };
 
         if (!isInside(searchDir, boundary)) {
-            console.log(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`);
+            tl.writeExternalOutput(`Working directory '${searchDir}' is outside boundary '${boundary}'. Skipping global.json search.`+ os.EOL, {source: 'repository'});
             return null;
         }
 
