@@ -130,10 +130,17 @@ if (process.env[shared.TestEnvVars.action] === 'bake') {
     };
 
     const komposeCommand = `kompose convert -f ${process.env[shared.TestEnvVars.dockerComposeFile]} -o ${path.join('tempdirectory', 'baked-template-random.yaml')}`;
-    a.exec[komposeCommand] = {
-        'code': 0,
-        stdout: 'Kubernetes files created'
-    };
+    if (process.env[shared.TestEnvVars.dockerComposeFile] && process.env[shared.TestEnvVars.dockerComposeFile].indexOf('SIMULATE_KOMPOSE_FAILURE') > -1) {
+        a.exec[komposeCommand] = {
+            'code': 1,
+            stderr: 'Error: no such file or directory'
+        };
+    } else {
+        a.exec[komposeCommand] = {
+            'code': 0,
+            stdout: 'Kubernetes files created'
+        };
+    }
     a.checkPath[process.env[shared.TestEnvVars.dockerComposeFile]] = true;
 }
 

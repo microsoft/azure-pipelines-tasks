@@ -37,6 +37,7 @@ describe('Kubernetes Manifests Suite', function () {
         delete process.env[shared.TestEnvVars.trafficSplitMethod];
         delete process.env[shared.TestEnvVars.containers];
         delete process.env.RemoveNamespaceFromEndpoint;
+        delete process.env[shared.TestEnvVars.komposeBakeDisableLogSanitizationFeatureFlag];
     });
 
     after((done) => {
@@ -533,6 +534,55 @@ describe('Kubernetes Manifests Suite', function () {
         process.env[shared.TestEnvVars.komposeBakeDisableLogSanitizationFeatureFlag] = 'true';
         tr.run();
         assert(!tr.succeeded, 'with sanitization disabled, the injected task.complete command is processed as a real agent command');
+        done();
+    });
+
+    it('Kompose bake should filter logging commands injected via a bare carriage return (\\r)', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const dockerComposeFilePath = 'dockerComposeFilePath\r##vso[task.complete result=Failed]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        tr.run();
+        assert(tr.succeeded, 'the injected task.complete command delivered via a bare \\r should not be processed as a real agent command');
+        done();
+    });
+
+    it('Kompose bake should not be bypassed by a pre-encoded logging command payload (%0A)', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        // an attacker pre-encoding the newline hoping our escaping double-decodes it back to a real newline
+        const dockerComposeFilePath = 'dockerComposeFilePath%0A##vso[task.complete result=Failed]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        tr.run();
+        assert(tr.succeeded, 'a pre-encoded %0A payload should not be double-decoded into a real newline that triggers the injected command');
+        done();
+    });
+
+    it('Kompose bake should filter multiple distinct injected logging commands in a single payload', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const dockerComposeFilePath = 'dockerComposeFilePath\n##vso[task.setvariable variable=PROOF_FLAG]YES\n##vso[task.setsecret]injectedsecret\n##vso[task.complete result=Failed]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        tr.run();
+        assert(tr.succeeded, 'none of the injected commands (setvariable, setsecret, complete) should be processed as real agent commands');
+        done();
+    });
+
+    it('Kompose bake should fail cleanly (without crashing) when kompose itself fails and the path also contains an injection attempt', (done: Mocha.Done) => {
+        const tp = path.join(__dirname, 'TestSetup.js');
+        const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+        const dockerComposeFilePath = 'SIMULATE_KOMPOSE_FAILURE\n##vso[task.complete result=Succeeded]injected';
+        process.env[shared.TestEnvVars.action] = shared.Actions.bake;
+        process.env[shared.TestEnvVars.renderType] = 'kompose';
+        process.env[shared.TestEnvVars.dockerComposeFile] = dockerComposeFilePath;
+        tr.run();
+        assert(tr.failed, 'task should fail due to the genuine kompose error, not due to the injected command forcing a different result');
         done();
     });
 
