@@ -16,8 +16,8 @@
   "author": "Microsoft Corporation",
   "version": {
     "Major": 1,
-    "Minor": 283,
-    "Patch": 1
+    "Minor": 284,
+    "Patch": 0
   },
   "demands": [],
   "minimumAgentVersion": "1.100.0",
@@ -101,6 +101,11 @@
       "helpMarkDown": "ms-resource:loc.input.help.SqlAdditionalArguments"
     }
   ],
+  "restrictions": {
+    "settableVariables": {
+      "allowed": []
+    }
+  },
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "execution": {
     "Node10": {

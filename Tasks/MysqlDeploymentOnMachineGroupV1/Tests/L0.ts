@@ -27,6 +27,52 @@ describe('MySqlDeployment Suite', function() {
         assert(tr.stdOutContained('MysqlClientL0Tests.executeSqlCommand should has passed'), 'Should have printed: MysqlClientL0Tests.executeSqlCommand should has passed.');
     });
 
+    // Every mysql invocation (InlineSqlTask/SqlTaskFile, with/without DatabaseName)
+    // must filter untrusted tool output through the external-output marker filter.
+    async function runMysqlClientExecTest(selector: 'InlineSqlTask' | 'SqlTaskFile', withDatabase: boolean): Promise<void> {
+        const selectorEnvVar = 'MYSQL_MACHINEGROUP_TEST_SELECTOR';
+        const withDbEnvVar = 'MYSQL_MACHINEGROUP_TEST_WITHDB';
+        const previousSelector = process.env[selectorEnvVar];
+        const previousWithDb = process.env[withDbEnvVar];
+        try {
+            process.env[selectorEnvVar] = selector;
+            process.env[withDbEnvVar] = withDatabase ? 'true' : 'false';
+            const tp = path.join(__dirname, 'MysqlClientExecTests.js');
+            const tr: ttm.MockTestRunner = new ttm.MockTestRunner(tp);
+            await tr.runAsync();
+            assert.strictEqual(tr.succeeded, true, tr.stdout + tr.stderr);
+            assert(tr.stdOutContained('MysqlClientExecL0Tests.executeSqlCommand passed.'),
+                'Should have printed: MysqlClientExecL0Tests.executeSqlCommand passed.');
+        } finally {
+            if (previousSelector === undefined) { delete process.env[selectorEnvVar]; } else { process.env[selectorEnvVar] = previousSelector; }
+            if (previousWithDb === undefined) { delete process.env[withDbEnvVar]; } else { process.env[withDbEnvVar] = previousWithDb; }
+        }
+    }
+
+    it('MySqlDeployment filters output for InlineSqlTask with DatabaseName set', async () => {
+        await runMysqlClientExecTest('InlineSqlTask', true);
+    });
+
+    it('MySqlDeployment filters output for InlineSqlTask with DatabaseName unset', async () => {
+        await runMysqlClientExecTest('InlineSqlTask', false);
+    });
+
+    it('MySqlDeployment filters output for SqlTaskFile with DatabaseName set', async () => {
+        await runMysqlClientExecTest('SqlTaskFile', true);
+    });
+
+    it('MySqlDeployment filters output for SqlTaskFile with DatabaseName unset', async () => {
+        await runMysqlClientExecTest('SqlTaskFile', false);
+    });
+
+    it('MySqlDeployment task.json/task.loc.json deny all settable variables', () => {
+        const expected = { settableVariables: { allowed: [] } };
+        const taskJson = require(path.join(__dirname, '..', 'task.json'));
+        const taskLocJson = require(path.join(__dirname, '..', 'task.loc.json'));
+        assert.deepStrictEqual(taskJson.restrictions, expected, 'task.json restrictions must deny every settable variable.');
+        assert.deepStrictEqual(taskLocJson.restrictions, expected, 'task.loc.json restrictions must deny every settable variable.');
+    });
+
     it('MySqlDeployment DatabaseName validation', () => {
         assert.strictEqual(isValidDatabaseName('database_name-1$'), true);
         assert.strictEqual(isValidDatabaseName('数据库_name-1$'), true);

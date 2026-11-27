@@ -67,9 +67,11 @@ export class MysqlClientExecTests {
         // demonstrates its intended path even if the environment happens to define the
         // feature-flag variable, and so a future accidental default flip is caught here.
         tr.registerMockExport('getPipelineFeature', (_featureName: string) => isRollback);
-        tr.registerMockExport('execSync', (tool: string, args: string[]) => {
+        tr.registerMockExport('execSync', (tool: string, args: string[], options?: unknown) => {
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, connectionArgs);
+            assert.deepStrictEqual(options, { externalOutput: { source: 'childProcess' } },
+                'The firewall connection probe must also filter untrusted output for consistency across every mysql invocation.');
             connectionCheckCount++;
             return {
                 code: 1,
@@ -77,9 +79,11 @@ export class MysqlClientExecTests {
                 stderr: "ERROR 9000 (HY000): Client with IP address '250.250.250.250' is not allowed to connect to this MySQL server."
             };
         });
-        tr.registerMockExport('exec', async (tool: string, args: string[]) => {
+        tr.registerMockExport('exec', async (tool: string, args: string[], options?: unknown) => {
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, expectedExecutions[executionCount], `Unexpected SQL execution ${executionCount}.`);
+            assert.deepStrictEqual(options, { externalOutput: { source: 'childProcess' } },
+                'Every mysql invocation must filter untrusted output through the external-output marker filter.');
             executionCount++;
             return 0;
         });

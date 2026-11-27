@@ -65,14 +65,23 @@ async function runTests(): Promise<void> {
             assert.strictEqual(selector, 'SqlFile', 'Inline SQL must use exec, not spawn.');
             assert.strictEqual(tool, '/usr/local/bin/mysql');
             assert.deepStrictEqual(args, expectedArgs);
-            assert.deepStrictEqual(options, { stdio: ['pipe', 'inherit', 'inherit'] });
+            assert.deepStrictEqual(options, { stdio: ['pipe', 'pipe', 'pipe'] },
+                'mysql stdout/stderr must be piped (not inherited) so they can be routed through the external-output marker filter.');
             spawnCount++;
 
             const mysqlProcess = new ChildProcess();
             const stdin = new PassThrough();
+            const stdout = new PassThrough();
+            const stderr = new PassThrough();
             mysqlProcess.stdin = stdin;
+            mysqlProcess.stdout = stdout;
+            mysqlProcess.stderr = stderr;
             stdin.on('data', (chunk: Buffer) => chunks.push(chunk));
-            stdin.on('finish', () => mysqlProcess.emit('close', 0));
+            stdin.on('finish', () => {
+                stdout.end();
+                stderr.end();
+                mysqlProcess.emit('close', 0);
+            });
             return mysqlProcess;
         }) as SpawnFn;
 

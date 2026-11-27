@@ -36,6 +36,13 @@ export class MysqlClient implements ISqlClient {
 
     private static readonly SHORT_VALUE_CONSUMING_OPTIONS = new Set(['D', 'e', 'h', 'P', 'S', 'u']);
 
+    // mysql's own stdout/stderr (query results, and any SIGNAL/error text raised by a
+    // trigger or stored procedure the connected principal does not own) is untrusted
+    // output from the task's perspective. Every execution path below routes it through
+    // this same filter so a "##vso[" marker embedded in that output can never reach the
+    // agent's command parser.
+    private static readonly MYSQL_OUTPUT_FILTER: task.ExternalOutputOptions = { source: 'childProcess' };
+
     private _azureMysqlTaskParameter: AzureMysqlTaskParameter;
     private _hostName: string;
     private _toolPath: string;
@@ -149,9 +156,15 @@ export class MysqlClient implements ISqlClient {
         let firewallConfiguration: FirewallConfiguration = new FirewallConfiguration(true);
         // Regex to extract Ip Address from string
         const regexToGetIpAddress = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+        // Note: this connection probe never executes caller/database-supplied SQL, so
+        // untrusted data cannot reach its output - but it is still routed through the
+        // shared filter for defense-in-depth consistency across every mysql invocation.
+        // The filter only affects the *displayed* copy, not the result.stdout/stderr
+        // used below for the IP-address match.
         const result = task.execSync(this._toolPath, this._hardeningEnabled
             ? this._buildConnectionArgs()
-            : Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()));
+            : Utility.argStringToArray(this._getArgumentString() +" "+ this._getAdditionalArgument()),
+            { externalOutput: MysqlClient.MYSQL_OUTPUT_FILTER });
         task.debug('Mysql server connection check result: '+JSON.stringify(result));
         // If agent is not whitelisted it will throw error with ip address 
         if(result && result.stderr){
@@ -262,12 +275,23 @@ export class MysqlClient implements ISqlClient {
 
     private async _executeSqlScript(argument: string): Promise<number> {
         task.debug('Started execution of mysql script');
-        const resultCode = await task.exec(this._toolPath, Utility.argStringToArray(argument));
+        const resultCode = await task.exec(this._toolPath, Utility.argStringToArray(argument), { externalOutput: MysqlClient.MYSQL_OUTPUT_FILTER });
         task.debug('Script execution on mysql server result: '+ resultCode);
         if(resultCode === 0){
             return resultCode;
         }
         throw new Error(task.loc("SqlExecutionException", resultCode));
+    }
+
+    /**
+     * Spawns mysql with stdout/stderr piped through the shared external-output filter,
+     * so signal/error text originating from the database cannot smuggle a "##vso[" command to the agent.
+     */
+    private _spawnMysqlFiltered(args: string[]) {
+        const mysqlProcess = this._spawn(this._toolPath, args, { stdio: ['pipe', 'pipe', 'pipe'] });
+        mysqlProcess.stdout?.pipe(task.createExternalOutputStream({ ...MysqlClient.MYSQL_OUTPUT_FILTER, destination: process.stdout }));
+        mysqlProcess.stderr?.pipe(task.createExternalOutputStream({ ...MysqlClient.MYSQL_OUTPUT_FILTER, destination: process.stderr }));
+        return mysqlProcess;
     }
 
     /**
@@ -285,7 +309,7 @@ export class MysqlClient implements ISqlClient {
                 return;
             }
             const args = Utility.argStringToArray(argument);
-            const mysqlProcess = this._spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
+            const mysqlProcess = this._spawnMysqlFiltered(args);
             mysqlProcess.on('error', (err) => {
                 if (!settled) {
                     settled = true;
@@ -324,7 +348,7 @@ export class MysqlClient implements ISqlClient {
      */
     private async _executeSqlScriptArgs(args: string[]): Promise<number> {
         task.debug('Started execution of mysql script');
-        const resultCode = await task.exec(this._toolPath, args);
+        const resultCode = await task.exec(this._toolPath, args, { externalOutput: MysqlClient.MYSQL_OUTPUT_FILTER });
         task.debug('Script execution on mysql server result: '+ resultCode);
         if(resultCode === 0){
             return resultCode;
@@ -347,7 +371,7 @@ export class MysqlClient implements ISqlClient {
                 reject(new Error(task.loc("SqlFileNotFound", sqlFilePath)));
                 return;
             }
-            const mysqlProcess = this._spawn(this._toolPath, args, { stdio: ['pipe', 'inherit', 'inherit'] });
+            const mysqlProcess = this._spawnMysqlFiltered(args);
             mysqlProcess.on('error', (err) => {
                 if (!settled) {
                     settled = true;
