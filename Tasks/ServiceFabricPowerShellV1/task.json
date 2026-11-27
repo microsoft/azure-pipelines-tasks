@@ -18,7 +18,7 @@
     "version": {
         "Major": 1,
         "Minor": 284,
-        "Patch": 1
+        "Patch": 2
     },
     "demands": [
         "Cmd"
@@ -92,6 +92,7 @@
     "messages": {
         "CertNotPresentInLocalStoreWarningMsg": "The certificate with thumbprint {0} is not present in the local certificate store. This can potentially cause errors. If the release/build fails, please re-try it or ensure that multiple agents are not running builds/releases using the same service endpoint simultaneously on the same machine.",
         "InvalidScriptArguments0": "Invalid script arguments '{0}'. Line breaks are not allowed.",
-        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified."
+        "InvalidScriptPath0": "Invalid script path '{0}'. Invalid path characters specified.",
+        "UnsupportedScriptArguments0": "Unsupported script arguments '{0}'. Only parameter names and literal values (strings, numbers, $true, $false, $null, $env: variables, and arrays or hashtables of these) are supported."
     }
 }
