@@ -38,7 +38,8 @@ export let TestEnvVars = {
     isBaselineDeploymentPresent: "__isBaselineDeploymentPresent__",
     baselineAndCanaryReplicas: "__baselineAndCanaryReplicas__",
     trafficSplitMethod: "__trafficSplitMethod__",
-    resourceType: "__resourceType__"
+    resourceType: "__resourceType__",
+    komposeBakeDisableLogSanitizationFeatureFlag: "DISTRIBUTEDTASK_TASKS_KUBERNETESMANIFESTKOMPOSEBAKEDISABLELOGSANITIZATION"
 };
 
 export let OperatingSystems = {
