@@ -14,8 +14,16 @@ function ConvertTo-ScriptArgumentList {
         [string]$ScriptArguments
     )
 
-    function Get-UnsupportedArgumentsError {
-        Get-VstsLocString -Key UnsupportedScriptArguments0 -ArgumentList $ScriptArguments
+    # Reason and AstType are fixed values that are safe to publish in telemetry; the
+    # argument text is only included in the message shown in the pipeline log.
+    function New-UnsupportedArgumentsError([string]$Reason, [System.Management.Automation.Language.Ast]$Ast) {
+        $exception = New-Object System.Exception (Get-VstsLocString -Key UnsupportedScriptArguments0 -ArgumentList $ScriptArguments)
+        $exception.Data['Reason'] = $Reason
+        if ($Ast) {
+            $exception.Data['AstType'] = $Ast.GetType().Name
+        }
+
+        $exception
     }
 
     function Test-IsEnvironmentVariable([System.Management.Automation.Language.Ast]$Ast) {
@@ -27,14 +35,14 @@ function ConvertTo-ScriptArgumentList {
     function Get-ArgumentValue([System.Management.Automation.Language.Ast]$Ast) {
         $scriptBlocks = $Ast.FindAll({ $args[0] -is [System.Management.Automation.Language.ScriptBlockExpressionAst] }, $true)
         if (@($scriptBlocks).Count) {
-            throw (Get-UnsupportedArgumentsError)
+            throw (New-UnsupportedArgumentsError -Reason 'ScriptBlock')
         }
 
         # Stop-parsing token: the rest of the line would be passed through unparsed.
         if ($Ast -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
             $Ast.StringConstantType -eq [System.Management.Automation.Language.StringConstantType]::BareWord -and
             $Ast.Value -eq '--%') {
-            throw (Get-UnsupportedArgumentsError)
+            throw (New-UnsupportedArgumentsError -Reason 'StopParsing')
         }
 
         if (Test-IsEnvironmentVariable $Ast) {
@@ -44,7 +52,7 @@ function ConvertTo-ScriptArgumentList {
         if ($Ast -is [System.Management.Automation.Language.ExpandableStringExpressionAst]) {
             foreach ($nestedExpression in $Ast.NestedExpressions) {
                 if (!(Test-IsEnvironmentVariable $nestedExpression)) {
-                    throw (Get-UnsupportedArgumentsError)
+                    throw (New-UnsupportedArgumentsError -Reason 'ExpandableString' -Ast $nestedExpression)
                 }
             }
 
@@ -56,7 +64,7 @@ function ConvertTo-ScriptArgumentList {
             return $Ast.SafeGetValue()
         }
         catch {
-            throw (Get-UnsupportedArgumentsError)
+            throw (New-UnsupportedArgumentsError -Reason 'NonConstantValue' -Ast $Ast)
         }
     }
 
@@ -89,18 +97,31 @@ function ConvertTo-ScriptArgumentList {
     $tokens = $null
     $parseErrors = $null
     $ast = [System.Management.Automation.Language.Parser]::ParseInput("& placeholder $ScriptArguments", [ref]$tokens, [ref]$parseErrors)
+    if ($parseErrors) {
+        throw (New-UnsupportedArgumentsError -Reason 'ParseError')
+    }
+
+    if ($ast.EndBlock.Statements.Count -ne 1 -or $ast.EndBlock.Traps) {
+        throw (New-UnsupportedArgumentsError -Reason 'MultipleStatements')
+    }
+
+    $pipelineAst = $ast.EndBlock.Statements[0] -as [System.Management.Automation.Language.PipelineAst]
+    if ($pipelineAst -and $pipelineAst.PipelineElements.Count -ne 1) {
+        throw (New-UnsupportedArgumentsError -Reason 'Pipeline')
+    }
+
     $commandAst = $null
-    if (!$parseErrors -and $ast.EndBlock.Statements.Count -eq 1 -and !$ast.EndBlock.Traps) {
-        $pipelineAst = $ast.EndBlock.Statements[0] -as [System.Management.Automation.Language.PipelineAst]
-        if ($pipelineAst -and $pipelineAst.PipelineElements.Count -eq 1) {
-            $commandAst = $pipelineAst.PipelineElements[0] -as [System.Management.Automation.Language.CommandAst]
-        }
+    if ($pipelineAst) {
+        $commandAst = $pipelineAst.PipelineElements[0] -as [System.Management.Automation.Language.CommandAst]
     }
 
     if (!$commandAst -or
-        $commandAst.InvocationOperator -ne [System.Management.Automation.Language.TokenKind]::Ampersand -or
-        $commandAst.Redirections.Count) {
-        throw (Get-UnsupportedArgumentsError)
+        $commandAst.InvocationOperator -ne [System.Management.Automation.Language.TokenKind]::Ampersand) {
+        throw (New-UnsupportedArgumentsError -Reason 'InvalidStructure')
+    }
+
+    if ($commandAst.Redirections.Count) {
+        throw (New-UnsupportedArgumentsError -Reason 'Redirection')
     }
 
     # Script parameter metadata is needed to bind switches the same way PowerShell does.
@@ -123,7 +144,7 @@ function ConvertTo-ScriptArgumentList {
         $parameter = Get-ScriptParameter $parameters $element.ParameterName
         $name = if ($parameter) { $parameter.Name } else { $element.ParameterName }
         if ($named.ContainsKey($name)) {
-            throw (Get-UnsupportedArgumentsError)
+            throw (New-UnsupportedArgumentsError -Reason 'DuplicateParameter')
         }
 
         if ($element.Argument) {
@@ -140,9 +161,47 @@ function ConvertTo-ScriptArgumentList {
             $named[$name] = $true
         }
         else {
-            throw (Get-UnsupportedArgumentsError)
+            throw (New-UnsupportedArgumentsError -Reason 'MissingParameterValue')
         }
     }
 
     return New-Object psobject -Property @{ Named = $named; Positional = $positional.ToArray() }
+}
+
+# Publishes usage of the argument list invocation. Only fixed values and counts are
+# published: never argument text, parameter names, values or paths.
+function Publish-ScriptArgumentListTelemetry {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('FilePath', 'InlineScript')]
+        [string]$ScriptType,
+        [object]$ArgumentList,
+        [System.Management.Automation.ErrorRecord]$ErrorRecord
+    )
+
+    $telemetry = @{
+        argumentListInvocation = $true
+        scriptType = $ScriptType
+        rejected = $null -ne $ErrorRecord
+    }
+
+    if ($ArgumentList) {
+        $telemetry.namedCount = @($ArgumentList.Named.Keys).Count
+        $telemetry.positionalCount = @($ArgumentList.Positional).Count
+    }
+
+    if ($ErrorRecord) {
+        $knownReasons = @('ParseError', 'MultipleStatements', 'Pipeline', 'InvalidStructure', 'Redirection',
+            'ScriptBlock', 'StopParsing', 'ExpandableString', 'NonConstantValue', 'DuplicateParameter', 'MissingParameterValue')
+        $reason = [string]$ErrorRecord.Exception.Data['Reason']
+        $telemetry.reason = if ($knownReasons -ccontains $reason) { $reason } else { 'Unexpected' }
+        $astType = [string]$ErrorRecord.Exception.Data['AstType']
+        if ($astType -cmatch '^[A-Za-z]+Ast$') {
+            $telemetry.astType = $astType
+        }
+    }
+
+    $telemetryJson = $telemetry | ConvertTo-Json -Compress
+    Write-Host "##vso[telemetry.publish area=TaskHub;feature=ServiceFabricPowerShellV1]$telemetryJson"
 }

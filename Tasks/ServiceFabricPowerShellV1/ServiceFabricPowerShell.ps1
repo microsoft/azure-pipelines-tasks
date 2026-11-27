@@ -78,10 +78,28 @@ try
     $scriptCommand = "& '$($scriptPath.Replace("'", "''"))' $scriptArguments"
     if ($useScriptArgumentList)
     {
-        $scriptArgumentList = ConvertTo-ScriptArgumentList -ScriptPath $scriptPath -ScriptArguments $scriptArguments
+        $scriptArgumentList = $null
+        $scriptArgumentListError = $null
+        try
+        {
+            $scriptArgumentList = ConvertTo-ScriptArgumentList -ScriptPath $scriptPath -ScriptArguments $scriptArguments
+        }
+        catch
+        {
+            $scriptArgumentListError = $_
+            throw
+        }
+        finally
+        {
+            Publish-ScriptArgumentListTelemetry `
+                -ScriptType $(if ($scriptType -eq "InlineScript") { "InlineScript" } else { "FilePath" }) `
+                -ArgumentList $scriptArgumentList `
+                -ErrorRecord $scriptArgumentListError
+        }
+
         $scriptNamedArguments = $scriptArgumentList.Named
         $scriptPositionalArguments = $scriptArgumentList.Positional
-        Remove-Variable -Name scriptArgumentList
+        Remove-Variable -Name scriptArgumentList, scriptArgumentListError
         $scriptBlock = { & $scriptPath @scriptNamedArguments @scriptPositionalArguments }
     }
     else
@@ -98,6 +116,7 @@ try
         ($_.ModuleName -eq 'VstsTaskSdk' -and $_.Name -ne 'Out-Default') -or
         ($_.Name -eq 'Invoke-VstsTaskScript') -or
         ($_.Name -eq 'ConvertTo-ScriptArgumentList') -or
+        ($_.Name -eq 'Publish-ScriptArgumentListTelemetry') -or
         ($_.ModuleName -eq 'ServiceFabricHelpers' )
     } |
         Remove-Item

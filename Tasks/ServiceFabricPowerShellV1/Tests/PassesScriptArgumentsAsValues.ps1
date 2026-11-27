@@ -44,10 +44,62 @@ foreach ($scriptArguments in @(
     Assert-Throws { Invoke-Task $scriptArguments } -MessagePattern "UnsupportedScriptArguments0*"
 }
 
+function Get-TaskTelemetry([string]$ScriptArguments) {
+    $global:testScriptArguments = $ScriptArguments
+    $prefix = '##vso[telemetry.publish area=TaskHub;feature=ServiceFabricPowerShellV1]'
+    $telemetry = New-Object System.Collections.Generic.List[string]
+    try {
+        & $PSScriptRoot\..\ServiceFabricPowerShell.ps1 6>&1 |
+            ForEach-Object {
+                if ("$_".StartsWith($prefix)) {
+                    $telemetry.Add("$_")
+                }
+            }
+    }
+    catch { }
+    finally {
+        $global:ErrorActionPreference = 'Stop' # Reset to stop.
+    }
+
+    , $telemetry.ToArray()
+}
+
+function ConvertFrom-TaskTelemetry([string]$Line) {
+    $Line.Substring($Line.IndexOf(']') + 1) | ConvertFrom-Json
+}
+
+# Act/Assert: telemetry contains only fixed values and counts, never argument text.
+$telemetry = Get-TaskTelemetry '-Name ''secret value'' -Force extra'
+Assert-AreEqual 1 $telemetry.Count
+$data = ConvertFrom-TaskTelemetry $telemetry[0]
+Assert-AreEqual $true $data.argumentListInvocation
+Assert-AreEqual 'FilePath' $data.scriptType
+Assert-AreEqual $false $data.rejected
+Assert-AreEqual 2 $data.namedCount
+Assert-AreEqual 1 $data.positionalCount
+Assert-AreEqual $false ($telemetry[0] -match 'secret|extra|Force|PassesScriptArguments')
+
+# Act/Assert: rejections publish a fixed reason, never argument text.
+foreach ($case in @(
+    @{ Arguments = '-Name $(Write-Output secret)'; Reason = 'NonConstantValue'; AstType = 'SubExpressionAst' },
+    @{ Arguments = '-Name build; Write-Output secret'; Reason = 'MultipleStatements'; AstType = $null },
+    @{ Arguments = '-Name build | Write-Output secret'; Reason = 'Pipeline'; AstType = $null },
+    @{ Arguments = '-Name build > secret.txt'; Reason = 'Redirection'; AstType = $null },
+    @{ Arguments = '-Name { Write-Output secret }'; Reason = 'ScriptBlock'; AstType = $null })) {
+    $telemetry = Get-TaskTelemetry $case.Arguments
+    Assert-AreEqual 1 $telemetry.Count
+    $data = ConvertFrom-TaskTelemetry $telemetry[0]
+    Assert-AreEqual $true $data.rejected
+    Assert-AreEqual $case.Reason $data.reason
+    Assert-AreEqual $case.AstType $data.astType
+    Assert-AreEqual $false ($telemetry[0] -match 'secret|build|Write-Output')
+}
+
 # Act/Assert: with the org-level toggle off, arguments are invoked as before.
 $global:testToggleEnabled = $false
 $actual = Invoke-Task '-Name (Write-Output value)'
 Assert-AreEqual 'value' $actual.Name
+Assert-AreEqual 0 (Get-TaskTelemetry '-Name value').Count
 
 Remove-Item Env:\SF_POWERSHELL_TEST_VALUE
 Remove-Variable -Name testScriptArguments, testToggleEnabled -Scope Global
