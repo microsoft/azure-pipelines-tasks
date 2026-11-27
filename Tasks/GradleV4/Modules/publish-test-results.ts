@@ -34,7 +34,6 @@ export function publishTestResults(publishJUnitResults: boolean, testResultsFile
         }
 
         if (!matchingTestResultsFiles || matchingTestResultsFiles.length === 0) {
-            console.log(tl.loc('NoTestResults', testResultsFiles));
             return 0;
         }
 
