@@ -4,6 +4,7 @@ import armCompute = require('azure-pipelines-tasks-azure-arm-rest/azure-arm-comp
 import deployAzureRG = require("../models/DeployAzureRG");
 import utils = require("./Utils")
 import dgExtensionHelper = require("./DeploymentGroupExtensionHelper");
+import { sanitizeAzureResourceNameForLog } from "./sanitize";
 
 export class VirtualMachine {
     private taskParameters: deployAzureRG.AzureRGTaskParameters;
@@ -19,7 +20,7 @@ export class VirtualMachine {
         return new Promise<void>((resolve, reject) => {
             client.virtualMachines.list(this.taskParameters.resourceGroupName, null, (error, listOfVms, request, response) => {
                 if (error) {
-                    return reject(tl.loc("VM_ListFetchFailed", this.taskParameters.resourceGroupName, utils.getError(error)));
+                    return reject(tl.loc("VM_ListFetchFailed", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName), utils.getError(error)));
                 }
                 if (listOfVms.length == 0) {
                     console.log(tl.loc("NoVMsFound"));

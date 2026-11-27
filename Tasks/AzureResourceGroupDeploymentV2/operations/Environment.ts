@@ -1,6 +1,7 @@
 import tl = require("azure-pipelines-task-lib/task");
 import deployAzureRG = require("../models/DeployAzureRG");
 import azureUtil = require("./AzureUtil");
+import { sanitizeAzureResourceNameForLog } from "./sanitize";
 
 class PropertyValue {
     public IsSecure: boolean;
@@ -103,7 +104,7 @@ export class EnvironmentHelper {
     }
 
     public async RegisterEnvironment() {
-        console.log(tl.loc("RegisteringEnvironmentVariable", this.taskParameters.resourceGroupName));
+        console.log(tl.loc("RegisteringEnvironmentVariable", sanitizeAzureResourceNameForLog(this.taskParameters.resourceGroupName)));
         var azureUtilObject = new azureUtil.AzureUtil(this.taskParameters);
         var resourceGroupDetails = await azureUtilObject.getResourceGroupDetails();
         this.instantiateEnvironment(resourceGroupDetails);
