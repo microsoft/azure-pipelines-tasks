@@ -44,7 +44,7 @@ export function writeObjectsToFile(inputObjects: any[]): string[] {
                     fs.writeFileSync(path.join(fileName), inputObjectString);
                     newFilePaths.push(fileName);
                 } else {
-                    tl.debug('Input object is not proper K8s resource object. Object: ' + inputObjectString);
+                    tl.debug('Input object is not proper K8s resource object: kind or metadata.name is missing.');
                 }
             } catch (ex) {
                 tl.debug('Exception occurred while writing object to file : ' + inputObject + ' . Exception: ' + ex);
@@ -62,7 +62,7 @@ export function writeManifestToFile(inputObjectString: string, kind: string, nam
             fs.writeFileSync(path.join(fileName), inputObjectString);
             return fileName;
         } catch (ex) {
-            tl.debug('Exception occurred while writing object to file : ' + inputObjectString + ' . Exception: ' + ex);
+            tl.debug('Exception occurred while writing manifest to file. Exception: ' + ex);
         }
     }
     return '';
