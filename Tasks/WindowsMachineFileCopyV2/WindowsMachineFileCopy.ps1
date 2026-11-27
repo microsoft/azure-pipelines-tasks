@@ -23,7 +23,7 @@ Import-VstsLocStrings -LiteralPath $PSScriptRoot/Task.json
 Import-Module $PSScriptRoot\ps_modules\Sanitizer
 $useSanitizerCall = Get-SanitizerCallStatus
 $useSanitizerActivate = Get-SanitizerActivateStatus
-# Hardened unless the feature is explicitly off; it is unset where the server does not send it.
+# Only an explicit false turns this off; Get-VstsPipelineFeature would treat an unset feature as off.
 $enableWindowsMachineFileCopyArgumentsHardening = (Get-VstsTaskVariable -Name 'DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening') -ne 'false'
 $disableWindowsMachineFileCopyVsoSanitization = Get-VstsPipelineFeature -FeatureName 'DisableWindowsMachineFileCopyMachineNamesSanitization'
 

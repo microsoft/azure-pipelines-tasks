@@ -4,9 +4,9 @@ The task is used to copy application files and other artifacts that are required
 
 ### Additional arguments
 
-Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax in the value, such as `$env:NAME`, `;`, `&`, redirection or pipes, is not interpreted: Robocopy treats those words as file names (file filters, or exclusions after `/XF` or `/XD`), so the copy may include no files, include files you meant to exclude, or keep retrying. Remove such syntax; use pipeline variables (`$(Var)`) to pass values and Robocopy's own options (for example `/LOG:` or `/NFL /NDL /NJH /NJS /NP`) for output control. Backtick escapes and `$` inside quotes are not interpreted either: remove backticks and write `$` as it is. Do not end a quoted path with a backslash.
+Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax is not interpreted: `$env:NAME`, subexpressions, backticks, `;`, `|`, `&`, redirection and comma lists such as `/XF a, b` reach Robocopy as plain words, usually file names, so the copy can include the wrong files or keep retrying. Use pipeline variables (`$(Var)`) for values and Robocopy options (for example `/LOG:`) for output. Do not end a quoted path with a backslash.
 
-The previous command-line handling (PowerShell syntax in the inputs is then expanded) is used only when the `EnableWindowsMachineFileCopyArgumentsHardening` pipeline feature is explicitly off. Where the server does not set the feature, a pipeline can turn it off with the variable `DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening` set to `false`. The `EnableLegacyWindowsMachineFileCopyNetUseCommand` compatibility feature applies only in that case.
+Where the server does not set the `EnableWindowsMachineFileCopyArgumentsHardening` feature, a pipeline can keep the previous handling for now by setting the variable `DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening` to `false`. The `EnableLegacyWindowsMachineFileCopyNetUseCommand` feature applies only in that case.
 
 ### The different parameters of the task are explained below:
 

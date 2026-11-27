@@ -13,6 +13,6 @@ Copy-OnLocalMachine -sourcePath $validSourcePackage -targetPath $validApplicatio
                     -cleanTargetBeforeCopy $true -additionalArguments ""
 
 Assert-WasCalled Invoke-Command -Times 1 -ParametersEvaluator {
-    $ScriptBlock -eq $CopyJob -and $ArgumentList -contains $validSourcePackage -and $ArgumentList -contains $validApplicationPath -and `
+    $ScriptBlock -eq $CopyJob -and $ArgumentList[1] -eq $validSourcePackage -and $ArgumentList[2] -eq $validApplicationPath -and `
     $ArgumentList[4] -eq 'True' -and $ArgumentList[7] -is [bool] -and $ArgumentList[7] -and $ArgumentList[9] -is [bool] -and -not $ArgumentList[9]
 }
