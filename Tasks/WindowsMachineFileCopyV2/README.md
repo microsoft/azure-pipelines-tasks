@@ -12,9 +12,9 @@ telemetry is emitted. The output filter does not change Robocopy arguments or ex
 
 ### Additional arguments
 
-Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax is not interpreted: `$env:NAME`, subexpressions, backticks, `;`, `|`, `&`, redirection and comma lists such as `/XF a, b` reach Robocopy as plain words, usually file names, so the copy can include the wrong files or keep retrying. Use pipeline variables (`$(Var)`) for values and Robocopy options (for example `/LOG:`) for output. Do not end a quoted path with a backslash.
+Additional arguments are split on whitespace (quotes group words) and passed to Robocopy as separate arguments. PowerShell syntax is not interpreted: `$env:NAME`, subexpressions, backticks, `;`, `|`, `&`, redirection and comma lists such as `/XF a, b` reach Robocopy as plain words, usually file names, so the copy can skip files, copy the wrong files, or keep retrying. Use pipeline variables (`$(Var)`) for values and Robocopy options (for example `/LOG:`) for output. Do not end a quoted path with a backslash.
 
-Where the server does not set the `EnableWindowsMachineFileCopyArgumentsHardening` feature, a pipeline can keep the previous handling for now by setting the variable `DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening` to `false`.
+Where the server does not set the `EnableWindowsMachineFileCopyArgumentsHardening` feature (Azure DevOps Server), a pipeline can keep the previous handling for now by setting the variable `DistributedTask.Tasks.EnableWindowsMachineFileCopyArgumentsHardening` to `false`. Where the server sets it (Azure DevOps Services), the server value is used.
 
 ### The different parameters of the task are explained below:
 
