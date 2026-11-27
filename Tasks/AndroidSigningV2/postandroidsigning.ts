@@ -8,7 +8,7 @@ async function run() {
 
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
-        let keystoreFile: string = tl.getTaskVariable('KEYSTORE_FILE_PATH');
+        #let keystoreFile: string = tl.getTaskVariable('KEYSTORE_FILE_PATH');
         if (keystoreFile && tl.exist(keystoreFile)) {
             fs.unlinkSync(keystoreFile);
             tl.debug('Deleted keystore file downloaded from the server: ' + keystoreFile);
