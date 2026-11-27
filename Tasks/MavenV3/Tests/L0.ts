@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import * as fs from "fs";
 import * as path from "path";
 
 import { MockTestRunner } from "azure-pipelines-task-lib/mock-test";
@@ -259,6 +260,26 @@ describe("Maven L0 Suite", function () {
         assert(testRunner.invokedToolCount == 3, "should have only run maven 3 times: " + testRunner.invokedToolCount);
         assert(testRunner.stderr.length == 0, "should not have written to stderr=" + testRunner.stderr);
         assert(testRunner.succeeded, "task should have succeeded");
+    });
+
+    it("does not log maven settings.xml contents", async function() {
+        this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
+        const testPath = path.join(__dirname, "L0MavenWithFeedSettings.js");
+        const testRunner = new MockTestRunner(testPath);
+        const settingsPath = path.join(getTempDir(), "settings.xml");
+        const secretMarker = "SYNTHETIC_SETTINGS_SECRET_42";
+        fs.writeFileSync(settingsPath,
+            `<settings><servers><server><id>private-repository</id><username>user</username><password>${secretMarker}</password></server></servers></settings>`);
+
+        try {
+            await testRunner.runAsync();
+
+            assert(testRunner.succeeded, "task should have succeeded");
+            assert(!testRunner.stdOutContained(secretMarker), "it should not log settings.xml secrets");
+            assert(fs.readFileSync(settingsPath, "utf-8").includes(secretMarker), "it should preserve existing settings.xml credentials");
+        } finally {
+            fs.unlinkSync(settingsPath);
+        }
     });
 
     it("run maven with missing goals", async function() {
