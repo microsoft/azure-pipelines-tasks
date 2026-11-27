@@ -222,6 +222,8 @@ Tasks/DownloadBuildArtifactsV0/   @microsoft/release-management-task-team @manol
 
 Tasks/DownloadBuildArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
+Tasks/DownloadBuildArtifactsV2/   @microsoft/azure-pipelines-tasks-and-agent @tarunramsinghani
+
 Tasks/DownloadFileshareArtifactsV1/   @microsoft/release-management-task-team @manolerazvan 
 
 Tasks/DownloadGitHubNpmPackageV1/    @microsoft/release-management-task-team @manolerazvan 

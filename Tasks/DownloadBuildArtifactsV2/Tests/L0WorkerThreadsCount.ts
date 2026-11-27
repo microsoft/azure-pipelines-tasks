@@ -1,0 +1,6 @@
+import { createRunner } from './L0Common';
+
+createRunner({
+    inputs: { buildType: 'current', downloadType: 'single', artifactName: 'drop' },
+    variables: { AZURE_PIPELINES_DEDUP_WORKER_THREADS: ' 3 ' }
+}).run();
