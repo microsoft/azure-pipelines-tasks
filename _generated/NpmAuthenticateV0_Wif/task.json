@@ -10,7 +10,7 @@
   "version": {
     "Major": 0,
     "Minor": 283,
-    "Patch": 3
+    "Patch": 5
   },
   "runsOn": [
     "Agent",
@@ -113,6 +113,7 @@
     "Warning_NpmrcRestoreSkipped": "The .npmrc path at %s could not be verified as the same regular file that was backed up. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
     "Warning_NpmrcBackupIntegrityMismatch": "The backup for %s failed integrity validation. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
     "Warning_NpmrcIdentityUnavailable": "The trusted file identity for %s is missing or invalid. Skipping restoration without writing file contents. Changes made by npmAuthenticate were not reverted.",
+    "Warning_NpmrcBackupCleanupSkipped": "The npmAuthenticate backup directory could not be verified. Skipping cleanup.",
     "UnableToWriteFileContents": "Unable to write the contents of %s.",
     "ServiceEndpointUrlNotDefined": "Couldn't find the URL for the service connection. Make sure the service connection is correctly configured.",
     "SavingFile": "Saving file %s",
@@ -148,7 +149,7 @@
     "Debug_EndpointProbeFailed": "isEndpointInternal check failed: %s"
   },
   "_buildConfigMapping": {
-    "Default": "0.283.2",
-    "wif_242": "0.283.3"
+    "Default": "0.283.4",
+    "wif_242": "0.283.5"
   }
 }

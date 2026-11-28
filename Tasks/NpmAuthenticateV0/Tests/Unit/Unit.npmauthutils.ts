@@ -11,6 +11,8 @@ import {
 	initializeBackupDirectory
 } from '../../npmauthutils';
 import { NpmrcCredential } from '../../npmrcCredential';
+import { NpmrcBackupRootTaskVariable } from '../../npmrcBackupManager';
+import * as tl from 'azure-pipelines-task-lib/task';
 
 describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 	describe('validateAndFilterRegistryUrls', function () {
@@ -231,6 +233,16 @@ describe('NpmAuthenticateV0 Unit - npmauthutils', function () {
 			// No AGENT_TEMPDIRECTORY set.
 
 			assert.throws(() => initializeBackupDirectory());
+		});
+
+		it('stores the created backup root in a task variable', function () {
+			const homeDirectory = path.join(scratchRoot, 'home');
+			fs.mkdirSync(homeDirectory);
+			process.env['AGENT_HOMEDIRECTORY'] = homeDirectory;
+
+			initializeBackupDirectory();
+
+			assert.strictEqual(tl.getTaskVariable(NpmrcBackupRootTaskVariable), path.join(homeDirectory, 'npmAuthenticateBackup'));
 		});
 	});
 });
